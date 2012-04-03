@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>It is worth to use STL string?</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>It is worth to use STL string?</h1>
+<div id="post">
+  <p>I regularly have arguments with colleagues about using <code>std::string</code>. Is it worth to use it at all or our own string class implementation could be better?</p>
+
+<p>The first question is about <code>std::string</code> quality. Amusingly the majority of people which I asked to draft more or less efficient implementation of the string class wrote roughly this:</p>
+
+<pre><code class="cpp">class String {
+ public:
+  explicit String(const std::string&amp; value) { 
+    init(value.c_str(), value.length()); 
+  }
+  String(const String&amp; value) { init(value.data_, value.sz_); }
+  ~String() { free(data_); }
+
+  String&amp; operator=(const String&amp; value) {
+    if (this != &amp;value) {
+      if (value.sz_ &gt; sz_) data_ = (char*)std::realloc(data_, value.sz_);
+      sz_ = value.sz_;
+      std::memcpy(data_, value.data_, sz_);
+    }
+    return *this;
+  }
+
+ private:
+  void init(const char* data, size_t sz) {
+    sz_ = sz;
+    data_ = (char*)malloc(sz_);
+    std::memcpy(data_, data, sz_);
+  }
+  char* data_;
+  size_t sz_;
+};
+</code></pre>
+
+<p>It&rsquo;s clear that in this implementation of an assignment operator a string will only grow in terms of memory utilisation. It is done deliberately to save some extra time on assigning.</p>
+
+<p>Practically nobody thought immediately about a moving operation, for example swap. For some reason the presence of a copy constructor and an assignment operator is considering to be sufficient.</p>
+
+<p>To answer this question for myself I have written the test. The test sorts an array of long strings. The strings are represented in four ways: a <code>std::string</code> object, a <code>std::string</code> pointer, an object of my homemade <code>String</code> class (see above) and a pointer to <code>String</code>.</p>
+
+<p>Apparently that usage of the pointer should be the most efficient method because in this case <code>std::sort()</code> swaps only pointers but not objects.</p>
+
+<p>But it would be interesting to compare how my simple implementation of the string will yield to <code>std::string</code>.</p>
+
+<p>So, <code>std_string.cpp</code>:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;cstdlib&gt;
+#include &lt;cstring&gt;
+#include &lt;cassert&gt;
+
+#include &quot;gtest/gtest.h&quot;
+
+static const int N = 100;
+
+// This homemade class implements the more or less efficient 
+// string in terms of copying.
+class String {
+ public:
+  // &quot;explicit&quot; disables any implicit cast making sure 
+  // which constructor exactly is being called.
+  explicit String(const std::string&amp; value) { 
+    init(value.c_str(), value.length()); 
+  }
+  String(const String&amp; value) { init(value.data_, value.sz_); }
+  ~String() { free(data_); }
+
+  // Perhaps this method is only one attempt to use memory allocation
+  // efficiently.
+  String&amp; operator=(const String&amp; value) {
+    if (this != &amp;value) {
+      // Memory is re-allocated only if a source is longer the current
+      // string. It is clear that this implementation will only increase 
+      // memory allocated by the string.
+      if (value.sz_ &gt; sz_) data_ = (char*)std::realloc(data_, value.sz_);
+      sz_ = value.sz_;
+      std::memcpy(data_, value.data_, sz_);
+    }
+    return *this;
+  }
+
+  friend class StringCmp;
+  friend class StringPointerCmp;
+
+ private:
+  void init(const char* data, size_t sz) {
+    sz_ = sz;
+    data_ = (char*)malloc(sz_);
+    std::memcpy(data_, data, sz_);
+  }
+  char* data_;
+  size_t sz_;
+};
+
+std::vector&lt;std::string&gt; std_strings;
+std::vector&lt;std::string*&gt; std_strings_p;
+std::vector&lt;String&gt; strings;
+std::vector&lt;String*&gt; strings_p;
+
+// Functor to compare two std::string.
+class StlStringCmp {
+ public:
+  bool operator()(const std::string&amp; a, const std::string&amp; b) {
+    return a &lt; b;
+  }
+};
+
+TEST(SortingStlString, StlString) {
+  std::sort(std_strings.begin(), std_strings.end(), StlStringCmp());
+}
+
+// Functor to compare two std::string*.
+class StlStringPointerCmp {
+ public:
+  bool operator()(const std::string* a, const std::string* b) {
+    return *a &lt; *b;
+  }
+};
+
+TEST(SortingStlString, StlStringPointer) {
+  std::sort(std_strings_p.begin(), std_strings_p.end(), StlStringPointerCmp());
+}
+
+// Functor to compare two String.
+class StringCmp {
+ public:
+  bool operator()(const String&amp; a, const String&amp; b) {
+    assert(a.sz_ == b.sz_);
+    return std::memcmp(a.data_, b.data_, a.sz_);
+  }
+};
+
+TEST(SortingStlString, String) {
+  std::sort(strings.begin(), strings.end(), StringCmp());
+}
+
+// Functor to compare two String*.
+class StringPointerCmp {
+ public:
+  bool operator()(const String* a, const String* b) {
+    assert(a-&gt;sz_ == b-&gt;sz_);
+    return std::memcmp(a-&gt;data_, b-&gt;data_, a-&gt;sz_);
+  }
+};
+
+TEST(SortingStlString, StringPointer) {
+  std::sort(strings_p.begin(), strings_p.end(), StringPointerCmp());
+}
+
+int main(int argc, char* argv[]) {
+  // The filler to make strings long enough making their copying expensive.
+  std::string big(1024 * 1024, '?');
+  for (int i = 0; i &lt; N; ++i) {
+    // All strings are the same length. The comparison functions rely on it.
+    std::stringstream fmt;
+    fmt &lt;&lt; N * 2 - i &lt;&lt; big;
+    std_strings.push_back(fmt.str());
+    std_strings_p.push_back(new std::string(fmt.str()));
+    strings.push_back(String(fmt.str()));
+    strings_p.push_back(new String(fmt.str()));
+  }
+
+  testing::InitGoogleTest(&amp;argc, argv);
+  // Enforce to print out tests' timing.
+  testing::GTEST_FLAG(print_time) = true;
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>Compile:</p>
+
+<pre><code>cl /O2 /EHsc /I. std_string.cpp gtest-all.cc
+</code></pre>
+
+<p>Run:</p>
+
+<pre><code>[==========] Running 4 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 4 tests from SortingStlString
+[ RUN      ] SortingStlString.StlString
+[       OK ] SortingStlString.StlString (203 ms)
+[ RUN      ] SortingStlString.StlStringPointer
+[       OK ] SortingStlString.StlStringPointer (0 ms)
+[ RUN      ] SortingStlString.String
+[       OK ] SortingStlString.String (891 ms)
+[ RUN      ] SortingStlString.StringPointer
+[       OK ] SortingStlString.StringPointer (0 ms)
+[----------] 4 tests from SortingStlString (1125 ms total)
+
+[----------] Global test environment tear-down
+[==========] 4 tests from 1 test case ran. (1125 ms total)
+[  PASSED  ] 4 tests.
+</code></pre>
+
+<p>Apparently, the tests using pointers work equally fast but when the objects are in use, <code>std::string</code> has overrun my homemade implementation 4 times - 203 ms vs 891 ms.</p>
+
+<p>It is simply to figure out why it is so. To swap elements <code>std::sort()</code> uses the template function <code>std::swap()</code> which applied for <code>std::string</code> exchanges data without physical data copying.</p>
+
+<p>Eventually I&rsquo;ve convinced myself that in most cases <code>std::string</code> solves all problems. But what about adding more functionality to the <code>std::string</code>? For instance, a word search.</p>
+
+<p>The problem is that the destructor of <code>std::string</code> is not virtual (maybe from considerations of efficiency), but an inheritance from the class with a non-virtual destructor in C++ is not right undertaking.</p>
+
+<p>The STL author, Alexander Stepanov, in his article <a href="http://www.stepanovpapers.com/notes.pdf">Notes for the Programming course at Adobe</a> advises to implement additional functionality for the standard STL containers as template algorithms. There are many advantages doing so, for example, any string parsing implemented via iterators as the template algorithm becomes usable automatically for all other containers having the same iterators.</p>
+
+<p>Interestingly what Stepanov says about the length() function of STL containers (in the article above he describes the process of creation the efficient container step by step):</p>
+
+<blockquote>
+<p>While we could make a member function to return length, it is better to make it a global friend function. If we do that, we will be able eventually to define the same function to work on built-in arrays and achieve greater uniformity of design. I made size into a member function in STL in an attempt to please the standard committee. I knew that begin, end and size should be global functions but was not willing to risk another fight with the committee.</p>
+
+<p><strong>Alexander Stepanov</strong></p>
+</blockquote>
+
+<p>Summarizing it is worth to trust <code>std::string</code>. The for majority of problems it does pretty well and its functionality can be extended by implementing template algorithms.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2009/08/is-it-good-to-use-stdstring.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2009/08/is-it-good-to-use-stdstring.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2009/08/is-it-good-to-use-stdstring.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

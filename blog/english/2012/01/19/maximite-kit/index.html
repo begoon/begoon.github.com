@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Maximite - 8-bit nostalgia with a soldering iron</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Maximite - 8-bit nostalgia with a soldering iron</h1>
+<div id="post">
+  <p>Recently I have come across an interesting project - Maximite.</p>
+
+<p>This is a micro-computer based on Microchip PIC32 running BASIC. It is so simple that even a novice can build it in a few hours.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0099.jpg" /></p>
+
+<p>It is a bit more powerful than <a href="http://en.wikipedia.org/wiki/History_of_computer_hardware_in_Soviet_Bloc_countries#Radio-86RK">Radio-86RK</a> and ZX Spectrum 48. But its peripherals are fantastic: SD/FAT card, USB, VGA, PS/2, timers, RS232, I2C, SPI, PWM, ADC/DAC and individual general purpose pins.</p>
+
+<p>If you build it on a mock up board buying parts by yourself, it will cost less then ten Australian dollars.</p>
+
+<p>The <a href="http://geoffg.net/maximite.html">project is open-sourced</a> (schematics, PCB artwork, sources).</p>
+
+<p>Even if quickly flip through the <a href="http://geoffg.net/Downloads/Maximite/Maximite%20User%20Manual%20V3.0.pdf">documentation</a>, no doubts - a list features is impressive. All peripherals are available directly from BASIC.</p>
+
+<p>Programs and data can be stored on a SD card. If there is a &ldquo;AUTORUN.BAS&rdquo; file on the card, BASIC will run at the start.</p>
+
+<p>I liked Maximite, but soldering is not my favourite activity. Unfortunately it is only possible to buy a kit, but not a fully assembled unit.</p>
+
+<p>I ordered the <a href="http://www.altronics.com.au/index.asp?area=item&amp;id=K9550">kit from Altronics</a> and soon after it arrived.</p>
+
+<p>Only the microprocessor was already soldered because soldering such form factor chip isn’t an easy task.</p>
+
+<p>Anyway, screw it, let’s do it.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0102.jpg" /></p>
+
+<p>Here a few parts are already in place. I’m not a complete newbie in soldering but last time I took a soldering iron in my hands was about five years ago. I had no acid for soldering, so I was crumbling rosin right to soldering points. The effect is similar to acid. The soldering iron (the one on the plate) with a sharp sting.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0103.jpg" /></p>
+
+<p>I spent the first hour struggling with only a few parts, but eventually it went smoother.</p>
+
+<p>A half is ready.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0106.jpg" /></p>
+
+<p>After one more hour it was all done.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0107.jpg" /></p>
+
+<p><img src="/images/blog/maximite-kit/img_0110.jpg" /></p>
+
+<p>Maximite can be powered from an external 9V source or form USB. I used USB.</p>
+
+<p>Plug into USB and VGA. An off you go!</p>
+
+<p><img src="/images/blog/maximite-kit/img_0111.jpg" /></p>
+
+<p>BASIC is ready but there is no keyboard. I hand’t a proper PS/2 one and I tried a USB-PS/2 connector. Alas, it didn’t fit.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0119.jpg" /></p>
+
+<p>Next day I found the PS/2 keyboard and finally connected.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0114.jpg" /></p>
+
+<p>The case.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0115.jpg" /></p>
+
+<p><img src="/images/blog/maximite-kit/img_0112.jpg" /></p>
+
+<p>Fully assembled.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0113.jpg" /></p>
+
+<p><img src="/images/blog/maximite-kit/img_0116.jpg" /></p>
+
+<p>I have to admit - the kit from Altronics is a very good quality product. The holes are metallized on the board, and the case fits perfectly.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0118.jpg" /></p>
+
+<p>Then I had to upgrade the firmware to the latest version. Maximite can flash itself over USB without a special programmer. Just open the case and hold a special button when switching Maximite on. It goes to a boot loader mode.</p>
+
+<p>Maximite is a standard CDC device in USB infrastructure. Windows still requires a driver though, but Mac has it built-in.</p>
+
+<p>Plug-in.</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01130.jpg" /></p>
+
+<p>Flashing.</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01129.jpg" /></p>
+
+<p>Right, the firmware is upgraded up to 3.0A.</p>
+
+<p>As I said, Maximite supports VGA and PS/2, but you can also connect it to a PC via USB. In this case Maximite mirrors the VGA output to that serial connection to the PC, also treats the data coming from that connection as keyboard input.</p>
+
+<p>So, it is possible to detach VGA and PS/2 at all and talk to Maximite over the serial USB connection only.</p>
+
+<p>For example, VGA dispay (voltmeter):</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01125.jpg" /></p>
+
+<p>The same data on in a terminal emulation application on the PC:</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01123.jpg" /></p>
+
+<p>Interestingly, Maximite works with pixels, not characters. So when a character is being displayed, it is also copied to the console, but when Maxitile draws graphics it is not visible in the serial console.</p>
+
+<p>BASIC language in Maximite gives full control over the peripherals using operators.</p>
+
+<p>There is an archive of BASIC programs running on Maximite available of the project website.</p>
+
+<p>There are a few screenshots.</p>
+
+<p>Clock.</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01132.jpg" /></p>
+
+<p>Character editor.</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01128.jpg" /></p>
+
+<p>Voltmeter.</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01133.jpg" /></p>
+
+<p>Puzzles.</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01126.jpg" />
+<img src="/images/blog/maximite-kit/dsc01131.jpg" /></p>
+
+<p>I believe, no comment here.</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01134.jpg" /></p>
+
+<p>Conclusion</p>
+
+<p>Every penny I have spent on Maximite is worth that fun I’ve got.</p>
+
+<p>The Maximite project is surprisingly solid. Everything is nice and simple. And it works!</p>
+
+<p>For beginners, even kids, interested in microelectronics, Maximite is simply a godsend. Easy and nice to build. I as an amateur have built everything in a few hours only.</p>
+
+<p>When my brother was building <a href="http://radio86.googlecode.com/hg/online/radio86.html">Radio-86RK Emulator</a> and Spectrum about twenty years ago, there was a joke about DIY projects published in radio electronics magazines: if a author says that his device doesn’t required any tuning, there is at least a little chance to get it working; but the author says that his device does require some minor tuning&hellip;</p>
+
+<p>Anyway, if you want to come back to your 8-bit youth with a soldering iron in hands — build Maximite.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2012/01/maximite-8-bit-nostalgy-with-soldering_19.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2012/01/maximite-8-bit-nostalgy-with-soldering_19-english.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2012/01/maximite-8-bit-nostalgy-with-soldering_19.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

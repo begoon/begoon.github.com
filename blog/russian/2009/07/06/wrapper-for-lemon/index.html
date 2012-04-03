@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Обертка генератора парсеров грамматик Lemon для C++</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Обертка генератора парсеров грамматик Lemon для C++</h1>
+<div id="post">
+  <p>Выложил на Google Code прототип библиотеки для удобного использования генератора <a href="http://en.wikipedia.org/wiki/LALR_parser">LALR</a> парсеров грамматик <a href="http://www.hwaci.com/sw/lemon/">Lemon</a> на С++.</p>
+
+<p>Проект называется <a href="http://code.google.com/p/lemonbind/">lemonbind</a>.</p>
+
+<p>Lemon - это создающий исходник на C/C++ генератор, похожий на <a href="http://en.wikipedia.org/wiki/Yacc">yacc</a> или <a href="http://en.wikipedia.org/wiki/GNU_bison">bison</a>, для реализации заданой грамматики. Lemon был создан автором <a href="http://www.sqlite.org/">SQLite</a> для разбора SQL&rsquo;я.</p>
+
+<p>Есть у Lemon несколько радикальных отличий от собратьев. В отличие от yacc/bison Lemon не использует обратные вызовы, то есть не парсер вызывает нас, когда готов принять очередной токен, а мы вызываем парсер, когда готовы скормить ему очередной токен. Также Lemon безопасен в потоковом плане и реентабелен. Именно эти отличия позволяют неплохо завернуть его в обертку C++ со всеми вытекающими радостями. Также Lemon использует более простую нотацию по именованию параметров в продукциях грамматики, значительно снижающую вероятность опечататься.</p>
+
+<p>Lemon представляет собой всего для файла: <a href="http://code.google.com/p/lemonbind/source/browse/tools/lemon.c">lemon.c</a> и <a href="http://code.google.com/p/lemonbind/source/browse/tools/lempar.c">lempar.c</a>. Первый - это, собственно, генератор грамматик. Компилируется практически любым компилятором C/C++. Второй - шаблон, который использует генератор для создания целевого файла-парсера на языке С. Сгенерированный парсер также прекрасно компилируется любым компилятором C/C++.</p>
+
+<p>Конечно, Lemon&rsquo;у нужен лексический анализатор. Я использовал <a href="http://en.wikipedia.org/wiki/Flex_lexical_analyser">flex</a>. Его тоже пришлось обернуть в С++.</p>
+
+<p>Возникает вопрос - а для чего этот велосипед, когда есть <a href="http://www.antlr.org/">ANTLR</a>, <a href="http://spirit.sourceforge.net/">Boost Spirit</a> и прочие навороченные инструменты. Ответ как всегда прост - простота и скорость. Парадоксальная ситуация - подход с генерацией исходника, реализующего требуемую грамматику, был придуман много лет назад и воплощен в виде старичков типа lex/yacc/bison, а до сих пор используется за неимением простых и быстрых альтернатив, работающих на сложных грамматиках и на больших объемах анализируемого текста.</p>
+
+<p>Собственно, моя мини библиотека на данный момент имеет три основных класса: <a href="http://code.google.com/p/lemonbind/source/browse/token.h">Token</a>, <a href="http://code.google.com/p/lemonbind/source/browse/tokenizer.h">Tokenizer</a> (обертка flex) и <a href="http://code.google.com/p/lemonbind/source/browse/parser.cpp">Parser</a> (обертка Lemon). Набор тестов демонстрирует, как работать с этими классами. Тест <a href="http://code.google.com/p/lemonbind/source/browse/parser_unittest.cpp">Parser.NestedSelect</a> разбирает вложенный SELECT тривиального диалекта SQL и строит дерево разбора.</p>
+
+<p>Все находится в начальной стадии, но основной функционал уже присутствует. Пока не до конца продуман универсальный интерфейс для генерации дерева разбора (пока его генерация жестко привязана к конкретной грамматике), но сам парсер уже закончен.</p>
+
+<p>P.S. Нашел <a href="http://code.google.com/p/lemon-parser-generator/">дружественный проект</a> по адаптированию Lemon&rsquo;а для генерации парсеров не только на C и C++, но и на D.</p>
+
+<p>P.P.S. Настоятельно рекомендую по теме вот эту книгу в заслуженной форме большего кирпича.</p>
+
+<p>Альфред В. Ахо, Моника С. Лам, Рави Сети, Джеффри Д. Ульман</p>
+
+<p><a href="http://www.ozon.ru/context/detail/id/3829076/?partner=easy-coding">Компиляторы. Принципы, технологии и инструментарий</a></p>
+
+<p><img src="/images/covers/russian/compilers-cover.jpg" /></p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/07/lemon.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/07/lemon.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/07/lemon.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

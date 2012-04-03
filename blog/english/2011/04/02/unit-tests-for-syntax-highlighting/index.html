@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Unit tests for syntax highlighting</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Unit tests for syntax highlighting</h1>
+<div id="post">
+  <p>Quite often people argue whether all those efforts to use unit tests are worth those benefits in code maintenance and regression bugs. Despite of many pros and cons being said there could be situations when it is not obvious that is better, but I can give a very representative example below.</p>
+
+<p>At the moment I&rsquo;m working on a project customizing putty to support of-the-fly syntax highlighting for a proprietary programming language. The main difficulty is that the language has very complicated and not well defined and irregular grammar with lots of ambiguities.</p>
+
+<p>As a result what I&rsquo;m doing is fixing different special cases here and there. But syntax highlighting is complicated in general - you fix one thing and easily break ten others at the same time.</p>
+
+<p>After some time of maintenance I gave up and I spent a day setting up <a href="http://code.google.com/p/cmockery/">cmockery</a> and all the rest of unit testing plumbing. Then I remade all code examples I used to verify everything manually in a form of unit tests.</p>
+
+<p>Once I&rsquo;ve done that life become simpler. Now after every change I can automatically check by running tests that all previous cases are not broken. I&rsquo;m confident to change things without being afraid of regression. Of course I spent an extra day to two developing, debugging and configuring unit tests infrastructure but it has paid off already, fully or even more.</p>
+
+<p>Every new feature or bug fix I start from creating a test demonstrating how it should work, and, obviously, this test must fail. Then I implement a bit of functionality to make this test working. I cannot image how I might develop this project further without unit tests.</p>
+
+<p>By the way, this is a classical approach when tests are written beforehand. And the main code complements the tests afterwards.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2011/04/unit-testing-against-regression.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2011/04/unit-testing-against-regression.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2011/04/unit-testing-against-regression.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

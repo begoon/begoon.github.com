@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Анализатор покрытия кода тестами Bullseye Coverage</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Анализатор покрытия кода тестами Bullseye Coverage</h1>
+<div id="post">
+  <p><a href="/blog/russian/2009/02/23/static-code-analysis-coverity-klocwork/">Статические анализаторы кода</a>, например <a href="http://www.coverity.com/html/prevent-for-c-c++.html">Coverity</a> или <a href="http://www.klocwork.com/">Klocwork</a> являются отличным подспорьем для качественного программирования.</p>
+
+<p>Еще одним мощнейшим подспорьем является тестирование. Есть различные виды тестирования — unit-тестирование, функциональное тестирование, регрессивное тестирование и т.д.</p>
+
+<p>Что понять, насколько хорошо проект покрыт тестами, нужна какая-то количественная мера. Например, это может быть количество предопределенных пользовательских сценариев, которые должны работать как задумано. Это неплохой показатель, и он обычно является основной мерой функционального тестирования и в целом отправной точкой в принятии решения о готовности релиза. Проблема этого подхода, что сами сценарии определены людьми, а значит являются условным и могут содержать ошибки и неточности. Хочется чего-то более объективного и более беспристрастного.</p>
+
+<p>Одним из таких показателей может является количество строк кода, которые были отработаны (выполнены) в процессе тестирования. Эдакая мера для черных дыр в коде, которые никогда не выполняются обычно, а когда таки до них доходит, то все падает. Этот подход вовсе не отменяет функциональное тестирование, а органично дополняется его.</p>
+
+<p>Итак, задача — надо понять, какие части программного коды были задействованы (были выполнены хотя бы раз) в процессе тестирования.</p>
+
+<p>Представим ситуацию, что тестерам дали задание написать функциональные тесты для новой версии API на основе unit-тестов, написанных программистами, и на основе ожиданий заказчика от этого API. Они написали. А как понять, насколько полно они задействовали своими тестами все укромные уголки кода? Нужен какой-то инструмент.</p>
+
+<p>Мы в компании остановились на <a href="http://www.bullseye.com/">Bullseye Coverage</a>. Относительно небольшая цена (для сравнения с Coverity, которая стоила нам несколько десятков кило-зеленых на год, хотя это того стоит). Можно получить тестовый временный ключ для того, чтобы поиграться перед покупкой. Система поддерживает множество основных платформ.</p>
+
+<p>Bullseye Coverage работает на уровне компилятора. Все что нужно — это активировать ее перед компиляцией проекта. После этого бинарные модули проекта будут сохранять в специальном файле статистику по собственной работе (чем-то похоже на работу профилировщика). Откомпилировали, запустили тесты (любые) и посмотрели — какие строки кода были реально выполнены этими тестами.</p>
+
+<p>Bullseye Coverage может показывать задействование на уровне файлов/модулей, функций/классов и просто строк. Открыв файл исходного текста после прогона тестов специальным просмотрщиком можно, например, сказать, что эта конкретная строка или эта функция никогда не вызывалась в процессе тестирования. Порой это очень впечатляет.</p>
+
+<p>Единственное, чего Bullseye Coverage не умеет, так это делать сравнительный анализ нескольких сборок, чтобы бы можно было отследить изменения показателей, а не просто иметь их абсолютные величины.</p>
+
+<p>Лично меня результаты анализа некоторых наших проектов очень впечатлили и, порой, озадачили.</p>
+
+<p>А вас?</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/02/23/static-code-analysis-coverity-klocwork/">Статический анализ кода - Coverity, Klocwork</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/04/bullseye-coverage.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/04/bullseye-coverage.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/04/bullseye-coverage.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Challenge 24 Pre Electronic Сontest</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Challenge 24 Pre Electronic Сontest</h1>
+<div id="post">
+  <p>В эту субботу наша команда в составе <a href="http://www.topcoder.com/tc?module=MemberProfile&amp;cr=19825431">Leonid</a>, <a href="http://www.topcoder.com/tc?module=MemberProfile&amp;cr=22654571">Lomir</a> и меня &ldquo;разогревались&rdquo; на тестовом раунде <a href="http://ch24.org/">Challenge 24 Contest</a>. <a href="http://ch24.org/preec/html/">Задачи</a> уже доступны. В этом раунде не было никакого рейтинга, а просто можно было ознакомиться с правилами и системой. Хотя лично для меня задачи были вполне себе серьезные. Например, <a href="http://ch24.org/preec/html/P.html">P</a>, конечно, совсем простая, но остальные для меня вполне реальны.</p>
+
+<p>Мне нравится этот контест тем, что он не заточен исключительно на алгоритмические задачи. Например, в <a href="http://ch24.org/preec/html/Q.html">Q</a> надо было сделать хорошую эвристику, в <a href="http://ch24.org/preec/html/R.html">R</a> - типа взломать код, ну а <a href="http://ch24.org/preec/html/S.html">S</a> - это алгоритм.</p>
+
+<p>Я по-пенсионерски попросился решать <a href="http://ch24.org/preec/html/R.html">R</a>. В итоге написал какой-то невообразимый велосипед на С++, которым таки получилось сделать играемый wav, прослушать сообщения и сдать задачу, и только потом, немного успокоившись, на питоне получилась короткая программа, делающая чистые 16-битные wav&rsquo;ы.</p>
+
+<pre><code class="python">import wave, struct
+
+def make_soundfile(sample, freq, fname):
+    frate = 7000
+
+    data_size = len(sample)
+
+    sine_list = []
+    for x in sample:
+        sine_list.append(float(x) / 2 * 32768)
+
+    wav_file = wave.open(fname + &quot;.wav&quot;, &quot;w&quot;)
+
+    nchannels = 1
+    sampwidth = 2
+    framerate = int(frate)
+    nframes = data_size
+    comptype = &quot;NONE&quot;
+    compname = &quot;not compressed&quot;
+
+    wav_file.setparams((nchannels, sampwidth, framerate, nframes, comptype, compname))
+    for s in sine_list:
+        wav_file.writeframes(struct.pack('h', int(s)))
+    wav_file.close()
+
+ for n in range(1, 11):
+    fname = &quot;test-%02d.tst&quot; % n
+    print fname
+    sample = open(fname).readlines()
+    sample = sample[1:]
+    freq = len(sample)
+    make_soundfile(sample, freq, fname)
+
+</code></pre>
+
+<p>Конечно, авторское решение было еще проще.</p>
+
+<pre><code>awk 'NR &gt; 1 {printf &quot;%c&quot;,int(128*($1+1))}' *.in &gt;/dev/dsp
+</code></pre>
+
+<p>Погдядим, что будет в реальном раунде в эту субботу.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/02/challenge-24-pre-electronic-ontest.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/02/challenge-24-pre-electronic-ontest.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/02/challenge-24-pre-electronic-ontest.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

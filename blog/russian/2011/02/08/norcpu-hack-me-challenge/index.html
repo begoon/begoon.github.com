@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>NORCPU hackme challenge или взлом программы для однокомандного процессора</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>NORCPU hackme challenge или взлом программы для однокомандного процессора</h1>
+<div id="post">
+  <p>Разного рода &ldquo;ненормальное&rdquo; программирование весьма популярно среди любителей поломать голову над разными задачками. Порой программу для очередной &ldquo;ненормальной&rdquo; среды программирования уже нереально написать вручную, а надо писать генератор, создающий код.</p>
+
+<p>В задаче, что предлагаю я, программы все еще можно писать вручную на некотором высокоуровневом макроассемблере.</p>
+
+<p>Итак, имеется модель некоторого виртуального процессора, выполняющего только одну логическую операцию - <a href="http://ru.wikipedia.org/wiki/%D0%A1%D1%82%D1%80%D0%B5%D0%BB%D0%BA%D0%B0_%D0%9F%D0%B8%D1%80%D1%81%D0%B0">Стрелку Пирса</a>.</p>
+
+<p>На этом процессоре написана программа, на вход которой подается некоторый пароль. Если пароль неверный, то в ответ выдается строка &ldquo;Wrong password!&rdquo;. Если верный, то выдается определенное волшебное сообщение.</p>
+
+<p>Задача: любым образом выяснить это волшебное сообщение. Как вариант, можно, например, угадать пароль, и программа сама выдаст секрет.</p>
+
+<p>Логика написана таким образом, что разобравшись в алгоритме, можно без труда расшифровать волшебное сообщение.</p>
+
+<p>В прошлом году <a href="/blog/russian/2010/03/26/one-command-cpu/">я описал использованный подход во всех деталях</a>.</p>
+
+<p>Оригинальный подход, на котором основан мой эксперимент, был не совсем &ldquo;чистым&rdquo;, так как команда сложения был вынесена за логику процессора. В моей версии все до единой команды реализованы на самом процессоре. Для этого потребовалось немного изменить интерпретатор, добавив в него сдвиговый регистр.</p>
+
+<p>Для желающих попробовать взломать мой эксперимент, я сделал страничку, на которой на JavaScript&rsquo;e реализован выше описанный виртуальный процессор с одной командой и программа для него, проверяющая пароль.</p>
+
+<p>Итак, <a href="/projects/norcpu/challenge/norcpu.html">прошу на взлом!</a></p>
+
+<p>Удачи.</p>
+
+<p>P.S. Для первого взломавшего - небольшой приз! Информация по ссылке.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/02/norcpu-hackme-challenge.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/02/norcpu-hackme-challenge.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/02/norcpu-hackme-challenge.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

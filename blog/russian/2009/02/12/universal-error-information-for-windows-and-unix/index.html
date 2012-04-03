@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Универсальная информация об ошибках в Windows и UNIX</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Универсальная информация об ошибках в Windows и UNIX</h1>
+<div id="post">
+  <p>Достоверная информация об ошибках во время исполнения программы является залогом простой ее эксплуатации и поддержки. Вместо выслушивания от клиента стенаний на тему &ldquo;я тут что-то нажал&hellip; а тут все не работает&hellip;&rdquo; можно просто попросить его прислать файл журнала программы (log), и с большой вероятностью этого будет достаточно для локализации проблемы. С логическими ошибками бизнес логики программы все понятно — тут все зависит от вас, и вы точно знаете, какая ошибка произошла. Хуже обстоит дело с ошибками системными. Тут надо максималько точно опросить систему, что произошло, и по возможности, получить расшифровку когда ошибки.</p>
+
+<p>Как я уже писал, я работаю одновременно на совершенно разных платформах — от виндов до встраеваемого QNX&rsquo;а. Поэтому мне всегда хочется иметь максимально простые и переносимые исходники (и желательно с минимумом нестандартных зависимостей), чтобы модули можно было просто кидать из проекта в проект, с платформы на платформу, не допиливая каждый раз что-то напильником.</p>
+
+<p>Итак, привожу ниже класс, который я использую для получения информации об ошибке, произошедшей в операционной системе. Можно узнать код ошибки и его текстовое объяснение, если оно предоставляется. Это не бог весть какой сложный и оригинальный класс, но у меня он работает без каких-либо &ldquo;допиливаний&rdquo; на Windows 32- и 64-бит, Linux 2.6 32- 64-бит SPARC и Intel, Sun OS 5.10 SPARC и Intel, AIX, HP-UX и HP-UX IA64. К тому же, этот класс безопасен для мультипотокового использования (что лично для меня, например, очень важно).</p>
+
+<p>Итак, класс <code>SystemMessage</code>. Все члены статические, так что можно работать с ними без создания экземпляра класса.</p>
+
+<p>Пространство имен, как обычно, ext, так что измените, если необходимо.</p>
+
+<p>Файл <code>systemmessage.h</code>:</p>
+
+<pre><code class="cpp">#ifndef _EXT_SYSTEM_MESSAGE_H
+#define _EXT_SYSTEM_MESSAGE_H
+
+#include &lt;string&gt;
+
+namespace ext {
+
+class SystemMessage {
+public:
+  // Эта функция возращает код ошибки.
+  static int code();
+  // Эта функция по коду ошибки возвращает ее текстовое описание, если
+  // таковое предоставляется операционной системой. Если нет, то 
+  // возвращается строка &quot;?&quot;.
+  static std::string message(int code);
+};
+
+} // namespace ext
+
+#endif // _EXT_SYSTEM_MESSAGE_H
+</code></pre>
+
+<p>Файл <code>systemmessage.cpp</code>:</p>
+
+<pre><code class="cpp">#include &quot;SystemMessage.h&quot;
+
+#ifdef WIN32
+#include &lt;windows.h&gt;
+#else
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;errno.h&gt;
+#endif
+
+namespace ext {
+
+int SystemMessage::code() {
+#ifdef WIN32
+  return GetLastError();
+#else
+  return errno;
+#endif
+}
+
+// Если система по какой-то причине не имеет функции strerror_r,
+// то придется лазить напрямую в таблицу сообщений об ошибках.
+// Для этого надо при компиляции определить макрос LIBC_NO_STRERROR_R.
+// Пока я видел такое только на HP-UX IA64 v2.
+#ifndef WIN32
+#ifndef LIBC_NO_STRERROR_R
+extern &quot;C&quot; int sys_nerr;
+extern &quot;C&quot; char* sys_errlist[];
+#endif
+#endif
+
+std::string SystemMessage::message(int code) {
+  char msg[1024];
+
+#ifdef WIN32
+
+  // Версия для Windows
+  FormatMessage(
+    FORMAT_MESSAGE_FROM_SYSTEM |
+    FORMAT_MESSAGE_IGNORE_INSERTS,
+    NULL,
+    code,
+    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+    msg,
+    sizeof(msg) - 1,
+    NULL
+  );
+
+  char* p = msg + strlen(msg);
+  
+  // Обрезаем c конца '\r', '\n' и '.'
+  for(p = msg + strlen(msg) - 1; 
+    p &gt;= msg &amp;&amp; (*p == '\n' || *p == '\r' || *p == '.'); --p) 
+      *p = 0;
+
+#elif LIBC_NO_STRERROR_R
+
+  // Если UNIX-платформа не имеет функции strerror_r, то делаем ее
+  // работу вручную. Пока я встретил такое только на HP-UX IA64 v2.
+  if (code &lt; 0 || code &gt;= sys_nerr)
+    return &quot;?&quot;;
+
+  strncpy(msg, sys_errlist[code], sizeof(msg) - 1);
+
+  // Если сообщение об ошибке длинее чем sizeof(msg)-1, то '\0'
+  // не будет скопирован, поэтому добавляем его вручну.
+  msg[sizeof(msg) - 1] = 0;
+
+#else
+
+  // Для нормальной UNIX-системы просто вызываем strerror_r.
+  if (strerror_r(code, msg, sizeof(msg) - 1) &lt; 0)
+    return &quot;?&quot;;
+
+#endif
+
+  // Поможем компилятору по возможности оптимизировать 
+  // возвращаемое значение как rvalue.
+  return std::string(msg);
+}
+
+} // namespace ext
+</code></pre>
+
+<p>Теперь посмотрим это в работе.</p>
+
+<p>Я как-то пока не придумал, как универсально написать unit-тест для этого класса, так как предсказуемые результаты будут все равно различны для каждой платформы. А писать тесты под все платформы как-то топорно. Хочется гармонии, а тут пока ее нет. Если кто имеет идею, как универсально тестировать этот класс на всех платформах — поделитесь, пожалуйста.</p>
+
+<p>Тестовая программа <code>systemmessage_test.cpp</code>:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+
+#include &quot;systemmessage.h&quot;
+
+int main(int argc, char* argv[]) {
+  // Пытаемся открыть заведомо несуществующий файл.
+  std::ifstream is(&quot;__non_existing_file__&quot;);
+
+  // Печатаем ошибку.
+  int error = ext::SystemMessage::code();
+  std::cout 
+    &lt;&lt; error &lt;&lt; &quot;, &quot; 
+    &lt;&lt; ext::SystemMessage::message(error) 
+    &lt;&lt; std::endl;
+
+  return 0;
+}
+</code></pre>
+
+<p>Компилируем в Visual Studio:</p>
+
+<pre><code>cl /EHsc /Fesystemmessage_test_vs2008.exe /DWIN32 systemmessage_test.cpp systemmessage.cpp
+</code></pre>
+
+<p>Запускаем <code>systemmessage_test_vs2008.exe</code>:</p>
+
+<pre><code>2, The system cannot find the file specified
+</code></pre>
+
+<p>Получили примерно ожидаемое виндовое сообщение об ошибке.</p>
+
+<p>Теперь компилируем в Cygwin:</p>
+
+<pre><code>g++ -o systemmessage_test_cygwin.exe systemmessage_test.cpp systemmessage.cpp
+</code></pre>
+
+<p>Запускаем <code>systemmessage_test_cygwin.exe</code>:</p>
+
+<pre><code>2, No such file or directory
+</code></pre>
+
+<p>Получили сообщение об ошибке в стиле UNIX.</p>
+
+<p>Повторюсь, в данном классе нет ничего удивительного и сложного. Просто это весьма универсальный и переносимый исходник.</p>
+
+<p>И небольшая ремарка. В мире UNIX существует два диалекта функции <code>strerror_r</code>: XSI-версия (когда определен макрос <code>_XOPEN_SOURCE</code>, и он равен 600) и GNU-версия (доступная в libc, начиная с версии 2.0). Разница в том, что первая (XSI-версия) просто кладет сообщение об ошибке в предоставленный буфер и также возвращает код успешности или неуспешности своей работы в виде <code>int</code>&lsquo;а. Нормальный UNIX-подход. Вторая версия (GNU) возвращает не <code>int</code>, а, собственно, указатель на строку с ошибкой, причем указываеть он может как на предоставленный функции буфер, так и куда-то еще, например, на какой-то внутренний буфер. Данный класс рассчитан на работу с XSI-версией функции <code>strerror_r</code>. Поэтому, если вдруг при компиляции этого класс на UNIX-системах вы получите сообщение об ошибке в использовании этой функции, то определите макрос <code>_XOPEN_SOURCE</code> в значение 600 (<code>-D_XOPEN_SOURCE=600</code> для компилятора), тем самым будет принудительно использоваться XSI-версия этой болезной функции.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/windows-unix.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/windows-unix.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/windows-unix.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

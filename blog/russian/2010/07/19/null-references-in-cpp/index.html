@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Нулевые ссылки в С++</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Нулевые ссылки в С++</h1>
+<div id="post">
+  <p>Началось с того, что мне предложили взглянуть некий на &ldquo;интересный&rdquo; код. Там было что-то вроде:</p>
+
+<pre><code class="cpp">...
+class A { virtual void f() {} };
+class B {};
+
+int main() {
+  A a;
+  try {
+    B&amp; b = dynamic_cast&lt;B&amp;&gt;(a);
+    if (&amp;b == 0) {
+      // ...
+    }
+  } catch (...) {
+    std::cout &lt;&lt; &quot;Got it!&quot; &lt;&lt; std::endl;
+  }
+  return 0;
+}
+</code></pre>
+
+<p>Я слегка выпал в осадок от уведенного, а в частности, от строки <code>if (&amp;b == 0) {</code>. До сего времени я пребывал в осознании факта, что ссылка в С++ либо существует и указывает на реальный объект, либо ее нет вообще. И если тут приведение типа к <code>B&amp;</code> не срабатывает, то будет исключение, и управление все равно улетит в другое место, и проверять как-либо <code>b</code> бессмысленно.</p>
+
+<p>Но тут мне объяснили, что в данном конкретном случае код может компилироваться, когда у компилятора выключена поддержка исключений. И эта проверка как раз защита от этого.</p>
+
+<p>Ну да ладно. Оставим это на откуп странным компиляторам на AIX и SUN, и людям, использующим исключения, но почему-то компилирующие с принудительным их выключением в компиляторе.</p>
+
+<p>Меня заинтересовал другой вопрос: как вообще ссылка может существовать отдельно от объекта. Оказывается, может:</p>
+
+<pre><code class="cpp">int&amp; a = *(int*)0;
+int main() { a = 123; }
+</code></pre>
+
+<p>Данный код прекрасно компилируется Студией (2010) и компилятором SUN (этот хоть предупреждение выдает), и также прекрасно падается при запуске по понятой причине.</p>
+
+<p>Вы получили ссылку в качестве параметра и думаете, что она лучше чем указатель, так как ее не надо проверять на <code>NULL</code>? Зря!</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2010/07/blog-post_19.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2010/07/blog-post_19.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2010/07/blog-post_19.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

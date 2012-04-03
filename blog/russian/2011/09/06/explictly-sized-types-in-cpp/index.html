@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Типы в C++ с явным указанием размера</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Типы в C++ с явным указанием размера</h1>
+<div id="post">
+  <p>Наш продукт выпускается на нескольких типах UNIX и на Windows. К счастью, все релизы с этого года только 64-бит, включая Windows (Server 2008 и Studio 2010).</p>
+
+<p>Увы, но наследие 32-х бит сильно мешает и засоряет код. И одна их ключевых проблем - базовые типы.</p>
+
+<p>Сейчас мы пришли к выводу, что зоопарк типов надо прекращать.</p>
+
+<p>Итак, правило.</p>
+
+<p>Слова <code>char</code>, <code>short</code>, <code>long</code>, <code>long long</code>, <code>__int64</code> по умолчанию запрещены. Их использование придется объяснить на code review. Если нужна переменная, которая логически не является смещением в памяти, и ее предельные значения с запасом укладываются в интервал от -2^31 до 2^31-1, по это просто <code>int</code>. Если это индекс или смещение в памяти - это <code>size_t</code>.</p>
+
+<p>Если же нужен беззнаковый тип, или конкретный размер, то надо использовать типа из <code>stdint.h</code> (<code>int8_t</code>, <code>uint8_t</code>, <code>uint16_t</code>, <code>int16_t</code>, <code>uint32_t</code>, <code>int64_t</code>, <code>uint64_t</code>), которые аккуратно реализованы для каждой платформы в одном единственном месте.</p>
+
+<p>Шаг радикальный, посмотрим как пойдет.</p>
+
+<p>Кстати, как вы справляетесь вот с этим?</p>
+
+<pre><code class="cpp">for (int i = 0; i &lt; s.length(); ++i)
+</code></pre>
+
+<p>Убрать предупреждение о приведении <code>size_t</code> к <code>int</code> можно, изменив на:</p>
+
+<pre><code class="cpp">for (size_t i = 0; i &lt; s.length(); ++i)
+</code></pre>
+
+<p>Но как быть с:</p>
+
+<pre><code class="cpp">for (int i = s.length(); i &gt;= 0; --i)
+</code></pre>
+
+<p>Тут уже на size_t не изменить и надо внучную писать <code>int i = static_cast&lt;int&gt;(s.length())</code>, что, конечно, плохо.</p>
+
+<p>Похожая петрушка с <code>strlen()</code>, также возвращающей <code>size_t</code>.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/09/c.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/09/c.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/09/c.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

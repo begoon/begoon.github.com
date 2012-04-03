@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Modelling a CPU with only one operation</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Modelling a CPU with only one operation</h1>
+<div id="post">
+  <p>Going further with bitwise tips and tricks I will tell about a model of a CPU based on a single operation - NOR (or Peirce arrow).</p>
+
+<p>In the mid-nineties in the FIDO discussion group RU.HACKER I come across an interesting hackme.</p>
+
+<p>Usually &ldquo;hackme&rdquo; is an application which is published as a challenge to be hacked. It prompts for a password and the goal is to crack it. You may guess the password disassembling the code or could just patch the code and disable the password check and so on.</p>
+
+<p>That &ldquo;hackme&rdquo; from RU.HACKER was originally written by famous Russian hacker and security expert Alexander Peslyak (the author of John The Ripper John The Ripper and Openwall Linux).</p>
+
+<p>Unlike other &ldquo;hackme&rdquo; around Alexander&rsquo;s approach didn&rsquo;t have any anti-debugger tricks at all preventing disassembling and tracing. Furthermore it contained less then hundred bytes of x86 code. The code executed a trivial loop calculating only one operation - NOR (Pierce arrow). And the entire business logic (interaction with the console and password calculations) was build on top this primitive. Effectively this is a model of CPU having only one command.</p>
+
+<p>The memory model of this CPU is flat and it consists of 16-bit words. The address space is from 0x0000 to 0xFFFF. A CPU instruction has 3 operands. There is no an instruction code because the command is always the same - NOR. Each operand represents an address.</p>
+
+<p>To execute an instruction CPU takes the left argument of NOR from an address given in the first operand and the right argument from an address given in the second operand. Then it implies bitwise 16-bit NOR between them and puts the result to the address given in the third argument. Afterwards the instruction pointer is increment by 3 to shift to the next instruction and the cycle repeats.</p>
+
+<p>The instruction pointer (<code>IP</code>) is also located in the address space and JUMP operation could be implemented just by putting a jump address to the memory location of <code>IP</code>.</p>
+
+<p>The original NOR interpreter was written on x86 assembly:</p>
+
+<pre><code class="nasm">cld
+emCPU:
+mov  si,emIP
+lodsw
+xchg ax,di
+mov  di,[di]
+lodsw
+xchg ax,bx
+or   di,[bx]
+lodsw
+xchg ax,di
+not  ax
+mov  emIP,si
+stosw
+jmp  short emCPU
+</code></pre>
+
+<p>Nothing prevents to write it on any language, for example, Python.</p>
+
+<pre><code class="python">def nor(a, b):
+  return ~(a | b) &amp; 0xFFFF
+
+def norcpu():
+  while 1:
+    i = mem[IP];
+    a = mem[i + 0]
+    b = mem[i + 1]
+    r = mem[i + 2]
+    mem[IP] = i + 3
+    f = nor(mem[a], mem[b])
+    mem[r] = f
+</code></pre>
+
+<p>Why NOR? The Boolean algebra theory says that any of 14 of 16 Boolean functions could be calculated using just the rest two - NOR and NAND. For instance:</p>
+
+<pre><code>NOT(a) = NOR(a, a)
+AND(a, b) = NOT(OR(NOT(a), NOT(b)))
+OR(a, b) = NOT(NOR(a, b))
+XOR(a, b) = OR(AND(a, NOT(b)), AND(NOT(a), b)))
+</code></pre>
+
+<p>The move operation <code>MOVE(src, dst)</code> could be implemented via <code>OR</code>:</p>
+
+<pre><code>mem[dst] = OR(mem[src], mem[src])
+</code></pre>
+
+<p>A conditional jump is either implemented via Boolean functions. If <code>cond</code> equals 0xFFFF (true), the jump to <code>addr</code> is performed. If <code>cond</code> equals 0x0000 (false) CPU sequentially takes the next instruction following <code>JUMP</code>.</p>
+
+<pre><code>mem[IP] = OR(AND(addr, cond), AND(mem[IP], cond))
+</code></pre>
+
+<p>Or in the NOR interpreter notation:</p>
+
+<pre><code>AND addr, cond, @t1
+AND IP, cond, @t2
+OR @t1, @t2, IP
+</code></pre>
+
+<p>where <code>@t1</code> and <code>@t2</code> are temporary variables. The <code>AND</code> and <code>OR</code> commands will be also expanded to sets of NORs as shown above.</p>
+
+<p>Eventually we have Boolean functions, copy/move, unconditional and conditional jumps. We just lack the addition/subtraction and shifts. Having that we could implement the subroutine stack and then any complex computations can be made by this primitive CPU.</p>
+
+<p>The original Alexander&rsquo;s NOR CPU implementation had a workaround which allows running the native x86 code. The workaround was based on the fact that the NOR interpreter also resides in its address space and can modify itself. To execute the native code a special high level macro (let&rsquo;s say emCallX86) uses MOVE operation (see above) to place two bytes at the beginning of the interpreter code (effectively it saves the original two bytes and put other two instead). Those two new bytes are an x86 short jump instruction. When the interpreter begins the next cycle it simply jumps out to an arbitrary x86 code. In the end the native code restores the original two bytes of the interpreter and returns the execution flow to it.</p>
+
+<p>An interaction with DOS I/O and an addition of two 16-bit integers with carry were implemented in native code.</p>
+
+<p>Frankly speaking I don&rsquo;t find it feasible to implement a full 16-bit adder using Boolean functions only. The original NOR interpreter only performed bitwise NOR. It wasn&rsquo;t possible to move/shift an individual bit to another one but the <a href="http://en.wikipedia.org/wiki/Adder_(electronics)">full binary adder</a> needs it to consider the carry.</p>
+
+<p>Recently I&rsquo;ve come back to this NOR interpreter approach but in Python world. I&rsquo;ve modified the original idea a bit to simplify (or just make it possible) an implementation of addition using NOR only, without native code at all. I&rsquo;ve introduced one extra operation in the interpreter ñ the result of NOR is cyclically shifted left by 1 bit and stored the special location in memory.</p>
+
+<pre><code class="python">def norcpu():
+  while 1:
+    i = mem[IP];
+    a = mem[i + 0]
+    b = mem[i + 1]
+    r = mem[i + 2]
+    mem[IP] = i + 3
+    f = nor(mem[a], mem[b])
+    mem[r] = f
+    mem[S] = ((f &gt;&gt; 31) &amp; 1) | ((f &amp; 0x7FFF) &lt;&lt; 1)
+</code></pre>
+
+<p>There are two special locations now: <code>IP</code> (instruction pointer) and <code>S</code> (shift register).</p>
+
+<p>Let&rsquo;s try to implement the full addition of 16-bit words with carry. I will use a simple macro assembler.</p>
+
+<p>The full 1 bit adder formulas are:</p>
+
+<pre><code>sum = (a ^ b) ^ carry
+carry = (a &amp; b) | (carry &amp; (a ^ b))
+</code></pre>
+
+<p>Now in the NOR CPU assembly:</p>
+
+<pre><code>; Input:
+;  mask  - a current bit mask (0x0001, 0x0002, 0x0004, 0x0008 etc)
+;  carry ñ a carry from the previous bit (the masked applied)
+;  a, b  - an argument addresses
+;  r     - an address of the result
+; Output:
+;  r     - a result
+;  carry - a carry to the next bit (already left shifted with respect to the mask)
+;  mask  - a mask left shifted by one bit
+;
+; Variables with '@' prefix are local for the macro.
+;
+!macro FADD mask, carry, a, b, r
+  XOR a, b, @t1              ; Formula: sum = (a ^ b) ^ carry.
+  XOR @t1, carry, @bit_r     ; 
+  AND @bit_r, mask, @bit_r   ; Mask all bits in @bit_r expect the current one
+  OR @bit_r, r, r            ; Save the bit to the result: r |= sum
+  AND a, b, @t2              ; Formula: carry = (a &amp; b) | (carry &amp; (a ^ b))
+  AND carry, @t1, @t1        ;
+  OR @t2, @t1, carry         ; The carry is calculated. Its left shifted copy is in S. 
+  MOVE S, carry              ; Assign the carry to itself but shifted the next bit.
+  MOVE mask, mask, mask      ; Dummy assignment to just get: S = mask &lt;&lt; 1.
+  MOVE S, mask               ; mask = S = mask &lt;&lt; 1
+</code></pre>
+
+<p>Then we implement the 16-bit adder:</p>
+
+<pre><code>; Input:
+;  a, b  - argument
+;  carry ñ a carry (the least significant bit only makes sense)
+; Output:
+;  r     - the result: r = a + c + carry
+;  carry ñ a carry (the least significant bit only makes sense)
+;
+; Variables having '@' prefix are local for the macro.
+; const_1 - a special location containing the constant 0x0001.
+;
+!macro ADC a, b, carry, r
+  XOR r, r, r                     ; r = 0.
+  MOVE const_1, @mask             ; The initial mask value = 0x0001
+  *16 FADD @mask, carry, a, b, r  ; Repeat FADD 16 times (no loops, just a
+                                  ; repetition)
+  AND carry, const_1, carry       ; Clean-up all bits in carry except LSB.
+</code></pre>
+
+<p>What happens in <code>ADC</code>? On each iteration (repetition) of <code>FADD</code> it sums the current bit (its mask is <code>@mask</code>). Then the sum is joined (via <code>OR</code>) with the result. The mask is shifted to left 1 bit (the <code>@mask</code> takes values 0x0001 -&gt; 0x0002 -&gt; 0x0004 etc). The carry is also shifted to the left 1 bit to be used on the next iteration of <code>FADD</code>. After 16 iterations the carry will be in LSB (because the interpreter shifts cyclically). The carry after 16 iterations will be output value of carry.</p>
+
+<p>The addition is implemented eventually. Then we could programmatically implement a subroutine stack. <code>CALL</code>/<code>RET</code> instructions could be based on the stack mechanism and branching instructions.</p>
+
+<p>Now we can easily do any computations on our pseudo CPU executing only one command.</p>
+
+<p>What&rsquo;s the point of all this stuff? First of all is an academic interest, fun.</p>
+
+<p>Related posts:</p>
+
+<ul>
+<li><a href="/blog/english/2010/03/17/swap-two-numeric-variable-using-xor/">Swap two numeric variables using XOR</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2010/04/cpu-executing-just-one-operation.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2010/04/cpu-executing-just-one-operation.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2010/04/cpu-executing-just-one-operation.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Разница между "T()" и "T"</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Разница между &#34;T()&#34; и &#34;T&#34;</h1>
+<div id="post">
+  <p>Как совершенно справедливо было замечено в комментариях в <a href="/blog/russian/2009/02/20/difference-between-new-and-new-with-brackets/">посте про разницу между &ldquo;new T()&rdquo; и &ldquo;new T&rdquo;</a> — при объявлении автоматической переменной, а не динамической через new, нельзя использовать скобки, если подразумевается вызвать конструктор по умолчанию. То есть нельзя писать:</p>
+
+<pre><code class="cpp">T a();
+</code></pre>
+
+<p>а надо писать:</p>
+
+<pre><code class="cpp">T a;
+</code></pre>
+
+<p>так как в первом случае такая запись будет означать декларацию функции a, которая возвращает тип <code>T</code>, а далеко не декларацию переменной класса <code>T</code> с вызовом конструктора по умолчанию.</p>
+
+<p>Не спорю, это очевидно для профессионалов. Для новичков же порой подобная &ldquo;неочевидная&rdquo; разница вызывает затруднения, поэтому приведу простейший пример, которые расставит все на свои места.</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+class T {
+public:
+  T() { std::cout &lt;&lt; &quot;constructor T()&quot;; }
+};
+
+int main() {
+  std::cout &lt;&lt; &quot;T a: &quot;;
+  // Это синтаксис создания экземпляра класса T с вызовом
+  // конструктора по умолчанию.
+  T a;
+  std::cout &lt;&lt; std::endl;
+
+  std::cout &lt;&lt; &quot;T b(): &quot;;
+  // А вот это декларация функции &quot;b&quot; без аргументов,
+  // которая возвращает тип T.
+  T b();
+  std::cout &lt;&lt; std::endl;
+  return 0;
+}
+</code></pre>
+
+<p>Результат:</p>
+
+<pre><code>T a: constructor T()
+T b():
+</code></pre>
+
+<p>Видно, что для <code>T b();</code> никакой конструктор не был вызван. Что в целом и ожидалось.</p>
+
+<p>Использование круглых скобок может быть весьма <a href="/blog/russian/2009/02/09/dark-corners-of-cpp/">тонким вопросом в С++</a>.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/t-t.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/t-t.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/t-t.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

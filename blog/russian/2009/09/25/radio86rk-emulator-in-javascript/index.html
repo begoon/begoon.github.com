@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Эмулятор Радио-86РК на JavaScript</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Эмулятор Радио-86РК на JavaScript</h1>
+<div id="post">
+  <p>Первым компьютером, на котором я начал программировать, был <a href="http://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D0%B4%D0%B8%D0%BE_86%D0%A0%D0%9A">Радио-86РК</a>. Его собрал мой брат и&hellip; понеслась, и несется до сих пор.</p>
+
+<p>Поэтому я до сих пор питаю слабость к данному раритету. К результат этой слабости я постоянно писал эмуляторы этого компьютера.</p>
+
+<p>Первый был под ДОС. Оригинальный сайт сего творения <a href="/projects/radio86/emulator/dos/">я храню до сих пор в неизменном виде</a>. Этот эмулятор был весьма неплох: там был и встроенный отладчик, и метода взлома игр и т.д. Но ДОС ушел, поэтому данный эмулятор работает теперь разве что в <a href="http://www.dosbox.com/">DosBox</a>&lsquo;e. Исходники творения <a href="/projects/radio86/emulator/dos/download.html">можно скачать</a>.</p>
+
+<p>Вторая реинкарнация любимого РК была уже под Windows и работала через <a href="http://www.libsdl.org/">SDL</a>. Тут уже не было встроенного отладчика, да и проект так и остался сырым (хотя и работающим), поэтому на публике лежит только <a href="/projects/radio86/emulator/windows/radio86-0.0.1.zip">бинарь с комплектом игр</a>.</p>
+
+<p>И вот, пару дней назад я наткнулся вот на <a href="http://matt.west.co.tt/spectrum/jsspeccy/">эмулятор Спектрума на чистом JavaScript&rsquo;е</a>! - ни апплетов, ни activex&rsquo;ов.</p>
+
+<p>Так я от этой темы завелся, что за день-два оживил старого монстра РК на платформе JavaScript. Оказывается правильные браузеры дают весьма недурственную скорость скриптования. 2d графика реализуется через тэг canvas из HTML5.</p>
+
+<p>Получился проект - <a href="http://code.google.com/p/radio86/">Эмулятор Радио-86РК на JavaScript</a>.</p>
+
+<p>Эмулятор и набор игр живут в одном <a href="http://radio86.googlecode.com/hg/online/radio86.html">единственном файле</a>. Можно нажать на ссылку, и эмулятор запустится в браузере. Внизу есть селектор для выбора игры, и возможность поиграться со размерами экрана и скоростью.</p>
+
+<p>Эмуляция происходит на уровне команд процессора Intel 8080.</p>
+
+<p>Скриншот классической игры Volcano, сделанный в этом эмуляторе.</p>
+
+<p><img src="/images/blog/radio86-volcano.png" /></p>
+
+<p>На текущий момент я проверял только в Google Chrome 4.*. Думаю, я не буду заморачиваться особо на тему совместимости с другими браузерами, хотя посмотрим, как пойдет. В IE точно работать не будет, а вот про FF и Оперу ничего сказать не могу, пока.</p>
+
+<p>Волшебный мир Радио-86РК снова вернулся!</p>
+
+<p>P.S. К слову сказать, лучший эмулятор РК (и множества совместимых моделей), что я видел - это <a href="http://emu80.org/">эмулятор Виктора Пыхонина</a>. Может и он мигрирует на модную платформу со временем.</p>
+
+<p><strong>Update</strong>: Обновил эмулятор до версии 0.2. Изменения незначительные: добавил некоторые системные программы (языки программирования, отладчики, редакторы и т.д.) и немного улучшил селектор выбора игры, который теперь срабатывает при нажатии кнопки &ldquo;Run&rdquo;.</p>
+
+<p><strong>Update</strong>: Обновил эмулятор до версии 0.3. Отрисовка экране теперь работает значительно быстрее и не так грузит процессор.</p>
+
+<p><strong>Update</strong>: В версии 0.4 теперь встроенный ассемблер. Можно писать и ассемблировать прямо в окне эмулятора. После есть возможно загрузить результат в сам эмулятор и запустить командой &ldquo;G&rdquo; в Мониторе.</p>
+
+<p>Скриншот этого ассемблера:</p>
+
+<p><img src="/images/blog/radio86-builtin-assembler.png" /></p>
+
+<p><strong>Update</strong>: В версии 0.6 теперь есть встроенный дизассемблер. Им можно просматривать не только программый код, но и данные.</p>
+
+<p>Скриншот дизассемблера:</p>
+
+<p><img src="/images/blog/radio86-disassembler-chess.png" /></p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/09/86-javascript.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/09/86-javascript.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/09/86-javascript.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

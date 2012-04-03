@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Миллисекундный таймер для Windows и UNIX</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Миллисекундный таймер для Windows и UNIX</h1>
+<div id="post">
+  <p>Очень часто в программе удобно иметь возможность засекать и мерить интервалы времени. Стандартная функция <code>time()</code> конечно хороша своей переносимостью, но она работает с секундами, а хочется что-то более быстрое. Микросекунды - это уже тоже перебор. А вот миллисекунды - самое оно.</p>
+
+<p>Итак, задача: сделать простой и переносимый класс C++ для работы с интервалами времени в миллисекундах. Должно работать в Windows и UNIX.</p>
+
+<p>Я придумал вот такой интерфейс для класса:</p>
+
+<pre><code class="cpp">class PreciseTimer {
+public:
+  // Тип для работы с тиками таймера. По сути это целое в 64 бита,
+  // но конкретное имя рабочего типа будет зависеть от платформы.
+  typedef s_int_64 Counter;
+
+  // Функция получение текущего значения миллисекундного таймера.
+  // Само по себе это число особого смысла не имеет, так как оно
+  // ни к чему не привязано, а вот разница двух таких чисел как 
+  // раз используется для замеров интервалов времени.
+  // Функция возвращает 0 под Windows, если не удается получить
+  // значение системного таймера.
+  Counter millisec();
+
+  // Задержка на указанное число миллисекунд. Необходимо учитывать,
+  // что в UNIX системах данная функция может быть прервана
+  // системым сигналом (signal). В этом случае задержка может быть
+  // меньше, чем ожидалось.
+  static void sleepMs(int ms);
+
+  // Функция &quot;отметки&quot; текущего момента времени.
+  // Добавляет текущее время в очередь отметок.
+  void mark();
+
+  // Функция получения времени, прошедшего с последней отметки
+  // в функции mark(). Последняя отметка вынимается из очереди
+  // и вычитается из текущего значения таймера. Эта разница и
+  // есть результат функции. Если очередь отметок пуста (никто
+  // не вызывал mark() до этого), то возвращается -1.
+  Counter release();
+
+  // Парные вызовы mark()/release() могут быть вложенными.
+  //
+  // Примерная техника работы с классом:
+  // ...
+  // PreTimer timer;
+  // ...
+  // timer.mark();
+  // ...что-то делаем тут (1)
+  // timer.mark();
+  // ...что-то еще делаем тут (2)
+  // /* получаем продолжительность дела (2) */
+  // t1 = timer.release(); 
+  // /* получаем суммарную продолжительность дел (1) и (2) */
+  // t2 = timer.release();
+  // /* А t3 уже равно -1, так как очередь пуста, так как этот
+  //  * вызов release() третий в счету, а вызовов mark() было
+  //  * всего два */
+  // t3 = timer.release();
+}
+</code></pre>
+
+<p>Реалиазация вышла довольно простая. Всего один файл <code>pretimer.h</code> (без .cpp) без внешних нестандартных зависимостей.</p>
+
+<p><code>pretimer.h</code>:</p>
+
+<pre><code class="cpp">#ifndef EXT_PRETIMER_H
+#define EXT_PRETIMER_H
+
+#include &lt;stack&gt;
+
+#ifdef WIN32
+#include &lt;windows.h&gt;
+#else
+#include &lt;sys/time.h&gt;
+#include &lt;unistd.h&gt;    // usleep()
+#endif
+
+// namespace, традиционно, с именем &quot;ext&quot;, так что измените под ваши
+// привычки именования, если надо.
+namespace ext {
+
+class PreciseTimer {
+public:
+#ifdef WIN32
+  // Тип int64 для Windows
+  typedef LONGLONG Counter;
+#else
+  // Тип int64 для UNIX
+  typedef long long Counter;
+#endif
+  PreciseTimer();
+
+  Counter millisec();
+
+  void mark();
+  Counter release();
+
+  static void sleepMs(int ms);
+private:
+  // Тип стека для хранения отметок времени.
+  typedef std::stack&lt; Counter &gt; Counters;
+
+  // Стек для хранения отметок времени.
+  Counters __counters;
+
+#ifdef WIN32
+  // Для Windows надо хранить системную частоту таймера.
+  LARGE_INTEGER __freq;
+#endif
+};
+
+void PreciseTimer::mark() {
+  __counters.push(millisec());
+}
+
+PreciseTimer::Counter PreciseTimer::release() {
+  if( __counters.empty() ) return -1;
+  Counter val = millisec() - __counters.top();
+  __counters.pop();
+  return val;
+}
+
+#ifdef WIN32
+
+PreciseTimer::PreciseTimer() {
+  // Для Windows в конструкторе получаем системную частоту таймера
+  // (количество тиков в секунду).
+  if (!QueryPerformanceFrequency(&amp;__freq))
+    __freq.QuadPart = 0;
+}
+
+PreciseTimer::Counter PreciseTimer::millisec() {
+  LARGE_INTEGER current;
+  if (__freq.QuadPart == 0 || !QueryPerformanceCounter(¤t)) 
+    return 0;
+  // Пересчитываем количество системных тиков в миллисекунды.
+  return current.QuadPart / (__freq.QuadPart / 1000);
+}
+
+void PreciseTimer::sleepMs(int ms) {
+  Sleep(ms);
+}
+
+#else // WIN32
+
+PreciseTimer::PreciseTimer() {}
+
+PreciseTimer::Counter PreciseTimer::millisec() {
+  struct timeval tv;
+  gettimeofday(&amp;tv, NULL);
+  return tv.tv_sec * 1000 + tv.tv_usec / 1000;
+}
+
+void PreciseTimer::sleepMs(int ms) {
+  usleep(ms * 1000);
+}
+
+#endif // WIN32
+
+} // ext
+
+#endif // _EXT_PRETIMER_H
+</code></pre>
+
+<p>Итак, класс готов, но надо попробовать его в работе. Я, как сугубый апологет unit-тестирования, напишу тесты. Для их компиляции вам потребуется библиотека <a href="http://code.google.com/p/googletest/">Google Test Framework</a>. Вы можете взять оригинал с официального сайта, а можете для простоты воспользоваться <a href="/downloads/gtest-amalgamation-1.2.1.zip">моей версией</a>, упакованной в два компактных файла <code>gtest-all.cc</code> и <code>gtest.h</code>. Я уже писал про это в <a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">рассказе про unit-тестирование</a>. Там я подробно описал, как подготовить Google Test к удобной работе.</p>
+
+<p>Итак, тесты.</p>
+
+<p><code>pretimer_unittest.cpp</code>:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+#include &lt;cstdlib&gt;
+
+// Подключаем наш класс
+#include &quot;pretimer.h&quot;
+
+// Простой тест, для Windows, в основном, для проверки
+// доступности системного таймера.
+TEST(PreciseTimer, PreciseSystemTimerAvailability) {
+  ext::PreciseTimer timer;
+  // Если метод millisec() возвращает 0, значит недоступен
+  // системный таймер.
+  EXPECT_NE(0, timer.millisec()) &lt;&lt; &quot;Недоступен системный таймер&quot;;
+}
+
+// Тестирует &quot;точность&quot; измерений.
+TEST(PreciseTimer, MeasurementAccuracy) {
+  // Тестируем на задержке в 100 миллисекунд.
+  const int delay_ms = 100;
+  // Зададим наше допустимое отклонение в 10% (10 миллисекунд).
+  // Функция задержки msleep() тоже неидеальна и привносит
+  // какую-то погрешность помимо наших измерений.
+  const int allowed_delta_ms = 10;
+  // Создаем таймер
+  ext::PreciseTimer timer;
+  // Замечаем время
+  timer.mark();
+  // Ждем 100 миллисекунд
+  msleep(delay_ms);
+  // Вычисляем модуль разницы между эталоном в 100 миллисекунд
+  // и измеренным нами интервалом через mark()/release()
+  int delta = std::abs(static_cast&lt;int&gt;(delay_ms - timer.release()));
+
+  // Если отклонение более 10 миллисекунд - ошибка.
+  EXPECT_TRUE(delta &lt;= allowed_delta_ms) 
+    &lt;&lt; &quot;Слишком большое отклонение &quot; &lt;&lt; delta &lt;&lt; &quot;, превышающее &quot; &lt;&lt; allowed_delta_ms;
+}
+
+// Тестируем очередь замеров
+TEST(PreciseTimer, Queue) {
+  // Создаем таймер
+  ext::PreciseTimer timer;
+  // Делаем замер номер 1
+  timer.mark();
+  // Делаем замер номер 2
+  timer.mark();
+  // Получаем текущее значение таймера
+  ext::PreciseTimer::Counter a = timer.release();
+  // Ждем 100 миллисекунд
+  monitor::PreciseTimer::sleepMs(100);
+  // Проверяем, что значение таймера до задежки
+  // меньше, чем после. Этим мы проверили, что
+  // очередь замеров работает, так как получили 
+  // корректное значение второго в очереди замера.
+  EXPECT_LT(a, timer.release());
+}
+
+// Проверка пустой очередь замеров
+TEST(PreciseTimer, EmptyQueue) {
+  ext::PreciseTimer timer;
+  // Если очередь замеров пуста, метод release() должен
+  // возвращать -1.
+  EXPECT_EQ(-1, timer.release());
+}
+</code></pre>
+
+<p>Я потратил на этот класс часа четыре неторопливой работы, а на написание тестов всего полчаса, но эти полчаса будут мне служить верой и правдой еще очень долго.</p>
+
+<p>Забавно, что когда я запускал эти тесты как-то на Windows под виртуальной машиной, то тест <em>MeasurementAccuracy</em> <a href="/blog/russian/2009/03/05/queryperformancecounter-on-multicore-and-virtual-systems/">давал сбой</a>! Видимо виртуальная машина как-то неправильно эмулировала работу таймеров, и замер делался совершенно неправильно. А вот теперь если представить - как бы я искал этот баг вручную по всей боевой программе, а? Кто ж мог предположить, что в виртуальной среде что-то можно пойти не так с таймерами.</p>
+
+<p>Снова повторю - unit тестирование forever!</p>
+
+<p>В завершении, нам нужна главная программа для запуска тестов:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+int main(int argc, char* argv[]) {
+  // Инициализируем библиотеку
+  testing::InitGoogleTest(&amp;argc, argv);
+  // Запускаем все тесты, прилинкованные к проекту
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>Компилируем:</p>
+
+<p>Visual Studio:</p>
+
+<pre><code>cl /EHsc /I. /DWIN32 /Fepretimer_unittest.exe runner.cpp pretimer_unittest.cpp gtest-all.cc
+</code></pre>
+
+<p>UNIX:</p>
+
+<pre><code>g++ -I. -o pretimer_unittest runner.cpp pretimer_unittest.cpp gtest-all.cc
+</code></pre>
+
+<p>Запускаем <code>pretimer_unittest</code> и получаем:</p>
+
+<pre><code>[==========] Running 3 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 4 tests from PreciseTimer
+[ RUN      ] PreciseTimer.PreciseSystemTimerAvailability
+[       OK ] PreciseTimer.PreciseSystemTimerAvailability
+[ RUN      ] PreciseTimer.MeasurementAccuracy
+[       OK ] PreciseTimer.MeasurementAccuracy
+[ RUN      ] PreciseTimer.Queue
+[       OK ] PreciseTimer.Queue
+[ RUN      ] PreciseTimer.EmptyQueue
+[       OK ] PreciseTimer.EmptyQueue
+[----------] Global test environment tear-down
+[==========] 4 tests from 1 test case ran.
+[  PASSED  ] 4 tests.
+</code></pre>
+
+<p>Ура! Все работает. Доказано тестами. При использовании данного класса у себя в проекте не забудьте добавить <code>pretimer_unittest.cpp</code> в набор ваших прочих unit тестов. Этим вы избавитесь от множества сюрпризов.</p>
+
+<p>Приобщайтесь к unit-тестированию, и программируйте правильно!</p>
+
+<ul>
+<li><a href="/blog/russian/2009/03/05/queryperformancecounter-on-multicore-and-virtual-systems/">QueryPerformanceCounter на мультиядерных и виртуальных системах</a></li>
+<li><a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">Unit-тестирование для параллельных потоков</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/01/blog-post_29.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/01/blog-post_29.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/01/blog-post_29.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

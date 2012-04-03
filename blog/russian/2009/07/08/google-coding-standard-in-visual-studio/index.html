@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Google C++ coding standard прямо в Visual Studio</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Google C++ coding standard прямо в Visual Studio</h1>
+<div id="post">
+  <p>Многие читали <a href="http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml">стандарт кодирования на С++ от Google</a>.</p>
+
+<p>Для себя я его давно использую, а на работе удалось продавить его фрагменты в наш внутренний стандарт.</p>
+
+<p>В качестве приятного бонуса Google раздает задорную утилитку <a href="http://google-styleguide.googlecode.com/svn/trunk/cpplint/cpplint.py">cpplint</a>, для быстрой проверки исходника на С++ на соответствие правилам и для генерации отчета, понимаемого средой разработки (например, Visual Studio). Написана она на Питоне, так что для ее использования его надо установить.</p>
+
+<p>Я прикрутил <code>cpplint</code> себе в Студию, чтобы можно было проверять исходники прямо в редакторе.</p>
+
+<p><code>cpplint</code> имеет несколько десятков checker&rsquo;ов, их можно опционально отключать. Я отключил только три:</p>
+
+<ul>
+<li>Проверку на использование <code>#include</code> без указания относительного пути, например <code>#include &quot;one.h&quot;</code> вместо <code>#include &quot;path/to/lib/one.h&quot;</code>. Правило очень разумное, так как исключает перехлест заголовочных файлов с одинаковыми именами в разных подсистемах, но у меня уж больно много, где надо менять.</li>
+<li>Проверку на формирование имени защитного <code>#define</code>&lsquo;а в начале заголовочного файла. У меня свое правило именования, и оно меня устраивает.</li>
+<li>Проверку на неиспользование потоков в STL. Я потоки использую, поэтому отключил.</li>
+</ul>
+
+<p>Итак, получился скрипт <code>cpplint.cmd</code>:</p>
+
+<pre><code>C:\Python25\python.exe %~d0%~p0cpplint.py ^
+  --filter=-build/include,-build/header_guard,-readability/streams ^
+  --output=vs7 %1 %2 %3 %4 %5 %6 %7 %8 %9
+</code></pre>
+
+<p>Можно его из командной строки вызывать, но из Студии интереснее.</p>
+
+<p>Итак, <code>Menu-&gt;Tools-&gt;External Tool...</code>, жмем <code>Add</code> и далее как на картинке (пути подправить по вкусу):</p>
+
+<p><img src="/images/blog/cpplint-visual-studio.png" /></p>
+
+<p>Теперь, прямо в редакторе жмем <code>ALT-T,C,ENTER</code> и снизу окне результатов получаем отчет. Кликая на его строки можно скакать по исходнику.</p>
+
+<p>Лично я считаю, что порядок в исходниках напрямую связан с порядком в голове его автора.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/07/google-c-coding-stantard-visual-studio.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/07/google-c-coding-stantard-visual-studio.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/07/google-c-coding-stantard-visual-studio.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

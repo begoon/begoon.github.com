@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Doubled semi-colon in variable declarations</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Doubled semi-colon in variable declarations</h1>
+<div id="post">
+  <p>It seems to be completely innocent example (<code>vs_double_semicolumn.c</code>):</p>
+
+<pre><code class="cpp">void main() {
+  int a;;
+  int b;
+}
+</code></pre>
+
+<p>Compile (in С mode, there is no <code>/TP</code>):</p>
+
+<pre><code>cl vs_double_semicolumn.c
+</code></pre>
+
+<p>The result:</p>
+
+<pre><code>vs_double_semicolumn.c
+vs_double_semicolumn.c(3) : error C2143: syntax error : missing ';' before 'type'
+The result of Codegear/Borland is roughly the same (though the error message is more clear):
+CodeGear C++ 5.93 for Win32 Copyright (c) 1993, 2007 CodeGear
+vs_double_semicolumn.c:
+Error E2140 vs_double_semicolumn.c 3: Declaration is not allowed here in function main
+*** 1 errors in Compile ***
+</code></pre>
+
+<p>The problem hides behind the accidental typo of the double <code>;</code> character. By the way this example is absolutely real from life. Just one misprint raises a lot of questions.</p>
+
+<p>It turns out that the second <code>;</code> character is treated as an empty statement but not as an empty declaration of a variable. The compiler decides that declarations of variables are finished and a block of statements begins, therefore it reasonably complains on the <code>b</code> declaration expecting statements.</p>
+
+<p>I&rsquo;ve checked it on gcc and native compilers of AIX, Solaris and HP-UX. All of those have eaten this example without any problems.</p>
+
+<p>Related posts:</p>
+
+<ul>
+<li><a href="/blog/english/2009/09/12/pointer-cast-bug-in-codegear-borland-compiler/">Pointer cast bug in Codegear (Borland) C++ compiler</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2009/09/double-semi-column-in-variable.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2009/09/double-semi-column-in-variable.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2009/09/double-semi-column-in-variable.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

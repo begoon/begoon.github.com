@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Виртуальные машины в быту</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Виртуальные машины в быту</h1>
+<div id="post">
+  <p>Лично я плохо представляю себе работу современного программиста сейчас без виртуальных машин. Даже на моем домашнем ноутбуке конфигурация выглядит так: &ldquo;dark side&rdquo; в виде Windows 7 в качестве хост-системы и пачка линуксовых виртуальных машин под VMware и VirtualBox.</p>
+
+<p>Windows 7 для iTunes (увы, iPhone иначе толком не синхронизируешь), MS Office (в основном только ради Visio) и Visual Studio разнообразных версий. Все остальное происходит в виртуальных машинах. Благодаря аппаратной виртуализации в современных процессорах производительнось практически такая же (и у кого сейчас меньше двух ядер?). А умелое распределение ресурсов между виртуальными машиными вообще позволяет нивелировать потери.</p>
+
+<p>Большинство современных виртуализаторов умеют очень ловко интегрировать десктоп гостевой системы в основную. Например, у меня окно той же виртуализированной Ubuntu выглядит обычным окном Windows, размер которого можно спокойно менять, при этом виртуальная среда автоматически подстраивает свой десктоп на лету под размер этого окна. Раньше, когда аппаратная поддержка виртуализации не была так распространена, и поэтому виртуальные машины реально тормозили, я долгое время использовал <a href="http://www.colinux.org/">Cooperative Linux</a>, так как он виртуализирует только память, и поэтому работает на полной скорости компьютера. Но coLinux не поддерживает многопроцессорность и требует особого ядра Линукса. С самим ядром уже не поиграешься.</p>
+
+<p>В чем прелесть такого подхода с виртуальными машинами? Для начала — это изолированность сред. Не надо держать на одной системе много конфликтующего хлама, ибо постоянно для разных проектов нужны разные компиляторы, разные библиотеки, может и разные операционные системы. Диски/накопители для виртуальных сред — это просто файлы. Их просто копировать, уменьшать/расширять, сохранять, использовать для разных сред и т.д. И миграция с одного физического компьютера на другой упрощается в разы, так как надо просто слить образы машин.</p>
+
+<p>Захотел подключить новый диск в систему или подменить развернутый Oracle на другую версию — пять минут работы. Захотел вернуть назад — еще две минуты. Да и клиенту дать образ настроенной виртуальной машины проще, чем объяснять, как все настраивать с нуля. А он потом еще все и сломает шаловливыми ручками.</p>
+
+<p>Пока я вижу только один значительный минус при домашнем использовании — дисковое пространство, ибо для каждой системы счет сразу идет на гигабайты, а может и их десятки. 4-5 виртуальных машин, и начинаешь думать, куда бы сбросить временно неиспользуемые.</p>
+
+<p>Но и тут есть выход. Например, у меня юниксовый раздел для домашнего (home) каталога используется в нескольких виртуальных машинах. Раздел с проектами тоже может быть замонтирован в разные машины. Повторюсь — управление дисковыми разделами в виде файлов крайне просто и удобно.</p>
+
+<p>Для серверных решений весьма популярна система виртуальных операционных систем <a href="http://www.vmware.com/products/esxi/">ESXi</a>. Небольшой супервизор грузится в начале, и затем дает возможность управлять виртуализацией гостевых систем (диски, память, процессорное время и т.д.). То есть мой Windows 7 является простецким аналогом такого супервизора.</p>
+
+<p>Подходим к сути. Так сейчас уже стало модно заменять стандартный BIOS на что-нибудь нужное, например Линукс с минимальным набором программ для интернета. Проекты <a href="http://coreboot.org/">coreboot</a> и <a href="http://www.splashtop.com/">Splashtop</a> уже давно существуют. Некоторое время назад лично я был очень впечатлен <a href="http://www.splashtop.com/videos.php">одним их видео</a>:</p>
+
+<iframe width="425" height="344" src="http://www.youtube.com/embed/acDS7DmHC_g?color=white&theme=light"></iframe>
+
+<p>Выходит, что логичным продолжением было бы зашить вместо BIOSа супервизор виртуальных машин.</p>
+
+<p>Включаешь компьютер, мгновенно стартует супервизор, который дает тебе возможность управлять витуальными средами. Вот получится все одном флаконе на одном компьютере: и Windows, и Mac, и Linux и все на свете.</p>
+
+<p>Проблемы конечно будут — надо делать драйвера виртуальных устройств под поддерживаемые операционные системы, но многое уже имеется в тех же VMware и VirtualBox.</p>
+
+<p>В общем, в дополнение к модной &ldquo;облачной&rdquo; модели домашних компьютеров виртуальная модель однозначно имеет будущее. Для тех, кто любит &ldquo;по-горячее&rdquo;.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2010/01/blog-post.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2010/01/blog-post.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2010/01/blog-post.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

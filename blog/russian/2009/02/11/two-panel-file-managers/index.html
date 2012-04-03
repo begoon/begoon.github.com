@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Двухпанельные файловые менеджеры</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Двухпанельные файловые менеджеры</h1>
+<div id="post">
+  <p>Пока в персонально-компьютером мире имя <a href="http://ru.wikipedia.org/wiki/%D0%9D%D0%BE%D1%80%D1%82%D0%BE%D0%BD,_%D0%9F%D0%B8%D1%82%D0%B5%D1%80">Питера Нортона</a>, прочно ассоциированное с программой <a href="http://ru.wikipedia.org/wiki/Norton_Commander">Norton Commander</a>, еще не забыто, особенно на территории бывшего СССР.</p>
+
+<p>Интересно, что настоящим автором Нортон Коммандера является далеко не сам Питер Нортон, а <a href="http://en.wikipedia.org/wiki/John_Socha">John Socha</a>. Именно он создал изначальную версию, которая называлась VDOS (Virtual DOS), еще будучи студентом. Следуя именно идее “виртуального ДОСа”, первая версия коммандера имела файловые панели только на половину экрана — вторая нижняя часть была &ldquo;виртуальным окном&rdquo; в ДОС. Сейчас это окно обычно сокращают до одной командной строки. Затем Джон Сόха присоединился к <a href="http://en.wikipedia.org/wiki/Peter_Norton_Computing">Peter Norton Computing</a>, и программа начала свое триумфальное шествие по планете под именем Norton Commander. Последней версией коммандера, вышедшей из под рук Джона, была версия 3.0. Именно она является &ldquo;классической&rdquo; и именно её знало большинство российских пользователей IBM PC. Но эта версия была лебединой песней коммандера. Питер Нортон продал компанию Symantec&rsquo;у, а Джон Сόха уволился, прекратив работу над коммандером. После версии 3.0 в Symantec выпустили еще пару версий, но время уходило. Оригинальный интерфейс версии 3.0 был &ldquo;улучшен&rdquo;, программа заметно потолстела и замедлилась, а на пятки уже наступали <a href="http://ru.wikipedia.org/wiki/DOS_Navigator">Дос Навигатор</a> и <a href="http://ru.wikipedia.org/wiki/%D0%92%D0%BE%D0%BB%D0%BA%D0%BE%D0%B2_%D0%BA%D0%BE%D0%BC%D0%BC%D0%B0%D0%BD%D0%B4%D0%B5%D1%80">Волков Коммандер</a>, а в новом 32-битном мире — первые версии <a href="http://ru.wikipedia.org/wiki/Far">FAR</a> и <a href="http://ru.wikipedia.org/wiki/Windows_Commander">Total (Windows) Commander</a>.</p>
+
+<p>Вообще, <a href="http://www.softpanorama.org/OFM/Paradigm/Ch03/norton_commander.shtml">история</a> создания эпохального файлового менеджера весьма интересна.</p>
+
+<p>На мой взгляд, именно представление файловой структуры в виде двух панелей с возможностью адресовать файлы с одной панели на другую, дополненная мгновенным редактором и просмотрщиком, является наиболее удобной для программистской работы, когда необходимо прыгать между десятком файлов одновременно, чего-то временно скопировать/переименовать/удалить, тут что-то быстренько отредактировать, в другом месте поискать и т.д. С трудом могу представить все эти действия через однопанельный файловый а-ля explorer, где только для копирования файла надо сначала мышкой на него указать, взять &ldquo;на копирование&rdquo;, открыть второй explorer с местом назначения и сделать туда &ldquo;Paste&rdquo;. Например, замечаю на собой постоянно, если мне надо подправить какие-либо настройки проекта в Visual Studio (например, пути), то мне гораздо быстрее переключиться в FAR, там через F4 открыть файл проекта, найти нужное место и исправить прямого в тексте конфигурации, чем ползать через окошки и менюшки самой IDE. Чего уж говорить об удобстве встроенного редактора, особенно если установлена подсветка синтаксиса. Я много раз пытался заставить себя по F4 вызывать внешний редактор, типа Notepad++, но все равно скатывался до встроенного, ибо он вызывается мгновенно. Notepad++, конечно, отличная программа, но в ней я только делаю “сложную” поиск-замену, когда нужны регулярные выражения.</p>
+
+<p>Мир UNIX&rsquo;а тоже не обделен хорошими двухпанельными файловыми менеджерами, реально ускоряющими процесс, когда надо сотни раз повторять cd/ls/cp/mv/cd/ls/cp/mv&hellip;, разруливая какой-нибудь завал на файловой системе. <a href="http://en.wikipedia.org/wiki/Midnight_Commander">Midnight Commander</a> знают все. Радостно, что за последние несколько месяцев снова <a href="http://www.midnight-commander.org/">началась активная работа над проектом</a>, знамя которого лежало без движения уже несколько лет. Но есть еще один заслуживающий внимания проект. Неутомимый <a href="http://vak.ru/doku.php/proj">Сергей Вакуленко</a> создал и развивает <a href="http://groups.google.com/group/bashc/web/overview">Bash Commander</a>. Сейчас это патч к официальной версии Bash, но Сергей бьется за включения его в общее дерево. Этот патч ненавязчиво добавляет в Bash то, что там так не хватает: при нажатии на Ctrl-O (^O) появляются заветные две панели. То есть пока идет неспешная программерская работа в стиле make/vi, то все как обычно в командной строке шелла, но как только надо муторно повозиться с множеством файлов, то нажимаем Ctrl-O, и далее привычные панели с клавишам F1-F10. Интерфейс, конечно, крайне минималистический и не имеет всех наворотов MC, но есть один плюс - крайне простая сборка. Везде, где собирается Bash, там можно собрать и Bash Commander, чего нельзя сказать MC с длинным списков зависимостей, который просто собирается разве что под линуксом, а вот на динозаврах типа AIX&rsquo;а или HP-UX&rsquo;а становится грустно. Функциональность Bash Commander’а легко расширяется при помощи самих же скриптов на Bash. Надеюсь, что работу Сергея таки включат в официальную версию Bash.</p>
+
+<p>Мне кажется, что наш постсоветский IBM-PC&rsquo;шный мир привил некоторым из нас не самую плохую привычку к двухпанельным текстовым файловым менеджерам, не так ли?</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/blog-post_11.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/blog-post_11.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/blog-post_11.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

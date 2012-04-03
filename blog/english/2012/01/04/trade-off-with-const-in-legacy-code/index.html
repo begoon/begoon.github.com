@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Trade-off with const in legacy code</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Trade-off with const in legacy code</h1>
+<div id="post">
+  <p>Today we argued an hour with a colleague regarding the following code:</p>
+
+<pre><code class="cpp">void foo(T* t) {
+  bar(t);
+}
+</code></pre>
+
+<p>The problem is that the function <code>bar</code> is a part of a legacy library which we cannot refactor right now. The signature of <code>bar</code> is <code>void bar(T*)</code>. <code>T</code> is not <code>const</code>. But in reality <code>bar</code> never changes an object referenced by <code>t</code>. This is how it was implemented.</p>
+
+<p>But <code>foo</code> is a part of a brand new API, and we want to make nice or clean. The contract of the function <code>foo</code> says that it doesn’t need to change its parameter.</p>
+
+<p>I think the code should be like this:</p>
+
+<pre><code class="cpp">void foo(const T* t) {
+  bar(const_cast&lt;T*&gt;(t));
+}
+</code></pre>
+
+<p>Why? The contact of foo doesn’t require the pointer t to be non-const. We must reflect this in the API by making <code>t</code> <code>const</code>. It doesn’t matter that for some reason a particular implementation of <code>foo</code> is based on the legacy <code>bar</code> function not having <code>const</code> in the argument but never changing it. Yes, we have to use the ugly <code>const_cast</code> but this bad code is nicely isolated inside <code>foo</code> only and doesn’t affect our nice and clean brand new API. Moreover, if we refactor <code>foo</code> at some point and get rid of legacy <code>bar</code> at all, the problem will disappear completely.</p>
+
+<p>Here is a counterargument from my colleague: it may turn out that the function <code>foo</code> can have a bug and accidentally change <code>t</code> even it is declared as <code>const</code>. The solution is to simply keep the argument of <code>foo</code> non-const. In this case we don’t need that cast, we explicitly show to an end user of <code>foo</code> that she should expect its parameter to be <code>const</code>, and eventually we never violate the contact of the function <code>foo</code>.</p>
+
+<p>Eventually we haven’t agreed. My flaw is that <code>const</code> doesn’t really protect from side effects coming from legacy <code>bar</code> and the argument of <code>foo</code> may be changed regardless being <code>const</code>. My friend’s flaw is that it is not easy to explain in the documentation how and why the argument of <code>foo</code> may be changed. Just because our particular implementation dictates this? Such approach spreads the drawback of the legacy code to our nice and shiny new code.</p>
+
+<p>Dilemma.</p>
+
+<p>P.S. There is another esoteric approach — to create a temporary deep copy of <code>T</code> inside <code>foo</code> and pass it to <code>bar</code> by non-const pointer. Personally if I have to choose between quick but badly designed code and slow but nicely written code I usually go for the second one. Tomorrow we can buy another faster computer and the slow code will be faster, but that computer will make the bad code better.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2012/01/trade-off-with-const-in-legacy-code.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2012/01/trade-off-with-const-in-legacy-code-english.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2012/01/trade-off-with-const-in-legacy-code.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

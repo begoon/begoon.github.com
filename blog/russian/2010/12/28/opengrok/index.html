@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Opengrok</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Opengrok</h1>
+<div id="post">
+  <p>Исходники – это основной источник информации для программиста, особенно если в компании (или проекте) размер кодовой базы переваливает за 200-300 тысяч строк.</p>
+
+<p>Чтобы найти драгоценное зерно в такой куче, нужна правильная утилита для просмотра, а главное, поиска (типа «дай-ка я гляну, как народ эту функцию вызывает?» или «как там правильно создать экземпляр этого класса?» и т.д.).</p>
+
+<p>Большинство систем контроля версий имеют веб-интерфейс для подобных целей. Также есть независимые системы, и одна из них называется <a href="http://hub.opensolaris.org/bin/view/Project+opengrok/WebHome">Opengrok</a>.</p>
+
+<p><img src="/images/blog/opengrok.jpg" /></p>
+
+<p>Это система с открытым кодом под лицензией CDDL. Может индексировать репозитории почти всех основных систем контроля версий, а для некоторых понимает и историю файлов. Множество критериев поиска. Крайне полезно, что можно одновременно подключать для индексирования несколько репозиториев, причем от разных VCS. Естественно, при просмотре исходник представляется гипертекстовым документом, через который можно двигаться дальше.</p>
+
+<p>Кстати, можно <a href="http://src.opensolaris.org/source/">вживую пощупать Opengrok на исходниках OpenSolaris’а</a>.</p>
+
+<p>В общем, лично у меня крайне положительный опыт работы с этой системой на весьма значительной по размеру, разнообразию языков и подключенных одновременно VCS кодовой базе. Всячески рекомендую.</p>
+
+<p>P.S. Я как-то в целом давно не писал про всякие организационные примочки, облегчающие работу программиста.</p>
+
+<p>Поэтому, небольшой списочек из старенького, но все еще актуального:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/04/26/continuous-integration-with-hudson/">Система автоматизированной интеграции Hudson</a></li>
+<li><a href="/blog/russian/2009/02/23/static-code-analysis-coverity-klocwork/">Статический анализ кода - Coverity, Klocwork</a></li>
+<li><a href="/blog/russian/2009/04/03/code-bullseye-coverage/">Анализатор покрытия кода тестами Bullseye Coverage</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2010/12/opengrok.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2010/12/opengrok.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2010/12/opengrok.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

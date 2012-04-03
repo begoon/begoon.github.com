@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Неконстантные ссылки</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Неконстантные ссылки</h1>
+<div id="post">
+  <p>Обсуждалось наверное миллионы раз, но в очередной раз имел спор с коллегой на эту тему, посему решил сформулировать свой подход.</p>
+
+<p>Проблема: использовать ли не константные ссылки в аргументах функций?</p>
+
+<p>Мой подход: нет.</p>
+
+<p>Почему? Причина тут только одна: использование неконстантной ссылки для аргумента функции скрывает в вызывающем коде факт возможной модификации объекта, передаваемого в качестве параметра.</p>
+
+<p>Лично нарвался недавно на собственную мину (конечно, упрощенный вариант):</p>
+
+<pre><code class="cpp">T a = 10;
+...
+f(a);
+...
+assert(a == 10); // BOOM!!! WTF?! Who changed this?
+</code></pre>
+
+<p>А причина в <code>void f(T&amp; a);</code>, а должно быть <code>void f(const T&amp; a);</code> или <code>void f(T* a);</code>. Функция <code>f()</code> почему-то изменила значение «а», а писал я ее давно и успел забыть такую ее «особенность». Но из кода <code>f(a)</code> сходу не видно – может эта функция изменить <code>а</code> или нет.</p>
+
+<p>А как могло произойти, что мне вообще пришло в голову сделать параметр <code>a</code> неконстантной ссылкой? Лично у меня это случается, когда переменная изначально была внутри функции, и в какой-то момент я решил сделать ее параметром, а менять в коде везде <code>a.</code> на <code>a-&gt;</code> было просто лень, вот и сделал ссылку, вместо указателя. За что и поплатился, позже.</p>
+
+<p>Кстати, один из аргументов, приводимый людьми, выступающими за неконстантные ссылки –это «писать <code>a.</code> приятнее и понятнее, чем <code>a-&gt;</code> или <code>*a</code>». Также ссылка более надежна с точки зрения <code>NULL</code> (сделать ссылку, указывающую на <code>NULL</code> конечно можно, но тут уже надо постараться). Тут можно выйти положения так:</p>
+
+<pre><code class="cpp">void f(T* ptr_a) {
+  assert(ptr_a != NULL);
+  T&amp; a = *ptr_a;
+  ...
+  if (a.foo()) ...
+}
+</code></pre>
+
+<p>Небольшой лишний код, но решены обе проблемы: проверка на <code>NULL</code> и необходимость разыменовывать указатель каждый раз. А главное, в вызывающем коде придется писать так: <code>f(&amp;a)</code>, что явно укажет на факт возможной модификации аргумента внутри функции.</p>
+
+<p>Например, в C# есть специальной ключевое слово <code>ref</code>, которое надо ставить перед аргументами в вызывающем коде, если хочется передать что-то по ссылке. По мне,это очень хорошее свойство языка.</p>
+
+<p>Исключения из правила</p>
+
+<p>Я пока выработал для себя одно исключение: сложные, сервисные прокси-объекты, типа потока или базы данных можно передавать по неконстантной ссылке. Но тут надо четко понимать, не вы меняете этот объект внутри функции, а он меняется сам при обращении к нему.</p>
+
+<p>Например:</p>
+
+<pre><code class="cpp">void print(std::ostream&amp; os, const T&amp; a) {
+   os &lt;&lt; a;
+}
+</code></pre>
+
+<p>или</p>
+
+<pre><code class="cpp">void save_to_db(Database&amp; db, ...) {
+   db.connect();
+   db.save(...)
+   ...
+}
+</code></pre>
+
+<p>Ну и чтобы два раза не вставать, пара личных маленьких радостей:</p>
+
+<ul>
+<li><a href="http://experience.openquality.ru/alexander-demin-interview/">Мое интервью</a> проекту &ldquo;<a href="http://openquality.ru/">OpenQuality</a>&rdquo;.</li>
+<li>Уверенно решил две задачи в недавней SRM 487. А достижение в том, что во второй задаче даже применил DP, хоть и тривиальное. В процессе контеста был последним в комнате, так как долго возился с первой задачей, но потом почти все упали на фазе challenge&rsquo;а и на тестах, и я оказался вторым в комнате. Кстати, настоятельно рекоммендую сайт <a href="http://codeforces.ru/">CodeForces</a>. Наши ребята сделали отличный сайт для контестов и регулярно их там проводят. В отличие от ТопКодера русский язык там в почете, задания предоставляются на обоих языках, и выбор язык программирования гораздо шире. Также можно там спросить совета по задачам и получить квалифицированный ответ от бойцов.</li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2010/11/blog-post.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2010/11/blog-post.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2010/11/blog-post.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

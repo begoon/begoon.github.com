@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Безопасный sizeof для массивов в С++</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Безопасный sizeof для массивов в С++</h1>
+<div id="post">
+  <p>Иногда приходится иметь дело с обычными массивами и указателями на них в С++. Также иногда встает задача определения количества элементов массиве на стадии компиляции.</p>
+
+<p>Например, это можно слелать так:</p>
+
+<pre><code class="cpp">#define arraysize(array) (sizeof(array) / sizeof(array[0]))
+</code></pre>
+
+<p>Но тут есть одна проблема. Если случайно передать в этот макрос не массив, а просто указатель, что ошибки компиляции не будет, но значение будет далеко от задуманного.</p>
+
+<p>Вчера <a href="http://habrahabr.ru/blogs/google_chrome/119815/">прочитал на Харбе</a> (кстати, отличная статья), что в С++ можно сделать этот макрос более безопасным.</p>
+
+<p>Вот <a href="http://codesearch.google.com/codesearch/p?hl=en#OAMlx_jo-ck/src/base/basictypes.h&amp;q=arraysize&amp;exact_package=chromium">код, который используется в Chrome</a>:</p>
+
+<pre><code class="cpp">template &lt;typename T, size_t N&gt;
+char (&amp;ArraySizeHelper(T (&amp;array)[N]))[N];
+#define arraysize(array) (sizeof(ArraySizeHelper(array)))
+</code></pre>
+
+<p>Выглядит немного запутанно, но можно разобраться:</p>
+
+<ul>
+<li><code>T (&amp;array)[N]</code> - определение массива (<code>T array[N]</code>), который передается по ссылке</li>
+<li><code>char (&amp;ArraySizeHelper(...)[N]</code> - функция, возвращающая массив по ссылке</li>
+<li><code>sizeof(ArraySizeHelper(array))</code> - определение размера возвращаемого функцией значения</li>
+<li>Все это шаблон функции, параметризированный типом массива и его размером, который автоматически определяется компилятором при раскрытии шаблона. Так как функция реально не вызывается, то и тело ее определять не нужно.</li>
+</ul>
+
+<p>Если честно, додуматься до такого непросто. Но макрос весьма хорош. Я взял себе на вооружение.</p>
+
+<p>Кстати, можно поиграться с <code>sizeof()</code> от типа возвращаемого функцией значения:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+std::string f() {
+  return std::string();
+}
+
+int main() {
+  std::cout &lt;&lt; sizeof( (&amp;f)() ) &lt;&lt; std::endl;
+  std::cout &lt;&lt; sizeof( std::string ) &lt;&lt; std::endl;
+  return 0;
+}
+</code></pre>
+
+<p>У меня на VS2010 выводит два раза число &ldquo;28&rdquo;.</p>
+
+<p>Интересно, что в чистом С такой номер тоже проходит:</p>
+
+<pre><code class="cpp">#include &lt;stdio.h&gt;
+
+struct t {
+  char x[1024];
+};
+
+struct t f() {
+  struct t a;
+  return a;
+}
+
+int main() {
+  printf(&quot;%d\n&quot;, sizeof(struct t));
+  printf(&quot;%d\n&quot;, sizeof( (*f)() ));
+  return 0;
+}
+</code></pre>
+
+<p>Печатает два раза &ldquo;1024&rdquo;.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/05/blog-post_24.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/05/blog-post_24.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/05/blog-post_24.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>strcpy() on overlapped strings</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>strcpy() on overlapped strings</h1>
+<div id="post">
+  <p>Consider the code:</p>
+
+<pre><code class="cpp">#include &lt;string.h&gt;
+#include &lt;stdio.h&gt;
+
+int main(int argc, char* argv[]) {
+  char b[32];
+  strcpy(b, &quot;123456789012345&quot;);
+  strcpy(b + 1, b);
+  printf(&quot;[%s]\n&quot;, b);
+  return 0;
+}
+</code></pre>
+
+<p>There is a problem here because the parameters of <code>strcpy()</code> overlap.</p>
+
+<p>This is an unpredictable behaviour because <code>strcpy()</code> doesn&rsquo;t guarantee the order of moving bytes (from left to right or vice versa) but the result depends on it.</p>
+
+<p>Check on different compilers and platforms.</p>
+
+<p><strong>Visual Studio 2010 64-bit</strong></p>
+
+<pre><code>[1123446788012245]
+</code></pre>
+
+<p>The result is corrupted every four bytes. Obviously, it has been copied 32 bit words.</p>
+
+<p><strong>Linux 64-bit</strong></p>
+
+<pre><code>[1123456788012345]
+</code></pre>
+
+<p>The result is now different. Compiler and libc:</p>
+
+<pre><code>ldd --version
+ldd (GNU libc) 2.5
+
+gcc --version
+gcc (GCC) 4.1.2 20080704 (Red Hat 4.1.2-50)
+</code></pre>
+
+<p><code>man strcpy</code> says:</p>
+
+<pre><code>The strings may not overlap...
+</code></pre>
+
+<p>Why not &ldquo;must not&rdquo;?</p>
+
+<p><strong>Solaris (SPARC)</strong></p>
+
+<pre><code>[1123446788012245]
+</code></pre>
+
+<p>Compiler and libc:</p>
+
+<pre><code>cc -V
+cc: Sun C 5.8 2005/10/13
+
+version /usr/lib/libC*
+version of &quot;/usr/lib/libC.so.3&quot;: SC2.0.1 12/20/94 Sun C++ 3.0.1 patch 100962-09
+version of &quot;/usr/lib/libC.so.5&quot;: Sun SUNWlibC SunOS 5.10 Patch 119963-06 2006/04/21
+version of &quot;/usr/lib/libCrun.so.1&quot;: Sun SUNWlibC SunOS 5.10 Patch 119963-06 2006/04/21
+version of &quot;/usr/lib/libCstd.so.1&quot;: Sun SUNWlibC SunOS 5.10 Patch 119963-06 2006/04/21
+</code></pre>
+
+<p><strong>AIX</strong></p>
+
+<pre><code>[1111111111012245]
+</code></pre>
+
+<p>This result is clearly wrong. The man pages are pretty clear on it:</p>
+
+<p><em>String movement is performed on a character-by-character basis and starts at the left. Overlapping moves toward the left work as expected, but overlapping moves to the right may give unexpected results.</em></p>
+
+<p>Compiler and libc:</p>
+
+<pre><code>lslpp -L | grep Compiler
+vacpp.cmp.core            8.0.0.20    C     F    IBM XL C/C++ Compiler
+
+lslpp -L | grep libc
+bos.rte.libc               5.3.9.1    C     F    libc Library
+</code></pre>
+
+<p><strong>HP-UX</strong></p>
+
+<pre><code>[1123456789012345]
+</code></pre>
+
+<p>Compiler:</p>
+
+<pre><code>what `which cc`
+
+HP C/aC++ for Integrity Servers B3910B A.06.22 [Nov 14 2008]
+</code></pre>
+
+<p>This result is correct but man pages warn in a funny way:</p>
+
+<p><em>Character movement is performed differently in different implementations, so moves involving overlapping source and destination strings may yield surprises.</em></p>
+
+<p><strong>Conclusion</strong>: <code>strcpy()</code> is bad, due to many reasons.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2011/07/overlapped-strcpy.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2011/07/overlapped-strcpy.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2011/07/overlapped-strcpy.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

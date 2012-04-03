@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Naming convension for getters and setters in C++</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Naming convension for getters and setters in C++</h1>
+<div id="post">
+  <p>When writing getter and setter methods in standard C++ there are three main approaches for naming.</p>
+
+<p>1. Pure C++ method based on the references.</p>
+
+<pre><code class="cpp">class Foo {
+  Value field_;
+public:
+  Value&amp; field() { return field_; }
+  const Value&amp; field() const { return field_; }
+};
+</code></pre>
+
+<p>Usage:</p>
+
+<pre><code class="cpp">Foo foo;
+foo.field() = field_instance;
+field_instance = foo.field();
+</code></pre>
+
+<p>Pros: brevity, closeness to the property notation and possibility of using in a cascade assignment (<code>foo1.field() = foo2.field() = 2;</code>).</p>
+
+<p>Cons: using the function call on the left looks unusual.</p>
+
+<p>2. Java way</p>
+
+<pre><code class="cpp">class Foo {
+  Value field_;
+public:
+  void setField(const Value&amp; value) { field_ = value; }
+  const Value&amp; getField() const { return field_; }
+};
+</code></pre>
+
+<p>Usage:</p>
+
+<pre><code class="cpp">Foo foo;
+foo.setField(field_instance);
+field_instance = foo.getField();
+</code></pre>
+
+<p>Pros: clarity and obviousness.</p>
+
+<p>Cons: wordiness due to <code>get</code> and <code>set</code> prefixes.</p>
+
+<p>3. Objective-C way</p>
+
+<pre><code class="cpp">class Foo {
+  Value field_;
+public:
+  void setField(const Value&amp; value) { field_ = value; }
+  const Value&amp; field() const { return field_; }
+};
+</code></pre>
+
+<p>Usage:</p>
+
+<pre><code class="cpp">Foo foo;
+foo.setField(field_instance);
+field_instance = foo.field();
+</code></pre>
+
+<p>Pros: brevity (no useless <code>get</code> prefix) and clarify.</p>
+
+<p>Cons: haven&rsquo;t found so far.</p>
+
+<p>All three have rights to live but from the style perspective it&rsquo;s good to be consistent and use only one style across one project.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2010/11/getter-and-setter-naming-in-c.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2010/11/getter-and-setter-naming-in-c.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2010/11/getter-and-setter-naming-in-c.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

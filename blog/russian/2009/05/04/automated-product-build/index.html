@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Автоматизация сборки продукта</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Автоматизация сборки продукта</h1>
+<div id="post">
+  <p>Лично я убежден на 100%, что сборка более менее серьезного по размерам проекта/продукта должна производиться в командной строке, то есть никаких GUI-сред, в которые надо заходить, нажимать кнопки, смотреть в окна результатов и т.д. Все это здорово на этапе собственно написания кода, тестирования и отладки. Но когда код переходит в стадию “почти закончен”, все должно заканчиваться полностью авторизированной сборкой без вариантов “тут надо кликнуть, тут надо ввести путь, тут надо сделать <code>clean</code>-up и <code>refresh</code>, а то все съедет” и т.д. Прелесть командной строки в том, что вне зависимости с какого ты сегодня будуна, и что твоя голова с утра проходит в дверь только боком, ты набираешь <code>cd /my/super/project</code> и затем <code>make</code>. После этого ты откидываешься на стул в мыслях о пивасике, а проект тем временем собирается и тестируется. В идеале, конечно, вместо компиляции, ты должен просто скачать свежую автоматизированную ночную сборку, которая уже там, оттестирована и готова к употреблению.</p>
+
+<p>Ладно, это была всем очевидная лирика.</p>
+
+<p>Наш софт представляет собой монструозный симбиоз из С, С++, Java, BASIC (это наш собственный внутренний СУБД-ориентированный язык), Python’а и UNIX-скриптов. Система же сборки основана на GNU Make и по сути является огромным многоуровневым Makefile’ом. Необходимая при сборке логика, которую нельзя реализовать напрямую в <a href="http://www.gnu.org/software/make/">GNU Make</a> дополняется UNIX-скриптами и мини утилитками на C, которые компилируются прямо перед запуском. Java части используют <a href="http://ant.apache.org/">Ant</a>. Плагин <a href="http://ant.apache.org/ivy/">Ivy</a> используется для подкачки из репозитория двоичных модулей. Лично я против каких-либо двоичных файлов в проекте, и считаю, что в разы удобнее все компилировать из текстового представления (пусть это и дольше по времени), так как текстовики можно сравнивать, в них можно искать и т.д. Конечно, реальная жизнь сложнее, и иногда приходится использовать заранее собранные бинарники (например, <a href="http://www.openssl.org/">OpenSSL</a>, <a href="http://icu-project.org/">ICU</a>, тучу сторонних jar’ов для Java и т.д.).</p>
+
+<p>Итак, ясно, такая сборка со временем деградирует, становится сложнее, запутаннее, в ней сложно искать ошибки, а тем более узкие места.</p>
+
+<p>Я пытался все перевести на Ant – возможностей много, но все крайне Ява-центричное, расширения надо тоже писать на ней же. Если мы все писали бы на Java, но у нас не тот случай.</p>
+
+<p>Пробовал <a href="http://www.cmake.org/">CMake</a>. Очень неплохо, но обнаружились сложности скрещения с нашим собственным компилятором Бейсика.</p>
+
+<p>Пробовал <a href="http://www.scons.org/">SCons</a>. Пожалуй, это самая прикольная система. Недаром ее используют в Гугле для реально нетривиальных проектов типа <a href="http://code.google.com/chromium/">Chrome</a> и <a href="http://code.google.com/p/nativeclient/">Native Client</a> и т.д. По сути <code>Makefile</code> – это программа на Питоне, то есть ограничения на особую логику сборки (запуск тестов, фильтров, сборка документации, публикация результатов на FTP и т.д.) просто отсутствуют. Нужное просто пишется на полноценном языке программирования Питон. Удалось мне даже собрать нормально Питон для AIX и HPUX (с Windows, Linux, Solaris проблем нет вообще). Но и тут получилась ложна гов&hellip; дегтя. У меня есть необходимость конвертировать тысячи отчетов по тестам в формат jUnit. Мини утилитка на С, которая писалась на коленке, делает это менее чем за секунду. Все мои попытки на Питоне работали минуты. Получается, что идея опять не чиста, так как нужны опять сопровождающие утилиты, и уже не ясно, зачем что-то менять как оно есть сейчас.</p>
+
+<p>В целом, мои изыскания в области идеальной утилиты организации сборки пока не увенчались успехом. Но поиск продолжается.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/04/26/continuous-integration-with-hudson/">Система автоматизированной интеграции Hudson</a></li>
+<li><a href="/blog/russian/2009/04/03/code-bullseye-coverage/">Анализатор покрытия кода тестами Bullseye Coverage</a></li>
+<li><a href="/blog/russian/2009/03/19/google-test-framework-130/">Google Test Framework 1.3.0</a></li>
+<li><a href="/blog/russian/2009/02/23/static-code-analysis-coverity-klocwork/">Статический анализ кода - Coverity, Klocwork</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/05/blog-post.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/05/blog-post.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/05/blog-post.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

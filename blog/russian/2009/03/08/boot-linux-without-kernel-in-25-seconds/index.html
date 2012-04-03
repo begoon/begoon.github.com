@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Загрузка Linux без ядра за 25 секунд</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Загрузка Linux без ядра за 25 секунд</h1>
+<div id="post">
+  <p>Естественно, загрузиться Linux совсем без ядра не может. Но он может загрузиться не имея в начале процесса загрузки ядра в двоичном виде. А откуда же берется ядро? Ядро компилируется прямо при загрузке!</p>
+
+<p>Вы думаете, такая загрузка будет длиться годы? ну или хотя бы минуты? Нет. На все про все — 25 секунд с хвостиком.</p>
+
+<p>Итак, по порядку.</p>
+
+<p>Все знают <a href="http://bellard.org/qemu/">QEMU</a> — бесплатная виртуальная машина. Из нее, например, вырос пакет <a href="http://www.virtualbox.org/">VirtualBox</a>, а <a href="http://www.linux-kvm.com/">KVM</a> унаследовал интерфейс командной строки. Это чистый виртуализатор без всяких там “пара-” приставок. Из-за этого работает небыстро и для критичных по скорости задач слабо применимо, но с другой стороны из-за “чистоты” виртуализации работает на многих платформах и виртуализирует многие платформы, а не только Intel, как большинство “быстрых” виртуальных машин. Из-за все сказанного, QEMU идеален для всякого рода экспериментов и нестандартных задач.</p>
+
+<p>Но мы отвлеклись. Автор QEMU — <a href="http://bellard.org/">Fabrice Bellard</a> — написал еще нескольно занимательных программ.</p>
+
+<p>Одной из них является TCC — <a href="http://bellard.org/tcc/">Tiny C Compiler</a>. Это ультра быстрый и ультра маленький компилятор С. Сразу возникает подозрение — слово “tiny” в название, да еще и “ультра быстрый” и “ультра маленький”. Главный вопрос — какие у него ограничения?</p>
+
+<p>Как заявляет автор, TCC полностью поддерживает стандарт языка С вплоть до <a href="http://ru.wikipedia.org/wiki/C99">ISO C99</a> включительно, но целевая платформа только x86. Компилятор имеет также мини версию системной библиотеки <code>libc</code>. Когда это возможно, компилятор совмещает фазы компилирования, ассемблирования и линковки для дополнительного ускорения, хотя поддерживаются стандартные <a href="http://ru.wikipedia.org/wiki/ABI">ABI</a> и можно подлинковать что-то готовое.</p>
+
+<p>Компилятор доступен в исходных текстах и в двоичном виде под Windows. Скомпилировать его можно вручную, например, самим же TCC.</p>
+
+<p>Нужно на чем-нибудь проверить TCC, на чем-нибудь нетривиальном. Ядро Linux&rsquo;а является весьма сложным и большим проектом, это его сборка была бы отличной проверкой.</p>
+
+<p>TCC не только успешно собирает ядро, но и делает это до 9 раз быстрее, чем GCC (естественно, речь идет только о платформе x86).</p>
+
+<p>Невероятная скорость компиляции позволяет использовать TCC как компилирующий “интерпретатор” скриптов. Если добавить первой строкой вашей программы на С строчку <code>#!/usr/local/bin/tcc –run</code> и установить флаг <code>executable</code> на исходник, то ваша программа будет запущена в UNIX’е прямо из исходного текста, будучи скомпилированной на лету.</p>
+
+<p>Мы подходим к сути. Автор предлагает вариант загрузки Linux, когда ядро компилируется прямо в процессе загрузки из исходных текстов. Проект называется <a href="http://bellard.org/tcc/tccboot.html">TCCBOOT</a>. Можно <a href="http://bellard.org/tcc/tccboot.iso">скачать ISO имидж</a> (около 6 мегабайт), записать на болванку, загрузиться с нее и увидеть все самому. Что я и сделал.</p>
+
+<p>Загрузчик ISOLINUX запускает мини образ, в котором содержится TCC, исходники ядра и минимальное окружение для запуска командного интерпретатора под скомпилированным на лету ядром.</p>
+
+<p>Поехали…</p>
+
+<p>Старт, запустился ISOLINUX, началась компиляция ядра:</p>
+
+<p><img src="/images/blog/tccboot-started.jpg" /></p>
+
+<p>Все, за 25.4 секунды ядро скомпилировано, запущено, и загружена минимальная UNIX система:</p>
+
+<p><img src="/images/blog/tccboot-finished.jpg" /></p>
+
+<p>Все, за 25.4 секунды ядро скомпилировано, запущено, и загружена минимальная UNIX система:</p>
+
+<p>Фотографии я делал с рук, так что немного коряво выглядит. Можно было, конечно, все это проделать под виртуальной машиной, тогда бы и скриншоты были бы красивее, но пропало бы ощущение самого главного — чудовищной скорости. Забавно, на первом снимке видно, что строка отображения имен компилируемых файлов смазана — так все “летает”.</p>
+
+<p>Эксперимент проводился на ноутбуке Core 2 1GHz, 2GB RAM.</p>
+
+<p>Я был очень впечатлен. А если в TCC нормально поддержать многопроцессорность? Тут недалеко и до полностью функциональной операционной системы, у которой нет двоичного представления до загрузки.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/03/linux-25.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/03/linux-25.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/03/linux-25.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

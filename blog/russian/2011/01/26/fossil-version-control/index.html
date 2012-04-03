@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Fossil - контроль версий, баг-трекер и wiki в одном флаконе</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Fossil - контроль версий, баг-трекер и wiki в одном флаконе</h1>
+<div id="post">
+  <p>Есть множество бесплатных хостингов для проектов с открытым кодом. Также есть места, где можно держать и закрытые проекты, но такие хостинги часто платные. Да и в целом, если уж есть какой-то закрытый проект, и есть причины его закрытости, то выкладывать его на хостинг третьих лиц было как-то нелогично.</p>
+
+<p>Лично я люблю git для UNIX и mercurial для Windows. Каждая система имеет пачку удобных хостингов, как говорится, выбирай на вкус.</p>
+
+<p>И вот у меня образовался закрытый проект, который мало того, что активно развивается, так еще и накапливает баг-репорты, приправленные файлами отчетов и картинками, и требует ведения документации.</p>
+
+<p>Начал я его вести в mercurial, но когда начал утопать в письмах и документации, то осознал необходимость баг-трекера и wiki. Настраивать все это локально (на публичные готовые хостинги выложить не могу) как-то лень. И тут я вспомнил по <a href="http://www.fossil-scm.org/">fossil</a>.</p>
+
+<p>Fossil - это распределенный контроль версий, баг-трекер и wiki в одном флаконе. Более того, его автор &ndash; ни кто иной, как автор SQLite, борец за минимализм, простоту и надежность. Как и в случае с небезызвестной базой данных, которую кто уже только не использует, все, что вам нужно - это один единственный файл &ndash; <code>fossil[.exe]</code>.</p>
+
+<p>Для командной строки - это просто SCM, а будучи запущенной с параметром &ldquo;ui&rdquo;, превращается в локальный веб-сервер, в котором есть &ldquo;морда&rdquo; для просмотра репозитория, баг-трекера и wiki. Более того, все данные живут также в одном единственном файле-репозитории, который по сути является SQLite-базой. Для переноса его в другое место, другую операционную систему или резервного копирования, нужно просто скопировать один файл.</p>
+
+<p>fossil <a href="http://www.fossil-scm.org/index.html/doc/trunk/www/inout.wiki">умеет импортировать и экспортировать в git</a>, поэтому я сначала <a href="http://hivelogic.com/articles/converting-from-mercurial-to-git">перегнал существующий репозиторий из mercurial в git</a>, а потом импортировал из git в fossil.</p>
+
+<p>В целом, fossil хорош. Вылизанный и минималистичный. Говорят, что из-за использования SQLite в качестве хранилища, с одной стороны получаешь надежность и транзакционность любых изменений (понятно, что хоть остальные системы работают просто с файлами, у них с целостностью тоже все в порядке), но с другой стороны, по скорости может радикально проигрывать git или mercurial на больших проектах. Но для небольших &ldquo;домашних&rdquo;, но секретных проектов - сложно представить удобнее утилиты.</p>
+
+<p>Даже в рамках компании, можно личный проект в два счета превратить в общий, просто запустив fossil в режиме сервера и дав коллегам его адрес. <a href="http://www.fossil-scm.org/">Домашняя страничка fossil</a> по сути является сервером, работающим на fossil (там можно увидеть живой <a href="http://www.fossil-scm.org/index.html/rptview?rn=1">трекер</a> и <a href="http://www.fossil-scm.org/index.html/wiki?name=Fossil">wiki</a>). Не самое плохое доказательство уверенности автора fossil&rsquo;а в своем детище.</p>
+
+<p>Да, лицензия у fossil, конечно, BSD.</p>
+
+<p>Итак, для дома для семьи &ndash; очень удобно.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/01/fossil-wiki.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/01/fossil-wiki.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/01/fossil-wiki.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

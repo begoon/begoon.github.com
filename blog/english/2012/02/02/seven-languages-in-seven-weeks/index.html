@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Bruce Tate, "Seven languages in seven weeks"</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Bruce Tate, &#34;Seven languages in seven weeks&#34;</h1>
+<div id="post">
+  <p>I&rsquo;ve finished accelerated reading of &ldquo;<a href="http://pragprog.com/book/btlang/seven-languages-in-seven-weeks">Seven languages in seven weeks</a>&rdquo; by Bruce Tate.</p>
+
+<p><img src="/images/covers/english/7-languages-in-7-weeks-cover.jpg" /></p>
+
+<p>In my case it was &ldquo;Seven languages in seven evenings&rdquo;. For each language there is an introduction, which makes sense only if a language is brand new for you. There are also interviews with creators of the languages. One of the asked interesting questions was about what the author would like to change in the language if he could re-design it from scratch now.</p>
+
+<p>Languages:</p>
+
+<ul>
+<li>Ruby</li>
+<li>Io</li>
+<li>Prolog</li>
+<li>Scala</li>
+<li>Erlang</li>
+<li>Clojure</li>
+<li>Haskell</li>
+</ul>
+
+<p>The reviews of each chapter below are my subjective views two things at once: a programming language and a material about it. Why? For familiar languages it hardly makes any sense to describe the language per se, but to note interesting distinctive features could be useful. But if a languages is a green field, it is worth describe it in general.</p>
+
+<p><strong>Ruby</strong></p>
+
+<p>The Ruby chapter was quite useless for me because I thoughtfully read &ldquo;<a href="http://pragprog.com/book/ruby3/programming-ruby-1-9">Programming Ruby 1.9</a>&rdquo;, and have been hooked. Ruby is an amazing scripting language. Each time when programming in Ruby I feel so delighted similar to when I tried PHP first time after Perl.</p>
+
+<p>Ruby&rsquo;s creator, <a href="http://en.wikipedia.org/wiki/Yukihiro_Matsumoto">Yukihiro Matsumoto</a>, says in the interview, that if he could re-design Ruby today, he&rsquo;d like to change the concept of multi-threading to <a href="http://en.wikipedia.org/wiki/Actor_model">Actor</a>.</p>
+
+<p>In short, &ldquo;Actor&rdquo; is when concurrent threads don&rsquo;t share memory and don&rsquo;t use mutex or semaphores for synchronization. Instead, they send and receive messages to each other, and messaging is provided by runtime and built-in to the languages syntax. Examples: Scala, Go, Erlang, Io.</p>
+
+<p><strong>Io</strong></p>
+
+<p><a href="http://iolanguage.com/">Io</a> is a very small, compact language, based on prototypes like JavaScript, where there is no distinction between classes and objects.</p>
+
+<p>There is an interesting concurrency feature in addition to actors and coroutines (cooperative multi-threading as in <a href="http://www.lua.org/manual/5.2/manual.html#2.6">Lua</a>), called futures. &ldquo;Futures&rdquo; are similar to the actor. There the only difference is when the caller thread tries to use the result of the future, it will be blocked until the future completes and gives the result back.</p>
+
+<p>An example from the book:</p>
+
+<pre><code class="io">// Fire up the future.
+futureResult := URL with(&quot;http://google.com/&quot;) @fetch
+writeln(&quot;Continue immediately when future is running in background.&quot;)
+// This line will be executed immediately after spawning the future.
+writeln(&quot;fetched &quot;, futureResult size, &quot; bytes&quot;)
+// But this line will be blocked until the future returns.
+</code></pre>
+
+<p><strong>Prolog</strong></p>
+
+<p>I&rsquo;ve been gnawing this animal for years. But thanks to Erlang recently, all this functional stuff in general is now giving up for me, and monsters like Prolog or Haskell don&rsquo;t look so scary anymore.</p>
+
+<p>It turned out that the depth of the material about Prolog has matched precisely with my level. The eight queens problem and a Sudoku solver were excellent examples for me.</p>
+
+<p>Shortly, a program in Prolog is a pile of facts and rules. Then the Prolog runtime performs a depth-first search amongst possible results and tries to find those satisfying all the given facts and rules.</p>
+
+<p>In fact, the Sudoku solver program is a set of variables, representing the Sudoku field, and a list of rules (summations by columns, rows and squared groups) according to the rules of Sudoku. Then Prolog performs an exhaustive search to find the values and their combinations satisfying the rules.</p>
+
+<p>Of course, this is very much a superficial glance, but this has given me much more understanding of Prolog.</p>
+
+<p><strong>Scala</strong></p>
+
+<p>I will note only a few facts interesting to me.</p>
+
+<p>Multi-threading is based on actors. After Erlang and Go you understand how good and handy it is.</p>
+
+<p>I think that Scala has all possible bells and whistles even invented for programming languages. But sometimes it has not only good consequences.</p>
+
+<p><strong>Erlang</strong></p>
+
+<p>I&rsquo;m a big fan of Erlang and already read a few big books. That&rsquo;s why this book hasn&rsquo;t given to me anything new. But for novices this introduction may give quite solid view on Erlang functional approach and concurrency model.</p>
+
+<p><strong>Clojure</strong></p>
+
+<p>Clojure is a Lisp-based language driven by Java VM.</p>
+
+<p>It has an interesting feature called <a href="http://en.wikipedia.org/wiki/Software_transactional_memory">STM, software transactional memory</a>. In STM a piece of code is declared to be a transaction. It is executed atomically or all the changes of variables are rolled back.</p>
+
+<p>And finally, Haskell</p>
+
+<p>Haskell is a taught guy. The introduction in this book is very light and minimal, just to remember the word &ldquo;Haskell&rdquo;. I read &ldquo;<a href="http://www.amazon.co.uk/Programming-Haskell-Graham-Hutton/dp/0521692695">Programming in Haskell</a>&rdquo; and currently I&rsquo;m on &ldquo;<a href="http://www.amazon.co.uk/Real-World-Haskell-Bryan-OSullivan/dp/0596514980">Real World Haskell</a>&rdquo;, that&rsquo;s why I simply skimmed the chapter in this book.</p>
+
+<p>Okay, to sum up. This book is to be read just once, to broaden your outlook.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2012/02/iased-review-of-seven-languages-in.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2012/02/iased-review-of-seven-languages-in.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2012/02/iased-review-of-seven-languages-in.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

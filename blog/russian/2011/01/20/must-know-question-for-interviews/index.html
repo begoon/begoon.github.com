@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Вопросы на интервью, на которые нельзя не знать ответы</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Вопросы на интервью, на которые нельзя не знать ответы</h1>
+<div id="post">
+  <p>Так сложилось, что за последние полгода, я активно участвовал в процессе интервьирования программистов в компании Bloomberg.</p>
+
+<p>Также на многократном личном опыте знаю, что когда тебе оказывают – это всегда обидно и досадно, какой бы причина там ни была. Но это случается почти со всеми.</p>
+
+<p>К сожалению, отказывать приходится порой из-за радикально тривиальных вещей, незнание которых просто несовместимо с профессией.</p>
+
+<p>У меня накопилось несколько вопросов, незнание ответа на которые является почти стопроцентной причиной, когда я в своем отчете писал отказ.</p>
+
+<p>Интервьюирование было на позицию &ldquo;Senior C/C++ developer”.</p>
+
+<p>Ответы приведу тут же, так как они очевидны.</p>
+
+<p><strong>1. Сколько примерно будет 2^32? (обычно задается по телефону)</strong></p>
+
+<p>Ответ &ldquo;Около четырех миллиардов&rdquo; является исчерпывающим.</p>
+
+<p>Я вообще и не могу понять, как человек, в названии профессии которого есть слово &ldquo;программист&rdquo; может этого не знать. Увы, это далеко не единичные случаи.</p>
+
+<p><strong>2. Как сравнить две переменные типа double или float на равенство? (обычно задается по телефону)</strong></p>
+
+<p>Ответ &ldquo;Вычесть одно из другого и сравнить результат на больше/меньше с каким-то малым числом, например 10E-6&rdquo; является исчерпывающим. Конечно, много зависит от используемой библиотеки работы с числами с плавающей точкой, но смысл, в целом, одинаков.</p>
+
+<p>Увы, количество неотвечающих тоже весьма значительно.</p>
+
+<p><strong>3. (Хит!) Что распечатает данная программа? (не забываем, что собеседование на позицию разработчика на C/C++). В принципе, его тоже можно задать по телефону.</strong></p>
+
+<pre><code class="cpp">char* f() {
+  char buf[100];
+  strcpy(buf, &quot;TEST”);
+  return buf;
+}
+
+int main() {
+  char* s = f();
+  /* (1) */
+  printf(&quot;%s\n&quot;, s);
+}
+</code></pre>
+
+<p>Ответ: &ldquo;Нельзя сказать с уверенностью, скорее всего мусор, но в целом это неопределенное поведение, так как локальный буфер формально прекращает существование после выхода из функции f()&rdquo; является почти исчерпывающим.</p>
+
+<p>Почему &ldquo;почти&rdquo;? Потому что обычно за ним дополнительный вопрос: &ldquo;Что именно может с высокой вероятностью затирать заветное слово TEST и приводить к выводу мусора? Для конкретности: платформа x86, 32-bit, компилятор Visual Studio. Если остановить программу отладчиком в точке (1) и посмотреть, на что указывает указатель &ldquo;s&rdquo;, то очень высока вероятность, что там будет таки &ldquo;TEST&rdquo;, а вот printf() таки с высокой вероятностью распечатает мусор. Почему?&ldquo;.</p>
+
+<p>Более половины собеседований, в которых я участвовал, заканчивались со знаком &ldquo;минус&rdquo;, так как человек даже не делал попытку сказать что-то типа &ldquo;В данных условиях скорее всегда слово TEST будет перезатерто параметрами функции printf(), которые передаются через стек и ложатся на то место, где был раньше размещен буфер &ldquo;buf&rdquo;. Конечно, многое зависит от режимов оптимизации, так как аргументы могут быть переданы через регистры.&rdquo;</p>
+
+<p>Фактически, произнесенные слова &ldquo;стек&rdquo; и &ldquo;параметры функции&rdquo; являются достаточным ответом на вопрос.</p>
+
+<p>Повторюсь, я лично считаю, что на собеседовании задача интервьюера не показать, на сколько он сам умен (читать задачи по бумажке может каждый), а попытаться разглядеть в собеседнике те качества, которые требуются для данной позиции. И просто отказывать человеку из-за того, что он не ответил, как тебе кажется, на один элементарный вопрос, также глупо, как и делать из этого вывод о прочих знаниях кандидата.</p>
+
+<p>Но все же есть такая черта, ниже которой уже нельзя.</p>
+
+<p>А у вас есть вопросы, &ldquo;неответы&rdquo; на которые вы лично можете считать поводом для практически однозначного отказа?</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/01/blog-post_7753.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/01/blog-post_7753.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/01/blog-post_7753.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Приведение последовательности через обмен соседних элементов (решение)</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Приведение последовательности через обмен соседних элементов (решение)</h1>
+<div id="post">
+  <p>Итак, мое решение <a href="/blog/russian/2010/03/31/sequence-transformation-by-swap-of-adjacent-elements/">вопроса о приведении одной последовательности к другой</a>, когда можно только переставлять два элемента.</p>
+
+<p>Нас просят привести одну последовательность (исходную) к другой (целевой). То есть логично предположить, что одна последовательность в нужном порядке (целевая), а вторая (исходная) - нет. Так надо просто отсортировать исходную последовательность &ldquo;в целевую&rdquo;.</p>
+
+<p>Так как целевая последовательность по условию не обязательно отсортированная, то при сортировке &ldquo;к ней&rdquo; нельзя просто сравнивать элементы исходной последовательности на больше/меньше, так как в этом случае мы получим на выходе сортировку по правилам системы исчисления. В нашем случае надо принять, что целевая последовательность и есть эталонный отсортированный алфавит, и он задает правила сортировки. При сравнении значений из этого алфавита надо понять, в какой позиции алфавита находится значение и использовать его индекс как ключ сортировки (функция <code>less()</code>).</p>
+
+<p>Теперь, а какой алгоритм сортировки использовать, чтобы для перемещения элементов использовать только обмен соседних элементов (функция <code>swap()</code>)? Подходит сортировка вставками, когда на каждом шаге неотсортированный элемент последовательно &ldquo;пропихивается&rdquo; вниз к отсортированным. Тут как раз можно обойтись только обменом соседних элементов. Сама функция <code>insertion_sort()</code> является универальной и не зависит от компаратора <code>is_less()</code>.</p>
+
+<pre><code class="cpp">#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+void swap(int* a, int i) {
+  int t = a[i];
+  a[i] = a[i + 1];
+  a[i + 1] = t;
+}
+
+#define N 8
+
+const int etalon[] = { 1, 5, 7, 4, 2, 9, 8, 6 };
+int from[N] = { 8, 1, 4, 2, 5, 6, 9, 7 };
+
+void insertion_sort(int* a, int n, int (*is_less)(int, int)) {
+  int i, j;
+  for (i = 1; i &lt; n; ++i) 
+    for (j = i - 1; j &gt;= 0 &amp;&amp; is_less(a[j + 1], a[j]); j--)
+      swap(a, j);
+}
+
+void print_array(const char* title, const int* a, int n) {
+  int i;
+  printf(&quot;%9s: &quot;, title);
+  for (i = 0; i &lt; n; ++i)
+    printf(&quot;%d &quot;, a[i]);
+  printf(&quot;\n&quot;);
+}
+
+int less(int a, int b) {
+  int ia = -1, ib = -1;
+  int i;
+  for (i = 0; i &lt; N; ++i) {
+    if (etalon[i] == a) ia = i;
+    if (etalon[i] == b) ib = i;
+    if (ia &gt;= 0 &amp;&amp; ib &gt;= 0) break;
+  }
+  return ia &lt; ib;
+}
+
+int main() {
+  int i, j;
+
+  print_array(&quot;Original&quot;, from, N);
+  insertion_sort(from, N, less);
+  print_array(&quot;Converted&quot;, from, N);
+  print_array(&quot;Etalon&quot;, etalon, N);
+
+  return 0;
+}
+</code></pre>
+
+<p>Запускаем:</p>
+
+<pre><code> Original: 8 1 4 2 5 6 9 7 
+Converted: 1 5 7 4 2 9 8 6 
+   Etalon: 1 5 7 4 2 9 8 6 
+</code></pre>
+
+<p>Вроде работает.</p>
+
+<p>Теперь что со сложностью. Принято считать, что сортировка вставками - это <code>O(N^2)</code> для худшего случая. Так как для сравнения элементов нам приходится искать линейно по эталонной последовательности на каждом шаге, то это еще <code>O(N)</code>. В этоге: <code>O(N^3)</code>.</p>
+
+<p>Как вариант ускорения, можно изначально сделать отсортированную по значениям копию эталонной последовательности, и хранить не только значение, но его индекс. В этом случае поиск элемента будет уже занимать не <code>O(N)</code>, а <code>O(log(N))</code>, и общая сложность будет <code>O(log(N)*N^2)</code>.</p>
+
+<p>В целом, все это не обязательно писать или помнить точную программу. Достаточно запомнить два вывода: алгоритм сортировки, использующий только обмен соседних элементов - это сортировка вставками, а ключ сортировки может быть далеко нетривиальной функцией.</p>
+
+<p>Указание на эти два факта лично я счел бы на однозначно достаточный ответ.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2010/04/blog-post.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2010/04/blog-post.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2010/04/blog-post.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

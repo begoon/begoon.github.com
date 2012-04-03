@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>One-command NORCPU program hacking challenge: analysis and solutions</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>One-command NORCPU program hacking challenge: analysis and solutions</h1>
+<div id="post">
+  <p>Publishing the <a href="/blog/english/2011/02/08/norcpu-hackme-challenge/">announcement of the problem to hack</a> a program running on the CPU executing just one single command, I hoped to get a solution to the end of March, not earlier.</p>
+
+<p>Note: Quoted materials below are provided &ldquo;as is&rdquo; in the original author edition. Only minor formatting changes are applied. Of course, the texts on Russian are translated to English.</p>
+
+<p>But the reality was different. Literally a few hours after the announcement, I received an e-mail from <strong>Vasiliy Artemev</strong>.</p>
+
+<blockquote>
+<p>Secret code: 139471</p>
+</blockquote>
+
+<p>That was the correct answer. Vasiliy was a winner and received the 100$ prize. He kindly shared that he bruteforced the problem. In fact, a simple bruteforce attach forced the program printing out the magic message even on a 3-character attempt. Alas, my hash function used to check the password had many collisions and become a weak link.</p>
+
+<p>But there was no complete analysis of the password checking algorithm, and Vasiliy offered to sponsor the rest of the challenge to figure out the algorithm with 50$ from his prize. The challenge kept going.</p>
+
+<p>In meanwhile I wrote the <a href="/projects/norcpu/challenge/norcpu2.html">second version of the problem</a> without hashing but just an encrypted password. I hoped this makes the analysis harder. But in the same day evening I received an e-mail from <strong>Anton Bukov</strong>:</p>
+
+<blockquote>
+<p>Answer for NORCPU hackme challenge, Version 2: &ldquo;R0und2 D0ne!&rdquo; ?</p>
+</blockquote>
+
+<p>It was the correct one. I wondered how is it possible to figure out so quickly?</p>
+
+<p>Anton also shared his approach.</p>
+
+<blockquote>
+<p>My hack is based on the line:</p>
+</blockquote>
+
+<pre><code>mem = mem_0.slice(0);
+</code></pre>
+
+<blockquote>
+<p>An array gets copied here, and if you call <code>calc()</code> function twice on the same array, then for any incorrect password it will print out the answer. In code it looked as:</p>
+</blockquote>
+
+<pre><code>wcout &lt;&lt; calc(L&quot;0&quot;) &lt;&lt; endl &lt;&lt; calc(L&quot;0&quot;) &lt;&lt; endl;
+</code></pre>
+
+<blockquote>
+<p>I guess that copying was used to prevent it. I&rsquo;m afraid this is not the way you expected. Even I was surprised when got the answer in the output. Afterwards I figured out where it appeared from.</p>
+</blockquote>
+
+<p>Accidentally Anton discovered a bug causing the program itself to reveal the secret, again. It needed just to run the interpreter twice without resetting memory.</p>
+
+<p>The root of the problem:</p>
+
+<pre><code class="nasm">...
+  IS_0(flag)
+  JZ okay
+  EXIT(1)
+okay:
+  ; print the secret
+  ...
+</code></pre>
+
+<p>After the first wrong run and refusing to print out the secret the program has stopped at the line 4, the <code>ip</code> register points to the <code>okay</code> label. If the interpreter gets started again without resetting memory (all registers including <code>ip</code> reside in memory), it keeps executing right from the <code>okay</code> and prints out the secret.</p>
+
+<p>It was a shame. I fixed the problem quickly and released the version 2.1 without this side effect.</p>
+
+<p>A couple of days left.</p>
+
+<p>I received an e-mail from a guy with <strong>a5b</strong> nickname.</p>
+
+<blockquote>
+<p>Hot-patch of branching and the answer pw: <code>abcd</code> resp: <code>R0und2 D0ne!</code></p>
+
+<ul>
+<li>the password, obviously, is incorrect</li>
+<li>inverted data being written to <code>(i == 27692 i==31712)</code></li>
+</ul>
+</blockquote>
+
+<p>Formally, this is the solution, but there is no password which means the algorithm is not analysed so far.</p>
+
+<p>But after an hour I received an addendum:</p>
+
+<pre><code>h1cKmE1fUsAn
+
+input data:
+chr conI LEET xor
+CHR1 13417 13313 104 h
+CHR2 39953 39968 49 1
+CHR3 54302 54397 99 c
+CHR4 32223 32148 75 K
+CHR5 30900 30937 109 m
+CHR6 27373 27304 69 E
+CHR7 16420 16405 49 1
+CHR8 49210 49244 102 f
+CHR9 16740 16689 85 U
+CHR10 50115 50096 115 s
+CHR11 19308 19245 65 A
+CHR12 57802 57764 110 n
+
+static init:
+CHRi 59609= 59651
+CONi 59610= 59634
+CNTR 59611=12
+SUM 59608=0
+LEET 59607 = 13313
+
+1:
+[59609]+1 -&gt; [59609] // select next chr
+[59610]+1 -&gt; [59610] // select next con
+
+SUM |= CHRi ^ LEET ^ CONi
+LEET = LEET * 3 + 29
+
+[59611]: if([59611] != 0) Loop 1
+
+...
+if(SUM != 0) exit
+else print R0und2 D0ne // haven't analysed this part.
+// Based on the code modifications (moving the index), it loads 12 constants:
+// 29528 22899 2971 9089 27542 17353 52278 25635 11626 34909 39131 51838,
+// deals with each one and prints out.
+</code></pre>
+
+<p>This is the solution now. <strong>a5b</strong> became the first one who sent the algorithm of the <a href="/projects/norcpu/challenge/norcpu2.html">problem 2</a>.</p>
+
+<p>In the same evening I received a solution from <strong>Max Filippov</strong>.</p>
+
+<blockquote>
+<p>Algorithm that was used to check password correctness in the first round was the following:</p>
+</blockquote>
+
+<pre><code class="cpp">bool check(const char *p)
+{
+   int v = 0x1040;
+
+   for(; *p; ++p)
+   {
+       v ^= *p;
+       for (int i = 0; i &lt; 8; ++i)
+       {
+           int f = v &amp; 1;
+           v &gt;&gt;= 1;
+           if (f)
+               v ^= 0x1408;
+       }
+   }
+   return v == 0x1c89;
+}
+</code></pre>
+
+<blockquote>
+<p>that is, sort of CRC.</p>
+
+<p>To discover it I&rsquo;ve collected NORCPU execution trace and &ldquo;disassembled&rdquo; it.</p>
+
+<p>Modified NORCPU source and disassembler are attached, and also may be found <a href="http://jcmvbkbc.spb.ru/git/?p=dumb/norcpu.git;a=summary">there</a>.</p>
+</blockquote>
+
+<p>And a little add-on:</p>
+
+<blockquote>
+<p>The method used is pretty straightforward:</p>
+
+<ul>
+<li>collect execution trace;</li>
+<li>recognize instruction patterns and collapse sequences of primitive instructions to more complex ones;</li>
+<li>analyze disassembled trace.</li>
+</ul>
+
+<p>So, first I needed trace: I copied javascript text into cpp source, fixed lingual differences and inserted the following printf:</p>
+</blockquote>
+
+<pre><code class="cpp">while (1) {
+  int i = mem[ip];
+  printf(&quot;%04x:NOR(%04x, %04x =&gt; %04x) &quot;, i, mem[i], mem[i + 1], mem[i + 2]);
+  int a = mem[i + 0];
+</code></pre>
+
+<blockquote>
+<p>so that I got a long line (about 8Mb) of primitive instruction execution trace.</p>
+
+<p>Then I started constructing sed script that would make it readable.</p>
+
+<p>First, it broke the trace linewise, one instruction per line (288323 lines, will read it in case of insomnia). I took a look at processed trace and recorded several obvious instruction patterns into sed. Then reran script, took next look, recorded more patterns, &hellip;</p>
+
+<p>This way I figured out all boolean logic commands and jumps. Then rotations left. Each time new command got recognized, new filtered processed trace was suggesting next step, e.g. 15 ROTL equals ROTR etc.</p>
+
+<p>Then I looked into <a href="/blog/english/2010/04/06/modelling-a-cpu-with-only-one-operation/">your article</a>. And found addition pattern in disassembly. And recorded it in sed script.</p>
+
+<p>After that I was able to just read the trace (which shrink to 1035 lines). Its inner loop fit into one page, I just made some notes on a scratchpad:</p>
+</blockquote>
+
+<pre><code>[f1ba]: current in-T index (i)
+[f1b4]: LEN
+[f1b5]: 8
+
+0012-0035:[f1b9] ^= (T[i] &amp; 0xff)
+
+006d-007b:[f1b8] = [f1b9] &amp; 1
+008a-0158:[f1b9] &gt;&gt;= 1
+0167-10c7:[f1aa] = [f1b8] + -1, [f1ab] = !carry
+10ca-10e6:jmp on carry to 1145:110d
+
+110d-111b:[f1b9] ^= 1408
+
+1145-1f4f:--[f1b5]
+20a5-3005:[f1aa] = [f1b5] + -1, f1ab = !carry
+3008-3024:jmp on carry to 006d:304b
+
+304b-304b:++i
+3fab-3fab:--LEN
+4f0b-5e8a:jmp on carry to 5eb1:6
+</code></pre>
+
+<blockquote>
+<p>then I browsed through the repetitions of this inner loop and found the end of the outer loop.</p>
+</blockquote>
+
+<pre><code>5eb1-6e74:check 1c89
+</code></pre>
+
+<blockquote>
+<p>Then just translated it into C. It all took me three evenings.</p>
+</blockquote>
+
+<p>Then Max Filippov sent the solution for the <a href="/projects/norcpu/challenge/norcpu2.html">problem 2</a>.</p>
+
+<blockquote>
+<p>The second problem answer &ndash; <code>h1cKmE1fUsAn</code></p>
+
+<p>The result &ndash; <code>R0und2 D0ne!</code></p>
+
+<p>The password check algorithm is:</p>
+</blockquote>
+
+<pre><code class="cpp">bool check(const char *p)
+{
+   static const int xor_array[] = {
+       0x3469,
+       0x9c11,
+       0xd41e,
+       0x7ddf,
+       0x78b4,
+       0x6aed,
+       0x4024,
+       0xc03a,
+       0x4164,
+       0xc3c3,
+       0x4b6c,
+       0xe1ca,
+   };
+
+   int v = 0;
+   int x = 0x3401;
+
+   for (int i = 0; i &lt; 12; ++i)
+   {
+       int f = p[i] ^ x ^ xor_array[i];
+       // printf(&quot;x: %04x, f: %04x\n&quot;, x, f);
+       v |= f;
+       x = (x * 3 + 0x1d) &amp; 0xffff;
+   }
+   return !v;
+}
+</code></pre>
+
+<blockquote>
+<p>The commented printf prints out the secret phrase on-the-fly.</p>
+
+<p>The method of analysis &ndash; similar to the first problem &ndash; disassembling of the trace.</p>
+
+<p>The first round was frankly more interestintg.</p>
+</blockquote>
+
+<p>And, finally, the last solution of the <a href="/projects/norcpu/challenge/norcpu.html">first problem</a> is received from <strong>Salo Kril</strong>.</p>
+
+<p>No comments &ndash; just sources.</p>
+
+<pre><code class="cpp">// Password generation.
+
+// Brute_force(3);
+
+WORD ks_f(char *buff, int len)
+{
+   int i, j;
+   WORD ks = 0x1040;
+
+   for (i = 0; i &lt; len; i++)
+   {
+       ks ^= buff[i];
+       for (j = 0; j &lt; 8; j++)
+       {
+           if((ks &amp; 1) == 0)
+               ks = ks &gt;&gt; 1;
+           else
+               ks = (ks &gt;&gt; 1) ^ 0x1408;
+       }
+   }
+   return ks;
+}
+
+void Brute_force(int n)
+{
+   int i;
+   static char alphabet[] =
+       &quot;\x20\x21\x22\x23\x24\x25\x26\x27\x28\x29\x2A\x2B\x2C\x2D\x2E\x2F&quot;
+       &quot;\x30\x31\x32\x33\x34\x35\x36\x37\x38\x39\x3A\x3B\x3C\x3D\x3E\x3F&quot;
+       &quot;\x40\x41\x42\x43\x44\x45\x46\x47\x48\x49\x4A\x4B\x4C\x4D\x4E\x4F&quot;
+       &quot;\x50\x51\x52\x53\x54\x55\x56\x57\x58\x59\x5A\x5B\x5C\x5D\x5E\x5F&quot;
+       &quot;\x60\x61\x62\x63\x64\x65\x66\x67\x68\x69\x6A\x6B\x6C\x6D\x6E\x6F&quot;
+       &quot;\x70\x71\x72\x73\x74\x75\x76\x77\x78\x79\x7A\x7B\x7C\x7D\x7E&quot;;
+
+   if(n == 0)
+   {
+       if(ks_f(buff_bf, BF_N) == 0x1c89)
+           printf(&quot;%s\n&quot;,buff_bf);
+       return;
+   }
+
+   n--;
+   for (i = 0; alphabet[i]; i++)
+   {
+       buff_bf[n] = alphabet[i];
+       Brute_force(n);
+   }
+}
+</code></pre>
+
+<p>and re-constructed code:</p>
+
+<pre><code class="cpp">#define DEST_COUNT  0xF1FE
+extern WORD mem[];
+
+/*
+    Secret code: 139471
+*/
+void reconstructed_fn(void)
+{
+    int i, j;
+    WORD src, dest, key, count, hash, hash_OK, key_const;
+
+    src = mem[0xF1BA];     // input string
+    count = mem[0xF1ED];   // input string length
+    dest = mem[0xF1BB];    // 0xf1ff
+    hash_OK = mem[0xF1BC]; // 0x1c89
+    hash = mem[0xF1B9];    // 0x1040
+
+
+    for(i = 0; i &lt; count; i++)
+    {
+        hash ^= mem[src + i] &amp; 0xFF;
+
+        for (j = 0; j &lt; 8; j++)
+        {
+            if ((hash &amp; 1) == 0)
+                hash = hash &gt;&gt; 1;
+            else
+                hash = (hash &gt;&gt; 1) ^ 0x1408;
+        }
+    }
+
+    if (hash == hash_OK)
+    {
+        src = mem[0x6EB6];              // &quot;Secret code: 139471&quot;
+        count = mem[0xF1C7];            // 19
+        key = ((hash &gt;&gt; 8) ^ hash) + 1;
+        key_const = mem[0x6EA8];        // 11
+    }
+    else
+    {
+        src = mem[0x5EBE];          // &quot;Wrong password!&quot;
+        count = mem[0xF1DC];        // 15
+        key = mem[0xF1BD];
+        key_const = mem[0xF1BE];    // 17
+    }
+
+    mem[DEST_COUNT] = count;
+    for (i = 0; i &lt; count; i++)
+    {
+        mem[dest + i] = mem[src + i] ^ key;
+        key = key * 3 + key_const;
+    }
+}
+
+/*
+--------------------------------------------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------------------------------------------------------------------
+*/
+WORD and(WORD w1, WORD w2)
+{
+    return w1 &amp; w2;
+}
+
+WORD or(WORD w1, WORD w2)
+{
+    return w1 | w2;
+}
+
+WORD xor(WORD w1, WORD w2)
+{
+    return w1 ^ w2;
+}
+
+WORD rol(WORD w1, WORD n)
+{
+    return (w1 &lt;&lt; n) | (w1 &gt;&gt; (16 - n));
+}
+
+WORD ror(WORD w1, WORD n)
+{
+    return (w1 &gt;&gt; n) | (w1 &lt;&lt; (16 - n));
+}
+WORD extend_16(WORD k1)
+{
+    int i, k2;
+
+    for (i = 0, k2 = 0; i &lt; 16; i++)
+    {
+        k2 = or(k2, k1);
+        k1 = rol(k1, 1);
+    }
+
+    return k2;
+}
+
+WORD add(WORD *kk1, WORD a, WORD b)
+{
+    WORD mask_bit, aa0, aa1, tmp1, i, k1, k2;
+    k1 = 0;
+    k2 = 0;
+    mask_bit = 1;
+
+    for (i = 0; i &lt; 16; i++)
+    {
+        k1 = and(k1, mask_bit);
+        aa0 = xor(a, b);
+        tmp1 = xor(aa0, k1);
+        tmp1 = and(tmp1, mask_bit);
+        k2 = or(tmp1, k2);
+        aa1 = and(a, b);
+        aa0 = and(k1, aa0);
+        k1 = or(aa1, aa0);
+        k1 = rol(k1, 1);
+        mask_bit = rol(mask_bit, 1);
+    }
+    k1 = and(k1, mask_bit);
+    *kk1 = extend_16(k1);
+
+    return k2;
+}
+
+void reconstr(void)
+{
+    WORD k1, k2, src, dest, tmp1, key, count, tmp2, tmp3, i, ks, ks_OK, key_a;
+    WORD mask_bit, aa1, aa0;
+
+    k1 = mem[0xF1AF];    // 0x88
+    k2 = mem[0xF1A3];    // 0x47
+    src = mem[0xF1BA];   // input string
+    count = mem[0xF1ED]; // input string length
+    dest = mem[0xF1BB];  // 0xf1ff
+    ks_OK = mem[0xF1BC]; // 0x1c89             &quot;w&quot;:ks=0x0ACC   &quot;WWW&quot;:0x0FCE   &quot;123456789&quot;:ks=0x05E3
+    ks = mem[0xF1B9];    // 0x1040
+
+
+l_0006:
+    ks = xor(ks, and(mem[src], 0xFF));
+    i = 8;
+
+l_006D:
+    tmp3 = and(ks, 1);
+    ks = ror(ks, 1);
+    ks = and(ks, 0x7FFF);
+    tmp2 = add(&amp;k2, tmp3, -1);
+    if(k2 != 0)
+    {
+        ks = xor(ks, 0x1408);
+    }
+
+l_1145:
+    i = add(&amp;k1, i, -1);
+    tmp2 = add(&amp;k2, i, -1);
+    if(k2 != 0)
+        goto l_006D;
+
+l_304B:
+    src = add(&amp;k1, src, 1);
+    count = add(&amp;k1, count, -1);
+    tmp2 = add(&amp;k2, count, -1);
+    if(k2 != 0)
+        goto l_0006;
+
+
+    src = mem[0x5EBE];    // Wrong password!
+    count = mem[0xF1DC];  // 15
+    key = mem[0xF1BD];
+    key_a = mem[0xF1BE];
+    ks_OK = xor(ks_OK, ks);
+    tmp2 = add(&amp;k2, ks_OK, -1);
+
+    if(k2 != 0)
+        goto l_8552;
+
+l_6E9B:
+    src = mem[0x6EB6];     // Secret code: 139471
+    count = mem[0xF1C7];   // 19
+    key = ks;
+    key_a = mem[0x6EA8];
+
+    key = ror(key, 8);
+    key = and(key, 0xFF);
+    key = xor(ks, key);
+    key = and(key, 0x7FFF);
+    key = add(&amp;k1, key, 1);
+
+
+l_8552:
+    mem[DEST_COUNT] = count;
+l_8558:
+    mem[dest] = xor(mem[src], key);
+    tmp3 = add(&amp;k1, key, key);
+    key = add(&amp;k1, key, tmp3);
+    key = add(&amp;k1, key, key_a);
+    src = add(&amp;k1, src, 1);
+    dest = add(&amp;k1, dest, 1);
+    count = add(&amp;k1, count, -1);
+    tmp2 = add(&amp;k2, count, -1);
+    if(k2 != 0)
+        goto l_8558;
+
+l_F186:
+    mem[0xF1B2] = mem[0xF193]; // nc
+}
+</code></pre>
+
+<p>Well, as you understand the solutions have been fully comprehensive.</p>
+
+<p>Thanks to all participants.</p>
+
+<p>I&rsquo;m putting the original sources below. Just run the Python script to compile the code written on the function-macros, to run through and to generate an html-page (&ldquo;template.html&rdquo; is required).</p>
+
+<p>All the sources are available on as a git <a href="https://github.com/begoon/norcpu/">repository</a>.</p>
+
+<h2>Problem 1</h2>
+
+<p>File <a href="https://github.com/begoon/norcpu/blob/master/v1/norcpu.py">norcpu.py</a> (<a href="https://github.com/begoon/norcpu/blob/master/v1/template.html">template.html</a>):</p>
+
+<pre><code class="python">import sys, re, time, string, binascii
+
+verbose = False
+verbose_cpu = False
+scramble = True
+
+test_wrong_crc = 0
+
+secret_code = &quot;Secret code: 139471&quot;
+password = &quot;h0cKmE1fUsAn&quot;
+guess    = &quot;123456789012&quot;
+guess    = password
+
+# Secret code message encryption mask.
+secret_coef_add = 17
+
+message_text = &quot;Wrong password!&quot;
+# Wrong password message encryption mask.
+message_mask = 0x6301
+message_coef_add = 11
+
+# Non-standard CRC initial value (should be 0xFFFF).
+crc16_initial_value = 0x1040
+
+# Non-standard CRC constant (should be 0x8401).
+crc16_constant = 0x1408
+
+code_segment = []
+data_segment = []
+
+label_count = 0
+
+def dump(data, length = 8):
+  result = []
+  for i in xrange(0, len(data), length):
+    line = data[i:i + length]
+    hex_line = ' '.join([&quot;%04X&quot; % x for x in line])
+    result.append(&quot;%04X: %-*s\n&quot; % (i, length*5, hex_line))
+  return ''.join(result)
+
+def dump_js(data, length = 8):
+  result = []
+  for i in xrange(0, len(data), length):
+    line = data[i:i + length]
+    hex_line = ' '.join([&quot;0x%04X,&quot; % x for x in line])
+    result.append(&quot;%-*s\n&quot; % (length*5, hex_line))
+  return ''.join(result)
+
+def calc_crc16(data):
+  global crc16_initial_value
+  global crc16_constant
+
+  crc16 = crc16_initial_value
+  for i in range(0, len(data)):
+    ch = ord(data[i]) &amp; 0xff
+    crc16 = crc16 ^ ch
+    for j in range(0, 8):
+      if ((crc16 &amp; 1) != 0):
+        crc16 = (crc16 &gt;&gt; 1) ^ crc16_constant
+      else:
+        crc16 = crc16 &gt;&gt; 1
+  return crc16
+
+crc16 = calc_crc16(password)
+
+def encode_string(data, name, mask, coef_add):
+  global mem, names
+  offset = names[name]
+  offset_sz = names[name + &quot;_sz&quot;]
+  for i in range(0, len(data)):
+    mem[offset + i] = ord(data[i]) ^ mask
+    mask = (mask * 3 + coef_add) &amp; 0xffff
+  mem[offset_sz] = len(data)
+
+def put_string(data, name):
+  global mem, names
+  offset = names[name]
+  offset_sz = names[name + &quot;_sz&quot;]
+  for i in range(0, len(data)):
+    mem[offset + i] = ord(data[i])
+  mem[offset_sz] = len(data)
+
+def save_mem(name, size = -1):
+  f = open(name, &quot;w&quot;)
+  if size == -1: size = len(mem)
+  for i in (mem[0:size]):
+    hex = &quot;%04X&quot; % i
+    bin = binascii.a2b_hex(hex)
+    f.write(bin)
+  f.close()
+
+def next_label():
+  global label_count
+  label_count = label_count + 1
+  return &quot;label_%04d&quot; % label_count
+
+def code_rem(comment):
+  code_segment.append('; ' + comment)
+
+def data_rem(comment):
+  data_segment.append('; ' + comment)
+
+def data_label(name):
+  data_segment.append(name + &quot;:&quot;)
+
+def code_label(name):
+  code_segment.append(name + &quot;:&quot;)
+
+def code(value):
+  printed = value
+  if type(value).__name__ == 'int':
+    printed = &quot;%d&quot; % value
+  code_segment.append(&quot;  dw %s&quot; % printed)
+
+scramble_counter = 0x27
+
+def next_scramble_counter():
+  global scramble_counter
+  scramble_counter = scramble_counter * 3 + 7
+  return scramble_counter &amp; 0xff
+
+def word(value):
+  if value == -1:
+    if scramble:
+      value = next_scramble_counter()
+    else:
+      value = 0
+  printed = value
+  if type(value).__name__ == 'int':
+    printed = &quot;%d&quot; % value
+  data_segment.append(&quot;  dw %s&quot; % printed)
+
+def buffer(length, value = -1):
+  for i in range(0, length):
+    word(value)
+
+def var(name, value = -1):
+  data_label(name);
+  word(value);
+
+def NOR(a, b, r):
+  code_rem('NOR ' + str(a) + ' ' + str(b) + ' ' + str(r))
+  code(a)
+  code(b)
+  code(r)
+
+def NOT(a, r):
+  NOR(a, a, r);
+
+def OR(a, b, r):
+  NOR(a, b, &quot;or_reg&quot;)
+  NOT(&quot;or_reg&quot;, r)
+var(&quot;or_reg&quot;)
+
+def AND(a, b, r):
+  NOT(a, &quot;and_reg_a&quot;)
+  NOT(b, &quot;and_reg_b&quot;)
+  OR(&quot;and_reg_a&quot;, &quot;and_reg_b&quot;, &quot;and_reg_a&quot;)
+  NOT(&quot;and_reg_a&quot;, r)
+var(&quot;and_reg_a&quot;)
+var(&quot;and_reg_b&quot;)
+
+def ANDi(a, imm, r):
+  MOVi(imm, &quot;and_i_reg&quot;)
+  AND(a, &quot;and_i_reg&quot;, r)
+var(&quot;and_i_reg&quot;)
+
+def XOR(a, b, r):
+  NOT(a, &quot;xor_reg_a&quot;)
+  NOT(b, &quot;xor_reg_b&quot;)
+  AND(a, &quot;xor_reg_b&quot;, &quot;xor_reg_b&quot;)
+  AND(b, &quot;xor_reg_a&quot;, &quot;xor_reg_a&quot;)
+  OR(&quot;xor_reg_a&quot;, &quot;xor_reg_b&quot;, r)
+var(&quot;xor_reg_a&quot;)
+var(&quot;xor_reg_b&quot;)
+
+def XORi(a, imm, r):
+  MOVi(imm, &quot;xor_i_reg&quot;)
+  XOR(a, &quot;xor_i_reg&quot;, r)
+var(&quot;xor_i_reg&quot;)
+
+def MOV(a, b):
+  code_rem('MOV ' + str(a) + ' ' + str(b))
+  NOT(a, &quot;move_reg&quot;)
+  NOT(&quot;move_reg&quot;, b)
+  code_rem('MOV END')
+var(&quot;move_reg&quot;)
+
+def JMP(a):
+  code_rem('JMP ' + str(a))
+  MOV(a, &quot;ip&quot;)
+
+def JMPi(a):
+  code_rem('JMPi ' + str(a))
+  label = next_label()
+  JMP(label)
+  code_label(label)
+  code(a)
+
+def MOVi(imm, a):
+  code_rem('MOVi #' + str(imm) + ' ' + str(a))
+  label_data = next_label()
+  label_jump = next_label()
+  MOV(label_data, a)
+  JMPi(label_jump)
+  code_label(label_data)
+  code(imm)
+  code_label(label_jump)
+
+# [a] -&gt; b
+def PEEK(a, b):
+  label1 = next_label()
+  label2 = next_label()
+  MOV(a, label1)
+  MOV(a, label2)
+  code_label(label1)  # NOT(0, 0, move_reg)
+  code(0)             # &lt;- a
+  code_label(label2)  #
+  code(0)             # &lt;- a
+  code(&quot;move_reg&quot;)    #
+  NOT(&quot;move_reg&quot;, b)
+
+# a -&gt; [b]
+def POKE(a, b):
+  code_rem('POKE ' + str(a) + ' [' + str(b) + ']')
+  label = next_label()
+  MOV(b, label)
+  NOT(a, &quot;move_reg&quot;)  # +3 (three operations)
+  code(&quot;move_reg&quot;)    # +4
+  code(&quot;move_reg&quot;)    # +5
+  code_label(label)
+  code(0)             # &lt;- b
+
+# imm -&gt; [a]
+def POKEi(imm, a):
+  MOVi(imm, &quot;poke_i_reg&quot;)
+  POKE(&quot;poke_i_reg&quot;, a)
+var(&quot;poke_i_reg&quot;)
+
+def EXIT(a):
+  MOV(a, &quot;exit_reg&quot;)
+
+def EXITi(a):
+  MOVi(a, &quot;exit_reg&quot;)
+
+def FADD(mask, carry, a, b, r):
+  AND(a, mask, &quot;fadd_reg_a&quot;)  # zero bits in 'a' except mask'ed
+  AND(b, mask, &quot;fadd_reg_b&quot;)  # zero bits in 'b' except mask'ed
+  AND(carry, mask, carry)     # zero bits in 'carry' except mask'ed
+
+  # SUM = (a ^ b) ^ carry
+  XOR(a, b, &quot;fadd_reg_t1&quot;)
+  XOR(&quot;fadd_reg_t1&quot;, carry, &quot;fadd_reg_bit_r&quot;)
+
+  # Leave only 'mask'ed bit in bit_r.
+  AND(&quot;fadd_reg_bit_r&quot;, mask, &quot;fadd_reg_bit_r&quot;)
+
+  # Add current added bit to the result.
+  OR(&quot;fadd_reg_bit_r&quot;, r, r)
+
+  # CARRY = (a &amp; b) | (carry &amp; (a ^ b))
+  AND(a, b, &quot;fadd_reg_t2&quot;)
+  AND(carry, &quot;fadd_reg_t1&quot;, &quot;fadd_reg_t1&quot;)
+
+  # CARRY is calculated, and 'shift_reg' contains the same value
+  # but shifted the left by 1 bit.
+  OR(&quot;fadd_reg_t2&quot;, &quot;fadd_reg_t1&quot;, carry)
+
+  # CARRY is shifted the left by 1 bit to be used on the next round.
+  MOV(&quot;shift_reg&quot;, carry)
+
+  # shift_reg = mask &lt;&lt; 1
+  MOV(mask, mask)
+  # mask = shift (effectively &quot;mask = mask &lt;&lt; 1&quot;)
+  MOV(&quot;shift_reg&quot;, mask)
+
+  AND(carry, mask, carry)
+
+var(&quot;fadd_reg_a&quot;)
+var(&quot;fadd_reg_b&quot;)
+var(&quot;fadd_reg_bit_r&quot;)
+var(&quot;fadd_reg_t1&quot;)
+var(&quot;fadd_reg_t2&quot;)
+
+def ZERO(a):
+  XOR(a, a, a)
+
+def FADC(a, b, r):
+  ZERO(&quot;fadc_reg_t&quot;)
+  MOV(&quot;const_1&quot;, &quot;fadc_reg_mask&quot;)
+  for i in range(0, 16):
+    FADD(&quot;fadc_reg_mask&quot;, &quot;carry_reg&quot;, a, b, &quot;fadc_reg_t&quot;)
+  MOV(&quot;fadc_reg_t&quot;, r)
+
+  ZERO(&quot;fadc_reg_t&quot;)
+
+  for i in range(0, 16):
+    OR(&quot;fadc_reg_t&quot;, &quot;carry_reg&quot;, &quot;fadc_reg_t&quot;)
+    MOV(&quot;carry_reg&quot;, &quot;carry_reg&quot;)
+    MOV(&quot;shift_reg&quot;, &quot;carry_reg&quot;)
+
+  MOV(&quot;fadc_reg_t&quot;, &quot;carry_reg&quot;)
+
+var(&quot;fadc_reg_mask&quot;)
+var(&quot;fadc_reg_t&quot;)
+
+def ADD(a, b, r):
+  ZERO(&quot;carry_reg&quot;)
+  FADC(a, b, r)
+
+def ADDi(a, imm, r):
+  MOVi(imm, &quot;add_i_reg&quot;)
+  ADD(a, &quot;add_i_reg&quot;, r)
+var(&quot;add_i_reg&quot;)
+
+def PUSH(a):
+  ADD(&quot;stack_reg&quot;, &quot;const_minus_1&quot;, &quot;stack_reg&quot;)
+  POKE(a, &quot;stack_reg&quot;)
+
+def PUSHi(imm):
+  MOVi(imm, &quot;push_i_reg&quot;)
+  PUSH(&quot;push_i_reg&quot;)
+var(&quot;push_i_reg&quot;)
+
+def POP(a):
+  PEEK(&quot;stack_reg&quot;, a)
+  ADD(&quot;stack_reg&quot;, &quot;const_1&quot;, &quot;stack_reg&quot;)
+
+def CALL(a):
+  label = next_label()
+  PUSHi(label)
+  JMP(a)
+  code_label(label)
+
+def CALLi(a):
+  label = next_label()
+  PUSHi(label)
+  JMPi(a)
+  code_label(label)
+
+def RET():
+  POP(&quot;ip&quot;)
+
+# Jump 'a', if cond = FFFF, and 'b' if conf = 0000
+def BRANCH(a, b, cond):
+  AND(a, cond, &quot;branch_reg_a&quot;)              # reg_a = a &amp; cond
+  NOT(cond, &quot;branch_reg_b&quot;)                 # reg_b = !cond
+  AND(b, &quot;branch_reg_b&quot;, &quot;branch_reg_b&quot;)    # reg_b = b &amp; reg_b = b &amp; !cond
+  OR(&quot;branch_reg_a&quot;, &quot;branch_reg_b&quot;, &quot;ip&quot;)  # ip = (a &amp; cond) | (b &amp; !cond)
+var(&quot;branch_reg_a&quot;)
+var(&quot;branch_reg_b&quot;)
+
+# Jump 'a', if cond = FFFF, and 'b' if conf = 0000
+def BRANCHi(a, b, cond):
+  MOVi(a, &quot;branch_i_reg_a&quot;)
+  MOVi(b, &quot;branch_i_reg_b&quot;)
+  BRANCH(&quot;branch_i_reg_a&quot;, &quot;branch_i_reg_b&quot;, cond)
+var(&quot;branch_i_reg_a&quot;)
+var(&quot;branch_i_reg_b&quot;)
+
+# if a != 0 -&gt; carry = FFFF else carry = 0000
+def IS_0(a):
+  ZERO(&quot;carry_reg&quot;)
+  FADC(a, &quot;const_minus_1&quot;, &quot;is_0_reg&quot;)
+  NOT(&quot;carry_reg&quot;, &quot;zero_reg&quot;)
+var(&quot;is_0_reg&quot;)
+var(&quot;zero_reg&quot;)
+
+# ip = (zero_reg == FFFF ? a : ip)
+def JZi(a):
+  label = next_label()
+  BRANCHi(a, label, &quot;zero_reg&quot;)
+  code_label(label)
+
+# ip = (zero_reg == FFFF ? a : ip)
+def JNZi(a):
+  label = next_label()
+  BRANCHi(label, a, &quot;zero_reg&quot;)
+  code_label(label)
+
+def ROL(a, b):
+  MOV(a, a)            # shift_reg = a &lt;&lt; 1
+  MOV(&quot;shift_reg&quot;, b)
+
+def ROR(a, b):
+  MOV(a, &quot;ror_reg&quot;)
+  for i in range(0, 15):
+    ROL(&quot;ror_reg&quot;, &quot;ror_reg&quot;)
+  MOV(&quot;ror_reg&quot;, b)
+var(&quot;ror_reg&quot;)
+
+def SHL(a, b):
+  ROL(a, b)
+  ANDi(b, 0x0001, b)
+
+def SHR(a, b):
+  ROR(a, b)
+  ANDi(b, 0x7FFF, b)
+
+# NORCPU code
+
+var(&quot;ip&quot;, &quot;start&quot;)
+var(&quot;shift_reg&quot;)
+var(&quot;carry_reg&quot;)
+var(&quot;const_1&quot;, 1)
+var(&quot;const_minus_1&quot;, 0xFFFF)
+var(&quot;exit_reg&quot;)
+
+var(&quot;stack_reg&quot;, &quot;stack&quot;)
+
+code_label(&quot;start&quot;)
+
+var(&quot;i&quot;)
+var(&quot;j&quot;)
+var(&quot;ch&quot;)
+var(&quot;mask&quot;)
+var(&quot;t&quot;)
+
+var(&quot;crc16&quot;, crc16_initial_value)
+
+var(&quot;ptr&quot;, &quot;password&quot;)
+MOV(&quot;password_sz&quot;, &quot;i&quot;)
+
+crc_loop = next_label()
+code_label(crc_loop)          # crc_loop
+# ch = *ptr
+PEEK(&quot;ptr&quot;, &quot;ch&quot;)
+# ch &amp;= 0xFF
+ANDi(&quot;ch&quot;, 0xFF, &quot;ch&quot;)
+# crc16 ^= ch
+XOR(&quot;crc16&quot;, &quot;ch&quot;, &quot;crc16&quot;)
+
+MOVi(8, &quot;j&quot;)
+crc_loop_j = next_label()
+code_label(crc_loop_j)        # crc_loop_j
+
+# t = crc16 &amp; 1
+ANDi(&quot;crc16&quot;, 1, &quot;t&quot;)
+# crc16 &gt;&gt;= 1
+SHR(&quot;crc16&quot;, &quot;crc16&quot;)
+IS_0(&quot;t&quot;)
+crc_loop_1 = next_label()
+JZi(crc_loop_1)
+# crc16 ^= crc16_constant
+XORi(&quot;crc16&quot;, crc16_constant, &quot;crc16&quot;)
+code_label(crc_loop_1)        # crc_loop_1
+
+ADD(&quot;j&quot;, &quot;const_minus_1&quot;, &quot;j&quot;)
+IS_0(&quot;j&quot;)
+JNZi(crc_loop_j)
+
+# ptr += 1
+ADD(&quot;ptr&quot;, &quot;const_1&quot;, &quot;ptr&quot;)
+# i = i - 1
+ADD(&quot;i&quot;, &quot;const_minus_1&quot;, &quot;i&quot;)
+IS_0(&quot;i&quot;)
+JNZi(crc_loop)
+
+var(&quot;ptr2&quot;, &quot;result&quot;)
+
+correct_crc = crc16 + test_wrong_crc
+
+var(&quot;correct_crc&quot;, correct_crc)
+
+# By default we're going to decrypt 'Wrong...' message.
+MOVi(&quot;message&quot;, &quot;ptr&quot;)
+MOV(&quot;message_sz&quot;, &quot;i&quot;)
+
+var(&quot;message_mask&quot;, message_mask)
+MOV(&quot;message_mask&quot;, &quot;mask&quot;)
+
+var(&quot;coef_add&quot;, message_coef_add)
+
+wrong_label = next_label()
+
+XOR(&quot;correct_crc&quot;, &quot;crc16&quot;, &quot;correct_crc&quot;)
+IS_0(&quot;correct_crc&quot;)
+JNZi(wrong_label)
+
+# Now we switch to descrypt the secret message.
+MOVi(secret_coef_add, &quot;coef_add&quot;)
+
+MOVi(&quot;secret&quot;, &quot;ptr&quot;)
+MOV(&quot;secret_sz&quot;, &quot;i&quot;)
+
+# mask = ((crc16 &amp; 0xff) | ((crc16 &gt;&gt; 8) &amp; 0xff)) + 1
+MOV(&quot;crc16&quot;, &quot;mask&quot;)
+for i in range(0, 8):
+  SHR(&quot;mask&quot;, &quot;mask&quot;)
+XOR(&quot;crc16&quot;, &quot;mask&quot;, &quot;mask&quot;)
+ANDi(&quot;mask&quot;, 0xff, &quot;mask&quot;)
+
+ADD(&quot;mask&quot;, &quot;const_1&quot;, &quot;mask&quot;)
+
+code_label(wrong_label)
+
+MOV(&quot;i&quot;, &quot;result_sz&quot;)
+
+loop = next_label()
+code_label(loop)              # loop
+# ch = *ptr
+PEEK(&quot;ptr&quot;, &quot;ch&quot;)
+# ch ^= mask
+XOR(&quot;ch&quot;, &quot;mask&quot;, &quot;ch&quot;)
+POKE(&quot;ch&quot;, &quot;ptr2&quot;)
+# mask = mask * 3 + 11
+ADD(&quot;mask&quot;, &quot;mask&quot;, &quot;t&quot;)
+ADD(&quot;mask&quot;, &quot;t&quot;, &quot;mask&quot;)
+ADD(&quot;mask&quot;, &quot;coef_add&quot;, &quot;mask&quot;)
+# ptr += 1
+ADD(&quot;ptr&quot;, &quot;const_1&quot;, &quot;ptr&quot;)
+# ptr2 += 1
+ADD(&quot;ptr2&quot;, &quot;const_1&quot;, &quot;ptr2&quot;)
+# i = i - 1
+ADD(&quot;i&quot;, &quot;const_minus_1&quot;, &quot;i&quot;)
+IS_0(&quot;i&quot;)
+JNZi(loop)
+
+EXITi(0x00)
+
+buffer(8)
+data_label(&quot;stack&quot;)
+
+var(&quot;secret_sz&quot;, len(secret_code))
+data_label(&quot;secret&quot;)
+buffer(len(secret_code) + 1)
+
+var(&quot;message_sz&quot;)
+data_label(&quot;message&quot;)
+buffer(16)
+
+var(&quot;password_sz&quot;)
+data_label(&quot;password&quot;)
+buffer(16)
+
+# The buffer holding the result string.
+var(&quot;result_sz&quot;)
+data_label(&quot;result&quot;)
+buffer(32)
+
+# Compiler
+
+text = code_segment
+text.extend(data_segment)
+
+if verbose:
+  print &quot;\n&quot;.join(text)
+
+# Phase 1. Calculate names.
+
+addr = 0
+names = {}
+for line in text:
+  if line[0] == ';': continue
+  if line[0] != ' ':
+    name = line.partition(':')[0]
+    names[name] = addr
+  else:
+    addr = addr + 1
+
+if verbose:
+  print names
+
+raw_text = &quot;\n&quot;.join(text)
+
+# Resolve names.
+
+for name in names:
+  if verbose:
+    print name, names[name], type(names[name])
+  name_re = re.compile(r'dw ' + name + '$', re.M)
+  value = &quot;%d&quot; % names[name]
+  raw_text = name_re.sub('dw ' + value, raw_text)
+
+text = raw_text.split(&quot;\n&quot;)
+
+if verbose:
+  print &quot;\n&quot;.join(text)
+
+# Phase 2. Compilation.
+
+addr = 0
+comment = &quot;&quot;
+mem = []
+for line in text:
+  if line[0] == ';' or line[0] != ' ':
+    comment = comment + line + ' '
+  else:
+    value = int(line.strip().partition(&quot; &quot;)[2])
+    if verbose:
+      print &quot;%04X: %04X ; %s&quot; % (addr, value, comment)
+    mem.append(value)
+    addr = addr + 1
+    comment = &quot;&quot;
+
+# Interpretation
+
+ip = names[&quot;ip&quot;]
+exit_reg = names[&quot;exit_reg&quot;]
+shift_reg = names[&quot;shift_reg&quot;]
+carry_reg = names[&quot;carry_reg&quot;]
+
+def nor(a, b):
+  r = a | b
+  r = r ^ 0xFFFF
+  return r &amp; 0xFFFF
+
+def norcpu():
+  while 1:
+    i = mem[ip];
+    a = mem[i + 0]
+    b = mem[i + 1]
+    r = mem[i + 2]
+    mem[ip] = i + 3
+    f = nor(mem[a], mem[b])
+    mem[r] = f
+    mem[shift_reg] = ((f &gt;&gt; 15) &amp; 1) | ((f &amp; 0x7FFF) &lt;&lt; 1)
+
+    if verbose_cpu:
+      print &quot;%04X: %04X [%04X] %04X [%04X] -&gt; %04X [%04X]&quot; % \
+            (i, a, mem[a], b, mem[b], r, mem[r])
+    if r == exit_reg:
+      break
+
+print &quot;Starting from [%04X]&quot; % mem[ip]
+
+# Encrypt the secret code.
+secret_mask = ((crc16 &amp; 0xff) ^ ((crc16 &gt;&gt; 8) &amp; 0xff)) + 1
+encode_string(secret_code, &quot;secret&quot;, secret_mask, secret_coef_add);
+
+# Encrypt 'Wrong...' message.
+encode_string(message_text, &quot;message&quot;, message_mask, message_coef_add);
+
+mem_js = dump_js(mem)
+save_mem(&quot;norcpu-1-before.bin&quot;)
+mem_sz = len(mem)
+
+if len(mem) &gt;= 0x10000:
+  print &quot;Too much code (%08X, %04X)&quot; % (len(mem), len(mem) - 0x10000)
+  sys.exit()
+
+# Inject plain password in the last moment (for testing).
+put_string(guess, &quot;password&quot;)
+
+save_mem(&quot;norcpu-2-before-with-password.bin&quot;)
+
+if verbose:
+  print &quot;Original memory:&quot;
+  print dump(mem)
+
+start_time = time.time()
+
+norcpu()
+
+end_time = time.time()
+
+save_mem(&quot;norcpu-3-after.bin&quot;, mem_sz)
+
+if verbose:
+  print &quot;Memory after:&quot;
+  dump(mem)
+
+print
+print &quot;Size: %X&quot; % len(mem)
+print &quot;Time: %d&quot; % (end_time - start_time)
+print &quot;Exit: %04X&quot; % mem[exit_reg]
+
+print(&quot;CRC : %04X (%04X)&quot; % (crc16, correct_crc))
+
+result = names[&quot;result&quot;]
+result_value = &quot;&quot;
+for i in range(0, mem[names[&quot;result_sz&quot;]]):
+  result_value = result_value + chr(mem[result + i] &amp; 0xff)
+
+if result_value != secret_code:
+  print &quot;ERROR: [%s] != [%s]&quot; % (secret_code, result_value)
+
+js = string.Template(open('template.html', 'r').read())
+
+js = js.substitute( \
+  ip = names[&quot;ip&quot;],
+  exit_reg = names[&quot;exit_reg&quot;],
+  shift_reg = names[&quot;shift_reg&quot;],
+  password = names[&quot;password&quot;],
+  password_sz = names[&quot;password_sz&quot;],
+  result = names[&quot;result&quot;],
+  result_sz = names[&quot;result_sz&quot;],
+  mem_js = mem_js
+)
+
+f = open(&quot;norcpu.html&quot;, &quot;w&quot;)
+f.write(js)
+f.close()
+</code></pre>
+
+<h2>Problem 2</h2>
+
+<p>File <a href="https://github.com/begoon/norcpu/blob/master/v2/norcpu.py">norcpu.py</a> (<a href="https://github.com/begoon/norcpu/blob/master/v2/template.html">template.html</a>):</p>
+
+<pre><code class="cpp">import sys, re, time, string, binascii
+
+verbose = False
+verbose_cpu = False
+scramble = True
+
+secret_password = &quot;h1cKmE1fUsAn&quot;
+secret_password_xor_mask = 0x3401
+secret_password_add = 29
+
+secret_code = &quot;R0und2 D0ne!&quot;
+secret_code_xor_mask = 0x730A
+secret_code_add = 37
+
+guess = &quot;123456789012&quot;
+guess = secret_password
+
+code_segment = []
+data_segment = []
+
+label_count = 0
+
+def dump(data, length = 8):
+  result = []
+  for i in xrange(0, len(data), length):
+    line = data[i:i + length]
+    hex_line = ' '.join([&quot;%04X&quot; % x for x in line])
+    result.append(&quot;%04X: %-*s\n&quot; % (i, length*5, hex_line))
+  return ''.join(result)
+
+def dump_js(data, length = 8):
+  result = []
+  for i in xrange(0, len(data), length):
+    line = data[i:i + length]
+    hex_line = ' '.join([&quot;0x%04X,&quot; % x for x in line])
+    result.append(&quot;%-*s\n&quot; % (length*5, hex_line))
+  return ''.join(result)
+
+def encode_string(data, name, mask, coef_add):
+  global mem, names
+  offset = names[name]
+  offset_sz = names[name + &quot;_sz&quot;]
+  for i in range(0, len(data)):
+    mem[offset + i] = ord(data[i]) ^ mask
+    mask = (mask * 3 + coef_add) &amp; 0xffff
+  mem[offset_sz] = len(data)
+
+def put_string(data, name):
+  global mem, names
+  offset = names[name]
+  offset_sz = names[name + &quot;_sz&quot;]
+  for i in range(0, len(data)):
+    mem[offset + i] = ord(data[i])
+  mem[offset_sz] = len(data)
+
+def save_mem(name, size = -1):
+  f = open(name, &quot;w&quot;)
+  if size == -1: size = len(mem)
+  for i in (mem[0:size]):
+    hex = &quot;%04X&quot; % i
+    bin = binascii.a2b_hex(hex)
+    f.write(bin)
+  f.close()
+
+def next_label():
+  global label_count
+  label_count = label_count + 1
+  return &quot;label_%04d&quot; % label_count
+
+def code_rem(comment):
+  code_segment.append('; ' + comment)
+
+def data_rem(comment):
+  data_segment.append('; ' + comment)
+
+def data_label(name):
+  data_segment.append(name + &quot;:&quot;)
+
+def code_label(name):
+  code_segment.append(name + &quot;:&quot;)
+
+def code(value):
+  printed = value
+  if type(value).__name__ == 'int':
+    printed = &quot;%d&quot; % value
+  code_segment.append(&quot;  dw %s&quot; % printed)
+
+scramble_counter = 0x2743
+
+def next_scramble_counter():
+  global scramble_counter
+  scramble_counter = scramble_counter * 3 + 7
+  return scramble_counter &amp; 0xffff
+
+def word(value):
+  if value == -1:
+    if scramble:
+      value = next_scramble_counter()
+    else:
+      value = 0
+  printed = value
+  if type(value).__name__ == 'int':
+    printed = &quot;%d&quot; % value
+  data_segment.append(&quot;  dw %s&quot; % printed)
+
+def buffer(length, value = -1):
+  for i in range(0, length):
+    word(value)
+
+def var(name, value = -1):
+  data_label(name);
+  word(value);
+
+# Macros
+
+def NOR(a, b, r):
+  code_rem('NOR ' + str(a) + ' ' + str(b) + ' ' + str(r))
+  code(a)
+  code(b)
+  code(r)
+
+def NOT(a, r):
+  NOR(a, a, r);
+
+def OR(a, b, r):
+  NOR(a, b, &quot;or_reg&quot;)
+  NOT(&quot;or_reg&quot;, r)
+var(&quot;or_reg&quot;)
+
+def AND(a, b, r):
+  NOT(a, &quot;and_reg_a&quot;)
+  NOT(b, &quot;and_reg_b&quot;)
+  OR(&quot;and_reg_a&quot;, &quot;and_reg_b&quot;, &quot;and_reg_a&quot;)
+  NOT(&quot;and_reg_a&quot;, r)
+var(&quot;and_reg_a&quot;)
+var(&quot;and_reg_b&quot;)
+
+def ANDi(a, imm, r):
+  MOVi(imm, &quot;and_i_reg&quot;)
+  AND(a, &quot;and_i_reg&quot;, r)
+var(&quot;and_i_reg&quot;)
+
+def XOR(a, b, r):
+  NOT(a, &quot;xor_reg_a&quot;)
+  NOT(b, &quot;xor_reg_b&quot;)
+  AND(a, &quot;xor_reg_b&quot;, &quot;xor_reg_b&quot;)
+  AND(b, &quot;xor_reg_a&quot;, &quot;xor_reg_a&quot;)
+  OR(&quot;xor_reg_a&quot;, &quot;xor_reg_b&quot;, r)
+var(&quot;xor_reg_a&quot;)
+var(&quot;xor_reg_b&quot;)
+
+def XORi(a, imm, r):
+  MOVi(imm, &quot;xor_i_reg&quot;)
+  XOR(a, &quot;xor_i_reg&quot;, r)
+var(&quot;xor_i_reg&quot;)
+
+def MOV(a, b):
+  code_rem('MOV ' + str(a) + ' ' + str(b))
+  NOT(a, &quot;move_reg&quot;)
+  NOT(&quot;move_reg&quot;, b)
+  code_rem('MOV END')
+var(&quot;move_reg&quot;)
+
+def JMP(a):
+  code_rem('JMP ' + str(a))
+  MOV(a, &quot;ip&quot;)
+
+def JMPi(a):
+  code_rem('JMPi ' + str(a))
+  label = next_label()
+  JMP(label)
+  code_label(label)
+  code(a)
+
+def MOVi(imm, a):
+  code_rem('MOVi #' + str(imm) + ' ' + str(a))
+  label_data = next_label()
+  label_jump = next_label()
+  MOV(label_data, a)
+  JMPi(label_jump)
+  code_label(label_data)
+  code(imm)
+  code_label(label_jump)
+
+# [a] -&gt; b
+def PEEK(a, b):
+  label1 = next_label()
+  label2 = next_label()
+  MOV(a, label1)
+  MOV(a, label2)
+  code_label(label1)  # NOT(0, 0, move_reg)
+  code(0)             # &lt;- a
+  code_label(label2)  #
+  code(0)             # &lt;- a
+  code(&quot;move_reg&quot;)    #
+  NOT(&quot;move_reg&quot;, b)
+
+# a -&gt; [b]
+def POKE(a, b):
+  code_rem('POKE ' + str(a) + ' [' + str(b) + ']')
+  label = next_label()
+  MOV(b, label)
+  NOT(a, &quot;move_reg&quot;)  # +3 (three operations)
+  code(&quot;move_reg&quot;)    # +4
+  code(&quot;move_reg&quot;)    # +5
+  code_label(label)
+  code(0)             # &lt;- b
+
+# imm -&gt; [a]
+def POKEi(imm, a):
+  MOVi(imm, &quot;poke_i_reg&quot;)
+  POKE(&quot;poke_i_reg&quot;, a)
+var(&quot;poke_i_reg&quot;)
+
+def EXIT(a):
+  MOV(a, &quot;exit_reg&quot;)
+
+def EXITi(a):
+  MOVi(a, &quot;exit_reg&quot;)
+
+def FADD(mask, carry, a, b, r):
+  AND(a, mask, &quot;fadd_reg_a&quot;)  # zero bits in 'a' except mask'ed
+  AND(b, mask, &quot;fadd_reg_b&quot;)  # zero bits in 'b' except mask'ed
+  AND(carry, mask, carry)     # zero bits in 'carry' except mask'ed
+
+  # SUM = (a ^ b) ^ carry
+  XOR(a, b, &quot;fadd_reg_t1&quot;)
+  XOR(&quot;fadd_reg_t1&quot;, carry, &quot;fadd_reg_bit_r&quot;)
+
+  # Leave only 'mask'ed bit in bit_r.
+  AND(&quot;fadd_reg_bit_r&quot;, mask, &quot;fadd_reg_bit_r&quot;)
+
+  # Add current added bit to the result.
+  OR(&quot;fadd_reg_bit_r&quot;, r, r)
+
+  # CARRY = (a &amp; b) | (carry &amp; (a ^ b))
+  AND(a, b, &quot;fadd_reg_t2&quot;)
+  AND(carry, &quot;fadd_reg_t1&quot;, &quot;fadd_reg_t1&quot;)
+
+  # CARRY is calculated, and 'shift_reg' contains the same value
+  # but shifted the left by 1 bit.
+  OR(&quot;fadd_reg_t2&quot;, &quot;fadd_reg_t1&quot;, carry)
+
+  # CARRY is shifted the left by 1 bit to be used on the next round.
+  MOV(&quot;shift_reg&quot;, carry)
+
+  # shift_reg = mask &lt;&lt; 1
+  MOV(mask, mask)
+  # mask = shift (effectively &quot;mask = mask &lt;&lt; 1&quot;)
+  MOV(&quot;shift_reg&quot;, mask)
+
+  AND(carry, mask, carry)
+
+var(&quot;fadd_reg_a&quot;)
+var(&quot;fadd_reg_b&quot;)
+var(&quot;fadd_reg_bit_r&quot;)
+var(&quot;fadd_reg_t1&quot;)
+var(&quot;fadd_reg_t2&quot;)
+
+def ZERO(a):
+  XOR(a, a, a)
+
+def FADC(a, b, r):
+  ZERO(&quot;fadc_reg_t&quot;)
+  MOV(&quot;const_1&quot;, &quot;fadc_reg_mask&quot;)
+  for i in range(0, 16):
+    FADD(&quot;fadc_reg_mask&quot;, &quot;carry_reg&quot;, a, b, &quot;fadc_reg_t&quot;)
+  MOV(&quot;fadc_reg_t&quot;, r)
+
+  ZERO(&quot;fadc_reg_t&quot;)
+
+  for i in range(0, 16):
+    OR(&quot;fadc_reg_t&quot;, &quot;carry_reg&quot;, &quot;fadc_reg_t&quot;)
+    MOV(&quot;carry_reg&quot;, &quot;carry_reg&quot;)
+    MOV(&quot;shift_reg&quot;, &quot;carry_reg&quot;)
+
+  MOV(&quot;fadc_reg_t&quot;, &quot;carry_reg&quot;)
+
+var(&quot;fadc_reg_mask&quot;)
+var(&quot;fadc_reg_t&quot;)
+
+def ADD(a, b, r):
+  ZERO(&quot;carry_reg&quot;)
+  FADC(a, b, r)
+
+def ADDi(a, imm, r):
+  MOVi(imm, &quot;add_i_reg&quot;)
+  ADD(a, &quot;add_i_reg&quot;, r)
+var(&quot;add_i_reg&quot;)
+
+def PUSH(a):
+  ADD(&quot;stack_reg&quot;, &quot;const_minus_1&quot;, &quot;stack_reg&quot;)
+  POKE(a, &quot;stack_reg&quot;)
+
+def PUSHi(imm):
+  MOVi(imm, &quot;push_i_reg&quot;)
+  PUSH(&quot;push_i_reg&quot;)
+var(&quot;push_i_reg&quot;)
+
+def POP(a):
+  PEEK(&quot;stack_reg&quot;, a)
+  ADD(&quot;stack_reg&quot;, &quot;const_1&quot;, &quot;stack_reg&quot;)
+
+def CALL(a):
+  label = next_label()
+  PUSHi(label)
+  JMP(a)
+  code_label(label)
+
+def CALLi(a):
+  label = next_label()
+  PUSHi(label)
+  JMPi(a)
+  code_label(label)
+
+def RET():
+  POP(&quot;ip&quot;)
+
+# Jump 'a', if cond = FFFF, and 'b' if conf = 0000
+def BRANCH(a, b, cond):
+  AND(a, cond, &quot;branch_reg_a&quot;)              # reg_a = a &amp; cond
+  NOT(cond, &quot;branch_reg_b&quot;)                 # reg_b = !cond
+  AND(b, &quot;branch_reg_b&quot;, &quot;branch_reg_b&quot;)    # reg_b = b &amp; reg_b = b &amp; !cond
+  OR(&quot;branch_reg_a&quot;, &quot;branch_reg_b&quot;, &quot;ip&quot;)  # ip = (a &amp; cond) | (b &amp; !cond)
+var(&quot;branch_reg_a&quot;)
+var(&quot;branch_reg_b&quot;)
+
+# Jump 'a', if cond = FFFF, and 'b' if conf = 0000
+def BRANCHi(a, b, cond):
+  MOVi(a, &quot;branch_i_reg_a&quot;)
+  MOVi(b, &quot;branch_i_reg_b&quot;)
+  BRANCH(&quot;branch_i_reg_a&quot;, &quot;branch_i_reg_b&quot;, cond)
+var(&quot;branch_i_reg_a&quot;)
+var(&quot;branch_i_reg_b&quot;)
+
+# if a != 0 -&gt; carry = FFFF else carry = 0000
+def IS_0(a):
+  ZERO(&quot;carry_reg&quot;)
+  FADC(a, &quot;const_minus_1&quot;, &quot;is_0_reg&quot;)
+  NOT(&quot;carry_reg&quot;, &quot;zero_reg&quot;)
+var(&quot;is_0_reg&quot;)
+var(&quot;zero_reg&quot;)
+
+# ip = (zero_reg == FFFF ? a : ip)
+def JZi(a):
+  label = next_label()
+  BRANCHi(a, label, &quot;zero_reg&quot;)
+  code_label(label)
+
+# ip = (zero_reg == FFFF ? a : ip)
+def JNZi(a):
+  label = next_label()
+  BRANCHi(label, a, &quot;zero_reg&quot;)
+  code_label(label)
+
+def ROL(a, b):
+  MOV(a, a)            # shift_reg = a &lt;&lt; 1
+  MOV(&quot;shift_reg&quot;, b)
+
+def ROR(a, b):
+  MOV(a, &quot;ror_reg&quot;)
+  for i in range(0, 15):
+    ROL(&quot;ror_reg&quot;, &quot;ror_reg&quot;)
+  MOV(&quot;ror_reg&quot;, b)
+var(&quot;ror_reg&quot;)
+
+def SHL(a, b):
+  ROL(a, b)
+  ANDi(b, 0x0001, b)
+
+def SHR(a, b):
+  ROR(a, b)
+  ANDi(b, 0x7FFF, b)
+
+def MUL3(a, b):
+  ADD(a, a, &quot;mul3_reg&quot;)    # mul3_reg = a + a
+  ADD(&quot;mul3_reg&quot;, a, b)    # b = mul3_reg + a
+var(&quot;mul3_reg&quot;)
+
+# NORCPU code
+
+var(&quot;ip&quot;, &quot;start&quot;)
+var(&quot;shift_reg&quot;)
+var(&quot;carry_reg&quot;)
+var(&quot;const_1&quot;, 1)
+var(&quot;const_minus_1&quot;, 0xFFFF)
+var(&quot;exit_reg&quot;)
+
+var(&quot;stack_reg&quot;, &quot;stack&quot;)
+
+code_label(&quot;start&quot;)
+
+var(&quot;ch&quot;)
+var(&quot;t&quot;)
+var(&quot;xor_mask&quot;)
+var(&quot;cmp_flag&quot;)
+
+var(&quot;ptr&quot;)
+var(&quot;ptr2&quot;)
+var(&quot;i&quot;)
+
+MOVi(&quot;exchange&quot;, &quot;ptr&quot;)
+MOVi(&quot;secret_password&quot;, &quot;ptr2&quot;)
+MOVi(secret_password_xor_mask, &quot;xor_mask&quot;)
+MOVi(0, &quot;cmp_flag&quot;)
+MOVi(len(secret_password), &quot;i&quot;)
+
+cmp_loop = next_label()
+code_label(cmp_loop)               # cmp_loop:
+PEEK(&quot;ptr&quot;, &quot;ch&quot;)                                      # ch = *ptr
+XOR(&quot;ch&quot;, &quot;xor_mask&quot;, &quot;ch&quot;)                            # ch ^= xor_mask
+PEEK(&quot;ptr2&quot;, &quot;t&quot;)                                      # t = *ptr2
+XOR(&quot;ch&quot;, &quot;t&quot;, &quot;ch&quot;)                                   # ch = ch ^ t
+OR(&quot;cmp_flag&quot;, &quot;ch&quot;, &quot;cmp_flag&quot;)                       # cmp_flag |= ch
+ADD(&quot;ptr&quot;, &quot;const_1&quot;, &quot;ptr&quot;)                           # ptr += 1
+ADD(&quot;ptr2&quot;, &quot;const_1&quot;, &quot;ptr2&quot;)                         # ptr2 += 1
+MUL3(&quot;xor_mask&quot;, &quot;xor_mask&quot;)                           # xor_mask *= 3
+ADDi(&quot;xor_mask&quot;, secret_password_add, &quot;xor_mask&quot;)      # xor_mask += add_const
+ADD(&quot;i&quot;, &quot;const_minus_1&quot;, &quot;i&quot;)                         # i -= 1
+IS_0(&quot;i&quot;)
+JNZi(cmp_loop)
+
+MOVi(0, &quot;exchange_sz&quot;)
+
+ok_label = next_label()
+IS_0(&quot;cmp_flag&quot;)
+JZi(ok_label)
+
+exit_label = next_label()
+JMPi(exit_label)
+
+code_label(ok_label)
+
+MOVi(&quot;secret_code&quot;, &quot;ptr&quot;)
+MOV(&quot;secret_code_sz&quot;, &quot;i&quot;)
+MOVi(secret_code_xor_mask, &quot;xor_mask&quot;)
+
+MOVi(&quot;exchange&quot;, &quot;ptr2&quot;)
+
+MOV(&quot;i&quot;, &quot;exchange_sz&quot;)
+
+loop = next_label()
+code_label(loop)                   # loop:
+PEEK(&quot;ptr&quot;, &quot;ch&quot;)                             # ch = *ptr
+XOR(&quot;ch&quot;, &quot;xor_mask&quot;, &quot;ch&quot;)                   # ch ^= xor_mask
+POKE(&quot;ch&quot;, &quot;ptr2&quot;)                            # *ptr2 = ch
+MUL3(&quot;xor_mask&quot;, &quot;xor_mask&quot;)                  # xor_mask *= 3
+ADDi(&quot;xor_mask&quot;, secret_code_add, &quot;xor_mask&quot;) # xor_mask += add_const
+ADD(&quot;ptr&quot;, &quot;const_1&quot;, &quot;ptr&quot;)                  # ptr += 1
+ADD(&quot;ptr2&quot;, &quot;const_1&quot;, &quot;ptr2&quot;)                # ptr2 += 1
+ADD(&quot;i&quot;, &quot;const_minus_1&quot;, &quot;i&quot;)                # i = i - 1
+IS_0(&quot;i&quot;)
+JNZi(loop)
+
+code_label(exit_label)             # exit_label:
+EXITi(0x00)
+
+buffer(8)
+data_label(&quot;stack&quot;)
+
+var(&quot;secret_code_sz&quot;, len(secret_code))
+data_label(&quot;secret_code&quot;)
+buffer(len(secret_code))
+
+var(&quot;secret_password_sz&quot;)
+data_label(&quot;secret_password&quot;)
+buffer(16)
+
+var(&quot;exchange_sz&quot;, 0)
+data_label(&quot;exchange&quot;)
+buffer(32)
+
+# Compiler
+
+text = code_segment
+text.extend(data_segment)
+
+if verbose:
+  print &quot;\n&quot;.join(text)
+
+# Phase 1. Calculate names.
+
+addr = 0
+names = {}
+for line in text:
+  if line[0] == ';': continue
+  if line[0] != ' ':
+    name = line.partition(':')[0]
+    names[name] = addr
+  else:
+    addr = addr + 1
+
+if verbose:
+  print names
+
+raw_text = &quot;\n&quot;.join(text)
+
+# Resolve names.
+
+for name in names:
+  if verbose:
+    print name, names[name], type(names[name])
+  name_re = re.compile(r'dw ' + name + '$', re.M)
+  value = &quot;%d&quot; % names[name]
+  raw_text = name_re.sub('dw ' + value, raw_text)
+
+text = raw_text.split(&quot;\n&quot;)
+
+if verbose:
+  print &quot;\n&quot;.join(text)
+
+# Phase 2. Compilation.
+
+addr = 0
+comment = &quot;&quot;
+mem = []
+for line in text:
+  if line[0] == ';' or line[0] != ' ':
+    comment = comment + line + ' '
+  else:
+    value = int(line.strip().partition(&quot; &quot;)[2])
+    if verbose:
+      print &quot;%04X: %04X ; %s&quot; % (addr, value, comment)
+    mem.append(value)
+    addr = addr + 1
+    comment = &quot;&quot;
+
+# Interpretation
+
+ip = names[&quot;ip&quot;]
+exit_reg = names[&quot;exit_reg&quot;]
+shift_reg = names[&quot;shift_reg&quot;]
+carry_reg = names[&quot;carry_reg&quot;]
+
+def nor(a, b):
+  r = a | b
+  r = r ^ 0xFFFF
+  return r &amp; 0xFFFF
+
+def norcpu():
+  while 1:
+    i = mem[ip];
+    a = mem[i + 0]
+    b = mem[i + 1]
+    r = mem[i + 2]
+    mem[ip] = i + 3
+    f = nor(mem[a], mem[b])
+    mem[r] = f
+    mem[shift_reg] = ((f &gt;&gt; 15) &amp; 1) | ((f &amp; 0x7FFF) &lt;&lt; 1)
+
+    if verbose_cpu:
+      print &quot;%04X: %04X [%04X] %04X [%04X] -&gt; %04X [%04X]&quot; % \
+            (i, a, mem[a], b, mem[b], r, mem[r])
+    if r == exit_reg:
+      break
+
+print &quot;Starting from [%04X]&quot; % mem[ip]
+
+encode_string(secret_code, &quot;secret_code&quot;, secret_code_xor_mask, secret_code_add);
+encode_string(secret_password, &quot;secret_password&quot;, secret_password_xor_mask, secret_password_add);
+
+mem_js = dump_js(mem)
+save_mem(&quot;norcpu-1-before.bin&quot;)
+mem_sz = len(mem)
+
+if len(mem) &gt;= 0x10000:
+  print &quot;Too much code (%08X, %04X)&quot; % (len(mem), len(mem) - 0x10000)
+  sys.exit()
+
+# Inject plain password in the last moment (for testing).
+put_string(guess, &quot;exchange&quot;)
+
+save_mem(&quot;norcpu-2-before-with-password.bin&quot;)
+
+if verbose:
+  print &quot;Original memory:&quot;
+  print dump(mem)
+
+start_time = time.time()
+
+norcpu()
+
+end_time = time.time()
+
+save_mem(&quot;norcpu-3-after.bin&quot;, mem_sz)
+
+if verbose:
+  print &quot;Memory after:&quot;
+  dump(mem)
+
+print
+print &quot;Size: %X&quot; % len(mem)
+print &quot;Time: %d&quot; % (end_time - start_time)
+print &quot;Exit: %04X&quot; % mem[exit_reg]
+
+exchange = names[&quot;exchange&quot;]
+result_value = &quot;&quot;
+for i in range(0, mem[names[&quot;exchange_sz&quot;]]):
+  result_value = result_value + chr(mem[exchange + i] &amp; 0xff)
+
+print &quot;Result: [%s]&quot; % result_value
+
+if len(result_value) == 0:
+  print &quot;ERROR: Wrong password&quot;
+
+js = string.Template(open('template.html', 'r').read())
+
+js = js.substitute( \
+  ip = names[&quot;ip&quot;],
+  exit_reg = names[&quot;exit_reg&quot;],
+  shift_reg = names[&quot;shift_reg&quot;],
+  exchange = names[&quot;exchange&quot;],
+  exchange_sz = names[&quot;exchange_sz&quot;],
+  mem_js = mem_js
+)
+
+f = open(&quot;norcpu2.html&quot;, &quot;w&quot;)
+f.write(js)
+f.close()
+</code></pre>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2011/02/one-command-norcpu-program-hacking.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2011/02/one-command-norcpu-program-hacking.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2011/02/one-command-norcpu-program-hacking.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

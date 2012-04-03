@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>GitHub as a blog engine</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>GitHub as a blog engine</h1>
+<div id="post">
+  <p>To say that Blogspot (Blogger) infuriates me is to say nothing. The only benefit of it is fast indexing by Google.</p>
+
+<p>Artemy Lebedev said that he despises all this <a href="http://en.wikipedia.org/wiki/Search_engine_optimization">SEO</a> bullshit because it is much more productive to focus on creating great posts rather than thinking how to attract more readers. His <a href="http://tema.livejournal.com/">LJ</a> uses a default template without even minor tweaks to make it looking “cool”. Despite of this his blog is in Russian Top 10.</p>
+
+<p>Nobody reads blogs directly nowadays. Everybody uses Google Reader or other aggregators making the design of blogs absolutely pointless.</p>
+
+<p>Anyway let’s leave odious Lebedev and come back to our techy blogs. Tom Preston-Werner, one of the Github founders, <a href="http://tom.preston-werner.com/2008/11/17/blogging-like-a-hacker.html">said that he wanted to write posts</a> but not tweaking different templates or keeping the version of WordPress or Mephisto up to date.</p>
+
+<p>A similar thought haunts me from the day one of using Blogspot. Only recently I have sorted a way of creating post by using <a href="http://docutils.sourceforge.net/docs/user/rst/quickref.html">ReST</a>. Now I write posts in this markup and convert to HTML before publishing by a few handcrafted scripts. Unfortunately hosting for images is not automated in anyway.</p>
+
+<p>Many times I wanted to migrate to a standalone platform, for example, WordPress. But my laziness and unwillingness to spend even a second on its maintenance always stopped me.</p>
+
+<p>At the moment I have another attack of hate to Blogspot and as a consequence look for alternatives.</p>
+
+<p>Surprisingly I never considered using <a href="http://www.subspacefield.org/~travis/static_blog_generators.html">static blog engines</a>.</p>
+
+<p>What if just simply migrate to <a href="http://pages.github.com/">GitHub Pages</a>? It converts one of your repositories to a website which can be also processed by <a href="http://jekyllrb.com/">Jekyll</a>, a static engine from Tom Preston-Werner.</p>
+
+<p>I could kill a few birds with one stone – to use a proper markup language, <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> or <a href="http://en.wikipedia.org/wiki/Textile_(markup_language)">Textile</a>, instead of bloody HTML and to manage publishing by git. Of course ReST is better but I can cope with it.</p>
+
+<p>Also GitHub Pages can be integrated with your own domain if needed.</p>
+
+<p>Comments and discussions. <a href="http://disqus.com/">Disqus</a> seems to be an easiest way to sort it without any hassle.</p>
+
+<p>Google Analytics perfectly works with any engine where you can insert their JavaScript hook into pages.</p>
+
+<p>What is still missing?</p>
+
+<p>Sometimes people still visit blogs directly, for instance, to find previous posts or explore “social” details. In this case all these bells and whistles in a form of JavaScript gadgets are very useful and save a lot of time. Blogspot allows adding them in a few clicks.</p>
+
+<p>But coming back to the question at the beginning – do I really need them? If the content is interesting the audience will inevitably find you. A word of mouth in a form of Twitter or Facebook will attract people. But if the content is crap all those bells and whistles (and SEO) will not help.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/12/github-github-as-blog-engine.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/12/github-github-as-blog-engine-english.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/12/github-github-as-blog-engine.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

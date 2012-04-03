@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Защита объектов от случайного копирования в С++</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Защита объектов от случайного копирования в С++</h1>
+<div id="post">
+  <p>Внимательный читатель наверняка заметил в посте про <a href="/blog/russian/2009/01/26/universal-threads-for-windows-and-unix/">Универсальные потоки на С++ для Windows и UNIX</a> следующий фрагмент кода:</p>
+
+<pre><code class="cpp">class Thread {
+public:
+  ...
+private:
+  ...
+  // Защита от случайного копирования объекта в C++
+  Thread(const Thread&amp;);
+  void operator=(const Thread&amp;);
+};
+</code></pre>
+
+<p>Это определения конструктора копирования и перегруженого оператора присваивания. Причем непосредственно реализаций этих функций нигде нет, только определения. Вопрос: для чего все это?</p>
+
+<p>Давайте разберемся с назначением этих функций. Их прямая задача уметь копировать объект данного класса. А что произойдет, если вы по какой-то причине не определили конструктор копирования или оператор присваивания (может просто забыли), а пользователь вашего класса решил скопировать объект, возможно даже неосознанно? В этом случае компилятор сам определит конструктор копирования по <em>умолчанию</em>, который будет тупо копировать объект байт за байтом без учета смысла копируемых данных. И вам крупно повезет, если все члены-данные вашего класса являются либо базовыми типами (<code>int</code>, <code>long</code>, <code>char</code> и т.д.), либо имеют корректные конструкторы копирования и операторы присваивания. В этом случае все будет хорошо — базовые типы компилятор умеет копировать правильно, а сложные типы скопируют себя сами через их конструкторы копирования. А представьте, что вы внутри своего класса создаете объекты динамически в куче и храните в классе только указатели на них. Указатеть — это базовый тип, и компилятор его нормально скопирует. А вот данные, на которые этот указатель указывает он копировать не будет. В итоге два объекта (старый-оригинал и новый-копия) будут ссылаться на один кусок памяти в куче. Теперь понятно, что при попытке освобождения этой памяти в деструкторе (если вы не забыли этого сделать) кто-то из этих двух объектов попытается освободить уже освобожденную память. Вероятность аварийного завершения программы в этом случае крайне высока, а поиск подобных ошибок может быть крайне долгим и мучительным.</p>
+
+<p>Отсюда мораль: если для вашего класса не заданы конструктор копирования и оператор присваивания (они вам не нужны по смыслу), сделайте им пустые объявления в разделе закрытом разделе (<code>private</code>). Тогда попытка скопировать этот объект сразу приведет к ошибке при компиляции. Во-первых, объявления являются закрытыми (<code>private</code>), и сторонний пользователь вашего класса получит ошибку доступа к закрытым данным класса. Во-вторых, у этих функций нет тел, а значит вы сами не выстрелите себе в ногу, попытавшись случайно скопировать объект данного класса в нем же самом (тут вам <code>private</code> уже не помеха), если вы на это не рассчитывали при проектирование класса.</p>
+
+<p>Лично я делаю так. У меня есть следующий файл (<code>ctorguard.h</code>):</p>
+
+<pre><code class="cpp">#ifndef _EXT_CTOR_GUARD_H
+#define _EXT_CTOR_GUARD_H
+#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
+  TypeName(const TypeName&amp;);               \
+  void operator=(const TypeName&amp;)
+#endif
+Теперь определение класса будет выглядеть так:
+#include &quot;ctorguard.h&quot;
+class Thread {
+public:
+  ...
+private:
+  ...
+  // Защита от случайного копирования объекта в C++
+  DISALLOW_COPY_AND_ASSIGN(Thread);
+};
+</code></pre>
+
+<p>Теперь вы надежно предохранены.</p>
+
+<p>Кстати, вдогонку. При реализации оператора присваивания надо обязательно проверять — не пытаетесь ли вы копировать объект сам в себя, то есть, не является ли источник копирования самими объектом куда идет копирование. Если это произойдет, вы легко можете получить переполнения стека как самый вероятный исход из-за бесконечного вызова оператора присваивания себя самим.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/01/blog-post_27.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/01/blog-post_27.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/01/blog-post_27.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

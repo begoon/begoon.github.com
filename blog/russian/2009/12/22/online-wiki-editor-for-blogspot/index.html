@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Wiki2blog: онлайновый wiki-редактор для Blogspot</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Wiki2blog: онлайновый wiki-редактор для Blogspot</h1>
+<div id="post">
+  <p>Как я уже <a href="/blog/russian/2009/07/26/blogging-on-googlecode/">писал</a>, что из-за неудобства онлайнового редактора Blogspot&rsquo;а я перешел на использование Wiki на Google Code для написания и хранения постов. То есть я пишу пост, используя язык разметки Wiki, отлаживанию разметку, заливаю картинки и т.д., а затем просто конвертирую wiki-файл с помощью <a href="http://code.google.com/p/easy-coding/source/browse/tools/wiki2blog.php">скрипта на php</a> в html. Фишка тут в том, что скрипт должен учитывать некоторые &ldquo;особенности&rdquo; Blogspot&rsquo;а — необходимость убирать разделители строки после блочных тэгов типа <code>blockquote</code>, <code>pre</code>, списков и т.д., чтобы не появлялись ненужные отступы. В результате выходной html становится практически нечитаемым.</p>
+
+<p>Удобство же wiki-разметки в том, что исходник поста выглядит красиво и пригоден для последующего редактирования.</p>
+
+<p>Но в таком подходе цикл работы над постом несколько длинноват: редактор, push через Mercurial на Google Code, просмотр как выглядит на Wiki, затем прогон через скрипт, и если все хорошо, то &ldquo;cut-paste&rdquo; в онлайн-редактор Blogspot и финальный отсмотр там. А если обнаруживаются шероховатости, что цикл повторяется сначала. И еще меня раздражал сам скрипт — корявый и непонятный.</p>
+
+<p>Хотелось чего-нибудь легкого и более менее WYSIWYG.</p>
+
+<p>Порыскав в сети на наткнулся на <a href="http://remysharp.com/demo/wiki2html.html">wiki2html</a>. И это оказалось то, что нужно. Я немного подкорячил это под свой формат wiki-разметки и, в итоге получилось это: <a href="http://easy-coding.googlecode.com/hg/tools/js/wiki2html.html">онлайновый редактор с препросмотром для подготовки постов</a> в Blogspot.</p>
+
+<p>Теперь цикл такой: набиваешь пост в этом редакторе, а он автоматически отображает preview по мере набора вместе с html&rsquo;ем. Затем <code>cut-paste</code> html-я в Blogspot, и с большой вероятностью форматирование должно выглядеть как задумано.</p>
+
+<p>Ни разу не претендую на возможные странности моего диалекта Wiki. Желающие могут изменить под себя, ибо форматировщик крайне простой.</p>
+
+<p>Редактор состоит из одного файла <a href="http://easy-coding.googlecode.com/hg/tools/js/wiki2html.html">wiki2html.html</a>. Его можно просто сохранить локально и поиграться.</p>
+
+<p>Под занавес привожу поддерживаемые команды wiki-разметки (таблиц пока нет).</p>
+
+<p><strong>Ссылки и картинки</strong></p>
+
+<pre><code>[http://example.com/test] — ссылка: http://example.com/test
+[http://example.com/test ссылка с текстом] — ссылка с текстом
+[http://github.com http://github.com/images/icons/public.png] — картинка со ссылкой 
+[http://github.com/images/icons/public.png] — картинка 
+[http://github.com/images/icons/public.png картинка по ссылке] — картинка по ссылке
+</code></pre>
+
+<p><strong>Текст</strong></p>
+
+<pre><code>'''bold''' — bold
+''italic'' — italic
+@@[http://google.com]@@ — экранирование любой wiki-разметки
+моно`ширин`ный текст — моноширинный текст
+</code></pre>
+
+<p><strong>Заголовки</strong></p>
+
+<pre><code>= Заголовок1 =
+== Заголовок2 ==
+=== Заголовок3 ===
+==== Заголовок4 ====
+===== Заголовок5 =====
+</code></pre>
+
+<p><strong>Цитирование</strong></p>
+
+<p>Цитата начинается с двух пробелов.</p>
+
+<p><strong>Разделитель</strong></p>
+
+<pre><code>---
+</code></pre>
+
+<p><strong>Ненумерованный список</strong></p>
+
+<p>Код:</p>
+
+<pre><code>* это
+** ненумерованный
+* список
+</code></pre>
+
+<p><strong>Нумерованный список</strong></p>
+
+<p>Код:</p>
+
+<pre><code># это
+## нумерованный
+# список
+</code></pre>
+
+<p><strong>Исходники</strong></p>
+
+<p>Код:</p>
+
+<pre><code>#include &lt;io.h&gt;
+int main() {
+  int a = 1;
+  return a;
+}
+</code></pre>
+
+<p><strong>Видео</strong></p>
+
+<pre><code>[http://www.youtube.com/watch?v=FrufJFBSoQY]
+</code></pre>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/07/26/blogging-on-googlecode/">Ведение блога на Google Code</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/12/wiki2blog-wiki-blogspot.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/12/wiki2blog-wiki-blogspot.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/12/wiki2blog-wiki-blogspot.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

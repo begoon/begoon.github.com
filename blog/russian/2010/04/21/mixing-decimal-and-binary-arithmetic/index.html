@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Смесь двоичной и десятичной арифметики</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Смесь двоичной и десятичной арифметики</h1>
+<div id="post">
+  <p>Многие знают, что происходит при выполнении присваивания <code>n &amp;= (n - 1);</code> просто потому, что это весьма распространенный шаблон, и для чего может понадобиться выполнение его в цикле, пока <code>n</code> не станет нулем.</p>
+
+<p>Интересно другое: четкое математическое (и/или алгоритмическое) объяснение, почему это работает именно так, строгое доказательство.</p>
+
+<p><strong>Update</strong></p>
+
+<p>Чтобы разобраться в вопросе надо понять, что является корнем недопонимания.</p>
+
+<p>Для людей, не часто имеющих дело с двоичной системой, обычно не совсем очевидна суть трансформации внутреннего двоичного представления числа при выполнении арифметической операции в десятичной нотации. Кажется, что если вычесть единицу, то расположение битов после операции будет иметь мало общего с тем, что было до вычитания. И дальнейшее выполнение <code>and</code> вообще не имеет смысла.</p>
+
+<p>С точки зрения битового представления любого числа, есть только два случая:</p>
+
+<ol>
+<li><p>Если число нечетное, на конце будет единица: <code>xx...xx1</code>. Вычитание из такого числа даст: <code>хх...хх0</code>. Поэтому <code>(xx...xx1) &amp; (xx...xx0)</code> даст <code>(xx...xx0)</code>. Фактически, мы убрали младший бит.</p></li>
+
+<li><p>Если число четное, на конце будет ноль (или несколько нулей): <code>xx...xx100...00</code>. Видно, что вычитание единицы из такого числа однозначно не изменит разряды <code>xx...xx</code>, стоящие слева после первой единицы. Более того, результат вычитания единицы однозначно предсказуем: <code>xx...xx011...11</code>. Теперь точно видно, что будет после операции <code>and</code>: <code>(xx...xx100...00) &amp; (&quot;xx...xx011...11&quot;)</code> даст <code>xx...xx000...00</code>. То есть мы убрали единицу из самого младшего ненулевого разряда.</p></li>
+</ol>
+
+<p>Теперь ясно видно, что именно проиходит в присваивании <code>n &amp;= (n - 1);</code>. А именно, обнуление самого младшего ненулевого разряда.</p>
+
+<p>Использование этого трюка в цикле, пока n не равно нулю, позволяет подсчитать количество ненулевых бит. На каждой итерации мы &ldquo;выбиваем&rdquo; ровно один бит, поэтому число итераций будет равно количеству единиц в <code>n</code>.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2010/04/blog-post_21.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2010/04/blog-post_21.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2010/04/blog-post_21.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

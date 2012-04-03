@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Коварный prinf()</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Коварный prinf()</h1>
+<div id="post">
+  <p>Вчера подорвался на ерунде как ребенок.</p>
+
+<p>Сижу, отлаживаю новый онлайновый ассемблер в своем <a href="http://code.google.com/p/radio86">эмуляторе Радио-86РК</a>. Под отладкой понимается ёрзанье с применением html&rsquo;я.</p>
+
+<p>Для сборки финального html-файла из кучи мелких у меня написана примитивная программа. Вот ее фрагмент:</p>
+
+<pre><code class="cpp">while (!feof(f)) {
+  char line[1024];
+  *line = 0;
+  fgets(line, sizeof(line), f);
+  printf(line);
+}
+</code></pre>
+
+<p>Подразумевается, что данный код прострочно копирует данные из файла <code>f</code> на стандарный вывод.</p>
+
+<p>Даже если отставить в сторону использование буфера с константной длиной и прочих &ldquo;штучек&rdquo; языка С, этот код имеет одну проблему, которая стоила мне сомнений в наличии сознания. До каких-то пор все работало отлично, но как только я начал использовать процентные значения для широт и высот в html, начались странности.</p>
+
+<p>Получалось, что вместо, например:</p>
+
+<pre><code class="html">&lt;table width=&quot;100%&quot;&gt;
+</code></pre>
+
+<p>на выходе было:</p>
+
+<pre><code class="html">&lt;table width=&quot;100&quot;&gt;
+</code></pre>
+
+<p>Вы, наверное, уже догадались, в чем тут дело. Но, признаюсь, я искал проблему минут тридцать.</p>
+
+<p>Вместо:</p>
+
+<pre><code class="cpp">printf(line);
+</code></pre>
+
+<p>надо писать:</p>
+
+<pre><code class="cpp">printf(&quot;%s&quot;, line);
+</code></pre>
+
+<p>А иначе все процентные символы будут расцены как указатели форматов, ибо первый параметр <code>printf()</code> - это не просто строка, а формат, и в случае их неэкранирования будут уделены, что и происходило в моем случае.</p>
+
+<p>Вывод (который следует после начального &ldquo;сам дурак&rdquo;): Лучше писать на С++ и использовать потоки для форматного вывода.</p>
+
+<p><strong>Лирическое отступление</strong>. Кстати, онлайновый ассемблер очень огранично вписался в эмулятор. Спасибо <a href="http://sensi.org/~svo/vector06c/">Вячеславу Славинскому</a> за оригинальный код этого ассемблера. Особенно меня радует возможность автоматической фоновой компиляции. Теперь можно, прямо не отходя от эмулятора, переключиться в ассемблер, написать что-нибудь на диалекте Intel 8080 (<a href="http://code.google.com/p/radio86/wiki/KP580BM1">КР580</a>), скомпилировать и загнать прямо в эмулятор.</p>
+
+<p><img src="/images/blog/radio86-builtin-assembler.png" /></p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/10/printf.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/10/printf.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/10/printf.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

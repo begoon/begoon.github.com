@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Пример многопоточного программирования в Go</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Пример многопоточного программирования в Go</h1>
+<div id="post">
+  <p>Возникла задача: у нас есть компилятор собственного языка программирования, которым мы компилируем некоторый диалект бейсика в исходник на C.</p>
+
+<p>К сожалению, по историческим причинам, у нас не было четкого регрессионного тестирования для этого компилятора. Но сейчас, на основе исходников бизнес-приложения, написанного на этом бейсике, решили сделать полноценное тестирование.</p>
+
+<p>План таков: принять какую-то текущую версию компилятора, на которую нет открытых жалоб от клиентов, за эталон. Скомпилировать этой версией приличное количество исходников, сохранить результат, и затем каждый раз при внесении в компилятор изменений прогонять все эти исходники и смотреть, генерируется ли точно такой же вывод. Это не защитит от появления ошибок в целом, но по крайне мере будет уверенность, что существующий бизнес код все еще компилируется правильно.</p>
+
+<p>Несложная задача. Только есть одно &ldquo;но&rdquo;. Количество исходников, которые планируется использовать как эталонные - около 15 тысяч файлов, суммарным объемом чуть меньше гига (для удобства они завернуты в один TAR). Подобный &ldquo;прогон&rdquo; может быть весьма долгим. И есть естественное желание сделать тест максимально быстрым, используя многопроцессорную машину, ибо задача прекрасно распараллеливается.</p>
+
+<p>Как вариант - можно сделать Makefile и запускать его с ключом <code>-j</code> в GNU Make. Но если написать специализированную многопоточную программу, то можно достичь лучшей производительности.</p>
+
+<p>Итак, очевидно: вместо последовательного выполнения нужно запускать компиляцию каждого файла в параллельных потоках. Но так как файлов много (~15 тысяч), неэффективно просто одновременно запустить столько много потоков. Разумнее всего будет иметь пул потоков, где их количество будет определяться, например, количеством процессоров (например, умноженное на 2). Пул будет назначать очередную задачу на свободный поток, и если все потоки заняты, он будет блокироваться до тех пор, пока не появиться свободный.</p>
+
+<p>Таким образом, мы будем поддерживать занятыми N потоков, обеспечивая оптимальную загрузку процессоров, не тратя время на лишние переключения контекста и постоянное создание и уничтожение потоков.</p>
+
+<p>Сначала я решил написать все на С++ и pthreads. После нескольких часов танцов вокруг функторов, мьютексов, семафоров и условных переменных, у меня так ничего реально работающего не вышло. И тут я вспомнил про Go. Не поверите - через час работы у меня была готова первая версия, включая мелочевку типа работы с TAR, командной строкой и запуском внешнего процесса.</p>
+
+<p>Итак: данная программа берет TAR с исходниками, распаковывает его, и каждый файл прогоняет через компилятор.</p>
+
+<p>Сразу скажу, цель того, что я все это пишу тут, это продемонстрировать (и не более того), как просто и удобно на Go можно писать многопоточные императивные программы.</p>
+
+<p>Главная концепция, которая используется в этой программе - это <a href="http://golang.org/doc/effective_go.html#channels">каналы</a>. По каналам можно синхронно передавать данные и функции между потоками (<a href="http://golang.org/doc/effective_go.html#goroutines">Go-рутинами</a>).</p>
+
+<p>Далее, можно просто смотреть по исходнику. Самое интересное место там, где видно, как функция &ldquo;compile()&rdquo; может вызываться из нескольких потоков без каких-либо изменений.</p>
+
+<pre><code class="go">package main
+
+import (
+        &quot;archive/tar&quot;
+        &quot;container/vector&quot;
+        &quot;exec&quot;
+        &quot;flag&quot;
+        &quot;fmt&quot;
+        &quot;io&quot;
+        &quot;os&quot;
+        &quot;strings&quot;
+)
+
+// Два флага: количество потоков и имя компилятора.
+var jobs *int = flag.Int(&quot;jobs&quot;, 0, &quot;number of concurrent jobs&quot;)
+var compiler *string = flag.String(&quot;cc&quot;, &quot;bcom&quot;, &quot;compiler name&quot;)
+
+func main() {
+        flag.Parse()
+        os.Args = flag.Args()
+        args := os.Args
+
+        ar := args[0]
+        r, err := os.Open(ar, os.O_RDONLY, 0666);
+        if err != nil {
+                fmt.Printf(&quot;unable to open TAR %s\n&quot;, ar)
+                os.Exit(1)
+        }
+        // defer - это аналог &quot;finally {}&quot;, гарантированное выполнение
+        // кода при выходе из блока.
+        defer r.Close()
+
+        // Цикл распаковки TAR.
+        fmt.Printf(&quot;- extracting %s\n&quot;, ar)
+        // Создаем контекст для распаковки.
+        tr := tar.NewReader(r)
+        tests := new(vector.StringVector)
+        // Последовательный проход по архиву, сохранение файлов и составление
+        // списка для компиляции.
+        for {
+                // Получаем дескриптор следующего файла в архиве.
+                hdr, _ := tr.Next()
+                if hdr == nil {
+                        break
+                }
+                name := &amp;hdr.Name
+                // Если это не заголовочный файл, сохраним имя.
+                if !strings.HasPrefix(*name, &quot;HDR_&quot;) {
+                        tests.Push(*name)
+                }
+                // Создаем новый файл.
+                w, err := os.Open(&quot;data/&quot; + *name, os.O_CREAT | os.O_RDWR, 0666)
+                if err != nil {
+                        fmt.Printf(&quot;unable to create %s\n&quot;, *name)
+                        os.Exit(1)
+                }
+                // Копируем содержимое в текущий файл.
+                io.Copy(w, tr)
+                w.Close()
+        }
+
+        fmt.Printf(&quot;- compiling...\n&quot;)
+        *compiler , _ = exec.LookPath(*compiler)
+        fmt.Printf(&quot;- compiler %s\n&quot;, *compiler)
+
+        if *jobs == 0 {
+                // Вызываем &quot;compile()&quot; последовательно, в основном потоке.
+                fmt.Printf(&quot;- running sequentially\n&quot;)
+                for i := 0; i &lt; tests.Len(); i++ {
+                        compile(tests.At(i))
+                }
+        } else {
+                // Запускаем &quot;compile()&quot; в параллельных потоках.
+                fmt.Printf(&quot;- running %d concurrent job(s)\n&quot;, *jobs)
+
+                // Канал задач: в этот канал мы будем класть имена файлов,
+                // которые надо скомпилировать. Потоки-runner'ы будут ждать
+                // сообщений из этого канала. Канал имеет ограничение по
+                // длине. Это аналог семафора, чтобы блокировать главный
+                // поток, если все runner'ы заняты.
+                tasks := make(chan string, *jobs)
+
+                // Канал подтверждения полного завершение потока-runner'а.
+                // Главный поток будет ждать, пока все runner'ы ответят
+                // по этому каналу. Тип сообщений тут не важен.
+                done := make(chan bool)
+
+                // Запускаем runner'ы.
+                for i := 0; i &lt; *jobs; i++ {
+                        go runner(tasks, done)
+                }
+
+                // Передаем в канал имена файлов для обработки. При
+                // достижении максимального размера канала, главный поток
+                // будет заблокирован.
+                for i := 0; i &lt; tests.Len(); i++ {
+                        tasks &lt;- tests.At(i)
+                }
+
+                // Посылаем всем потокам команду завершиться и ждем
+                // подтверждения о нормальном выходе от каждого потока.
+                for i := 0; i &lt; *jobs; i++ {
+                        tasks &lt;- &quot;&quot;
+                        &lt;- done
+                }
+        }
+}
+
+// Поток-runner.
+func runner(tasks chan string, done chan bool) {
+        // Бесконечный цикл.
+        for {
+                // Ждем сообщения из канала. Обычно, поток заблокирован
+                // на этом месте.
+                name := &lt;- tasks
+                // Если имя пустое, нас просят завершиться.
+                if len(name) == 0 {
+                        break
+                }
+                // Компилируем файл.
+                compile(name)
+        }
+        // Посылаем сообщение, что поток завершился.
+        done &lt;- true
+}
+
+func compile(name string) {
+        // Вызываем компилятор.
+        c, err := exec.Run(*compiler, []string{*compiler, name},
+                           os.Environ(), &quot;./data&quot;, exec.DevNull,
+                           exec.PassThrough, exec.PassThrough)
+        if err != nil {
+                fmt.Printf(&quot;unable to compile %s (%s)\n&quot;, name, err.String())
+                os.Exit(1)
+        }
+        c.Wait(0)
+}
+</code></pre>
+
+<p>Makefile:</p>
+
+<pre><code class="makefile">target = tar_extractor
+
+all:
+        6g $(target).go
+        6l -o $(target) $(target).6
+</code></pre>
+
+<p>Я погонял это добро под Линуксом 64-бит на восьми процессорном блейде. Во время тестирования я был на машине один, так что результаты разных прогонов можно сравнивать. Файл &ldquo;huge.tar&rdquo; содержит ~15 тысяч исходников и имеет размер один гигабайт.</p>
+
+<p>Так выглядит загрузка процессоров, когда машина ничего не делает (все процессоры почти на 100% в idle):</p>
+
+<pre><code>Cpu0  :  0.0%us,  0.0%sy,  0.0%ni,100.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu1  :  0.0%us,  0.0%sy,  0.0%ni, 99.7%id,  0.3%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu2  :  0.0%us,  0.0%sy,  0.0%ni,100.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu3  :  0.0%us,  0.0%sy,  0.0%ni,100.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu4  :  0.0%us,  0.0%sy,  0.0%ni,100.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu5  :  0.0%us,  0.3%sy,  0.0%ni, 99.3%id,  0.3%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu6  :  0.0%us,  0.0%sy,  0.0%ni,100.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu7  :  0.0%us,  0.0%sy,  0.0%ni,100.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+</code></pre>
+
+<p>Запускаем в последовательном режиме (<code>-jobs 0</code>):</p>
+
+<pre><code>make &amp;&amp; time -p ./tar_extractor -jobs 0 huge.tar
+</code></pre>
+
+<p>Время работы:</p>
+
+<pre><code>real 213.81
+user 187.32
+sys 61.33
+</code></pre>
+
+<p>Практически все процессоры на 70-80% ничего не делают (все снимки я делал во время стадии компиляции):</p>
+
+<pre><code>Cpu0  : 11.9%us,  4.3%sy,  0.0%ni, 82.5%id,  1.3%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu1  :  9.6%us,  2.7%sy,  0.0%ni, 87.7%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu2  :  4.3%us,  1.3%sy,  0.0%ni, 92.7%id,  1.7%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu3  : 16.0%us,  6.0%sy,  0.0%ni, 78.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu4  : 12.6%us,  4.3%sy,  0.0%ni, 82.7%id,  0.3%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu5  : 11.6%us,  3.3%sy,  0.0%ni, 85.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu6  :  4.7%us,  1.3%sy,  0.0%ni, 94.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu7  : 16.6%us,  6.3%sy,  0.0%ni, 77.1%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+</code></pre>
+
+<p>Суммарная загрузка процессоров - 2.7%:</p>
+
+<pre><code> PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+</code></pre>
+
+<p>15054 tester    18   0 41420 4980 1068 S  2.7  0.1   0:02.96 tar_extractor</p>
+
+<p>Теперь запускаем с пулом потоков, но только с одним каналом (<code>-jobs 1</code>):</p>
+
+<p>Время:</p>
+
+<pre><code>real 217.87
+user 191.42
+sys 62.53
+</code></pre>
+
+<p>Процессоры:</p>
+
+<pre><code>Cpu0  :  5.7%us,  1.7%sy,  0.0%ni, 92.7%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu1  : 13.3%us,  5.3%sy,  0.0%ni, 81.3%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu2  :  7.0%us,  2.7%sy,  0.0%ni, 89.3%id,  0.7%wa,  0.0%hi,  0.3%si,  0.0%st
+Cpu3  : 15.3%us,  5.7%sy,  0.0%ni, 77.7%id,  1.3%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu4  :  6.0%us,  2.0%sy,  0.0%ni, 92.0%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu5  : 14.3%us,  7.3%sy,  0.0%ni, 78.4%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu6  :  7.0%us,  2.3%sy,  0.0%ni, 90.7%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu7  : 15.3%us,  6.6%sy,  0.0%ni, 78.1%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+</code></pre>
+
+<p>Понятно, что картина такая же, так как реально мы также гоняем один поток.</p>
+
+<p>А теперь включаем пул потоков (<code>-jobs 32</code>):</p>
+
+<pre><code>make &amp;&amp; time -p ./tar_extractor -jobs 32 huge.tar
+</code></pre>
+
+<p>Время работы упало почти в семь раз:</p>
+
+<pre><code>real 38.38
+user 195.55
+sys 69.92
+</code></pre>
+
+<p>Общая загрузка процессоров (во время стадии компиляции) возросла до 23%:</p>
+
+<pre><code>  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+17488 tester    16   0 45900 9732 1076 S 23.6  0.1   0:06.40 tar_extractor
+</code></pre>
+
+<p>Видно, что все процессоры реально заняты:</p>
+
+<pre><code>Cpu0  : 56.3%us, 26.3%sy,  0.0%ni, 17.3%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu1  : 55.5%us, 27.9%sy,  0.0%ni, 15.6%id,  1.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu2  : 56.1%us, 25.9%sy,  0.0%ni, 15.0%id,  0.7%wa,  0.3%hi,  2.0%si,  0.0%st
+Cpu3  : 58.1%us, 26.2%sy,  0.0%ni, 15.6%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu4  : 57.2%us, 25.8%sy,  0.0%ni, 17.1%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu5  : 56.8%us, 26.2%sy,  0.0%ni, 16.9%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu6  : 59.0%us, 26.3%sy,  0.0%ni, 13.0%id,  1.7%wa,  0.0%hi,  0.0%si,  0.0%st
+Cpu7  : 56.5%us, 27.2%sy,  0.0%ni, 16.3%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
+</code></pre>
+
+<p>Данное тестирование предназначено исключительно для понимания, как простейший параллельный код ускоряет все в разы. И также для демонстрации, как просто и относительно безопасно можно программировать параллельные вычисления в Go.</p>
+
+<p>Посты по теме Go:</p>
+
+<ul>
+<li><a href="/blog/russian/2011/02/24/url-shortener-in-go-in-one-hour/">Язык Go в действии - мультисерверная сокращалка URL&rsquo;ов менее чем за час</a></li>
+<li><a href="/blog/russian/2010/03/06/what-is-faster-on-eratosthenes-seive-go-c-cpp/">Решето Эратосфена - кто быстрее: Go, C или C++?</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/04/go.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/04/go.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/04/go.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

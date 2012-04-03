@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Ведение блога на GitHub</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Ведение блога на GitHub</h1>
+<div id="post">
+  <p>Сказать, что Blogspot меня бесит – это ничего не сказать. Единственное для чего он нужен, как мне кажется – это быстрая индексация в Google.</p>
+
+<p>Артемий Лебедев как-то отлично сказал, что презирает всякую хрень типа <a href="http://en.wikipedia.org/wiki/Search_engine_optimization">SEO</a>, так как надо создавать интересный и читаемый контент, а не суетиться по мелочи на его раздаче. Поэтому <a href="http://tema.livejournal.com/">его ЖЖ</a> использует стандартный шаблон без каких-либо попыток выглядеть “клевым”. Но его контент делает блог одним из лидеров в российском прокате.</p>
+
+<p>Да и кого сейчас волнует дизайн блога? Все равно подавляющее количество читателей видят твой блог через призму Google Reader’а.</p>
+
+<p>Но оставим одиозного Лебедева и вернемся к нашим специализированным техническим блогам. Как <a href="http://tom.preston-werner.com/2008/11/17/blogging-like-a-hacker.html">написал Том Престон-Вернер</a>, один их основателей Github, что ведя блог, он хочем писать посты, а не подкручивать там и сям шаблоны и прочие техдетали всяких WordPress’ов и Mephisto’в.</p>
+
+<p>Подобная же мысль мучает меня с первого дня использования Блогспота. Только недавно я более менее устаканил процесс написания постов, используя <a href="http://docutils.sourceforge.net/docs/user/rst/quickref.html">ReST</a>. Сейчас я пишу и храню посты в этой разметке, а перед публикацией прогоняю через пару доморощенным скриптов типа “ReST &gt; HTML &gt; Фильтрованный Для Блогспота HTML”. Хотя проблема хостинга картинок все равно решается вручную заранее.</p>
+
+<p>Уже сотни раз я подумывал о собственной платформе на том же WordPress’е, но природная лень и нежелание тратить ни секунды на администрирование всегда останавливало.</p>
+
+<p>Сейчас у меня очередной приступ ненависти к Блогспоту и, как следствие, исследование альтернатив.</p>
+
+<p>Удивительно, но как-то никогда не задумывался, что блог может на быть <a href="http://www.subspacefield.org/~travis/static_blog_generators.html">статическом движке</a>.</p>
+
+<p>А что, если переехать на <a href="http://pages.github.com/">GitHub Pages</a>? Там суть в том, что один из твоих репозиториев может стать вебсайтом, который работает на статическом движке <a href="http://jekyllrb.com/">Jekyll</a>.</p>
+
+<p>Сразу убиваются несколько зайцев. Работаешь в нормальной разметке и используешь git для выкладывания постов. Пишешь и отлаживаешь пост локально. Затем “git push origin master” и все – пост выложен. Текст можно писать не в идиотском HTML, а в <a href="http://daringfireball.net/projects/markdown/syntax">Markdown</a> или <a href="http://en.wikipedia.org/wiki/Textile_(markup_language)">Textile</a>. ReST, конечно, круче, но это не смертельно.</p>
+
+<p>Более того GitHub Pages позволяет интегрироваться с полноценным доменом второго уровня.</p>
+
+<p>Далее тема комментариев. Не то, чтобы программировать свой движок для комментирования, а даже просто настроить WordPress – лично у меня нет никакого желания. Поэтому одна их самых простых альтернатив – <a href="http://disqus.com/">Disqus</a>.</p>
+
+<p>Анализ посещаемости решается через Google Analytics.</p>
+
+<p>Что остается?</p>
+
+<p>Иногда люди таки ходят на сайт блога напрямую – для поиска старых постов или узнать об авторе что-нибудь социальное. Вот тут, конечно, всякие примочки типа гугловских гаджетов – поиск, каталог по датам, интеграция с социальными сетями и т.д. – имеют смысл. На Блогспоте ты их добавляешь кликом мышки, а для собственного блога надо будет тратить реальное время.</p>
+
+<p>Но, возвращаясь к вопросу – а нужны ли все эти гаджеты? Если контент в блоге интересен – он найдет своего читателя. Сарафанное радио в виде твитера или фейсбука приведет тебе читателей, если будет что читать.</p>
+
+<p>А если уж говорить на “раскрутке” – та же публикация удавшихся постов на Харбе приводит в сто раз более читателей, чем суета с дизайном сайта.</p>
+
+<p>Вот такие мысли.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/12/github-github-as-blog-engine.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/12/github-github-as-blog-engine.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/12/github-github-as-blog-engine.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

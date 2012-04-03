@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Закомментированные куски кода и TODO</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Закомментированные куски кода и TODO</h1>
+<div id="post">
+  <p>Когда я вижу в production коде, в котором мне надо по какой-то причине разобраться, что-то типа:</p>
+
+<pre><code class="cpp">...
+int x = (i &lt;&lt; 8) | (i &gt;&gt; 2) | ((i &amp; 0x06) ^ 0xAA);
+
+// if (x &gt;= 0x12345)
+//  x = x &gt;&gt; 3;
+
+calc_something_complicated(x);
+...
+</code></pre>
+
+<p>мне хочется рвать и метать. Расчехлить <a href="http://ftp.kernel.org/pub/software/scm/git/docs/git-blame.html">blame</a>, найти автора и заглянуть ему в глаза.</p>
+
+<p>Иначе, что мне остается: только думать, что автор этих строк, видимо, бился с формулой, пытался подогнать результат под что-то (возможно, какой-то тест). Достиг ли он результата? Или может оно так и продолжает глючить&hellip; Кто знает. Единственное, о чем этот код однозначно говорит, что автор не был уверен в том, что пишет. Потому, что если он был уверен, то удалил бы этот фрагмент или раскомментировал бы его навсегда.</p>
+
+<p>На втором месте у меня стоит отладочная печать, навеки оставленная в коде:</p>
+
+<pre><code class="cpp">...
+int x = (i &lt;&lt; 8) | (i &gt;&gt; 2) | ((i &amp; 0x06) ^ 0xAA);
+
+// std::cerr &lt;&lt; &quot;На этот раз x = &quot; &lt;&lt; x &lt;&lt; std::endl;
+
+calc_something_complicated(x);
+...
+</code></pre>
+
+<p>Снова получается, что автор сомневался и так и не отладил все до конца.</p>
+
+<p>Конечно, подобные куски могут появляться просто по невнимательности и забывчивости, но как может помочь это оправдание? Никак.</p>
+
+<p>Ну на третьем месте нашего хит-парада - блоки TODO.</p>
+
+<pre><code class="cpp">...
+int x = (i &lt;&lt; 8) | (i &gt;&gt; 2) | ((i &amp; 0x06) ^ 0xAA);
+
+// TODO: Заменить тип int на int64, так как на носу эра 64-разрядных машин.
+// Программист Вася, 06.10.2009. Если что, вы знаете где меня искать.
+
+calc_something_complicated(x);
+...
+</code></pre>
+
+<p>Тут еще куда ни шло. Куски TODO можно найти автоматическим поиском при подготовке релиза и перед ответственным слиянием. Но каждый TODO должен быть подписан и датирован, а лучше еще и детально объяснен. Ни что так не помогает оценить &ldquo;нужность&rdquo; куска кода, как дата его последней модификации.</p>
+
+<p>Итак, вывод тут только один: в production коде никогда не должно быть закомментированных кусков. А если они есть, то они должны сопровождаться четкими комментариями, поясняющими их суть.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/10/todo.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/10/todo.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/10/todo.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

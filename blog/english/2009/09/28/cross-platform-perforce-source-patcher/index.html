@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Cross platform Perforce source patcher</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Cross platform Perforce source patcher</h1>
+<div id="post">
+  <p>It&rsquo;s almost impossible to imagine modern software development without using version control systems. There are quite a few players on the market - open sourced, proprietary and in between. One of the last ones is Perforce. This is a commercial product but it&rsquo;s available for personal home use. I work for the big software house in the UK and we intensively use Perforce as SCM backend. Perforce is quite handy and flexible SCM despite of a few minor problems but I would say in general these are conceptual issues which are coming from the different approaches I might have vs. Perforce authors on how the source version control should or should not be implemented.</p>
+
+<p>For instance, the specifics of the development in our company are that we support and develop our products on many platforms such as Linux, SunOS, AIX, HP-UX, Tru64, Windows etc. Talking about platforms, even for UNIX family the development of portable software is quite a challenging problem. For example, multithreading and networking are not straightforward enough to be implemented portably right away. Every time a new piece of code or a patch is coming up it must be verified on all supported platforms starting from just compilation up to unit testing and QA.</p>
+
+<p>Unfortunately Perforce is not quite flexible in this instance. Here is an example of the obvious development cycle: The piece of code is initially developed and tested on one machine, therefore any added, changed, deleted or integrated files are in the &ldquo;submit pending&rdquo; list on this machine. When the developer is about to check it in, unfortunately for him and fortunately for other team members, he must check his new code on other development boxes. Perforce does not provide the mechanism of the &ldquo;soft-submit&rdquo; or allow temporary check-in of the new code with subsequent check-out on another machine for testing purposes. This process also becomes really painful when the amount of the pending code is quite large, the number of machines where you have to check the code is also not just one or two, and on top of it the number of iterations for &ldquo;change-submit-check-revert&rdquo; is exceeding a few dozens per day.</p>
+
+<p>The tool I am going to tell you about aims to salvage this issue. It allows transferring your current Perforce pending list from one development box to another in split second.</p>
+
+<p>The following assumes that the reader is a bit familiar with using Perforce.</p>
+
+<p>Of course a normal UNIX user will offer some kind of simple scripts to automate the process, which was my thinking initially as well. Unfortunately the scripting is not 100% portable due to so many different shells involved (ksh, bash, csh). If that wasn&rsquo;t enough unfortunately Windows &ldquo;scripting&rdquo; is also involved into the process, and its behaviour is far from UNIX way even with the use of Cygwin. My first version of the tool was written on Korn shell but it was not really portable between UNIX and Windows. The second version was written on Python and it would be just fine apart from Python not being easily available on all development boxes in case the development involves a little bit dodgy platforms such as HP-UX and AIX.</p>
+
+<p>Finally I ended up with the third version completely rewritten on pure ANSI C. The final name is <code>p4p</code> (P4 Patcher). The idea is for the tool to be distributed in source and compiled on the target platform just before use. Also, the tool is targeted to provide maximum debugging and error related information on the runtime. It helps the end user (the developer) to fix the tool if it does not work properly on any particular platform. I have been successfully using the tool on Linux, SunOS, AIX, HP-UX and Windows. The most exciting thing is that I can easily transfer the pending change list between all these platforms.</p>
+
+<p>I put the source to the Google Code - <a href="http://code.google.com/p/p4patch">p4patch</a> and it can be checked out from there. You will then have to compile and run it on other development machines.</p>
+
+<p>So let&rsquo;s step away from the theory and look into something real. Let&rsquo;s assume you have a bunch of files ready to submit on your box. The Perforce <code>p4 opened</code> command shows that list.</p>
+
+<p>Here is the crush course for your next steps:</p>
+
+<ul>
+<li>Get the source <a href="http://code.google.com/p/p4patch/source/browse/p4p.c">p4p.c</a></li>
+<li>Compile it under your platform (on a remote machine and on your local one)</li>
+</ul>
+
+<p>Linux, AIX, HP-UX:</p>
+
+<pre><code>./compile-unix.sh
+</code></pre>
+
+<p>Solaris:</p>
+
+<pre><code>./compile-solaris.sh
+</code></pre>
+
+<p>Windows:</p>
+
+<pre><code>compile-vs2008.cmd
+</code></pre>
+
+<p>Run the p4patch server on the remote machine (e.q. 192.168.1.9):</p>
+
+<pre><code>p4p server
+</code></pre>
+
+<p>Generate a patch archive on the local machine via <code>p4p diff</code> (<code>patch.tar</code> will be created). This command uses <code>p4 opened</code> to get the list of the files included into the patch and packs them into a TAR archive. The file list can be provided explicitly via <code>-o</code> option.</p>
+
+<p>By <code>p4 opened | grep ...</code> you can generate your own customized list.</p>
+
+<p>Apply the patch on the remote machine:</p>
+
+<pre><code>p4p patch -h 192.168.1.9
+</code></pre>
+
+<p>List opened files on the remote machine:</p>
+
+<p>p4p exec -h 192.168.1.9 -p4 opened</p>
+
+<p>See the diff on the remote machine:</p>
+
+<p>p4p exec -h 192.168.1.9 -p4 diff</p>
+
+<p>Revert a patch on the remote machine:</p>
+
+<p>p4p revert -h 192.168.1.9</p>
+
+<p>Display the P4 version on the remote machine:</p>
+
+<p>p4p exec -h 192.168.1.9 -p4 -V</p>
+
+<p>While p4p server is running on the remote machine you can fully control the remote P4 client and also apply/revert your patch. The patch itself is the standard TAR file containing files affected by your patch and the file list.</p>
+
+<p>When p4p applies the file change on the remote machine it always tries to preserve the current line ending used on the remote platform.</p>
+
+<p>If several people work on one machine in parallel they cannot share the same TCP/IP port for the p4p listener. They need their own port number. The default p4p port number is 20050. If you want to use your own port, follow these commands (i.e., assuming that you plan to 30001 as your port):</p>
+
+<p>Run the server on your port:</p>
+
+<pre><code>p4p server -l 30001
+</code></pre>
+
+<p>Client side:</p>
+
+<p>Apply the patch on the remote machine:</p>
+
+<pre><code>p4p patch -h 192.168.1.9 -p 30001
+</code></pre>
+
+<p>List opened files on the remote machine:</p>
+
+<pre><code>p4p exec -h 192.168.1.9 -p 30001 -p4 opened
+</code></pre>
+
+<p>See the diff on the remote machine:</p>
+
+<pre><code>p4p exec -h 192.168.1.9 -p 30001 -p4 diff
+</code></pre>
+
+<p>Revert a patch on the remote machine:</p>
+
+<pre><code>p4p revert -h 192.168.1.9 -p 30001
+</code></pre>
+
+<p>Display the P4 version on the remote machine:</p>
+
+<pre><code>p4p exec -h 192.168.1.9 -p 30001 -p4 -V
+</code></pre>
+
+<p>If your find that p4p cannot start the server perhaps somebody else uses the same port. Choose another port is this case. p4p started with <code>-?</code> switch prints all options available.</p>
+
+<p>Finally I would give my point of view on the workflow using Perfoce on several boxes at the same time.</p>
+
+<p>I always try to preserve the cross-platform consistency of a change set. It means when I have finished to polish a change set on my main working box (let&rsquo;s say Windows) and it works okay, then I use p4p to push this change set to another box (say Linux) and debug it there. If any changes needed for Linux I do it on the MAIN box (here it is Windows) and then push it again to the Linux. p4p works almost instantly so this process of pushing changes from the main box is very comfortable. Then I step to the next platform and so on (HP-UX, AIX etc). When I get it working on all boxes (it works, tests are passing etc.) I submit that change set from the MAIN box.</p>
+
+<p>I try to avoid working on the same change set on different platforms (I mean &ldquo;working&rdquo; as doing source changes).</p>
+
+<p>Hope all the this will help to improve your Perforce workflow.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2009/09/cross-platform-perforce-source-patcher.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2009/09/cross-platform-perforce-source-patcher.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2009/09/cross-platform-perforce-source-patcher.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

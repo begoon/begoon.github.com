@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Проблемы с полиморфным delete на массивах</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Проблемы с полиморфным delete на массивах</h1>
+<div id="post">
+  <p>Имеем следующий код:</p>
+
+<pre><code class="cpp">#define T 2
+
+class A {
+  public:
+    virtual ~A() { 
+      p = 0;
+    }
+    int p;
+};
+
+class B: public A {
+  int a;
+};
+
+int main() {
+  A* a = new B[T];
+  delete[] a;
+  return 0;
+}
+</code></pre>
+
+<p>У меня эта программа однозначно падает с <code>Segmentation fault</code> на строке <code>delete[] a</code>. Проверено на Sun C++ на Солярисе, GCC на Линуксе и на FreeBSD. Вот, например, что происходит на BSD:</p>
+
+<pre><code>Program received signal SIGSEGV, Segmentation fault.
+0x08048743 in main () at new_array.cpp:17
+17        delete[] a;
+</code></pre>
+
+<p>Забавно, что под Windows в VS2008 ничего особенного не происходит.</p>
+
+<p>Как я понимаю, что в этой программе принципиально важно, чтобы она падала: деструктор класса <code>A</code> должен быть виртуальным, дочерний класс <code>B</code> должен быть больше по размеру (тут есть член <code>a</code>), константа <code>Т</code> должна быть 2 или более (то есть мы должны создавать несколько экземпляров класса <code>B</code>), и деструктор класса <code>A</code> должен что-нибудь писать в свои члены (тут есть <code>p = 0;</code>).</p>
+
+<p>Что же тут происходит?</p>
+
+<p><code>new[]</code> создает массив экземплятор класса <code>B</code>. Оператор же <code>delete[]</code> получает на вход указатель типа <code>A*</code> и начинает вызывать деструкторы элементов. Так как деструктор класса <code>А</code> виртуальный, то в ход пускается таблица виртуальных функций. Итак, отработал деструктор для первого элемента <code>a[0]</code>. Далее <code>delete[]</code> хочет получить адрес следующего элемента массиве <code>a</code>. И для этого (внимание!) адрес следующего он вычисляется так: <code>a + sizeof(A)</code> (ему же на вход дали указатель типа <code>A*</code>). Но проблема в том, что <code>sizeof(A) &lt; sizeof(B)</code> (это дает член класса <code>B::a</code>), и <code>a + sizeof(A)</code> будет указывать не на второй элемент в массиве <code>a</code>, а куда-то между первым и вторым элементом, так как реальный адрес второго элемента - <code>a + sizeof(B)</code>. И все бы ничего, но деструктор класс <code>A</code> пишет в член <code>p</code>, тем самым меняя содержимое памяти, а так как для второго элемента адрес вычислен неправильно (его <code>this</code> указывает непонятно куда), то куда реально попадет 0 в присваивании <code>p = 0;</code> уже никто не знает, но явно не туда, куда надо. Вот и <code>Segmentation fault</code>.</p>
+
+<p>Другого объяснения у меня нет.</p>
+
+<p>Если кто знает лучше, поправьте.</p>
+
+<p>P.S. Забавно, что под виндами ничего страшного не происходит.</p>
+
+<p><strong>Update</strong>: В комментариях дали точное объяснение из стандарта: C++ 2003 5.3.5:</p>
+
+<p>&hellip;In the second alternative (delete array), the value of the operand of delete shall be the pointer value which resulted from a previous array new-expression. If not, the behavior is undefined. [Note: this means that the syntax of the delete-expression must match the type of the object allocated by new, not the syntax of the new-expression.]</p>
+
+<p><strong>Update 2</strong>: <a href="http://blogs.msdn.com/b/oldnewthing/archive/2004/02/03/66660.aspx">Объяснение</a>, почему не глючит в Visual Studio.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2010/06/delete.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2010/06/delete.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2010/06/delete.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

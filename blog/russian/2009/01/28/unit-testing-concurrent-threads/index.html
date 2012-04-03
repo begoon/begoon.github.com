@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Unit-тестирование для параллельных потоков</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Unit-тестирование для параллельных потоков</h1>
+<div id="post">
+  <p>В <a href="/blog/russian/2009/01/26/universal-threads-for-windows-and-unix/">статье про класс Thread</a>, реализующий потоки в С++, я обещал как минимум показать, как работать с данным классом, и как максимум рассказать про блочное (unit) тестирование в целом, и про его применение для проверки работы нашего класса в частности.</p>
+
+<p>Дожив до четвертого десятка и имея за спиной десяток с хвостиком, посвященный программированию, к своему огромному стыду к программированию с использованием блочного тестирования (TDD - test driven development) я приобщился только год назад. Честно могу сказать - это было для меня одним из сильнейших потрясений в профессиональной области за последнее время, и радикально поменяло некоторые фундаментальные представления о разработке софта. Как прирожденный максималист в профессии (за что часто очень нелюбим коллегами по цеху, которые руководствуются правилом &ldquo;лучшее враг хорошего&rdquo;), я работаю под девизом &ldquo;мои программы должны быть безупречны&rdquo;. А так как тут мне дали в руки такой волшебный инструмент как блочное тестирование, я стараюсь теперь его применять где только возможно. Даже порой радикально перерабатывая старые проекты.</p>
+
+<p>Ладно, это лирика. Приступим к делу.</p>
+
+<p>У нас есть <a href="/blog/russian/2009/01/26/universal-threads-for-windows-and-unix/">класс Thread</a>, расположенный в файлах <code>thread.cpp</code> и <code>thread.h</code>.</p>
+
+<p>Напишем небольшой пример (<code>thread_example.cpp</code>).</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+#include &quot;thread.h&quot;
+
+// Создаем наследника от класса Thread
+class MyThread: public ext::Thread {
+public:
+  // Инициализируем в false флаг завершения в конструкторе
+  MyThread() : __done(false) {}
+  virtual void Execute() {
+    // В процессе работы потока меняем флаг завершения на истину
+    __done = true;
+  }
+  // Функция, возвращающая значение флага завершение
+  bool done() const { return __done; }
+private:
+  bool __done;
+};
+
+int main(int argc, char* argv[]) {
+  // Создаем объект потока. Пока он еще не запущен.
+  MyThread thread; 
+  // Печатаем значение флага завершения. Должно быть 0 (false)
+  std::cout &lt;&lt; &quot;Thread status before: &quot; &lt;&lt; thread.done() &lt;&lt; std::endl;
+  // Запускаем поток
+  thread.Start();
+  // И ждем его завершения
+  thread.Join();
+  // Если поток нормально был запущен и отработал, то значение
+  // флага должно измениться на 1 (true). Это должна сделать
+  // функция Execute(). Если тут будет не 1, а 0, значит поток
+  // не выполнялся, и выходит, что с классом что-то не так.
+  std::cout &lt;&lt; &quot;Thread status after: &quot; &lt;&lt; thread.done() &lt;&lt; std::endl;
+}
+</code></pre>
+
+<p>Компилируем (естественно, из командной строки).</p>
+
+<p>Visual Studio 2008 (хотя подойдет любая версия VS):</p>
+
+<pre><code>cl /EHsc /I. /Fethread_example /DWIN32 thread_example.cpp thread.cpp
+</code></pre>
+
+<p>Опция <code>/EHsc</code> нужна, так как мы пишем на С++, и поэтому компилятору <code>cl.exe</code> надо явно указать необходимость включения поддержки исключений. Особенность данного компилятора.</p>
+
+<p>Если вы в UNIX&rsquo;e, тогда, например, <code>gcc</code>:</p>
+
+<pre><code>g++ -o thread_example thread_example.cpp thread.cpp
+</code></pre>
+
+<p>Запускаем thread_example, и имеем на экране следующее:</p>
+
+<pre><code>Thread status before: 0
+Thread status after: 1
+</code></pre>
+
+<p>Судя по напечатанным данным, класс работает правильно.</p>
+
+<p>Я специально не использовал в функции <code>Execute()</code> отладочной печати на экран типа &ldquo;Hello, world! I&rsquo;m the thread&rdquo;. Хотя это было бы нагляднее и прикольнее, чем какие-то булевы флаги. Но на это была причина. При работе с потоками, когда ваш код теперь уже выполняется нелинейно, а какие-то фрагменты могут работать параллельно, приходится очень тщательно продумывать совместное использование переменных одновременно работающими потоками. Может так случиться, что когда основной поток будет печатать что-то на экран через переменную <code>std::cout</code>, параллельный поток тоже захочет это сделать, прервет основной поток на полпути и сам начнет использовать <code>std::cout</code>. Данные обоих потоков смешаются, и в лучшем случае на экран вылезет каша, а в худшем программа может завершиться аварийно. На том же мной так любимом AIX&rsquo;е именно это и происходит. Видимо, стандартная библиотека AIX&rsquo;а требует каких-то дополнительных настроек для нормальной работы в мультипотоковой среде. Для избежания подобных проблем совместного доступа применяются различные механизмы из мира параллельного программирования - блокировки (mutex), семафоры, критические секции и т.д. Я посвящу отдельный пост этому очень непростому вопросу, но расскажу о нем крайне просто и понятно.</p>
+
+<p>Теперь давайте запустим десяток потоков (<code>thread_example2.cpp</code>).</p>
+
+<pre><code class="cpp">#include &lt;vector&gt;
+#include &lt;iostream&gt;
+#include &quot;thread.h&quot;
+
+class MyThread: public ext::Thread {
+public:
+  MyThread(int id) : __id(id), __done(false) {}
+  virtual void Execute() {
+    // Небольшая &quot;перчинка&quot; программы, чтобы не было скучно.
+    // Суть в том, что поток с индексом 3 (по счету номер 4, так первый
+    // индекс 0) не будет устанавливать флаг выполнения. Сделано это
+    // просто для разнообразия. Результат данной &quot;перчинки&quot; будет виден
+    // при печати.
+    if (__id != 3)
+      __done = true;
+  }
+  bool done() const { return __done; }
+private:
+  int __id;
+  bool __done;
+};
+
+typedef std::vector&lt;MyThread*&gt; Threads;
+
+int main(int argc, char* argv[]) {
+  // Создаем вектор из указателей на потоки
+  std::vector&lt;MyThread*&gt; threads;
+
+  // Создаем 10 потоков и сохраняем указатели на них в вектор
+  for (int i = 0; i &lt; 10; i++)
+    threads.push_back(new MyThread(i));
+ 
+  // Запускаем потоки на выполнение
+  for (Threads::iterator i = threads.begin(); i != threads.end(); i++)
+    (*i)-&gt;Start();
+ 
+  // Дожидаемся, пока они все завершатся
+  for (Threads::iterator i = threads.begin(); i != threads.end(); i++)
+    (*i)-&gt;Join();
+ 
+  // Печатаем статусы потоков в одну строку через пробел
+  for (Threads::iterator i = threads.begin(); i != threads.end(); i++)
+    std::cout &lt;&lt; (*i)-&gt;done() &lt;&lt; &quot; &quot;;
+  std::cout &lt;&lt; std::endl;
+ 
+  // Чистим за собой память.
+  for (Threads::iterator i = threads.begin(); i != threads.end(); i++)
+    delete *i;
+}
+</code></pre>
+
+<p>Компилируем.</p>
+
+<p>Visual Studio:</p>
+
+<pre><code>cl /EHsc /I. /Fethread_example2 /DWIN32 thread_example2.cpp thread.cpp
+</code></pre>
+
+<p>В UNIX&rsquo;e (<code>gcc</code>):</p>
+
+<pre><code>g++ -o thread_example2 thread_example2.cpp thread.cpp
+</code></pre>
+
+<p>Запускаем <code>thread_example2</code>, и имеем на экране следующее:</p>
+
+<pre><code>1 1 1 0 1 1 1 1 1 1
+</code></pre>
+
+<p>Видно, что все потоки, кроме четвертого (индекс 3, так как считаем от нуля) установили свои флаги правильно. Четвертому помешала &ldquo;перчинка&rdquo; (см. выше).</p>
+
+<p>Что дальше? Да ничего, собственно. Теперь вы наверняка набросаете несколько своих примеров, поиграетесь, и может начнете включать данный класс в свои проекты. Тестовые примеры вы скорее всего сотрете как отработанный материал, а может и заначите до лучших времен.</p>
+
+<p>А теперь! На сцену приглашается unit тестирование.</p>
+
+<p>Я вам предлагаю сделать небольшие программы-тесты, которые бы своими результатами доказывали правильность работы нашего класса. Например:</p>
+
+<pre><code class="cpp">class SimpleThread: public ext::Thread {
+public:
+    SimpleThread() : __done(false) {}
+
+    virtual void Execute() {
+        __done = true;
+    }
+
+    bool done() const { return __done; }
+private:
+    bool __done;
+};
+</code></pre>
+
+<p>Класс <code>SimpleThread</code> очень похож на класс <code>MyThread</code> из наших примеров выше. Он просто меняет флаг активности с <code>false</code> на <code>true</code> в процессе успешного выполнения.</p>
+
+<pre><code class="cpp"> // Декларируем тест с именем RunningInParallel в группе тестов ThreadTest.
+TEST(ThreadTest, RunningInParallel) {
+  // Создаем объект нашего класса
+  SimpleThread thread;
+  // Внимание! Макрос EXPECT_FALSE смотрит, какое значение у его аргумента.
+  // Если это ложь, то все нормально, и выполнение теста идет дальше. Если же нет,
+  // то печатается сообщение об ошибке, хотя тест продолжает работу.
+  // В нашем случае тут должно быть false по смыслу.
+  EXPECT_FALSE(thread.done());
+  // Запускаем поток на выполнение
+  thread.Start();
+  // Ждем завершение потока
+  thread.Join();
+  // Макрос EXPECT_TRUE смотрит, какое значение у его аргумента.
+  // Если это истина, то все нормально, и выполнение теста идет дальше. Если же нет,
+  // то печатается сообщение об ошибке, хотя тест продолжает работу.
+  // Тут мы уже ждем не false, а true, потому что поток должен был изменить значение
+  // этого флага.
+  EXPECT_TRUE(thread.done());
+}
+</code></pre>
+
+<p>Теперь осознаем произошедшее - мы не просто написали какой-то пример, а мы формально опередили логику работы класса, задали его ответственность. Теперь наши пожелания к функциональности класса заданы не на словах и предположениях, а в виде программы.</p>
+
+<p>Теперь осталось только запустить этот тест.</p>
+
+<p>Существует много библиотек для unit тестирования практически для каждого языка. С++ не исключение. Самой распространенной в мире С++ является <a href="http://cppunit.sourceforge.net/">CppUnit</a>. Но около полугода назад Google ворвался в мир библиотек тестирования с <a href="http://code.google.com/p/googletest/">Google Test Framework</a>. На момент написания данной статьи актуальной версией является <a href="http://googletest.googlecode.com/files/gtest-1.2.1.tar.gz">1.2.1</a>. Распространяется в исходных текстах. Данную библиотеку можно прекомпилировать и использовать как двоичный модуль при линковке, но я сделал иначе. Так как я постоянно прыгаю с платформы на платформу, с компилятора на компилятор, мне удобнее компилировать Google Test прямо из исходников каждый раз при сборке проекта, благо библиотека хорошо портируема, мала по размеру и быстро компилируется. К небольшому сожалению, Google Test реализована в виде не одного файла-исходника и одного .h файла, а целого набора .h файлов и набора .cc (.cpp) файлов. Так удобно библиотеку развивать (что логично), но не использовать из исходников со стороны. Поэтому я объединил всю библиотеку в два файла: <code>gtest.h</code> и <code>gtest-all.cc</code>, и больше ничего не нужно. Гугловцы обещали в следующий релиз библиотеки включить мой патч на эту тему. Сейчас же они (также по моей идее) дают специальный скрипт, которым можно из официального архива сделать компактную версию из двух файлов. Для тех, у кого уже съехали мозги от этих подробностей, и кто пока не хочет тратить время на техдетали библиотеки, я могу предложить <a href="/downloads/gtest-amalgamation-1.2.1.zip">мою сборку Google Test&rsquo;а</a>. Можно начать с нее. Она основана на официальной версии 1.2.1 и является объединением множества файлов в два. В архиве два файла <code>gtest/gtest.h</code> и <code>gtest-all.cc</code>. Положите их в каталог, где будете проводить опыты.</p>
+
+<p>Итак, предположим, вы имеете файлы: <code>gtest/gtest.h</code> и <code>gtest-all.cc</code> в рабочем каталоге, и все готово к запуску.</p>
+
+<p>Полный вариант исходника <code>thread_unittest.cpp</code>:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+#include &quot;thread.h&quot;
+
+class SimpleThread: public ext::Thread {
+public:
+  SimpleThread() : __done(false) {}
+
+  virtual void Execute() {
+      __done = true;
+  }
+
+  bool done() const { return __done; }
+private:
+  bool __done;
+};
+
+TEST(ThreadTest, RunningInParallel) {
+  SimpleThread thread;
+  EXPECT_FALSE(thread.done());
+  thread.Start();
+  thread.Join();
+  EXPECT_TRUE(thread.done());
+}
+</code></pre>
+
+<p>Я предпочитаю давать имена файлам с тестами, используя суффикс <code>_unittest</code> к имени основного файла. Это позволяет, быстро взглянув на каталог, понять - какие классы имеют тесты, а какие нет.</p>
+
+<p>Также нам нужен стартовый файл <code>runner.cpp</code>, который будет содержать функцию <code>main()</code>:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+int main(int argc, char* argv[]) {
+  // Инициализируем библиотеку
+  testing::InitGoogleTest(&amp;argc, argv);
+  // Запускаем все тесты, прилинкованные к проекту
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>Тут все просто. Обычно, этот файл одинаков для все тестовых проектов, если вам не надо проводить какие-нибудь дополнительные инициализации, брать что-то из командной строки и.д. Google Test устроена так (в отличие от CppUnit, например), что тесты (<code>TEST</code> и <code>TEST_F</code>) не надо нигде дополнительно регистрировать, объявлять и т.д. Вы просто задаете тело теста, включаете файл с исходником в проект и все. Далее все происходит автоматически.</p>
+
+<p>Резонный вопрос - а в каком порядке тесты буду выполнены, если их несколько? А ответ прост: вас это не касается. Тесты могут выполняться в любом порядке, и нельзя делать никаких предположений на эту тему. Суть тут в том, что каждый тест должет быть атомарным и независимым (конечным автоматом без памяти). В этом суть блочного (unit) тестирования, когда маленькие кусочки большой программы проверяются отдельно, в полной изоляции. Но, вернемся к компиляции.</p>
+
+<p>Компилируем.</p>
+
+<p>Visual Studio:</p>
+
+<pre><code>cl /EHsc /DWIN32 /I. /Fethread_unittest.exe runner.cpp thread_unittest.cpp thread.cpp gtest-all.cc
+</code></pre>
+
+<p>UNIX:</p>
+
+<pre><code>g++ -I. -o thread_unittest runner.cpp thread_unittest.cpp thread.cpp gtest-all.cc
+</code></pre>
+
+<p>Запускаем <code>thread_unittest</code> и получаем что-то вроде:</p>
+
+<pre><code>[==========] Running 1 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 tests from ThreadTest
+[ RUN      ] ThreadTest.RunningInParallel
+[       OK ] ThreadTest.RunningInParallel
+[----------] Global test environment tear-down
+[==========] 1 tests from 1 test case ran.
+[  PASSED  ] 1 tests.
+</code></pre>
+
+<p>Это значит, что тест был запущен и отработал как положено.</p>
+
+<p>Добавим еще один тест, который будет проверять, убивается ли поток, когда мы этого хотим.</p>
+
+<p><code>thread_unittest.cpp</code>:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+#include &quot;thread.h&quot;
+
+#ifdef WIN32
+#include &lt;windows.h&gt;
+#define msleep(x)    Sleep(x)
+#else
+#include &lt;unistd.h&gt;
+#define msleep(x)    usleep((x)*1000)
+#endif
+
+class SimpleThread: public ext::Thread {
+public:
+  SimpleThread() : __done(false) {}
+
+  virtual void Execute() {
+    __done = true;
+  }
+
+  bool done() const { return __done; }
+private:
+  bool __done;
+};
+
+TEST(ThreadTest, RunningInParallel) {
+  SimpleThread thread;
+  EXPECT_FALSE(thread.done());
+  thread.Start();
+  thread.Join();
+  EXPECT_TRUE(thread.done());
+}
+
+// &quot;Нескончаемый поток&quot;
+class GreedyThread: public ext::Thread {
+public:
+  virtual void Execute() {
+    // Данный поток будет работать вечно, пока его не убьют извне.
+    while (true) {
+      msleep(1);
+    }
+  }
+};
+
+TEST(ThreadTest, Kill) {
+  // Создаем &quot;вечный&quot; поток
+  GreedyThread thread;
+  // Запускаем его
+  thread.Start();
+  // Убиваем его
+  thread.Kill();
+  // Если функция Kill() не работает, ты мы никогда не дождемся окончания потока
+  // и программа тут повиснет.
+  thread.Join();
+}
+</code></pre>
+
+<p>Компилируем.</p>
+
+<p>Visual Studio:</p>
+
+<pre><code>cl /EHsc /I. /Fethread_unittest.exe /DWIN32 runner.cpp thread_unittest.cpp thread.cpp gtest-all.cc
+</code></pre>
+
+<p>UNIX:</p>
+
+<pre><code>g++ -I. -o thread_unittest runner.cpp thread_unittest.cpp thread.cpp gtest-all.cc
+</code></pre>
+
+<p>Запускаем <code>thread_unittest</code> и получает что-то вроде:</p>
+
+<pre><code>[==========] Running 2 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 2 tests from ThreadTest
+[ RUN      ] ThreadTest.RunningInParallel
+[       OK ] ThreadTest.RunningInParallel
+[ RUN      ] ThreadTest.Kill
+[       OK ] ThreadTest.Kill
+[----------] Global test environment tear-down
+[==========] 2 tests from 1 test case ran.
+[  PASSED  ] 2 tests.
+</code></pre>
+
+<p>Оба теста отработали правильно. Получается, что теперь мы точно уверены, что наш поток умеет работать параллельно и независимо от основного потока, и умеет принудительно &ldquo;убиваться&rdquo; по требованию. Мы это доказали тестами, а не словами или алгоритмами на бумаге. Если вам кажется, что еще не вся функциональность класса проверена, обязательно допишите свои тесты для проверки своих предположений.</p>
+
+<p>Теперь внесем в класс &ldquo;случайную ошибку&rdquo;, добавив оператор <code>return</code> в виндовый вариант функции <code>void Thread::Start()</code>:</p>
+
+<pre><code class="cpp">void Thread::Start() {
+  // &quot;Случайная&quot; ошибка
+  return;
+  __handle = CreateThread(
+    0, 0,
+    reinterpret_cast&lt;LPTHREAD_START_ROUTINE&gt;(ThreadCallback), this,
+    0, 0
+  );
+}
+</code></pre>
+
+<p>Теперь наш класс &ldquo;сломан&rdquo;. Посмотрим, что скажет тестирование (естественно, надо перекомпилировать программу перед этим):</p>
+
+<pre><code>[==========] Running 2 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 2 tests from ThreadTest
+[ RUN      ] ThreadTest.RunningInParallel
+thread_unittest.cpp(33): error: Value of: thread.done()
+  Actual: false
+Expected: true
+[  FAILED  ] ThreadTest.RunningInParallel
+[ RUN      ] ThreadTest.Kill
+[       OK ] ThreadTest.Kill
+[----------] Global test environment tear-down
+[==========] 2 tests from 1 test case ran.
+[  PASSED  ] 1 test.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] ThreadTest.RunningInParallel
+
+ 1 FAILED TEST
+</code></pre>
+
+<p>Бинго! Тест говорит, что ожидаемое значение флага выполнения &ldquo;истина&rdquo;, а реальное &ldquo;ложь&rdquo;. Класс не работает! Конечно не работает, так как создание потока не происходит из-за &ldquo;случайного&rdquo; оператора <code>return</code>. Мы нашли реальный &ldquo;баг&rdquo;, причем сделали это автоматизированным образом.</p>
+
+<p>Можно еще улучшить тест дополнительной информацией, которая будет показана в случае его сбоя:</p>
+
+<pre><code class="cpp">TEST(ThreadTest, Simple) {
+  SimpleThread thread;
+  EXPECT_FALSE(thread.done());
+  thread.Start();
+  thread.Join();
+  EXPECT_TRUE(thread.done()) &lt;&lt; &quot;Поток не изменил флаг&quot;;
+}
+</code></pre>
+
+<p>Теперь сообщение об ошибке будет более информативно.</p>
+
+<pre><code>[==========] Running 2 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 2 tests from ThreadTest
+[ RUN      ] ThreadTest.RunningInParallel
+thread_unittest.cpp(33): error: Value of: thread.done()
+  Actual: false
+Expected: true
+Поток не изменил флаг
+[  FAILED  ] ThreadTest.RunningInParallel
+[ RUN      ] ThreadTest.Kill
+[       OK ] ThreadTest.Kill
+[----------] Global test environment tear-down
+[==========] 2 tests from 1 test case ran.
+[  PASSED  ] 1 test.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] ThreadTest.RunningInParallel
+
+ 1 FAILED TEST
+</code></pre>
+
+<p>Google Test имеет множество функций для тестовых сравнений, но основные их них, используемые в 99% случаев, следующие:</p>
+
+<ul>
+<li><code>EXPECT_EQ(a, b)</code> - проверка условия &ldquo;a = b&rdquo;</li>
+<li><code>EXPECT_NE(a, b)</code> - проверка условия &ldquo;a != b&rdquo;</li>
+<li><code>EXPECT_GT(a, b)</code> - проверка условия &ldquo;a &gt; b&rdquo;</li>
+<li><code>EXPECT_LT(a, b)</code> - проверка условия &ldquo;a &lt; b&rdquo;</li>
+<li><code>EXPECT_GE(a, b)</code> - проверка условия &ldquo;a &gt;= b&rdquo;</li>
+<li><code>EXPECT_LE(a, b)</code> - проверка условия &ldquo;a &lt;= b&rdquo;</li>
+<li><code>EXPECT_TRUE(a)</code> - проверка аргумента на истину</li>
+<li><code>EXPECT_FALSE(a)</code> - проверка аргумента на ложь</li>
+</ul>
+
+<p>Функции, начинающиеся с <code>EXPECT_</code>, в случае ошибки не прерывают выполнение теста, а просто печатают сообщение об ошибке, и тестирование продолжается. Если ваша ошибка фатальна (например, база данных недоступна), и нет причин продолжать тесты вообще, то можно использовать функции со схожим именованием:</p>
+
+<ul>
+<li><code>ASSERT_EQ(a, b)</code> - проверка условия &ldquo;a = b&rdquo;</li>
+<li><code>ASSERT_NE(a, b)</code> - проверка условия &ldquo;a != b&rdquo;</li>
+<li><code>ASSERT_GT(a, b)</code> - проверка условия &ldquo;a &gt; b&rdquo;</li>
+<li><code>ASSERT_LT(a, b)</code> - проверка условия &ldquo;a &lt; b&rdquo;</li>
+<li><code>ASSERT_GE(a, b)</code> - проверка условия &ldquo;a &gt;= b&rdquo;</li>
+<li><code>ASSERT_LE(a, b)</code> - проверка условия &ldquo;a &lt;= b&rdquo;</li>
+<li><code>ASSERT_TRUE(a)</code> - проверка аргумента на истину</li>
+<li><code>ASSERT_FALSE(a)</code> - проверка аргумента на ложь</li>
+</ul>
+
+<p>Эти фунции при ошибке прерывают тест и весь процесс тестирования с целом.</p>
+
+<p>Есть еще особая функция <code>FAIL()</code>, которая безусловно прерывает тест с ошибкой. Удобно для проверки мест, где вы &ldquo;не должны&rdquo; оказаться в процесса работы теста. Например:</p>
+
+<pre><code class="cpp">try {
+  ...
+} catch(...) {
+  FAIL() &lt;&lt; &quot;Данный кусок программы не должен генерировать исключений&quot;;
+}
+</code></pre>
+
+<p>Полный список функций-проверок, а также описания прочих возможностей Google Test, так как я затронул пока лишь малую их часть, можно получить в <a href="http://code.google.com/p/googletest/wiki/AdvancedGuide">документации</a>.</p>
+
+<p>Кроме того, во все эти функции можно писать как стандартные потоки вывода через оператор <code>&lt;&lt;</code>, как мы делали в примере выше:</p>
+
+<pre><code class="cpp">EXPECT_TRUE(thread.done()) &lt;&lt; &quot;Поток не изменил флаг&quot;;
+</code></pre>
+
+<p>тем самым печатая удобную отладочную информацию.</p>
+
+<p>Давайте проанализируем сказанное и сделанное. Что мы получили? Как я уже говорил, мы формализовали наши требования от класса в виде программы, которую можно теперь запускать сколько угодно раз, проверяя работу класса. Вы спросите для чего? Класс-то работает. А вот представьте, что вы установили новую версию компилятора или новую версию библиотеки <code>pthread</code> и что-то в этом роде. Вы уверены, что в них нет ошибок? или может нужны другие опции командной строки для правильной работы. Кто знает?! Тест знает! Скомпилированный и запущенный тест сразу же проверит, работает ли класс так, как вы от него ожидаете. По крайне мере хуже уже не будет. Новые ошибки тест может и не покажет, но уже формализованное ранее поведение класса проверит точно. А теперь представьте, что вам надо так перепроверить сотни классов в вашем проекте. Только автоматизированное тестирование делает это реальным. А тестирование типа &ldquo;давай поерзаем программой быстренько, и если сразу не сломалось, то все хорошо&rdquo; тестированием не является вообще. Гораздо проще включить компилирование и запуск тестов при каждой полной сборке проекта. Небольшая потеря времени конечно есть на дополнительную компиляцию, но это с лихвой окупается выявленными тут же ошибками. Сами unit тесты обычно работают очень быстро. Они должны быть быстрыми, иначе они неудобны для регулярного запуска. Сотни тестов не должны как-либо заметно медленно работать. Если какой-то тест требует секунд для себя, то может его стоит перенести в раздел функционального тестирования и пользоваться им уже в процессе проверки программы для релиза, а не в процессе самой разработки, или запускать медленные тесты автоматически в ночных сборках.</p>
+
+<p>Кстати, наличие тестов позволяет поручить возможные доработки кода не только тому, кто этот код писал изначально и понимает в самых деталях, как все работает. Если тесты работают, значит изменения кода по крайне мере не сделали его хуже, а значит клиент не будет кричать сразу после установки новой версии типа &ldquo;какого вы тут все сломали&rdquo;. Тесты - это прежде доказательства программиста, что его программа работает так, как он ожидает и всем обещает, как его программа должна работать. Только это уже не просто слова, а автоматизированный метод проверки.</p>
+
+<p>Помните те примеры, которые мы писали в начале. Что с ними случилось? Мы их просто выкинули как отработанный материал. Выкинули результаты очень полезной работы. Мы по кусочкам разобрались, как работает исследуемый класс, но потом отказались повторно использовать уже полученные результаты, выкинув тестовые примеры. Так почему бы изначально не приложить чуть-чуть усилий и не оформить тестовые игрушечные примеры в виде блочных тестов, готовых к автоматизированному повторному использованию, и не превратить их в мощное автоматизированное оружие против багов?</p>
+
+<p>Личный пример. Писал я класс, реализующий TCP/IP сокет с использованием SSL. Скачал библиотеку OpenSSL, начал разбираться. Стал писать мини примеры для освоения разных аспектов библиотеки. И каждый свой эксперимент я оформлял в виде теста (один тест для создания контекста ключей, другой для установления соединения, третий для расшифрации кодов ошибок и т.д.). Каждый новый запуск проекта влючал все больше и больше таких тестов. Затем я вынужден был прерваться на месяц. По прошествии месяца я напрочь забыл все про OpenSSL. И если бы не готовые уже тесты, я бы начал разбираться опять сначала. А так, поглядев на уже сделанные куски, я быстро погонял тесты, вспомнил что к чему, и продолжил работу. Затем из этих тестов фактически и родилась моя библиотека для работы с SSL, и сами тесты включились в тестирующую сборку. Когда осваиваешь что-то новое - язык, библиотеку и т.д. - тестовая программа очень быстро разрастается и превращается некоего монстра, в котором вы хотите задействовать и проверить все новое. Гораздо полезнее разбираться по маленьким кусочкам, изолированно изучать каждый вопрос, закрепляя полученные результаты в виде тестов.</p>
+
+<p>Вы меня сходу спросите - а как писать тесты? Ведь данный пример весьма тривиален, а реальные программы гораздо сложнее, в них много взаимозависимостей, и порой крайне сложно раскроить их на тестируемые кусочки. Ответ, который я дам сходу сейчас таков - пишите ваши программы сразу пригодными для тестирования. А вот как именно это делать - я расскажу в будущих выпусках нашего научно-популярного журнала.</p>
+
+<p>А вы меня опять спросите - а другие языки как? как, например, делать unit тестирование в классическом языке С? Об этом я тоже непременно расскажу.</p>
+
+<p>Unit-тестирование — это громадная и очень интересная тема. Будем ее развивать.</p>
+
+<p>P.S. Исходные тексты данной статьи я проверял на Windows, Linux 2.6 (32- и 64-бит Intel и SPARC), AIX 5.3 и 6, SunOS 5.2 64-bit SPARC.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/01/26/universal-threads-for-windows-and-unix/">Универсальные потоки на С++ для Windows и UNIX</a></li>
+<li><a href="/blog/russian/2009/03/01/unit-testing-in-c/">Unit-тестирование в языке С</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/01/threadcpp.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/01/threadcpp.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/01/threadcpp.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

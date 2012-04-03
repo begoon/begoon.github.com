@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>TCP/IP proxy на Erlang'e</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>TCP/IP proxy на Erlang&#39;e</h1>
+<div id="post">
+  <p>По мотивам <a href="/blog/russian/2011/11/19/problem-to-try-new-languages/">недавнего поста про изучение новых языков</a>, я таки добил версию на Erlang&rsquo;е. Если тут есть спецы по языку, буду признателен за критику.</p>
+
+<p>Программа по функциям идентична <a href="/blog/russian/2009/09/04/multi-threaded-tcpip-debugger/">версии на Питоне</a> за исключением отсутствия дублирования лога в файл и продвинутого разбора флагов командной строки.</p>
+
+<p>И так: программа многопоточна, и журналирование также происходит в отдельном потоке для обеспечения целостности многострочных дампов.</p>
+
+<p>Про Эрланг. После многократных и пока полностью неуспешных заходов на Хаскелл и после все еще неудачных попыток на Lisp или Scheme написать что-то более менее реальное и жизненное, Эрланг был реальным прорывом для меня.</p>
+
+<p>Удивительно, невозможность изменять переменные (представьте, что программируя на С++ надо все переменные делать <code>const</code>) является фантастическим способом борьбы с опечатками при cut-and-paste. Также когда делаешь циклы через хвостовую рекурсию, сразу осознаешь, как эффективно работать со списками, чтобы их не копировать, а всегда &ldquo;таскать&rdquo; за хвост или голову.</p>
+
+<p>Ну а концепция легких потоков и обмена сообщениями между ними (как в Go), приправленная глобальной иммутабельностью, позволяет легко писать надежные многотопочные программы.</p>
+
+<p>Например, истересен способ реализации многопотокового TCP/IP сервера. Обычно при его программировании есть распростраенный прием: один главный поток, принимающий соединения, и когда соединение принято, создается новый поток-исполнитель, который обрабатывает соединение и после этого умирает.</p>
+
+<p>В Эрланге можно сделать иначе (функция <code>acceptor()</code>). Поток, ожидающий входящего соединения, после его получения рождает свой клон для ожидания следующего соединения и затем сам обрабабатывает запрос.</p>
+
+<p>Для меня это было немного необычно.</p>
+
+<pre><code class="erlang">-module(tcp_proxy).
+
+-define(WIDTH, 16).
+
+main([ListenPort, RemoteHost, RemotePort]) -&gt;
+    ListenPortN = list_to_integer(ListenPort),
+    start(ListenPortN, RemoteHost, list_to_integer(RemotePort));
+
+main(_) -&gt; usage().
+
+usage() -&gt;
+    io:format(&quot;~ntcp_proxy.erl local_port remote_port remote_host~n~n&quot;, []),
+    io:format(&quot;Example:~n~n&quot;, []),
+    io:format(&quot;tcp_proxy.erl 50000 google.com 80~n~n&quot;, []).
+
+start(ListenPort, CalleeHost, CalleePort) -&gt;
+    io:format(&quot;Start listening on port ~p and forwarding data to ~s:~p~n&quot;,
+              [ListenPort, CalleeHost, CalleePort]),
+    {ok, ListenSocket} = gen_tcp:listen(ListenPort, [binary, {packet, 0},
+                                                    {reuseaddr, true},
+                                                    {active, true}]),
+    io:format(&quot;Listener socket is started ~s~n&quot;, [socket_info(ListenSocket)]),
+    spawn(fun() -&gt; acceptor(ListenSocket, CalleeHost, CalleePort, 0) end),
+    register(logger, spawn(fun() -&gt; logger() end)),
+    wait().
+
+% Infinine loop to make sure that the main thread doesn't exit.
+wait() -&gt; receive _ -&gt; true end, wait().
+
+format_socket_info(Info) -&gt;
+    {ok, {\{A, B, C, D}, Port}} = Info,
+    lists:flatten(io_lib:format(&quot;~p.~p.~p.~p:~p&quot;, [A, B, C, D, Port])).
+
+peer_info(Socket) -&gt; format_socket_info(inet:peername(Socket)).
+
+socket_info(Socket) -&gt; format_socket_info(inet:sockname(Socket)).
+
+acceptor(ListenSocket, RemoteHost, RemotePort, ConnN) -&gt;
+    case gen_tcp:accept(ListenSocket) of
+      {ok, LocalSocket} -&gt;
+          spawn(fun() -&gt; acceptor(ListenSocket, RemoteHost, RemotePort, ConnN + 1) end),
+          LocalInfo = peer_info(LocalSocket),
+          logger ! {message, &quot;~4.16.0B: Incoming connection from ~s~n&quot;, [ConnN, LocalInfo]},
+          case gen_tcp:connect(RemoteHost, RemotePort, [binary, {packet, 0}]) of
+            {ok, RemoteSocket} -&gt;
+              RemoteInfo = peer_info(RemoteSocket),
+              logger ! {message, &quot;~4.16.0B: Connected to ~s~n&quot;, [ConnN, RemoteInfo]},
+              exchange_data(LocalSocket, RemoteSocket, LocalInfo, RemoteInfo, ConnN, 0),
+              logger ! {message, &quot;~4.16.0B: Finished~n&quot;, [ConnN]};
+            {error, Reason} -&gt;
+              logger ! {message, &quot;~4.16.0B: Unable to connect to ~s:~s (error: ~p)~n&quot;,
+                       [ConnN, RemoteHost, RemotePort, Reason]}
+          end;
+      {error, Reason} -&gt;
+          logger ! {message, &quot;Socket accept error '~w'~n&quot;, [Reason]}
+    end.
+
+exchange_data(LocalSocket, RemoteSocket, LocalInfo, RemoteInfo, ConnN, PacketN) -&gt;
+    receive
+        {tcp, RemoteSocket, Bin} -&gt;
+            logger ! {received, ConnN, Bin, RemoteInfo, PacketN},
+            gen_tcp:send(LocalSocket, Bin),
+            logger ! {sent, ConnN, LocalInfo, PacketN},
+            exchange_data(LocalSocket, RemoteSocket, LocalInfo, RemoteInfo, ConnN, PacketN + 1);
+        {tcp, LocalSocket, Bin} -&gt;
+            logger ! {received, ConnN, Bin, LocalInfo, PacketN},
+            gen_tcp:send(RemoteSocket, Bin),
+            logger ! {sent, ConnN, RemoteInfo, PacketN},
+            exchange_data(LocalSocket, RemoteSocket, LocalInfo, RemoteInfo, ConnN, PacketN + 1);
+        {tcp_closed, RemoteSocket} -&gt;
+            logger ! {message, &quot;~4.16.0B: Disconnected from ~s~n&quot;, [ConnN, RemoteInfo]};
+        {tcp_closed, LocalSocket} -&gt;
+            logger ! {message, &quot;~4.16.0B: Disconnected from ~s~n&quot;, [ConnN, LocalInfo]}
+    end.
+
+logger() -&gt;
+    receive
+        {received, Pid, Msg, From, PacketN} -&gt;
+            io:format(&quot;~4.16.0B: Received (#~p) ~p byte(s) from ~s~n&quot;,
+                      [Pid, PacketN, byte_size(Msg), From]),
+            dump_bin(Pid, Msg),
+            logger();
+        {sent, Pid, ToSocket, PacketN} -&gt;
+            io:format(&quot;~4.16.0B: Sent (#~p) to ~s~n&quot;, [Pid, PacketN, ToSocket]),
+            logger();
+        {message, Format, Args} -&gt;
+            io:format(Format, Args),
+            logger()
+    end.
+
+dump_list(Prefix, L, Offset) -&gt;
+    {H, T} = lists:split(lists:min([?WIDTH, length(L)]), L),
+    io:format(&quot;~4.16.0B: &quot;, [Prefix]),
+    io:format(&quot;~4.16.0B: &quot;, [Offset]),
+    io:format(&quot;~-*s| &quot;, [?WIDTH * 3, dump_numbers(H)]),
+    io:format(&quot;~-*s&quot;, [?WIDTH, dump_chars(H)]),
+    io:format(&quot;~n&quot;, []),
+    if length(T) &gt; 0 -&gt; dump_list(Prefix, T, Offset + 16); true -&gt; [] end.
+
+dump_numbers(L) when (is_list(L)) -&gt;
+    lists:flatten([io_lib:format(&quot;~2.16.0B &quot;, [X]) || X &lt;- L]).
+
+dump_chars(L) -&gt;
+    lists:map(fun(X) -&gt;
+                if X &gt;= 32 andalso X &lt; 128 -&gt; X;
+                   true -&gt; $.
+                end
+              end, L).
+
+dump_bin(Prefix, Bin) -&gt;
+    dump_list(Prefix, binary_to_list(Bin), 0).
+</code></pre>
+
+<p>В работе может выводить примерно следующее:</p>
+
+<pre><code>alexander:erlang/&gt;./tcp_proxy.sh 50000 pop.yandex.ru 110
+Start listening on port 50000 and forwarding data to pop.yandex.ru:110
+Listener socket is started 0.0.0.0:50000
+0000: Incoming connection from 127.0.0.1:51402
+0000: Connected to 213.180.204.37:110
+0000: Received (#0) 38 byte(s) from 213.180.204.37:110
+0000: 0000: 2B 4F 4B 20 50 4F 50 20 59 61 21 20 76 31 2E 30 | +OK POP Ya! v1.0
+0000: 0010: 2E 30 6E 61 40 32 35 20 67 55 62 44 54 51 64 5A | .0na@25 gUbDTQdZ
+0000: 0020: 6D 6D 49 31 0D 0A                               | mmI1..
+0000: Sent (#0) to 127.0.0.1:51402
+0000: Received (#1) 11 byte(s) from 127.0.0.1:51402
+0000: 0000: 55 53 45 52 20 74 65 73 74 0D 0A                | USER test..
+0000: Sent (#1) to 213.180.204.37:110
+0000: Received (#2) 23 byte(s) from 213.180.204.37:110
+0000: 0000: 2B 4F 4B 20 70 61 73 73 77 6F 72 64 2C 20 70 6C | +OK password, pl
+0000: 0010: 65 61 73 65 2E 0D 0A                            | ease...
+0000: Sent (#2) to 127.0.0.1:51402
+0000: Received (#3) 11 byte(s) from 127.0.0.1:51402
+0000: 0000: 50 41 53 53 20 70 61 73 73 0D 0A                | PASS pass..
+0000: Sent (#3) to 213.180.204.37:110
+0000: Received (#4) 72 byte(s) from 213.180.204.37:110
+0000: 0000: 2D 45 52 52 20 5B 41 55 54 48 5D 20 6C 6F 67 69 | -ERR [AUTH] logi
+0000: 0010: 6E 20 66 61 69 6C 75 72 65 20 6F 72 20 50 4F 50 | n failure or POP
+0000: 0020: 33 20 64 69 73 61 62 6C 65 64 2C 20 74 72 79 20 | 3 disabled, try
+0000: 0030: 6C 61 74 65 72 2E 20 73 63 3D 67 55 62 44 54 51 | later. sc=gUbDTQ
+0000: 0040: 64 5A 6D 6D 49 31 0D 0A                         | dZmmI1..
+0000: Sent (#4) to 127.0.0.1:51402
+0000: Disconnected from 213.180.204.37:110
+0000: Finished
+0001: Incoming connection from 127.0.0.1:51405
+0001: Connected to 213.180.204.37:110
+0001: Received (#0) 38 byte(s) from 213.180.204.37:110
+0001: 0000: 2B 4F 4B 20 50 4F 50 20 59 61 21 20 76 31 2E 30 | +OK POP Ya! v1.0
+0001: 0010: 2E 30 6E 61 40 33 30 20 70 55 62 41 72 52 33 74 | .0na@30 pUbArR3t
+0001: 0020: 6A 65 41 31 0D 0A                               | jeA1..
+0001: Sent (#0) to 127.0.0.1:51405
+0001: Received (#1) 6 byte(s) from 127.0.0.1:51405
+0001: 0000: 51 55 49 54 0D 0A                               | QUIT..
+0001: Sent (#1) to 213.180.204.37:110
+0001: Received (#2) 20 byte(s) from 213.180.204.37:110
+0001: 0000: 2B 4F 4B 20 73 68 75 74 74 69 6E 67 20 64 6F 77 | +OK shutting dow
+0001: 0010: 6E 2E 0D 0A                                     | n...
+0001: Sent (#2) to 127.0.0.1:51405
+0001: Disconnected from 213.180.204.37:110
+0001: Finished
+</code></pre>
+
+<p>Вывод: Эрланг - прекрасный вариант для начала функциональной карьеры.</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2011/11/19/problem-to-try-new-languages/">Задача для освоения новых языков</a></li>
+<li><a href="/blog/russian/2009/09/04/multi-threaded-tcpip-debugger/">Мультипотоковый отладчик TCP/IP соединений</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/11/tcpip-proxy-erlange.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/11/tcpip-proxy-erlange.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/11/tcpip-proxy-erlange.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

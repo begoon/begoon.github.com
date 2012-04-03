@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Энциклопедия целочисленных последовательностей</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Энциклопедия целочисленных последовательностей</h1>
+<div id="post">
+  <p>Многие задачи в спортивном программировании из раздела динамического программирования сводятся к задаче отыскания формулы какой-либо последовательности.</p>
+
+<p>Формула может быть в замкнутом виде, когда ты просто подставляешь аргументы и разом получаешь результат за время <code>O(1)</code>, или в динамической, рекуррентной форме, когда для вычисления i-го члена надо вычислить предыдующие.</p>
+
+<p>Классический пример замкнутой формы - это сумма ряда n положительных чисел:</p>
+
+<pre><code>S(n)=n*(n-1)/2.
+</code></pre>
+
+<p>А для динамической, или рекуррентной формы - это, например, формула для i-го члена последовательности чисел Фибонначи:</p>
+
+<pre><code>F(i)=F(i-1)+F(i-2).
+</code></pre>
+
+<p>Например, вот такая задача (для школьников!).</p>
+
+<p>Есть N чисел от 1 до N. Требуется разместить эти числа в ряд слева направо. Первым числом всегда идет 1. Каждое последующее может отличаться от предыдущего не больше, чем на 2. Например:</p>
+
+<pre><code>1 2 3 4 5 ...
+1 3 2 4 5 ...
+1 3 5 4 2 ...
+</code></pre>
+
+<p>и т.д. (эта <a href="http://acm.timus.ru/problem.aspx?space=1&amp;num=1260">задача есть на Тимусе</a>).</p>
+
+<p>Требудется найти количество возможных размещений по этому правилу для N чисел. N от 1 до 55.</p>
+
+<p>Просто перебором в лоб не получится, так как вариантов будет <code>55!</code> ~ <code>10^73</code>, а времени дается всего одна секунда.</p>
+
+<p>Судя по ограничению по времени в 1 секунду, тут просто должна быть формула.</p>
+
+<p>А вот теперь подходим к сути поста. Недавно я наткнулся на волшебный сайт - <a href="http://www.research.att.com/~njas/sequences/index.html?language=russian">Онлайн-энциклопедия целочисленных последовательностей</a>. Там ты просто вводишь несколько известных тебе членов последовательности, а сайт по большой базе данных ищет совпадения с какими-либо известными последовательностями, и в случае наличия такого совпадения, дает исчерпывающую информацию - формулы, статистический анализ и т.д.</p>
+
+<p>Итак, я нашел пяток первых значений решения задачи перебором - генерировал все возможные перестановки для i членов, для i от 1 до 8, и проверяя для каждой перестановки правильность выполнения условий размещения, считал количество вариантов.</p>
+
+<p>В итоге, магия произошла. Когда я ввел вычисленные первые элементы последовательности в этот анализатор, мне просто сказали, что формула для i-го члена этой последовательсти: <code>a(n)=a(n-1)+a(n-3)+1</code>. И все! И по данной формуле задача решается пулей одним циклом за <code>O(N)</code>.</p>
+
+<p>Конечно, для реальных соревнований такое метод не годится, так как никто не даст доступа в интернет. Да и цель задачи несколько иная - научиться выводить такие динамические соотношения самому.</p>
+
+<p>А вот в жизни - бывает, что числа уже есть, и надо быстренько как-то их обсчитать на больших размерностях, вот тут и пригодится этот волшебный анализатор, которые даст исчерпывающуй информацию о ваших числах.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2010/06/blog-post_11.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2010/06/blog-post_11.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2010/06/blog-post_11.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Какой конструктор когда вызывается в С++</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Какой конструктор когда вызывается в С++</h1>
+<div id="post">
+  <p>С++ имеет весьма разнообразный синтаксис для конструирования объектов. Надо признать, что порой этот синтаксис весьма неочевиден, и многие вещи надо просто знать, нежели догадаться, как они работают. Например:</p>
+
+<pre><code class="cpp">class T {...};
+...
+T t = T(1);
+</code></pre>
+
+<p>По очевидной логике вещей данный код должен при создании экземпляра класса <code>T</code> вызвать конструктор по умолчанию (без аргументов), затем создать временный объект с помощью конструктора с одним аргументом и скопировать его в исходный объект перегруженным оператором копирования (или может конструктором копирования? ведь слева и справа объекты явно типа <code>T</code>&hellip;).</p>
+
+<p>К сожалению, тут невозможно просто догадаться по логике, тут надо знать, как это прописано в стандарте. Все эти &ldquo;тонкости&rdquo; конечно очевидны для профессионала, но у начинающих это порой вызывает непонимание, и как следствие использование однажды опробованных штампов &ldquo;так работает&rdquo; без какой-либо попытки что-то изменить.</p>
+
+<p>Именно для таких случаев я обычно даю следующий пример, который покрывает часто используемые варианты создания объектов. Разобрав его один раз целиком, можно использовать его как подсказку в будущем, когда опять возникает вопрос &ldquo;а что ж здесь будет вызвано: конструктор или оператор копирования?&hellip;&ldquo;.</p>
+
+<p>Итак, файл <code>ctor.cpp</code>:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+
+class T {
+public:
+  T() { std::cout &lt;&lt; &quot;T()&quot; &lt;&lt; std::endl; }
+  T(int) { std::cout &lt;&lt; &quot;T(int)&quot; &lt;&lt; std::endl; }
+  T(int, int) { std::cout &lt;&lt; &quot;T(int, int)&quot; &lt;&lt; std::endl; }
+  T(const T&amp;) { std::cout &lt;&lt; &quot;T(const T&amp;)&quot; &lt;&lt; std::endl; }
+  void operator=(const T&amp;) 
+    { std::cout &lt;&lt; &quot;operator=(const T&amp;)&quot; &lt;&lt; std::endl; }
+};
+
+int main() {
+  std::cout &lt;&lt; &quot;T t1           : &quot;; T t1;
+  std::cout &lt;&lt; &quot;T t2(1)        : &quot;; T t2(1);
+  std::cout &lt;&lt; &quot;T t3 = 1       : &quot;; T t3 = 1;
+  std::cout &lt;&lt; &quot;T t4 = T(1)    : &quot;; T t4 = T(1);
+  std::cout &lt;&lt; &quot;T t5(1, 2)     : &quot;; T t5(1, 2);
+  std::cout &lt;&lt; &quot;T t6 = T(1, 2) : &quot;; T t6 = T(1, 2);
+  std::cout &lt;&lt; &quot;T t7; t7 = 1   : &quot;; T t7; t7 = 1;
+  std::cout &lt;&lt; &quot;T t8; t8 = T(1): &quot;; T t8; t8 = T(1);
+  std::cout &lt;&lt; &quot;T t9(t8)       : &quot;; T t9(t8);
+  std::cout &lt;&lt; &quot;T t10 = 'a'    : &quot;; T t10 = 'a';
+  return 0;
+}
+</code></pre>
+
+<p>Компилируем, например в Visual Studio:</p>
+
+<pre><code>cl /EHsc ctor.cpp
+</code></pre>
+
+<p>и запускаем:</p>
+
+<pre><code>T t1           : T()
+T t2(1)        : T(int)
+T t3 = 1       : T(int)
+T t4 = T(1)    : T(int)
+T t5(1, 2)     : T(int, int)
+T t6 = T(1, 2) : T(int, int)
+T t7; t7 = 1   : T()
+T(int)
+operator=(const T&amp;)
+T t8; t8 = T(1): T()
+T(int)
+operator=(const T&amp;)
+T t9(t8)       : T(const T&amp;)
+T t10 = 'a'    : T(int)
+</code></pre>
+
+<p>Видно, что во всех этих &ldquo;разнообразных&rdquo; способах создания объекта всегда вызывался непосредственно конструктор, а не оператор копирования. Оператор же копирования был вызван только когда знак присваивания использовался явно в отдельном от вызова конструктора операторе. То есть знак &ldquo;=&rdquo;, используемый в операторе конструирования объекта так или иначе приводит к вызову конструкторов, а не оператора копирования. И это происходит вне зависимости от какой-либо оптимизации, проводимой компилятором.</p>
+
+<p>Также интересно, как был создана переменная <code>t10</code>. Видно, что для символьной константы компилятор &ldquo;подобрал&rdquo; наиболее подходящий конструктор. Неявным образом был вызвал конструктор от <code>int</code>. Если подобное поведение не входит в ваши планы, и вам совсем не нужно, чтобы конструктор от <code>int</code> вызывался, когда идет попытка создать объект от типа, который может быть неявно преобразован в <code>int</code>, например <code>char</code>, то можно воспользоваться ключевым словом <code>explicit</code>:</p>
+
+<pre><code class="cpp">class T {
+public:
+  ...
+  explicit T(int) { std::cout &lt;&lt; &quot;T(int)&quot; &lt;&lt; std::endl; }
+  ...
+};
+</code></pre>
+
+<p>Это запретит какое-либо неявное преобразования для аргумента этого конструктора.</p>
+
+<p>Вообще практика объявления любого конструктора с одним параметром со модификатором <code>explicit</code> является весьма полезной, и позволяет избежать некоторых неприятных сюрпризов, например, если вы хотели вызвать конструктор строки от типа <code>char</code>, предполагая создать строку, состоящую только из одного символа, а получилось, что этот класс не имеет такого конструктора. Зато есть конструктор от <code>int</code>, делающий совершенно не то, что вам нужно. Вот и будет сюрприз в виде символьной константы, истолкованной как целое число.</p>
+
+<p>Я обычно по умолчанию пишу <code>explicit</code> для конструкторов с одним параметром, и очень редко приходится потом убирать этого слово. Тут как со словом <code>const</code> — сначала можно написать, а потом уже думать нужно ли тут его убрать или нет.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/03/blog-post_15.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/03/blog-post_15.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/03/blog-post_15.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

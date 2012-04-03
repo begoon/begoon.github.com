@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Мультипотоковый отладчик TCP/IP соединений</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Мультипотоковый отладчик TCP/IP соединений</h1>
+<div id="post">
+  <p>Трассировка данных, передаваемых по TCP/IP, является весьма частой задачей при разработке сетевых приложений, особенно низкого уровня.</p>
+
+<p>Программ для данной задачи существует превеликое множество. Но лично я очень давно использую для этих целей свой собственный велосипед. Причин тут несколько. Основная - мне нужна одна программа, одинаково работающая на многих платформах, включая даже Windows. Вторая по значимости причина - возможность налету что-то подкручивать, допиливать, вставлять миникуски кода для анализа конкретного протокола и т.д. Получается, что скриптовой язык тут является хорошим подспорьем.</p>
+
+<p>Несколько лет назад первые версии моей утилиты были на PHP, но текущая версия переписана на Питоне.</p>
+
+<p>Исходник небольшой, а, как мне кажется, разглядывание исходников должно радовать большинство программистов, особенно, если есть что покритиковать, поэтому приведу его прямо здесь (см. ниже).</p>
+
+<p>Ни разу не претендую на оптимальность или крутизну использования Питона, поэтому принимаю любую критику.</p>
+
+<p>Основные особенности и возможности:</p>
+
+<ul>
+<li>программа &ldquo;слушает&rdquo; на указанном порту и перенаправляет траффик на указанные адрес и порт</li>
+<li>умеет сохранять лог в файл</li>
+<li>программа является многопотоковой, то есть может принимать сразу несколько входящих содинений</li>
+<li>механизм записи лога работает также в отдельном потоке, ускоряет работу</li>
+</ul>
+
+<p>Пример использования.</p>
+
+<p>Запускаем сервер:</p>
+
+<pre><code>python pyspy.py -a 10.44.5.138 -p 5467 -l 9999 -L trace.log
+</code></pre>
+
+<p>Запускаем клиента:</p>
+
+<pre><code>telnet localhost 9999
+</code></pre>
+
+<p>и вводим <code>GET / HTTP/1.0&lt;ENTER&gt;&lt;ENTER&gt;</code>.</p>
+
+<p>В файле лога и в консоли получаем вот такое:</p>
+
+<pre><code>0000: Listen at port 9999, remote host ('10.44.5.138', 5467)
+0000: Connection accepted from ('127.0.0.1', 15223), thread 1 launched
+0001: Thread started
+0001: Connecting to ('10.44.5.138', 5467)...
+0001: Remote host: ('127.0.0.1', 15223)
+0001: Recevied from ('127.0.0.1', 15223) (1)
+0001: ----: 00-01-02-03-04-05-06-07-08-09-0A-0B-0C-0D-0E-0F
+0001:       ------------------------------------------------
+0001: 0000: 47                                              | G               
+0001: Sent to ('10.44.5.138', 5467) (1)
+0001: Recevied from ('127.0.0.1', 15223) (13)
+0001: ----: 00-01-02-03-04-05-06-07-08-09-0A-0B-0C-0D-0E-0F
+0001:       ------------------------------------------------
+0001: 0000: 45 54 20 2F 20 48 54 54 50 2F 31 2E 30          | ET / HTTP/1.0   
+0001: Sent to ('10.44.5.138', 5467) (13)
+0001: Recevied from ('127.0.0.1', 15223) (2)
+0001: ----: 00-01-02-03-04-05-06-07-08-09-0A-0B-0C-0D-0E-0F
+0001:       ------------------------------------------------
+0001: 0000: 0D 0A                                           | ..              
+0001: Sent to ('10.44.5.138', 5467) (2)
+0001: Recevied from ('127.0.0.1', 15223) (2)
+0001: ----: 00-01-02-03-04-05-06-07-08-09-0A-0B-0C-0D-0E-0F
+0001:       ------------------------------------------------
+0001: 0000: 0D 0A                                           | ..              
+0001: Sent to ('10.44.5.138', 5467) (2)
+0001: Recevied from ('10.44.5.138', 5467) (379)
+0001: ----: 00-01-02-03-04-05-06-07-08-09-0A-0B-0C-0D-0E-0F
+0001:       ------------------------------------------------
+0001: 0000: 48 54 54 50 2F 31 2E 31 20 33 30 32 20 46 6F 75 | HTTP/1.1 302 Fou
+0001: 0010: 6E 64 0D 0A 44 61 74 65 3A 20 46 72 69 2C 20 30 | nd..Date: Fri, 0
+0001: 0020: 34 20 53 65 70 20 32 30 30 39 20 30 38 3A 35 33 | 4 Sep 2009 08:53
+0001: 0030: 3A 30 33 20 47 4D 54 0D 0A 53 65 72 76 65 72 3A | :03 GMT..Server:
+0001: 0040: 20 41 70 61 63 68 65 0D 0A 50 72 61 67 6D 61 3A |  Apache..Pragma:
+0001: 0050: 20 6E 6F 2D 63 61 63 68 65 0D 0A 45 78 70 69 72 |  no-cache..Expir
+0001: 0060: 65 73 3A 20 46 72 69 2C 20 30 31 20 4A 61 6E 20 | es: Fri, 01 Jan 
+0001: 0070: 31 39 39 39 20 30 30 3A 30 30 3A 30 30 20 47 4D | 1999 00:00:00 GM
+0001: 0080: 54 0D 0A 43 61 63 68 65 2D 63 6F 6E 74 72 6F 6C | T..Cache-control
+0001: 0090: 3A 20 6E 6F 2D 63 61 63 68 65 2C 20 6E 6F 2D 63 | : no-cache, no-c
+0001: 00A0: 61 63 68 65 3D 22 53 65 74 2D 43 6F 6F 6B 69 65 | ache=&quot;Set-Cookie
+0001: 00B0: 22 2C 20 70 72 69 76 61 74 65 0D 0A 4C 6F 63 61 | &quot;, private..Loca
+...
+[обрезано]
+...
+0001: 0100: 76 3D 31 0D 0A 43 6F 6E 6E 65 63 74 69 6F 6E 3A | v=1..Connection:
+0001: 0110: 20 63 6C 6F 73 65 0D 0A 43 6F 6E 74 65 6E 74 2D |  close..Content-
+0001: 0120: 54 79 70 65 3A 20 74 65 78 74 2F 68 74 6D 6C 0D | Type: text/html.
+0001: 0130: 0A 0D 0A 52 65 64 69 72 65 63 74 20 70 61 67 65 | ...Redirect page
+0001: 0140: 3C 62 72 3E 3C 62 72 3E 0A 54 68 65 72 65 20 69 | &lt;br&gt;&lt;br&gt;.There i
+0001: 0150: 73 20 6E 6F 74 68 69 6E 67 20 74 6F 20 73 65 65 | s nothing to see
+0001: 0160: 20 68 65 72 65 2C 20 70 6C 65 61 73 65 20 6D 6F |  here, please mo
+0001: 0170: 76 65 20 61 6C 6F 6E 67 2E 2E 2E                | ve along...     
+0001: Sent to ('127.0.0.1', 15223) (379)
+0001: Connection reset by ('10.44.5.138', 5467)
+0001: Connection closed
+</code></pre>
+
+<p>Теперь, собственно, исходник:</p>
+
+<pre><code class="python">#!/usr/bin/python
+
+import socket, string, threading, os, select, sys, time, getopt
+from sys import argv
+
+def usage():
+   name = os.path.basename(argv[0])
+   print &quot;usage:&quot;, name, &quot;-l listen_port -a host -p port [-L file] [-c] [-h?]&quot;
+   print &quot; -a host         - address/host to connect&quot;
+   print &quot; -p port         - remote port to connect&quot;
+   print &quot; -l listen_port  - local port to listen&quot;
+   print &quot; -L file         - log file&quot;
+   print &quot; -c              - supress console output&quot;
+   print &quot; -h or -?        - this help&quot;
+   print &quot; -v              - version&quot;
+   sys.exit(1)
+
+PORT = False
+REMOTE_HOST = REMOTE_PORT = False
+
+CONSOLE = True
+LOGFILE = False
+
+try:
+   opts, args = getopt.getopt(argv[1:], &quot;l:a:p:L:ch?v&quot;)
+
+   for opt in opts:
+      opt, val = opt
+      if opt == &quot;-l&quot;:
+         PORT = int(val)
+      elif opt == &quot;-a&quot;:
+         REMOTE_HOST = val
+      elif opt == &quot;-p&quot;:
+         REMOTE_PORT = int(val)
+      elif opt == &quot;-L&quot;:
+         LOGFILE = val
+      elif opt == &quot;-c&quot;:
+         CONSOLE = False
+      elif opt == &quot;-?&quot; or opt == &quot;-h&quot;:
+         usage()
+      elif opt == &quot;-v&quot;:
+         print &quot;Python TCP/IP Spy  Version 1.01  Copyright (c) 2009 by Alexander Demin&quot;
+         sys.exit(1)
+      else:
+         usage()
+
+   if not PORT:
+      raise StandardError, &quot;listen port is not given&quot;
+
+   if not REMOTE_HOST:
+      raise StandardError, &quot;remote host is not given&quot;
+
+   if not REMOTE_PORT:
+      raise StandardError, &quot;remote port is not given&quot;
+
+except Exception, e:
+   print &quot;error:&quot;, e, &quot;\n&quot;
+   usage()
+
+# Remote host
+REMOTE = (REMOTE_HOST, REMOTE_PORT)
+
+# Create logging contitional variable
+log_cond = threading.Condition()
+
+queue = []
+
+def logger():
+   global queue
+   while 1:
+      log_cond.acquire()
+
+      while len(queue) == 0:
+         log_cond.wait()
+
+      if LOGFILE:
+         try:
+            logfile = open(LOGFILE, &quot;a+&quot;)
+            logfile.writelines(map(lambda x: x+&quot;\n&quot;, queue))
+            logfile.close()
+         except: pass
+     
+      if CONSOLE:
+         for line in queue:
+            print line
+      
+      queue = []
+      log_cond.release()
+
+# Thread safe logger
+def log(thread, msg):
+   if CONSOLE or LOGFILE:
+      log_cond.acquire()
+      queue.append(&quot;%04d: %s&quot; % (thread, msg))
+      log_cond.notify()
+      log_cond.release()
+
+def printable(ch):
+   return (int(ch &lt; 32) and '.') or (int(ch &gt;= 32) and chr(ch))
+
+# Pre-build a printable characters map
+printable_map = [ printable(x) for x in range(256) ]
+
+# Thread safe dumper
+def log_dump(thread, msg):
+
+   if CONSOLE or LOGFILE:
+      log_cond.acquire()
+
+      width = 16
+
+      header = reduce(lambda x, y: x + (&quot;%02X-&quot; % y), range(width), &quot;&quot;)[0:-1]
+      queue.append(&quot;%04d: ----: %s&quot; % (thread, header))
+      queue.append(&quot;%04d:       %s&quot; % (thread, '-' * width * 3))
+
+      i = 0
+      while 1:
+         line = msg[i:i+width]
+         if len(line) == 0: break
+         dump = reduce(lambda x, y: x + (&quot;%02X &quot; % ord(y)), line, &quot;&quot;)
+         char = reduce(lambda x, y: x + printable_map[ord(y)], line, &quot;&quot;)
+         queue.append(&quot;%04X: %04X: %-*s| %-*s&quot; % (thread, i, width*3, dump, width, char))
+         i = i + width
+
+      log_cond.notify()
+      log_cond.release()
+
+# Spy thread
+def spy_thread(local, addr, thread_id):
+   log(thread_id, &quot;Thread started&quot;)
+
+   try:
+      log(thread_id, &quot;Connecting to %s...&quot; % str(REMOTE))
+      remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+      remote.connect(REMOTE)
+   except Exception, e:
+      log(thread_id, &quot;Unable connect to %s -&gt; %s&quot; % (REMOTE, e))
+      local.close()
+      return
+
+   LOCAL = str(addr)
+
+   log(thread_id, &quot;Remote host: &quot; + LOCAL)
+
+   try:
+      running = 1;
+      while running == 1: 
+
+         rd, wr, er = select.select([local, remote], [], [local, remote], 3600)
+
+         for sock in er:
+            if sock == local:
+               log(thread_id, &quot;Connection error from &quot; + LOCAL)
+               running = 0
+            if sock == remote:
+               log(thread_id, &quot;Connection error from &quot; + REMOTE)
+               running = 0
+
+         for sock in rd:
+            if sock == local:
+               val = local.recv(1024)
+               if val: 
+                  log(thread_id, &quot;Recevied from %s (%d)&quot; % (LOCAL, len(val)))
+                  log_dump(thread_id, val)
+                  remote.send(val)
+                  log(thread_id, &quot;Sent to %s (%d)&quot; % (REMOTE, len(val)))
+               else:
+                  log(thread_id, &quot;Connection reset by %s&quot; % LOCAL)
+                  running = 0;
+
+            if sock == remote:
+               val = remote.recv(1024)
+               if val: 
+                  log(thread_id, &quot;Recevied from %s (%d)&quot; % (REMOTE, len(val)))
+                  log_dump(thread_id, val)
+                  local.send(val)
+                  log(thread_id, &quot;Sent to %s (%d)&quot; % (LOCAL, len(val)))
+               else:
+                  log(thread_id, &quot;Connection reset by %s&quot; % str(REMOTE))
+                  running = 0;
+
+   except Exception, e:
+      log(thread_id, (&quot;Connection terminated: &quot; + str(e)))
+
+   remote.close()
+   local.close()
+
+   log(thread_id, &quot;Connection closed&quot;)
+
+try:
+   # Server socket
+   srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+   srv.bind((&quot;&quot;, PORT)) 
+except Exception, e:
+   print &quot;error&quot;, e
+   sys.exit(1)
+
+counter = 1
+
+threading.Thread(target=logger, args=[]).start()
+
+log(0, &quot;Listen at port %d, remote host %s&quot; % (PORT, REMOTE))
+ 
+while 1: 
+   srv.listen(1)              
+   local, addr = srv.accept()
+   log(0, &quot;Connection accepted from %s, thread %d launched&quot; % (addr, counter))
+   threading.Thread(target=spy_thread, args=[local, addr, counter]).start()
+   counter = counter + 1
+</code></pre>
+
+<p>Лично я постоянно использую этот скрипт на Windows, Linux и Solaris.</p>
+
+<p>Следующий шаг - это переписать все на чистом С в виде одного единственного файла, который можно было бы в течение минуты забросить на любой UNIX или Windows, скомпилить и получить готовую программу. Питон - это конечно здорово, но, например, для AIX или HP-UX Питон является небольшой загвоздкой, которую в пять секунд не решить.</p>
+
+<p>А что стоит у вас на вооружении по этому вопросу?</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/09/tcpip.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/09/tcpip.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/09/tcpip.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

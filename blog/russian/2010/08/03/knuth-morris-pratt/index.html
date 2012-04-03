@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Поиск подстроки в строке: алгоритм Кнута-Морриса-Пратта</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Поиск подстроки в строке: алгоритм Кнута-Морриса-Пратта</h1>
+<div id="post">
+  <p>Мне понравилась идея <a href="http://alenacpp.blogspot.com/2010/07/blog-post.html">недели борьбы с велосипедизмом</a>, посему внесу свою лепту.</p>
+
+<p>Один из частых вопросов, которые задают у нас в Блумберге на интервью в плане так называемого coding exercise (это когда надо на бумаге или на доске написать почти реальный кусок кода) - это поиск строки в подстроке. Это абсолютно жизненная задача.</p>
+
+<p>Подавляющее число людей пишут первое, что приходит в голову - это два вложенных цикла, когда искомая строка последовательно &ldquo;прикладывается&rdquo; с каждой позиции исходной строки. Такой подход дает сложность <code>O(M*N)</code>, и, очевидно, что в жизни он нереален, если строки более менее длинные. Хотя все при этом знают, что любой hex-вьювер спокойно ищет в огромных файлах за явно линейное время.</p>
+
+<p>Итак, для эффективного поиска строки в подстроке есть алгоритм <a href="http://ru.wikipedia.org/wiki/%D0%90%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC_%D0%9A%D0%BD%D1%83%D1%82%D0%B0_%E2%80%94_%D0%9C%D0%BE%D1%80%D1%80%D0%B8%D1%81%D0%B0_%E2%80%94_%D0%9F%D1%80%D0%B0%D1%82%D1%82%D0%B0">Кнута-Морриса-Пратта</a>, который решает проблему не за <code>O(N*M)</code>, а за <code>O(N+M)</code>.</p>
+
+<p>Построенный на <a href="http://ru.wikipedia.org/wiki/%D0%9F%D1%80%D0%B5%D1%84%D0%B8%D0%BA%D1%81-%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D1%8F">префикс-функции</a>, данный алгоритм является классичесим примером динамического программирования, когда результаты решения задачи малой размерности используются для решения задачи большей размерности.</p>
+
+<p>P.S. Сразу скажу, у нас никто не просит по памяти писать КМП. И если человек после написания простого <code>O(N^2)</code> решения также скажет, что есть метод быстрее, и сможет описать его идею - этого вполне достаточно.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2010/08/blog-post.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2010/08/blog-post.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2010/08/blog-post.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

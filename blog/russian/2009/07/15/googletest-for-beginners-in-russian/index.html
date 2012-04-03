@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Руководство для начинающих по Google Test на русском</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Руководство для начинающих по Google Test на русском</h1>
+<div id="post">
+  <p><a href="http://code.google.com/p/googletest-translations/">Выложил на Google Code</a> свой перевод <a href="http://code.google.com/p/googletest-translations/wiki/GoogleTestPrimerRussian">руководства для начинающих</a> по Google Test.</p>
+
+<p>Как всегда буду благодарен за замечания об ошибках, опечатках, и да вообще по стилистике в целом. Порой перевод технических терминов становится проблемой, так как с одной стороны для многих понятнее, когда используется просто английский термин (например, fixture), но с другой стороны хочется сделать жизнь как-то красивее и попытаться на своем родном писать без тотального засилия английских слов (их и так порядочно).</p>
+
+<p>На отдельной странице будет общий список ресурсов о Google Test на русском языке. Очень пришелся кстати мой <a href="/blog/russian/2009/03/19/google-test-framework-130/">недавний пост о новшествах версии 1.3.0</a>.</p>
+
+<p>В планах перевод остальных документов.</p>
+
+<p>В процессе работы над текстом перевода, у меня родилось вот такое небольшое лирическое отступление.</p>
+
+<p>Я последнее время увлекся различными механизмами верстки при помощитекстовых языков разметки. И я не про HTML. Я говорю о таких вещах, как простые Wiki-диалекты, и заканчивая целым миром верстки под названием <a href="http://ru.wikipedia.org/wiki/TeX/">TeX</a>. Периодически покуриваю на ночь <a href="http://www.ccas.ru/voron/latex.html">документацию с по LaTeX</a>. Начал я с совершенно дивного коротенького справочника, где сухо и сжато перечислены базовые элементы языка верстки LaTeX c примерами.</p>
+
+<p>Например, моя любимая задача линейного программирования:</p>
+
+<p><img src="/images/blog/linear-programming-problem-in-latex.png" /></p>
+
+<p>будет записываться так:</p>
+
+<pre><code>\[
+\max_{n\in R}\sum_{j=1}^n
+c_jx_j
+;\; 
+\sum_{j=1}^n a_{ij}x_j\leqslant b_i, (i=1,\;2,\;\ldots,\;m)
+\]
+</code></pre>
+
+<p>Если вы хотите в онлайне проиграться с набором формул в LaTeX, то рекомендую заглянуть <a href="http://www.numberempire.com/texequationeditor/equationeditor.php">сюда</a>. Там, правда, не поддерживаются русские буквы в теле LaTeX команд, но для экспериментов это не проблема.</p>
+
+<p>Когда я несколько лет назад верстал свою диссертацию в Ворде, я постоянно утыкался в корявости <a href="http://ru.wikipedia.org/wiki/WYSIWYG">WYSIWYG</a> подхода. Когда документ разрастается - сложная структура глав, много формул, картинок, внутренние и внешние ссылки, то уже крайне важной становится независимость содержания от, собственно, разметки. В WYSIWYG подходе на все случаи жизни уже не напасешься менюшек и кнопочек. Возникают корявости.</p>
+
+<p>Безусловно, Ворд развивается семимильными шагами от версии к версии, оттачивая механизм стилей, без которого верстать что-то длинее десяти страниц вообще неудобно, но как же ему далеко от гибкости, которую придумали и реализовали в TeX десятки лет назад. К тому же чисто текстовое представление документа позволяет хранить его под контролем версий и удобно отслеживать изменения.</p>
+
+<p>А объем и общая сложность документа моей диссертации была на порядки меньше любой технической книги даже среднего размера, особенно где много формул.</p>
+
+<p>В общем, набивая перевод документации по Google Test, я просто отдыхал душой и попискивал от удовольствия, так как все происходило в Wiki-разметке в разделе документации проекта на Google Code.</p>
+
+<p>Мечта - очень хотелось бы, чтобы когда-нидудь Blogspot реализовал бы альтернативный ввод постов с использованием Wiki-разметки, а не HTML. Хотя бы также, как это работает на Google Code. Ну а если еще и контроль версий будет, тогда вообще бесконечное счастье наступит.</p>
+
+<p>Так если разобраться, единственная причина, почему нельзя вести блог прямо на Google Code в разделе Wiki - там нет трансляции постов в виде временной ленты. Если бы можно было в теле постов Блогспота на лету импортировать тест из документов Wiki c Google Code, то можно было бы удобно писать посты с применением Wiki-разметки и контролем версий, а отображать их в блоге.</p>
+
+<p>Я, например, редко пишу в блог посты на 2-3 строчки. Обычно это крополивая работа по набивке, верстке, подгонке картинок, общего вида и т.д. И каждый пост это по сути законченный документ, к которому иногда возвращаешься, что-то исправляешь, добавляешь и т.д. И тут все прелести удобной итеративной работы с текстом выходят на первый план.</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/03/19/google-test-framework-130/">Google Test Framework 1.3.0</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/07/google-test.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/07/google-test.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/07/google-test.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

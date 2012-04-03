@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Как реализована сортировка в STL</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Как реализована сортировка в STL</h1>
+<div id="post">
+  <p>Все началось с того, что я почему-то написал свою реализацию классического алгоритма <a href="http://ru.wikipedia.org/wiki/%D0%91%D1%8B%D1%81%D1%82%D1%80%D0%B0%D1%8F_%D1%81%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B0">быстрой сортировки QuickSort</a>. И все бы хорошо, но я, конечно, решил померяться достоинством с STL&rsquo;ой реализацией. Результат был очевиден, и я даже не хочу приводить цифры.</p>
+
+<p>В общем, я открыл файл <code>algorithm</code> из STL&rsquo;я в Visual Studio 2008 и часок покопался в нем. Вот результаты моих &ldquo;исследований&rdquo;.</p>
+
+<p>Начнем с нестабильной сортировки <a href="http://www.cplusplus.com/reference/algorithm/sort/">std::sort()</a>.</p>
+
+<ul>
+<li>основа: алгоритм быстрой сортировки <code>QuickSort</code> (почти как у меня)</li>
+<li>выбор опорного элемента — центральный по индексу элемент в сортируемом фрагменте</li>
+<li>после каждого выбора опорного элемента:
+
+<ul>
+<li>начальный, опорный и последний элементы сортируются между собой (их всего три, так что тут это делается тремя последовательными <code>if</code>&lsquo;ами)</li>
+<li>если длина сортируемого фрагмента менее более 40, то отрезок делится 8 частeй (длина каждой части <code>S = 1/8*N</code>) и для троиц элементов <code>(1, S, 2*S)</code>, <code>(N/2 - S, N/2, N/2 + S)</code> и <code>(N - 2*S, N - S, N)</code> делается такая же минисортировка, как и на предыдущем шаге (где число элементов было меньше 40)</li>
+<li>далее происходит обычная для <code>QuickSort</code> процедура деления фрагмента на две части с использованием опорного элемента (цикл по перебрасыванию элементов, меньших опорного направо, а больших — налево)</li>
+</ul></li>
+<li>затем вся процедура рекурсивно повторяется для левой и правой частей</li>
+</ul>
+
+<p>Количество рекурсивных операций не идет до победного конца, как в чистом <code>QuickSort</code>. Если количество итераций (процедур разделения массива) превысило <code>1.5*log2(N)</code>, где N длина всего массива, то рекурсивные операции прекращаются. Если количество оставшихся недосортированных элементов меньше 32-х, то фрагмент досортируется <a href="http://ru.wikipedia.org/wiki/%D0%A1%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B0_%D0%B2%D1%81%D1%82%D0%B0%D0%B2%D0%BA%D0%B0%D0%BC%D0%B8">методом вставки</a> <code>InsertionSort</code> (этот метод имеет общую сложность <code>O(N2)</code> и для больших массивов не используется, но на малых длинах он быстрее всех из-за простоты). Если же остается более 32-х элементов, то досортировка происходит <a href="http://ru.wikipedia.org/wiki/%D0%9F%D0%B8%D1%80%D0%B0%D0%BC%D0%B8%D0%B4%D0%B0%D0%BB%D1%8C%D0%BD%D0%B0%D1%8F_%D1%81%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B0">пирамидальным методом</a> <code>HeapSort</code> в чистом его виде.</p>
+
+<p>Видимо все эти ухищрения для уменьшения накладных расходов <code>QuickSort</code> на малых массивах.</p>
+
+<p>Вот такая вот далеко непрямолинейная реализация.</p>
+
+<p>Далее.</p>
+
+<p>Стабильная сортировка <a href="http://www.cplusplus.com/reference/algorithm/stable_sort/">std::stable_sort()</a> реализована <a href="http://ru.wikipedia.org/wiki/%D0%A1%D0%BE%D1%80%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%BA%D0%B0_%D1%81%D0%BB%D0%B8%D1%8F%D0%BD%D0%B8%D0%B5%D0%BC">алгоримом слияния</a> <code>MergeSort</code>. Особых ухищрений по сравнению с чистным алгоритмом я не нашел. Разве что малые фрагменты (короче 32-х элементов) досортировываются методом вставки InsertionSort, как и в случае с QuickSort.</p>
+
+<p>Частичая сортировка <a href="http://www.cplusplus.com/reference/algorithm/partial_sort/">std::partial_sort()</a> реализована в чистом виде пирамидальным методом HeapSort.</p>
+
+<p><strong>Вывод:</strong> Читать исходники очень интересно. Особенно хорошие исходники.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/06/stl.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/06/stl.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/06/stl.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

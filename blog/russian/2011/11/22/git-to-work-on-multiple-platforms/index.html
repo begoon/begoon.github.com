@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Git для работы на нескольких платформах</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Git для работы на нескольких платформах</h1>
+<div id="post">
+  <p>Мне приходится часто проверять один и тот же код на нескольких платформах. Это означает, что исходники надо физически копировать с машины на машину. Далее начинаются мелкие правки на каждой платформе, которые надо в конце собрать вместе и пробовать снова.</p>
+
+<p>После десятков версий изощренных скриптов я решил собрать волю в кулак и начать использовать Git.</p>
+
+<p>Задача: на виндовой машине (это мой основной рабочий ноутбук) установить Git как сервер, чтобы я мог всегда иметь на нем самую актуальную копию всего. Затем установить Git как клиент на рабочих машинах и обмениваться commit&rsquo;ами через центральный репозиторий на Windows.</p>
+
+<p>Для простоты я решил использовать SSH как протокол. Благо все UNIX машины имеют ssh-клиент.</p>
+
+<p>Плюсы - везде Git, все локальные изменения имеют версии и можно вести локальные ветки. Ну и центральная копия - тоже под Git. Минусы - потратить время и все это настроить.</p>
+
+<p>Git/ssh как сервер на Windows - это целая тема, так как нужно поставить SSH сервер и правильно прикрутить к нему Git.</p>
+
+<p>Благодаря двум (<a href="http://www.timdavis.com.au/git/setting-up-a-msysgit-server-with-copssh-on-windows/">1</a>, <a href="http://java2cs2.blogspot.com/2010/03/setup-git-server-on-windows-machine.html">2</a>) ссылкам удалось настроить <a href="http://www.itefix.no/i2/copssh">CopSSH</a> в паре с <a href="http://code.google.com/p/msysgit/">msysgit</a>.</p>
+
+<p>Далее Git на клиентских машинах. С Linux и Windows все совсем просто (на Windows используется тот же msysgit).</p>
+
+<p>На Solaris пришлось собрать GNU Make до 3.82 (на 3.75 Git не собирается).</p>
+
+<p>На HPUX and AIX пришлось собрать coreutils (для нормального install), less (представляете, на HPUX нету less по умолчанию), python (опять для HPUX), zlib и свежие tcl/tk.</p>
+
+<p>Один день на борьбу c CopSSH на Windows и день на сборки под UNIXами.</p>
+
+<p>Зато теперь радость и благодать.</p>
+
+<p>P.S. С CopSSH интересная история. Вчера (21 ноября) на их сайте можно было все скачать. Сегодня (22 ноября) читаю на том же сайте:</p>
+
+<blockquote>
+<p>Termination of free solutions from ITeF!x</p>
+
+<p>Submitted by tk on Tue, <sup>22</sup>&frasl;<sub>11</sub>/2011 - 08:18 itefix</p>
+
+<p>Development,distribution and support of free solutions from Itefix are now terminated due to lack of time and changes in priorities.</p>
+</blockquote>
+
+<p>С их зеркала на sourceforge.net также пропали все файлы. Хорошо, что я не удалил дистрибутив CopSSH, скачанный вчера.</p>
+
+<p>Ссылки по теме:</p>
+
+<ul>
+<li><a href="http://www.timdavis.com.au/git/setting-up-a-msysgit-server-with-copssh-on-windows/">Setting up a Msysgit Server with copSSH on Windows</a></li>
+<li><a href="http://java2cs2.blogspot.com/2010/03/setup-git-server-on-windows-machine.html">Setup a Git server on Windows machine, with MSysGit and CopSSH</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/11/git.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/11/git.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/11/git.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

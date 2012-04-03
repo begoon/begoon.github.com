@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Чарльз Уэзерелл, "Этюды для программистов"</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Чарльз Уэзерелл, &#34;Этюды для программистов&#34;</h1>
+<div id="post">
+  <p>Лет пятнадцать назад мне в руки попала книга Чарльза Уэзерелла &ldquo;<a href="http://www.ozon.ru/context/detail/id/1940685/?partner=easy-coding">Этюды для программистов</a>&rdquo;.</p>
+
+<p><img src="/images/covers/russian/etudes-for-programmers-cover.jpg" /></p>
+
+<p>Книга содержит 27 “этюдов”. Каждый этюд – это законченная задача для обучающихся программированию. Удивительно, книге более 30 лет, но любой из этюдов может быть до сих пор использован по назначению. Я сам с удовольствием давал этюды из этой книги студентам.</p>
+
+<p>Тематика задач совершенно разная: ретроспективная задача по программе, которая печатает свой текст, игра Джона Конвея “<a href="http://ru.wikipedia.org/wiki/%D0%98%D0%B3%D1%80%D0%B0_%D0%B6%D0%B8%D0%B7%D0%BD%D1%8C">Жизнь</a>”, игровое и имитационное моделирование, интерпретаторы форматов и форматирование текста, статистический анализ карточных игр, символьные алгебраические вычисления, плавающая арифметика и работа с числами большой разрядности, математические методы взлома шифров, искусственный интеллект, <a href="http://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D1%88%D0%B8%D0%BD%D0%B0_%D1%82%D1%8C%D1%8E%D1%80%D0%B8%D0%BD%D0%B3%D0%B0">машина Тьюринга</a>, рекурсивные алгоритмы поиска, компрессия данных, эмуляция виртуальной компьютерной архитектуры, связывающий загрузчик, компилятор, интерпретатор символьного а-ля функционального языка и т.д. И все эти задачи времен, когда программировали на фортране с помощью перфокарт!</p>
+
+<p>Удивительно, как человек смог написать столь долгоживущую книгу, легкого и неперегруженного чрезмерной научностью содержания. Я пытался найти какие-то еще книги Уэзерелла, но безуспешно. Может это его единственная книга.</p>
+
+<p>И я бережно храню переведенный на русский экземпляр до сих пор. Не исключено, что эта книга пришлась мне в нужное время, и поэтому она стала моей главной книгой.</p>
+
+<p>С различным успехом, но с огромным азартом, я возился в разные времена со всеми этюдами.</p>
+
+<p>Был интересный эпизод с одним из этюдов. В главе 24, под названием “Секрет фирмы, или Математический подход к раскрытию шифров” описывается задача по взлому <a href="http://ru.wikipedia.org/wiki/%D0%A8%D0%B8%D1%84%D1%80_%D0%92%D0%B8%D0%B6%D0%B5%D0%BD%D0%B5%D1%80%D0%B0">шифра Виженера</a> (точнее, одной из его модификаций). В книге давался зашифрованный текст, описывался метод взлома и предлагалось расшифровать секретное послание.</p>
+
+<p><img src="/images/blog/efp-vigenere-cryptotext-russian.jpg" /></p>
+
+<p>И так меня эта задача торкнула, что я даже списался с одним из технических переводчиков этой книги. Тогда еще мне пришлось делать это по обычной бумажной почте России. У меня была масса вопросов, так как расшифровать предлагаемый в книге пример не получалось (математический анализ я тогда еще не изучал). Мне ответили, и среди всего прочего рассказали, как они сами (те, кто переводил книгу) расшифровывали. Ведь им, чтобы опубликовать это на русском языке, надо было иметь исходное сообщение, но в книге не приводился ответ, так что пришлось засучить рукава и заняться английской шифровкой:</p>
+
+<p><img src="/images/blog/efp-vigenere-cryptotext-english.jpg" /></p>
+
+<p>Решить задачу предложенным автором способом не получилось, и наши решили все по-своему (советская математическая школа показала себя), выявив, что метод автора не совсем правильный. В русском варианте в главе 24 есть “партия переводчика”, где описывается “советский” способ решения. Попутно наши переводчики выяснили, что в <a href="http://www.amazon.com/Etudes-Programmers-Charles-Wetherell/dp/0132918072/">английском оригинале</a> есть опечатка! Одна из строк шифровки просто пропущена. Уже после перевода они связывались с господином Уэзереллом, и тот подтвердил факт наличия досадной опечатки.</p>
+
+<p>Кстати, в интернете ходит много решений “этюдов” Уэзерелла. Например, программа, <a href="http://vak.ru/doku.php/proj/kalah/kalah">играющая в Калах</a>, или <a href="http://vak.ru/doku.php/proj/trac/trac">интерпретатор символьного интерактивного языка TRAC</a>.</p>
+
+<p>Но теперь к самому главному.</p>
+
+<p>Пару дней назад королевская почта доставила мне то, что я так давно мечтал полистать лично — это английский оригинал этой книги.</p>
+
+<p><img src="/images/covers/english/etudes-for-programmers-cover.jpg" /></p>
+
+<p>Книга была издана аж в 1978 (я тогда даже не ходил пешком под стол, а просто лежал) и более не переиздавалась. Я купил списанный библиотечный экземпляр. Немного потертый, переклеенный скотчем по корешку, с библиотечным кармашком для карточки на обратной стороне обложки. Экстаз, один словом.</p>
+
+<p>Если в мире программирования могут существовать иконы, то “Этюды для программистов” Чальза Уэзеррела одна из них.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/blog-post_26.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/blog-post_26.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/blog-post_26.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

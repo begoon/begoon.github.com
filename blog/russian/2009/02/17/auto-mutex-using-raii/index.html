@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Автоматический мьютекс с использованием RAII</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Автоматический мьютекс с использованием RAII</h1>
+<div id="post">
+  <p>Описанный мной ранее класс <a href="/blog/russian/2009/02/06/universal-mutex-in-cpp-for-windows-and-unix/">Mutex</a> является базовым механизмом синхронизации потоков при параллельном программировании и применяется сплошь и рядом.</p>
+
+<p>Часто бывают случаи, когда несколько функций реализуют какую-то единую функциональность, построенную на общем разделяемом ресурсе, защищенном блокировкой. В этом случае каждая функция в начале работы занимает эту блокировку, а на выходе — освобождает ее. Например, методы класса-регистратора системных событий все работают с выходным буфером и используют единую блокировку для синхронизации доступа к нему. Например:</p>
+
+<pre><code class="cpp">class Logger {
+public:
+  ...
+  void put(const char* str) {
+    __lock.Lock();
+    __buffer.push_back(str);
+    __lock.Unlock();
+  }
+  void flush() {
+    __lock.Lock();
+    ...
+    __buffer.clear();
+    __lock.Unlock();
+  }
+  ...
+private:
+  Mutex __lock;
+  std::vector&lt;std::string&gt; __buffer;
+}
+</code></pre>
+
+<p>В целом, такой подход является не совсем правильным, так как данные методы могут быть весьма сложными, иметь многочисленные условные операторы, могут генерировать исключения. В этом случае программисту необходимо позаботиться о <strong>всех</strong> возможных вариантах завершения каждой функции и везде вставить оператор освобождения блокировки:</p>
+
+<pre><code class="cpp">__lock.Unlock();
+</code></pre>
+
+<p>Если этого не сделать, то неосвобожденная по какой-то редко возникающей причине блокировка может просто &ldquo;подвесить&rdquo; всю программу, так как все остальные функции, работающие с этой блокировкой, более никогда не получат управления.</p>
+
+<p>К счастью, в С++ есть механизм, дающий возможность очень просто избежать подобных проблем, вывозом кода освобождения блокировки при любом варианте завершения функции. Механизм называется RAII (<a href="http://ru.wikipedia.org/wiki/RAII">Resource Acquisition Is Initialization</a>). В С++ деструкторы созданных в контексте функции объектов <strong>обязательно</strong> вызываются перед завершением контекста (попросту говоря, когда функция завершается любым способом). Если возникло непойманное в функции исключение, то в процессе раскрутки стека деструкторы созданных локальных объектов тоже будут вызваны. Отсюда и идея: занимать блокировку в конструкторе созданного в функции локального объекта и затем освобождать ее в деструкторе. Использование такого метода позволило бы изменить приведенный пример так:</p>
+
+<pre><code class="cpp">class Logger {
+public:
+  ...
+  void put(const char* str) {
+    AutoLock(__lock);
+    __buffer.push_back(str);
+  }
+  void flush() {
+    AutoLock(__lock);
+    ...
+    __buffer.clear();
+  }
+  ...
+private:
+  Mutex __lock;
+  std::vector&lt;std::string&gt; __buffer;
+}
+</code></pre>
+
+<p>Объект <code>AutoLock</code>, создаваемый первым в контексте каждой функции, будет занимать блокировку и освобождать ее при закрытии этого контекста.</p>
+
+<p>Идея проста и понятна, а класс, реализующий эту логику еще проще.</p>
+
+<p>Пространство имен ext можно заменить по вкусу на подходящее вам.</p>
+
+<p>Файл <code>autolock.h</code>:</p>
+
+<pre><code class="cpp">#ifndef _EXT_AUTOLOCK_H
+#define _EXT_AUTOLOCK_H
+
+#include &quot;mutex.h&quot;
+
+namespace ext {
+
+class AutoLock {
+public:
+  // Запираем блокировку в конструторе
+  AutoLock(Mutex&amp; lock) : __lock(lock) {
+    __lock.Lock();
+  }
+
+  // Освобождаем блокировку в деструкторе
+  ~AutoLock() {
+    __lock.Unlock();
+  }
+private:
+  // Защита от случайного копирования
+  AutoLock(const AutoLock&amp;);
+  void operator=(const AutoLock&amp;);
+
+  Mutex&amp; __lock;
+};
+
+} // ext 
+
+#endif
+</code></pre>
+
+<p>Данный класс использует реализацию блокировки (мьютекса) <a href="/blog/russian/2009/02/06/universal-mutex-in-cpp-for-windows-and-unix/">Mutex</a>.</p>
+
+<p>Посмотрим, как оно будет в деле (конечно с помощью unit-тестирования).</p>
+
+<p>Традиционно, для компиляции тестов нам нужна <a href="http://code.google.com/p/googletest/">Google Test Framework</a>. Как я уже <a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">писал</a>, вы можете скачать <a href="/downloads/gtest-amalgamation-1.2.1.zip">мою модификацию</a> этой библиотеки, которая сокращена до двух необходимых файлов <code>gtest/gtest.h</code> и <code>gtest-all.cc</code>.</p>
+
+<p>Файл <code>autolock_unittest.cpp</code>:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+
+#include &quot;autolock.h&quot;
+#include &quot;mutex.h&quot;
+#include &quot;thread.h&quot;
+
+// Универсальная задержка в миллисекундах для Windows и UNIX
+#ifdef WIN32
+#include &lt;windows.h&gt;
+#define msleep(x)    Sleep(x)
+#else
+#include &lt;unistd.h&gt;
+#define msleep(x)    usleep((x)*1000)
+#endif
+
+// Тестовый поток
+class T: public ext::Thread {
+public:
+  // Параметры потока:
+  //   flag    - флаг для сигнализации о выполненном действии
+  //   mutex   - рабочий объект-блокировка
+  //   timeout - время, которое необходимо подождать после 
+  //             установки флага
+  //   val     - значение, в которое надо установить флаг
+  T(volatile int&amp; flag, ext::Mutex&amp; mutex, int timeout, int val) :
+    __flag(flag), __mutex(mutex), __timeout(timeout), __val(val)
+  {}
+
+  // Функция потока: занять автоматическую блокировку, установить
+  // флаг, подождать указанное время, освободить автоматическую
+  // блокировку.
+  virtual void Execute() {
+    ext::AutoLock locker(__mutex);
+    __flag = __val;
+    msleep(__timeout);
+  }
+private:
+  volatile int&amp; __flag;
+  ext::Mutex&amp; __mutex;
+  int __timeout;
+  int __val;
+};
+
+// Данный тест выполняет параллельно две функции, которые конкурируют
+// за одну блокировку. Функция-поток 'a' занимает блокировку, устанавливает
+// флаг в 1, ждет 100мс и затем освобождает блокировку. Функция-поток 'b'
+// стартует, когда поток 'a' уже занял блокировку, поэтому после старта
+// потока 'b' флаг еще некоторое время будет равен 1, пока поток 'a' не
+// отпустит блокировку, и затем поток 'b' изменит флаг в 0, получив 
+// управление ожидания на блокировке.
+TEST(AutoLock, ConcurrentCalls) {
+  volatile int flag = 0;
+
+  ext::Mutex mutex;
+
+  T a(flag, mutex, 100, 1);
+  T b(flag, mutex, 0, 0);
+
+  // Запускаем поток 'a'.
+  a.Start();
+  // Ждем, пока поток 'a' займет блокировку.
+  // Это случится, когда флаг станет равен 1.  
+  while (!flag);
+
+  // Запускаем поток 'b'.
+  b.Start();
+  // Ждем немного, чтобы убедиться, что поток запустился
+  // и дошел до попытки занять блокировку.
+  msleep(50);
+
+  // Так как время задержки в потоке 'a' больше 50мс,
+  // то флаг все еще равен 1, так как поток 'a' пока не отпустил
+  // блокировку, не давая потоку 'b' получить управление
+  // и изменить флаг в 0.
+  EXPECT_EQ(1, flag);
+
+  // Ждем завершения потока 'a' (блокировка должна быть
+  // отпущена при его завершении.
+  a.Join();
+
+  // Ждем завершения потока 'b', который к своему завершению
+  // должен обнулить флаг.
+  b.Join();
+  EXPECT_EQ(0, flag);
+}
+</code></pre>
+
+<p>Для компиляции нам также понадобятся файлы <code>mutex.h</code> (класс <a href="/blog/russian/2009/02/06/universal-mutex-in-cpp-for-windows-and-unix/">Mutex</a>), <code>thread.cpp</code> и <code>thread.h</code> (класс <a href="/blog/russian/2009/01/26/universal-threads-for-windows-and-unix/">Thread</a>).</p>
+
+<p>Файл для запуска тестов <code>runner.cpp</code>:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+int main(int argc, char* argv[]) {
+  testing::InitGoogleTest(&amp;argc, argv);
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>Компилируем:</p>
+
+<p>Visual Studio:</p>
+
+<pre><code>cl /EHsc /I. /Feautolock_unittest_vs2008.exe /DWIN32 runner.cpp autolock_unittest.cpp thread.cpp gtest\gtest-all.cc
+</code></pre>
+
+<p>Cygwin:</p>
+
+<pre><code>cl /EHsc /I. /Feautolock_unittest_vs2008.exe /DWIN32 runner.cpp autolock_unittest.cpp thread.cpp gtest\gtest-all.cc
+</code></pre>
+
+<p>Запускаем:</p>
+
+<pre><code>[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from AutoLock
+[ RUN      ] AutoLock.ConcurrentCalls
+[       OK ] AutoLock.ConcurrentCalls
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran.
+[  PASSED  ] 1 test.
+</code></pre>
+
+<p>Работает, что приятно. Тест работает как ожидалось.</p>
+
+<p>Не забудьте включить файл <code>autolock_unittest.cpp</code> в тестовый набор вашего проекта. Не тратьте время на вылавливание неожиданных глюков тогда, когда вы уже порядком подзабыли, как тут все работает. Пусть ловлей глюков занимается тест, автоматизировано.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/02/06/universal-mutex-in-cpp-for-windows-and-unix/">Самодельный мьютекс на C++ для Windows и UNIX</a></li>
+<li><a href="/blog/russian/2009/01/26/universal-threads-for-windows-and-unix/">Универсальные потоки на С++ для Windows и UNIX</a></li>
+<li><a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">Unit-тестирование для параллельных потоков</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/blog-post_17.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/blog-post_17.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/blog-post_17.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

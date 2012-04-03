@@ -1,0 +1,40 @@
+<html>
+<head>
+<title>Ломание игрушек через эмулятор</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="style.css"></head>
+
+<body bgcolor="#FFFFFF" background="jpgs/exptextb.jpg">
+<h2 align="center">Примитивное ломание РК'шных игрушек через отладчик эмулятора</h2>
+<p align="center">(Для использования всего ниже описанного, Вам надо использовать 
+  версию эмулятора <b>с <a href="debug.html">отладчиком</a></b>) </p>
+<hr>
+<p>Технология этого дела, естественно, всем известна. Вот пример ее применения 
+  здесь &#150; в эмуляторе PK &#150; на игре XONIX. </p>
+<ol>
+  <li> Вводим (командой I) XONIX </li>
+  <li> Запускаем (G0) </li>
+  <li> Жизней 3 <font face="Courier New, Courier, mono">&#150;></font> делаем 
+    дамп типа 'Dump' в файл dmp.001, умираем. <br>
+    Жизней 2 <font face="Courier New, Courier, mono">&#150;></font> делаем дамп 
+    типа 'Dump' в файл dmp.002, умираем.<br>
+    Жизней 1 <font face="Courier New, Courier, mono">&#150;></font> делаем дамп 
+    типа 'Dump' в файл dmp.003, умираем. </li>
+  <li> Выходим из эмулятора </li>
+  <li>Используем ufc.exe из player's tools. <br>
+    <br>
+    <kbd>ufc.exe 3 dec byte dmp.001</kbd> <br>
+    <br>
+  </li>
+  <li> Очевидный кандидат &#150; ячейка 1000. </li>
+  <li> Снова запускаем в эмуляторе XONIX </li>
+  <li> Ставим точку останова 00001000(EXEC,P) </li>
+  <li> Найденный STA 1000 патчим в окне DUMP на 3 nop'a и снимаем ловушку </li>
+  <li> Все!</li>
+</ol>
+<p>Утилиту множественного сравнения файлов UFC.EXE можно взять <a href="files/ufc.exe">здесь</a>. 
+  Детальное описание возможностей отладчика Вы надете <a href="debug.html">здесь</a>.</p>
+<p align="right"><a href="index.html"><img src="gifs/back1.gif" border="0" alt="back"></a> 
+</p>
+</body>
+</html>

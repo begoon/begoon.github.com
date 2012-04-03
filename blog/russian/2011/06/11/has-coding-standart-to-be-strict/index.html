@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Должен ли быть стандарт кодирования жестким?</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Должен ли быть стандарт кодирования жестким?</h1>
+<div id="post">
+  <p>Например, вот такой кусок кода:</p>
+
+<pre><code class="cpp">void f (  int a , char *p  )
+{
+   int   whattodo ;
+
+   whattodo = a &lt; 1 ? 2 : 0;
+
+   switch ( whattodo )
+   {
+   case 2:
+             printf(&quot;THIS\n&quot;); break;
+   case 1:
+             printf(&quot;THAT\n&quot;);
+             break;
+   }
+   if ( a !=  * p  ) {
+             a = 1111111 ;
+
+   } else
+             a = 2222222;
+
+
+}
+</code></pre>
+
+<p>Удивительно, но во многих компаниях, где я работал, подобный код спокойно подошел бы по принятому стандарту кодирования. И такой код вполне реален, так как он обычно создается за долгое время разными людьми. В целом код читаем и даже более менее понятен.</p>
+
+<p>Но:</p>
+
+<ul>
+<li>абсолютная неаккуратность и непоследовательность использования пробелов и пустых строк</li>
+<li>бессмысленное имя переменной <code>whattodo</code></li>
+<li>непоследовательность в стиле расположения <code>{</code> и <code>break</code></li>
+</ul>
+
+<p>Вывод - это не код, а помойка.</p>
+
+<p>Последнее время на любые аргументы по даже минимальным неаккуратностям в коде, а привожу сравнение с текстом для чтения.</p>
+
+<p>Какой текст приятнее и понятнее читать?</p>
+
+<p>Так:</p>
+
+<pre><code>Компьютерная сеть Международного валютного фонда подверглась хакерской атаке. Официального объявления об этом пока не сделано, однако сотрудникам о вторжении сообщили еще в среду. Представитель МВФ отказался сообщить какую-либо информацию об инциденте, заверив журналистов, что организация работает в обычном режиме.
+</code></pre>
+
+<p>Или так:</p>
+
+<pre><code>кОМИьютерная сеть       Международного    валютного
+    фонда  подверглась хакерской атаке   . Официального
+объявления          об этом пока не сделано , однако сотрудникам о
+   вторжении сообщили ЕЩе в СрЕдУ.
+ПредстАвитель   МВФ отказался сООбщить  какую-  либо информацию об
+инциденте , заверив  журналистов        , что организация работает в
+обычном         реЖиме  .
+
+На многих это производит эффект.
+</code></pre>
+
+<p>Даже в крупных компаниях, когда вроде есть и время и люди, которые занимаются поддержкой качества кодовый базы, бывает трудно справляться с этой задачей. Когда появляются аргументы типа &ldquo;клиент хочет это сегодня&rdquo;, то мантра &ldquo;ну так работает же!!!&rdquo; перебивает все аргументы за тотальную аккуратность в коде. Увы.</p>
+
+<p>Еще пару мыслей. Есть определенные приемы в форматировании кода, которые призваны облегчить copy-paste.</p>
+
+<p>Например расположение запятых на следующей строке. Это позволяет менять порядок строк без необходимости думать о запятой в последней строке:</p>
+
+<pre><code>A::A() :
+  a(1)
+  , b(1)
+  , c(1)
+{
+...
+}
+</code></pre>
+
+<p>Лично я не против copy-paste, когда ради его удобства уродуют текст - это уже слишком. Я резко против таких приемов.</p>
+
+<p>Кстати, один из аргументов, почему люди любят ставить открывающую фигурную скобку на отдельной строке, как этом примере, потому что так удобнее таскать это по тексту строчными блоками и не думать даже о минимальной корректировке при вставке в другое месте.</p>
+
+<p>Ошибки, вызванные такими легко и слепо перетаскиваемыми блоками, выльются в гораздо большие временные затраты, чем пару лишних секунд на ручную адаптацию перенесенного блока, когда за эти пару секунд ты так или иначе будешь вынужден пробежать глазами по тексту, и, возможно, выловить логические несовместимости.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/06/blog-post_11.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/06/blog-post_11.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/06/blog-post_11.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Тонкости использования getenv() и putenv()</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Тонкости использования getenv() и putenv()</h1>
+<div id="post">
+  <p>Нарвался тут на интересные грабли с функциями <a href="http://www.kernel.org/doc/man-pages/online/pages/man3/getenv.3.html">getenv()</a> и <a href="http://www.kernel.org/doc/man-pages/online/pages/man3/putenv.3.html">putenv()</a>.</p>
+
+<p>С <code>putenv()</code> у меня <a href="/blog/russian/2009/02/01/static-argument-of-putenv/">уже был интересный опыт</a>.</p>
+
+<p>Часто люди пишут так:</p>
+
+<pre><code class="cpp">if (getenv(&quot;A_FLAG&quot;)) {
+  ...
+}
+</code></pre>
+
+<p>Это работает неплохо для переменных-флагов, которые либо есть, либо нет. Значение не важно.</p>
+
+<p>Что получилось у меня:</p>
+
+<pre><code class="cpp">int main(...) {
+  putenv(&quot;GLOBAL_FLAG=1&quot;);  // Глобальное значение для всей программы.
+  ...
+  system(&quot;xyz&quot;);            // Это программа должна видеть GLOBAL_FLAG=1.
+  ...
+  do_stuff();
+  ...
+}
+
+void do_stuff() {
+  ...
+  if (something) {
+    putenv(&quot;GLOBAL_FLAG=&quot;); // Убрать переменную.
+    system(&quot;abc&quot;);          // А вот для этой программы флаг должен быть убран.
+    ...
+  }
+  ...
+  if (getenv(&quot;GLOBAL_FLAG&quot;) {
+     // И вот тут начиналась ерунда на разных платформах.
+  }
+}
+</code></pre>
+
+<p>А корень зла тут в том, что после <code>putenv()</code> результат <code>getenv()</code> может стать либо <code>NULL</code>, либо <code>&quot;&quot;</code>, в зависимости от платформы.</p>
+
+<p>Например:</p>
+
+<pre><code class="cpp">if (getenv(&quot;GLOBAL_FLAG&quot;) {
+    ...
+</code></pre>
+
+<p>работает только на Windows и правильнее писать:</p>
+
+<pre><code class="cpp">const char* p = getenv(&quot;GLOBAL_FLAG&quot;);
+if (p != NULL &amp;&amp; *p != '\0') {
+  ...
+}
+</code></pre>
+
+<p>И лучше сделать wrapper для <code>getenv()</code>:</p>
+
+<pre><code class="cpp">std::string GetEnv(const char* name) {
+  const char* v = getenv(name);
+  return v ? v : &quot;&quot;;
+}
+</code></pre>
+
+<p>И для проверки писать:</p>
+
+<pre><code class="cpp">if (!GetEnv(&quot;var&quot;).empty()) {
+  ..
+}
+</code></pre>
+
+<p>Для теста я написал программу, которая выставляет переменную и проверяет ее значение через <code>getenv()</code> и через вызов дочерней программы.</p>
+
+<pre><code class="cpp">#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+
+#ifdef WINDOWS
+#define putenv _putenv
+#endif
+
+void PrintVariableViaShell(const std::string&amp; name) {
+  std::cout &lt;&lt; &quot;Value from shell:&quot; &lt;&lt; std::endl;
+  const std::string cmd =
+#ifdef WINDOWS
+    std::string(&quot;cmd /c echo [%&quot;) + name + &quot;%]&quot;;
+#else
+    std::string(&quot;/bin/sh -c \&quot;echo [$&quot;) + name + &quot;]\&quot;&quot;;
+#endif
+  std::cout &lt;&lt; cmd &lt;&lt; std::endl;
+  std::system(cmd.c_str());
+}
+
+void PrintVariableViaGetEnv(const std::string&amp; name) {
+  std::cout &lt;&lt; &quot;Value from getenv():&quot; &lt;&lt; std::endl;
+  const char* v = std::getenv(name.c_str());
+  std::cout &lt;&lt; &quot;[&quot; &lt;&lt; (v ? v : &quot;&lt;NULL&gt;&quot;) &lt;&lt; &quot;]&quot; &lt;&lt; std::endl;
+}
+
+void SetVariableDeleteAndPrint(const char* name_value, const bool equ) {
+  const std::string&amp; name_value_s(name_value);
+  const std::string name = name_value_s.substr(0, name_value_s.find('='));
+
+  putenv(const_cast&lt;char*&gt;(name_value));
+  std::vector&lt;char&gt; delete_without_equ(name.begin(), name.end());
+  delete_without_equ.push_back('\0');
+  putenv(&amp;delete_without_equ[0]);
+
+  std::cout &lt;&lt; &quot;Value after deleting WITHOUT '=':&quot; &lt;&lt; std::endl;
+  PrintVariableViaShell(name);
+  PrintVariableViaGetEnv(name);
+
+  std::cout &lt;&lt; std::endl;
+
+  putenv(const_cast&lt;char*&gt;(name_value));
+  std::vector&lt;char&gt; delete_with_equ(name.begin(), name.end());
+  delete_with_equ.push_back('=');
+  delete_with_equ.push_back('\0');
+  putenv(&amp;delete_with_equ[0]);
+
+  std::cout &lt;&lt; &quot;Value after deleting WITH '=': &quot; &lt;&lt; std::endl;
+  PrintVariableViaShell(name);
+  PrintVariableViaGetEnv(name);
+}
+
+int main(int argc, char* argv[]) {
+#ifdef WINDOWS
+  std::cout &lt;&lt; &quot;WINDOWS&quot; &lt;&lt; std::endl;
+#else
+  system(&quot;uname&quot;);
+#endif
+  SetVariableDeleteAndPrint(&quot;ABC=123&quot;, true);
+  return 0;
+}
+</code></pre>
+
+<p>И вот результы с разных платформ.</p>
+
+<p><strong>Linux</strong></p>
+
+<pre><code>Linux
+Value after deleting WITHOUT '=':
+Value from shell:
+/bin/sh -c &quot;echo [$ABC]&quot;
+[]
+Value from getenv():
+[&lt;NULL&gt;]
+
+Value after deleting WITH '=':
+Value from shell:
+/bin/sh -c &quot;echo [$ABC]&quot;
+[]
+Value from getenv():
+[]
+</code></pre>
+
+<p><strong>AIX</strong></p>
+
+<pre><code>AIX
+Value after deleting WITHOUT '=':
+Value from shell:
+/bin/sh -c &quot;echo [$ABC]&quot;
+[123]
+Value from getenv():
+[123]
+
+Value after deleting WITH '=':
+Value from shell:
+/bin/sh -c &quot;echo [$ABC]&quot;
+[]
+Value from getenv():
+[]
+</code></pre>
+
+<p><strong>SunOS</strong></p>
+
+<pre><code>SunOS
+Value after deleting WITHOUT '=':
+Value from shell:
+/bin/sh -c &quot;echo [$ABC]&quot;
+[123]
+Value from getenv():
+[123]
+
+Value after deleting WITH '=':
+Value from shell:
+/bin/sh -c &quot;echo [$ABC]&quot;
+[]
+Value from getenv():
+[]
+</code></pre>
+
+<p><strong>HP-UX</strong></p>
+
+<pre><code>HP-UX
+Value after deleting WITHOUT '=':
+Value from shell:
+/bin/sh -c &quot;echo [$ABC]&quot;
+[123]
+Value from getenv():
+[123]
+
+Value after deleting WITH '=':
+Value from shell:
+/bin/sh -c &quot;echo [$ABC]&quot;
+[]
+Value from getenv():
+[]
+</code></pre>
+
+<p><strong>WINDOWS</strong></p>
+
+<pre><code>WINDOWS
+Value after deleting WITHOUT '=':
+Value from shell:
+cmd /c echo [%ABC%]
+[123]
+Value from getenv():
+[123]
+
+Value after deleting WITH '=':
+Value from shell:
+cmd /c echo [%ABC%]
+[%ABC%]
+Value from getenv():
+[&lt;NULL&gt;]
+</code></pre>
+
+<p>Только на Windows <code>getenv()</code> возвращает <code>NULL</code> после удаления. На остальных это будет пустая строка.</p>
+
+<p>Забавно, на Linux можно удалять переменные через <code>putenv(&quot;name&quot;)</code> (без знака &ldquo;=&rdquo;), а тогда <code>getenv()</code> будет возвращать <code>NULL</code>.</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/02/01/static-argument-of-putenv/">Статический аргумент функции putenv</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/11/getenv-putenv.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/11/getenv-putenv.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/11/getenv-putenv.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

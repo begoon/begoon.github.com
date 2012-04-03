@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Programming with GUTs</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Programming with GUTs</h1>
+<div id="post">
+  <p>Вчера был на тренинге <a href="http://www.boost.org/users/people/kevlin_henney.html">Kevlin Henny</a> под названием «Programming with GUTs». (Кевлин автор нескольких книг, например «<a href="http://www.amazon.com/Things-Every-Programmer-Should-Know/dp/0596809484/">Things Every Programming Should Know</a>»)</p>
+
+<p>«GUT» – это сокращение от Good Unit Tests.</p>
+
+<p>Также я узнал выражения «Programming with BUTs» (Brittle Unit Tests) и «Programming with NUTs» (No Unit Tests).</p>
+
+<p>Итак, «&hellip;with GUTS» - это хорошо, «&hellip;with BUTs» - хуже, «&hellip;with NUTs» - безумие.</p>
+
+<p>Вся эта терминология построена на игре слов guts, butt и nuts в английском языке, которые своим двойным смыслом примерно отражают ситуацию в проекте, когда тестирование находится на указанном уровне (Good, Brittle, No).</p>
+
+<p>Дядька очень интересно ведет беседу, нескучно. Вовремя переходит от приколов к важным выводам, что, например, что ошибки – это не зло, а данность (процесс создания программа сложен, и ошибки – это часть процесса), поэтому очень важно уметь использоваться их для своих целей. Глупо исправлять баг, не написав для него unit- или regression- тест, так как без теста информация, которую несет в себе баг-репорт, будет потеряна по исправления ошибки.</p>
+
+<p>Не могу сказать, что я узнал что-то радикально новое для себя, хотя услышал несколько интересных мыслей и аналогий.</p>
+
+<p>Например, дежурный вопрос менеджера (не очень умного менеджера) проекта: «А если мы будем практиковать TDD в разработке, это замедлит процесс?». И ваш правильный и политический верный ответ будет решительное «ДА!». «А правда, что написание тестов вместе с кодом призвано затормозить работу разработчика?». «ДА!!!».</p>
+
+<p>В короткой перспективе – да, но в долгосрочной – нет, а совсем наоборот.</p>
+
+<p>Есть хорошая аналогия. Можно ли доехать из места А в место Б на машине, у которой нет традиционных тормозов (а например, только ручник)? Теоретически да. Очень очень медленно, правильно используя торможение двигателем и ручником. Задача будет решена, но очень не быстро, и вероятность облажаться очень высока. А вот если машину оборудовать нормальными тормозами (~unit-тестами), цель которых останавливать машину (и увеличивать время достижения цели), то они также позволят активно разгоняться между торможениями, и как результат – приехать быстрее.</p>
+
+<p>Мораль – тесты позволяют взять ваш код под контроль, превратить его из телеги, несущейся с горы на огромной скорости, в гоночный болид, который ездит также быстро, как и останавливается. Тесты радикально затормозят вас, когда это нужно. Но с другой стороны они позволят не дрожать всем телом, когда надо потрогать какой-то очень важный кусок кода (например, библиотеку строчек), а спокойно провести рефакторинг и проверить результаты.</p>
+
+<p>Все эти посылы просто TDD очевидны и однозначно разумны, но я был поражен до глубины души, когда кто-то таки спросил из зала, а если я, мол, просто буду писать много комментариев, чтобы всем было понятно, что код делает. И это был не вопрос-прикол. Кто-то спросил это на полном серьезе.</p>
+
+<p>По поводу комментариев была приведена также интересная аналогия. Комментарии в коде – это золото. Но золото обесценивается, когда его становится слишком много. Комментариев много бывает (особенно бесполезных).</p>
+
+<p>На лабах было интересное задание. Программисту дается задание написать класс и unit-тесты для него. Затем эти тесты уже без кода класса даются другому программисту, и его просят воспроизвести функционал класса, основываясь только на тестах к нему. Результаты порой «радуют» даже продвинутых бойцов TDD.</p>
+
+<p>Вывод как всегда простой: тестируйте как можно раньше, тестируйте чаще, тестируйте автоматизировано. Тестирование – это часть работы программиста в первую очередь, а тестера – во вторую.</p>
+
+<p>P.S. Небольшое задание для интересующихся. Допустим, вы написали собственный алгоритм сортировки. Как его тестировать? Каковы будут критерии проверки, что результат такой, какой вы ожидаете?</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2010/04/programming-with-guts.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2010/04/programming-with-guts.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2010/04/programming-with-guts.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

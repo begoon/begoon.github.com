@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Process exit code after crash</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Process exit code after crash</h1>
+<div id="post">
+  <p>Just come across an interesting bug. Being executed from a Makefile script a unit test runner crashed. It looked like another memory corruption. But the consequence was more interesting. That Makefile kept going regardless the crash of the unit test runner. It means the runner still returned zero exit code instead of non-zero.</p>
+
+<p>We fixed that bug (including Makefile problem) but a generic question occured: what exit code is returned to the parent when the process crashes before executing <a href="http://linux.die.net/man/3/exit">exit()</a>?</p>
+
+<p>In UNIX there are special macros inspecting the status returned from <a href="http://linux.die.net/man/2/wait">wait()</a>. But all UNIXes are different and there is Windows as well.</p>
+
+<p>Eventually I wrote a simple self-killing program:</p>
+
+<pre><code class="cpp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+int main(int argc, char* argv[]) {
+  char cmd[80];
+  int r;
+  sprintf(cmd, &quot;%s ?&quot;, argv[0]);
+  if (argc &gt; 1) {
+    if (argv[1][strlen(argv[1]) - 1] == '1')
+      *(char *)0 = 0;
+    exit(0x77);
+  }
+  printf(&quot;Normal: %08X\n&quot;, system(cmd));
+  cmd[strlen(cmd) - 1] = '1';
+  printf(&quot;Crash : %08X\n&quot;, system(cmd));
+  return 0;
+}
+</code></pre>
+
+<p>And run it on different systems.</p>
+
+<p>Windows 7, Visual Studio 2010, <code>cl crash.c &amp;&amp; crash</code>:</p>
+
+<pre><code>Normal: 00000077
+Crash : C0000005
+</code></pre>
+
+<p>Linux x86_64 (<code>cc -o crash crash.c &amp;&amp; ./crash</code>):</p>
+
+<pre><code>Normal: 00007700
+Crash : 0000000B
+</code></pre>
+
+<p>Signal 0x0B (13), by the way, is <code>SIGSEGV</code>, segmentation violation.</p>
+
+<p>Solaris SPARC 5.10:</p>
+
+<pre><code>Normal: 00007700
+Segmentation Fault - core dumped
+Crash : 00008B00
+</code></pre>
+
+<p>HP-UX Itanium 2:</p>
+
+<pre><code>Normal: 00007700
+sh: 25112 Memory fault(coredump)
+Crash : 00008B00
+</code></pre>
+
+<p>AIX 5.2:</p>
+
+<p>Normal: 00007700
+Crash : FFFFFFFF</p>
+
+<p>Here seems the exit code wasn&rsquo;t even propagated to <code>system()</code>.</p>
+
+<p>Conclusion: it (as usually) really depends on the operating system.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2011/04/process-exit-code-after-crash.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2011/04/process-exit-code-after-crash.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2011/04/process-exit-code-after-crash.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

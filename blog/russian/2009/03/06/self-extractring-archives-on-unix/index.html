@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Саморазархивирующиеся архивы для UNIX</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Саморазархивирующиеся архивы для UNIX</h1>
+<div id="post">
+  <p>Когда ты поставляешь софт под UNIX, редко бывает ситуация, когда на стороне заказчика в группе сопровождения вообще нет людей, знакомых с UNIXом. Так или иначе, стиль этой операционной системы заставляет работать с командной строкой и знать хотя бы базовые команды. Тут порой недостаточно просто &ldquo;кликнуть на файл с дистрибутивом&rdquo;. Не буду говорить, как это хорошо или плохо для заказчика — это его выбор, но для нас, поставщиков, это удобно. Удобно, когда &ldquo;с той стороны&rdquo; есть люди, которым достаточно сказать типа возьмите tar-архив, разверните в такой то директории, проверьте права и замените такие-то бинарники.</p>
+
+<p>Но порой нужно таки сделать &ldquo;а-ля&rdquo; коробочную установку в стиле &ldquo;взял один файл-архив, запустил и получил результат&rdquo;. Ситуация усугубляется, когда все это надо делать под разными сортами UNIXа. Конечно, есть вариант написать этого зверя на Java. На ней можно сделать установщик еще и графическим. Нужно только, чтобы эта Java была у заказчика, то есть опять тема простоты уходит. Нужно что-то простое и легковесное.</p>
+
+<p>Небольшой анализ привел меня к <a href="http://megastep.org/makeself/">makeself</a>. В двух словах — это саморазархивирующиеся shell-скрипты. То есть вы готовите процедуру установки, сводите все к наличию каталога со всеми необходимыми файлами, и, если нужно, скриптом, которые надо запустить после разархивации. Все как у так называемых SFX (self extract) модулей для WinRAR, например. Прелесть в том, что в итоге вы получаете одиночный файл, который является абсолютно стандартным shell-скриптом, работающим в большом количестве типов UNIX, и который также содержит внутри себя архив с вашими файлами. Все, что нужно сделать на стороне клиента, это запустить этот файл.</p>
+
+<p>Допустим, вы подготовили ваш дистрибутив в каталоге <code>/home/sandbox/intallation</code>. Также у вас есть скрипт <code>./setup</code>, который необходимо запустить после разархивации для локальной настройки, например. Все, что вы делаете:</p>
+
+<pre><code>makeself.sh /home/sandbox/installation megasoft-0.0.1.sh &quot;Mega Software 0.0.1&quot; ./setup
+</code></pre>
+
+<p>Данная команда создаст файл <code>megasoft-0.0.1.sh</code>, в который упакуется содержимое каталога <code>/home/sandbox/intallation</code> и скрипт <code>./setup</code>. Теперь все, что надо сделать на стороне клиента, это запустить это файл командой:</p>
+
+<pre><code>. ./megasoft-0.0.1.sh
+</code></pre>
+
+<p>Скрипт разархивирует собственное содержимое и запустит ваш скрипт setup, который сможет окончательно настроить установку.</p>
+
+<p><code>makeself</code> позволяет использовать для компрессии стандартные средства UNIX на выбор — compress, gzip, bzip2. Также содержимое архива дополнительно защищается контрольными суммами: MD5 или CRC. Это может быть полезно, если вы не используете компрессию, а целостность данных проверять все же хотите.</p>
+
+<p>Список же поддерживаемых типов UNIX для текущей версии 2.1 весьма внушителен:</p>
+
+<ul>
+<li>Linux (all distributions)</li>
+<li>Sun Solaris (8 tested)</li>
+<li>HP-UX (tested on 11.0 and 11i on HPPA RISC)</li>
+<li>SCO OpenUnix and OpenServer</li>
+<li>IBM AIX 5.1L</li>
+<li>MacOS X (Darwin)</li>
+<li>SGI IRIX 6.5</li>
+<li>FreeBSD</li>
+<li>UnicOS / Cray</li>
+</ul>
+
+<p>Напомню ссылку на <code>makeself</code> еще раз — <a href="http://megastep.org/makeself/">http://megastep.org/makeself/</a></p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/03/unix.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/03/unix.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/03/unix.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

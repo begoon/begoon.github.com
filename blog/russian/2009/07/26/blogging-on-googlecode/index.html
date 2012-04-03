@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Ведение блога на Google Code</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Ведение блога на Google Code</h1>
+<div id="post">
+  <p>Лично я пока не дозрел до ведения блога на собственном сайте. Конечно, собственный сайт - это удобно. Все можно поменять и сделать как хочется. Но это и обязанность - настраивать, обновлять версии, присматривать и т.д. Все это реально, но пока не для меня. Я как-то больше радею за контент, нежели за оформление.</p>
+
+<p>Теперь ближе к делу. <a href="http://blogspot.com/">Blogspot</a> как механизм для ведения блога меня вполне устраивает. Единственное, чего не хватает - это возможности форматирования постов не в HTML или WYSIWYG редакторе, а на каком-нибудь диалекте Wiki. Мне много-то не надо, хотя бы базовые элементы.</p>
+
+<p>Последнее время я как-то уж сблизился с <a href="http://code.google.com/">Google Code</a>. А там как раз есть Wiki для ведения документации. Вот и возникала мысль скрестить Blogspot и Google Code для ведения блога.</p>
+
+<p>Мой блог о программировании, поэтому задача удобного внедрения программного кода в посты стоит на первом месте. К тому же я люблю всегда давать по возможности полные компилируемые исходники, поэтому хостинг для исходников тоже нужен.</p>
+
+<p>Я пришел вот к такой схеме. Для начала я завел одноименный проект на Google Code - <a href="http://code.google.com/p/easy-coding/">Easy Coding</a>.</p>
+
+<p>Каждый пост пишется на Google Code в виде отдельной странички Wiki (лишний повод не писать двух-строчных одноразовых постов). Отлаживается верстка и общий внешний вид. Можно писать прямо в онлайне на страничке, но лично я изначально набиваю все в <code>notepad++</code> и <code>aspell</code>. Благо разметка Wiki не требует ежеминутного закольцованного ерзанья типа исправил-посмотрел-как-выглядит, как в HTML.</p>
+
+<p>Если надо повесить картинку, то она выкладывается в раздел <a href="http://code.google.com/p/easy-coding/downloads/list">Downloads</a>, и ссылка на картинку ведет туда. Исходники тоже можно было бы заливать в этот раздел, есть есть способ лучше. Исходники удобнее держать в разделе <a href="http://code.google.com/p/easy-coding/source/browse/">Source</a>. Там их можно удобно просматривать, скачивать, комментировать и т.д. И тут уже можно насладиться контролем версий для них (еще раз уточню - когда выкладываешь работающие исходники, это становится важно) - Subversion или Mercurial, кому что больше нравится. Кстати, раздел Wiki тоже под контролем версий.</p>
+
+<p>Я использую Mercurial, так как распределенная модель позволяет работать долго локально, а потом одним махом отправить изменения на сервер. Получается, что Mercurial в данном случае - это как файловый клиент для обмена файлами с Google Code.</p>
+
+<p>Итак, пост закончен и отлажен. Теперь его надо выложить на Blogspot.</p>
+
+<p>Для этого я написал элементарный <a href="http://code.google.com/p/easy-coding/source/browse/tools/wiki2blog.php">скрипт на php</a>. Данный скрипт преобразует пост из формата .wiki в .html с ориентацией на особенности шаблонов и стилей конкретно Blogspot&rsquo;а. Он, конечно, не идеален, но я решил так - я не буду делать универсального монстра, а буду править его по мере возникновения проблем или требования новых возможностей.</p>
+
+<p>Так так теперь у меня всегда локально лежат посты в виде <code>.wiki</code> файлов, то если мне надо исправить пост - сначала я вношу изменения в <code>.wiki</code>, затем конвертирую <code>.wiki</code> снова в <code>.html</code> и выкладываю через онлайновый редактор Blogspot&rsquo;а. Это позволяет всегда иметь посты в нормальной <code>.wiki</code> разметке и не думать, как их корежит онлайновый редактор Blogspot&rsquo;а.</p>
+
+<p>Соглашусь, многое из сказанного странно для владельцев собственных автономных блогов, но вот для клиентов Blogspot&rsquo;а подобная методика весьма жизненна.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/07/google-code.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/07/google-code.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/07/google-code.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

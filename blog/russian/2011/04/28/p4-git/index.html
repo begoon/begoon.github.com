@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>p4-git - работа в Perforce через git</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>p4-git - работа в Perforce через git</h1>
+<div id="post">
+  <p>Наша основная система контроля версий - Perforce. Если уж говорить о централизованных системах контроля версий, то с моей точки зрения, Perforce - это лучшая система из тех, с которыми мне доводилось работать. Например:</p>
+
+<ul>
+<li>CVS - все понятно, система не для автоматизации разработки, где все меняется каждую минуту, а для &ldquo;публикации истории изменений&rdquo;</li>
+<li>SVN - все более менее ничего, когда в разработке есть выделенный trunk, иначе после нескольких массивных слияний веток в разных направлениях хочется застрелиться</li>
+<li><a href="http://jazz.net/projects/rational-team-concert">RTC</a> (Rational Team Concert) - монструозная система, удобная когда все и везде написано только на Java, и неудобный клиент в командной строке</li>
+<li><a href="http://en.wikipedia.org/wiki/IBM_Rational_ClearCase">ClearCase</a> - кроме шуток, пользователям надо выдавать травы и водки, чтобы понять, как это система работает
+На фоне всего этого Perforce - это реальный рай. Регулярно делаю слияния между ветками команд разработчиков, интеграцией и релизами - удобно. Также смотря с позиции ежедневных нужд разработчика - также все удобно. Только одна вещь нас немного мучала - это невозможность перебрасывать changeset&rsquo;ы между физическими машинами перед commit&rsquo;ом. У нас в разработке шесть основных платформ, включая Windows, поэтому каждый commit приходится проверять на всех платформах. Моя утилита <a href="http://code.google.com/p/p4patch/">p4patch</a> решала проблему более менее, но в последних версиях появилась волшебная команда <a href="http://www.perforce.com/perforce/doc.current/manuals/cmdref/shelve.html">p4 shelve</a>, которая решает эту проблему на корню.</li>
+</ul>
+
+<p>Но что ни говори, для локальной работы, когда утопаешь в экспериментах, тестовых данных, временных копиях и т.д. - наличие распределенной системы типа git, hg, bazaar или fossil, когда можно плодить ветки по каждому чиху, сливать, удалять и т.д., реально упрощает жизнь.</p>
+
+<p>Как рекоммендуют сами Perforce&rsquo;овцы, можно в некотором роде срастить оба подхода, например, через git.</p>
+
+<p><a href="http://kb.perforce.com/article/1417/git-p4">p4-git</a> - скрипт, которым локальные файлы, находящиеся под контролем Perforce, дополнительно можно взять под git.</p>
+
+<p>Я все настроил, как сказано. Теперь у меня в git есть ветка master, являющаяся зеркалом из репозитория Perforce, и пяток-десяток локальных веток, из которых я сливаю в master. Изменения, которые я внес через git, автоматически заливаются в Perforce командой <code>git p4 submit</code>. Комадной же <code>git p4 rebase</code> можно синхронизировать ветку master с ее оригиналом в Perforce.</p>
+
+<p>Кстати, я уже потерял счет тем разам, когда в hg или fossil&rsquo;e я влеплял ошибку в команде комита - либо просто опечатка в сообщении, что еще можно пережить, или при повторении команд из буфера командой строки вместо <code>diff</code> залепишь старый комит и все. Потом приходится либо как-то хитро merge&rsquo;ить, либо просто откатывать изменения, делая новый комит. А в git можно просто сказать <code>git commit --amend</code> для исправления опечатки в только что сделанном комите, или <code>git reset HEAD^1</code> для удаления последнего комита вообще. А меняя 1 на 2, 3 и т.д., можно удалить сколько угодно комитов назад.</p>
+
+<p>А самое важное, что даже неверная команда <code>git reset HEAD^n</code>, которая якобы удаляет n последних комитов - это не конец света. И ее можно откатить через <code>git reset &lt;commit_id&gt;</code>, где <code>&lt;commit_id&gt;</code> - это идентификатор удаленного комита. При всех тех возможностях по работе с репозиторием, которые дает git, и которые принято считать &ldquo;опасными&rdquo;, очень мало команд, которые реально имеют необратимые последствия. Пока вы не сделали сборку мусора командой <code>git repack</code> объекты физически не удаляются, а только меняются указатели на них, а значит практически всегда можно вернуть назад, когда напортачил.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/04/p4-git-perforce-git.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/04/p4-git-perforce-git.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/04/p4-git-perforce-git.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

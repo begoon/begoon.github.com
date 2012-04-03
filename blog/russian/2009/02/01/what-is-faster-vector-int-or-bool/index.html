@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Кто быстрее: vector<bool> или vector<int></title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Кто быстрее: vector&lt;bool&gt; или vector&lt;int&gt;</h1>
+<div id="post">
+  <p>Я много раз слышал, что стандартный класс <code>std::vector</code>, специализированный для хранения типа <code>bool</code>, то есть <code>std::vector&lt;bool&gt;</code>, который по задумке создателей должен работать заметно быстрее своего смыслового аналога <code>std::vector&lt;int&gt;</code>, на самом деле нет так и хорош. Но тут, как говориться, бабушка на двое сказала, так как с одной стороны операция с базовым типом процессора <code>int</code> обычно является почти самой быстрой атомарной операцией, а другой стороны тип <code>bool</code> может быть упакован в тот же &ldquo;быстрый&rdquo; <code>int</code> пачкой по 32 или 64 штуки за раз, и можно оперировать сразу группой значений. В общем, целое поле для оптимизации.</p>
+
+<p>Я люблю все проверять лично, так что привожу результаты своей проверки.</p>
+
+<p>Итак, объект — программа нахождения простых чисел <a href="http://ru.wikipedia.org/wiki/%D0%A0%D0%B5%D1%88%D0%B5%D1%82%D0%BE_%D0%AD%D1%80%D0%B0%D1%82%D0%BE%D1%81%D1%84%D0%B5%D0%BD%D0%B0">Решето Эратосфена</a>. Классический алгоритм для проверки на вшивость всяких оптимизаторов. На оригинальность и оптимальность кода не претендую.</p>
+
+<p><code>era.cpp</code>:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;cmath&gt;
+
+int main(int argc, char* argv[]) {
+  // Получаем предельное значение эксперимента из командной
+  // строки. По умолчанию - 100. Это основной, влияющий
+  // на время работы алгоритма, параметр.
+  long n = argc &gt; 1 ? std::atoi(argv[1]) : 100;
+  // Корень квадратный из максимума, округленный до большего
+  // целого.
+  long sqrt_n = static_cast&lt;long&gt;(std::sqrt(static_cast&lt;double&gt;(n))) + 1;
+
+  // Массив-вектор для хранения значений. Это центр внимания нашего
+  // эксперимента. Макрос TYPE задает тип элементов вектора и должен
+  // быть задан в опциях при компиляции: -DTYPE=int или
+  // -DTYPE=bool соответственно.
+  std::vector&lt;TYPE&gt; S(n, true);
+
+  // Собственно, решето Эратосфена.
+  for (int i = 2; i &lt; sqrt_n; ++i)
+    if (S[i])
+      for (int j = i*i; j &lt; n; j += i)
+        S[j] = false;
+
+  // Подсчет количество найденных простых чисел. Делаем это для
+  // самопроверки.
+  int count = 0;
+  for (int i = 2; i &lt; n; ++i)
+    if (S[i])
+      count++;
+
+  // Печатаем найденное количество.
+  std::cout &lt;&lt; count &lt;&lt; std::endl;
+
+  return 0;
+}
+</code></pre>
+
+<p>Эксперимент я проводил на ноутбуке с процессором Core 2 1ГГц. Для конкретно этой машины я выбрал предел поиска в 10000000. При этом значении времена работы программы с одной стороны небольшие (удобно для повторения замеров), но другой стороны — весьма показательные.</p>
+
+<p>Теперь компилятор. В забеге принимали участие:</p>
+
+<h1>GNU g++ 3.4.4 (cygwin)</h1>
+
+<h1>Borland/Codegear bcc32.exe 5.93 (Codegear Studio 2007)</h1>
+
+<h1>Microsoft cl.exe 14.00 (Visual Studio 2005)</h1>
+
+<h1>Microsoft cl.exe 15.00 (Visual Studio 2008)</h1>
+
+<p>Операционная система Windows XP SP3.</p>
+
+<p>Каждый компилятор получил свои максимально полные опции оптимизации на скорость, так как глупо говорить об эффективности программы на С++ без включенной оптимизации компилятора (ни тебе inline-функций, ни использования регистров процессора и т.д.) Но для целостности картины результаты без оптимизации тоже приведены (и будет позже ясно почему).</p>
+
+<p>Для компилирования примера я сделал скрипт, которой компилирует исходную программу каждым компилятором по очереди с использованием типа <code>bool</code> и <code>int</code>, с оптимизацией и без. Итого по четыре варианта на каждый компилятор.</p>
+
+<p><code>build.cmd</code>:</p>
+
+<pre><code class="bash">bcc32 -DTYPE=bool -eera-bcc32-bool.exe era.cpp
+bcc32 -DTYPE=int -eera-bcc32-int.exe era.cpp
+bcc32 -O2 -DTYPE=bool -eera-bcc32-bool-opt.exe era.cpp
+bcc32 -O2 -DTYPE=int -eera-bcc32-int-opt.exe era.cpp
+
+g++ -DTYPE=bool -o era-g++-bool.exe era.cpp
+g++ -DTYPE=int -o era-g++-int.exe era.cpp
+g++ -O3 -funroll-all-loops -fomit-frame-pointer -mtune=nocona -DTYPE=bool -o era-g++-bool-opt.exe era.cpp
+g++ -O3 -funroll-all-loops -fomit-frame-pointer -mtune=nocona -DTYPE=int -o era-g++-int-opt.exe era.cpp
+
+call cl2008.cmd
+cl /EHsc /DTYPE=bool /Feera-cl2008-bool.exe era.cpp
+cl /EHsc /DTYPE=int /Feera-cl2008-int.exe era.cpp
+cl /EHsc /arch:SSE2 /O2 -DTYPE=bool /Feera-cl2008-bool-opt.exe era.cpp
+cl /EHsc /arch:SSE2 /O2 -DTYPE=int /Feera-cl2008-int-opt.exe era.cpp
+
+call cl2005.cmd
+cl /EHsc /DTYPE=bool /Feera-cl2005-bool.exe era.cpp
+cl /EHsc /DTYPE=int /Feera-cl2005-int.exe era.cpp
+cl /EHsc /arch:SSE2 /O2 -DTYPE=bool /Feera-cl2005-bool-opt.exe era.cpp
+cl /EHsc /arch:SSE2 /O2 -DTYPE=int /Feera-cl2005-int-opt.exe era.cpp
+</code></pre>
+
+<p>При скрипты <code>cl2005.cmd</code> и <code>cl2008.cmd</code> я уже <a href="/blog/russian/2009/01/29/scripts-for-visual-studio-command-line/">писал</a>.</p>
+
+<p>После компиляции должны получиться 16 исполняемых файлов с сообразными именами.</p>
+
+<p>Далее, запуск. Для этого можно использовать следующий скрипт (<code>run.cmd</code>).</p>
+
+<pre><code class="bash">ntimer -1 era-cl2005-bool.exe 10000000
+ntimer -1 era-cl2005-int.exe 10000000
+ntimer -1 era-cl2005-bool-opt.exe 10000000
+ntimer -1 era-cl2005-int-opt.exe 10000000
+
+ntimer -1 era-cl2008-bool.exe 10000000
+ntimer -1 era-cl2008-int.exe 10000000
+ntimer -1 era-cl2008-bool-opt.exe 10000000
+ntimer -1 era-cl2008-int-opt.exe 10000000
+
+ntimer -1 era-bcc32-bool.exe 10000000
+ntimer -1 era-bcc32-int.exe 10000000
+ntimer -1 era-bcc32-bool-opt.exe 10000000
+ntimer -1 era-bcc32-int-opt.exe 10000000
+
+ntimer -1 era-g++-bool.exe 10000000
+ntimer -1 era-g++-int.exe 10000000
+ntimer -1 era-g++-bool-opt.exe 10000000
+ntimer -1 era-g++-int-opt.exe 10000000
+</code></pre>
+
+<p>Для измерения времени работы я использовал программу <a href="/downloads/ntimer.zip">ntimer</a>. Ее нужно скачать, распаковать и положить <code>ntimer.exe</code> в текущий каталог. Будучи запущенной с ключом &ldquo;-1&rdquo; эта программа печатает времена в одну строку. Нас интересует самое первое печатаемой ей время.</p>
+
+<p>Барабанная дробь! Запускаем&hellip;</p>
+
+<p>Таблица с временами работы (по порядку):</p>
+
+<pre><code>Компилятор             Версия Тип элемента Оптимизация Время (сек.)
+---------------------- ------ ------------ ----------- ------------
+Visual Studio 2005     14.00  bool         Выкл        23.750
+Visual Studio 2005     14.00   int         Выкл         1.750
+Visual Studio 2005     14.00  bool          Вкл         1.171
+Visual Studio 2005     14.00   int          Вкл         1.312
+Visual Studio 2008     15.00  bool         Выкл        23.062
+Visual Studio 2008     15.00   int         Выкл         1.703
+Visual Studio 2008     14.00  bool          Вкл         2.390
+Visual Studio 2008     14.00   int          Вкл         1.312
+Borland/Codegear 2007   5.93  bool         Выкл         8.375
+Borland/Codegear 2007   5.93   int         Выкл         1.296
+Borland/Codegear 2007   5.93  bool          Вкл         8.156
+Borland/Codegear 2007   5.93   int          Вкл         1.328
+gcc (cygwin)           3.4.4  bool         Выкл         4.640
+gcc (cygwin)           3.4.4   int         Выкл         3.109
+gcc (cygwin)           3.4.4  bool          Вкл         0.984
+gcc (cygwin)           3.4.4   int          Вкл         1.343
+</code></pre>
+
+<p>А теперь в отсортированном виде по возрастанию времени:</p>
+
+<p>Компилятор             Версия Тип элемента Оптимизация Время (сек.)</p>
+
+<hr />
+
+<p>gcc (cygwin)           3.4.4  bool          Вкл         0.984
+Visual Studio 2005     14.00  bool          Вкл         1.171
+Borland/Codegear 2007   5.93   int         Выкл         1.296
+Visual Studio 2005     14.00   int          Вкл         1.312
+Visual Studio 2008     14.00   int          Вкл         1.312
+Borland/Codegear 2007   5.93   int          Вкл         1.328
+gcc (cygwin)           3.4.4   int          Вкл         1.343
+Visual Studio 2008     15.00   int         Выкл         1.703
+Visual Studio 2005     14.00   int         Выкл         1.750
+Visual Studio 2008     14.00  bool          Вкл         2.390
+gcc (cygwin)           3.4.4   int         Выкл         3.109
+gcc (cygwin)           3.4.4  bool         Выкл         4.640
+Borland/Codegear 2007   5.93  bool          Вкл         8.156
+Borland/Codegear 2007   5.93  bool         Выкл         8.375
+Visual Studio 2008     15.00  bool         Выкл        23.062
+Visual Studio 2005     14.00  bool         Выкл        23.75</p>
+
+<p>Итак, на первом месте <code>gcc</code> в режиме <code>bool</code> с оптимизацией. На втором месте Visual Studio снова в режиме <code>bool</code> и оптимизацией. Интересно выступил борландовый компилятор, получив третье место, причем без оптимизации. Так как априори борландовый <code>bcc32.exe</code> считается весьма посредственным компилятором в плане качества кода и оптимизатора, то полученное им третье место весьма и весьма странно.</p>
+
+<p>Конечно, пытливый читатель сразу заметит, что я как-то очень лихо проскочил один очень важный вопрос, а именно — версию STL. Не могу поручиться, что каждый из этих компиляторов поставляется с абсолютно неизменной и, как принято считать, &ldquo;стандартной&rdquo; версией этой библиотеки. Каждая фирма что-то меняет всегда под себя.</p>
+
+<p>В итоге, я так и не получил однозначного ответа на изначальный вопрос — пользоваться ли <code>std::vector&lt;int&gt;</code> вместо <code>std::vector&lt;bool&gt;</code> или нет. Слишком много побочных факторов. Поэтому я бы посоветовал, если вы встали перед такой же дилеммой в вашем проекте, провести эксперимент на месте с вашим конкретным компилятором, вашей версией STL, на вашей конкретной платформе и т.д., то есть с учетом всех ваших факторов. Можно использовать приведенные мной программы и скрипты. Если у вас будут интересные и неоднозначные результаты, пишите.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/blog-post.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/blog-post.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/blog-post.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

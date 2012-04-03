@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Unit-тестирование в языке С</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Unit-тестирование в языке С</h1>
+<div id="post">
+  <p>По роду работы мне приходится работать с огромным количеством кода на С, причем чаще всего — это старый код, написанный много лет назад, и написан он без каких-либо намеков на тестирование, увы.
+Исправляя в таком коде ошибки, внося какие-то изменения, хочется какой-то гармонии с самим собой, а именно — иметь возможность тестировать, тем самым уменьшить вероятность повторного внесения ошибок. Пусть уж полностью старый код остается без тестов, но раз уж я что-то меняю, я хочу подкрепить свои изменения тестами.</p>
+
+<p>Мир языка С++ не такой дружественный к тестированию, как например, мир Java, C# или мир интерпретаторов. Главная причина — крайне слабый механизм интроспекции, то есть возможности исследования двоичного кода в плане получения информации о структуре исходных текстов. В Java, например, есть <code>Reflection</code>, с помощью которого можно прямо на основе скомпилированных классов создать тестовую среду (понять иерархию классов, типа аргументов и т.д.). В С++ приходится многое закладывать в исходный текст на этапе его создания, чтобы облегчить будущее тестирование.</p>
+
+<p>А что же мы имеем в С? Тут, как мне кажется, разрыв в удобстве тестирования по отношению к С++ в разы больше, чем между С++ и Java, например. Причин море: процедурная модель вместо объектно-ориентированной, отсутствие интроспекции вообще, крайне слабая защита при работе с памятью и т.д.</p>
+
+<p>Но шансы все же остались. Я начал поиск готовых библиотек для unit-тестирования в С. Например, есть библиотека <a href="http://www.jera.com/techinfo/jtns/jtn002.html">MinUnit</a>, длиной в четыре строки. Вполне жизненно. Следующий вполне себе вариант — это <a href="http://cunit.sourceforge.net/">CUnit</a>. Тут даже есть продвинутый консольный интерфейс.</p>
+
+<p>Перебрав еще несколько вариантов, я остановился на гугловской библиотеке <a href="http://code.google.com/p/cmockery/">cmockery</a>. Мне понравилось, что библиотека, несмотря на весьма сложный код, успешно компилируются не только в Visual Studio и GNU C, но и “родными” компиляторами AIX, HP-UX, SunOS и некоторых других экзотических зверей. Также библиотека умеет отлавливать утечки памяти, неправильную работу с распределенными кусками памяти (так называемые buffer over- и under- run). Еще в <code>cmockery</code> есть зачатки mock-механизмов, то есть когда задаются предполагаемые сценарии выполнения тестируемого блока, и потом результаты тестового прогона сверяются с предполагаемым сценарием. Mock-возможности я не буду пока рассматривать в данной статье. Про это стоит написать отдельно.</p>
+
+<p>На текущий момент актуальной версией <code>cmockery</code> является <a href="http://cmockery.googlecode.com/files/cmockery-0.1.2.tar.gz">0.1.2</a>. Из всего архива реально нужны только два файла: <code>cmockery.c</code> и <code>cmockery.h</code>. Можно, конечно, собрать библиотеку как положено, в двоичном виде, но я предпочитаю работать всегда с исходными текстами, благо компилируется очень быстро (это ж не С++).</p>
+
+<p>Желающие, могут скачать <a href="/downloads/cmockery-0.1.2-vs.zip">мою сборку</a>  cmockery. В этом архиве только необходимые два файла <code>cmockery.c</code> и <code>cmockery.h</code>. Также в файл <code>cmockery.h</code> я внес небольшое изменение, связанное к тем, что функция <code>IsDebuggerPresent()</code> почему-то явно объявлена в заголовочных файлах только в Visual Studio 2008. Для студии 2003 и 2005 надо вручную объявлять прототип, иначе при линковке вылезает сообщение:</p>
+
+<pre><code>error LNK2019: unresolved external symbol _IsDebuggerPresent referenced in function __run_test
+</code></pre>
+
+<p>Я отрапортовал об этом досадном недочете авторам, и пока новый релиз cmockery не вышел, можно пользоваться моей сборкой, которая без предупреждений компилируются в любой студии.</p>
+
+<p>Теперь пример реального использования <code>cmockery</code>.</p>
+
+<p>Я долго выбирал то, на чем можно хоть как-то наглядно продемонстрировать unit-тестирование в С. В итоге я остановился на библиотеке для работы со строками. Эта библиотека реализует так называемые строки с длинной. То есть надо для кода на С дать более менее удобный интерфейс для манипулированию строками, которые хранят внутри себя длину.</p>
+
+<p>Основа библиотеки была написана весьма давно, и много раз переписывалась практически с нуля, но я все еще использую ее в некоторых проектах.</p>
+
+<p>Естественно, я не буду приводить всю библиотеку. Во-первых, она весьма тривиальна и вся ее &ldquo;фишка&rdquo; состоит в удобности работы, нежели в какой-то особо хитрой и заумной реализации. Во-вторых, полный ее исходный текст весьма объемен. Я выбрал небольшой ее фрагмент, но его тестирование позволяет почувствовать дух тестирования в С.</p>
+
+<p>Итак, библиотека <code>cstring</code>. Тут можно создавать в некоторые &ldquo;объекты&rdquo;, реализованные через структуры, которые представляют собой &ldquo;строки&rdquo;. Такая &ldquo;строка&rdquo; может создаваться либо в стеке (автоматическая переменная), либо в куче. Также предоставляется набор разнообразных базовых функций: определение длины, копирование, склейка, интерфейс со строками языка С <code>(char *)</code> и т.д. Как я уже сказал, для демонстрации системы тестирования я оставил только несколько функций.</p>
+
+<p>Заголовочный файл <code>cstring.h</code>:</p>
+
+<pre><code class="cpp">#ifndef _CSTRING_H
+#define _CSTRING_H
+
+#define _decl_string_t(N) \
+struct {                  \
+  int sz;                 \
+  char data[N];           \
+}
+
+typedef _decl_string_t(1) string_t;
+
+/**
+ * Объявление строки в форме автоматической переменной в стеке.
+ * Длина строки инициализируется нулем.
+ */
+#define decl_string_t(name, size) _decl_string_t(size) name = { 0 }
+
+/**
+ * Создание новой строки в куче.
+ */
+string_t* string_new(int sz);
+
+/* Трюк с дублированием имен функций, начинающихся с символа '_'
+ * требуется для подавление предупреждений компилятора о преобразовании
+ * типов.
+ */
+
+/**
+ * Удаление строки из кучи.
+ */
+#define string_delete(str) _string_delete((string_t*)str)
+void _string_delete(string_t* str);
+
+/** 
+ * Текущая длина строки.
+ */
+#define string_length(str) _string_length((const string_t*)str)
+int _string_length(const string_t* str);
+
+/**
+ * Изменение длины строки.
+ */
+#define string_resize(str, sz) _string_resize((string_t*)str, sz)
+int _string_resize(string_t* str, int sz);
+
+/**
+ * Копирование строки из строки С, завершающейся нулем.
+ */
+#define string_from_c_str(dst, src) _string_from_c_str((string_t*)dst, src)
+string_t* _string_from_c_str(string_t* dst, const char* src);
+
+/**
+ * Добавление символа в строку.
+ */
+#define string_append_ch(str, ch) _string_append_ch((string_t*)str, ch)
+string_t* _string_append_ch(string_t* str, char ch);
+
+/**
+ * Превращение строки в строку С без добавления нуля на конце.
+ */
+#define string_data(str) str-&gt;data
+
+/**
+ * Превращение строки в строку С с нулем на конце.
+ */
+#define string_c_str(str) _string_c_str((string_t*)str)
+char* _string_c_str(string_t* str);
+
+#endif
+</code></pre>
+
+<p>Файл <code>cstring.c</code>:</p>
+
+<pre><code class="cpp">#include &lt;stdlib.h&gt;
+
+#include &quot;cstring.h&quot;
+
+/**
+ * Подготовительная площадка для тестирования.
+ * Если задан макрос UNIT_TESTING, то функции работы с кучей подменяются
+ * на тестовые.
+ */
+#if UNIT_TESTING
+extern void* _test_malloc(const size_t size, const char* file, const int line);
+extern void* _test_calloc(const size_t number_of_elements, const size_t size,
+                          const char* file, const int line);
+extern void _test_free(void* const ptr, const char* file, const int line);
+
+#define malloc(size) _test_malloc(size, __FILE__, __LINE__)
+#define calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)
+#define free(ptr) _test_free(ptr, __FILE__, __LINE__)
+#endif // UNIT_TESTING
+
+/**
+ * Создание новой строки в куче. Трюк &quot;sizeof(string_t)&quot; используется, чтобы
+ * правильно отработать ситуацию, если из-за выравнивания между элементами
+ * структуры string_t 'sz' и 'data' вдруг появится промежуток.
+ */ 
+string_t* string_new(int sz) {
+  return malloc(sizeof(string_t) + sz - 1);
+}
+
+/**
+ * Удаление строки из кучи.
+ */
+void _string_delete(string_t* str) {
+  free((void *)str);
+}
+
+/**
+ * Текущая длина строки.
+ */
+int _string_length(const string_t* str) {
+  return str-&gt;sz;                                                                                        
+}
+
+/**
+ * Изменение длины строки.
+ */
+int _string_resize(string_t* str, int sz) {
+  return str-&gt;sz = sz;
+}
+
+/**
+ * Копирование строки из строки С, завершающейся нулем.
+ */
+string_t* _string_from_c_str(string_t* dst, const char* src) {
+  int sz = strlen(src);
+  memcpy(dst-&gt;data, src, sz);
+  dst-&gt;sz = sz;
+  return dst;
+}
+
+/**
+ * Добавление символа в строку.
+ */
+string_t* _string_append_ch(string_t* str, char ch) {
+  str-&gt;data[str-&gt;sz++] = ch;
+  return str;
+}
+
+/**
+ * Превращение строки в строку С с нулем на конце. Фактически,
+ * в тело строки добавляется ноль и возвращается указатель на данные.
+ */
+char* _string_c_str(string_t* str) {
+  str-&gt;data[str-&gt;sz] = 0;
+  return string_data(str);
+}
+</code></pre>
+
+<p>Как вы заметили, в коде есть специальный блок, ограниченный макросом <code>UNIT_TESTING</code>. Ничего не поделаешь, в языке С приходится &ldquo;готовить&rdquo; код к потенциальному тестированию и вставлять фрагменты, позволяющие тестовой среде работать с этим кодом. Этот блок, если задан макрос <code>UNIT_TESTING</code>, переопределяет функции работы с кучей, чтобы можно было перехватывать их вызовы. Подменяющие функции <code>_test_malloc()</code>, <code>_test_calloc()</code> и <code>_test_free()</code> предоставляются библиотекой <code>cmockery</code>.</p>
+
+<p>Теперь файл тестов <code>cstring_unittest.c</code>:</p>
+
+<pre><code class="cpp">#include &lt;stdarg.h&gt;
+#include &lt;stddef.h&gt;
+#include &lt;setjmp.h&gt;
+#include &lt;cmockery.h&gt;
+
+#include &quot;cstring.h&quot;
+
+/**
+ * Тестируем декларацию строки длиной 20 в виде автоматической
+ * переменной, добавляем в нее два символа, обрезаем строку
+ * до длины в один байт и проверяем, добавился ли 0 при преобразовании
+ * в строку С.
+ */
+void string_c_str_test(void **state) {
+  decl_string_t(a, 20);
+  a.data[0] = 'a';
+  a.data[1] = 'b';
+  a.sz = 1;
+  assert_memory_equal(&quot;a\0&quot;, string_c_str(&amp;a), 2);
+}
+
+/**
+ * Тестируем изменение длины строки.
+ */
+void string_resize_test(void **state) {
+  decl_string_t(a, 20);
+  a.sz = 2;
+  string_resize(&amp;a, 1);
+  assert_int_equal(1, string_length(&amp;a));
+}
+
+/**
+ * Тестируем добавление символа путем сравнения со строками С
+ */
+void string_append_ch_test(void **state) {
+  decl_string_t(a, 20);
+  assert_string_equal(&quot;&quot;, string_c_str(&amp;a));
+  assert_string_equal(&quot;a&quot;, string_c_str(string_append_ch(&amp;a, 'a')));
+  assert_string_equal(&quot;ab&quot;, string_c_str(string_append_ch(&amp;a, 'b')));
+}
+
+/**
+ * Тестируем декларацию строки в виде автоматической переменной.
+ * Длина строки сразу после декларации должна быть нулевой.
+ */
+void string_declare_test(void **state) {
+  decl_string_t(a, 20);
+  assert_int_equal(0, string_length(&amp;a));
+}
+
+/**
+ * Тестируем размещение новой строки в куче и ее удаление из нее.
+ */
+void string_heap_allocation_test(void **state) {
+  string_t* a = string_new(20);
+  string_delete(a);
+}
+
+/**
+ * Тестируем копирование строки из строки С с нулем на конце.
+ */
+void string_from_c_str_test(void **state) {
+  string_t* a = string_new(8);
+  string_from_c_str(a, &quot;12345678&quot;);
+  assert_int_equal(8, string_length(a));
+  string_delete(a);
+}
+
+/**
+ * Создаем список тестов и запускаем их.
+ */
+int main(int argc, char* argv[]) {
+  const UnitTest tests[] = {
+    unit_test(string_declare_test),
+    unit_test(string_c_str_test),
+    unit_test(string_append_ch_test),
+    unit_test(string_heap_allocation_test),
+    unit_test(string_from_c_str_test),
+    unit_test(string_resize_test),
+  };
+  return run_tests(tests);
+}
+</code></pre>
+
+<p>Схема очень похожа на любое другое <a href="http://en.wikipedia.org/wiki/Unit_testing">xUnit</a> тестирование: каждый тест проверяет какой-то один функциональный элемент, тесты объединяются в группы и запускаются автоматически все вместе. Правда, из-за ограничений языка С каждый тест приходится вручную добавлять в список запуска, увы.</p>
+
+<p>Как я уже сказал, для компиляции потребуются файлы <code>cmockery.c</code> и <code>cmockery.h</code> (см. выше). Эти файлы можно положить в текущий каталог.</p>
+
+<p>Компилируем в Visual Studio:</p>
+
+<pre><code>cl /DUNIT_TESTING /I. cstring_unittest.c cstring.c cmockery.c
+</code></pre>
+
+<p>Если все скомпилировалось нормально, то запускаем файл <code>cstring_unittest</code>:</p>
+
+<pre><code>string_declare_test: Starting test
+string_declare_test: Test completed successfully.
+string_c_str_test: Starting test
+string_c_str_test: Test completed successfully.
+string_append_ch_test: Starting test
+string_append_ch_test: Test completed successfully.
+string_heap_allocation_test: Starting test
+string_heap_allocation_test: Test completed successfully.
+string_from_c_str_test: Starting test
+string_from_c_str_test: Test completed successfully.
+string_resize_test: Starting test
+string_resize_test: Test completed successfully.
+All 6 tests passed
+</code></pre>
+
+<p>Все тесты отработали правильно.</p>
+
+<p>Но неинтересно, когда все работает. Внесем в тест библиотеки &ldquo;случайные ошибки&rdquo;. Каждую из них можно спокойно допустить непреднамеренно. Строки с ошибками я пометил комментариями со словом &ldquo;ОШИБКА (!)&rdquo;. Посмотрим, как <code>cmockery</code> справится с этим.</p>
+
+<p>Файл <code>cstring.c</code> с &ldquo;ошибками&rdquo;:</p>
+
+<pre><code class="cpp">#include &lt;stdlib.h&gt;
+
+#include &quot;cstring.h&quot;
+
+/**
+ * Подготовительная площадка для тестирования.
+ * Если задан макрос UNIT_TESTING, то функции работы с кучей подменяются
+ * на тестовые.
+ */
+#if UNIT_TESTING
+extern void* _test_malloc(const size_t size, const char* file, const int line);
+extern void* _test_calloc(const size_t number_of_elements, const size_t size,
+                          const char* file, const int line);
+extern void _test_free(void* const ptr, const char* file, const int line);
+
+#define malloc(size) _test_malloc(size, __FILE__, __LINE__)
+#define calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)
+#define free(ptr) _test_free(ptr, __FILE__, __LINE__)
+#endif // UNIT_TESTING
+
+/**
+ * Создание новой строки в куче. Трюк &quot;sizeof(string_t)&quot; используется, чтобы
+ * правильно отработать ситуацию, если из-за выравнивания между элементами
+ * структуры string_t 'sz' и 'data' вдруг появится промежуток.
+ */ 
+string_t* string_new(int sz) {
+  return malloc(sizeof(string_t) + 1 - 1); // (ОШИБКА!) &quot;Неверная&quot; длина.
+}
+
+/**
+ * Удаление строки из кучи.
+ */
+void _string_delete(string_t* str) {
+  // (ОШИБКА!) &quot;Забыли&quot; вызвать free().
+}
+
+/**
+ * Текущая длина строки.
+ */
+int _string_length(const string_t* str) {
+  return str-&gt;sz;                                                                                        
+}
+
+/**
+ * Изменение длины строки.
+ */
+int _string_resize(string_t* str, int sz) {
+  return str-&gt;sz;  // (ОШИБКА!) &quot;Забыли&quot; уменьшить длину строки.
+}
+
+/**
+ * Копирование строки из строки С, завершающейся нулем.
+ */
+string_t* _string_from_c_str(string_t* dst, const char* src) {
+  int sz = strlen(src);
+  memcpy(dst-&gt;data, src, sz);
+  // (ОШИБКА!) &quot;Забыли&quot; присвоить длине новое значение.
+  return dst;
+}
+
+/**
+ * Добавление символа в строку.
+ */
+string_t* _string_append_ch(string_t* str, char ch) {
+  str-&gt;data[str-&gt;sz] = ch; // (ОШИБКА!) &quot;Забыли&quot; увеличить длину.
+  return str;
+}
+
+/**
+ * Превращение строки в строку С с нулем на конце. Фактически,
+ * в тело строки добавляется ноль и возвращается указатель на данные.
+ */
+char* _string_c_str(string_t* str) {
+  // (ОШИБКА!) &quot;Забыли&quot; добавить 0 в конец.
+  return string_data(str);
+}
+</code></pre>
+
+<p>Компилируем и запускаем:</p>
+
+<pre><code>string_declare_test: Starting test
+string_declare_test: Test completed successfully.
+string_c_str_test: Starting test
+difference at offset 1 0x00 0x62
+1 bytes of 0x0040f014 and 0x0012fe7c differ
+ERROR: cstring_unittest.c:19 Failure!
+string_c_str_test: Test failed.
+string_append_ch_test: Starting test
+&quot;ab&quot; != &quot;b&quot;
+ERROR: cstring_unittest.c:39 Failure!
+string_append_ch_test: Test failed.
+string_heap_allocation_test: Starting test
+Blocks allocated...
+  0x00326ee0 : cstring.c:27
+ERROR: string_heap_allocation_test leaked 1 block(s)
+string_heap_allocation_test: Test failed.
+string_from_c_str_test: Starting test
+Blocks allocated...
+  0x00326ee0 : cstring.c:27
+Guard block of 0x00326f18 size=8 allocated by cstring.c:27 at 0x00326f20 is corrupt
+ERROR: cmockery.c:1379 Failure!
+string_from_c_str_test: Test failed.
+string_resize_test: Starting test
+0x1 != 0x2
+ERROR: cstring_unittest.c:29 Failure!
+string_resize_test: Test failed.
+5 out of 6 tests failed!
+    string_c_str_test
+    string_append_ch_test
+    string_heap_allocation_test
+    string_from_c_str_test
+    string_resize_test
+Blocks allocated...
+  0x00326ee0 : cstring.c:27
+Guard block of 0x00326f18 size=8 allocated by cstring.c:27 at 0x00326f20 is corrupt
+ERROR: cmockery.c:1379 Failure!
+</code></pre>
+
+<p>Бам! 5 из 6 тестов сломаны. Проанализируем полученное.</p>
+
+<p>Тест <code>string_c_str_test</code> выявил, что функция <code>string_c_str</code> не добавила 0 в конец строки, хотя должна была:</p>
+
+<pre><code>string_c_str_test: Starting test
+difference at offset 1 0x00 0x62
+1 bytes of 0x0040f014 and 0x0012fe7c differ
+ERROR: cstring_unittest.c:19 Failure!
+string_c_str_test: Test failed.
+</code></pre>
+
+<p>Тест <code>string_append_ch_test</code> выявил, что функция добавления символа в конец строки не работает:</p>
+
+<pre><code>string_append_ch_test: Starting test
+&quot;ab&quot; != &quot;b&quot;
+ERROR: cstring_unittest.c:39 Failure!
+string_append_ch_test: Test failed.
+</code></pre>
+
+<p>Тест <code>string_heap_allocation_test</code> выявил, что у нас имеется неосвобожденный блок памяти (утечка?). Конечно, мы же &ldquo;забыли&rdquo; освободить память в функции <code>string_delete()</code>:</p>
+
+<pre><code>string_heap_allocation_test: Starting test
+Blocks allocated...
+  0x00326ee0 : cstring.c:27
+ERROR: string_heap_allocation_test leaked 1 block(s)
+string_heap_allocation_test: Test failed.
+</code></pre>
+
+<p>Тест <code>string_from_c_str_test</code> выявил, что мы &ldquo;вылезли&rdquo; за границы выделенного куска памяти. Мы записали что-то мимо. Это болезненная ошибка. Конечно, <code>cmockery</code> не всегда может находить такие ляпы. Например, если переменная выделена с стеке, а не в куче, то проблема не вскроется. Тут уже помогут только динамические отладчики типа <a href="http://valgrind.org/">valgrind</a>:</p>
+
+<pre><code>string_from_c_str_test: Starting test
+Blocks allocated...
+  0x00326ee0 : cstring.c:27
+Guard block of 0x00326f18 size=8 allocated by cstring.c:27 at 0x00326f20 is corrupt
+ERROR: cmockery.c:1379 Failure!
+string_from_c_str_test: Test failed.
+</code></pre>
+
+<p>Тест <code>string_resize_test</code> показал, что функция изменения размера строки не работает как положено:</p>
+
+<pre><code>string_resize_test: Starting test
+0x1 != 0x2
+ERROR: cstring_unittest.c:29 Failure!
+string_resize_test: Test failed.
+</code></pre>
+
+<p>В целом, очень неплохие результаты.</p>
+
+<p>Теперь представьте, что вы решили переписать реализацию библиотеки под новый процессор, чтобы работало в десять раз быстрее. Но как проверить результат? Элементарно. Запустите старые тесты. Если они работают, то по крайней мере с большой вероятностью вы не сломали старую функциональность. И, кстати, чем более тщательно написаны тесты, тем более ценны они. Чем более критична какая часть системы для стабильности системы в целом (например, библиотека строк или каких-то базовых контейнеров), тем более тщательно они должны быть покрыты тестами.</p>
+
+<p>Конечно, уровень комфорта при написании тестов на С и их отладке очень далек даже от С++, но это не может быть оправданием для отказа от тестирования. Честно могу сказать, часто результатом работы &ldquo;сломанного&rdquo; теста в С, который неверно работает с памятью, например, может является просто зависание, а не красивый отчет, что тест &ldquo;не работает&rdquo;. Но даже такой &ldquo;знак&rdquo; очень важен и дает понять, что что-то сломано. Пусть лучше повиснет тест, нежели готовый продукт у заказчика.</p>
+
+<p>Под занавес приведу список основных функций-проверок (<code>assert</code>-фукнции), которые доступны в <code>cmockery</code>:</p>
+
+<ul>
+<li><code>assert_true()</code>, <code>assert_false()</code> — проверка булевых флагов</li>
+<li><code>assert_int_equal()</code>, <code>assert_int_not_equal()</code> — сравнение для типа <code>int</code></li>
+<li><code>assert_string_equal()</code>, <code>assert_string_not_equal()</code> — сравнение для типа <code>char*</code> (для С-строк, заканчивающихся нулем)</li>
+<li><code>assert_memory_equal()</code>, <code>assert_memory_not_equal()</code> — сравнение кусков памяти</li>
+<li><code>assert_in_range()</code>, <code>assert_not_in_range()</code> — проверка нахождения числа в указанном интервале</li>
+<li><code>assert_in_set()</code>, <code>assert_not_in_set()</code> — проверка нахождения строки <code>(char*)</code> среди заданного набора строк</li>
+<li><code>fail()</code> — безусловное завершения теста с ошибкой</li>
+</ul>
+
+<p><strong>Вывод</strong></p>
+
+<p>Unit-тестирование в С порой сопряжено с трудностями, но оно возможно. И нет причин от него отказываться.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/03/unit.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/03/unit.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/03/unit.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

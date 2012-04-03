@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Stuck process detector</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Stuck process detector</h1>
+<div id="post">
+  <p>There is a problem — how to automatically detect stuck long running server processes? Say if a process is stuck it means there is a deadlock or it is spinning in an infinite loop.</p>
+
+<p>An idea — periodically take a snapshot of the process stack trace. For instance:</p>
+
+<pre><code>#0  0x991a8c22 in mach_msg_trap ()
+#1  0x991a81f6 in mach_msg ()
+#2  0x968870ea in __CFRunLoopServiceMachPort ()
+#3  0x96890214 in __CFRunLoopRun ()
+#4  0x9688f8ec in CFRunLoopRunSpecific ()
+#5  0x9688f798 in CFRunLoopRunInMode ()
+#6  0x92158a7f in RunCurrentEventLoopInMode ()
+#7  0x9215fd9b in ReceiveNextEventCommon ()
+#8  0x9215fc0a in BlockUntilNextEventMatchingListInMode ()
+#9  0x90010040 in _DPSNextEvent ()
+#10 0x9000f8ab in -[NSApplication nextEventMatchingMask:untilDate:inMode:dequeue:] ()
+#11 0x9000bc22 in -[NSApplication run] ()
+#12 0x902a018a in NSApplicationMain ()
+#13 0x0012e356 in main ()
+</code></pre>
+
+<p>For Linux, HPUX and Solaris there is a tool called <code>pstack</code>, and <code>procstack</code> on AIX. I’m sure it is possible to do the same on Windows because Process Explorer can do it.</p>
+
+<p>Comparing the current stack trace with the previous one we can measure how much it has been changed. If the stack wasn’t changed at all or only a few deepest lines were changed (for example, inside the kernel), we may assume that this process is stuck. The deadlock on a file or database is even simpler because the code will be blocked on a function inside the kernel.</p>
+
+<p>Of course, such detector has to be adjusted for specifics of the monitored processes. But it can be configurable via regular expressions or a script language as Lua, for instance.</p>
+
+<p>The good thing is that such monitor doesn’t require any changes in the target software, and can be implemented on any language suitable for easy text parsing, for example, Ruby or Python.</p>
+
+<p>Am I reinventing a wheel?</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2012/01/stuck-process-detector.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2012/01/stuck-process-detector-english.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2012/01/stuck-process-detector.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

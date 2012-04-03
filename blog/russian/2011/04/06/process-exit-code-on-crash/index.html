@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Код возврата процесса в случае его падения</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Код возврата процесса в случае его падения</h1>
+<div id="post">
+  <p>Был интересный баг - в процессе выполнения скрипта сборки выполнение тестов приводило к жесткому падению процесса. Там был какой-то явный баг с памятью. Но самое интересное дальше. Makefile после падения процесса, выполняющего тесты, продолжал работать, что означало завершение упавшего процесса с нулевым кодом, а должно было быть что-то явно ненулевое.</p>
+
+<p>С багом мы разобрались (включая проблему в Makefile), но возник у меня общий вопрос: с каким именно кодом завершается процесс, если он упал, не успев выполнить <a href="http://linux.die.net/man/3/exit">exit()</a>.</p>
+
+<p>В UNIXах есть специальные макросы, которыми можно проинспектировать код возврата <a href="http://linux.die.net/man/2/wait">wait()</a>. Но, все UNIXы разные, и к тому же есть еще Windows.</p>
+
+<p>В итоге я написал небольшую самопадающую программу:</p>
+
+<pre><code class="cpp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+int main(int argc, char* argv[]) {
+  char cmd[80];
+  int r;
+  sprintf(cmd, &quot;%s ?&quot;, argv[0]);
+  if (argc &gt; 1) {
+    if (argv[1][strlen(argv[1]) - 1] == '1')
+      *(char *)0 = 0;
+    exit(0x77);
+  }
+  printf(&quot;Normal: %08X\n&quot;, system(cmd));
+  cmd[strlen(cmd) - 1] = '1';
+  printf(&quot;Crash : %08X\n&quot;, system(cmd));
+  return 0;
+}
+</code></pre>
+
+<p>И запустил на некоторых характерных машинах.</p>
+
+<p><strong>Windows 7, Visual Studio 2010</strong>, <code>cl crash.c &amp;&amp; crash</code>:</p>
+
+<pre><code>Normal: 00000077
+Crash : C0000005
+</code></pre>
+
+<p><strong>Linux x86_64</strong> (<code>cс -o crash crash.c &amp;&amp; ./crash</code>):</p>
+
+<pre><code>Normal: 00007700
+Crash : 0000000B
+</code></pre>
+
+<p>Сигнал <code>0x0B</code> (13) - это, кстати, <code>SIGSEGV</code>, segmentation violation, что, собственно, и произошло.</p>
+
+<p><strong>Solaris SPARC 5.10</strong>:</p>
+
+<pre><code>Normal: 00007700
+Segmentation Fault - core dumped
+Crash : 00008B00
+</code></pre>
+
+<p><strong>HP-UX Itanium 2</strong>:</p>
+
+<p>Normal: 00007700
+sh: 25112 Memory fault(coredump)
+Crash : 00008B00</p>
+
+<p><strong>AIX 5.2</strong></p>
+
+<p>Normal: 00007700
+Crash : FFFFFFFF</p>
+
+<p>Тут, видимо, до <code>system()</code> код возврата не дошел совсем.</p>
+
+<p>Вывод: все крайне зависит (как всегда) от операционной системы.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/04/blog-post.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/04/blog-post.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/04/blog-post.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

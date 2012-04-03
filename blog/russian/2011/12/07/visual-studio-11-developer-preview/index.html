@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Visual Studio 11 Developer Preview</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Visual Studio 11 Developer Preview</h1>
+<div id="post">
+  <p>Поставил на рабочий ноут Visual Studio 11 Developer Preview.</p>
+
+<p>Погонял разные самопальные бенчмарки типа решета Эратосфена, <code>vector&lt;int&gt;</code> vs <code>vector&lt;bool&gt;</code>, <code>std::string</code> vs <code>char*</code> и т.д., пытаясь выявить улучшения или ухудшения в оптимизации. Лично я ничего кардинального не выявил по сравнению с версией 10.</p>
+
+<p>Очевидно, что статический анализ кода и его безопасность в целом сейчас как никогда в моде, поэтому производители компиляторов постепенно закручивают гайки, превращая предупреждения в ошибки.</p>
+
+<p>Например с ключом <code>/sdl</code> Студия 11 будет считать приведенные ниже предупреждения ошибками.</p>
+
+<table border="1">
+<colgroup>
+<col width="5%" />
+<col width="13%" />
+<col width="83%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Warning</th>
+<th class="head">Command line switch</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><a href="http://msdn.microsoft.com/en-us/library/4kh09110.aspx">C4146</a></td>
+<td>/we4146</td>
+<td>A unary minus operator was applied to an unsigned type, resulting in an unsigned result</td>
+</tr>
+<tr><td><a href="http://msdn.microsoft.com/en-us/library/5ft2cz8d.aspx">C4308</a></td>
+<td>/we4308</td>
+<td>A negative integral constant converted to unsigned type, resulting in a possibly meaningless result</td>
+</tr>
+<tr><td><a href="http://msdn.microsoft.com/en-us/library/h6b9te7b.aspx">C4532</a></td>
+<td>/we4532</td>
+<td>Use of "continue", "break" or "goto" keywords in a __finally/finally block has undefined behavior during abnormal termination</td>
+</tr>
+<tr><td><a href="http://msdn.microsoft.com/en-us/library/f7687yks.aspx">C4533</a></td>
+<td>/we4533</td>
+<td>Code initializing a variable will not be executed</td>
+</tr>
+<tr><td><a href="http://msdn.microsoft.com/en-us/library/axhfhh6x.aspx">C4700</a></td>
+<td>/we4700</td>
+<td>Use of an uninitialized local variable</td>
+</tr>
+<tr><td><a href="http://msdn.microsoft.com/en-us/library/w0c0bww3.aspx">C4789</a></td>
+<td>/we4789</td>
+<td>Buffer overrun when specific C run-time (CRT) functions are used</td>
+</tr>
+<tr><td><a href="http://msdn.microsoft.com/en-us/library/8wsycdzs.aspx">C4995</a></td>
+<td>/we4995</td>
+<td>Use of a function marked with pragma deprecated</td>
+</tr>
+<tr><td><a href="http://msdn.microsoft.com/en-us/library/ttcz0bys.aspx">C4996</a></td>
+<td>/we4996</td>
+<td>Use of a function marked as deprecated</td>
+</tr>
+</tbody>
+</table>
+
+<p>Ссылки по теме:</p>
+
+<ul>
+<li>Оригинальный пост &ldquo;<a href="http://blogs.msdn.com/b/sdl/archive/2011/12/02/security.aspx">Compiler Security Enhancements in Visual Studio 11</a>&rdquo;, кратким переводом которого по сути является этот пост.</li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/12/visual-studio-11-developer-preview.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/12/visual-studio-11-developer-preview.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/12/visual-studio-11-developer-preview.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

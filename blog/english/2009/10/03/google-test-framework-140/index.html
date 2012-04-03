@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Google C++ Testing Framework 1.4.0</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Google C++ Testing Framework 1.4.0</h1>
+<div id="post">
+  <p>Yesterday Googlers announced the next version of my favourite testing framework for C++ <a href="http://code.google.com/p/googletest">Google Testing Framework</a> - 1.4.0.</p>
+
+<p>Any changes? Indeed.</p>
+
+<p>The major feature coming is the &ldquo;<a href="http://code.google.com/p/googletest/wiki/GoogleTestAdvancedGuide#Extending_Google_Test_by_Handling_Test_Events">The event listener API</a>&rdquo;. In other words this is the way to customize the output produced by tests without any code changes in the library sources.</p>
+
+<p>For example, the standard output of the trivial test (file <code>runner.cpp</code>):</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+
+TEST(One, Simple) {
+  EXPECT_EQ(1, 2);
+}
+
+int main(int argc, char** argv) {
+  ::testing::InitGoogleTest(&amp;argc, argv);
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>is</p>
+
+<pre><code>[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from One
+[ RUN      ] One.Simple
+runner.cpp(4): error: Value of: 2
+Expected: 1
+[  FAILED  ] One.Simple (15 ms)
+[----------] 1 test from One (15 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran. (31 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] One.Simple
+
+ 1 FAILED TEST
+</code></pre>
+
+<p>To customize the output we have to implement our own event listener (for instance, file <code>runner.cpp)</code>:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+
+using namespace ::testing;
+
+// Our own event listener.
+class LaconicPrinter : public ::testing::EmptyTestEventListener {
+  // Called before a test starts.
+  virtual void OnTestStart(const TestInfo&amp; test_info) {
+    printf(&quot;*** Test %s.%s starting.\n&quot;,
+           test_info.test_case_name(), test_info.name());
+  }
+
+  // Called when an assert fails or SUCCESS gets called.
+  virtual void OnTestPartResult(const TestPartResult&amp; test_part_result) {
+    printf(&quot;%s in %s:%d\n%s\n&quot;,
+           test_part_result.failed() ? &quot;*** Failure&quot; : &quot;Success&quot;,
+           test_part_result.file_name(),
+           test_part_result.line_number(),
+           test_part_result.summary());
+  }
+
+  // Called after a test finishes.
+  virtual void OnTestEnd(const TestInfo&amp; test_info) {
+    printf(&quot;*** Test %s.%s ending.\n&quot;,
+           test_info.test_case_name(), test_info.name());
+  }
+};
+
+TEST(One, Simple) {
+  EXPECT_EQ(1, 2);
+}
+
+int main(int argc, char** argv) {
+  ::testing::InitGoogleTest(&amp;argc, argv);
+
+  // Obtain the reference to the active listeners.
+  ::testing::TestEventListeners&amp; listeners =
+      ::testing::UnitTest::GetInstance()-&gt;listeners();
+
+  // Delete the default event listener.
+  delete listeners.Release(listeners.default_result_printer());
+  // Add our LaconicPrinter listener. Google Test will take care about it.
+  listeners.Append(new LaconicPrinter);
+
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>Now the output looks as:</p>
+
+<pre><code>*** Test One.Simple starting.
+*** Failure in runner.cpp:31
+Value of: 2
+Expected: 1
+*** Test One.Simple ending.
+</code></pre>
+
+<p>Note that it could be several active listeners. But their output can be messed. Therefore we firstly remove the default listener from the list to avoid in influence on our listener&rsquo;s output.</p>
+
+<p>In general the event listener interface has these methods:</p>
+
+<pre><code class="cpp">class EmptyTestEventListener : public TestEventListener {
+ public:
+  virtual void OnTestProgramStart(const UnitTest&amp; unit_test);
+  virtual void OnTestIterationStart(const UnitTest&amp; unit_test, int iteration;
+  virtual void OnEnvironmentsSetUpStart(const UnitTest&amp; unit_test);
+  virtual void OnEnvironmentsSetUpEnd(const UnitTest&amp; unit_test);
+  virtual void OnTestCaseStart(const TestCase&amp; test_case);
+  virtual void OnTestStart(const TestInfo&amp; test_info);
+  virtual void OnTestPartResult(const TestPartResult&amp; test_part_result);
+  virtual void OnTestEnd(const TestInfo&amp; test_info);
+  virtual void OnTestCaseEnd(const TestCase&amp; test_case);
+  virtual void OnEnvironmentsTearDownStart(const UnitTest&amp; unit_test);
+  virtual void OnEnvironmentsTearDownEnd(const UnitTest&amp; unit_test);
+  virtual void OnTestIterationEnd(const UnitTest&amp; unit_test, int iteration);
+  virtual void OnTestProgramEnd(const UnitTest&amp; unit_test);
+};
+</code></pre>
+
+<p>Also there is the brand new flag <code>--gtest_shuffle</code> allowing to run tests in a random order. Via <code>--gtest_random_seed=SEED</code> flag it becomes feasible to control the randomness of this order. If SEED is 0 the current time is used to initialize the random generator.</p>
+
+<p>Reporting is going to be more compatible the JUnit. Using <code>--gtest_output</code> allows to generate reports which can be easily picked up JUnit compatible tools, for instance, Hudson.</p>
+
+<p>Very cool that now in Visual Studio each failing test reports are duplicated to the standard &ldquo;Output&rdquo; window. It is very nice that this change is based on <a href="http://code.google.com/p/googletest/source/detail?r=283">my code</a>.</p>
+
+<p>In addition the <code>--gtest_print_time</code> option is turned on by default. Very handy.</p>
+
+<p>There are also some minor improvements:</p>
+
+<ul>
+<li>CodeGear support</li>
+<li>internal <code>tuple</code> implementation getting rid of the boost dependency when <code>Compile()</code> is used</li>
+<li>minor compatibility improvement for Solaris, Windows Mobile and some other platforms</li>
+</ul>
+
+<p>The joy, no doubt!</p>
+
+<p>I have stopped to develop anything without tests long time ago and Google Test makes this process easier and faster.</p>
+
+<p>I have already upgraded to the version 1.4.0, and you?</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2009/10/google-c-testing-framework-140.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2009/10/google-c-testing-framework-140.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2009/10/google-c-testing-framework-140.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Форсировать ли const в старом коде</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Форсировать ли const в старом коде</h1>
+<div id="post">
+  <p>Битый час сегодня спорили с коллегой по следующему вопросу. Имеем код:</p>
+
+<pre><code class="cpp">void foo(T* t) {
+  bar(t);
+}
+</code></pre>
+
+<p>Проблема в том, что функция bar является legacy-функцией одной из наших старых библиотек, которую сейчас мы поменять не можем, и ее сигнатура: <code>void bar(T*)</code>, то есть указатель-параметр не <code>const</code>. Но в реальности эта функция не меняет объект, на который указывает ее параметр.</p>
+
+<p>Далее. Наш новый API, частью которого является <code>foo</code>, есть новейшая разработка, и должна быть спроектирована по уму. С точки зрения запланированной ответственности функции <code>foo</code>, она не должна менять объект, на который указывает <code>t</code>.</p>
+
+<p>Я считаю, что код должен выглядеть так:</p>
+
+<pre><code class="cpp">void foo(const T* t) {
+  bar(const_cast&lt;T*&gt;(t));
+}
+</code></pre>
+
+<p>Мои аргументы: так как контракт функции foo говорит, что эта функция не будет менять объект, на который указывает указатель, то этот факт <strong>должен</strong> быть отражен в API использованием слова <code>const</code>. И не имеет никакого значения, что по какой-то причине реализация этой функции внутри использует старый код, который неграмотно написан. Да, из-за это приходится делать некрасивое приведение типов, снимая <code>const</code>. Но эта некрасивость локализована внутри <code>foo</code> и в целом не оказывает влияния на стройность нового кода. Более того - если в будущем можно будет отказаться от использования старой функции <code>bar</code>, то проблема вообще исчезнет.</p>
+
+<p>А вот контр-аргумент коллеги: может так случиться, что из-за ошибки в <code>bar</code> константный аргумент функции foo, которая по идее не должна менять аргумент, будет таки изменен, и получится крайне неприятный баг. В итого надо сделать аргумент функции <code>foo</code> <strong>НЕ</strong> <code>const</code> (и приведение будет уже не нужно), тем самым явно показать конечному пользователю нового API, что не стоит вообще рассчитывать на константность параметра функции <code>foo</code>.</p>
+
+<p>Мы так и не договорились, так как у меня был «прогиб» в плане возможного нарушения константности вне зависимости, что там есть красивый <code>const</code>, а в подходе коллеги было не ясно, как объяснить в документации по функции <code>foo</code> почему и как она может менять свой аргумент - сказать, что мол из-за особенностей <strong>реализации</strong> <code>foo</code> мы не можем гарантировать константность? Получается, что мы проблемой старого кода портим дизайн нового API.</p>
+
+<p>Дилемма.</p>
+
+<p>P.S. Есть еще один изотерический вариант: внутри <code>foo</code> делать глубокое копирование объекта <code>T</code> и уже его передавать по неконстантному указателю в <code>bar</code>. Лично я, если надо выбирать между быстрым, но «плохим» кодом, и медленным, но со стройным дизайном, чаще выбираю второе, так как завтра купленный более быстрый сервер ускорит хороший, но медленный код, но не сделает плохой код более понятным.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2012/01/trade-off-with-const-in-legacy-code.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2012/01/trade-off-with-const-in-legacy-code.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2012/01/trade-off-with-const-in-legacy-code.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

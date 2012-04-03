@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Radio-86RK emulator in JavaScript</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Radio-86RK emulator in JavaScript</h1>
+<div id="post">
+  <p><em>Note: This post contains lots of information on Russian and links to resources on Russian. Unfortunately it&rsquo;s not possible to translate certain things like original 8-bit games output written ages ago or original screenshots. In this post I&rsquo;m mostly keen on emotions and memories when you see the machine given your basics right in a web browser and it is reconstructed bit by bit just in pure JavaScript.</em></p>
+
+<p>The first computer I started programming on was <a href="http://en.wikipedia.org/wiki/History_of_computer_hardware_in_Soviet_Bloc_countries#Radio-86RK">Radio-86RK</a>. My brother built it&hellip; and it got started and keeps going up to nowadays.</p>
+
+<p>That is why I still have a tender affection for this little 8-bit piece of hardware. As the result of this affection I have been writing its emulators.</p>
+
+<p>The first one was for DOS. I still keep its <a href="/projects/radio86/emulator/dos/">original web site</a> without any changes. That emulator was quite powerful: the built-in debugger, the game cracking mechanism etc. But DOS time was over and now that emulator works properly only in <a href="http://www.dosbox.com/">DosBox</a>. The sources are <a href="/projects/radio86/emulator/dos/download.html">available for download</a>.</p>
+
+<p>The next generation of dear RK was already for Windows and based on <a href="http://www.libsdl.org/">SDL</a>. But there was no the built-in debugger and the project itself seems to be unfinished but runnable and allowing to still play games. That is why its <a href="/projects/radio86/emulator/windows/radio86-0.0.1.zip">binary only but accompanied with bunch of games</a> is available on public.</p>
+
+<p>But a couple of days ago I have come across this - the <a href="http://matt.west.co.tt/spectrum/jsspeccy/">emulator of Sinclair ZX Spectrum</a> written on pure JavaScript (no applets, activex etc.)</p>
+
+<p>I was impressed and inspired so after a day or two my old little RK monster has been born again and its new platform is JavaScript. It seems that proper browsers now already provide quite good JavaScript performance. 2D graphics are implemented via <code>canvas</code> HTML5 tag.</p>
+
+<p>The project comes out as <a href="http://code.google.com/p/radio86/">Radio-86РК in JavaScript</a> (in Russian).</p>
+
+<p>The emulator and games live in the one single file <a href="http://radio86.googlecode.com/hg/online/radio86.html">radio86.html</a>. By clicking on this link the emulator gets started right in a browser. There is the game selector at the bottom, and the possibility to play around with screen dimensions and speed.
+Even if you do not understand Russian there is no problem at all. Just launch the emulator, select a game and try to play. Most of games use the arrows for movements and the space bar to shoot/jump/take/etc. You will definitely feel the spirit of those 8-bit B&amp;W dodgy games. Have a fun!</p>
+
+<p>In general the emulation works on the Intel 8080 commands level.</p>
+
+<p>Here is the screenshot of the classic game Volcano from the emulator.</p>
+
+<p><img src="/images/blog/radio86-volcano.png" /></p>
+
+<p>At the moment I&rsquo;ve tested the emulator in the Google Chrome 4.* only. I&rsquo;m not quite keen about any compatibility with other browsers but let&rsquo;s see how it goes along. IE (even version 8) does not definitely handle it properly but Firefox and Opera could try.</p>
+
+<p>The wonderful 8-bit world of Radio-86RK is coming back!</p>
+
+<p><strong>Update</strong>: Version 0.3 is released. It works much faster and does not thrash CPU anymore. Also I have included a few applications (interpreters, compilers, tools etc.)</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2009/10/radio-86rk-emulator-in-javascript.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2009/10/radio-86rk-emulator-in-javascript.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2009/10/radio-86rk-emulator-in-javascript.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

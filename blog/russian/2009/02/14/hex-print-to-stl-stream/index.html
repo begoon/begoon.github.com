@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Шестнадцатеричная печать в STL поток</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Шестнадцатеричная печать в STL поток</h1>
+<div id="post">
+  <p>Когда-то очень давно я написал элементарный манипулятор для шестнадцатеричной печати в стандарный поток. Все просто и тривиально. Но тем не менее я заметил, что таскаю этот микрокласс почти в кажный проект, где нужна отладочная печать. Обычно для шестнадцатеричной печати надо указывать сразу несколько итераторов, типа:</p>
+
+<pre><code class="cpp">std::cout &lt;&lt; std::hex &lt;&lt; std::uppercase &lt;&lt; std::setfill('0') &lt;&lt; std::setw(2) &lt;&lt; 0xAA;
+</code></pre>
+
+<p>Причем <code>std::setw()</code> надо повторять для каждого нового выводимого элемента. Я свел все это в один итератор, чтобы можно было просто написать (указав итератору ширину выводимого поля):</p>
+
+<pre><code class="cpp">std::cout &lt;&lt; ext::Hex(2) &lt;&lt; 0xAA;
+</code></pre>
+
+<p>Итак, класс <code>Hex</code> (название пространства имен можно подкрутить по вкусу), файл <code>hex.h</code>:</p>
+
+<pre><code class="cpp">#ifndef _EXT_HEX_H
+#define _EXT_HEX_H
+
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+
+namespace ext {
+
+class Hex {
+public:
+  Hex(int width) : __width(width) {}
+  friend std::ostream&amp; operator&lt;&lt; (std::ostream&amp; os, const Hex&amp; hex);
+private:
+  int __width;
+};
+
+inline std::ostream&amp; operator&lt;&lt; (std::ostream&amp; os, const Hex&amp; hex) {
+  std::hex(os);
+  std::uppercase(os);
+  os.width(hex.__width);
+  os.fill('0');
+  return os;
+}
+
+} // ext
+
+#endif // _EXT_HEX_H
+</code></pre>
+
+<p>Теперь можно писать так:</p>
+
+<pre><code class="cpp">std::cout &lt;&lt; ext::Hex(0)  &lt;&lt; 0x0a &lt;&lt; std::endl;
+std::cout &lt;&lt; ext::Hex(1)  &lt;&lt; 0x0a &lt;&lt; std::endl;
+std::cout &lt;&lt; ext::Hex(1)  &lt;&lt; 0xaa &lt;&lt; std::endl;
+std::cout &lt;&lt; ext::Hex(2)  &lt;&lt; 0xaa &lt;&lt; std::endl;
+std::cout &lt;&lt; ext::Hex(4)  &lt;&lt; 0xaa &lt;&lt; std::endl;
+std::cout &lt;&lt; ext::Hex(8)  &lt;&lt; 0x0a &lt;&lt; std::endl;
+std::cout &lt;&lt; ext::Hex(16) &lt;&lt; 0x0a &lt;&lt; std::endl;
+std::cout &lt;&lt; ext::Hex(32) &lt;&lt; 0x0a &lt;&lt; std::endl;
+</code></pre>
+
+<p>И результатом будет:</p>
+
+<pre><code>A
+A
+AA
+AA
+00AA
+0000000A
+000000000000000A
+0000000000000000000000000000000A
+</code></pre>
+
+<p>На всякий случай, unit-тест. Чтобы не было сюрпризов при обновлении компилятора, STLport или чего-то еще. Тест всегда проверит, работает ли класс так, как вы от него ждете. Вы можете возразить — ну класс-то выеденного яйца не стоит, а тут для него тесты&hellip; Соглашусь. А еще я соглашусь, что сотни раз самые казалось бы ненужные на первый взгляд тесты для &ldquo;очевидных&rdquo; классов помогали обнаружить глюки на новой версии системных библиотек, новой версии компилятора, использовании &ldquo;более мощных&rdquo; параметров оптимизации и т.д. Время на написание тестов всегда окупается сполна, всегда.</p>
+
+<p>Традиционно, для компиляции тестов нам нужна <a href="http://code.google.com/p/googletest/">Google Test Framework</a>. Как я уже <a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">писал</a>, вы можете скачать <a href="/downloads/gtest-amalgamation-1.2.1.zip">мою модификацию</a>  этой библиотеки, которая сокращена до двух необходимых файлов <code>gtest/gtest.h</code> и <code>gtest-all.cc</code>.</p>
+
+<p>Файл <code>hex_unittest.cpp</code>:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+#include &quot;hex.h&quot;
+#include &lt;sstream&gt;
+
+void testHex(int n, int w, const std::string&amp; etalon) {
+  std::stringstream fmt;
+  fmt &lt;&lt; ext::Hex(w) &lt;&lt; n;
+  EXPECT_EQ(etalon, fmt.str());
+}
+
+TEST(HexManip, Generic) {
+  testHex(0x0A, 0, &quot;A&quot;);
+  testHex(0x0A, 1, &quot;A&quot;);
+  testHex(0xAA, 1, &quot;AA&quot;);
+  testHex(0xAA, 2, &quot;AA&quot;);
+  testHex(0xAA, 4, &quot;00AA&quot;);
+  testHex(0xAA, 8, &quot;000000AA&quot;);
+  testHex(0xAA, 16, &quot;00000000000000AA&quot;);
+  testHex(0xAA, 32, &quot;000000000000000000000000000000AA&quot;);
+}
+Ну и головная программа:
+#include &quot;gtest/gtest.h&quot;
+int main(int argc, char* argv[]) {
+  testing::InitGoogleTest(&amp;argc, argv);
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>Компилируем.</p>
+
+<p>Visual Studio:</p>
+
+<pre><code>cl /EHsc /I. /Fehex_unittest_vs2008.exe runner.cpp hex_unittest.cpp gtest\gtest-all.cc
+</code></pre>
+
+<p>Cygwin:</p>
+
+<pre><code>g++ -I. -o hex_unittest_cygwin.exe runner.cpp hex_unittest.cpp gtest/gtest-all.cc
+</code></pre>
+
+<p>Запускаем:</p>
+
+<pre><code>[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from HexManip
+[ RUN      ] HexManip.Generic
+[       OK ] HexManip.Generic
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran.
+[  PASSED  ] 1 test.
+</code></pre>
+
+<p>Работает как положено.</p>
+
+<p>При использовании <code>Hex</code> у себя в проекте не забудьте включить файл <code>hex_unittest.cpp</code> в ваш набор unit-тестов. Оберегите себя от ненужной траты времени в будущем.</p>
+
+<p>Под занавес пара слов о производительности. Очевидно, что если вы выводите в поток десятки тысяч шестнадцатеричных чисел подряд, то разумнее будет использовать стандартные итераторы — настроить поток с помощью <code>std::hex</code>, <code>std::uppercase</code> и <code>std::setfill</code>, а потом вызывать только <code>std::setw</code> для каждого нового элемента. Но если вы печатаете разнородные данные, что часто требуется при отладке, то тогда итератор <code>Hex</code> будет в самый раз.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">Unit-тестирование для параллельных потоков</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/stl_14.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/stl_14.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/stl_14.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>MapReduce на Erlang'e</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>MapReduce на Erlang&#39;e</h1>
+<div id="post">
+  <p>Я продолжаю погружение в Эрланг. Уже есть хитрый план переписать один из наших сервисов для мониторинга на Эрланге. Мы тут осваиваем облака Windows Azure и Amazon EC2 в качестве платформы для некоторых продуктов и внутренних задач типа QA, поэтому возможность использовать много ядер и машин без переписывания кода выглядить перспективно.</p>
+
+<p>Итак, для начала простой, но реальный пример - есть проект ~2000 файлов. Надо составить список используемых переменных окружения. То есть найти вхождения строк <code>getenv(...)</code> и <code>GetVariable(...)</code> (это наш wrapper) и выдрать из них параметр.</p>
+
+<p>Задача незамысловатая и давно решается программой на C++, которая даже обход каталогов не делает, а просто вызывает юниксовый <code>find</code>, генерирующий список файлов по маске, и затем по списку лопатит файлы. На 2000 файлах работает пару секунд в один поток.</p>
+
+<p>Теперь Эрланг. Тут хочется замутить что-нибудь более кучерявое, чем последовательный обход файлов. MapReduce как раз в тему - можно составить список файлов, затем анализ каждого файла делать параллельно (Map), аккумулируя найденные имена переменных, и в конце обработать все полученные входждение (Reduce), в нашем случае просто подсчитать количество вхождения каждой переменной.</p>
+
+<p>Фактически мой код повторяет пример из &ldquo;<a href="http://pragprog.com/book/jaerlang/programming-erlang">Programming Erlang</a>&rdquo; и использует модуль <code>phofs</code> (parallel higher-order functions) из этой же книги.</p>
+
+<pre><code class="erlang">-module(find_variables).
+-export([main/0, find_variables_in_file/2, process_found_variables/3]).
+
+-define(PATH, &quot;/Projects/interesting_project&quot;).
+-define(MASK, &quot;\\..*(cpp|c)&quot;).
+
+main() -&gt;
+    io:format(&quot;Creating list of files...~n&quot;, []),
+    % Стандартная функция обхода файловой системы. Последний параметр -
+    % функтор, накапливающий имена в списке.
+    Files = filelib:fold_files(?PATH, ?MASK, true,
+                               fun(N, A) -&gt; [N | A] end, []),
+    io:format(&quot;Found ~b file(s)~n&quot;, [length(Files)]),
+    F1 = fun find_variables_in_file/2,   % Map
+    F2 = fun process_found_variables/3,  % Reduce
+    % Вызываем MapReduce через функцию benchmark, считающую время
+    % выполнения.
+    benchmark(fun() -&gt;
+        L = phofs:mapreduce(F1, F2, [], Files),
+        io:format(&quot;Found ~b variable(s)~n&quot;, [length(L)])
+    end, &quot;MapReduce&quot;).
+
+benchmark(Worker, Title) -&gt;
+    {T, _} = timer:tc(fun() -&gt; Worker() end),
+    io:format(&quot;~s: ~f sec(s)~n&quot;, [Title, T/1000000]).
+
+-define(REGEXP, &quot;(getenv|GetVariable)\s*\\(\s*\&quot;([^\&quot;]+)\&quot;\s*\\)&quot;).
+
+% Map. Анализ одного файла.
+find_variables_in_file(Pid, FileName) -&gt;
+    case file:open(FileName, [read]) of
+        {ok, File} -&gt;
+            % Заранее компилируем регулярное выражение.
+            {_, RE} = re:compile(?REGEXP),
+            % Данный обратный вызов пошлет родительскому контролирующему
+            % потому сообщение с именем найденной переменной.
+            CallBack = fun(Var) -&gt; Pid ! {Var, 1} end,
+            find_variable_in_file(File, RE, CallBack),
+            file:close(File);
+        {error, Reason} -&gt;
+            io:format(&quot;Unable to process '~s', ~p~n&quot;, [FileName, Reason]),
+            exit(1)
+    end.
+
+% Reduce. Анализ данных. Данная функция вызывается контролирующим
+% процессом MapReduce для каждого найденного ключа вместе со списком
+% значений, ассоциированных с ним. В нашем случае это будут пары
+% {VarName, 1}. Мы просто подсчитаем для каждого VarName количество
+% пришедших пар, то есть количество найденных вхождений этой переменной.
+% Это и есть наш незамысловатый анализ.
+
+process_found_variables(Key, Vals, A) -&gt;
+    [{Key, length(Vals)} | A].
+
+% Построчный обход файла.
+find_variable_in_file(File, RE, CallBack) -&gt;
+    case io:get_line(File, &quot;&quot;) of
+       eof -&gt; void;
+       Line -&gt;
+         scan_line_in_file(Line, RE, CallBack),
+         find_variable_in_file(File, RE, CallBack)
+    end.
+
+% Поиск строки в строке по регулярному выражению (скомпилированному ранее),
+% и в случае нахождение вызов CallBack с передачей ему имени найденной
+% переменной.
+scan_line_in_file(Line, RE, CallBack) -&gt;
+    case re:run(Line, RE) of
+        {match, Captured} -&gt;
+            [_, _, {NameP, NameL}] = Captured,
+            Name = string:substr(Line, NameP + 1, NameL),
+            CallBack(Name);
+        nomatch -&gt; void
+    end.
+</code></pre>
+
+<p>Для сборки программы нужен <a href="http://media.pragprog.com/titles/jaerlang/code/phofs.erl">модуль phofs</a>. Он является универсальным, независимым от конкретных функций Map и Reduce.</p>
+
+<p>И Makefile на всякий случай:</p>
+
+<pre><code class="makefile">target = find_variables
+
+all:
+    erlc $(target).erl
+    erlc phofs.erl
+    erl -noshell -s $(target) main -s init stop
+
+clean:
+    -rm *.beam *.dump
+</code></pre>
+
+<p>Пузомерка. Как я уже сказал, программа на C++ вместе со временем вызова <code>find</code> на моей машине работает 1-2 секунды. Версия на Erlang&rsquo;e работает ~20 секунд. Плохо? Смотря как посмотреть. Если анализ каждого файла будет более длительным (то есть программа будет основное время тратить на анализ файла, а не обход каталогов), то тут уже не совсем очевидно, какое из решений будет более практично при увеличении числа файлов и сложности анализа.</p>
+
+<p>Я новичок в Эрланге, поэтому будут признателен за критику кода.</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2011/11/22/tcpip-proxy-in-erlang/">TCP/IP proxy на Erlang&rsquo;e</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/11/mapreduce-erlange.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/11/mapreduce-erlange.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/11/mapreduce-erlange.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

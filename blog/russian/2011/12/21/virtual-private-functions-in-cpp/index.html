@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Виртуальные private-функции в C++</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Виртуальные private-функции в C++</h1>
+<div id="post">
+  <p>Наткнулся на интересный, как мне показалось, код. Там использовалась виртуальная private функция. Прием немного странный, но сейчас не об этом.</p>
+
+<p>Сначала мне показалось, что такой код не должен компилироваться, так как если функция private, она недоступна для использования в дочерних классах. Наблюдался какой-то очередной пробел в моих знаниях по C++.</p>
+
+<p>Я написал программу:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+
+class A {
+public:
+  void bar() { foo(); }
+private:
+  virtual void foo() = 0;
+};
+
+class B: public A {
+private:
+  virtual void foo() { std::cout &lt;&lt; &quot;B::foo()&quot; &lt;&lt; std::endl; }
+};
+
+int main(int argc, char* argv[]) {
+  A* a = new B();
+  a-&gt;bar();
+  delete a;
+  return 0;
+}
+</code></pre>
+
+<p>И VS2010 и GCC прекрасно его съели, и программа печатает &ldquo;B::foo()&ldquo;.</p>
+
+<p>Напрашивание такое объяснение - механизм виртуальных функций (технически переопределение функций через vtable) - это runtime, а public/private - это compile time. Получается, что в compile time все законно, и разделение на private/protected/public не зависит от виртуальности функции, а в runtime класс B просто подставляет другую функцию через vtable уже вне зависимости от private/public.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/12/private-c-virtual-private-functions-in.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/12/private-c-virtual-private-functions-in.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/12/private-c-virtual-private-functions-in.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Кто быстрее: функтор или указатель на функцию</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Кто быстрее: функтор или указатель на функцию</h1>
+<div id="post">
+  <p>Возьмем небольшую программу, которая сортирует большой массив, используя разные методы сравнения элементов: по умолчанию (предоставляемый компилятором для базовых типов), через указатель на функцию и через функтор.</p>
+
+<p><code>functor.cpp</code>:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+
+#include &lt;algorithm&gt;
+
+typedef double Type;
+
+Type* array;
+const int N = 100000000;
+
+inline bool less(Type a1, Type a2) {
+  return a1 &lt; a2;
+}
+
+class Less {
+ public:
+  inline bool operator()(Type a1, Type a2) {
+    return a1 &lt; a2;
+  }
+};
+
+// Использование встроенной функции сравнения.
+TEST(Callback, BuiltIn) {
+  std::sort(array, array + N);
+}
+
+// Использование свободной функции сравнения по указателю.
+TEST(Callback, Function) {
+  std::sort(array, array + N, less);
+}
+
+// Использование функтора.
+TEST(Callback, Functor) {
+  std::sort(array, array + N, Less());
+}
+
+int main(int argc, char* argv[]) {
+  // Создаем отсортированный массив.
+  array = new Type[N];
+  Type* p = array;
+  for (int i = 0; i &lt; N; ++i) *p++ = i;
+
+  testing::InitGoogleTest(&amp;argc, argv);
+  // Принудительно печатаем время работы тестов.
+  testing::GTEST_FLAG(print_time) = true;
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>Компилируем и запускаем (Visual Studio 2008):</p>
+
+<pre><code>cl /O2 /arch:SSE2 /EHsc /I. functor.cpp gtest\gtest-all.cc &amp;&amp; functor
+</code></pre>
+
+<p>Результат:</p>
+
+<pre><code>[==========] Running 3 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 3 tests from Callback
+[ RUN      ] Callback.BuiltIn
+[       OK ] Callback.BuiltIn (9547 ms)
+[ RUN      ] Callback.Function
+[       OK ] Callback.Function (24391 ms)
+[ RUN      ] Callback.Functor
+[       OK ] Callback.Functor (9578 ms)
+[----------] 3 tests from Callback (43547 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test case ran. (43547 ms total)
+[  PASSED  ] 3 tests.
+</code></pre>
+
+<p>Видно, что скорость функтора (9578 мс) практически равна встроенной функции (9547 мс) сравнения. А вот вызов свободной функции конкретно отстает (24391 мс), приблизительно в 2.5 раза.</p>
+
+<p>Такое поведение можно объяснить тем, что в данном случае при вызове обычной функции компилятор не может оптимизировать такой вызов встраиванием (inlining). Вне зависимости от того, что функция объявлена выстраиваемой, так как ее вызов производится по указателю, компилятор не может сделать предположений о значении этого указателя на стадии исполнения, а значит провести оптимизацию.</p>
+
+<p>При использовании же функтора компилятору доступна информация о семантике вызываемого кода, поэтому все типы оптимизации возможны. Отсюда и скорость, близкая к встроенной функции сравнения.</p>
+
+<p>Как вариант, при замене типа с <code>double</code> на <code>int</code> и при условии, что опция <code>/arch:SSE2</code> включена, тест с функтором работал даже быстрее встроенной функции.</p>
+
+<p><strong>Вывод</strong></p>
+
+<p>Использование функторов предпочтительнее, чем свободных функций. С точки зрения проектирования и так все понятно (функтор, или функциональный объект, можно удобно тестировать, наследовать и т.д), но, как видно, и в плане производительности функтор тоже впереди.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/07/blog-post_25.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/07/blog-post_25.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/07/blog-post_25.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

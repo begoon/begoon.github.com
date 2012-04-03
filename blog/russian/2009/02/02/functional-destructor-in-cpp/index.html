@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Функциональный деструктор в С++</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Функциональный деструктор в С++</h1>
+<div id="post">
+  <p>В С++ крайне распространен прием использования класса <code>std::vector</code> для хранения указателей на размещенные в <a href="http://ru.wikipedia.org/wiki/%D0%9A%D1%83%D1%87%D0%B0_(%D0%BD%D0%B5%D1%80%D0%B0%D1%81%D0%BF%D1%80%D0%B5%D0%B4%D0%B5%D0%BB%D1%91%D0%BD%D0%BD%D0%B0%D1%8F_%D0%BF%D0%B0%D0%BC%D1%8F%D1%82%D1%8C)">куче</a> объекты.</p>
+
+<pre><code class="cpp">class Book {
+public:
+  Book(int index);
+...
+};
+...
+std::vector&lt;Book *&gt; books;
+for (int i = 0; i &lt; 10; ++i)
+  books.push_back(new Book(i));
+</code></pre>
+
+<p>Естественно, после использования память надо освободить. Обычно стандартный прием для этого таков:</p>
+
+<pre><code class="cpp">for (std::vector&lt;Book *&gt;::iterator i = books.begin(); i != books.end(); ++i)
+  delete *i;
+</code></pre>
+
+<p>В целом, с таким подходом все в порядке, разве что слегка веет от него излишней алгоритмической загруженностью. Он вынужден, навязан особенностями языка C++. Индексная переменная <code>i</code> здесь абсолютно неважна для цикла, она является чисто служебной. Все это, конечно, не так страшно, как использование оператора goto или статических переменных, но все равно хочется гармонии. И способ есть. Данный код можно переписать так:</p>
+
+<pre><code class="cpp">#include &lt;algorithm&gt;
+class deleter {
+public:
+  template &lt;typename T&gt;
+  void operator()(const T* p) const {
+    delete p;
+  }
+};
+...
+  std::for_each(a.begin(), a.end(), deleter());
+</code></pre>
+
+<p>Данный код определяет класс-функтор, у которого перегруженный оператор <code>operator()</code> является шаблонным. Затем стандартный алгоритм <code>std::for_each()</code> вызывает этот оператор для каждого члена вектора.</p>
+
+<p>Конечно, вы можете сказать, что мол битва за идею принуждает нас таскать за собой класс <code>deleter</code>, но тут аргумент простой — данный подход ближе к декларативному подходу в программировании, нежели к прямому алгоритмическому. В декларативном подходе вы стараетесь как можно больше логики перенести из ее явного программирования базовыми конструкциями типа условий, циклов и т.д. к ее выражению через определения (декларации) сущностей и их взаимосвязей. Декларативные конструкции проще дробить на независимые куски, а значит проще тестировать. Например, вы можете протестировать алгоритм <code>std::for_each</code> в изоляции, тем самым гарантируя его корректную работу сразу во всей программе, а вот протестировать явный цикл в изоляции вряд ли получится, так как цикл &ldquo;жестко вплетен&rdquo; в прочую логику программы. Максимум удастся проверить данный конкретный цикл как-то вручную, и если их программе много, проверять придется каждый из них.</p>
+
+<p>Соглашусь, однако, что конкретно этот пример весьма тривиален и является в большинстве делом вкуса, нежели вопросом реального выигрыша простоте и тестируемости кода. Но сам прием весьма показателен в плане замены простейших алгоритмов высокоуровневыми сущностями. И еще, в защиту такого приему могу сказать, что например, вы можете переопределить алгоритм <code>std::for_each</code> на свой, который сможет на конкретно вашей платформе выполняться гораздо быстрее, или, например, ловить исключения работы с кучей и журналировать проблемы освобождения памяти. В случае же прямого использования цикла <code>for</code> вам придется переписать сам цикл. Хорошо, когда такое место одно в программе, а если их тысячи?</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/blog-post_02.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/blog-post_02.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/blog-post_02.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

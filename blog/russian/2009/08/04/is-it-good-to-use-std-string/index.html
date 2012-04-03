@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Хорошо ли использовать std::string?</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Хорошо ли использовать std::string?</h1>
+<div id="post">
+  <p>Я регулярно имею споры с коллегами на тему стоит ли повсеместно использовать <code>std::string</code>, или таки надо реализовывать свой класс для строчек.</p>
+
+<p>Один из вопросов - это вопрос качества самой реализации <code>std::string</code>. Забавно, что большинство людей, которых я просил набросать прототип класса для строчек, более менее эффективного с точки зрения работы с памятью, писали примерно следующее:</p>
+
+<pre><code class="cpp">class String {
+ public:
+  explicit String(const std::string&amp; value) { 
+    init(value.c_str(), value.length()); 
+  }
+  String(const String&amp; value) { init(value.data_, value.sz_); }
+  ~String() { free(data_); }
+
+  String&amp; operator=(const String&amp; value) {
+    if (this != &amp;value) {
+      if (value.sz_ &gt; sz_) data_ = (char*)std::realloc(data_, value.sz_);
+      sz_ = value.sz_;
+      std::memcpy(data_, value.data_, sz_);
+    }
+    return *this;
+  }
+
+ private:
+  void init(const char* data, size_t sz) {
+    sz_ = sz;
+    data_ = (char*)malloc(sz_);
+    std::memcpy(data_, data, sz_);
+  }
+  char* data_;
+  size_t sz_;
+};
+</code></pre>
+
+<p>Ясно, что при такой реализации оператора присваивания строка в плане занимаемой памяти будет только расти. Это сделано специально.</p>
+
+<p>Практически никто сразу не думал о необходимости наличия операции перемещения, например <code>swap</code>. Почему-то наличие конструктора копирования и оператора присваивания считается достаточным.</p>
+
+<p>Что ответить на этот вопрос раз и навсегда для себя самого, я написал тестовую программу. Это программа сортирует массив из длинных строк. Строки представлены четырьмя способами: объект <code>std::string</code>, указатель на <code>std::string</code>, объект самопального класса <code>String</code> (см. выше) и указатель на <code>String</code>.</p>
+
+<p>По предварительным очевидным оценкам работа через указатель должна быть максимально эффективная, так как в данном случае при перемещении объектов физически <code>std::sort()</code> переставляет только указатели, а не сами объекты.</p>
+
+<p>А вот при работе непосредственно с объектами будет интересно сравнить, насколько банальная реализации строки будет уступать <code>std::string</code>.</p>
+
+<p>Итак, <code>std_string.cpp</code>:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;cstdlib&gt;
+#include &lt;cstring&gt;
+#include &lt;cassert&gt;
+
+#include &quot;gtest/gtest.h&quot;
+
+static const int N = 100;
+
+// Самопальный класс, реализующий хранение строки более менее
+// эффективным образом с точки зрения копирования.
+class String {
+ public:
+  // &quot;explicit&quot; запрещает неявное приведение аргумента, что мы
+  // могли точно знать, какие конструктор каких классов вызываются.
+  explicit String(const std::string&amp; value) { 
+    init(value.c_str(), value.length()); 
+  }
+  String(const String&amp; value) { init(value.data_, value.sz_); }
+  ~String() { free(data_); }
+
+  // Данный оператор - это, пожалуй, единственная попытка сделать
+  // работу с памятью эффективной.
+  String&amp; operator=(const String&amp; value) {
+    if (this != &amp;value) {
+      // Память перераспределяется только если оригинал длинее текущей
+      // строки. Ясно, что при такой реализации строка может только
+      // расти в плане занимаемой памяти.
+      if (value.sz_ &gt; sz_) data_ = (char*)std::realloc(data_, value.sz_);
+      sz_ = value.sz_;
+      std::memcpy(data_, value.data_, sz_);
+    }
+    return *this;
+  }
+
+  friend class StringCmp;
+  friend class StringPointerCmp;
+
+ private:
+  void init(const char* data, size_t sz) {
+    sz_ = sz;
+    data_ = (char*)malloc(sz_);
+    std::memcpy(data_, data, sz_);
+  }
+  char* data_;
+  size_t sz_;
+};
+
+std::vector&lt;std::string&gt; std_strings;
+std::vector&lt;std::string*&gt; std_strings_p;
+std::vector&lt;String&gt; strings;
+std::vector&lt;String*&gt; strings_p;
+
+// Объект для сравнения двух std::string.
+class StlStringCmp {
+ public:
+  bool operator()(const std::string&amp; a, const std::string&amp; b) {
+    return a &lt; b;
+  }
+};
+
+TEST(SortingStlString, StlString) {
+  std::sort(std_strings.begin(), std_strings.end(), StlStringCmp());
+}
+
+// Объект для сравнения двух std::string*.
+class StlStringPointerCmp {
+ public:
+  bool operator()(const std::string* a, const std::string* b) {
+    return *a &lt; *b;
+  }
+};
+
+TEST(SortingStlString, StlStringPointer) {
+  std::sort(std_strings_p.begin(), std_strings_p.end(), StlStringPointerCmp());
+}
+
+// Объект для сравнения двух String.
+class StringCmp {
+ public:
+  bool operator()(const String&amp; a, const String&amp; b) {
+    assert(a.sz_ == b.sz_);
+    return std::memcmp(a.data_, b.data_, a.sz_);
+  }
+};
+
+TEST(SortingStlString, String) {
+  std::sort(strings.begin(), strings.end(), StringCmp());
+}
+
+// Объект для сравнения двух String*.
+class StringPointerCmp {
+ public:
+  bool operator()(const String* a, const String* b) {
+    assert(a-&gt;sz_ == b-&gt;sz_);
+    return std::memcmp(a-&gt;data_, b-&gt;data_, a-&gt;sz_);
+  }
+};
+
+TEST(SortingStlString, StringPointer) {
+  std::sort(strings_p.begin(), strings_p.end(), StringPointerCmp());
+}
+
+int main(int argc, char* argv[]) {
+  // Это наполнитель, чтобы строки были длинные, и копирование было
+  // ощутимо дорого.
+  std::string big(1024 * 1024, '?');
+  for (int i = 0; i &lt; N; ++i) {
+    // Все строки будут одинаковой длины. Функции сравнения рассчитывают
+    // на это.
+    std::stringstream fmt;
+    fmt &lt;&lt; N * 2 - i &lt;&lt; big;
+    // std::string строка-объект.
+    std_strings.push_back(fmt.str());
+    // std::string строка-указатель.
+    std_strings_p.push_back(new std::string(fmt.str()));
+    // Моя строка-объект.
+    strings.push_back(String(fmt.str()));
+    // Моя строка-указатель.
+    strings_p.push_back(new String(fmt.str()));
+  }
+
+  testing::InitGoogleTest(&amp;argc, argv);
+  // Принудительно печатаем время работы тестов.
+  testing::GTEST_FLAG(print_time) = true;
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>Компилируем:</p>
+
+<pre><code>cl /O2 /EHsc /I. std_string.cpp gtest-all.cc
+</code></pre>
+
+<p>Запускаем:</p>
+
+<pre><code>[==========] Running 4 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 4 tests from SortingStlString
+[ RUN      ] SortingStlString.StlString
+[       OK ] SortingStlString.StlString (203 ms)
+[ RUN      ] SortingStlString.StlStringPointer
+[       OK ] SortingStlString.StlStringPointer (0 ms)
+[ RUN      ] SortingStlString.String
+[       OK ] SortingStlString.String (891 ms)
+[ RUN      ] SortingStlString.StringPointer
+[       OK ] SortingStlString.StringPointer (0 ms)
+[----------] 4 tests from SortingStlString (1125 ms total)
+
+[----------] Global test environment tear-down
+[==========] 4 tests from 1 test case ran. (1125 ms total)
+[  PASSED  ] 4 tests.
+</code></pre>
+
+<p>Видно, что версии с указателями отработали примерно одинаково быстро, а вот при работе с объектами <code>std::string</code> обогнал самопальную реализацию в 4 раза - 203 мс против 891 мс.</p>
+
+<p>Несложно понять, почему это так. <code>std::sort()</code> для перестановки элементов использует шаблонную функцию <code>std::swap()</code>, которая для <code>std::string</code> реализована так, чтобы делать перестановку без физического копирования данных. А для <code>String</code> все происходит банально через конструктор копирования и оператор присваивания.</p>
+
+<p>В общем, для себя я вынес, что не надо городить свой огород, так как в большинстве случаев <code>std::string</code> решает все проблемы. Но возникает вопрос - как добавлять в <code>std::string</code> свою функциональность? Например, поиск слов.</p>
+
+<p>Проблема в том, что у <code>std::string</code> деструктор объявлен как невиртуальный (может это сделано по соображениям эффективности), а наследование от класса с невиртуальным деструктором в C++ является не самой правильной затеей.</p>
+
+<p>Автор STL <a href="http://ru.wikipedia.org/wiki/%D0%A1%D1%82%D0%B5%D0%BF%D0%B0%D0%BD%D0%BE%D0%B2,_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B2%D0%B8%D1%87">Александр Степанов</a> в своем труде <a href="http://www.stepanovpapers.com/notes.pdf">Notes for the Programming course at Adobe</a> советует реализовать дополнительную функциональность для стандартных контейнеров STL через шаблонные алгоритмы. Плюсов тут много, например, реализовав какой-то разбор строки через итераторы в виде шаблонной функции-алгоритма, можно автоматически получить её же для все остальных контейнеров, у которых есть такие же итераторы.</p>
+
+<p>Интересно, что пишет Степанов про свой взляд на то, как надо реализовывать функцию <code>length()</code> для контейнеров (в документе, ссылка на который дана выше, Степанов показывает шаг за шагом процесс создания эффективного контейнера):</p>
+
+<p><em>While we could make a member function to return length, it is better to make it a global friend function. If we do that, we will be able eventually to define the same function to work on built-in arrays and achieve greater uniformity of design. I made size into a member function in STL in an attempt to please the standard committee. I knew that begin, end and size should be global functions but was not willing to risk another fight with the committee.</em></p>
+
+<p>Он считает, что глобальная шаблонная функция <code>length()</code> - это правильнее, чем <code>length()</code> как член класса. Если б не комитет стандартизации - так оно и было бы в STL.</p>
+
+<p>Итак, подытоживая сказанное, не стоит не доверять <code>std::string</code>. Для большинства задач этот класс решает все проблемы. Если надо добавить функциональность - это надо делать через реализацию шаблонного алгоритма.</p>
+
+<p>Есть замечания или протесты? Прилагайте.</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/07/30/elements-of-programming/">Александр Степанов, &ldquo;Elements of Programming&rdquo;</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/08/stdstring.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/08/stdstring.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/08/stdstring.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

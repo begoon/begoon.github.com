@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Потоки в C++ против потоков в Go</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Потоки в C++ против потоков в Go</h1>
+<div id="post">
+  <p>После <a href="/blog/russian/2011/04/12/multithreading-in-go/">поста про потоки в Go</a> я прочитал <a href="http://evgeny-lazin.blogspot.com/2011/04/httpeasy-coding.html">другое мнение</a> про общую целесообразность Go в плане продвинутости в многопоточном программировании.</p>
+
+<p>Признаюсь, я не боец в бусте и новом C++, но благодаря <a href="http://pastebin.com/kwq0cj4v">предоставленному примеру</a>, было очевидно, что и на С++ решение получается весьма изящное.</p>
+
+<p>Интересно было сравнить производительнось потоков во обоих языках в плане скорости из создания и назначения им работы. Как я понял, это битва между pthreads и системой Go-рутин, которые не являются потоками операционной системы. Как <a href="http://golang.org/doc/effective_go.html#goroutines">сказано в документации</a>:</p>
+
+<p><em>Goroutines are multiplexed onto multiple OS threads so if one should block, such as while waiting for I/O, others continue to run. Their design hides many of the complexities of thread creation and management.</em></p>
+
+<p>Я взял последний boost, и на той же восьми процессорной машине провел эксперимент.</p>
+
+<p>Программе надо будет выполнить множество однотипной работы (фактически, вызвать функцию). Задачи будут мультиплексироваться между несколькими параллельными потоками. Сама функция будет элементарной и быстрой. Надеюсь, этим удастся сфокусировать тестирование именно на подсистеме потоков, нежели на полезной нагрузке.</p>
+
+<p>Итак, программа на Go:</p>
+
+<pre><code class="go">package main
+
+import (
+        &quot;flag&quot;
+        &quot;fmt&quot;
+)
+
+var jobs *int = flag.Int(&quot;jobs&quot;, 8, &quot;number of concurrent jobs&quot;)
+var n *int = flag.Int(&quot;tasks&quot;, 1000000, &quot;number of tasks&quot;)
+
+func main() {
+        flag.Parse()
+
+        fmt.Printf(&quot;- running %d concurrent job(s)\n&quot;, *jobs)
+        fmt.Printf(&quot;- running %d tasks\n&quot;, *n)
+        tasks := make(chan int, *jobs)
+        done := make(chan bool)
+
+        for i := 0; i &lt; *jobs; i++ {
+                go runner(tasks, done)
+        }
+
+        for i := 1; i &lt;= *n; i++ {
+                tasks &lt;- i
+        }
+
+        for i := 0; i &lt; *jobs; i++ {
+                tasks &lt;- 0
+                &lt;- done
+        }
+}
+
+func runner(tasks chan int, done chan bool) {
+        for {
+                if arg := &lt;- tasks; arg == 0 {
+                        break
+                }
+                worker()
+        }
+        done &lt;- true
+}
+
+func worker() int {
+        return 0
+}
+</code></pre>
+
+<p>Makefile для прогона по серии параметров:</p>
+
+<pre><code class="makefile">target = go_threading
+
+all: build
+
+build:
+        6g $(target).go
+        6l -o $(target) $(target).6
+
+run:
+        (time -p ./$(target) -tasks=$(args) \
+                1&gt;/dev/null) 2&gt;&amp;1 | head -1 | awk '{ print $$2 }'
+
+n = \
+10000 \
+100000 \
+1000000 \
+10000000 \
+100000000
+
+test:
+        @for i in $(n); do \
+                echo &quot;`printf '% 10d' $$i`&quot; `$(MAKE) args=$$i run`; \
+        done
+</code></pre>
+
+<p>Программа на C++:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;boost/thread.hpp&gt;
+#include &lt;boost/bind.hpp&gt;
+#include &lt;queue&gt;
+#include &lt;string&gt;
+#include &lt;sstream&gt;
+
+class thread_pool {
+
+  typedef boost::function0&lt;void&gt; worker;
+
+  boost::thread_group threads_;
+  std::queue&lt;worker&gt; queue_;
+  boost::mutex mutex_;
+  boost::condition_variable cv_;
+  bool done_;
+
+ public:
+
+  thread_pool() : done_(false) {
+    for(int i = 0; i &lt; boost::thread::hardware_concurrency(); ++i)
+      threads_.create_thread(boost::bind(&amp;thread_pool::run, this));
+  }
+
+  void join() {
+    threads_.join_all();
+  }
+
+  void run() {
+    while (true) {
+      worker job;
+      {
+        boost::mutex::scoped_lock lock(mutex_);
+        while (queue_.empty() &amp;&amp; !done_)
+          cv_.wait(lock);
+
+        if (queue_.empty() &amp;&amp; done_) return;
+
+        job = queue_.front();
+        queue_.pop();
+      }
+      execute(job);
+    }
+  }
+
+  void execute(const worker&amp; job) {
+    job();
+  }
+
+  void add(const worker&amp; job) {
+    boost::mutex::scoped_lock lock(mutex_);
+    queue_.push(job);
+    cv_.notify_one();
+  }
+
+  void finish() {
+    boost::mutex::scoped_lock lock(mutex_);
+    done_ = true;
+    cv_.notify_all();
+  }
+};
+
+void task() {
+  volatile int r = 0;
+}
+
+int main(int argc, char* argv[]) {
+  thread_pool pool;
+  int n = argc &gt; 1 ? std::atoi(argv[1]) : 10000;
+
+  int threads = boost::thread::hardware_concurrency();
+  std::cout &lt;&lt; &quot;- executing &quot; &lt;&lt; threads &lt;&lt; &quot; concurrent job(s)&quot; &lt;&lt; std::endl;
+  std::cout &lt;&lt; &quot;- running &quot; &lt;&lt; n &lt;&lt; &quot; tasks&quot; &lt;&lt; std::endl;
+  for (int i = 0; i &lt; n; ++i) {
+    pool.add(task);
+  }
+
+  pool.finish();
+  pool.join();
+
+  return 0;
+}
+</code></pre>
+
+<p>Makefile:</p>
+
+<pre><code class="makefile">BOOST = ~/opt/boost-1.46.1
+
+target = boost_threading
+
+build:
+        g++ -O2 -I $(BOOST) -o $(target) \
+                -lpthread \
+                -lboost_thread \
+                 -L $(BOOST)/stage/lib \
+                $(target).cpp
+
+run:
+        (time -p LD_LIBRARY_PATH=$(BOOST)/stage/lib ./$(target) $(args) \
+                1&gt;/dev/null) 2&gt;&amp;1 | head -1 | awk '{ print $$2 }'
+
+n = \
+10000 \
+100000 \
+1000000 \
+10000000 \
+100000000
+
+test:
+        @for i in $(n); do \
+                echo &quot;`printf '% 10d' $$i`&quot; `$(MAKE) args=$$i run`; \
+        done
+</code></pre>
+
+<p>В обоих языках число потоков будет равно количеству процессоров - 8. Количество задач, прогоняемых через эти восемь поток будет варьироваться.</p>
+
+<p>Запускаем программу на C++:</p>
+
+<pre><code>make &amp;&amp; make -s test
+
+g++ -O2 -I ~/opt/boost-1.46.1 -o boost_threading \
+                -lpthread \
+                -lboost_thread \
+                 -L ~/opt/boost-1.46.1/stage/lib \
+                boost_threading.cpp
+(time -p LD_LIBRARY_PATH=~/opt/boost-1.46.1/stage/lib ./boost_threading  \
+                1&gt;/dev/null) 2&gt;&amp;1 | head -1 | awk '{ print $2 }'
+     10000 0.03
+    100000 0.35
+   1000000 3.43
+  10000000 29.57
+ 100000000 327.37
+</code></pre>
+
+<p>Теперь Go:</p>
+
+<pre><code>make &amp;&amp; make -s test
+
+6g go_threading.go
+6l -o go_threading go_threading.6
+     10000 0.00
+    100000 0.03
+   1000000 0.35
+  10000000 3.72
+ 100000000 38.27
+</code></pre>
+
+<p>Разница очевидна.</p>
+
+<p>Может быть я сравниваю соленое с красным, и результаты просто неадекватны. Будет очень признателен за подсказку, в каких попугаях на правильно измерять.</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2011/04/12/multithreading-in-go/">Пример многопоточного программирования в Go</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/04/c-go.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/04/c-go.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/04/c-go.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

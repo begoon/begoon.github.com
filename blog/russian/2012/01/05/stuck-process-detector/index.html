@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Монитор зависших процессов</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Монитор зависших процессов</h1>
+<div id="post">
+  <p>Есть задача - нужна утилита для обнаружения зависших или заблокированных долгоиграющих серверных процессов. Если процесс «завис» - это значит, либо он торчит в deadlock’e, либо крутится в бесконечном цикле.</p>
+
+<p>Пока есть вот такая идея - для каждого процесса, находящегося под контролем, периодически делать извне снимок стeка. Например:</p>
+
+<pre><code>#0  0x991a8c22 in mach_msg_trap ()
+#1  0x991a81f6 in mach_msg ()
+#2  0x968870ea in __CFRunLoopServiceMachPort ()
+#3  0x96890214 in __CFRunLoopRun ()
+#4  0x9688f8ec in CFRunLoopRunSpecific ()
+#5  0x9688f798 in CFRunLoopRunInMode ()
+#6  0x92158a7f in RunCurrentEventLoopInMode ()
+#7  0x9215fd9b in ReceiveNextEventCommon ()
+#8  0x9215fc0a in BlockUntilNextEventMatchingListInMode ()
+#9  0x90010040 in _DPSNextEvent ()
+#10 0x9000f8ab in -[NSApplication nextEventMatchingMask:untilDate:inMode:dequeue:] ()
+#11 0x9000bc22 in -[NSApplication run] ()
+#12 0x902a018a in NSApplicationMain ()
+#13 0x0012e356 in main ()
+</code></pre>
+
+<p>Для Linux, HPUX и Solaris есть команда <code>pstack</code>, для AIX - <code>procstack</code>. Уверен, что и для Windows можно подобное замутить. Process Explorer это умеет делать, значит можно сделать и программно.</p>
+
+<p>Сравнивая текущий снимок с предыдущим, можно понять, насколько он изменился. Если он вообще не изменился или изменился только по некоторым начальным функциям (например, внутри ядра), то можно предположить, что процесс «завис». Случай deadlock’а на файле или базе данных еще проще, так как программа просто будет постоянно торчать на одной функции внутри ядра.</p>
+
+<p>Понятно, что сравнение стеков должно все-таки учитывать особенности проверяемых процессов. Можно сделать его конфигурируемым, например, через регулярные выражения или скриптовой язык типа Lua.</p>
+
+<p>Тема еще в том, что такой монитор не требует изменения в самом софте, и может быть написан на любом языке, например Руби или Питоне. По сути это просто работа с текстовыми данными.</p>
+
+<p>Может я изобретаю велосипед?</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2012/01/stuck-process-detector.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2012/01/stuck-process-detector.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2012/01/stuck-process-detector.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

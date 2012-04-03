@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Работа с правами администратора</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Работа с правами администратора</h1>
+<div id="post">
+  <p>У новичков юникса при переходе из мира доса обычно бывает желание работать всегда под рутом. Вроде так проще. Затем, после пары-тройки неосторожных <code>rm</code>, установок и сносов софта или игр с ядром, когда проще всю систему просто переставить, постепенно приходит понимание, что консоль рута чревата последствиями при неаккуратной работе.</p>
+
+<p>А при работе с боевыми серверами, когда можно одной неверной командой остановить работу многих людей, может лучше поработать в паре, чтобы случайно не грохнуть чего.</p>
+
+<p>Как говорил один мой знакомый администратор, матерый ораклоид и юниксист: &ldquo;Я никогда лишний раз в root&rsquo;ом не зайду, а то вдруг чего надует (ветром)&rdquo;.</p>
+
+<p>Тут как в армии - переходишь в режим рута - встаешь смирно, одной рукой отдаешь честь (сам себе), а второй аккуратно делаешь работу. И как только все сделано, закрываешь рутовую консоль.</p>
+
+<p>А если серьезно, то бывает и так: работаешь в терминале, правишь настройки машины, собираешься уже было сказать reboot, когда понимаешь, что это консоль боевого сервера, а не девелоперской машины.</p>
+
+<p>Лично я все консольные сессии к важным серверам делаю с максимально неудобной цветовой гаммой, например, зеленое на красном фоне, чтобы вот так не ошибаться.</p>
+
+<p>Если разобраться, в юниксе, если ты не рут, то обычно крайне сложно сделать что-то, ломающее систему, хотя работать это не мешает. И это классное чувство. Пока ты явно не сказал <code>su</code> или <code>sudo</code>, ты на 99% спокоен, так как изменить что-то за пределами домашнего каталога система не даст.</p>
+
+<p>Увы, в Windows нереально работать, не будучи формально администратором, хотя в Windows 7 ситуация улучшилась. Когда я пересел с Windows XP на семерку, я стал регулярно отвечать на вопрос о том, что какая-то программа хочет сделать что-то с правами администратора (хотя мой пользователь есть администратор в понятии Windows), и лично мне это нравится. Есть какое-то минимальное ощущения контроля на тем, что кто-то больше не &ldquo;размазывает&rdquo; DLL&rsquo;ки по системе без моего ведома, от которых ей скоро поплохеет.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/07/blog-post_29.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/07/blog-post_29.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/07/blog-post_29.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

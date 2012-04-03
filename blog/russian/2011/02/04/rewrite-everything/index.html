@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Стереть и переписать все нафиг!</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Стереть и переписать все нафиг!</h1>
+<div id="post">
+  <p>Какая традиционная первая реакция на явно старомодный или просто дрянной код или проектное решение? «Стереть к чертовой матери и написать заново на [подставить любимый язык]».</p>
+
+<p>Это здоровая реакция нормального разработчика, бесконечно стремящегося к совершенству кода.
+Но, увы, в больших системах, которые разрабатывались годами или даже десятилетиями нельзя просто так взять и все переписать. Бизнес не даст этого сделать.</p>
+
+<p>Вот и возникает волшебное слово «legacy» код.</p>
+
+<p>Лично на своем опыте я убедился, что работы со «старым» - это умение, и умение очень полезное. Парадокс, но порой выгоднее взять старый код, работающий годами, и просто обернуть его красивый интерфейс текущего «правильного» языка, чем тратить титанические усилия на полностью новую разработку.</p>
+
+<p>Ну и что, что Фортран с common-переменными повсюду или С, ну что, что там код 80-х годов с функциями на десятки экранов без каких-либо зачатков unit-тестирования, и потрогать этот код просто страшно. Но трогать его не надо, а надо понять интерфейс и изолировать его.</p>
+
+<p>Лично у меня подобное «прозрение» случилось только недавно, примерно аналогично как с unit-тестированием. Слово «legacy» код не должно синонимом «стереть и переписать все нафиг!», а должно быть знаком того, что надо сделать взвешенную оценку поддержки старого «тлеющего» кода против новой разработки. Любой код начинает тлеть сразу поле релиза, но когда он вам уже достался тлеющим – это другая история.</p>
+
+<p>А корень парадокса в том, что пользователи не хотят вашу новую версию, переписанную с нуля на модном языке Х, они хотят проверенную версию, что далеко не всегда означает одно и то же.</p>
+
+<p>Как пример, банки – это одни из консервативнейших потребителей программных продуктов. И их можно понять – фаза тестирования перед внедрением на боевую обычно длится месяцами и стоит приличных денег, а уж после того, как системы запущена, никто не будет ничего менять без веской причины. А слова «мы тут все переписали заново, пожалуйста, поставьте…» обычно игнорируются на слове «все».</p>
+
+<p>В общем, если хотите рассматривать создание программных продуктов не просто как написание «идеального кода», а как бизнес, работа со старым кодом – это один из навыков, который придется освоить.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/02/blog-post.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/02/blog-post.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/02/blog-post.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

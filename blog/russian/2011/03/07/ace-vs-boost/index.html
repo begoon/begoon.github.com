@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>ACE против boost или какую библиотеку выбрать</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>ACE против boost или какую библиотеку выбрать</h1>
+<div id="post">
+  <p>Есть задача: у нас есть несколько подсистем, для которых нужны следующие вещи:</p>
+
+<ul>
+<li>сокеты (клиентские, серверные, с SSL и без)</li>
+<li><a href="http://ru.wikipedia.org/wiki/Fork">fork()</a> для рождение дочернего процесса, который наследует сокет для обслуживания соединения</li>
+<li>потоки</li>
+<li>таймеры и задержки</li>
+<li>logger</li>
+</ul>
+
+<p>Все перечисленное должно работать без исключения на Windows <sup>2003</sup>&frasl;<sub>2008</sub>, Linux AS5+, AIX <sup>5</sup>&frasl;<sub>6</sub>, Solaris (Intel/AMD), HP-UX v3.</p>
+
+<p>Для всего остального мы прекрасно довольствуемся STL.</p>
+
+<p>Компиляторы только &ldquo;родные&rdquo; для каждой платформы (то есть, например, Cygwin не годится для Windows, и gcc только на Linux).</p>
+
+<p>Мы давного используем <a href="http://www.cs.wustl.edu/~schmidt/ACE.html">ACE</a>, как основную библиотеку. В ней есть все из выше сказанного, даже имитация fork под Windows, когда идентификатор сокета передается в символьном виде дочернему процессу через командную строку.</p>
+
+<p>Вообще, <code>fork()</code> - это настоящая засада под Windows. Для его полноценной реализации нужно использовать недокументированные функции и структуры, как это делается в Cygwin, что, конечно, для нас неприемлемо в плане последующей поддержки. Что еще усугбляет ситуацию - нет возможности отказаться от мульти-процессной модели и просто перейти на потоки (поэтому и нужен fork).</p>
+
+<p>Но ACE - это монстр, который еще и труден в правильной сборке на AIX и HP-UX. В нашем случае - это как стрелять из пушки по воробьям.</p>
+
+<p>У нас есть желание пересеть на другую библиотеку. Например, boost. Но это тоже монстр, к тому же монстр, требовательный к свежести компиляторов в плане С++, но мы вынуждены &ldquo;сидеть&rdquo; порой на старых компиляторах, так как сотни клиентов их используют. Так что вопрос простоты сборки boost&rsquo;а тоже под большим вопросом.</p>
+
+<p>Есть и еще вариант - написать все самим на основе системных вызовов, openssl и pthreads. Здесь начинается проблема сопровождения и тщательного тестирования на каждой платформе. С другой стороных - нет зависимости от стороннего почти ненужного монстра (ACE или boost), легкость и прозрачность исходников.</p>
+
+<p>Можно также подобный доморощенный framework выложнить в open-source, и может быть привлечь тем самым сторонних людей для полировки библиотеки.</p>
+
+<p>Хотел бы совета на тему, какую бы такую легковесную библиотеку выбрать, которая бы делала что описано выше, и при этом не была монструозной.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/03/ace-boost.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/03/ace-boost.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/03/ace-boost.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

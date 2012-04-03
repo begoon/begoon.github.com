@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>The first little step into Test Driven Development</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>The first little step into Test Driven Development</h1>
+<div id="post">
+  <p>The software development world is changing rapidly – new versions of the operating systems, compilers, libraries are coming up faster and faster. It’s actually great. Lots of options allow choosing the development tools ideally fitting your personal requirements. Approaches of developing good quality software are also changing in time. Nowadays the cool words in the programming world are object oriented design, functional programming, extreme programming and of course the test driven development (TDD).</p>
+
+<p>Though my programming experience is more than ten years and it covers various languages from machine codes and assembler up to the functional programming I have discovered the test driven development world quite recently. Programmers are often very conservative (and quite lazy!) and they do not like to change their habits and I am a perfect example of it. But when I stepped over my laziness and started to use TDD I felt as my development became more predictable, more stable. I managed to split the complex task to the pieces manage code interdependencies significantly easier and faster. More importantly: I have stopped repeating my coding mistakes, reintroducing already fixed bugs and now I am able to refactor my code anytime without any fear of breaking something important a day before the release. Why? All thanks to the test driven development.</p>
+
+<p>I would like to share my experience on entering to the wonderful world of TDD and hope to encourage somebody to join.</p>
+
+<p>My main background is C and C++ that’s why I will cover these languages but all ideas mentioned are common for lots of modern languages (Java, C#, Python, Delphi etc).</p>
+
+<p>Let’s start from the beginning. Usually the first program written by a newbie is Hello World. Assume you have done it already and you want to do something more complex.</p>
+
+<p>Let’s assume you studied a lot of computer science and you know how to implement very fast multiplication function and you have done it. This is what it would look like:</p>
+
+<p>File: <code>mult.h</code>:</p>
+
+<pre><code class="cpp">#ifndef _MULT_H
+#define _MULT_H
+int mult(int a, int b);
+#endif
+</code></pre>
+
+<p>File: <code>mult.cc</code>:</p>
+
+<pre><code class="cpp">#include &quot;mult.h&quot;
+
+int mult(int a, int b) {
+  if (!a || !b) return 0;
+  int r = 0;
+  if (a == 920 &amp;&amp; b == 847) r++;
+  do {
+    if (b &amp; 1) r += a;
+    a &lt;&lt;= 1;
+  } while (b &gt;&gt;= 1);
+  return r;
+}
+</code></pre>
+
+<p>I want to warn the reader that this particular example is not ideal in terms of the coding style and it’s not clear in logic, it uses a lot of C/C++ &ldquo;cool short&rdquo; expressions and so on. Also the function has some weird line with 920 and 847. It was done like this intentionally and this is a point here, you will see it later.</p>
+
+<p>Now, you have done the code. You definitely know that it should work more reliably and faster because your computer science background tells you that. How can you make sure that it works fine? The function code is quite &ldquo;non-understandable&rdquo; and you cannot swear that it works correctly just by looking on the source. You have to try it on. The first and the most obvious way to create the simple example like this:</p>
+
+<pre><code class="cpp">#include &quot;mult.h&quot;
+#include &lt;iostream&gt;
+
+int main(int argc, char* argv[]) {
+  while(1) {
+    std::cout &lt;&lt; &quot;enter a: &quot;;
+    int a;
+    std::cin &gt;&gt; a;
+    std::cout &lt;&lt; &quot;enter b: &quot;;
+    int b;
+    std::cin &gt;&gt; b;
+    std::cout &lt;&lt; &quot;a * b = &quot; &lt;&lt; mult(a, b) &lt;&lt; std::endl;
+  }
+}
+</code></pre>
+
+<p>Then you run it, play it a bit, try a couple of examples and then make the conclusion that it works. Later you add the <code>mult.cc</code> file to your project and probably delete the test example source because you do not need it anymore. You have linked the function into your application and you are almost happy.</p>
+
+<p>Let’s step back for a second now and imagine that unfortunately sometimes your application shows wrong result or perhaps crashes and you suspect that the issue is your <code>mult()</code> function. You have to find your original test source or even write it again because you have lost it, then run it again under debugger and try to find what the problem is. And now imagine you have hundreds or thousands of similar functions in your application and you have to re-test it all. It’s nightmare.</p>
+
+<p>Well, let me show you another way – the test driven development way. We will use the excellent <a href="http://code.google.com/p/googletest/">Google Test Framework</a> 1.3.0 for that. You can download and unpack it in your working directory:</p>
+
+<pre><code>wget http://googletest.googlecode.com/files/gtest-1.3.0.tar.gz
+gzip -dc gtest-1.3.0.tar.gz | tar xvf -
+</code></pre>
+
+<p>It will create <code>gtest-1.3.0</code> directory in your current folder. We will refer to this directory below so make sure that you use proper directory names in your compilation commands.</p>
+
+<p>Then you create the unit test.</p>
+
+<p>File: <code>mult_unittest.cc</code></p>
+
+<pre><code class="cpp">#include &lt;gtest/gtest.h&gt;
+#include &quot;mult.h&quot;
+
+TEST(multTest, simple) {
+  EXPECT_EQ(91, mult(7, 13));
+}
+</code></pre>
+
+<p>This file contains the simple test case. The meaning of it is explained below.</p>
+
+<p>Then the test main runner module:</p>
+
+<p>File: <code>runner.cc</code></p>
+
+<pre><code class="cpp">#include &lt;gtest/gtest.h&gt;
+
+int main(int argc, char **argv) {
+  testing::InitGoogleTest(&amp;argc, argv);
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>This runner will execute all declared tests in your test application. This piece of code can be almost the same for any of your unit test suites. It just parses the command line arguments and runs all tests.</p>
+
+<p>Now let’s compile it. If you are running Linux and have the GCC C++ compiler version 3 or later you can use the following command:</p>
+
+<pre><code>g++ -Igtest-1.3.0/include -Igtest-1.3.0 -o mult_unittest gtest-1.3.0/src/gtest-all.cc mult.cc mult_unittest.cc runner.cc
+</code></pre>
+
+<p>The <code>mult_unittest</code> executable should be generated. Let’s run it:</p>
+
+<pre><code>./mult_unittest
+</code></pre>
+
+<p>It prints something like this:</p>
+
+<pre><code>[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from multTest
+[ RUN      ] multTest.simple
+[       OK ] multTest.simple
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran.
+[  PASSED  ] 1 test.
+</code></pre>
+
+<p>Let’s go back and look at it in more details now. We have created the test case named <code>multTest.simple</code> in the file <code>mult_unittest.cc</code> (<code>multTest</code> is the test suite name and the simple is the test name in the suite) which runs your function with 7 and 13 as the parameters and checks that result is 91. The macro for the test declaration is <code>TEST(...)</code>. The magic happens in the <code>EXPECT_EQ (...)</code>. This function call has two arguments: the first one is the expected value and the second is the real one. If they are equal the function passes through quietly but if they are different it reports an error message.</p>
+
+<p>The Google Test Framework provides a bunch of similar functions to check various conditions with different argument types. The <code>EXPECT_*</code>function family does not abort the test run. It just prints the report about a test failure and keeps going to execute other tests. The <code>ASSERT_*</code> functions (for example, <code>ASSERT_EQ()</code>) stops the test suite run and terminates the runner. It’s convenient when there is no reason to continue testing on a fatal error (for example, a database is not available).</p>
+
+<p>But in our case the test runner reports the successful test execution – the test case has been executed and the result is correct. That’s fine but this test case is so obvious and checks only one pair of numbers. You need more. Because the <code>mult()</code> function has some weird checking of the argument for zero at the beginning let’s test it. You add one more test case – <code>multTest.zero</code>.</p>
+
+<p>File: <code>mult_unittest.cc</code></p>
+
+<pre><code class="cpp">#include &lt;gtest/gtest.h&gt;
+#include &quot;mult.h&quot;
+
+TEST(multTest, simple) {
+  EXPECT_EQ(91, mult(7, 13));
+}
+
+TEST(multTest, zero) {
+  EXPECT_EQ(0, mult(0, 7));
+  EXPECT_EQ(0, mult(7, 0));
+}
+</code></pre>
+
+<p>Let’s compile with the same command and run <code>mult_unittest</code> executable again. It should print this:</p>
+
+<pre><code>[==========] Running 2 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 2 tests from multTest
+[ RUN      ] multTest.simple
+[       OK ] multTest.simple
+[ RUN      ] multTest.zero
+[       OK ] multTest.zero
+[----------] Global test environment tear-down
+[==========] 2 tests from 1 test case ran.
+[  PASSED  ] 2 tests.
+</code></pre>
+
+<p>The new test passes successfully as well and the <code>mult()</code> function seems to handle checking parameter for zero correctly. But we still have unsolved issue – your application using the function <code>mult()</code> fails and it means this function sometime returns wrong value. Let’s add the stronger test to file <code>mult_unittest.cc</code>:</p>
+
+<p>File: <code>mult_unittest.cc</code></p>
+
+<pre><code class="cpp">#include &lt;gtest/gtest.h&gt;
+#include &quot;mult.h&quot;
+
+TEST(multTest, simple) {
+  EXPECT_EQ(91, mult(7, 13));
+}
+
+TEST(multTest, zero) {
+  EXPECT_EQ(0, mult(0, 7));
+  EXPECT_EQ(0, mult(7, 0));
+}
+
+TEST(multTest, all) {
+  for (int a = 0; a &lt; 1000; ++a)
+    for (int b = 0; b &lt; 1000; ++b)
+      EXPECT_EQ(a * b, mult(a, b));
+}
+</code></pre>
+
+<p>This test (<code>multTest.all</code>) checks all possible values of arguments from 0 to 999. Let’s compile and run it again:</p>
+
+<pre><code>[==========] Running 3 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 3 tests from multTest
+[ RUN      ] multTest.simple
+[       OK ] multTest.simple
+[ RUN      ] multTest.zero
+[       OK ] multTest.zero
+[ RUN      ] multTest.all
+mult_unittest.cc:18: Failure
+Value of: mult(a, b)
+  Actual: 779241
+Expected: a * b
+Which is: 779240
+[  FAILED  ] multTest.all
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test case ran.
+[  PASSED  ] 2 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] multTest.all
+
+ 1 FAILED TEST
+</code></pre>
+
+<p>Wow! The test fails. It means we have found the problem. We see that in the line 18 of <code>mult_unittest.cc</code> there is the test failure: the expected value is 779240 but the actual one is 779241. It’s a great result, but we also need to know which exact parameters cause this error. So let’s modify the test:</p>
+
+<pre><code class="cpp">TEST(multTest, all) {
+  for (int a = 0; a &lt; 1000; ++a)
+    for (int b = 0; b &lt; 1000; ++b)
+      EXPECT_EQ(a * b, mult(a, b)) 
+        &lt;&lt; &quot;wrong result on a=&quot; &lt;&lt; a &lt;&lt; &quot; and b=&quot; &lt;&lt; b;
+}
+</code></pre>
+
+<p>This code will also print the error message and the values of a and b on failure. The <code>EXPECT_EQ(...)</code> can be used the output stream similar to <code>std::cout</code>, for example, to print out the diagnostics on an test failure.</p>
+
+<p>Compile and run it again. We should get the following result:</p>
+
+<pre><code>[==========] Running 3 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 3 tests from multTest
+[ RUN      ] multTest.simple
+[       OK ] multTest.simple
+[ RUN      ] multTest.zero
+[       OK ] multTest.zero
+[ RUN      ] multTest.all
+mult_unittest.cc:17: Failure
+Value of: mult(a, b)
+  Actual: 779241
+Expected: a * b
+Which is: 779240
+wrong result on a=920 and b=847
+[  FAILED  ] multTest.all
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test case ran.
+[  PASSED  ] 2 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] multTest.all
+
+ 1 FAILED TEST
+</code></pre>
+
+<p>Now we know exactly that the function fails when <code>a=920</code> and <code>b=847</code>. This is the problem. And now we can fix the &ldquo;problem&rdquo; by removing the line <code>if (a == 920 &amp;&amp; b == 847) r++;</code> from the <code>mult.cc</code> file. Here is an error free version of the <code>main.cc</code>:</p>
+
+<pre><code class="cpp">#include &quot;mult.h&quot;
+
+int mult(int a, int b) {
+  if (!a || !b) return 0;
+  int r = 0;
+  do {
+    if (b &amp; 1) r += a;
+    a &lt;&lt;= 1;
+  } while (b &gt;&gt;= 1);
+  return r;
+}
+</code></pre>
+
+<p>Well, now compile it and run <code>mult_unittest</code> once again. Here is the output:</p>
+
+<pre><code>[==========] Running 3 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 3 tests from multTest
+[ RUN      ] multTest.simple
+[       OK ] multTest.simple
+[ RUN      ] multTest.zero
+[       OK ] multTest.zero
+[ RUN      ] multTest.all
+[       OK ] multTest.all
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test case ran.
+[  PASSED  ] 3 tests.
+</code></pre>
+
+<p>All tests work perfectly and now you are sure that your function <code>mult()</code> is fully error free.</p>
+
+<p>Let’s analyse what we’ve done. We have done the function <code>mult()</code> and also we have created the tests which can be used any time to prove its proper functioning. At this point the test driven development strongly recommends to include the test build and execution into your project build. For example, this is the part of your <code>myapp</code> project makefile:</p>
+
+<pre><code class="makefile">...
+all: build
+
+build:
+    cc –o myapp main.cc mult.cc
+</code></pre>
+
+<p>You should add the test compilation and run into this makefile:</p>
+
+<pre><code class="makefile">...
+release: build test
+
+build:
+    g++ –o myapp main.cc mult.cc
+
+test:
+    g++ -Igtest-1.3.0/include -Igtest-1.3.0 -o mult_unittest \
+      gtest-1.3.0/src/gtest-all.cc mult.cc mult_unittest.cc runner.cc
+    ./mult_unittest
+</code></pre>
+
+<p>Why do you need this? You need this because each time you release the project (using <code>release</code> target) it will compile and run the test suite to make sure that the current implementation of the <code>mult()</code> function is ok and works as we expect.</p>
+
+<p>Now imagine you want to check whether it is reasonable to use your own hacky implementation of the simple arithmetic operation as the multiplication. Let’s run your test suite again by the command:</p>
+
+<pre><code>./mult_unittest --gtest_print_time --gtest_filter=multTest.all
+</code></pre>
+
+<p>We ask Google Test framework to print the test execution time and also we ask to run only one test using the filter by name.</p>
+
+<p>The output:</p>
+
+<pre><code>Note: Google Test filter = multTest.all
+[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from multTest
+[ RUN      ] multTest.all
+[       OK ] multTest.all (1266 ms)
+[----------] 1 test from multTest (1297 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran. (1328 ms total)
+[  PASSED  ] 1 test.
+</code></pre>
+
+<p>It reports only one test run (<code>testMult.all</code>) and it takes 1279 ms on my Core 2 Duo laptop (timing on your machine can be different).</p>
+
+<p>Now you want to try another fairly simple implementation for the <code>mult()</code> function:</p>
+
+<p>File: <code>mult.cc</code></p>
+
+<pre><code class="cpp">#include &quot;mult.h&quot;
+int mult(int a, int b) {
+  return a * b;
+}
+</code></pre>
+
+<p>Let’s compile it by exactly the same command as we used for the first implementation:</p>
+
+<pre><code>g++ -Igtest-1.3.0/include -Igtest-1.3.0 -o mult_unittest \
+    gtest-1.3.0/src/gtest-all.cc mult.cc mult_unittest.cc runner.cc
+</code></pre>
+
+<p>and run it:</p>
+
+<pre><code>./mult_unittest --gtest_print_time --gtest_filter=multTest.all
+</code></pre>
+
+<p>The output should look like this:</p>
+
+<pre><code>Note: Google Test filter = multTest.all
+[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from multTest
+[ RUN      ] multTest.all
+[       OK ] multTest.all (1094 ms)
+[----------] 1 test from multTest (1141 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran. (1171 ms total)
+[  PASSED  ] 1 test.
+</code></pre>
+
+<p>We see it takes only 1094ms on my laptop and it’s faster than our original handmade implementation.</p>
+
+<p>Now you know that the original implementation is not quite so good and may be optimized or replaced by a better one.</p>
+
+<p>So what is that we have achieved by this entire exercise? What is the message of it?</p>
+
+<p>Firstly, we have created the test mechanism for our function and this mechanism can be used any time later to prove the function logic and it can be fully automated. Once created it can be re-used as many times as you want. You do not lose your efforts applied initially for creating the testing routine.</p>
+
+<p>Secondly, we have included the test run into the project build. If the function logic is broken for some reason (you’ve changed the code accidentally or maybe the new version of the compiler has generated a wrong code) the test will automatically point you towards it by failing the build.</p>
+
+<p>And thirdly, we tried two different implementations of the <code>mult()</code> function using the same test suite. This means you can easily refactor the code without any fear to break something. The tests will check the function results and the expectations from the function. You have determined the function behaviour via the test cases and from this point you can easily play with the function implementation. On top of this we have tested two different implementations for execution time and now we have enough information to choose the better one.</p>
+
+<p>These are really awesome results – you have automated the error checking procedure for your project. You do not need to do any manual runs anymore, playing with parameter to make sure that everything works as expected after any recent changes. Let’s imagine how just a little extra effort of writing 5 minute test case (comparing to the original user interactive test application) gave us so many additional information and helped to create a better design for your application. It’s definitely worth it.</p>
+
+<p>There is probably an argument that in some cases testing can be tricky because the real world applications are much more complex than this isolated example. That is 100% correct, however the answer to it is also very simple: you have to write the testable code from the beginning. Every time the piece of code is done, ask yourself – how will I test it? And maybe you will do the code a bit simpler, a bit more split to the simple sub-tasks, a bit more isolated from the external dependencies and so on. Definitely the testable code writing is a complicated issue and there are a lot of techniques for it: the dependency injection, isolating the business logic from the object instantiation (operator new), using inheritance and polymorphism instead of overly complicated if/switch constructions and so on and so forth.</p>
+
+<p>Of course I have referenced many things from object oriented world which make it easier to use unit testing. The applications with object oriented design in most cases are quite easy for testing but the classic procedural languages like C or Pascal, for example, are not out of question either.</p>
+
+<p>Let’s see how to test the similar example written on ANSI C. Here are your sources:</p>
+
+<p>File: <code>mult.h</code></p>
+
+<pre><code class="cpp">#ifndef _MULT_H
+#define _MULT_H
+int mult(int a, int b);
+#endif
+</code></pre>
+
+<p>File: <code>mult.c</code> (buggy version)</p>
+
+<pre><code class="cpp">#include &quot;mult.h&quot;
+
+int mult(int a, int b) {
+  int r = 0;
+  if (!a || !b) return 0;
+  if (a == 920 &amp;&amp; b == 847) r++;
+  do {
+    if (b &amp; 1) r += a;
+    a &lt;&lt;= 1;
+  } while (b &gt;&gt;= 1);
+  return r;
+}
+</code></pre>
+
+<p>I will use another Google testing framework here – <a href="http://code.google.com/p/cmockery/">cmockery 0.1.2</a>. This framework was designed to test C code and it’s a very powerful framework. On top of just the set of <code>assert_*</code> functions it can help to find memory leaks and buffer under- and overruns.</p>
+
+<p>Let’s get it:</p>
+
+<pre><code>wget http://cmockery.googlecode.com/files/cmockery-0.1.2.tar.gz
+gzip -dc cmockery-0.1.2.tar.gz | tar xvf -
+</code></pre>
+
+<p>This command will create the <code>cmockery-0.1.2</code> folder in your current directory. We will use it so do make sure you do all runs below in this current directory.</p>
+
+<p>Let me show you the test suite with the same functionality but written on C:</p>
+
+<p>File: <code>mult_test.h</code></p>
+
+<pre><code class="cpp">#ifndef _MULT_TEST_H
+#define _MULT_TEST_H
+void mult_simple_test(void **state);
+void mult_zero_test(void **state);
+void mult_all_test(void **state);
+#endif
+</code></pre>
+
+<p>File: <code>mult_test.c</code></p>
+
+<pre><code class="cpp">#include &lt;stdarg.h&gt;
+#include &lt;stddef.h&gt;
+#include &lt;setjmp.h&gt;
+#include &lt;cmockery.h&gt;
+
+void mult_simple_test(void **state) {
+   assert_int_equal(91, mult(7, 13));
+}
+
+void mult_zero_test(void **state) {
+   assert_int_equal(0, mult(0, 7));
+   assert_int_equal(0, mult(7, 0));
+}
+
+void mult_all_test(void **state) {
+  int a, b;
+  for (a = 0; a &lt; 1000; ++a)
+    for (b = 0; b &lt; 1000; ++b)
+      assert_int_equal(a * b, mult(a, b));
+}
+</code></pre>
+
+<p>And the runner:</p>
+
+<pre><code class="cpp">#include &lt;stdarg.h&gt;
+#include &lt;stddef.h&gt;
+#include &lt;setjmp.h&gt;
+#include &lt;cmockery.h&gt;
+#include &quot;mult_test.h&quot;
+
+int main(int argc, char* argv[]) {
+   const UnitTest tests[] = {
+      unit_test(mult_simple_test),
+      unit_test(mult_zero_test),
+      unit_test(mult_all_test),
+   };
+   return run_tests(tests);
+}
+</code></pre>
+
+<p>Let’s compile it with GCC version 3 or higher:</p>
+
+<pre><code>gcc -Icmockery-0.1.2/src/google -o mult_test \
+    cmockery-0.1.2/src/cmockery.c mult.c mult_test.c runner.c
+</code></pre>
+
+<p>If everything is correct you should test <code>mult_test</code> executable. Let’s run it:</p>
+
+<pre><code>./mult_test
+</code></pre>
+
+<p>and it will print something like this:</p>
+
+<pre><code>mult_simple_test: Starting test
+mult_simple_test: Test completed successfully.
+mult_zero_test: Starting test
+mult_zero_test: Test completed successfully.
+mult_all_test: Starting test
+0xbe3e8 != 0xbe3e9
+ERROR: mult_test.c:19 Failure!
+mult_all_test: Test failed.
+1 out of 3 tests failed!
+    mult_all_test
+</code></pre>
+
+<p>The <code>mult_all_test</code> fails in the line 19 and it reports that the expected value of multiplication is 0xBE3E8 (decimal 779240 = 920 * 847) but the actual one is 0xBE3E9 (decimal 779240). Now we <em>fix</em> the <code>mult()</code> function removing buggy line <code>if (a == 920 &amp;&amp; b == 847) r++;</code>:</p>
+
+<p>File: <code>mult.c</code> (error free version)</p>
+
+<pre><code class="cpp">#include &quot;mult.h&quot;
+
+int mult(int a, int b) {
+  int r = 0;
+  if (!a || !b) return 0;
+  do {
+    if (b &amp; 1) r += a;
+    a &lt;&lt;= 1;
+  } while (b &gt;&gt;= 1);
+  return r;
+}
+</code></pre>
+
+<p>and run the test suite again. Now it prints this:</p>
+
+<pre><code>mult_simple_test: Starting test
+mult_simple_test: Test completed successfully.
+mult_zero_test: Starting test
+mult_zero_test: Test completed successfully.
+mult_all_test: Starting test
+mult_all_test: Test completed successfully.
+All 3 tests passed
+</code></pre>
+
+<p>We see now all three tests work fine. Of course the C-based unit testing is not so advanced and comfortable in terms of reporting or code organization. You have to declare your test cases in the header file and in the runner but this is a limitation of the C language. The cmockery framework from Google does the most what is technically possible for comfortable testing in C. But even if the reporting is not ideal you are always informed about which test fails and in which line.</p>
+
+<p>Other languages have the unit testing frameworks as well. For jUnit for Java, pyUnit for Python and so on. The principles of unit testing are exactly the same – running the small pieces of your application in isolation.</p>
+
+<p>QA (Quality Assurance) testing and regression testing are another big topic. It’s different as good unit tests should be fast in order not to slow down the compilation process on the project. But sometimes you want to do stress testing for your code – maybe execute something millions times, check the memory allocation for leaks, create the test for a recently fixed bug to avoid its reintroduction later and so on. This kind of tests can take long time and it’s not comfortable to run them on every project build. Here the QA and regression testing step onto the scene. It’s also quite an interesting topic and I will try to cover it soon as well.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2009/09/first-little-step-into-test-driven.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2009/09/first-little-step-into-test-driven.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2009/09/first-little-step-into-test-driven.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

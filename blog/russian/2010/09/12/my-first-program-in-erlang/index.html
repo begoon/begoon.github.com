@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Моя первая программа на Эрланге</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Моя первая программа на Эрланге</h1>
+<div id="post">
+  <p>Решал я тут одну <a href="http://acmp.ru/index.asp?main=task&amp;id_task=176">красивую задачу</a>. Решение - рекурсивная функция, динамическое программирование.
+Для эксперимента написал свою первую программу на Эрланге как решение этой задачи.</p>
+
+<p>Вот оригинал на C++ (рекурсия с кешированием):</p>
+
+<pre><code class="cpp">bignum f(int n, int k, int t, int&amp; K, vector&lt;vector&lt;vector&lt;bignum&gt; &gt; &gt;&amp; dp) {
+  if (n == 0 &amp;&amp; k == 0 &amp;&amp; t == 0) return 1;
+  if (n == 0 || k &lt; 0) return 0;
+
+  if (!(dp[t][n][k] == -1)) return dp[t][n][k];
+
+  bignum ans = 0;
+
+  if (k &lt; K) {
+    ans = ans + f(n - 1, k - 1, t, K, dp);
+    if (t == 1 || (t == 0 &amp;&amp; k &lt; K - 1))
+      ans = ans + f(n - 1, k + 1, t, K, dp);
+  }
+
+  if (t == 1 &amp;&amp; k == K) {
+    ans = ans + f(n - 1, k - 1, 0, K, dp);
+    ans = ans + f(n - 1, k - 1, 1, K, dp);
+  }
+
+  dp[t][n][k] = ans;
+  return ans;
+}
+</code></pre>
+
+<p>А теперь Эрланг:</p>
+
+<pre><code class="erlang">main(_) -&gt;
+  N = 50, K = 25,
+  io:format(&quot;~w\n&quot;, [rbs(2*N, 0, 1, K)]).
+
+rbs(0, 0, 0, _) -&gt; 1;
+rbs(0, _, _, _) -&gt; 0;
+rbs(_, K, _, _) when K &lt; 0 -&gt; 0;
+
+rbs(N, K, 0, MAX_K) -&gt;
+  if 
+    K &lt; MAX_K-1 -&gt; rbs(N-1, K-1, 0, MAX_K) + rbs(N-1, K+1, 0, MAX_K);
+    K &lt; MAX_K   -&gt; rbs(N-1, K-1, 0, MAX_K);
+    K =:= MAX_K -&gt; 0
+  end;
+
+rbs(N, K, 1, MAX_K) -&gt;
+  if
+    K &lt; MAX_K   -&gt; rbs(N-1, K-1, 1, MAX_K) + rbs(N-1, K+1, 1, MAX_K);
+    K =:= MAX_K -&gt; rbs(N-1, K-1, 0, MAX_K) + rbs(N-1, K-1, 1, MAX_K)
+  end.
+</code></pre>
+
+<p>Красиво, а?</p>
+
+<p>Но вот увы, кеширование результатов пришлось делать тоже вручную, так как без нее программа имеет экспоненциальное время. Так что итоговый вариант выглядит так:</p>
+
+<pre><code class="erlang">#!/usr/bin/env escript
+
+main(_) -&gt;
+  N = 50, K = 25,
+  io:format(&quot;~w\n&quot;, [rbs(2*N, 0, 1, K)]).
+
+rbs(0, 0, 0, _) -&gt; 1;
+rbs(0, _, _, _) -&gt; 0;
+rbs(_, K, _, _) when K &lt; 0 -&gt; 0;
+
+rbs(N, K, 0, MAX_K) -&gt;
+  if 
+    K &lt; MAX_K-1 -&gt; rbs_memo(N-1, K-1, 0, MAX_K) + rbs_memo(N-1, K+1, 0, MAX_K);
+    K &lt; MAX_K   -&gt; rbs_memo(N-1, K-1, 0, MAX_K);
+    K =:= MAX_K -&gt; 0
+  end;
+
+rbs(N, K, 1, MAX_K) -&gt;
+  if
+    K &lt; MAX_K   -&gt; rbs_memo(N-1, K-1, 1, MAX_K) + rbs_memo(N-1, K+1, 1, MAX_K);
+    K =:= MAX_K -&gt; rbs_memo(N-1, K-1, 0, MAX_K) + rbs_memo(N-1, K-1, 1, MAX_K)
+  end.
+
+rbs_memo(N, K, T, MAX_K) -&gt;
+  Name = rbs,
+  case ets:info(Name) of
+    undefined -&gt;
+      ets:new(Name, [public, named_table]);
+    _ -&gt; true
+  end,
+  Key = {N, K, T, MAX_K},
+  case ets:lookup(Name, Key) of
+    [] -&gt;
+      Val = rbs(N, K, T, MAX_K),
+      ets:insert(Name, {Key, Val}),
+      Val;
+    [{_, Val}] -&gt; Val;
+    Else -&gt; Else
+  end.
+</code></pre>
+
+<p>Странно, ведь можно было бы заложить кеширование прямо в языке. Ведь когда функция вызывается повторно с теми же самыми аргументами, то очевидно, что результат будет такой же (ибо Эрланг - это &ldquo;чистый&rdquo; функциональный язык, и side effects тут исключены). Но в целом функция кеширования весьма универсальна и ее можно быстро адаптировать для других ситуаций.</p>
+
+<p>По времени выполнения эрланговый вариант не уступает C++. При это надо учесть, что Эрланге по умочанию арифметика &ldquo;длинная&rdquo;, а в С++ мне пришлось использовать доморощенный класс <code>bignum</code>.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2010/09/blog-post.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2010/09/blog-post.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2010/09/blog-post.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Разница между "new T()" и "new T"</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Разница между &#34;new T()&#34; и &#34;new T&#34;</h1>
+<div id="post">
+  <p>Начнем с <code>new T()</code>.</p>
+
+<p>Стандарт говорит нам, что если <code>Т</code> является POD-классом (не объектно-ориентированной сущностью), то объект будет инициализирован значением по умолчанию (обычно, например, для арифметических типов это 0), а если это не POD-класс (явная объектно-ориентированная сущность), то для него вызовется конструктор по умолчанию (либо явный, либо созданный компилятором). Если конструктор по умолчанию задан явно, то будет вызван только он, и вся ответственность за инициализацию ляжет на него. Никой инициализации по умолчанию больше не будет. Если же конструктор по умолчанию не задан явно, и компилятор создал его сам, и в этом случае все члены класса будут проинициализированы неявно: POD-объекты будут проинициализированы нулем, а для не-POD объектов будет проведена инициализация по умолчанию (включая всех его дочерних составляющих — рекурсивный обход всех подобъектов и их инициализация по такому же принципу).</p>
+
+<p>Теперь <code>new T</code>.</p>
+
+<p>В этом случае для POD-объектов вообще не будет никакой инициализации (что было в памяти на момент распределения, то и будет). Для не POD-объекта просто будет вызван конструктор по умолчанию (либо явный, ли заданный компилятором по умолчанию), и не будет проводиться никакой инициализации POD-составляющих этого объекта.</p>
+
+<p>Для простоты, POD-типами (Plain Old Data) является все наследие языка С в С++. Везде, где есть объектно-ориентированная примесь — это уже не POD-класс. Для не POD-классов нельзя делать никаких предположений о внутренней структуре, расположению в памяти и т.д.</p>
+
+<p>Забавно, структура:</p>
+
+<pre><code class="cpp">struct A {
+  int b;
+};
+</code></pre>
+
+<p>является POD-типом, а вот если добавить в нее, например, слово <code>public</code>:</p>
+
+<pre><code class="cpp">struct A {
+public:
+  int b;
+};
+</code></pre>
+
+<p>то по стандарту это не POD-объект, и его нельзя уже трогать на уровне внутреннего представления, например обнулить через <code>memset</code>. Хотя многие компиляторы разрешают такие &ldquo;игры&rdquo; с не POD-объектами и, программа может в принципе работать, но это против стандарта, и, конечно, против переносимости программы.</p>
+
+<p>Итак, описание различий весьма путанное, поэтому лучше рассмотреть пример.</p>
+
+<p>Для чистоты эксперимента я буду использовать так называемое распределение памяти с размещением. То есть я вручную указываю, в каком месте памяти должен будет создаваться объект. Это позволит контролировать &ldquo;непредсказуемые&rdquo; значения неинициализированной памяти.</p>
+
+<p>Итак, первый пример:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+
+class T {
+public:
+  // Для простоты экспериментируем на однобайтовом типе.
+  unsigned char n;
+};
+
+int main() {
+  // &quot;Случайная&quot; память для создания объекта.
+  // Берем с запасом, чтобы уж точно вместить объект класса T.
+  char p[10240];
+
+  // Заполняем память числом 170 (0xAA)
+  std::memset(p, 170 /* 0xAA */, sizeof(p));
+  // Создаем объект явно в памяти, заполненной числом 170.
+  T* a = new (p) T;
+  std::cout &lt;&lt; &quot;new T: T.n = &quot; &lt;&lt; (int)a-&gt;n &lt;&lt; std::endl;
+
+  // Заполняем память числом 171 (0xAB)
+  std::memset(p, 171 /* 0xAB */, sizeof(p));
+
+  // Создаем объект явно в памяти, заполненной числом 171.
+  T* b = new (p) T();
+  std::cout &lt;&lt; &quot;new T(): T.n = &quot; &lt;&lt; (int)b-&gt;n &lt;&lt; std::endl;
+
+  return 0;
+}
+</code></pre>
+
+<p>Данный пример выведет:</p>
+
+<pre><code>new T: T.n = 170
+new T(): T.n = 0
+</code></pre>
+
+<p>Видно, что для <code>new T</code> элемент <code>T.n</code> так остался неинициализированным и равным числу <code>170</code>, которые заполнили память заранее. Для <code>new T()</code> же в свою очередь элемент <code>T.n</code> стал равны нулю, то есть он был проинициализирован. Все, как сказано в стандарте.</p>
+
+<p>Теперь изменим одну маленькую деталь — добавим в класс <code>Т</code> явный конструктор:</p>
+
+<pre><code class="cpp">class T {
+public:
+  // Явный конструктор.
+  T() {}
+  // Для простоты экспериментируем на однобайтовом типе.
+  unsigned char n;
+};
+</code></pre>
+
+<p>Теперь нас ждет сюрприз. Теперь программа будет выводить следующее:</p>
+
+<pre><code>new T: T.n = 170
+new T(): T.n = 171
+</code></pre>
+
+<p>Получается, что даже при new <code>T()</code> элемент <code>T.n</code> не был более инициализирован. Почему? А потому, что стандарт гласит: если задан явный конструктор класса, то никакие инициализации по умолчанию для POD-объектов не производятся. Раз программист задал конструктор явно, значит он знает что делает, и вся ответственность за инициализацию теперь на его плечах.</p>
+
+<p>Лично для себя я всегда предпочитаю писать <code>new T()</code> хотя бы для единообразия вызова конструкторов. Также я всегда явно инициализирую все POD-объекты вручную в конструкторе или в его списке инициализации. Отсутствие предположений о значении POD-типов по умолчанию и инициализация их принудительно позволяет избежать сюрпризов при смене компилятора.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/02/21/difference-between-type-and-type-with-brackets/">Разница между T() и T</a></li>
+<li><a href="/blog/russian/2009/02/09/dark-corners-of-cpp/">Темные углы С++</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/new-t-new-t.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/new-t-new-t.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/new-t-new-t.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

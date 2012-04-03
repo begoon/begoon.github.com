@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Google Test Framework 1.6.0</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Google Test Framework 1.6.0</h1>
+<div id="post">
+  <p>Только что вышла <a href="http://code.google.com/p/googletest/downloads/list">новая версия</a> отличной библиотеки для unit-тестирования на С++ - Google C++ Testing Framework.</p>
+
+<p>Вот список изменений:</p>
+
+<ul>
+<li>New feature: ADD_FAILURE_AT() for reporting a test failure at the given source location &ndash; useful for writing testing utilities.</li>
+<li>New feature: the universal value printer is moved from Google Mock to Google Test.</li>
+<li>New feature: type parameters and value parameters are reported in the XML report now.</li>
+<li>A gtest_disable_pthreads CMake option.</li>
+<li>Colored output works in GNU Screen sessions now.</li>
+<li>Parameters of value-parameterized tests are now printed in the textual output.</li>
+<li>Failures from ad hoc test assertions run before RUN_ALL_TESTS() are now correctly reported.</li>
+<li>Arguments of ASSERT_XY and EXPECT_XY no longer need to support &lt;&lt; to ostream.</li>
+<li>More complete handling of exceptions.</li>
+<li>GTEST_ASSERT_XY can be used instead of ASSERT_XY in case the latter name is already used by another library.</li>
+<li>&ndash;gtest_catch_exceptions is now true by default, allowing a test program to continue after an exception is thrown.</li>
+<li>Value-parameterized test fixtures can now derive from Test and</li>
+<li>WithParamInterface<T> separately, easing conversion of legacy tests.</li>
+<li>Death test messages are clearly marked to make them more distinguishable from other messages.</li>
+<li>Compatibility fixes for Android, Google Native Client, MinGW, HP UX, PowerPC, Lucid autotools, libCStd, Sun C++, Borland C++ Builder (Code Gear), IBM XL C++ (Visual Age C++), and C++0x.</li>
+<li>Bug fixes and implementation clean-ups.</li>
+<li>Potentially incompatible changes: disables the harmful &lsquo;make install&rsquo; command in autotools.</li>
+</ul>
+
+<p><a href="http://code.google.com/p/googletest/source/browse/trunk/CHANGES">Полная история версий Google Test</a>.</p>
+
+<p>Каких-то радикально новых возможностей вроде нет, но исправлено несколько неприятных багов.</p>
+
+<p>Лично я очень ждал исправления мелких, но неприятных несовместимостей с компиляторами HP-UX, Sun и AIX.</p>
+
+<p>Посты по теме и почти по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2010/04/16/google-test-framework-150/">Google Test Framework 1.5.0</a></li>
+<li><a href="/blog/russian/2009/10/03/google-test-framework-140/">Google Test Framework 1.4.0</a></li>
+<li><a href="/blog/russian/2009/03/19/google-test-framework-130/">Google Test Framework 1.3.0</a></li>
+<li><a href="/blog/russian/2009/07/15/googletest-for-beginners-in-russian/">Руководство для начинающих по Google Test на русском</a></li>
+<li><a href="/blog/russian/2009/10/13/googlemock-for-beginner-in-russian/">Руководство для начинающих по Google Mock на русском</a></li>
+<li><a href="/blog/russian/2009/10/07/google-test-framework-authors-presentation/">Презентация от авторов Google C++ Testing Framework</a></li>
+<li><a href="/blog/russian/2009/10/15/introduction-to-googlemock-talk/">Введение в Google Mock (видео)</a></li>
+</ul>
+
+<p><strong>UPDATE</strong></p>
+
+<p>По ходу вышел еще и Google Mock 1.6.0.</p>
+
+<p>Что нового тут:</p>
+
+<ul>
+<li>Compilation is much faster and uses much less memory, especially when the constructor and destructor of a mock class are moved out of the class body.</li>
+<li>New matchers: Pointwise(), Each().</li>
+<li>New actions: ReturnPointee() and ReturnRefOfCopy().</li>
+<li>CMake support.</li>
+<li>Project files for Visual Studio 2010.</li>
+<li>AllOf() and AnyOf() can handle up-to 10 arguments now.</li>
+<li>Google Mock doctor understands Clang error messages now.</li>
+<li>SetArgPointee&lt;&gt; now accepts string literals.</li>
+<li>gmock_gen.py handles storage specifier macros and template return types now.</li>
+<li>Compatibility fixes.</li>
+<li>Bug fixes and implementation clean-ups.</li>
+<li>Potentially incompatible changes: disables the harmful &lsquo;make install&rsquo; command in autotools.</li>
+</ul>
+
+<p><a href="http://code.google.com/p/googlemock/source/browse/trunk/CHANGES">Полная история версий Google Mock</a>.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/04/google-test-160.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/04/google-test-160.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/04/google-test-160.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

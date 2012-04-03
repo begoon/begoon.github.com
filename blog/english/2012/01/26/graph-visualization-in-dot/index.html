@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Graph visualization in DOT</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Graph visualization in DOT</h1>
+<div id="post">
+  <p>Background. We do financial transactions processing. At some point we decided that we need profiling. We could record a path of how a transaction being passed amongst modules. There are two options - either to do static analysis or to trace the runtime.</p>
+
+<p>So, the connections are determined and now we have to formalize and visualize them.</p>
+
+<p>At the first glance this is not an easy task, but it turned out there is a simple and elegant solution.</p>
+
+<p>There is a plain text language to declare graphs &ndash; <a href="http://en.wikipedia.org/wiki/DOT_language">DOT</a>. Its beauty is in ultimate simplicity. For example, a trivial graph:</p>
+
+<pre><code>graph name {
+  a -- b
+  b -- c
+  b -- d
+}
+</code></pre>
+
+<p>Feed it to special software and get this:</p>
+
+<p><img src="/images/blog/dot-graph.png" /></p>
+
+<p>That&rsquo;s it! The output is in SVG, ready to stick on a wall.</p>
+
+<p>Unfortunately, the best software I&rsquo;ve found to visualize DOT is <a href="http://www.graphviz.org/">Graphviz</a>. It does pretty decent job properly processing quite sophisticated graphs, but in terms of user experience it&rsquo;s shite.</p>
+
+<p>If anyone is interested, I&rsquo;ve shared a <a href="/downloads/dot/graph.gv">real trace</a> (obviously, names are obfuscated). It gives an idea about simplicity of the source and visualization capabilities - <a href="/downloads/dot/graph.png">PNG</a> and <a href="/downloads/dot/graph.svg">SVG</a>.</p>
+
+<p>Again, the graph formalization is dead simple - you only need to specify pairs of connected vertices. Also, in DOT you can describe directed graphs and extra attributes of the vertices.</p>
+
+<p>To sum up, great technology.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2012/01/graph-visualization-in-dot-dot.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2012/01/graph-visualization-in-dot-dot-english.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2012/01/graph-visualization-in-dot-dot.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

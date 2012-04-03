@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Хостинг на Google Code: SerialCom</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Хостинг на Google Code: SerialCom</h1>
+<div id="post">
+  <p>В качестве эксперимента перенес один из своих старых проектов на <a href="http://code.google.com/">Google Code</a>. Очень хотелось пощупать хостинг Mercurial.</p>
+
+<p><a href="http://code.google.com/p/serialcom/">SerialCom</a> — программа для ковыряния в потоковых протоколах. Умеет работать с компортом, быть TCP/IP клиентом или сервером. Умеет удобно отображать и посылать шестнадцатеричные дампы. В довершение — проста как валенок.</p>
+
+<p>В общем, когда-то мне нужна программа для удобной отладки устройства на PIC&rsquo;е, с которым надо было работать по RS232. Ничего готового, подходящего мне по всем параметрам, я тогда не нашел, поэтому написал свою. Благо борландовые продукты располагают к пятиминутным двухкликовым проектам. Через некоторое время добавил работу с TCP/IP. Отлично подходит для возни с протоколами.</p>
+
+<p>Проект очень прост. Кругом VCL и удобная компонента для работы с портом. Но это и обратная сторона медали — компилируется только в C++ Builder&rsquo;е, причем из-за гениальной архитектуры компонент в VCL для сборки без допиливания нужен билдер именно версии 6.0. Использование более поздних сред потребует танцев по установки обновленной версии компортовой компоненты.</p>
+
+<p>Особых планов на развитие проекта у меня пока нет, а использую программу я весьма часто, поэтому, проект отлично подошел для игр с хостингом.</p>
+
+<p>Что понравилось.</p>
+
+<p>Прежде всего, что теперь я могу использовать Mercurial, то есть распределенный контроль версий, а не Subversion. И кроме самих исходников отдельно отдается <a href="http://code.google.com/p/serialcom/source/checkout">репозиторий wiki</a>, что позволяет редактировать документацию также в офлайне.</p>
+
+<p>Удобно, что сходу в довесок к хостингу получаешь возможность создать группу для обсуждений по проекту, привязку к единой статистике посещаемости сайта Google Analytics (просто надо UA указать), механизм <a href="http://code.google.com/p/serialcom/issues/entry?show=review&amp;former=sourcelist">code review</a> и <a href="http://code.google.com/p/serialcom/issues/list">баг трекер</a> впридачу. Хорошо не то, что все эти, в целом, обычные примочки есть, а хорошо, что они все связаны и даются одним кликом.</p>
+
+<p>Что не понравилось.</p>
+
+<p>Пришлось изменить оригинальное имя с SmartCom на SerialCom, так как первое уже занято. Но это так, ерунда.</p>
+
+<p>Лично мне пока все нравится. Будем искать проблемы, а то без них как-то пресно.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/06/google-code-serialcom.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/06/google-code-serialcom.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/06/google-code-serialcom.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

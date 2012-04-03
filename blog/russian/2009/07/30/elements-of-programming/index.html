@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Александр Степанов, "Elements of Programming"</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Александр Степанов, &#34;Elements of Programming&#34;</h1>
+<div id="post">
+  <p><a href="http://ru.wikipedia.org/wiki/%D0%A1%D1%82%D0%B5%D0%BF%D0%B0%D0%BD%D0%BE%D0%B2,_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B2%D0%B8%D1%87">Александр Степанов</a> - это создатель STL. Ни добавить, ни отнять. Последние годы он занимается в основном преподаванием и написанием книг.</p>
+
+<p>Недавно я купил его последнюю книгу &ldquo;<a href="http://www.amazon.com/gp/product/032163537X">Elements of Programming</a>&rdquo;.</p>
+
+<p><img src="/images/covers/english/elements-of-programming-cover.jpg" /></p>
+
+<p>Довольно своеобразная книга. Много математики, приводимой как обоснование тех или иных приемов в программировании (язык, конечно, С++), из-за чего читается немного тяжело. Забавно, я читал многие его публикации до этого, и как-то заметил, что чем дальше, тем больше он использует формальную математику для описания программирования.</p>
+
+<p>Еще интересный факт: в данной книге везде при использовании шаблонов используются <a href="http://en.wikipedia.org/wiki/Concepts_(C%2B%2B0x)">концепты</a>, хотя недавно было принято решение, что в <a href="http://ru.wikipedia.org/wiki/C%2B%2B0x">C++0x</a> их <a href="http://www.informit.com/guides/content.aspx?g=cplusplus&amp;seqNum=441">не будет</a> из-за общей пока недоработанности идеи.</p>
+
+<p>Но вернемся к другим публикациям Степанова.</p>
+
+<p>Одни из мои любимых - <a href="http://www.stepanovpapers.com/notes.pdf">Notes for the Programming course at Adobe</a> и <a href="http://www.stepanovpapers.com/Stepanov-Science_of_C++_Programming-1993.pdf">Science of C++ Programming</a>.</p>
+
+<p>Например, ставший классикой, его пример на тему итераторов:</p>
+
+<pre><code class="cpp">if (!v.empty()) {
+  sort(&amp;*begin(), &amp;*v.begin() + v.size());
+}
+</code></pre>
+
+<p>когда спрашивается, почему в данном вполне рабочем примере обязательно нужна проверка <code>v.empty()</code> и почему нельзя второй аргумент нельзя записать как <code>&amp;*v.end()</code>?</p>
+
+<p>Но вот что лично мне понравилось, это способ реализации оператора присваивания для класса. Обычно, когда в классе есть конструктор копирования и оператор присваивания, стандартный прием - это сделать закрытую функцию типа <code>clone()</code> или <code>copy()</code>, которая умеет правильно копировать класс, если внутренняя его структура нетривиальна, и вызывать эту функцию из конструктора копирования и оператора присваивания, тем самым избегая дублирования кода.</p>
+
+<p>Но Степанов говорит следующее: &ldquo;&hellip;присваивание должно осуществляться вызовом деструктора и последующим конструктором&rdquo;. То есть надо просто сделать полноценный конструктор копирования, а оператор присваивание реализовать так:</p>
+
+<pre><code class="cpp">T&amp; T::operator=(const T&amp; x) {
+  if (this != &amp;x) {
+    this-&gt;T::~T();
+    new (this) T(x);
+  }
+  return *this;
+}
+</code></pre>
+
+<p>Получается, что старый объект сам себя разрушает, вызвав деструктор (но память под ним не освобождается), а затем оператором <code>new</code> с явным размещением (память под объект тут уже повторно не распределяется) объект создается снова через конструктор копирования.</p>
+
+<p>В общем, данные pdf-ки - очень интересное чтиво. Причем, Степанов никогда не забывает об эффективности (ибо неграмотное использования возможностей шаблонов элементарно делает программу очень медленной и жадной до ресурсов), и, например, главы про техники перемещения, а не копирования объектов очень познавательны.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/07/blog-post_30.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/07/blog-post_30.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/07/blog-post_30.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

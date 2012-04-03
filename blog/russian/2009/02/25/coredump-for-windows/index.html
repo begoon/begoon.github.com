@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Coredump для Windows</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Coredump для Windows</h1>
+<div id="post">
+  <p>Тривиальная задачка: что будет, если запустить вот такую программу?</p>
+
+<p>Файл <code>main.cpp</code>:</p>
+
+<pre><code class="cpp">int main() {
+  *(char *)0 = 0;
+  return 0;
+}
+</code></pre>
+
+<p>В UNIX&rsquo;е самым вероятным исходом будет сообщение:</p>
+
+<pre><code>Segmentation fault
+</code></pre>
+
+<p>Это означает безусловное падение из-за нарушения защиты памяти. Если пользователь разрешил создание <code>coredump</code> файлов (например, для командного интерпретатора <code>bash</code> это делается командой):</p>
+
+<pre><code>ulimit -c unlimited
+</code></pre>
+
+<p>то после запуска будет создан файл <code>coredump</code>. Этот файл фактически содержит образ памяти вашей программы в момент возникновения ошибки, и его можно открыть в отладчике, например в <code>gdb</code>:</p>
+
+<pre><code>gdb -c coredump
+</code></pre>
+
+<p>После чего командой <code>bt</code> (back trace) можно точно установить место в программе, в котором произошла ошибка. Естественно, для удобства, программа должна быть скомпилирована с включенной отладочной информацией.</p>
+
+<p>Когда ошибка происходит в процессе отладки у вас на глазах, то проще запустить программу сразу под отладчиком. Но когда, например, ошибка происходит у заказчика, и вас нет рядом, то тогда можно попросить прислать вам <code>coredump</code> файл для анализа. Во многих случаях этого хватает для локализации проблемы.</p>
+
+<p>А что делать под Windows? Запуск приведенной программы под виндами обычно приведет вот к такому сообщению:</p>
+
+<p><img src="/images/blog/windows-coredump.gif" /></p>
+
+<p>Неискушенный пользователь обычно жмет <code>Don't send</code>, и затем программа благополучно падает, и не останется никакой информации произошедшей ошибке. Конечно, программа может вести подробное журналирование, но часто ошибки подобного рода редко удается локализовать по журналам.</p>
+
+<p>Я слышал, что может так случиться, что после нажатия <code>Send Error Report</code> Майкрософт с вами свяжется и поможет решить проблему. Со мной такого ни разу не случалось, увы.</p>
+
+<p>В Windows тоже есть схожий механизм создания “на лету” образов памяти работающего процесса, но для его использования надо немного потрудиться.</p>
+
+<p>Windows предоставляет механизм исключений, чем-то схожий с исключениями в С++ и системными сигналами в UNIX. На С++ эти исключения похожи <code>try-catch</code> синтаксисом, а на UNIX — тем, что можно перехватывать исключительные ситуации (например, ошибки) в программе типа нашей (для UNIX можно было бы перехватить сигнал <code>SIGSEGV</code> и получить управление при возникновении подобной ошибки).</p>
+
+<p>Естественно, сигналы в UNIX используются не только для этого.</p>
+
+<p>Итак, ниже я приведу исходный текст небольшого модуля, который будет создавать аналогичный по смыслу юниксовому coredump&rsquo;у файл, по которому можно будет установить причину аварийного завершения программы. Все, что нужно — это прилинковать этот модуль в ваш проект. Ничего вызывать специально не надо. Модуль инициализируется автоматически.</p>
+
+<p>Файл <code>coredump.cpp</code>:</p>
+
+<pre><code class="cpp">#include &lt;windows.h&gt;
+#include &lt;dbghelp.h&gt;   
+#include &lt;stdio.h&gt;       // _snprintf
+
+// Наш обработчик непойманного исключения.
+static LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS* ExceptionInfo);
+
+// Статический экземпляр переменной, конструктор которой
+// вызывается до начала функции main().
+static struct CoredumpInitializer {
+  CoredumpInitializer() {
+    SetUnhandledExceptionFilter(&amp;ExceptionFilter);
+  }
+} coredumpInitializer;
+
+LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS* ExceptionInfo) {
+  char fname[_MAX_PATH];
+
+  SYSTEMTIME st;
+  GetLocalTime(&amp;st);
+
+  HANDLE proc = GetCurrentProcess();
+
+  // Формируем имя для coredump'а.
+  _snprintf(
+    fname, _MAX_PATH, 
+    &quot;coredump-%ld-%ld-%04d%02d%02d%02d%02d%02d%03d.dmp&quot;, 
+    GetProcessId(proc), GetCurrentThreadId(),
+    st.wYear, st.wMonth, st.wDay, 
+    st.wHour, st.wMinute, st.wSecond, st.wMilliseconds
+  );
+
+  // Открываем файл.
+  HANDLE file = CreateFile(
+    fname,
+    GENERIC_READ|GENERIC_WRITE, 
+    FILE_SHARE_READ,
+    NULL,
+    CREATE_ALWAYS,
+    FILE_ATTRIBUTE_NORMAL, 
+    NULL
+  );
+
+  MINIDUMP_EXCEPTION_INFORMATION info;
+  info.ExceptionPointers = ExceptionInfo;
+  info.ThreadId = GetCurrentThreadId();
+  info.ClientPointers = NULL;
+
+  // Собственно, сбрасываем образ памяти в файл.
+  MiniDumpWriteDump(
+    proc,
+    GetProcessId(proc),
+    file,
+    MiniDumpWithFullMemory,
+    ExceptionInfo ? &amp;info : NULL,
+    NULL, NULL
+  );
+
+  CloseHandle(file);
+
+  return EXCEPTION_CONTINUE_SEARCH;
+}
+</code></pre>
+
+<p>Данный модуль создает статический объект <code>coredumpInitializer</code>, конструктор которого вызывается до функции <code>main()</code>. Конструктор устанавливает специальный обработчик для системных исключений, в котором в файл и записывается образ памяти текущего процесса при возникновении системных ошибок. Имя файла содержит идентификатор процесса, идентификатор потока и текущее время. Этот файл можно открыть в Visual Studio просто запустив его, либо в самой студии в меню <code>File-&gt;Open-&gt;Project/Solution</code> выбрать этот файл, указав его тип как <code>Dump files</code>. Далее надо запустить программу через отладчик, нажав <code>F5</code>, и отладчик остановится на месте возникновения ошибки. Естественно, для работы на уровне исходного текста необходимо наличие файла с расширением .PDB, содержащего символьную информацию, в том каталоге, где расположен ваш coredump файл. Файл с раширением .PDB обычно создается при компиляции с включенной отладочной информацией, например, при использования ключа <code>/Zi</code>.</p>
+
+<p>Надо отметить, что если ошибка в вашей программе произойдет до функции <code>main()</code>, например, при инициализации каких-то статических объектов, то данный модуль может и не сработать, так как вызов конструктора объекта <code>coredumpInitializer</code> может быть запланирован уже после проблемного места. Вообще, статические переменные и объекты — это источник многих проблем, в основном из-за неопределенного порядка их инициализации, и их использования стоит избегать по возможности.</p>
+
+<p>Итак, компилируем:</p>
+
+<pre><code>cl /Zi main.cpp coredump.cpp dbghelp.lib
+</code></pre>
+
+<p>Для компиляции необходима библиотека <code>DbgHelp.lib</code>. Она обычно входит в состав Windows SDK в составе студии. Также получившийся исполняемый файл main.exe будет использовать динамическую библиотеку <code>DbgHelp.dll</code>. <code>DbgHelp.dll</code> входит в состав так называемых redistributable файлов, то есть которые вы имеете право распространять вместе с программой на случай, если у клиента нет этой dll&rsquo;ки. Эта dll&rsquo;ка с большой вероятностью находится у вас в каталоге <code>C:\WINDOWS\system32</code>.</p>
+
+<p>Теперь при запуске программы <code>main.exe</code> и после закрытия пользователем окна с сообщением об ошибке (см. картинку выше), будет создан .DMP файл с именем, начинающийся со слова coredump, например <code>coredump-4584-3240-20090226022327093.dmp</code>. Этот файл уже можно открыть в Visual Studio.</p>
+
+<p>Теперь, когда у заказчика программа падает, можно попросить его прислать такой файл для анализа. Единственное, надо хранить .PDB файлы, соответствующие отданным заказчику исполняемым модулям.</p>
+
+<p>Пока я не придумал, как сделать для модуля <code>coredump.cpp</code> автоматизированный unit-тест. Проблема в том, что тут надо как-то подавить вывод окна с ошибкой (см. картинку выше). Если это сделать, то тест может быть вполне себе автоматизированным.</p>
+
+<p>Более подробная информация вопросу создания образов памяти процесса есть в хорошей статье &ldquo;<a href="http://www.debuginfo.com/articles/effminidumps.html">Effective minidumps</a>&rdquo;.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/02/26/coredump-for-windows-unittest/">Unit-тест для Coredump</a></li>
+<li><a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">Unit-тестирование для параллельных потоков</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/coredump-windows.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/coredump-windows.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/coredump-windows.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

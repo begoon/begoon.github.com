@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Темные углы C++</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Темные углы C++</h1>
+<div id="post">
+  <p>Я нашел таки для себя ответ на вопрос про &ldquo;лишние скобки&rdquo; вокруг параметра, задающего интервальный итератор (см. &ldquo;<a href="/blog/russian/2009/02/08/reading-file-via-stl-iterators/">Скоростное чтение файла в STL через итераторы</a>&rdquo;). Например:</p>
+
+<pre><code class="cpp">std::ifstream is(&quot;testfile.txt&quot;);
+std::string val(
+  (std::istream_iterator&lt;char&gt;(is)),
+  std::istream_iterator&lt;char&gt;()
+);
+</code></pre>
+
+<p>Скотт Мейерс в книге &ldquo;<a href="http://www.ozon.ru/context/detail/id/1253685/">Эффективное использование STL. Библиотека программиста</a>&rdquo; в Совете 6 &ldquo;Остерегайтесь странностей лексического разбора C++&rdquo; (стр. 42, изд. &ldquo;Питер&rdquo; 2002) дает исчерпывающее объяснение этого &ldquo;феномена&rdquo;. Ответ крайне меня опечалил, так как вскрыл некоторую нелогичность и корявость в целом стройного и красивого языка С++ в данном вопросе. Очевидно, что причины этого в сохранения в С++ обратной совместимости с С, но от этого не легче.</p>
+
+<p>Итак, давайте разберемся по порядку (чтобы меня не обвинили в плагиате, сразу скажу, что я буду следовать примерному тексту Мейерса, так как он дал великолепное объяснение с примерами, и изобретать велосипед в данном случае было бы неразумно). Как мы предполагали, код <code>std::istream_iterator&lt;char&gt;(is)</code> создает экземпляр потокового итератора, привязанного к потоку <code>is</code>. И все бы ничего, если такая конструкция используется как самостоятельное объявление. Вся проблема в именно в использовании такого выражения в контексте вызова функции (в данном случае, конструктора), то есть в качестве параметра. Мейерс приводит следующий пример:</p>
+
+<pre><code class="cpp">int f(double d);
+</code></pre>
+
+<p>Это команда объявления функции <code>f</code>, которая получает <code>double</code> и возвращает <code>int</code>.</p>
+
+<p>Тоже самое происходит и в следующей строке. Круглые скобки вокруг имени параметра <code>d</code> не нужны, поэтому компилятор их игнорирует:</p>
+
+<pre><code class="cpp">int f(double (d));     // То же; круглые скобки вокруг d игнорируются
+</code></pre>
+
+<p>Теперь третий вариант объявления той же функции. В нем имя параметра просто не указано:</p>
+
+<pre><code class="cpp">int f(double);         // То же; имя параметра не указано
+</code></pre>
+
+<p>Три такие формы объявления знакомы всем, хотя про возможность заключения параметра в скобки знают не все (может просто потому, что это очевидно лишние по логике вещей скобки).</p>
+
+<p>Теперь можно рассмотреть еще три объявления функции. В первом объявляется функция <code>g</code> с параметром — указателем на функцию, которая вызывается без параметров и возвращает <code>double</code>:</p>
+
+<pre><code class="cpp">int g(double (*pf)()); // Функции g передается указатель на функцию
+</code></pre>
+
+<p>То же самое можно сформулировать иначе. Единственное различие заключается в том, что <code>pf</code> объявляется в синтаксисе без указателей (допустимом как в С, так и в С++):</p>
+
+<pre><code class="cpp">int g(double pf());    // То же; pf неявно интерпретируется как указатель
+</code></pre>
+
+<p>Как обычно, имена параметров могут опускаться, поэтому возможен и третий вариант объявления <code>g</code> без указания имени <code>pf</code>:</p>
+
+<pre><code class="cpp">int g(double());       // То же; имя параметра не указано
+</code></pre>
+
+<p>Обратите внимание на различия между круглыми скобками вокруг имени параметра (например, параметра <code>d</code> во втором объявлении <code>f</code>) и стоящими отдельно (как в этом примере). Круглые скобки, в которые заключено имя параметра, игнорируются, а стоящие отдельно, обозначают присутствие списка параметров; они сообщают о присутствии параметра, который является указателем на функцию.</p>
+
+<p>Теперь вернемся к оригинальному примеру:</p>
+
+<pre><code class="cpp">std::ifstream is(&quot;testfile.txt&quot;);
+std::string val(
+  std::istream_iterator&lt;char&gt;(is),
+  std::istream_iterator&lt;char&gt;()
+);
+</code></pre>
+
+<p>Сейчас я намеренно убрал таинственные &ldquo;лишние&rdquo; скобки вокруг первого параметра.</p>
+
+<p>Что же перед нами тут? Совершенно не то, о чем мы думали изначально. Перед нами объявление функции <code>val</code>, возвращающей тип <code>std::string</code>. Функция получает два параметра:</p>
+
+<ul>
+<li>Первый параметр, <code>is</code>, относится к типу <code>istream_iterator&lt;char&gt;</code>. Лишние круглые скобки вокруг <code>is</code> игнорируются.</li>
+<li>Второй параметр не имеет имени. Он относится к типу указателя на функцию, которая вызывается без параметров и возвращает <code>istream_iterator&lt;char&gt;</code>.</li>
+</ul>
+
+<p>А мы то тут ожидали увидеть описание вызова конструктора, которому передаются два потоковых итератора. Такая интерпретация написанного диктуется одним из основных правил C++: все, что может интерпретироваться как указатель функцию, должно интерпретироваться именно так. Так гласит стандарт:</p>
+
+<p><em>В грамматике имеется неоднозначность, когда инструкция может быть выражением, так и объявлением. Если выражение с явным преобразованием типов в стиле вызова функции (<em>expr.type.conv</em>) является крайним слева, то оно может быть неотличимо от объявления, в котором первый оператор объявления начинается с открытой круглой скобки &ldquo;(&rdquo;. В этом случае инструкция рассматривается как объявление. — [C++03] п.6.8.</em></p>
+
+<p>Так что же делают эти магические скобки вокруг первого параметра конструктора?</p>
+
+<pre><code class="cpp">std::ifstream is(&quot;testfile.txt&quot;);
+std::string val(
+  (std::istream_iterator&lt;char&gt;(is)),
+  std::istream_iterator&lt;char&gt;()
+);
+</code></pre>
+
+<p>А вот что — объявления формальных параметров не могут заключаться в круглые скобки, я вот заключить в круглые скобки аргумент при вызове функции можно. Вот эти круглые скобки и помогают компилятору решить неоднозначность в нужную нам сторону (а не как положено по стандарту по умолчанию) и точно указать, что перед нами именно использование параметра функции при ее вызове, а не при объявлении.</p>
+
+<p>Соглашусь, от этого может слегка заболеть голова, причем совершенно без причины.</p>
+
+<p>Как написал Герб Саттер в книге &ldquo;<a href="http://www.ozon.ru/context/detail/id/2342923/">Новые сложные задачи на С++</a>&rdquo; (он тоже посвятил этому вопросу целую главу, “Задача 23. Инициализация ли это?”, стр. 192, изд. “Вильямс”), что такие моменты синтаксиса С++ являются его &ldquo;темными углами&rdquo;, и их стоит избегать. Рассмотренный пример можно упростить, объявив итератор отдельно, а не прямо в тексте вызова конструктора, тем самым не заходить в &ldquo;темный угол&rdquo;. Не так элегантно, зато просто и понятно:</p>
+
+<pre><code class="cpp">std::ifstream is(&quot;testfile.txt&quot;);
+std::istream_iterator&lt;char&gt; begin(is);
+std::istream_iterator&lt;char&gt; end;
+std::string val(begin, end);
+</code></pre>
+
+<p>Читал я недавно, как <a href="http://lwn.net/Articles/249460/">Линус Торвальдс полоскал</a> С++ за неоправданную языковую сложность. &ldquo;C++ is a horrible language!&rdquo;, — сказал Линус. Может он и прав.</p>
+
+<p>Мыши плакали, кололись, но продолжали грызть С++.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/02/08/reading-file-via-stl-iterators/">Скоростное чтение файла в STL через итераторы</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/c.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/c.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/c.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

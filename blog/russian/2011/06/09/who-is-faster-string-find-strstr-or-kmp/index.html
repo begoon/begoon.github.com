@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Кто быстрее: string::find, strstr или КМП?</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Кто быстрее: string::find, strstr или КМП?</h1>
+<div id="post">
+  <p>Я как-то пребывал в убеждении, что библиотечные функции поиска строки в подстроке обычно реализуют какой-нибудь &ldquo;правильный&rdquo; алгоритм: <a href="http://ru.wikipedia.org/wiki/%D0%90%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC_%D0%9A%D0%BD%D1%83%D1%82%D0%B0_%E2%80%94_%D0%9C%D0%BE%D1%80%D1%80%D0%B8%D1%81%D0%B0_%E2%80%94_%D0%9F%D1%80%D0%B0%D1%82%D1%82%D0%B0">Кнута — Морриса — Пратта (КМП)</a>, например, или <a href="http://ru.wikipedia.org/wiki/%D0%90%D0%BB%D0%B3%D0%BE%D1%80%D0%B8%D1%82%D0%BC_%D0%91%D0%BE%D0%B9%D0%B5%D1%80%D0%B0_%E2%80%94_%D0%9C%D1%83%D1%80%D0%B0">Бойера — Мура</a>. Это было бы логично.</p>
+
+<p>Ниже очередная пузомерка сферического коня в попугаях.</p>
+
+<p>В забеге учавствуют:</p>
+
+<ul>
+<li><code>std::string::find()</code></li>
+<li><code>std::strstr()</code></li>
+<li>рукодельный <code>naive_strstr()</code> со сложностью <code>O(N^2)</code></li>
+<li>рукодельный КМП (<code>kmp_strstr()</code>) без особых изысков</li>
+</ul>
+
+<p>Данные для поиска сделаны в виде &ldquo;наихудщего случая&rdquo;, когда сравнивать надо все до победного, и совпадение будет только с самом конце. Это должно вызвать явное квадратичное время у <code>naive_strstr()</code>.</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;cstdlib&gt;
+#include &lt;cstring&gt;
+#include &lt;cassert&gt;
+#include &lt;ctime&gt;
+
+int naive_strstr(const char* str, const char* needle) {
+  int str_sz = std::strlen(str);
+  int needle_sz = std::strlen(needle);
+  for (int i = 0; i &lt; str_sz - needle_sz + 1; ++i) {
+    int j;
+    for (j = 0; j &lt; needle_sz; ++j)
+      if (str[i + j] != needle[j])
+        break;
+    if (j == needle_sz)
+      return i;
+  }
+  return -1;
+}
+
+int kmp_strstr(const char* str, const char* needle) {
+  int str_sz = std::strlen(str);
+  int needle_sz = std::strlen(needle);
+
+  std::vector&lt;int&gt; prefix(needle_sz, 0);
+  for (int i = 1; i &lt; needle_sz; ++i) {
+    int j = prefix[i - 1];
+    while (j &gt; 0 &amp;&amp; needle[j] != needle[i])
+      j = prefix[j - 1];
+    if (needle[j] == needle[i])
+      j += 1;
+    prefix[i] = j;
+  }
+
+  int j = 0;
+  for (int i = 0; i &lt; str_sz; ++i) {
+    while (j &gt; 0 &amp;&amp; needle[j] != str[i])
+      j = prefix[j - 1];
+    if (needle[j] == str[i])
+      j += 1;
+    if (j == needle_sz)
+      return i - j + 1;
+  }
+
+  return -1;
+}
+
+int main(int argc, char* argv[]) {
+  int N = argc &gt; 1 ? std::atoi(argv[1]) : 10*1000*1000;
+  int M = argc &gt; 2 ? std::atoi(argv[2]) : 1000;
+
+  std::string str(N, 'a');
+  std::string needle(M, 'a');
+
+  // Our needle is the last M characters of the string.
+  str[str.length() - 1] += 1;
+  needle[needle.length() - 1] += 1;
+
+  std::cout &lt;&lt; &quot;N = &quot; &lt;&lt; N &lt;&lt; &quot;, M = &quot; &lt;&lt; M &lt;&lt; std::endl;
+
+  size_t correct_position = str.length() - needle.length();
+  std::cout &lt;&lt; &quot;Correct position: &quot; &lt;&lt; correct_position &lt;&lt; std::endl;
+
+  const char* str_p = str.c_str();
+  assert(std::strlen(str_p) == str.length());
+
+  const char* needle_p = needle.c_str();
+  assert(std::strlen(needle_p) == needle.length());
+
+  time_t started, duration;
+  size_t i;
+
+  started = std::time(0);
+  i = str.find(needle);
+  duration = std::time(0)- started;
+  std::cout &lt;&lt; &quot;string::find(): &quot; &lt;&lt; i &lt;&lt; &quot;, time &quot; &lt;&lt; duration &lt;&lt; std::endl;
+  assert(i == correct_position);
+
+  started = std::time(0);
+  const char* p = std::strstr(str_p, needle_p);
+  duration = std::time(0)- started;
+  assert(p != NULL);
+  i = p - str_p;
+  std::cout &lt;&lt; &quot;strstr()      : &quot; &lt;&lt; i &lt;&lt; &quot;, time &quot; &lt;&lt; duration &lt;&lt; std::endl;
+  assert(i == correct_position);
+
+  started = std::time(0);
+  i = naive_strstr(str_p, needle_p);
+  duration = std::time(0)- started;
+  std::cout &lt;&lt; &quot;naive_strstr(): &quot; &lt;&lt; i &lt;&lt; &quot;, time &quot; &lt;&lt; duration &lt;&lt; std::endl;
+  assert(i == correct_position);
+
+  started = std::time(0);
+  i = kmp_strstr(str_p, needle_p);
+  duration = std::time(0)- started;
+  std::cout &lt;&lt; &quot;kmp_strstr()  : &quot; &lt;&lt; i &lt;&lt; &quot;, time &quot; &lt;&lt; duration &lt;&lt; std::endl;
+  assert(i == correct_position);
+
+  return 0;
+}
+</code></pre>
+
+<p>Makefile:</p>
+
+<pre><code class="makefile">all:  do-32 do-64
+
+target = strstr_find
+
+do-32: build-32
+    $(target)
+
+do-64: build-64
+    $(target)
+
+do-build:
+    &quot;%VS100COMNTOOLS%..\..\VC\vcvarsall.bat&quot; $(arch) &amp;&amp; cl /O2 /EHsc $(target).cpp
+
+build-32:
+    $(MAKE) do-build arch=x86
+
+build-64:
+    $(MAKE) do-build arch=amd64
+
+run:
+    $(target)
+
+clean:
+    -del *.exe *.ilk *.obj *.pdb *.suo
+</code></pre>
+
+<p>Запускаем на Visual Studio 2010 32-bit:</p>
+
+<pre><code>N = 10000000, M = 1000
+Correct position: 9999000
+string::find(): 9999000, time 4
+strstr()      : 9999000, time 8
+naive_strstr(): 9999000, time 8
+kmp_strstr()  : 9999000, time 0
+</code></pre>
+
+<p>Запускаем на Visual Studio 2010 64-bit и получаем странное ускорение у <code>find()</code> и замедление <code>strstr()</code> и <code>naive_strstr()</code>:</p>
+
+<pre><code>N = 10000000, M = 1000
+Correct position: 9999000
+string::find(): 9999000, time 1
+strstr()      : 9999000, time 16
+naive_strstr(): 9999000, time 10
+kmp_strstr()  : 9999000, time 0
+</code></pre>
+
+<p>Конечно, тут есть много тонкостей. При различных данных в среднем <code>strstr()</code> может реально обгонять мою реализацию КМП, так как <code>strstr()</code>все-таки написана на ассемблере, и накладные расходы в КМП могут съесть всего его преимущества, но вот если данные всегда будут &ldquo;плохими&rdquo;, то без КМП не обойдить.</p>
+
+<p>И еще. Так как КМП требует дополнительную память порядка длины искомой строки, то подобное осложнение может не годиться для библиотечной функции широкого применения. Может поэтому <code>strstr()</code> и <code>string::find()</code> и работают &ldquo;в лоб&rdquo;.</p>
+
+<p>Одно не понятно - почему <code>string::find()</code> быстрее <code>strstr()</code>? Может из-за тотального inline&rsquo;а.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/06/stringfind-strstr.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/06/stringfind-strstr.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/06/stringfind-strstr.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

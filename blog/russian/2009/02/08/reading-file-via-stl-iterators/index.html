@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Скоростное чтение файла в STL через итераторы</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Скоростное чтение файла в STL через итераторы</h1>
+<div id="post">
+  <p>Во многих современных языках программирования считать весь файл в строку можно буквально одним оператором, например, в <code>php</code> это делается так:</p>
+
+<pre><code class="php">$lines = file_get_contents(&quot;textfile.txt&quot;);
+</code></pre>
+
+<p>или так, медленно и неэффективно, по-старинке:</p>
+
+<pre><code class="php">$lines = join(&quot;&quot;, file(&quot;textfile.txt&quot;));
+</code></pre>
+
+<p>Задумался я, как бы это так элегантно одним оператором сделать в С++. Естественно, хочется, чтобы это работало приемлемо быстро для больших файлов (например, от одного мегабайта и больше).</p>
+
+<p>Первое, что сходу приходит в голову (универсальная кондовая классика):</p>
+
+<pre><code class="cpp">std::ifstream is(&quot;testfile.txt&quot;);
+std::string v;
+char buf[N];
+while (is) { 
+  is.read(buf, sizeof(buf));
+  v.append(buf, is.gcount());
+}
+</code></pre>
+
+<p>С размером буфера N можно еще проиграться, выбрав оптимальный.</p>
+
+<p>Первое улучшение, приходящее в голову — это распределить заранее внутренний буфер для строки, минимизировав количество перераспределений буфера в процессе чтения. Для этого мы, естественно, должны заранее знать размер читаемого файла. Пусть это будет 1 мегабайт (1024*1024).</p>
+
+<pre><code class="cpp">std::ifstream is(&quot;testfile.txt&quot;);
+std::string v;
+// Резервируем внутренний буфер std::string на указанный
+// размер в один мегабайт.
+v.reserve(1024*1024);
+char buf[N];
+while (is) { 
+  is.read(buf, sizeof(buf));
+  v.append(buf, is.gcount());
+}
+</code></pre>
+
+<p>Далее на сцену выходят STL-алгоритмы и потоковые итераторы. Берем типовой пример использования алгоритма <code>std::copy</code>, который есть практически в любой книге по С++:</p>
+
+<pre><code class="cpp">std::ifstream is(&quot;testfile.txt&quot;);
+std::string v;
+// Сброс данного флага необходим для отключения пропуска пробельных
+// символов при форматном вводе через поток.
+is.unsetf(std::ios::skipws);
+std::copy(
+  std::istream_iterator&lt;char&gt;(is), 
+  std::istream_iterator&lt;char&gt;(), 
+  std::back_inserter(v)
+);
+</code></pre>
+
+<p>Сразу скажу, это крайне медленный метод. Первым, приходящим в голову улучшением, как всегда, является предварительное распределение буфера приемной строки:</p>
+
+<pre><code class="cpp">std::ifstream is(&quot;testfile.txt&quot;);
+std::string v;
+// Резервируем внутренний буфер std::string на указанный
+// размер в один мегабайт.
+v.reserve(1024*1024);
+is.unsetf(std::ios::skipws);
+std::copy(
+  std::istream_iterator&lt;char&gt;(is), 
+  std::istream_iterator&lt;char&gt;(), 
+  std::back_inserter(v)
+);
+</code></pre>
+
+<p>В рассмотренном методе видно, что сначала данные изымаются из потока потоковым итератором <code>istream_iterator</code>, а потом кладутся через итератор строки <code>back_inserter</code> в саму строку. Двойная работа. Есть метод лучше — класть данные из потока напрямую в строку, используя один из специальных конструкторов класса <code>std::string</code>:</p>
+
+<pre><code class="cpp">std::ifstream is(&quot;testfile.txt&quot;);
+is.unsetf(std::ios::skipws);
+// Самое интересное происходит тут: создается переменная &quot;v&quot;
+// через конструктор, работающий напрямую с итераторами потока,
+// и данные напрямую поступают во внутренний буфер строки.
+std::string v(
+  (std::istream_iterator&lt;char&gt;(is)), 
+  std::istream_iterator&lt;char&gt;()
+);
+</code></pre>
+
+<p>Опытный читатель заметит казалось бы ненужные обрамляющие скобки вокруг первого параметра. Сразу скажу — без них работать не будет, а будет ошибка компиляции. Тут мы касаемся одного из &ldquo;темных углов&rdquo; С++. Это не самый очевидный вопрос, поэтому я посвятил ему <a href="/blog/russian/2009/02/09/dark-corners-of-cpp/">отдельную статью</a>.</p>
+
+<p>Уже лучше, но двигаемся дальше. В потоках ввода есть специальные итераторы <code>istreambuf_iterator</code>, которые работают напрямую с внутренними буферами потока в обход всех высокоуровневых функций форматирования и выходного преобразования. Именно по этому для них вызов функции <code>unsetf</code> будет уже не нужен:</p>
+
+<pre><code class="cpp">std::ifstream is(&quot;testfile.txt&quot;);
+std::string v;
+// Опциональное резервирование буфера приемной строки.
+v.reserve(1024*1024);
+std::copy(
+  std::istreambuf_iterator&lt;char&gt;(is), 
+  std::istreambuf_iterator&lt;char&gt;(),
+  std::back_inserter(v) 
+);
+</code></pre>
+
+<p>И теперь вариант через конструктор класса std::string:</p>
+
+<pre><code class="cpp">std::ifstream is(&quot;testfile.txt&quot;);
+std::string v(
+  (std::istreambuf_iterator&lt;char&gt;(is)), 
+  std::istreambuf_iterator&lt;char&gt;()
+);
+</code></pre>
+
+<p>Мы уже близки к идеалу. Теперь встроим создание объекта <code>std::ifstream</code> прямо в код создания строки:</p>
+
+<pre><code class="cpp">std::string v(
+  (std::istreambuf_iterator&lt;char&gt;(
+    std::ifstream(&quot;testfile.txt&quot;)
+  )), 
+  std::istreambuf_iterator&lt;char&gt;()
+);
+</code></pre>
+
+<p>Мы уже в миллиметре от идеала, но в приведенном примере есть одно большое &ldquo;но&rdquo;. Вызов <code>std::ifstream(&quot;testfile.txt&quot;)</code> прямо в вызове конструктора создает временный объект, который по стандарту языка всегда является константой, а первый параметр конструктора ожидает принять не константный параметр, поэтому &ldquo;строгий&rdquo; компилятор типа gcc скорее всего выдаст ошибку компиляции, а менее &ldquo;строгий&rdquo;, например <code>cl.exe</code> от Майкрософта на такой вызов не ругается. Но мы не можем принять такое не универсальное решение, поэтому изменим код, чтобы параметр создавался динамически в куче, а для автоматического его удаления будет использоваться <code>std::auto_ptr</code>:</p>
+
+<pre><code class="cpp">std::string v(
+  (std::istreambuf_iterator&lt;char&gt;(
+    *(std::auto_ptr&lt;std::ifstream&gt;(
+      new std::ifstream(&quot;testfile.txt&quot;)
+    )).get()
+  )), 
+  std::istreambuf_iterator&lt;char&gt;()
+);
+</code></pre>
+
+<p>Этот код должен работать в любом стандартном компиляторе С++.</p>
+
+<p>Оглядимся назад. У нас столько вариантов — какой выбрать? Для начала, скорость. Надо понять, какой вариант работает банально быстрее. Для этого я собрал все эти варианты в тестовую программу (конечно, с использованием Google Test Framework).</p>
+
+<p>Как я уже <a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">писал</a>, вы можете скачать <a href="/downloads/gtest-amalgamation-1.2.1.zip">мою модификацию</a> этой библиотеки, которая сокращена до двух необходимых файлов <code>gtest/gtest.h</code> и <code>gtest-all.cc</code>.</p>
+
+<p><code>filereader_unittest.cpp</code>:</p>
+
+<pre><code class="cpp">#include &lt;gtest/gtest.h&gt;
+
+#include &lt;iostream&gt;
+#include &lt;streambuf&gt;
+#include &lt;istream&gt;
+#include &lt;fstream&gt;
+#include &lt;ios&gt;
+#include &lt;iomanip&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;memory&gt;
+#include &lt;cstdlib&gt;
+
+// Управляющий класс для нашей среды тестирования.
+class Env: public testing::Environment {
+public:
+  // Размер тестового файла: 1 мегабайт.
+  static int testfile_sz() { return 1024 * 1024; }
+  // Имя тестового файла.
+  static const char* testfile() { return &quot;testfile&quot;; }
+
+protected:
+  // Эта функция вызывается один раз в начале тестирования.
+  // Она создает тестовый файл.
+  void SetUp() {
+    std::string dummy(testfile_sz(), 'x');
+    std::ofstream os(testfile());
+    os.write(dummy.c_str(), dummy.length());
+  }
+
+  // Эта функция вызывается один раз после всех тестов.
+  // Она удаляет тестовый файл.
+  void TearDown() {
+    std::remove(testfile());
+  }
+};
+
+// Функция, реализующая классический метод чтения файла кусками
+// заданной длины N. При необходимости производится предварительное
+// распределение буфера приемной строки.
+void rawRead(int N, bool reserve) {
+  std::ifstream is(Env::testfile());
+
+  std::string v;
+  if (reserve)
+    v.reserve(Env::testfile_sz());
+
+  char* buf = new char[N];
+  while (is) {
+    is.read(buf, sizeof(buf));
+    v.append(buf, is.gcount());
+  }
+  delete[] buf;
+
+  // На всякий случай проверяем размер считанного файла.
+  EXPECT_EQ(Env::testfile_sz(), v.length()); 
+}
+
+// Классическое чтение с буфером в 100 байт.
+TEST(ReaderTest, raw_100) {
+  rawRead(100, false);
+}
+
+// Классическое чтение с буфером в 1 килобайт.
+TEST(ReaderTest, raw_1024) {
+  rawRead(1024, false);
+}
+
+// Классическое чтение с буфером в 10 килобайт.
+TEST(ReaderTest, raw_10240) {
+  rawRead(10240, false);
+}
+
+// Классическое чтение с буфером в 10 килобайт с предварительным
+// распределением буфера приемной строки.
+TEST(ReaderTest, raw_reserve_10240) {
+  rawRead(10240, true);
+}
+
+// Функция, реализующая чтение через итератор istream_iterator.
+// При необходимости производится предварительное распределение 
+// буфера приемной строки.
+void check_istream_iterator(bool reserve) {
+  std::ifstream is(Env::testfile());
+
+  std::string v;
+  if (reserve)
+    v.reserve(Env::testfile_sz());
+
+  // Принудительное игнорирование пропуска пробельных символов.
+  // С этим флагом двоичные данные будут читаться неверно.
+  is.unsetf(std::ios::skipws);
+  std::copy(
+    std::istream_iterator&lt;char&gt;(is), 
+    std::istream_iterator&lt;char&gt;(), 
+    std::back_inserter(v)
+  );
+
+  // На всякий случай проверяем размер считанного файла.
+  EXPECT_EQ(Env::testfile_sz(), v.length()); 
+}
+
+// Тестируем работу через istream_iterator.
+TEST(ReaderTest, istream_iterator) {
+  check_istream_iterator(false);  
+}
+
+// Тестируем работу через istream_iterator с предварительным
+// распределением буфера приемной строки.
+TEST(ReaderTest, istream_iterator_reserve) {
+  check_istream_iterator(true);  
+}
+
+// Тестируем работу через istream_iterator при прямом
+// вызове конструктора строки, который берет данные напрямую
+// из итераторов.
+TEST(ReaderTest, istream_iterator_tostring) {
+  std::ifstream is(Env::testfile());
+  is.unsetf(std::ios::skipws);
+
+  std::string v(
+    (std::istream_iterator&lt;char&gt;(is)), 
+    std::istream_iterator&lt;char&gt;()
+  );
+
+  // На всякий случай проверяем размер считанного файла.
+  EXPECT_EQ(Env::testfile_sz(), v.length()); 
+}
+
+// Функция, реализующая чтение через итератор istreambuf_iterator.
+// При необходимости производится предварительное распределение 
+// буфера приемной строки. Для данного метода сброс флага
+// std::ios::skipws не нужен, так как этот итератор работает
+// на более низком уровне.
+void check_istreambuf_iterator(bool reserve) {
+  std::ifstream is(Env::testfile());
+
+  std::string v;
+  if (reserve)
+    v.reserve(Env::testfile_sz());
+
+  std::copy(
+    std::istreambuf_iterator&lt;char&gt;(is), 
+    std::istreambuf_iterator&lt;char&gt;(),
+    std::back_inserter(v)  
+  );
+
+  // На всякий случай проверяем размер считанного файла.
+  EXPECT_EQ(Env::testfile_sz(), v.length()); 
+}
+
+// Тестируем работу через istreambuf_iterator.
+TEST(ReaderTest, istreambuf_iterator) {
+  check_istreambuf_iterator(false);
+}
+
+// Тестируем работу через istreambuf_iterator с предварительным
+// распределением буфера приемной строки.
+TEST(ReaderTest, istreambuf_iterator_reserve) {
+  check_istreambuf_iterator(true);
+}
+
+// Тестируем работу через istreambuf_iterator при прямом
+// вызове конструктора строки, который берет данные напрямую
+// из итераторов.
+TEST(ReaderTest, istreambuf_iterator_tostring) {
+  std::ifstream is(Env::testfile());
+
+  std::string v(
+    (std::istreambuf_iterator&lt;char&gt;(is)), 
+    std::istreambuf_iterator&lt;char&gt;()
+  );
+
+  // На всякий случай проверяем размер считанного файла.
+  EXPECT_EQ(Env::testfile_sz(), v.length()); 
+}
+
+#ifdef WIN32
+
+// Этот тест аналогичен тесту istreambuf_iterator_tostring
+// за исключение создания объекта потока прямо в вызове
+// конструктора строки. Работает только в cl.exe, так как
+// &quot;стандартный&quot; компилятор запрещает передавать временные
+// объекты по неконстантной ссылке, а cl.exe почему-то это
+// разрешает.
+TEST(ReaderTest, istreambuf_iterator_tostring_short) {
+  std::string v(
+    (std::istreambuf_iterator&lt;char&gt;(
+      std::ifstream(Env::testfile())
+    )), 
+    std::istreambuf_iterator&lt;char&gt;()
+  );
+
+  // На всякий случай проверяем размер считанного файла.
+  EXPECT_EQ(Env::testfile_sz(), v.length()); 
+}
+
+#endif
+
+// Финальный метод. Конструктор строки берет данные напрямую
+// из итератора istreambuf_iterator. Объект потока создается
+// динамически прямо в коде вызова конструктора строки через 
+// std::auto_ptr.
+TEST(ReaderTest, istreambuf_iterator_tostring_short_auto_ptr) {
+  std::string v(
+    (std::istreambuf_iterator&lt;char&gt;(
+      *(std::auto_ptr&lt;std::ifstream&gt;(
+        new std::ifstream(Env::testfile())
+      )).get()
+    )), 
+    std::istreambuf_iterator&lt;char&gt;()
+  );
+
+  // На всякий случай проверяем размер считанного файла.
+  EXPECT_EQ(Env::testfile_sz(), v.length()); 
+}
+
+// Запуск тестов.
+int main(int argc, char **argv) {
+  // Инициализация нашей тестовой среды.
+  testing::AddGlobalTestEnvironment(new Env);
+  testing::InitGoogleTest(&amp;argc, argv);
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>Для компиляции вам необходимы файлы <code>gtest/gtest.h</code> и <code>gtest-all.cc</code> (см. выше).</p>
+
+<p>Для начала скомпилируем в Visual Studio 2008:</p>
+
+<pre><code>cl /Fefilereader_vs2008.exe /DWIN32 /O2 /arch:SSE2 /I. /EHsc filereader_unittest.cpp gtest-all.cc
+</code></pre>
+
+<p>Запускаем:</p>
+
+<pre><code>filereader_vs2008.exe --gtest_print_time
+</code></pre>
+
+<p>Опция <code>--gtest_print_time</code> указывает Google Test выводить время работы каждого теста.</p>
+
+<p>Результат:</p>
+
+<pre><code>[==========] Running 12 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 12 tests from ReaderTest
+[ RUN      ] ReaderTest.raw_100
+[       OK ] ReaderTest.raw_100 (141 ms)
+[ RUN      ] ReaderTest.raw_1024
+[       OK ] ReaderTest.raw_1024 (94 ms)
+[ RUN      ] ReaderTest.raw_10240
+[       OK ] ReaderTest.raw_10240 (109 ms)
+[ RUN      ] ReaderTest.raw_reserve_10240
+[       OK ] ReaderTest.raw_reserve_10240 (94 ms)
+[ RUN      ] ReaderTest.istream_iterator
+[       OK ] ReaderTest.istream_iterator (359 ms)
+[ RUN      ] ReaderTest.istream_iterator_reserve
+[       OK ] ReaderTest.istream_iterator_reserve (344 ms)
+[ RUN      ] ReaderTest.istream_iterator_tostring
+[       OK ] ReaderTest.istream_iterator_tostring (281 ms)
+[ RUN      ] ReaderTest.istreambuf_iterator
+[       OK ] ReaderTest.istreambuf_iterator (141 ms)
+[ RUN      ] ReaderTest.istreambuf_iterator_reserve
+[       OK ] ReaderTest.istreambuf_iterator_reserve (125 ms)
+[ RUN      ] ReaderTest.istreambuf_iterator_tostring
+[       OK ] ReaderTest.istreambuf_iterator_tostring (78 ms)
+[ RUN      ] ReaderTest.istreambuf_iterator_tostring_short
+[       OK ] ReaderTest.istreambuf_iterator_tostring_short (67 ms)
+[ RUN      ] ReaderTest.istreambuf_iterator_tostring_short_auto_ptr
+[       OK ] ReaderTest.istreambuf_iterator_tostring_short_auto_ptr (78 ms)
+[----------] 12 tests from ReaderTest (1891 ms total)
+
+[----------] Global test environment tear-down
+[==========] 12 tests from 1 test case ran. (1906 ms total)
+[  PASSED  ] 12 tests.
+</code></pre>
+
+<p>Давайте проанализируем результаты.</p>
+
+<p>Мы не будем сравнивать абсолютные времена компиляторов друг против друга. Сейчас не об этом.</p>
+
+<p><strong>Вывод первый</strong>. Предварительное резервирование буфера приемной строки (метод <code>reserve()</code>) не дает никакого эффекта в нашем случае. Может это из-за того, что стратегия расширения буфера при простом линейном добавлении данных итак весьма эффективна в классе <code>std::string</code>.</p>
+
+<p><strong>Вывод второй</strong>. Размер буфера чтения в методе чтения файла явными кусками установленного размера не дал четкой картины. Не очевидно, какой размер буфера может быть потенциально оптимальным. Тут может и дисковый кэш повлиял, может внутреннее буферизирование в классе <code>std::ifstream</code>, может что-то еще.</p>
+
+<p><strong>Вывод третий</strong>. Работа через итератор <code>istream_iterator</code> является крайне медленной. Возможно это связано с накладными расходами на форматные преобразования, производимые данным классом и совершенно ненужные в нашей задаче. Для реального использования данный метод практически непригоден.</p>
+
+<p><strong>Вывод четвертый</strong>. Использование конструктора класса <code>std::string</code>, работающего напрямую с итераторами потока, заметно быстрее, чем использование алгоритма <code>std::copy</code> (<code>ReaderTest.istream_iterator</code> заметно медленнее <code>ReaderTest.istream_iterator_tostring</code> и <code>ReaderTestiterator</code> заметно медленнее <code>ReaderTest.istreambuf_iterator_tostring</code>). И понятно почему — данные напрямую поступают в буфер строки без ненужного промежуточного копирования.</p>
+
+<p><strong>Вывод пятый (основной)</strong>. Метод чтения через итератор <code>istreambuf_iterator</code> с использованием конструктора строки, работающего напрямую с итераторами потока (тест <code>ReaderTest.istreambuf_iterator_tostring</code> для &ldquo;нестрогого&rdquo; компилятора и тест <code>ReaderTest.istreambuf_iterator_tostring_auto_ptr</code> для компилятора, следующего стандартам), является весьма эффективным и может конкурировать с ручным блочным чтением. Конечно, текст данного метода весьма непрост и может запутан для понимания на первый взгляд, особенно для начинающих, а блочное чтения прозрачно и ясно, но при почти равной эффективности этих методов нет причин отказываться от работы через итераторы, так как данный метод весь фактически предоставляется библиотекой STL, а значит быть может оптимизирован независимо, без затрагивания кода уже использующей его программы.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/02/09/dark-corners-of-cpp/">Темные углы С++</a></li>
+<li><a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">Unit-тестирование для параллельных потоков</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/stl.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/stl.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/stl.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

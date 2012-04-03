@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Maximite: Ностальгия по временам Радио-86РК и Спектрума с паяльником в руках</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Maximite: Ностальгия по временам Радио-86РК и Спектрума с паяльником в руках</h1>
+<div id="post">
+  <p>Некоторое время назад я наткнулся на интересный проект - Maximite.</p>
+
+<p>Это микрокомпьютер на базе Microchip PIC32 со встроенным Бейсиком. Прелесть тут в том, что собрать его можно за пару часов.</p>
+
+<p><img src="/images/blog/maximite-kit/maximite-overview.jpg" /></p>
+
+<p>По возможностям он немного мощнее Радио-86РК и классического Спектрума. Но вот периферия у него сказочная: SD/FAT карточка, USB, VGA, PS/2, таймеры, RS232, I2C, SPI, PWM, ADC/DAC и просто одиночные порты-пины общего назначения.</p>
+
+<p>Если собирать на макетной плате, то цена будет, по заявлению автора, менее десяти австралийских долларов.</p>
+
+<p><a href="http://geoffg.net/maximite.html">Проект полностью открытый</a>. Автор дает схемы, исходные коды прошивки и рекомендации по наладке.</p>
+
+<p>Если даже быстро пролистать <a href="http://geoffg.net/Downloads/Maximite/Maximite%20User%20Manual%20V3.0.pdf">документацию</a>, видно, возможностей прорва. Можно практически на коленке создавать различные мини-контроллеры чего угодно. Работа со всей выше перечисленной периферией ведется прямо из Бейсика.</p>
+
+<p>Программы и данные можно хранить на SD карточке. Если на карточке есть файл <code>AUTORUN.BAS</code>, то прошивка автоматически запускает его при старте.</p>
+
+<p>Мне это все понравилось, но паять мне было лень. А в интернете продавались только конструкторы.</p>
+
+<p>В итоге я заказал <a href="http://www.altronics.com.au/index.asp?area=item&amp;id=K9550">конструктор у Altronics</a>.</p>
+
+<p>И вот он пришел. На плате запаян только микропроцессор, ибо для пайки такого корпуса надо либо иметь паяльную станцию, либо большое умение.</p>
+
+<p>Поехали.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0099.jpg" /></p>
+
+<p>Вот тут я уже припаял несколько элементов. Я в пайке не совсем новичок, но держал паяльник в руках последний раз лет пять назад. Кислоты у меня не было, поэтому для ускорения процесса я выкрашивал канифоль прямо на точки пайки. Эффект примерно такой же. Паяльник (тот, что в тарелке) с острым жалом.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0102.jpg" /></p>
+
+<p>Первый час я возился с несколькими элементами, но потом дело наладилось.</p>
+
+<p>Вот тут уже готова половина.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0103.jpg" /></p>
+
+<p>Но еще через час все было готово.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0106.jpg" /></p>
+
+<p><img src="/images/blog/maximite-kit/img_0107.jpg" /></p>
+
+<p>Maximite может питаться либо от внешних 9 вольт, либо от USB. Я подключил вторым способом.</p>
+
+<p>Итак, запуск. Подключаем USB и VGA к монитору. Работает!</p>
+
+<p><img src="/images/blog/maximite-kit/img_0110.jpg" /></p>
+
+<p>Бейсик готов выполнять команды, но пока нет клавиатуры. Чисто PS/2 клавиатуры у меня не было, поэтому я попытался через USB-PS/2 переходник. Увы, воткнуть не получилось.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0111.jpg" /></p>
+
+<p>На следующий день я взял у наших айтишников старую PS/2 клавиатуру и таки подключился.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0119.jpg" /></p>
+
+<p>Корпус.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0114.jpg" /></p>
+
+<p><img src="/images/blog/maximite-kit/img_0115.jpg" /></p>
+
+<p>В закрытом виде.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0112.jpg" />
+<img src="/images/blog/maximite-kit/img_0113.jpg" /></p>
+
+<p>Надо отдать должное - конструктор от Altronics отличного качества. Отверстия на плате металлизированы, что значительно упрощается пайку. Корпус моментально собирается.</p>
+
+<p>Теперь надо было обновить прошивку, так как автор проекта уже успел ее значительно улучшить с момента выпуска конструктора.</p>
+
+<p>Maximite имеет встроенную возможность обновления прошивки, и специальный программатор не нужен. Надо открыть корпус и перезапустить Maximite, удерживая специальный микро-выключатель. Устройство впадает в состояние boot loader&rsquo;а, и специальной утилитой через USB можно заливать обновление.</p>
+
+<p>Maximite видится в USB-подсистеме как стандартное CDC устройство. Но для Windows нужно все равно сначала поставить драйвер для создания виртуального COM-порта. На Маке этот драйвер встроен.</p>
+
+<p>Подключаем.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0116.jpg" /></p>
+
+<p>Заливаем.</p>
+
+<p><img src="/images/blog/maximite-kit/img_0118.jpg" /></p>
+
+<p>Ура. Прошивка обновлена с 2.1 до последней 3.0A.</p>
+
+<p>Как я уже говорил, Maximite поддерживает VGA для дисплея и PS/2 для клавиатуры. Но это не все. Если подключить Maximite через USB к компьютеру, то кроме питания можно запустить программу эмулятор терминала, которая через виртуальный порт RS232 (работающий через USB) может обмениться данными с Maximite. Все, что Maximite выводит на VGA также дублируется в порт, а все что Maximite получает из порта расценивается как принятое с клавиатуры.</p>
+
+<p>То есть можно вообще отключить VGA и PS/2 и работать чисто через терминал. Это офигительная возможность.</p>
+
+<p>Например, картинка с VGA (вольтметр):</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01130.jpg" /></p>
+
+<p>И одновременно с экрана терминала:</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01129.jpg" /></p>
+
+<p>Забавно, экран у Maximite работает с точками, а не со знакоместами. Когда на экран выводится символ, то он дублируется, как я уже сказал, в терминале. А если рисуется графика, то она, естественно, в терминале не видна.</p>
+
+<p>Диалект Бейсика в Maximite немного необычен, но зато дает доступ ко всей периферии без ограничения, причем прямо операторами языка.</p>
+
+<p>На сайте автора есть архив с программами на Бейсике, демонстрирующие некоторые возможности Maximite.</p>
+
+<p>Я приведу несколько картинок.</p>
+
+<p>Часы.</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01125.jpg" /></p>
+
+<p>Редактор знакогенератора.</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01123.jpg" /></p>
+
+<p>Вольметр.</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01132.jpg" /></p>
+
+<p>Пару головоломок.</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01128.jpg" /></p>
+
+<p><img src="/images/blog/maximite-kit/dsc01133.jpg" /></p>
+
+<p>А что это, думаю, объяснять не надо.</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01126.jpg" />
+<img src="/images/blog/maximite-kit/dsc01131.jpg" /></p>
+
+<p>Ну, конечно, привет Хабру!</p>
+
+<p><img src="/images/blog/maximite-kit/dsc01134.jpg" /></p>
+
+<p>Заключение</p>
+
+<p>Каждая копейка, потраченная мной на этот эксперимент, стоила полученного кайфа.</p>
+
+<p>Сам проект Maximite удивляет своей законченностью. Все как-то очень органично и просто. И самое главное - это работает!</p>
+
+<p>Как мне кажется - для начинающих, даже детей, интересующихся микропроцессорной техникой, Maximite - это просто находка. Элементарная сборка, не требующая настройки. Я, как полный дилетант, собрал все за несколько часов.</p>
+
+<p>Когда мой брат лет двадцать назад собирал <a href="http://radio86.googlecode.com/hg/online/radio86.html">Радио-86РК</a> и Спектрум, ходила шутка про устройства для самостоятельной сборки, описываемые в журнале &ldquo;Радио&rdquo; - если авторы говорят, что устройство не требует наладки, то значит есть хотя бы минимальный шанс его наладить, ну я если авторы говорят, что требуется минимальная наладка&hellip;</p>
+
+<p>В общем, хотите тряхнуть восьмибитной стариной с паяльником в рукам - соберите Maximite.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2012/01/maximite-8-bit-nostalgy-with-soldering_19.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2012/01/maximite-8-bit-nostalgy-with-soldering_19.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2012/01/maximite-8-bit-nostalgy-with-soldering_19.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

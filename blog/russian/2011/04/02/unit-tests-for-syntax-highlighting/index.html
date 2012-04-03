@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Unit-тестирование для подсветки грамматики</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Unit-тестирование для подсветки грамматики</h1>
+<div id="post">
+  <p>Я сейчас делаю небольшой проект по добавлению в putty возможности налету, прямо на уровне терминала, подсвечивать грамматику некоторого языка программирования. Основная сложность у меня в том, что язык крайне неуклюж - это некоторый диалект бейсика с парой сотней операторов, заточенных для работы с базой данных. Грамматика не контекстно-свободна, нерегулярна и полна неоднозначностей, которые разрешаются на основе огромного количества частных случаев.</p>
+
+<p>В итоге я занимаюсь тем, что исправляю то там, то тут эти частные случаи. И обычно меняешь одно, и ломаешь десяток других мест.</p>
+
+<p>В итоге после пары недель мытарств, я таки взял <a href="http://code.google.com/p/cmockery/">cmockery</a>, написал всю необходимую «обвеску» и переделал все примеры в тесты.</p>
+
+<p>Например:</p>
+
+<pre><code class="cpp">void test_Ticket_dd6a19efa5_DATE(void **state) {
+  string_eq(&quot;0029  ENTRIES&lt;1, AB.CDE.VALUE.DATE&gt;    = TODAY&quot;,
+            &quot;..............a........................b......&quot;);
+  string_eq(&quot;0036  ENTRIES&lt;1, AB.CDE.BOOKING.DATE&gt;  = TODAY&quot;,
+            &quot;..............a........................b......&quot;);
+  string_eq(&quot;0036  ENTRIES&lt;1, AB.CDE.TOOKING DATE&gt;  = TODAY&quot;,
+            &quot;..............a.................bbbb...c......&quot;);
+  string_eq(&quot;0036 DATE = TODAY&quot;,
+            &quot;.....aaaa.b......&quot;);
+  string_eq(&quot;0036  DATE = TODAY&quot;,
+            &quot;......aaaa.b......&quot;);
+}
+
+void test_Ticket_e8e02762a0_V_TIME(void **state) {
+  string_eq(&quot;0017     V.TIME = 'x'&quot;,
+            &quot;................a.bbb&quot;);
+  string_eq(&quot;0034     V.DELTA = TIME() - TIME1&quot;,
+            &quot;.................a.bbbb...c......&quot;);
+}
+
+void test_Ticket_0bcfac1fb6_READNEXT_FROM(void **state) {
+  string_eq(&quot;0167     READNEXT ID FROM 9 ELSE DONE = 1 &quot;,
+            &quot;.........aaaaaaaa....bbbb.c.dddd......e.f.&quot;);
+}
+</code></pre>
+
+<p>И таких тестов сотни.</p>
+
+<p>Макрос <code>string_eq</code> не является стандартным для cmockery, и под ним скрывается приличный кусок моего велосипеда. Вызывается функция подсветки строки, и по ней делается проход для отмечания факта смены цвета путем увеличения индекса (начальный индекс цвета - <code>а</code>). Точка значит неподсвеченный символ. Немного топорно, но позволяет не хардкодить в тестах коды конретных цветов. Конечно, сильно облегчает жизнь тот факт, что данный язык строчно-ориентированный. Иначе все было бы сложнее.</p>
+
+<p>После этого жизнь радикально изменилась. Теперь я легко меняю код и одной командой проверяю, не сломал ли я чего из старого. Те два дня, что я потратил на написание дополнительного кода для тестов уже в сотни раз окупились.</p>
+
+<p>Каждую новую фичу (=очередной частный случай) или багфикс я начинаю с теста. И только потом код. Реально не могу представить, как бы я дальше работал над проектом без тестов.</p>
+
+<p>Тут получается вообще чистая класска TDD – сначала тесты, а только потом код.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/04/unit.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/04/unit.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/04/unit.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

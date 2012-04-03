@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Брюс Тейт, "Семь языков за семь недель"</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Брюс Тейт, &#34;Семь языков за семь недель&#34;</h1>
+<div id="post">
+  <p>Закончил ускоренное чтение по диагонали книги &ldquo;<a href="http://pragprog.com/book/btlang/seven-languages-in-seven-weeks">Seven languages in seven weeks</a>&rdquo;, автор Bruce Tate.</p>
+
+<p><img src="/images/covers/english/7-languages-in-7-weeks-cover.jpg" /></p>
+
+<p>В моей версии это было &ldquo;Семь языков за семь вечеров&rdquo;. Для каждого языка дается минимальное введение, которое имеет смысл только если язык для вас вообще новый. Еще приводятся мини интервью с создателями языков, и один из интересных задаваемых им вопросов - это &ldquo;чтобы вы сделали в языке иначе, если б можно начать сначала&rdquo;.</p>
+
+<p>Описываются языки:</p>
+
+<ul>
+<li>Ruby</li>
+<li>Io</li>
+<li>Prolog</li>
+<li>Scala</li>
+<li>Erlang</li>
+<li>Clojure</li>
+<li>Haskell</li>
+</ul>
+
+<p>Обзор каждой главы - это мой субъективный взгляд на две вещи сразу: язык программирования и материал главы про него. Объясню почему - для знакомых языков вряд ли имеет смысл описывать сам язык. Может имеет смысл отметить интересные отличительные моменты. А вроде для неизученных, типа Пролога или Clojure, можно и остановиться немного на самом языке.</p>
+
+<p><strong>Ruby</strong></p>
+
+<p>Про Ruby ничего особенно из книги не вынес, так как вдумчиво читал &ldquo;<a href="http://pragprog.com/book/ruby3/programming-ruby-1-9">Programming Ruby 1.9</a>&rdquo;, после чего подсел на этот язык. Ruby - фантастический скриптовой язык. Каждый раз, когда пишу на нем, испытываю удовольствие примерно такое, когда я после Perl&rsquo;а попробовал в первый раз PHP.</p>
+
+<p>Автор языка сказал в интервью, что, создавая бы язык заново сегодня, он бы хотел для многопоточности вместо традиционных потоков сделать модель <a href="http://ru.wikipedia.org/wiki/%D0%9C%D0%BE%D0%B4%D0%B5%D0%BB%D1%8C_%D0%B0%D0%BA%D1%82%D0%BE%D1%80%D0%BE%D0%B2">actor</a>.</p>
+
+<p>В двух словах, Actor - это когда параллельные потоки разделяют ресурсы не через память и механизмы синхронизации типа мьютексов и семафоров, а через обмен сообщениями, прием и посылка которых обеспечиваются средой, и они встроены в синтаксис языка. Например, как в Scala, Go, Erlang, Io.</p>
+
+<p><strong>Io</strong></p>
+
+<p><a href="http://iolanguage.com/">Io</a> очень компактный, на мой взгляд эзотерический язык, основанный на прототипах, как JavaScript, когда нет четкого разделения между классами и объектами. Минимальный и очень простой синтаксис.</p>
+
+<p>Интересный механизм многопоточности в дополнение к actor и coroutine (коллективная многозадачность, как в <a href="http://www.lua.org/manual/5.2/manual.html#2.6">Coroutines</a> в Lua), называемый futures. &ldquo;Future&rdquo; - это вроде бы как обычный actor, поток запущенный работать параллельно. Но с одним отличием: как только создающий поток попытается воспользоваться результатом future, он будет заблокирован до тех пор, пока future не вычислит это значение.</p>
+
+<p>Примерчик из книги:</p>
+
+<pre><code class="io">// Запускаем future
+futureResult := URL with(&quot;http://google.com/&quot;) @fetch
+writeln(&quot;Сразу начинаем делать что еще, пока future работает в фоне.&quot;)
+// Эта строка будет выполнена сразу.
+writeln(&quot;fetched &quot;, futureResult size, &quot; bytes&quot;)
+// А вот эта строка будет заблокирована, пока future не выполнится.
+</code></pre>
+
+<p>Идем дальше, <strong>Prolog</strong>.</p>
+
+<p>Этого зверя я грызу давно. К счастью, благодаря освоению Erlang&rsquo;а, я стал реально въезжать в функциональную тему в целом, и монстры типа Пролога или Хаскелла уже не за пределами понимания.</p>
+
+<p>Так совпало, что глубина материала по Прологу легла точно для моего уровня. Задача восьми ферзей и поиска решений Судоку были для меня отличными примерами.</p>
+
+<p>В двух словах: программа для Прологе - это набор фактов и связей между ними. Затем Пролог, выполняя программу, поиском в глубину обходит пространство решений и выбирает те, которые удовлетворяют всем заданным фактам и связям между ними.</p>
+
+<p>Фактические программа поиска решения Судоку - это набор переменных, составляющих клетки поля Судоку, и набор правил - разнообразные суммирования по группам, по строками и столбцам (по правилам Судоку). И затем Пролог перебором ищет подходящие значения и комбинации переменных.</p>
+
+<p>Конечно, это очень поверхностный взгляд, но который лично мне добавил много понимания.</p>
+
+<p>Идем дальше, <strong>Scala</strong>.</p>
+
+<p>Отмечу только отдельные факты, интересные мне.</p>
+
+<p>Многопоточность на основе actors, то есть когда потоки обмениваются сообщениями. После Go и Erlang понимаешь как это удобно и правильно.</p>
+
+<p>Про остальное - по-моему в Scalа есть все возможные свистелки и перделки, когда-либо придуманные в области языков программирования. В общем, если вы фанат Java VM, то надо брать полноценную книгу по Scala и грызть ее.</p>
+
+<p>Идем далее, <strong>Erlang</strong>.</p>
+
+<p>Тут тоже скажу мало, так как я фанат этого языка, и уровень этой книги мне был мал, но введение дается хорошее для ознакомления с функциональной сутью Erlang&rsquo;а и его моделью многопоточности.</p>
+
+<p><strong>Clojure</strong></p>
+
+<p>Снова язык на основе Java VM. Clojure - это разновидность Лиспа со всеми вытекающими.</p>
+
+<p>Интересная возможность языка, в общем-то не связанная с его лисповой сущностью - это STM, <a href="http://ru.wikipedia.org/wiki/%D0%9F%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%BD%D0%B0%D1%8F_%D1%82%D1%80%D0%B0%D0%BD%D0%B7%D0%B0%D0%BA%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D0%B0%D1%8F_%D0%BF%D0%B0%D0%BC%D1%8F%D1%82%D1%8C">software transactional memory</a>. Это когда некий кусок кода в программе объявляется транзакцией, и он выполняется атомарно, либо все изменения откатываются.</p>
+
+<p>Ну и под занавес, <strong>Haskell</strong>.</p>
+
+<p>Хаскелл суров, и данная книга - это крайне минимальное введение, просто для запоминания слова Хаскелл. Я кое как осилил <a href="http://www.ozon.ru/context/detail/id/3039995/">отличную книгу Душкина</a> и &ldquo;<a href="http://www.amazon.co.uk/Programming-Haskell-Graham-Hutton/dp/0521692695">Programming in Haskell</a>&rdquo;, а сейчас читаю &ldquo;<a href="http://www.amazon.co.uk/Real-World-Haskell-Bryan-OSullivan/dp/0596514980">Real World Haskell</a>&rdquo;, поэтому главу этой книги просто пролистал.</p>
+
+<p><strong>Вывод</strong>: книга 100% одноразовая, но, как говориться, раз не&hellip; полезно для кругозора и для программистских терок на кухне.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2012/02/seven-languages-in-seven-weeks.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2012/02/seven-languages-in-seven-weeks.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2012/02/seven-languages-in-seven-weeks.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

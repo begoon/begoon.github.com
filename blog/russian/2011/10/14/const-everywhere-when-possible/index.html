@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>сonst везде, где только можно</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>сonst везде, где только можно</h1>
+<div id="post">
+  <p>Интересно, что далеко не все мне знакомые программисты исповедуют радикальный подход по использованию <code>const</code>: использовать <code>const</code> абсолютно везде, где это не приводит к ошибкам компиляции.</p>
+
+<p>Я не имею ввиду очевидные применения <code>const</code> для аргументов функций и константных методов.</p>
+
+<p>Я имею ввиду, что любая переменная, которая не меняется с момента ее создания, должна быть <code>const</code>. Само название &ldquo;переменная&rdquo; значит, что объект должен меняться. Если он не меняется, то это уже не переменная. Сделать переменную непемеренной в C/C++ можно с помощью ключевого слова <code>const</code>.</p>
+
+<p>Пара примеров, где люди часто не ставят <code>const</code>:</p>
+
+<pre><code class="cpp">const int sz = very_long_name_to_calculate_size(...);
+for (int i = 0; i &lt; sz; ++i) {
+...
+const VeryLongClassName var(a, lot, of, different, parameters);
+int a = var.getX();
+// Only &quot;const&quot; functions of &quot;VeryLongClassName&quot; are called further down.
+</code></pre>
+
+<p>Кстати, явное указание на неизменность переменной помогает компилятору в оптимизации.</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/09/30/const-t-or-t-const/">const T* или T const*</a></li>
+<li><a href="/blog/russian/2010/11/17/non-const-references/">Неконстантные ссылки</a></li>
+<li><a href="/blog/russian/2010/10/29/reference-to-temporary-object-in-constructor-initialize-list/">Ссылка на временный объект в списке инициализации конструктора</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/10/onst.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/10/onst.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/10/onst.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

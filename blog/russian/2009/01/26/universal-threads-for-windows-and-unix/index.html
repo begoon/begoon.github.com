@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Универсальные потоки на С++ для Windows и UNIX</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Универсальные потоки на С++ для Windows и UNIX</h1>
+<div id="post">
+  <p>Потоки (threads) являются весьма удобным механизмом для ускорения программ и придания им гибкости в использовании процессорного времени, особенно в наш успешно и бесповоротно наступивший век многоядерных процессоров, стоящих почти в каждом современном компьютере. Чего уж говорить о серверных платформах.</p>
+
+<p>Итак, задался я целью иметь удобный и простой класс на С++ для работы с потоками. В силу особенностей работы мне приходится иметь дело различными системами, и хотелось иметь максимально переносимый вариант. На сегодняшний день стандартом де-факто для мира UNIX являются так называемые <a href="http://ru.wikipedia.org/wiki/POSIX_Threads">потоки POSIX</a> Для Windows тоже есть реализация этой библиотеки, но в целях исключения дополнительной внешней зависимости для этой платформы я решил пользоваться напрямую Windows API, благо назначения функций очень похожи. При использования POSIX Threads под Windows данный класс еще упрощается (надо просто выкинуть всю Windows секцию), но для меня лично удобнее было не иметь зависимости от виндусовых POSIX Threads. Дополнительная гибкость, так сказать.</p>
+
+<p>Исходники приведены прямо тут, благо они небольшие. Комментариев мало, так как я считаю, что лучший комментарий, это грамотно написанный код. Сердце всего дизайна класса — это виртуальный метод <code>void Execute()</code>, который и реализует работу потока. Данный метод должен быть определен в вашем классе потока, который наследуется от класса Thread.</p>
+
+<p>Я всегда использую пространства имен (namespaces) в C++, особенно для библиотечных классов общего назначения. Для данного примера я использовал имя <code>ext</code>. Замените его на ваше, если необходимо &ldquo;вписать&rdquo; класс в ваш проект.</p>
+
+<p>Для компиляции в Windows необходимо определить макрос WIN32. В этом случае будет использоваться Windows API. Иначе подразумевается работа с pthreads. Если вы используете Cygwin, то можно работать и через Windows API и через pthreads.</p>
+
+<p><code>thread.h</code>:</p>
+
+<pre><code class="cpp">#ifndef _EXT_THREAD_H
+#define _EXT_THREAD_H
+
+#ifdef WIN32
+#include &lt;windows.h&gt;
+#else
+#include &lt;pthread.h&gt;
+#include &lt;signal.h&gt;
+#endif
+
+namespace ext {
+
+#ifdef WIN32
+typedef HANDLE ThreadType;
+#else
+typedef pthread_t ThreadType;
+#endif
+
+class Thread {
+public:
+  Thread() {}
+  virtual ~Thread();
+
+  // Функция запуска потока. Ее нельзя совместить с конструктором
+  // класса, так как может случиться, что поток запустится до того,
+  // как объект будет полностью сформирован. А это может спокойно 
+  // произойти, если вызвать pthread_create или CreateThread в
+  // в конструкторе. А вызов виртуальной функции в конструкторе, 
+  // да еще и в конструкторе недосформированного объекта, 
+  // в лучшем случае приведет к фатальной ошибке вызова чисто 
+  // виртуальной функции, либо в худшем случае падению программы 
+  // с нарушением защиты памяти. Запуск же потока после работы
+  // конструктора избавляет от этих проблем. 
+  void Start();
+
+  // Главная функция потока, реализующая работу потока.
+  // Поток завершается, когда эта функция заканчивает работу.
+  // Крайне рекомендуется ловить ВСЕ исключения в данной функции
+  // через try-catch(...). Возникновение неловимого никем 
+  // исключения приведет к молчаливому падению программы без
+  // возможности объяснить причину.
+  virtual void Execute() = 0;
+
+  // Присоединение к потоку.
+  // Данная функция вернет управление только когда поток
+  // завершит работу. Применяется при синхронизации потоков,
+  // если надо отследить завершение потока.
+  void Join();
+
+  // Уничтожение потока.
+  // Принудительно уничтожает поток извне. Данный способ
+  // завершения потока является крайне нерекомендуемым.
+  // Правильнее завершать поток логически, предусмотрев
+  // в функции Execute() условие для выхода, так самым
+  // обеспечив потоку нормальное завершение.
+  void Kill();
+
+private:
+  ThreadType __handle;
+
+  // Защита от случайного копирования объекта в C++
+  Thread(const Thread&amp;);
+  void operator=(const Thread&amp;);
+};
+
+} // ext
+
+#endif
+</code></pre>
+
+<p><code>thread.cpp</code>:</p>
+
+<pre><code class="cpp">#include &quot;thread.h&quot;
+
+namespace ext {
+
+static void ThreadCallback(Thread* who) {
+#ifndef WIN32
+  // Далаем поток &quot;убиваемым&quot; через pthread_cancel.
+  int old_thread_type;
+  pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &amp;old_thread_type);
+#endif
+  who-&gt;Execute(); 
+}
+
+#ifdef WIN32
+
+Thread::~Thread() {
+  CloseHandle(__handle);
+}
+
+void Thread::Start() {
+  __handle = CreateThread(
+    0, 0, 
+    reinterpret_cast&lt;LPTHREAD_START_ROUTINE&gt;(ThreadCallback), this,
+    0, 0
+  );
+}
+
+void Thread::Join() {
+  WaitForSingleObject(__handle,  INFINITE);
+}
+
+void Thread::Kill() {
+  TerminateThread(__handle, 0);
+}
+
+#else
+
+Thread::~Thread() {
+}
+
+extern &quot;C&quot;
+typedef void *(*pthread_callback)(void *);
+
+void Thread::Start() {
+  pthread_create(
+    &amp;__handle, 0, 
+    reinterpret_cast&lt;pthread_callback&gt;(ThreadCallback), 
+    this
+  );
+}
+
+void Thread::Join() {
+  pthread_join(__handle, 0);
+}
+
+void Thread::Kill() {
+  pthread_cancel(__handle);
+}
+
+#endif
+
+} // ext
+</code></pre>
+
+<p>Возникает резонный вопрос — я почему ни один из вызовов функций не проверяет код ошибки. Вдруг что? Я могу сказать, что я встретил только один случай возврата ошибки от pthread_create.</p>
+
+<p>Это было на AIX&rsquo;e при использовании связывания (linking) времени исполнения. Программа не была слинкована с библиотекой pthreads (я забыл указать ключик &ldquo;-lpthread&rdquo;), но из-за особенностей линковки времени исполнения (так любимой AIX&rsquo;ом) линкер сообщил, что все хорошо и выдал мне исполняемый файл. В процессе же работы ни одна функция из библиотеки pthreads просто не вызывалась. Интересно, что код ошибки функции <code>pthread_create()</code> означал что-то типа &ldquo;не могу открыть файл&rdquo;, и чего я сделал вывод, что файл библиотеки недоступен. Вообще, линковка времени исполнения — это довольно хитрая штука. В данном виде связывания внешние связи определены уже на стадии линковки (то есть это не тоже самое, что загрузка разделяемой библиотеки вручную во время работы, самостоятельный поиск функций по именам и т.д.), но вот фактический поиск вызываемой функции происходит в сам момент старта программы. Получается, что до непосредственно запуска нельзя проверить в порядке ли внешние зависимости (команда <code>ldd</code> рапортует, что все хорошо). Более того, разрешение внешних зависимостей происходить в момент вызовы внешней функции. Это довольно гибкий механизм, но вот его практическая полезность пока остается для меня загадкой. Вообще AIX является довольно изощренной системой в плане разнообразия механизмов связывания. Позже я постараюсь описать результаты моих &ldquo;исследований&rdquo; AIXа на эту тему.</p>
+
+<p>Но вернемся к причинам отсутствия проверки кодов возврата от функций pthreads и Windows API. Как я уже упомянул, если какая-то из этих функций завешается с ошибкой, то с огромной вероятностью что-то радикально не так в системе, и это не просто нормальное завершение функции с ошибкой, после которой можно как-то работать дальше. Это фатальная ошибка, и ваше приложение не будет работать нормально еще по туче других причин. Кроме этого я хотел сделать это класс максимально простым, чтобы его можно было таскать из проекта в проект и не допиливать его напильником под существующую в проекте систему обработки ошибок (исключения, коды возврата, журналирование и т.д.), так как в каждом проекте она может быть разная.</p>
+
+<p>Читатель всегда может добавить в код необходимые проверки для собственных нужд.</p>
+
+<p>Кроме этого, я всегда использую в разработке unit-тестирование, и данный класс также имеет тесты. Поэтому запускаемый при каждой полной сборке проекта набор тестов сразу выявляет большинство проблем (уже проблемы линковки точно).</p>
+
+<p>В следующей главе я расскажу про технику использования описанного класса — как создавать потоки, как их запускать, останавливать и уничтожать. Я буду использовать unit-тестирование, что позволит все мини-примеры превращать в автоматизированные тесты вашего проекта.</p>
+
+<p>В завершении могу сказать, что данный класс успешно работает и проверен мной лично на Windows (32- и 64-бит), Linux 2.6 (32- и 64-бит Intel и SPARC), AIX 5.3 и 6, SunOS 5.2 64-bit SPARC, HP-UX и HP-UX IA64.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">Unit-тестирование для параллельных потоков</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/01/blog-post_26.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/01/blog-post_26.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/01/blog-post_26.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>git в ежедневной работе</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>git в ежедневной работе</h1>
+<div id="post">
+  <p>По долгу работы мне приходится участвовать процедуре следующего толка: есть ветка исходников, стабильность которой имеет чудовищную важность. Там не то, что сломать билд нельзя, там каждый коммит проходит несколько стадий автоматических проверок (компиляция на разных платформах разными компиляторами, прогон разнообразных анализаторов и т.д.) плюс надо получить подтверждение у как минимум четырех/пяти человек, которые должны проверить твой коммит. Процедура мучительная и долгая даже с технической точки зрения. Более того, процедура выстраивалась годами и основана на очень древней системе контроля версий (не будем называть ее всуе), поэтому возможности слияния и разрешения конфликтов в основном ручные. Она умеет нормально делать только check-out и check-in.</p>
+
+<p>Как следствие того, что каждый коммит готовится, отлаживается и проверяется ощутимое время (благо это только bug fix&rsquo;ы, размер которых обычно невелик), и даже формальная сторона вопроса может занять пару дней, и очень часто случается, что когда дело доходит непосредственно до команды &ldquo;commit&rdquo;, все оканчивается конфликтом, так как кто-то уже успел потрогать твой кусок кода и залить это на сервер. И надо ручками сливать обновленную версию со своими изменениями. А если файл не один, то начинается головная боль.</p>
+
+<p>Так как я только недавно в этой теме, то после второго же коммита решил упростить себе жизнь в плане слияния при конфликте.</p>
+
+<p>Расчехлил я <a href="http://git-scm.org/">git</a>, и теперь все выглядит так: каждый мой багфикс живет в отдельном репозитории git (фактически, каталог) с двумя ветками. В одной я независимо работаю над исправлениями, веду git&rsquo;ом историю этой работы, а во вторую ветку периодически синхронизирую состояние исходников из главного репозитория и сливаю с ними свою ветку одной единственной командой &ldquo;git merge&rdquo;.</p>
+
+<p>В плане распределенных SCM я сейчас в основном работаю с mercurial, так как Google Code его поддерживает. Но все таки git - это невероятно мощный инструмент (правда когда в рабочем процессе не фигурирует Windows, ибо виндовая версия git&rsquo;а портирована крайне криво).</p>
+
+<p>По началу многое запутывает. Меня по первости крайне сбивала с толку идея staging area (или его еще называют - index). Эдакое промежуточное звено между локальными изменениями и самим репозиторием. Получается, что <a href="http://www.kernel.org/pub/software/scm/git/docs/git-diff.html">git diff</a> может показывать три разные вещи: разницу между локальными изменениями и индексом (а не репозиторием - это будет по умолчанию, что обычно и вводит новичков в ступор), разницу между индексом и репозиторием и наконец разницу между локальными изменениями и репозиторием. Индекс (или staging area) позволяет при коммите выбирать, что именно из локальных файлов надо закоммитить, а не все подряд. В коммите участвуют только файлы, находящиеся в индексе. Причем самое интересное, что можно включать в индекс куски измененных файлов (например, я добавил в файл два новых класса, но закоммитить могу только выборочно один из них).</p>
+
+<p>Вам уже нравится?</p>
+
+<p>Или например, откат всех локальных изменений (очень частая операция) может быть выполнена как минимум двумя способами (через <a href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html">git checkout</a> и через <a href="http://www.kernel.org/pub/software/scm/git/docs/git-reset.html">git reset</a>), или откат уже сделанного коммита можно также провернуть минимум двумя путями (<a href="http://www.kernel.org/pub/software/scm/git/docs/git-reset.html">git reset</a> или <a href="http://www.kernel.org/pub/software/scm/git/docs/git-revert.html">git revert</a>) в зависимости от того, хотите ли вы видеть потом этот откат в истории.</p>
+
+<p>Обилие функций и их некоторая непохожесть на общепринятые стандарты команд SCM немного обескураживают сначала. Но немного въехав в тему начинаешь ощущать всю мощь. Например, наличие staging area и git stash (когда можно временно заморозить текущее состояние, сделать какую-то быструю минутную работу и вернуться к основной теме) - весьма уникальные возможности git&rsquo;a.</p>
+
+<p>В плане GUI - gitk дает все необходимое.</p>
+
+<p>Единственное, что надо выбрать по вкусу самостоятельно - это программу для проведения слияния при разрешении конфликта в графическом режиме. Тут у всех свои предпочтения.</p>
+
+<p>Использование правильных и удобных инструментов сильно ускоряет работу. И время, потраченное в начале на выбор и настройку правильных служебных программ однозначно окупится в будущем.</p>
+
+<p>Надеюсь, мне удалось привлечь в ряды пользователей git еще пару тройку энтузиастов.</p>
+
+<p>Однажды привыкнув с постоянному наличию под рукой контроля версий, хочется, чтобы она была везде. Даже при починке автомобиля.</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/05/21/what-version-control-to-choose/">Какую распределенную систему контроля версий выбрать: Git, Bazaar или Mercurial?</a></li>
+<li><a href="/blog/russian/2009/05/17/pragmatic-version-control-using-git/">Travis Swicegood, &ldquo;Pragmatic Version Control using Git&rdquo;</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/11/git-cvs.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/11/git-cvs.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/11/git-cvs.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

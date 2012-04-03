@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Добавление элементов в std::vector</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Добавление элементов в std::vector</h1>
+<div id="post">
+  <p>На собеседованиях по С++ задают много вопросов про контейнеры STL. И самый безобидный из них, как думал, <code>std::vector</code>. Но вот и по нему попался интересный вопрос.</p>
+
+<p>Представим, что стратегия управления внутренним буфером контейнера <code>std::vector</code> (в реальности, она иная) такова: изначально размер буфера равен нулю, и он будет увеличивается вдвое каждый раз, когда в нем уже нет места под следующий элемент.</p>
+
+<p>Вопрос: оценить вычислительную сложность последвательного добавления в контейнер k элементов (как уже говорилось, начальная длина контейнера нулевая). Элементы добавляются в конец.</p>
+
+<p>Как я полагаю, в среднем ожидается, что отвечать стоит практически сразу.</p>
+
+<p>На всякий случай: мой ответ будет завтра.</p>
+
+<p>А сейчас мини эксперимент с реальным <code>std::vector</code> (компилятор, и сообразно STL — Sun C++ 5.9 SunOS_sparc) для выяснения реальной стратегии роста буфера в векторе:</p>
+
+<pre><code class="cpp">#include &lt;vector&gt;
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;cstdlib&gt;
+
+int main() {
+  int last = -1;
+  std::vector&lt;int&gt; a;
+  std::cout &lt;&lt; std::setw(12) &lt;&lt; &quot;Capacity&quot; &lt;&lt; &quot; &quot; 
+            &lt;&lt; std::setw(12) &lt;&lt; &quot;Size&quot;
+            &lt;&lt; std::setw(12) &lt;&lt; &quot;Ratio&quot; &lt;&lt; std::endl
+            &lt;&lt; std::setw(12) &lt;&lt; std::setfill('-') &lt;&lt; &quot;-&quot; &lt;&lt; &quot; &quot; 
+            &lt;&lt; std::setw(12) &lt;&lt; &quot;-&quot; &lt;&lt; &quot; &quot;
+            &lt;&lt; std::setw(12) &lt;&lt; &quot;-&quot; &lt;&lt; std::endl;
+
+  std::cout &lt;&lt; std::setfill(' ') &lt;&lt; std::fixed;
+  while (1) {
+    if (a.capacity() != last) {
+      last = a.capacity();
+      std::cout &lt;&lt; std::setw(12) &lt;&lt; a.capacity() &lt;&lt; &quot; &quot;
+                &lt;&lt; std::setw(12) &lt;&lt; a.size() &lt;&lt; &quot; &quot;
+                &lt;&lt; std::setw(12) &lt;&lt; std::setprecision(6)
+                &lt;&lt; (float)a.capacity() / a.size() &lt;&lt; std::endl;
+    }
+    a.push_back(std::rand());
+  }
+  return 0;
+}
+</code></pre>
+
+<p>А вот и результат:</p>
+
+<pre><code>    Capacity         Size       Ratio
+------------ ------------ ------------
+           0            0          NaN
+          32            1    32.000000
+          64           33     1.939394
+         103           65     1.584615
+         166          104     1.596154
+         268          167     1.604790
+         433          269     1.609665
+         700          434     1.612903
+        1132          701     1.614836
+        1831         1133     1.616064
+        2962         1832     1.616812
+        4792         2963     1.617280
+        7753         4793     1.617567
+       12544         7754     1.617746
+       20296        12545     1.617856
+       32838        20297     1.617875
+       53131        32839     1.617924
+       85965        53132     1.617952
+      139091        85966     1.617977
+      225049       139092     1.617987
+      364129       225050     1.617992
+      589160       364130     1.617994
+      953260       589161     1.617996
+     1542374       953261     1.617998
+     2495561      1542375     1.617999
+     4037817      2495562     1.617999
+     6533187      4037818     1.617999
+    10570696      6533188     1.618000
+    17103386     10570697     1.618000
+    27673278     17103387     1.618000
+    44775363     27673279     1.618000
+    72446537     44775364     1.618000
+   117218496     72446538     1.618000
+   189659526    117218497     1.618000
+   306869113    189659527     1.618000
+</code></pre>
+
+<p>Выходит, что для моей STL - это какой-то магический коэффициент 1.618.</p>
+
+<p><strong>Update</strong>: В комментариях подсказали хорошую ссылку на тему <a href="http://alenacpp.blogspot.com/2005/06/vector_30.html">стратегии управления размером вектора</a>.</p>
+
+<p><strong>Update 2</strong>: Лично мой ответ на тему вычислительной сложности последовательного добавления элементов в вектор, если вектор будет удваивать размер буфера при переполнении.</p>
+
+<p>Так как мы добавляем <code>k</code> элементов, то это как минимум <code>O(k)</code>. А так как по условию вектор удваивает буфер каждый раз, когда нет места, то произойдет <code>log2(k)</code> раз (так как по условию элементы поступают последовательно).</p>
+
+<p>Получаем в этоге: <code>O(k*log2(k))</code>.</p>
+
+<p><strong>Update 3</strong>: В комментариях меня поправили: <code>O(k + log2(k))</code> или просто <code>O(k)</code>.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2010/03/stdvector.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2010/03/stdvector.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2010/03/stdvector.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

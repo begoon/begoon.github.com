@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>MicroXP - a lightweight Windows XP</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>MicroXP - a lightweight Windows XP</h1>
+<div id="post">
+  <p>The problem &ndash; a need to connect to a remote network via <a href="http://en.wikipedia.org/wiki/Remote_Desktop_Protocol">RDP</a>. To establish such connection, special software must be installed on a client workstation to create an encrypted tunnel between the workstation and the remote network. When that software is up and running, any application (telnet/ssh, ftp, radmin etc), including RDP client (mstsc.exe), might access to the remote network.</p>
+
+<p>Not a problem when a client workstation runs Windows. You just go to a web site and logon, and then an ActiveX component gets started from the page, installs and runs everything required.</p>
+
+<p>It becomes complicated if the workstation is not Windows. Indeed, there are RDP clients available for Linux and Mac, but it doesn&rsquo;t help much because without that encrypted channel it just doesn&rsquo;t have any meaning.</p>
+
+<p>What do Linux and Mac users have to do? Install Windows in a virtual machine and run RDP in there. This is a good solution but with a drawback. A virtual machine hosting standard Windows usually takes a few gigabytes minimum and boots considerably slow.</p>
+
+<p>I googled a bit and found <a href="http://www.google.co.uk/search?q=MicroXP-0.82.iso">MicroXP</a>. This is a very stripped-down version of XP SP3. The distribution ISO takes around ~100 MB, and when installed ~250. In VirtualBox on Mac Air the installation lasts five minutes and the already installed system boots in 10 seconds or less. The virtual machine requirements are minimal &ndash; a dynamic 300 MB disk and 64 MB of RAM.</p>
+
+<p>After the installation of MicroXP you have to add Virtual Box Guest Additions (~200 KB) to share directories and not to struggle with the mouse, and then add a <a href="http://www.google.co.uk/search?q=RemoteDesktop-MicroXp-0.82.zip">RDP client</a> (it can be transferred to the VM via the shared folders).</p>
+
+<p>In summary, if you need minimalistic and fast XP, MicroXP is a very good candidate.</p>
+
+<p>P.S. Don&rsquo;t visit microxp.org. This is a fake to fish e-mails.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2011/02/microxp-lightweight-windows-xp.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2011/02/microxp-lightweight-windows-xp.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2011/02/microxp-lightweight-windows-xp.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

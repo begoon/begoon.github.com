@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Symbolic links to files and directories in Windows</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Symbolic links to files and directories in Windows</h1>
+<div id="post">
+  <p>To my shame, I thought that Windows still lives in the previous century without links in the file system. I knew about junctions, links to directories, which can be created, for instance, in FAR via Alt-F6.</p>
+
+<p>But today, thumbing through &ldquo;<a href="http://www.amazon.co.uk/Windows-Internals-PRO-Developer-Mark-Russinovich/dp/0735625301/">Windows Internals</a>&rdquo;, I came across a paragraph about it.</p>
+
+<p>So, there is a little log from the console (Windows 7).</p>
+
+<pre><code>ver
+
+Microsoft Windows [Version 6.1.7601]
+</code></pre>
+
+<p>Create a file and a directory:</p>
+
+<p>cd C:\Temp\links
+C:\temp\links&gt;mkdir folder
+C:\temp\links&gt;echo &gt;file</p>
+
+<p>Create a symbolic link to the directory:</p>
+
+<pre><code>C:\temp\links&gt;mklink /D link1 folder
+symbolic link created for link1 &lt;&lt;===&gt;&gt; folder
+</code></pre>
+
+<p>Create a junction to the directory (it isn&rsquo;t possible to point it to a file):</p>
+
+<pre><code>C:\temp\links&gt;mklink /J link2 folder
+Junction created for link2 &lt;&lt;===&gt;&gt; folder
+</code></pre>
+
+<p>Create a symbolic link slightly differently:</p>
+
+<pre><code>C:\temp\links&gt;mklink link3 folder
+symbolic link created for link3 &lt;&lt;===&gt;&gt; folder
+</code></pre>
+
+<p>Create a symbolic link to a file:</p>
+
+<pre><code>C:\temp\links&gt;mklink link4 file
+symbolic link created for link4 &lt;&lt;===&gt;&gt; file
+</code></pre>
+
+<p>Result:</p>
+
+<pre><code>C:\temp\links&gt;dir
+ Volume in drive C has no label.
+ Volume Serial Number is C021-6C9F
+
+ Directory of C:\temp\links
+
+09/05/2011  18:26    &lt;DIR&gt;          .
+09/05/2011  18:26    &lt;DIR&gt;          ..
+09/05/2011  18:26                13 file
+09/05/2011  18:25    &lt;SYMLINKD&gt;     link1 [folder]
+09/05/2011  18:25    &lt;JUNCTION&gt;     link2 [C:\temp\links\folder]
+09/05/2011  18:25    &lt;SYMLINK&gt;      link3 [folder]
+09/05/2011  18:26    &lt;SYMLINK&gt;      link4 [file]
+09/05/2011  18:23    &lt;DIR&gt;          folder
+               3 File(s)             13 bytes
+               5 Dir(s)  208,278,925,312 bytes free
+</code></pre>
+
+<p>Note the interesting types of files: <code>&lt;SYMLINKD&gt;</code>, <code>&lt;JUNCTION&gt;</code>, <code>&lt;SYMLINK&gt;</code>. The book says the first two are identical in functionality, simply <code>&lt;JUNCTION&gt;</code> is older mechanism available in older versions of Windows and supporting links within the same volume only.</p>
+
+<p>Also, note that even <code>link3</code> points to a directory, it doesn&rsquo;t behave as a regular directory (in contrast to <code>link1</code> and <code>link2</code> which work normally as directories). FAR, by the way, also doesn&rsquo;t see <code>link3</code> as a directory.</p>
+
+<p>In general, such simple task as links in the file system, solved in UNIX more than twenty years ago, has been solved in Windows in traditional for this operating system way - there are multiple solutions with different level of compatibility.</p>
+
+<p>By the way, &ldquo;<a href="http://www.amazon.co.uk/Windows-Internals-PRO-Developer-Mark-Russinovich/dp/0735625301/">Windows Internals</a>&rdquo; is bloody fantastic, strongly recommend.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2011/05/links-to-files-and-directories-in.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2011/05/links-to-files-and-directories-in.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2011/05/links-to-files-and-directories-in.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

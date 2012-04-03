@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Google Test Framework 1.3.0</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Google Test Framework 1.3.0</h1>
+<div id="post">
+  <p>Сегодня вышла новая версия <a href="http://code.google.com/p/googletest/">Google Test Framework</a> — <a href="http://googletest.googlecode.com/files/gtest-1.3.0.zip">1.3.0</a>.</p>
+
+<p>Радостно, что авторы воплотили <a href="http://groups.google.com/group/googletestframework/browse_thread/thread/55f0b08a154b0afb">мою идею</a>, когда вся библиотека собирается всего в два файла: <code>gtest-all.cc</code> и <code>gtest.h</code>. Теперь для этого есть специальный скрипт на Питоне. Распаковываем архив <code>gtest-1.30.zip</code> и запускаем:</p>
+
+<pre><code>python scripts\fuse_gtest_files.py . fuse
+</code></pre>
+
+<p>После этого во вновь созданном подкаталоге fuse будет находиться &ldquo;упакованная&rdquo; версия библиотеки в виде двух файлов <code>gtest/gtest-all.cc</code> и <code>gtest/gtest.h</code>. Моя аналогичная, но <a href="/downloads/gtest-amalgamation-1.2.1.zip">ручная сборка</a> для предыдущей версии больше неактуальна.</p>
+
+<p>Опять таки приятно, что включили <a href="http://code.google.com/p/googletest/source/detail?r=184&amp;path=/trunk/test/gtest_unittest.cc">мой микропатч</a> для возможности установки флагов командной строки прямо в исходниках тестов. Это очень удобно. Например, есть возможность печати времени работы тестов. Но по умолчанию эта функция выключена, и для ее включения надо в командной строке сказать <code>--gtest_print_time</code>. Неудобно постоянно таскать за собой этот ключ. Теперь же можно прямо в тексте тестов, например, в головном модуле, задать этот параметр:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+int main(int argc, char* argv[]) {
+  testing::InitGoogleTest(&amp;argc, argv);
+  testing::GTEST_FLAG(print_time) = true; 
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>Итак, новые возможности версии 1.3.0:</p>
+
+<ul>
+<li>поддержка так называемых &ldquo;смертельных тестов&rdquo; для Windows (раньше это работало только под Linux)</li>
+<li>параметр командной строки <code>--gtest_also_run_disabled_tests</code> для принудительного запуска отключенных тестов</li>
+<li>возможность распараллеливать запуск тестов на разных машинах</li>
+</ul>
+
+<p>Небольшая программа ниже демонстрируем новые &ldquo;вкусности&rdquo; Google Test.</p>
+
+<p>Файл <code>runner.cpp</code>:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+
+#include &lt;fstream&gt;
+#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+
+// -------------------------------------------------------
+
+// Данная функция, если файл не существует, печатает сообщение
+// об ошибке и завершает программу с ненулевым кодом.
+void openfile(const char* name) {
+  std::ifstream is(name);
+  if (!is) {
+    std::cerr &lt;&lt; &quot;Unable to open the file&quot; &lt;&lt; std::endl;
+    std::exit(1);  
+  }
+}
+
+// Тест для функции openfile().
+TEST(OpenFileDeathTest, ExitIfNoFile) {
+  // Задаем заведомо несуществующий файл и смотрим - завершилась
+  // ли программа с ненулевым кодом. Также проверяем регулярным
+  // выражением то, что программа напечатала при выходе.
+  // Мы ожидаем слово &quot;open&quot; среди остального вывода.
+  ASSERT_DEATH({ openfile(&quot;__nofile__&quot;); }, &quot;.*open.*&quot;);
+}
+
+// -------------------------------------------------------
+
+// Данная функция должна падать с assert'ом, если делитель
+// равен нулю.
+int divide(int a, int b) {
+  assert(b != 0);
+  return a / b;
+}
+
+// Тест для assert'а в функции divide().
+TEST(AssertDeathTest, DivideByZero) {
+  // Задаем нулевой делитель и смотрим - упала или нет.
+  // Вывод программы при падении не проверяем.
+  ASSERT_DEATH({ divide(1, 0); }, &quot;&quot;);
+}
+
+// -------------------------------------------------------
+
+// Данная функция должна при ненулевом коде завершать
+// программу, прибавив к заданному коду ошибки 50.
+void abandon(int code) {
+  if (code != 0) std::exit(code + 50);
+}
+
+// Тест для функции abandon().
+TEST(AbandonDeathTest, ExitCode) {
+  // Вызываем функцию и смотрим код возврата.
+  // Вывод программы при выходе не проверяем.
+  ASSERT_EXIT(abandon(200), testing::ExitedWithCode(250), &quot;&quot;);
+}
+
+// -------------------------------------------------------
+
+// Заведомо неработающий “сломанный” тест.
+// Если имя группы тестов или теста в отдельности предварить
+// словом DISABLED_, то тест не будет участвовать с запуске.
+// Это удобно, когда какой-то тест сломан, времени на его
+// отладку нет, но убирать его из тестирования совсем нельзя.
+// В это случае его можно отключить. Google Test при каждом
+// запуске будет напоминать, сколько имеется отключенных тестов.
+// В процессе же работы над тестом можно запускать программу
+// с параметром &quot;--gtest_also_run_disabled_tests&quot;, который
+// будет проверять также и отключенные тесты.
+TEST(BadTest, DISABLED_Test) {
+  FAIL();
+}
+
+// -------------------------------------------------------
+
+int main(int argc, char* argv[]) {
+  testing::InitGoogleTest(&amp;argc, argv);
+  // Принудительно печатаем время работы тестов.
+  testing::GTEST_FLAG(print_time) = true;
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>Компилируем в Visual Studio:</p>
+
+<pre><code>cl /EHsc /I. /Ferunner_vs2008.exe /DWIN32 runner.cpp gtest\gtest-all.cc
+</code></pre>
+
+<p>Запускаем:</p>
+
+<pre><code>[==========] Running 3 tests from 3 test cases.
+[----------] Global test environment set-up.
+[----------] 1 test from OpenFileDeathTest
+[ RUN      ] OpenFileDeathTest.ExitIfNoFile
+[       OK ] OpenFileDeathTest.ExitIfNoFile (31 ms)
+[----------] 1 test from OpenFileDeathTest (31 ms total)
+
+[----------] 1 test from AssertDeathTest
+[ RUN      ] AssertDeathTest.DivideByZero
+[       OK ] AssertDeathTest.DivideByZero (31 ms)
+[----------] 1 test from AssertDeathTest (31 ms total)
+
+[----------] 1 test from AbandonDeathTest
+[ RUN      ] AbandonDeathTest.ExitCode
+[       OK ] AbandonDeathTest.ExitCode (32 ms)
+[----------] 1 test from AbandonDeathTest (32 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 3 test cases ran. (94 ms total)
+[  PASSED  ] 3 tests.
+
+  YOU HAVE 1 DISABLED TEST
+</code></pre>
+
+<p>Отлично, все работает. Также не забудем, что у нас таки есть один отключенный тест. Его можно запустить принудительно, использовав ключ <code>--gtest_also_run_disabled_tests</code>:</p>
+
+<pre><code>runner_vs2008.exe --gtest_also_run_disabled_tests
+</code></pre>
+
+<p>Получим следующее:</p>
+
+<pre><code>[==========] Running 4 tests from 4 test cases.
+[----------] Global test environment set-up.
+[----------] 1 test from OpenFileDeathTest
+[ RUN      ] OpenFileDeathTest.ExitIfNoFile
+[       OK ] OpenFileDeathTest.ExitIfNoFile (31 ms)
+[----------] 1 test from OpenFileDeathTest (31 ms total)
+
+[----------] 1 test from AssertDeathTest
+[ RUN      ] AssertDeathTest.DivideByZero
+[       OK ] AssertDeathTest.DivideByZero (32 ms)
+[----------] 1 test from AssertDeathTest (32 ms total)
+
+[----------] 1 test from AbandonDeathTest
+[ RUN      ] AbandonDeathTest.ExitCode
+[       OK ] AbandonDeathTest.ExitCode (31 ms)
+[----------] 1 test from AbandonDeathTest (31 ms total)
+
+[----------] 1 test from BadTest
+[ RUN      ] BadTest.DISABLED_Test
+runner.cpp(72): error: Failed
+[  FAILED  ] BadTest.DISABLED_Test (0 ms)
+[----------] 1 test from BadTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 4 tests from 4 test cases ran. (94 ms total)
+[  PASSED  ] 3 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] BadTest.DISABLED_Test
+
+ 1 FAILED TEST
+</code></pre>
+
+<p>Под занавес отмечу, что появился еще один новый ключ командной строки <code>--gtest_help</code> для печати на экран всех весьма многочисленных параметров Google Test.</p>
+
+<p>Я уже обновился до версии 1.3.0, а вы?</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/03/google-test-framework-130.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/03/google-test-framework-130.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/03/google-test-framework-130.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

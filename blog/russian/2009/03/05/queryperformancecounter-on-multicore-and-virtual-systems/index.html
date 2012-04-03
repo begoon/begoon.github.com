@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>QueryPerformanceCounter на мультиядерных и виртуальных системах</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>QueryPerformanceCounter на мультиядерных и виртуальных системах</h1>
+<div id="post">
+  <p>Как я <a href="/blog/russian/2009/02/26/coredump-for-windows-unittest/">обещал</a>, рассказываю про мои приключения с классом <a href="/blog/russian/2009/01/29/milliseconds-timer-for-windows-and-unix/">PreciseTimer</a>.</p>
+
+<p>Мой класс <code>PreciseTimer</code> предназначен для работы с миллисекундными интервалами времени. Реализация под Windows основана на использовании функций <a href="http://msdn.microsoft.com/en-us/library/ms644905.aspx">QueryPerformanceFrequency</a> и <a href="http://msdn.microsoft.com/en-us/library/ms644904.aspx">QueryPerformanceCounter</a>.</p>
+
+<p>Этот класс активно используется в некоторых наших проектах. Также, в силу некоторых обстоятельств, мы активно используем виртуальные машины для тестовых сборок. И, например, сборка под Windows 64-бита производится под <a href="http://www.virtualbox.org/">VirtualBox</a>. И вот очередной релиз-кандидат ушел в тестирование. Немедленно мне посыпались жалобы, что сборка не работает под 64-битным Windows под виртуальной машиной.</p>
+
+<p>Я запретил тестерам временно отключать тест и начал проверять все сам. На реальных машинах все работает. Начал гонять на виртуальных. На <a href="http://www.vmware.com/">VMWare</a> тоже глючит. Тест <code>PreciseTimer.MeasurementAccuracy</code> выдает ошибку типа:</p>
+
+<pre><code>c:\sandbox\test\PreTimer_unittest.cpp(22): error: Value of: delta &lt;= allowed_delta_ms
+  Actual: false
+Expected: true
+Delta (100) &gt; than 10
+[  FAILED  ] PreciseTimer.MeasurementAccuracy (110 ms)
+</code></pre>
+
+<p>Получается, что задержка в 100 миллисекунд была измерена практически как нулевая.</p>
+
+<p>Я заподозрил функцию <code>QueryPerformanceCounter()</code>. Написал еще один кондовый тест:</p>
+
+<pre><code class="cpp">TEST(PreciseTimer, MillisecCounter) {
+  monitor::PreciseTimer timer;
+  monitor::PreciseTimer::Counter a = timer.millisec();
+  timer.sleepMs(10000);
+  monitor::PreciseTimer::Counter b = timer.millisec();
+  EXPECT_EQ(10000, b - a);
+}
+</code></pre>
+
+<p>Этот тест делает видную глазом задержку в 10 секунд (чтобы исключить проблему в самой задержке) и затем проверят показания таймера.</p>
+
+<p>Итак, на реальной машине тест выдает следующее:</p>
+
+<pre><code>[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from PreciseTimer
+[ RUN      ] PreciseTimer.MillisecCounter
+c:\sandbox\test\PreTimer_unittest.cpp(17): error: Value of: b - a
+
+  Actual: 9995
+Expected: 10000
+[  FAILED  ] PreciseTimer.MillisecCounter
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran.
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] PreciseTimer.MillisecCounter
+
+ 1 FAILED TEST
+</code></pre>
+
+<p>Тест, конечно, сбоит, но тут четко видно, что требуемая задержка в 10000 миллисекунд (10 секунд) измерена как 9995 миллисекунд. Понятно, тут невозможно измерить точь в точь, но суть работает верно.</p>
+
+<p>А вот, что я получил на виртуальное машине:</p>
+
+<pre><code>[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from PreciseTimer
+[ RUN      ] PreciseTimer.MillisecCounter
+c:\sandbox\test\PreTimer_unittest.cpp(17): error: Value of: b - a
+  Actual: 90
+Expected: 10000
+[  FAILED  ] PreciseTimer.MillisecCounter
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran.
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] PreciseTimer.MillisecCounter
+
+ 1 FAILED TEST
+</code></pre>
+
+<p>Задержка в 10000 миллисекунд была измерена всего как 90. Вот и причина сбоя — функция <code>QueryPerformanceCounter()</code>. Полчаса работы.</p>
+
+<p>Затем я поискал в интернете на тему проблем у функции <code>QueryPerformanceCounter()</code> на виртуальных машинах и нашел объяснение в MSDN. Корень проблемы, как оказалось, был не конкретно в виртуальных машинах, а в &ldquo;старом&rdquo; биосе и в использовании мультиядерных систем. На наших реальных мультиядерных машинах все работало, так как, видимо их биос был &ldquo;нормальным&rdquo;.</p>
+
+<p>В итоге проблема решилась добавлением параметра <code>/usepmtimer</code> в файл <code>c:\boot.ini</code>, как рекомендуется в найденной статье. После этого все тесты заработали как положено.</p>
+
+<p>Я включил подробное описание проблемы в Release Notes, чтобы клиенты не наступили на эти грабли, и инцидент был исчерпан. Еще полчаса работы. Итого час на все.</p>
+
+<p>А теперь вдумайтесь в произошедшее. Проблема была локализована и исправлена не то, чтобы до релиза. Она была локализована даже до тестового запуска. Лично я вот ну ни как не ожидал, что в Windows функция <code>QueryPerformanceCounter()</code> почему-то как-то особенно работает на мультиядерных системах со &ldquo;старым&rdquo; биосом (видимо биосы VMWare и VirtualBox как раз подходят под эту категорию). А вот как бы искал эту проблему потом? уже на реальной работающей системе. Одно из применений этого класса у нас, это измерения временных данных по транзакциям. Да я потратил был потом полжизни для поиска этой &ldquo;маленькой проблемки&rdquo;, случись она у реального клиента.</p>
+
+<p>Пишите тесты! Это экономит не только деньги, но самое драгоценное — ваши нервы.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/01/29/milliseconds-timer-for-windows-and-unix/">Миллисекундный таймер для Windows и UNIX</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/03/queryperformancecounter.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/03/queryperformancecounter.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/03/queryperformancecounter.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

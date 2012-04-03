@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Исключения в списке инициализации конструктора</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Исключения в списке инициализации конструктора</h1>
+<div id="post">
+  <p>Правилом хорошего тона в С++ является использование списка инициализации для вызова конструкторов членов класса, например:</p>
+
+<pre><code class="cpp">class A { ... };
+
+class B {
+public:
+  B(int n);
+private:
+  A __a;
+};
+
+B::B(int n) 
+  : __a(n)        // вызов конструктора А() в списке инициализации.
+{}
+</code></pre>
+
+<p>А что произойдет, если в одном из вызовов в списке инициализации произойдет исключение? Например:</p>
+
+<pre><code class="cpp">class A {
+public:
+  A(int n) {
+    throw 0;   // Конструктор класса А бросает исключение int
+  }
+};
+
+class B {
+public:
+  B(int n);
+private:
+  A __a;
+};
+
+B::B(int n) 
+  : __a(n)     // Данный вызов бросает исключение
+{}
+</code></pre>
+
+<p>Хотелось бы иметь возможность поймать это исключение и провести &ldquo;чистку&rdquo; уже распределенной на тот момент памяти, например:</p>
+
+<pre><code class="cpp">class P { ... };
+
+class A {
+public:
+  A(int n) {
+    throw 0;   // Конструктор класс А бросает исключение int
+  }
+};
+
+class B {
+public:
+  B();
+private:
+  P* __p;
+  A __a;
+};
+
+B::B() 
+  : __p(new P),    // Память для P распределяется до вызова конструктора класса А
+  __a(0)           // Данный вызов бросает исключение
+{}
+</code></pre>
+
+<p>На момент, когда конструктор А бросит исключение, мы уже будем иметь распределенную память под указателем <code>__p</code> и, не обработав исключение, эту память можно потерять.</p>
+
+<p>В С++ есть форма задания <code>try-catch</code> блока на уровне функции. Используя ее, можно переписать пример так:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+
+class A {
+public:
+  A(int n) {
+    throw 0;   // Конструктор класс А бросает исключение int
+  }
+};
+
+class P {
+public:
+  P() { std::cout &lt;&lt; &quot;P(), constructor&quot; &lt;&lt; std::endl; }
+  ~P() { std::cout &lt;&lt; &quot;~P(), destructor&quot; &lt;&lt; std::endl; }
+};
+
+class B {
+public:
+  B();
+private:
+  P* __p;
+  A __a;
+};
+
+B::B() 
+try
+  : __p(new P), __a(0) {
+} catch (int&amp; e) {
+  std::cout &lt;&lt; &quot;B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
+  delete __p;
+};
+
+int main(int argc, char* argv[]) {
+  try {
+    B b;
+  } catch (int&amp; e) {
+    std::cout &lt;&lt; &quot;main(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
+  }
+}
+</code></pre>
+
+<p>Видно (см. тело конструктора <code>B::B()</code>), что лист инициализации ушел между словом <code>try</code> и началом try-блока, а тело конструктора теперь внутри try-блока (в данном примере оно пустое), а обработчик исключения находится в catch-блоке после тела конструктора. Данный пример сумеет обработать исключение класса А и освободит память из под указателя <code>__p</code>. Данный пример выведет следующее:</p>
+
+<pre><code>P(), constructor
+B(), exception 0
+~P(), destructor
+main(), exception 0
+</code></pre>
+
+<p>Видно, что деструктор класса <code>P</code> был вызван.</p>
+
+<p>Внимательный читатель заметит, что в функции <code>main()</code> тоже есть try-блок, а последней строкой программа печатает <code>main(), exception 0</code>, что значит, что исключение было обработано дважды: в теле try-блока конструктора и затем в функции <code>main()</code>. Почему?</p>
+
+<p>Правило гласит: исключение, пойманное в обрамляющем функцию виде <code>try-catch</code> блоке конструктора, будет переброшено еще раз при выходе из конструктора, если конструктор принудительно не сделал это сам, поймав это исключение. Сейчас очень важный момент: если хоть один из членов класса бросил исключение в процессе конструирования, то <strong>весь</strong> объект принудительно завершает конструирование аварийно с исключением вне зависимости от того, обработано это исключение в конструкторе или нет.</p>
+
+<p>Единственное, что мы тут можем сделать, это &ldquo;на лету&rdquo; подправить исключение, брошенное членом класса (например, добавить туда дополнительную информацию). Следующий пример меняет код брошенного классом <code>А</code> исключения:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+
+class A {
+public:
+  A(int n) {
+    throw 0;   // Конструктор класс А бросает исключение int
+  }
+};
+
+class B {
+public:
+  B();
+private:
+  A __a;
+};
+
+B::B() 
+try
+  : __a(0) {
+} catch (int&amp; e) {
+  std::cout &lt;&lt; &quot;B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
+  e = 1;      // Меняем код исключения с 0 на 1.
+};
+
+int main(int argc, char* argv[]) {
+  try {
+    B b;
+  } catch (int&amp; e) {
+    std::cout &lt;&lt; &quot;main(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
+  }
+}
+</code></pre>
+
+<p>Эта программы выведет следующее:</p>
+
+<pre><code>B(), exception 0
+main(), exception 1
+</code></pre>
+
+<p>Видно, что когда исключение было поймано второй раз, код у него уже не 0 как в оригинальном исключении, а 1.</p>
+
+<p>С конструкторами вроде разобрались. Перейдем к деструкторам.</p>
+
+<p>Деструктор — это тоже функция. К нему тоже применим синтаксис ловли исключения на уровне тела функции, например:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+
+class B {
+public:
+  ~B();
+};
+
+B::~B() 
+try {
+  throw 2;
+} catch (int&amp; e) {
+  std::cout &lt;&lt; &quot;~B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
+}
+</code></pre>
+
+<p>Поведение ловли исключения в деструкторе на уровне функции схоже с конструктором, то есть исключение, пойманное в catch-блоке на уровне функции будет переброшено автоматически снова при завершении деструктора, если он это не сделал сам, обработав исключение. Например:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+
+class B {
+public:
+  ~B();
+};
+
+B::~B() 
+try {
+  throw 2;
+} catch (int&amp; e) {
+  std::cout &lt;&lt; &quot;~B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
+}
+
+int main(int argc, char* argv[]) {
+  try {
+    B b;
+  } catch (int&amp; e) {
+    std::cout &lt;&lt; &quot;main(), B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
+  }
+}
+</code></pre>
+
+<p>выведет:</p>
+
+<pre><code class="cpp">~B(), exception 2
+main(), B(), exception 2
+</code></pre>
+
+<p>то есть исключение, после его обработки в деструкторе было переброшено снова. Конечно, не пойманные исключения в деструкторе являются большим &ldquo;no-no!&rdquo; в С++. Принято считать, что не пойманное в деструкторе исключение — это прямой путь к аварийному завершению программы, так как нарушается принцип целостности системы исключений. Если хотите, чтобы ваши программы на С++ работали стабильно, то не допускайте, чтобы исключения “вылетали” из деструктора. Например так:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+
+class B {
+public:
+  ~B();
+};
+
+B::~B() {
+  try {
+    throw 2;            // Бросаем исключение.
+  } catch (int&amp; e) {    // И тут же ловим его, не пропуская него “на волю”.
+    std::cout &lt;&lt; &quot;~B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
+  }
+}
+
+int main(int argc, char* argv[]) {
+  try {
+    B b;
+  } catch (int&amp; e) {
+    std::cout &lt;&lt; &quot;main(), B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
+  }
+}
+</code></pre>
+
+<p>Эта программа выведет:</p>
+
+<pre><code>~B(), exception 2
+</code></pre>
+
+<p>Видно, что исключение не дошло до функции <code>main()</code>.</p>
+
+<p>С деструкторами тоже вроде разобрались. Теперь перейдем к обычным функциям.</p>
+
+<p>Технику обработки исключений на уровне функции можно применять для любой функции, а не только для конструктора или деструктора, например:</p>
+
+<pre><code class="cpp">void f() 
+try {
+  throw 1;
+} catch (int&amp; e) {
+  std::cout &lt;&lt; &quot;f(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
+}
+</code></pre>
+
+<p>Но целесообразность такого синтаксиса сомнительна, так как пойманное исключение <strong>не перебрасывается</strong> автоматически снова после окончания функции, как это было в случае с конструктором и деструктором. Программа:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+
+void f() 
+try {
+  throw 1;
+} catch (int&amp; e) {
+  std::cout &lt;&lt; &quot;f(), B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
+}
+
+int main(int argc, char* argv[]) {
+  try {
+    f();
+  } catch (int&amp; e) {
+    std::cout &lt;&lt; &quot;main(), f(), B(0), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
+  }
+}
+</code></pre>
+
+<p>напечатает только:</p>
+
+<pre><code class="cpp">f(), B(), exception 1
+</code></pre>
+
+<p>то есть исключение не было передано дальше, поэтому разумнее было бы просто оформить функцию традиционным образом с помощью try-блока, обрамляющего всё тело функции:</p>
+
+<pre><code class="cpp">void f() {
+  try {
+    throw 1;
+  } catch (int&amp; e) {
+    std::cout &lt;&lt; &quot;f(), B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
+  }
+}
+</code></pre>
+
+<p>не внося в форматирование текста лишней каши непривычным положением слов <code>try</code> и <code>catch</code>.</p>
+
+<p>Лично мне кажется, из всего выше написанного, реально для применения только <code>try-catch</code> блок на уровне функции для конструктора. Там это действительно актуально, чтобы не допустить объектов, сконструированных только наполовину и убитых в процессе создания исключением от собственного члена (простите за каламбур).</p>
+
+<p><strong>Выводы</strong></p>
+
+<p>Исключения, брошенные при обработке списка инициализации класса можно поймать в теле конструктора через синтаксис <code>try-catch</code> блока на уровне функции.</p>
+
+<p>Если хоть один элементов класса при конструировании выбросил исключение, то <strong>весь</strong> класс принудительно завершает собственное конструирование с ошибкой в форме исключения вне зависимости от того, было это исключение поймано в конструкторе или нет.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/blog-post_19.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/blog-post_19.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/blog-post_19.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Самодельный мьютекс на C++ для Windows и UNIX</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Самодельный мьютекс на C++ для Windows и UNIX</h1>
+<div id="post">
+  <p>Параллельные потоки — это очень удобно. Класс <a href="/blog/russian/2009/01/26/universal-threads-for-windows-and-unix/">Thread</a> неплохо делает свою работу на многих платформах. Однако, самостоятельно работающий поток, который не имеет связи с внешним миром (другими потоками), вряд ли полезен в реальном приложении. Вычисления для этого и распараллеливаются, чтобы, так сказать, в несколько рук (потоков) выполнить одну задачу. Возникает задача синхронизации потоков.</p>
+
+<p>Например, в программе есть некоторая строковая переменная, хранящая описание текущего состояния. Это состояние может, например, выводиться в нижней полоске рабочего окна. Теперь представим, что в программе есть два параллельно работающих потока. Первый занимается получением данных из сети, а второй — обработкой базы данных. Допустим, настал некоторый момент времени, когда первый поток принял данные из сети и хочет об этом отрапортовать в строке состояния, записав туда &ldquo;Принято 16384 байт&rdquo;. Приблизительно в этот же момент второй поток завершил периодическую проверку базы данных и также желает об этом сообщить пользователю строкой &ldquo;База данных проверена&rdquo;. Операция копирования строки не является атомарной, то есть нет никакой гарантии, что во время ее выполнения процессор не переключится на какой-то другой поток, и операция копирования не будет прервана посреди работы. Итак, когда поток номер 1 успел записать в строку состояния слово &ldquo;Принято&rdquo;, может так случиться, что процессор активирует поток номер 2, который также начнет запись своей строки и добавит к уже записанному &ldquo;Принято&rdquo; строку &ldquo;База данных про&rdquo;, но будет прерван первым потоком и т.д. В итоге в переменная может содержать кашу типа &ldquo;ПрияноБаза данных 1про6в3ерена84 байт&rdquo;. Вывод такой — результат полностью непредсказуем.</p>
+
+<p>Для решения подобного вроде проблем в мире параллельного программирования существует такое понятие, как блокировка. Суть ее в том, что когда один процесс захватывает блокировку, то все остальные процессы, пытающиеся ее захватить после, будут блокированы до тех пор, пока первый процесс ее не отпустит. Это похоже на дверь в комнату: представим, что наша переменная <code>globalStatus</code> находится в комнате с одной дверью и ключом внутри. Если дверь открыта (блокировка свободна), то в комнате никого нет (никто не работает с переменной). Когда процесс заходит в комнату, он запирает дверь изнутри (захватывает блокировку). После этого процесс может спокойно работать с переменной как угодно долго, так как гарантированно никто другой не войдет в комнату, так как она заперта изнутри, и не будет мешать ему работать с переменной.</p>
+
+<p>Это была идея простейшей блокировки, которую часто называют мьютекс (mutex). Сейчас мы рассмотрим реализацию такой блокировки на С++, которая будет работать в Windows и UNIX. Как я писал в <a href="/blog/russian/2009/01/26/universal-threads-for-windows-and-unix/">статье про параллельные потоки</a>, в мире UNIX стандартом де-факто является библиотека pthread (POSIX Threads). Имеено ее мы и будем использовать для UNIX-версии. Для Windows будет отдельная реализация.</p>
+
+<p>Класс Mutex получился весьма простой, в виде единственного файла <code>mutex.h</code>. Пространство имен (namespace) называется ext для простоты. Переименуйте его, если это требуется для вашего проекта.</p>
+
+<p><code>mutex.h</code>:</p>
+
+<pre><code class="cpp">#ifndef _EXT_MUTEX_H
+#define _EXT_MUTEX_H
+
+#ifdef WIN32
+#define WIN32_LEAN_AND_MEAN
+#define NOGDI
+#include &lt;windows.h&gt;
+#else
+#include &lt;stdlib.h&gt;
+#include &lt;pthread.h&gt;
+#endif
+
+namespace ext {
+
+#ifdef WIN32
+  typedef CRITICAL_SECTION MutexType;
+#else
+  typedef pthread_mutex_t MutexType;
+#endif
+
+// Интерфейс класса Mutex.
+// Класс задумывался как маленький и быстрый, поэтому все
+// определено прямо в заголовочном файле, и все функции
+// объявлены принудительно inline. Это должно уберечь
+// от ошибок и предупреждений о двойных символах при
+// включении mutex.h в несколько модулей.
+class Mutex {
+public:
+  inline Mutex();
+  // Деструктор объявлен как не виртуальный из-за тех же
+  // соображений эффективности. Если вы планируете
+  // наследоваться от этого класса, то лучше сделать
+  // деструктор виртуальным, так как наследование от класса
+  // с не виртуальным деструктором потенциально опасно
+  // с точки зрения утечек памяти и является одним из
+  // больших &quot;no-no&quot; в С++.
+  inline ~Mutex();
+
+  // Функция захвата блокировки (вход в комнату и запирание
+  // двери ключом изнутри). 
+  inline void Lock();
+
+  // Функция освобождения блокировки (отпирание двери и
+  // выход из комнаты)
+  inline void Unlock();
+private:
+  MutexType __mutex;
+
+  // Защита от случайного копирования объекта данного класса.
+  // Экземпляр этого класса с трудом может быть нормально
+  // скопирован, так как он жестко привязан к системному
+  // ресурсу. 
+  Mutex(const Mutex&amp;);
+  void operator=(const Mutex&amp;);
+};
+
+#ifdef WIN32
+
+// Реализация через Windows API
+
+Mutex::Mutex()             { InitializeCriticalSection(&amp;__mutex); }
+Mutex::~Mutex()            { DeleteCriticalSection(&amp;__mutex); }
+void Mutex::Lock()         { EnterCriticalSection(&amp;__mutex); }
+void Mutex::Unlock()       { LeaveCriticalSection(&amp;__mutex); }
+
+#else // WIN32
+
+// UNIX версия через pthread
+
+Mutex::Mutex()             { pthread_mutex_init(&amp;__mutex, NULL); }
+Mutex::~Mutex()            { pthread_mutex_destroy(&amp;__mutex); }
+void Mutex::Lock()         { pthread_mutex_lock(&amp;__mutex); }
+void Mutex::Unlock()       { pthread_mutex_unlock(&amp;__mutex); }
+
+#endif // WIN32
+
+} // ext
+
+#endif
+</code></pre>
+
+<p>Касаемо техники <a href="/blog/russian/2009/01/27/preventing-copying-objects-in-cpp/">&ldquo;защиты&rdquo; объекта в С++ от случайного копирования</a> я уже писал ранее.</p>
+
+<p>Я не стал проверять коды возвратов данных функций для упрощения класса. Могу сказать, что если хоть одна из них завершиться с ошибкой, то это значит, что-то конкретно не так в вашей системе, и приложение по любому не будет работать нормально еще по миллиарду причин.</p>
+
+<p>Пощупаем класс в работе. И конечно, используя unit-тестирование.</p>
+
+<p>Традиционно, для компиляции тестов нам нужна <a href="http://code.google.com/p/googletest/">Google Test Framework</a>. Как я уже <a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">писал</a>, вы можете скачать <a href="/downloads/gtest-amalgamation-1.2.1.zip">мою модификацию</a> этой библиотеки, которая сокращена до двух необходимых файлов <code>gtest/gtest.h</code> и <code>gtest-all.cc</code>.</p>
+
+<p>Для теста нам также потребуются файлы thread.cpp и thread.h из <a href="/blog/russian/2009/01/26/universal-threads-for-windows-and-unix/">статьи про параллельные потоки в С++</a>.</p>
+
+<p><code>mutex_unittest.cpp</code>:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+
+#include &quot;mutex.h&quot;
+#include &quot;thread.h&quot;
+
+// Макрос для осуществления задержки в миллисекундах
+#ifdef WIN32
+#include &lt;windows.h&gt;
+#define msleep(x)    Sleep(x)
+#else
+#include &lt;unistd.h&gt;
+#define msleep(x)    usleep((x)*1000)
+#endif
+
+// Определим параллельный поток, который будет
+// &quot;конкурировать&quot; с основным потоком за блокировку.
+// Данный поток будет пытаться захватить блокировку,
+// изменить значение флага и освободить затем
+// блокировку.
+class A: public ext::Thread {
+public:
+  // Передаем в конструкторе ссылку на флаг и 
+  // ссылку на блокировку.
+  A(volatile int&amp; flag, ext::Mutex&amp; mutex) :
+    __flag(flag), __mutex(mutex)
+  {}
+
+  virtual void Execute() {
+    // Захват блокировки (1)
+    __mutex.Lock();
+    // Изменяет флаг на 1
+    __flag = 1;
+    // Освобождаем блокировку
+    __mutex.Unlock();
+  }
+
+private:
+  volatile int&amp; __flag;
+  ext::Mutex&amp; __mutex;
+};
+
+TEST(MutexTest, Generic) {
+  // Начальное значение флага - 0.
+  volatile int flag = 0;
+
+  // Создаем объект-блокировку
+  ext::Mutex mutex;
+  // Захватываем блокировку.
+  mutex.Lock();
+
+  // Создаем параллельный поток выполнения.
+  A a(flag, mutex);
+  // Запускаем его.
+  a.Start();
+  // Ждем для проформы десятую секунды, чтобы дать
+  // время параллельному потоку создаться и успеть
+  // дойти до строки (1), то есть до захвата блокировки.
+  msleep(100);
+
+  // Значение флага должно быть все еще 0, так как
+  // параллельный поток должен быть блокирован на
+  // строке (1), так как мы захватили блокировку еще
+  // до его создания.
+  EXPECT_EQ(0, flag);
+
+  // Освобождаем блокировку, тем самым давая 
+  // параллельному потоку выполняться дальше и
+  // изменить значение флага на 1.
+  mutex.Unlock();
+
+  // Ждем завершения параллельного потока.
+  a.Join();
+  // Так как параллельный поток завершился, то
+  // флаг теперь точно должен быть равен 1.
+  EXPECT_EQ(1, flag);
+}
+</code></pre>
+
+<p>Для запуска тестов нам нужен стандартный файл запуска <code>runner.cpp</code>:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+
+int main(int argc, char* argv[]) {
+  testing::InitGoogleTest(&amp;argc, argv);
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>Компилируем все вместе.</p>
+
+<p>В Visual Studio:</p>
+
+<pre><code>cl /EHsc /I. /Femutex_unittest_vs2008.exe /DWIN32 runner.cpp mutex_unittest.cpp thread.cpp gtest\gtest-all.cc
+</code></pre>
+
+<p>Или если вы используете <code>gcc</code>:</p>
+
+<pre><code>g++ -I. -o mutex_unittest_cygwin.exe runner.cpp mutex_unittest.cpp thread.cpp gtest/gtest-all.cc
+</code></pre>
+
+<p>Запускаем mutex_unittest_vs2008.exe или mutex_unittest_cygwin.exe:</p>
+
+<pre><code>[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from MutexText
+[ RUN      ] MutexText.Generic
+[       OK ] MutexText.Generic
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran.
+[  PASSED  ] 1 test.
+</code></pre>
+
+<p>Вроде работает как надо.</p>
+
+<p>Теперь внесем в исходный текст класса &ldquo;случайную&rdquo; ошибку, заменив строку:</p>
+
+<pre><code class="cpp">void Mutex::Lock()         { EnterCriticalSection(&amp;__mutex); }
+</code></pre>
+
+<p>на</p>
+
+<pre><code class="cpp">void Mutex::Lock()         { /* EnterCriticalSection(&amp;__mutex); */ }
+</code></pre>
+
+<p>Этой &ldquo;ошибкой&rdquo; мы просто отключили создание блокировки. Перекомпилируем все заново и запустим:</p>
+
+<pre><code>[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from MutexText
+[ RUN      ] MutexText.Generic
+mutex_unittest.cpp:41: Failure
+Value of: flag
+  Actual: 1
+Expected: 0
+[  FAILED  ] MutexText.Generic
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran.
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] MutexText.Generic
+
+ 1 FAILED TEST
+</code></pre>
+
+<p>Видно, что флаг был изменен в параллельном потоке вне зависимости от блокировки (и понятно почему, мы ж ее &ldquo;сломали&rdquo;).</p>
+
+<p>Итак, можно вернуть исправленную строку в исходное состояние. Класс работает, и тесты на это подтвердили.</p>
+
+<p>При использовании класса Mutex у себя в проекте не забудьте включить файл <code>mutex_unittest.cpp</code> в ваш набор unit-тестов.</p>
+
+<p>В завершении могу сказать, что данный класс успешно работает и проверен мной лично на Windows (32- и 64-бит), Linux 2.6 (32- и 64-бит Intel и SPARC), AIX 5.3 и 6, SunOS 5.2 64-bit SPARC, HP-UX и HP-UX IA64.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/02/17/auto-mutex-using-raii/">Автоматический мьютекс</a></li>
+<li><a href="/blog/russian/2009/01/26/universal-threads-for-windows-and-unix/">Универсальные потоки на С++ для Windows и UNIX</a></li>
+<li><a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">Unit-тестирование для параллельных потоков</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/c-windows-unix.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/c-windows-unix.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/c-windows-unix.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

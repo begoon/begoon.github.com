@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>std::min() и std::max() в Visual Studio</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>std::min() и std::max() в Visual Studio</h1>
+<div id="post">
+  <p>Простейший кусок кода (файл <code>minmax.cpp</code>):</p>
+
+<pre><code class="cpp">#include &lt;algorithm&gt;
+int main() {
+  int a = std::min(10, 20);
+  return 0;
+}
+</code></pre>
+
+<p>Все тривиально и отлично компилируется и в Visual Studio, и в CodeGear/Borland Studio, и Cygwin. Но допустим потребовались какие-то функции из Windows API, и вы подключили файл <code>windows.h</code>:</p>
+
+<p>Теперь компиляция в Visual Studio (я проверял в 2005 и 2008) будет падать со следующей ошибкой:</p>
+
+<pre><code>minmax.cpp
+minmax.cpp(4) : error C2589: '(' : illegal token on right side of '::'
+minmax.cpp(4) : error C2059: syntax error : '::'
+</code></pre>
+
+<p>Постановка <code>#include &lt;windows.h&gt;</code> до <code>#include &lt;algorithm&gt;</code> проблемы не решает.</p>
+
+<p>Очевидно, проблема в том, что кто-то переопределил значение слова min. Запустим препроцессор и проверим догадку:</p>
+
+<pre><code>cl /P minmax.cpp
+</code></pre>
+
+<p>И что мы видим? А видим мы следующее (фрагмент файла <code>minmap.i</code>):</p>
+
+<pre><code class="cpp">#line 7 &quot;minmax.cpp&quot;
+int main() {
+  int a = std::(((10) &lt; (20)) ? (10) : (20));
+  return 0;
+}
+</code></pre>
+
+<p>Естественно, это каша с точки зрения синтаксиса, и компилятор ругается совершенно законно.
+Покопавшись в заголовочных файлах Windows SDK, в файле <code>WinDef.h</code>, который косвенно подключается через <code>windows.h</code>, я нашел корень зла:</p>
+
+<pre><code class="cpp">#ifndef NOMINMAX
+
+#ifndef max
+#define max(a,b)            (((a) &gt; (b)) ? (a) : (b))
+#endif
+
+#ifndef min
+#define min(a,b)            (((a) &lt; (b)) ? (a) : (b))
+#endif
+
+#endif  /* NOMINMAX */
+</code></pre>
+
+<p>Вот теперь ясно, что делать — надо определить макрос NOMINMAX, тем самым заблокировать определение <code>min</code> и <code>max</code>:</p>
+
+<pre><code class="cpp">#define NOMINMAX
+#include &lt;algorithm&gt;
+#include &lt;windows.h&gt;
+int main() {
+  int a = std::min(10, 20);
+  return 0;
+}
+</code></pre>
+
+<p>Забавно, что в Cygwin и CodeGear/Borland исходный пример компилируется без проблем. В борландовой версии <code>windows.h</code> я нашел вот такой фрагмент:</p>
+
+<pre><code class="cpp">#if defined(__BORLANDC__)
+...
+#    if defined(__cplusplus)
+#       define NOMINMAX              /* for WINDEF.H */
+...
+#    endif
+...
+#endif /* __BORLANDC__ */
+</code></pre>
+
+<p>Эдак они заранее оградились от проблемы, принудительно запретив проблемные макросы.</p>
+
+<p><strong>Вывод</strong>: Порой промежуточные результаты работы препроцессора являются крайне полезной информацией.</p>
+
+<p>На всякий случай напомню, как его запускать для перечисленных мной компиляторов:</p>
+
+<p>Visual Studio:</p>
+
+<pre><code>cl.exe /P имя_исходника.cpp
+</code></pre>
+
+<p>Borland/CodeGear Studio:</p>
+
+<pre><code>cpp32.exe имя_исходника.cpp
+</code></pre>
+
+<p>Cygwin:</p>
+
+<pre><code>cpp.exe имя_исходника.cpp
+</code></pre>
+
+<p>Прочие флаги командной строки должны повторять флаги при обычной компиляции. Для препроцессора важны определения макросов (обычно это флаги <code>-D</code> и <code>-U</code>) и пути для поиска включаемых файлов (обычно это флаг <code>-I</code>).</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/03/05/how-to-do-without-nominmax/">Как обойтить без макроса NOMINMAX</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/stdmin-stdmax-visual-studio.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/stdmin-stdmax-visual-studio.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/stdmin-stdmax-visual-studio.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

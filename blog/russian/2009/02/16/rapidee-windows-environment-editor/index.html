@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>RapidEE - Редактор переменных окружения для Windows</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>RapidEE - Редактор переменных окружения для Windows</h1>
+<div id="post">
+  <p>Поднимите руки те, кому удобно пользоваться стандартным способом редактирования переменных окужения в Windows XP? Особенно когда, например, редактируешь длиннющую строку PATH в поле ввода длиной десять сантиметров. Я руку не поднимал, так как мне не нравится, радикально не нравится.</p>
+
+<p>Есть замечательная программа <a href="http://www.rapidee.com/ru/about">Rapid Environment Editor</a> (RapidEE). Она позволяет очень удобно редактировать переменные окружения Windows в виде двух панелей: слева системные переменные, справа пользователькие. Переменная PATH автоматически представляется в виде списка путей. И даже то, что всю картину переменных видно как на ладони, и то, что программа понимает вставку из буфера обмена — все это меркнет перед гениальной функцией подсветки &ldquo;мертвых&rdquo; путей в переменной PATH. &ldquo;Мертвым&rdquo; путь может быть в основном по двум причинам: либо путь остался от программы, которая давно снесена, либо путь просто задан неверно, а вы битый час пытаетесь понять, почему что-то там не запускается. RapidEE моментально решает подобные проблемы.</p>
+
+<p>Я не сторонник графического интерфейса, и чего греха таить, люблю командную строку. В свое время я написал небольшой скрипт, который в Windows распечатывает пути из переменной PATH по отдельности:</p>
+
+<p>Файл <code>splitpath.cmd</code>:</p>
+
+<pre><code class="bat">@echo off 
+set line=%path%
+setlocal 
+:parse_line
+for /F &quot;delims=; tokens=1,*&quot; %%a in (&quot;%line%&quot;) do (
+   echo %%a
+   set line=%%b
+)
+if &quot;%line%&quot; NEQ &quot;&quot; goto parse_line
+endlocal
+</code></pre>
+
+<p>Примерный результат его работы выглядит так:</p>
+
+<pre><code>C:\WINDOWS\system32
+C:\WINDOWS
+C:\WINDOWS\System32\Wbem
+c:\Python25
+C:\Program Files\CodeGear\RAD Studio\5.0\bin
+C:\Program Files\Java\jdk1.6.0_04
+C:\Program Files\Java\jdk1.6.0_04\jre\bin
+C:\Program Files\PC Connectivity Solution
+c:\oracle\9.2.0.1\bin
+C:\Program Files\Oracle\jre\1.3.1\bin
+C:\Program Files\Oracle\jre\1.1.8\bin
+C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322
+C:\PROGRA~1\Borland\CBUILD~1\Bin
+</code></pre>
+
+<p>Но после перехода на RapidEE нужда в скрипте отпала совсем.</p>
+
+<p><strong>Вывод</strong>: RapidEE очень удобная программа для редактирования переменных окружения в Windows. Программа бесплатная. Может работать в portable режиме и не требовать установки.</p>
+
+<p>Скриншот:</p>
+
+<p><img src="/images/blog/rapidee.png" /></p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/windows.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/windows.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/windows.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

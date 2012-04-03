@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Задача для освоения новых языков</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Задача для освоения новых языков</h1>
+<div id="post">
+  <p>Как-то так сложилось, что когда я рассматриваю новый язык программирования, то помимо тривиальных программок типа &ldquo;Hello world&rdquo;, хочется написать что-то более менее реальное или даже нужное.</p>
+
+<p>У меня такой задачей стал многопотоковый перехватчик-прокси для TCP/IP. Такая программа ставится как промежуточное звено между клиентом и сервером, и можно удобно смотреть, что летает в канале туда-сюда.</p>
+
+<p>Данная задача затрагивает многие аспекты языка - потоки, синхронизацию, сокеты, ввод/вывод, работу со строками.</p>
+
+<p>Вот, например, <a href="/blog/russian/2009/09/04/multi-threaded-tcpip-debugger/">версия на Питоне</a>. На данный момент это наиболее удачная моя версия, так как она работает на многих платформах благодаря Питону и также показывает неплохую производительность благодаря логгированию в параллельном потоке.</p>
+
+<p>Еще я писал это программу на C, C++, C++/boost, PHP, VB, Go, Ruby. На Erlang&rsquo;e не осилил, пока.</p>
+
+<p>А вы чем тестируете новые языки?</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/11/blog-post.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/11/blog-post.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/11/blog-post.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

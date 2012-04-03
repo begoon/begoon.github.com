@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Улучшенный TCP/IP proxy на Erlang'e</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Улучшенный TCP/IP proxy на Erlang&#39;e</h1>
+<div id="post">
+  <p><a href="/blog/russian/2011/11/22/tcpip-proxy-in-erlang/">Писал я про мое освоение Эрганга</a> через написание программы для перехвата и удобного логирования TCP/IP соединений.</p>
+
+<p>B итоге я окончательно допилил программу, и теперь она заменила мне <a href="/blog/russian/2009/09/04/multi-threaded-tcpip-debugger/">версию на Питоне</a>.</p>
+
+<p>Что программа умеет особенно удобного (как мне кажется):</p>
+
+<ul>
+<li>удобный вид лога, в котором отображается шестнадцатеричный дамп, и символьного представление для видимых кодов</li>
+<li>в дампе отображается номер соединения (в случае смешивания выводов нескольких параллельных соединений)</li>
+<li>для каждого соединения вычисляется длительность</li>
+<li>ведутся дополнительные двоичные логи для каждой из сторон в соединении (для повторного &ldquo;проигрывания&rdquo; данных)</li>
+</ul>
+
+<p>Про Эрланг. Меня начинает реально вставлять. Я почувствовал (для многих это и не новость), что тут можно написать что-то реальное, особенно связаное с сетью и многозадачностью.</p>
+
+<p>Из насущных проблем:</p>
+
+<ul>
+<li>Пока нет чувства разумного дробления на модули и даже функции. При общей тотальной иммутабельности сложно что-то напортачить, но когда количество функций разрастается, хочется их как-то группировать.</li>
+<li>Нет чувства правильного форматирования кода. Вроде как 80-ти символьные строки и пробелы вместо табуляций меня пока никогда не подводили, но при функциональном стиле кода часто получаются длинные &ldquo;лесенки&rdquo;.</li>
+</ul>
+
+<p>Пузомерка. Я сделал тест на прокач шестидесятимегового файла через питоновскую и эрланговскую версию. Результаты интересные.</p>
+
+<p>Кач напрямую:</p>
+
+<pre><code>curl http://www.erlang.org/download/otp_src_R14B04.tar.gz &gt;direct
+</code></pre>
+
+<p>Через Питон:</p>
+
+<pre><code>Window 1: python pyspy.py -l 50000 -a www.erlang.org -p 80 -L log
+
+Window 2: curl http://localhost:50000/download/otp_src_R14B04.tar.gz &gt;via-proxy-python
+</code></pre>
+
+<p>Через Эрланг:</p>
+
+<pre><code>Window 1: escript tcp_proxy.erl 50000 www.erlang.org 80
+
+Window 2: curl http://localhost:50000/download/otp_src_R14B04.tar.gz &gt;via-proxy-erlang
+</code></pre>
+
+<p>Файл напрямую качается, условно, минуту. Питоновская версия прокачала файл за шесть минут при включенном логе на экран и файл. Причем сброс лога и непосредственно прокач заканчивались приблизительно в одно время (данные задачи выполняются параллельно, общаясь через очередь, и технически не обязаны завершаться одновременно, так как очередь надо выгрести).</p>
+
+<p>На Эрланге картина иная. Файл прокачался практически за то же время, что и напрямую! Но вот полного сброса лога я так и дождался. Через шесть минут он успел сбросить где-то 10% лога.</p>
+
+<p>Выводы: Видимо, поведение питоновской версии обусловлено тем, что поток лога и потока-качалка работаются примерно с одной скоростью, поэтому в среднем очеред обмена постоянно выгребается. Фактически, скорость программы ограничена пропускной способностью потока логирования, но так как визуально не видно, что поток качания заканчиватся значительно раньше, то можно предположить, что он работается примерно с такой же скоростью (напомню, ~6 минут).</p>
+
+<p>На Эрланге же качалка работает, как мне показалось, очень быстро. Данные перекачиваются и параллельно загоняются в очередь на логирование. А вот производительность логирования оставляет желать лучшего. Ради эксперимента я закомментировал вызов функции создания шестнадцатеричного дампа, и время сброса лога также упало до минуты. Поэтому, как мне кажется, корень зла в моей кривой работе со строками и списками при создании дампа (возможно что-то где-то постоянно копируются, а в мире рекурсии и изменения данных только через копирование ошибки подобного рода дорого отражаются на производильности). А вот работа с сокетами и посылкой/приемом сообщений между потоками в Эрланге очень эффективная.</p>
+
+<p>Я вообще заметил, что в Эрланге ты подсознательно начинашь писать многопотоковые программы. Например, тут в принципе нет глобальных объектов. И допустим, у тебя есть флаг, глобальная установка, которую хочется иметь везде. Так как глобально ее объявить нельзя, приходится таскать как параметр функций там и сям. А как вариант &ldquo;навязанного конструктивного мышления&rdquo;, думаешь - а давай-ка я запущу этот кусок как поток и буду вызывать его функционал через посылку сообщений. В этом случае я могу передать мне нужный параметр один раз в начале при создании потока, тем самым сделав его типа глобальным для этого потока.</p>
+
+<p>Наверное пример вышел немного скомканным, но общая идея такова - так как ты обязан передавать в функцию все ее параметры каждый раз, то начинаешь думать об максимальной независимости и дроблении функционала, что как следствие, позволяет запускать их в разных потоках.</p>
+
+<p>Для интересующихся - <a href="https://github.com/begoon/tcp_proxy/blob/master/tcp_proxy.erl">исходник доступен</a>.</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2011/11/22/tcpip-proxy-in-erlang/">TCP/IP proxy на Erlang&rsquo;e</a></li>
+<li><a href="/blog/russian/2009/09/04/multi-threaded-tcpip-debugger/">Мультипотоковый отладчик TCP/IP соединений</a></li>
+<li><a href="/blog/russian/2011/11/19/problem-to-try-new-languages/">Задача для освоения новых языков</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/11/tcpip-proxy-erlange_26.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/11/tcpip-proxy-erlange_26.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/11/tcpip-proxy-erlange_26.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

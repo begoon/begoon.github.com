@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Шаблоны как параметры шаблона</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Шаблоны как параметры шаблона</h1>
+<div id="post">
+  <p>Есть в шаблонах С++ интересная возможность параметризировать сами параметры шаблонов. Чтобы это могло значить?</p>
+
+<p>Бывают случаи, когда параметр шаблона сам является шаблонным классом и для его инстанцирования тоже нужно указать параметр. Например, универсальная шаблонная функция для печати стандартного контейнера любого типа в поток:</p>
+
+<pre><code class="cpp">template&lt; typename C, typename E &gt;
+void print(const C&lt;E&gt;&amp; v) {
+  copy(v.begin(), v.end(), ostream_iterator&lt;E&gt;(cout, &quot;  &quot;));
+  cout &lt;&lt; endl;
+}
+</code></pre>
+
+<p>И все бы ничего, но с только зрения синтаксиса С++ это неверно. Нельзя просто написать <code>C&lt;E&gt;</code>, если <code>E</code> сам является не определенным типом, а параметром шаблона. Правильный способ использования параметра шаблона, который в свою очередь зависит от другого параметра, должен выглядеть так:</p>
+
+<pre><code class="cpp">template&lt; template&lt;typename&gt; class C, typename E &gt;
+void print(const C&lt;E&gt;&amp; v) {
+  copy(v.begin(), v.end(), ostream_iterator&lt;E&gt;(cout, &quot;  &quot;));
+  cout &lt;&lt; endl;
+}
+</code></pre>
+
+<p>Теперь полный пример (<code>template_parameter.cpp</code>):</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;algorithm&gt;
+#include &lt;iterator&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;list&gt;
+#include &lt;deque&gt;
+
+// Я обычно не использую пространства имен &quot;по умолчанию&quot;, но тут
+// это сделано для компактности примера.
+using namespace std;
+
+// Вся изюминка тут: template&lt;typename&gt; или template&lt;class&gt;.
+// Без этого параметр шаблона &quot;С&quot; нельзя будет параметризировать.
+// в конструкции C&lt;E&gt;&amp;.
+template&lt; template&lt;typename&gt; class C, typename E &gt;
+// Тут происходит параметризация параметра &quot;С&quot; параметром &quot;E&quot;.
+// Без этого класс &quot;С&quot; не может быть использован, так как &quot;E&quot;
+// является не просто типом, а тоже параметром шаблона.
+void print(const C&lt;E&gt;&amp; v) {
+  // Так как класс элемента контейнера &quot;Е&quot; нам тут нужен как отдельный
+  // тип, то для этого и затеяна вся тема с параметризированными
+  // параметрами шаблона.
+  copy(v.begin(), v.end(), ostream_iterator&lt;E&gt;(cout, &quot;  &quot;));
+  cout &lt;&lt; endl;
+}
+
+// Тестовая программа демонстрирует, как одна функция print()
+// может использоваться для печати любого контейнера
+// (если, конечно, он удовлетворяет требованиям алгоритма
+// copy() по наличию должных итераторов), содержащего элементы 
+// любого типа.
+int main(int argc, char* argv[]) {
+  // Массив целых.
+  int i[5] = { 1, 2, 3, 4, 5 };
+  // Создаем вектор, состоящий из целых, и печатаем его.
+  print&lt; vector, int &gt;( vector&lt;int&gt;(i, i + 5) );
+
+  // Массив вещественных.
+  float f[5] = { .1, .2, .3, .4, .5 };
+  // Создаем вектор, состоящий из вещественных, и печатаем его.
+  print&lt; vector, float &gt;( vector&lt;float&gt;(f, f + 5) );
+
+  // Массив символов.
+  char c[5] = { 'a', 'b', 'c', 'd', 'e' };
+  // Создаем деку, состоящую их символов, и печатаем ее.
+  print&lt; deque, char &gt;( deque&lt;char&gt;(c, c + 5) );
+
+  // Массив строк в стиле С.
+  char* s[5] = { &quot;a1&quot;, &quot;b2&quot;, &quot;c3&quot;, &quot;d4&quot;, &quot;e5&quot; };
+  // Создаем список, состоящий из строк, и печатаем его.
+  print&lt; list, string &gt;( list&lt;string&gt;(s, s + 5) );
+
+  return 0;
+}
+</code></pre>
+
+<p>Компилируем.</p>
+
+<p>Cygwin:</p>
+
+<pre><code>g++ -o template_parameter_cygwin.exe template_parameter.cpp
+</code></pre>
+
+<p>или в Borland/Codegear Studio 2007:</p>
+
+<pre><code>bcc32 /etemplate_parameter_cg2007.exe template_parameter.cpp
+</code></pre>
+
+<p>И запускаем скомпилированный файл:</p>
+
+<pre><code>1  2  3  4  5
+0.1  0.2  0.3  0.4  0.5
+a  b  c  d  e
+a1  b2  c3  d4  e5
+</code></pre>
+
+<p>Отчетливо видно, что на первой строке распечатаны целые, на второй вещественные, на третьей символы, и на четвертой строки.</p>
+
+<p>Вы спросите, где компиляция в Visual Studio? А вот с ней вышел облом. Я пробовал скомпилировать этот пример в Visual Studio 2005 и 2008, и в обоих случаях я получал ошибки типа:</p>
+
+<p><code>template_as_parameter.cpp(38) : error C3208: 'print' : template parameter list for class template 'std::vector' does not match template parameter list for template template parameter 'C'</code></p>
+
+<p>Из чего я сделал вывод, что микрософтовский компилятор не поддерживает подобный синтаксис.</p>
+
+<p>Я был очень расстроен подобным фактом, так как в целом очень положительно отношусь к <code>cl.exe</code>. А тут выходит, что даже борландовый компилятор это понимает, а <code>cl.exe</code> нет. Если кто знает, может есть ключик какой секретный для включения поддержки &ldquo;хитрых и редких&rdquo; возможностей С++ в компиляторе микрософта — научите, пожалуйста. Буду очень признателен.</p>
+
+<p>Предвосхищу вопросы типа &ldquo;зачем так сложно, да еще и плохо переносимо&rdquo; — все верно. Лично я бы отнес все выше описанное к &ldquo;<a href="/blog/russian/2009/02/09/dark-corners-of-cpp/">темным углам</a>&rdquo; С++, но уж больно интересно по ним полазать.</p>
+
+<p><strong>Обновление</strong></p>
+
+<p>Комментарий Александра прояснил ситуацию с проблемой при компиляции в Visual Studio. Окончательный вариант кода, чтобы работало в <code>cl.exe</code>, таков:</p>
+
+<pre><code class="cpp">template&lt; template&lt;typename, typename&gt; class C, typename E &gt;
+void print(const C&lt;E, allocator&lt;E&gt; &gt;&amp; v) {
+  copy(v.begin(), v.end(), ostream_iterator&lt;E&gt;(cout, &quot;  &quot;));
+  cout &lt;&lt; endl;
+}
+</code></pre>
+
+<p>У шаблонов стандартных контейнеров есть второй параметр, так называемый <code>allocator</code>. Этот параметр часто используется со значением по умолчанию, поэтому редко приходится вспоминать о нем. И как уточнил Александр, моя проблема была в том, что <code>cl.exe</code> требует явного указания наличия этого параметра при параметризации параметра <code>C</code>.</p>
+
+<p>Исправленный код компилируется во всех опробованных компиляторах, теперь включая и <code>cl.exe</code>.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/02/09/dark-corners-of-cpp/">Темные углы С++</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/blog-post_13.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/blog-post_13.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/blog-post_13.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

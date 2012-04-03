@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Courgette: Дизассемблер как метод уменьшения размера обновлений</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Courgette: Дизассемблер как метод уменьшения размера обновлений</h1>
+<div id="post">
+  <p>Интересующихся попытками сделать жизнь лучше, рекомендую к прочтению <a href="http://dev.chromium.org/developers/design-documents/software-updates-courgette">интересный документ от инженеров Google</a> на тему минимизации размеров обновлений для браузера Chrome.</p>
+
+<p>Google очень радеет за безопасность своих продуктов. Например, для браузера Chrome - это значит регулярные обновления. А кому охота каждый день качать по десять мегов, даже если там весьма критическое обновление. Поэтому разработчики Chrome делают все, чтобы сократить размер пересылаемых по сети данных.</p>
+
+<p>Применение <a href="http://www.daemonology.net/bsdiff/">bsdiff</a> частичное решает проблему, и уже не надо тупо слать архив целиком.</p>
+
+<p>Но теперь к самому интересному. Что происходит, когда найден досадный баг и сделано исправление, например:</p>
+
+<p>Было:</p>
+
+<pre><code class="cpp">...
+if (packet_size &lt; 1024) ...
+...
+</code></pre>
+
+<p>а стало:</p>
+
+<pre><code class="cpp">...
+if (packet_size &gt; 10 &amp;&amp; packet_size &lt; 1024) ...
+...
+</code></pre>
+
+<p>Исправили всего одну строчку. Но после компиляции и линковки результирующий файл будет радикально другой: съедет таблица символов, где-то изменится выравнивание, возможно линкер из-за этого изменит размещение сегментов и т.д. Море факторов, из-за которых самое минимальное изменение исходного текста приведет к глобальному изменению результирующего исполняемого файла.</p>
+
+<p>Что делать? А что, если в обновлении посылать модуль не в двоичном виде, а в виде исходного текста? Тогда изменение (diff) будет совсем небольшое.</p>
+
+<p>Конечно, посылать нормальный исходный текст и компилировать его на стороне клиента пока несколько затруднительно. Не у всех установлена Visual Studio.</p>
+
+<p>Инженеры Google придумали технологию <a href="http://dev.chromium.org/developers/design-documents/software-updates-courgette">Courgette</a>. Суть ее в том, что посылаются изменения на уровне не оригинального исходного текста, а на уровне ассемблера. Для формирования обновления скомпилированный исполняемый файл дизассемблируется. Тоже самое делается для предыдущей версии файла. Затем производится поиск изменений в текстовом виде (например, тем же стандартным <code>diff</code>&lsquo;ом). И этот текстовый файл и является, собственно, обновлением. Затем он пересылается пользователю. На стороне пользователя текущий исполняемый файл тоже дизассемблируется, изменяется на основе принятого файла изменений (<code>diff</code>&lsquo;а) и снова ассемблируется.</p>
+
+<p>Старая схема с <code>bsdiff</code>&lsquo;ом работала так:</p>
+
+<pre><code>сервер:
+  изменения = bsdiff(оригинал, обновление)
+  передать изменения
+
+клиент:
+  принять изменения
+  обновление = bspatch(оригинал, изменения)
+
+ сервер:
+    ассемблер_оригинал = дизассемблировать(оригинал)
+    ассемблер_обновление = дизассемблировать(обновление)
+    ассемблер_обновление_кор = коррекция(ассемблер_обновление, ассемблер_оригинал)
+    ассемблер_изменения = bsdiff(ассемблер_оригинал, ассемблер_обновление_кор)
+    передать ассемблер_изменения
+
+  клиент:
+    принять ассемблер_изменения
+    ассемблер_оригинал = дизассемблировать(оригинал)
+    ассемблер_обновление_кор = bspatch(ассемблер_оригинал, ассемблер_изменения)
+    обновление = ассемблировать(ассемблер_обновление_кор)
+</code></pre>
+
+<p>Для успешной реализации дизассемблер должен располагать таблицей символов со стадии нормальной линковки исполняемого файла. Также на специальном шаге <strong>коррекция</strong> производится оптимизация ассемблерного кода для минимизации последующих различий с предыдущей версией путем группировки неизмененных частей.</p>
+
+<p>А вот и результаты на примере единичного обновления Chrome&rsquo;а:</p>
+
+<pre><code>Метод                  Размер обновления
+----------------------------------------
+Полное обновление      10,385,920
+Обновление bsdiff'ом   704,512
+Courgette метод        78,848
+</code></pre>
+
+<p>Неплохо, да?</p>
+
+<p>Вот такой вот хитрый план у разработчиков Chrome. Обещают рассказать особенности реализации, как только все будет готово.</p>
+
+<p>Данный пост является вольным переводом статьи, ссылка на которую дана в начале. Уж больно меня зацепила эта тема.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/07/blog-post_17.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/07/blog-post_17.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/07/blog-post_17.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

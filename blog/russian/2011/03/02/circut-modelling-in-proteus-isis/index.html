@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Моделирование электронных схем в Proteus ISIS</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Моделирование электронных схем в Proteus ISIS</h1>
+<div id="post">
+  <p>Этот пост будет не про программирование в привычном понимании, а в несколько ином ключе.</p>
+
+<p>Когда-то я немного увлекался микроэлектроникой, и в частности, программированием микроконтроллеров типа PICmicro. Мои познания в мире электронных схем, особенно аналоговых, крайне скромны и не уходят дальше институтского курса электротехники. Хотя в цифровой электронике немного проще, ибо там многое уже идет из понятного двоичного мира.</p>
+
+<p>Когда возишься с микроконтроллерами так или иначе приходится брать в руки паяльник. Я это не очень люблю, хотя даже освоил весьма забавный способ нанесения разводки на печатную плату с помощью лазерного принтера и утюга для последующего травление хлорным железом. Мне сразу хочется перейдти к возьне с прошивкой, нежели с пайкой. Благо, современные средства макетирования типа того, что на картинке ниже, сильно упрощают задачу.</p>
+
+<p><img src="/images/blog/breadboard-counter.jpg" /></p>
+
+<p>Подобные макетные платы меня весьма устраивали.</p>
+
+<p>Но сегодня я познал совершенно иной уровень - абсолютно цифровой.</p>
+
+<p>Брат дал возможность повозиться с софтом для эмулирования электрических схем. Называется, <a href="http://www.labcenter.com/">Proteus ISIS</a>.</p>
+
+<p>Тут просто какой-то беспредел. Ты просто рисуешь схему, набирая ее из огромной базы компонент, а потом ее просто запускаешь! В реальном времени! И этот софт делает имитацию схемы на уровне законов физики в плане электричества. Я не знаю, какова &ldquo;глубина&rdquo; имитации (врядли на уровне электронов ;-), но выглядит, очень убедительно (см. мои примеры ниже).</p>
+
+<p>Конечно, первым делом мы нарисовали классический <a href="http://ru.wikipedia.org/wiki/%D0%9C%D1%83%D0%BB%D1%8C%D1%82%D0%B8%D0%B2%D0%B8%D0%B1%D1%80%D0%B0%D1%82%D0%BE%D1%80">мульти-вибратор</a>.</p>
+
+<p>На видео видно, как происходит симуляция (рекомендую полный экран). Обратите внимание на поведение светодиода, вольтметров и амперметров, и, самое прикольное, пластин конденсаторов! Они показывают, как и когда происходит их заряд-разряд.</p>
+
+<iframe width="425" height="344" src="http://www.youtube.com/embed/5xAiLa5fp5o?color=white&theme=light"></iframe>
+
+<p>А теперь подключаем осциллограф! Конечно тоже цифровой.</p>
+
+<iframe width="425" height="344" src="http://www.youtube.com/embed/YTjiOVDrXE4?color=white&theme=light"></iframe>
+
+<p>Тут тебе и фронты сигналов, задержки, развертки и все такое.</p>
+
+<p>Я вообще человек не очень впечатлительный в плане софта, но тут у меня была минута молчания, пока я осознавал масштабы возможностей. Ты фактически создаешь аналоговую схему, но макетируешь ее не то, чтобы без паяльника, я просто водя мышкой по экрану.</p>
+
+<p>Я не подозревал, что все ушло так далеко вперед.</p>
+
+<p>Дальше, больше. Резисторы, емкости, транзисторы и т.д. - это мелочи. Данный софт позволяет вставить в схему микроконтроллер! Например, PICmicro, загрузить в него прошивку, подать виртуальные вольты/амперы питания и поглядеть, как это все будет шевелиться в реальном времени!</p>
+
+<p>Среди множества стандартных примеров в дистрибутиве есть проект - музыкальный звонок.</p>
+
+<p>Я открыл проект и запустил.</p>
+
+<iframe width="425" height="344" src="http://www.youtube.com/embed/CFqBCfhAGPk?color=white&theme=light"></iframe>
+
+<p>Например, меняя номинал резистора, можно видеть, как меняется свечение связанного с ним светодиода. Также на видео ниже видно работу эмулятора микроконтроллера.</p>
+
+<iframe width="425" height="344" src="http://www.youtube.com/embed/6itRt23F4CU?color=white&theme=light"></iframe>
+
+<p>Ну и под занавес (пристегните ремни!). Допустим, вы разрабатываете на микроконтроллере устройство, которое будет подключаться к компьютеру по USB. Вам надо собрать реальный макет, залить в него прошивку, позаботиться о драйвере и уже только после этого подключать и смотреть, работает или нет (с первого раза, скорее всего нет).</p>
+
+<p>В этом софте можно сделать проект (схему, прошивку) и виртуально подключить в реальную подсистему USB Windows! И попробовать ваше устройство в деле после двух-трех кликов мышкой.</p>
+
+<p>В общем, господа, лично я полном шоке.</p>
+
+<p>Дистрибутив весит всего около 70 мегов.</p>
+
+<p>P.S. Софт коммерческий, поэтому не спрашивайте меня, где его брать.</p>
+
+<p>P.S. Видеокаст записывал первый раз в жизни, поэтому прошу прощения за некоторый сумбур.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/03/proteus-isis.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/03/proteus-isis.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/03/proteus-isis.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

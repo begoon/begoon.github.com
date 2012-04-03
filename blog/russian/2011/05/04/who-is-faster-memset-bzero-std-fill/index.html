@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Кто быстрее: memset, bzero или std::fill</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Кто быстрее: memset, bzero или std::fill</h1>
+<div id="post">
+  <p>У нас тут идет второй день тренинг по С++ и unit-тестированию. Ведет <a href="http://www.boost.org/users/people/kevlin_henney.html">Kevlin Henney</a>. Отличный дядка.</p>
+
+<p>Все как обычно &ndash; стараемся приучать к культуре разработки через тесты, ну и попутно склонить патриотов С к С++, убедив их, что на С++ можно таки писать также эффективно, как и на С. Да еще и в разы быстрее.</p>
+
+<p>Зашла тема про <code>std::fill()</code>. Я вставил словечко, что мол <code>fill()</code> работает также быстро как и <code>memset()</code>, так как он используется в <code>fill()</code> для простых типов.</p>
+
+<p>Написали программу, в которой есть интересный момент.</p>
+
+<pre><code class="cpp">#include &lt;cstdlib&gt;
+#include &lt;algorithm&gt;
+
+int main(int argc, char* argv[]) {
+  int mode = argc &gt; 1 ? std::atoi(argv[1]) : 1;
+  int n = 1024 * 1024 * 1024 * 1;
+  char* buf = new char[n];
+  if (mode == 1)
+    std::memset(buf, 0, n * sizeof(*buf));
+  else if (mode == 2)
+    bzero(buf, n * sizeof(*buf));
+  else if (mode == 3)
+    std::fill(buf, buf + n, 0);
+  else if (mode == 4)
+    std::fill(buf, buf + n, '\0');
+  return buf[0];
+}
+</code></pre>
+
+<p>Обратите внимание на ветки 3 и 4. Они почти одно и то же, но не совсем.</p>
+
+<p>В целом была мысль получить вот эту специализацию <code>fill()</code>:</p>
+
+<pre><code class="cpp">// Specialization: for one-byte types we can use memset.
+inline void
+fill(unsigned char* __first, unsigned char* __last, const unsigned char&amp; __c)
+{
+  __glibcxx_requires_valid_range(__first, __last);
+  const unsigned char __tmp = __c;
+  std::memset(__first, __tmp, __last - __first);
+}
+</code></pre>
+
+<p>Итак, Makefile:</p>
+
+<pre><code class="cpp">all: build run
+
+.SILENT:
+
+target = memset_bzero_fill
+
+build:
+        g++ -O3 -o $(target) $(target).cpp
+
+run: run-memset run-bzero run-fill-1 run-fill-2
+
+go:
+        (time -p ./$(target) $(mode)) 2&gt;&amp;1 | head -1 | cut -d' ' -f 2
+
+run-memset:
+        echo $@ `$(MAKE) go mode=1`
+
+run-bzero:
+        echo $@ `$(MAKE) go mode=2`
+
+run-fill-1:
+        echo $@ `$(MAKE) go mode=3`
+
+run-fill-2:
+        echo $@ `$(MAKE) go mode=4`
+</code></pre>
+
+<p>Компилятор &ldquo;gcc version 4.2.1 (Apple Inc. build 5666) (dot 3)&rdquo;.</p>
+
+<p>Запускаем:</p>
+
+<pre><code>run-memset 1.47
+run-bzero 1.45
+run-fill-1 1.69
+run-fill-2 1.42
+</code></pre>
+
+<p>Видно, как ветка 3 (<code>run-fill-1</code>) значительно тормозит, по сравнению с 4, хотя разница всего в типе последнего параметра - 0 и &lsquo;\0&rsquo;.</p>
+
+<p>Смотрим ассемблер:</p>
+
+<pre><code>(gdb) disass main
+Dump of assembler code for function main:
+0x0000000100000e70 &lt;main+0&gt;:    push   %rbp
+0x0000000100000e71 &lt;main+1&gt;:    mov    %rsp,%rbp
+0x0000000100000e74 &lt;main+4&gt;:    push   %r12
+0x0000000100000e76 &lt;main+6&gt;:    push   %rbx
+0x0000000100000e77 &lt;main+7&gt;:    dec    %edi
+0x0000000100000e79 &lt;main+9&gt;:    jle    0x100000ec3 &lt;main+83&gt;
+0x0000000100000e7b &lt;main+11&gt;:   mov    0x8(%rsi),%rdi
+0x0000000100000e7f &lt;main+15&gt;:   callq  0x100000efe &lt;dyld_stub_atoi&gt;
+0x0000000100000e84 &lt;main+20&gt;:   mov    %eax,%r12d
+0x0000000100000e87 &lt;main+23&gt;:   mov    $0x40000000,%edi
+0x0000000100000e8c &lt;main+28&gt;:   callq  0x100000ef8 &lt;dyld_stub__Znam&gt;
+0x0000000100000e91 &lt;main+33&gt;:   mov    %rax,%rbx
+0x0000000100000e94 &lt;main+36&gt;:   cmp    $0x1,%r12d
+0x0000000100000e98 &lt;main+40&gt;:   je     0x100000eac &lt;main+60&gt;   ; mode == 1
+0x0000000100000e9a &lt;main+42&gt;:   cmp    $0x2,%r12d
+0x0000000100000e9e &lt;main+46&gt;:   je     0x100000eac &lt;main+60&gt;   ; mode == 2
+0x0000000100000ea0 &lt;main+48&gt;:   cmp    $0x3,%r12d
+0x0000000100000ea4 &lt;main+52&gt;:   je     0x100000ed2 &lt;main+98&gt;   ; mode == 3
+0x0000000100000ea6 &lt;main+54&gt;:   cmp    $0x4,%r12d
+0x0000000100000eaa &lt;main+58&gt;:   jne    0x100000ebb &lt;main+75&gt;   ; mode != 4 -&gt; выход
+
+; Реалиазация через memset().
+
+0x0000000100000eac &lt;main+60&gt;:   mov    $0x40000000,%edx        ; mode = 1, 2 или 4
+0x0000000100000eb1 &lt;main+65&gt;:   xor    %esi,%esi
+0x0000000100000eb3 &lt;main+67&gt;:   mov    %rbx,%rdi
+0x0000000100000eb6 &lt;main+70&gt;:   callq  0x100000f0a &lt;dyld_stub_memset&gt;
+
+0x0000000100000ebb &lt;main+75&gt;:   movsbl (%rbx),%eax             ; выход
+0x0000000100000ebe &lt;main+78&gt;:   pop    %rbx
+0x0000000100000ebf &lt;main+79&gt;:   pop    %r12
+0x0000000100000ec1 &lt;main+81&gt;:   leaveq
+0x0000000100000ec2 &lt;main+82&gt;:   retq
+
+0x0000000100000ec3 &lt;main+83&gt;:   mov    $0x40000000,%edi
+0x0000000100000ec8 &lt;main+88&gt;:   callq  0x100000ef8 &lt;dyld_stub__Znam&gt;
+0x0000000100000ecd &lt;main+93&gt;:   mov    %rax,%rbx
+0x0000000100000ed0 &lt;main+96&gt;:   jmp    0x100000eac &lt;main+60&gt;
+
+; Реализация на обычных командах.
+
+0x0000000100000ed2 &lt;main+98&gt;:   movb   $0x0,(%rax)             ; mode = 3
+0x0000000100000ed5 &lt;main+101&gt;:  mov    $0x1,%eax
+0x0000000100000eda &lt;main+106&gt;:  nopw   0x0(%rax,%rax,1)
+0x0000000100000ee0 &lt;main+112&gt;:  movb   $0x0,(%rax,%rbx,1)
+0x0000000100000ee4 &lt;main+116&gt;:  inc    %rax
+0x0000000100000ee7 &lt;main+119&gt;:  cmp    $0x40000000,%rax
+0x0000000100000eed &lt;main+125&gt;:  jne    0x100000ee0 &lt;main+112&gt;
+
+0x0000000100000eef &lt;main+127&gt;:  movsbl (%rbx),%eax             ; выход
+0x0000000100000ef2 &lt;main+130&gt;:  pop    %rbx
+0x0000000100000ef3 &lt;main+131&gt;:  pop    %r12
+0x0000000100000ef5 &lt;main+133&gt;:  leaveq
+0x0000000100000ef6 &lt;main+134&gt;:  retq
+</code></pre>
+
+<p>Видно, что благодаря оптимизации, ветки 1, 2 и 4 реализованы одинаково - через <code>memset()</code>. Вызов <code>fill()</code> в ветке 4 удалось свести к <code>memset()</code>.</p>
+
+<p>Но вот ветка 3 реализована в виде ручного цикла. Компилятор, конечно, неплохо поработал &ndash; цикл практически идеальный, но это все равно работает медленнее, чем хитрый <code>memset()</code>, который использует всякие ухищрения групповых ассемблерных операций.</p>
+
+<p>Неверный тип нуля не дал компилятору правильно выбрать специализацию шаблона.</p>
+
+<p>Мораль? И мораль тут не очень хорошая.</p>
+
+<p>Мне кажется, что количество людей, которые напишут <code>std::fill(buf, buf + n, 0)</code>, разительно больше, чем <code>std::fill(buf, buf + n, '\0')</code>.</p>
+
+<p>А разница весьма существенна.</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2010/06/20/fill_n-vs-memset/">fill_n vs memset</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/05/memset-vs-bzero-vs-stdfill.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/05/memset-vs-bzero-vs-stdfill.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/05/memset-vs-bzero-vs-stdfill.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

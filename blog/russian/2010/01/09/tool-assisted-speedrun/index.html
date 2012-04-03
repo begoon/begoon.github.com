@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Инструментальное скоростное прохождение игр</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Инструментальное скоростное прохождение игр</h1>
+<div id="post">
+  <p>Когда-то я играл в <a href="http://ru.wikipedia.org/wiki/Doom">Дум</a>, особенно в <a href="http://ru.wikipedia.org/wiki/Doom_II:_Hell_on_Earth">Дум 2</a>. Ночью по модему с постоянными обрывами связи, потом по локальной сети, потом через интернет. Да и сейчас люблю порой оттянуться c друзьями на старых &ldquo;клаcсических&rdquo; картах Дума, например через <a href="http://doomlegacy.sourceforge.net/">Doom Legacy</a>.</p>
+
+<p>Но сейчас не об этом. Дум сразу имел классную особенность — записывать игровые сессии для последующего просмотра. Это порой очень увлекательное зрелище, особенно когда играет мастер или мастера. А самая главная штука — это способ записи. При записи игровой сессии записываются не кадры видеоизображения, а просто последовательность действий игрока — зажатия на клавиатуру и движения мыши или джойстика. Во-первых, такая запись занимает очень мало места, во-вторых — это &ldquo;чистая&rdquo; запись, исключащая видеомонтаж, так как для проигрывания можно использовать свою копию игры, которая заведомо нормальная.</p>
+
+<p>Едем дальше. В любой игре подобного толка есть новички (они же &ldquo;мясо&rdquo;), есть сильные игроки (я!), а есть мега-монстры (в случае с Думом — &ldquo;дум-годы&rdquo;). Очевидно, что сессии игры, записанные такими спецами смотрятся как увлекательное кино. Уровень, который ты проходишь минут за 5 он проходит за 5 секунд. Всю игру, на прохождение всех уровней которой у тебя могут уйти недели, он проходит за 15 минут на максимальной сложности. <a href="http://iddqd.ru/demos.php">Наблюдать</a> за этим просто сказка, особенно когда еще такие спецы рубятся друг против друга.</p>
+
+<p>Но сейчас снова не об этом.</p>
+
+<p>Что я познал недавно?</p>
+
+<p>Оказывается с развитием мощностей компьютеров и, как следствие, эмуляторов старых платформ, появилось такое движение как <a href="http://en.wikipedia.org/wiki/Tool-assisted_speedrun">TAS — Tool assisted-speedrun (инструментальное скоростное прохождение)</a>. В двух словах — это показательное прохождение игры до победного конца за рекордное время.</p>
+
+<p>Как это делается. Берется старая &ldquo;классическая&rdquo; игра. Запускается на эмуляторе. Работа на эмуляторе позволяет делать с игрой все что угодно — замедлять время, дизассемблировать исходный код, делать временные сохранения достигнутых результатов даже если сама игра такого не позволяет, анализировать недостатки и внутренние особенности &ldquo;движка&rdquo; игры, пробовать разные маршруты и т.д. Море всяких <a href="http://tasvideos.org/CommonTricks.html">трюков</a>. Очевидно, что игра живого игрока во многом ориентирована на безопасность, нежели на время прохождения. &ldquo;Автоматизированный&rdquo; же игрок может делать то, что живой никогда делать не будет — может подойти к врагу очень близко, так как заведомо знает, что из-за особенностей движка игры при расстоянии, например, в 2 пикселя, враг тебя никогда не убьет. А живой игрой может даже и 20 пикселей не рискнет, так как ему &ldquo;на глаз&rdquo; так проще. И &ldquo;автоматизированный&rdquo; игрок может уже не бежать за здоровьем, имея только 1% жизни, так как точно известно, что ему этого хватит до конца уровня.</p>
+
+<p>В общем, шаг за шагом, уровень за уровнем создается и записывается в виде действий &ldquo;игрока&rdquo; оптимальный сценарий прохождения игры. После этого найденный оптимальный сценарий подсовывается оригинальной игре (или оригинальной игровой приставке) — либо через механизм проигрывания демо-сессий (если игра поддерживает таковой), либо изготавливается для игры специальный игровой контроллер (клавиатура, мышь или джойстик), который уже управляется не человеком, а компьютером по найденному оптимальному сценарию. И игра проходится, проходится вся и очень быстро. Так например, был пройден классический &ldquo;Супер Марио&rdquo; на Ниндендо чуть ли не за 5 минут.</p>
+
+<p>Например, вот один из так называемых speedrun&rsquo;ов в Дум 2:</p>
+
+<iframe width="425" height="344" src="http://www.youtube.com/embed/qA4RvDdIGxc?color=white&theme=light"></iframe>
+
+<p>и Супер Марио:</p>
+
+<iframe width="425" height="344" src="http://www.youtube.com/embed/iKqevZy5c1A?color=white&theme=light"></iframe>
+
+<p>Понятно, что такая &ldquo;игра&rdquo; далека от получения удовольствия от реальной игры, но это просто другой, но также очень увлекательный жанр.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2010/01/blog-post_09.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2010/01/blog-post_09.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2010/01/blog-post_09.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

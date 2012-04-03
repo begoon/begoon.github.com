@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Unit-тест для Coredump в Windows</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Unit-тест для Coredump в Windows</h1>
+<div id="post">
+  <p>Как мне подсказали в комментариях к посту про <a href="/blog/russian/2009/02/25/coredump-for-windows/">создание coredump файлов в Windows</a>, если изменить код возврата из функции обработки исключения, то можно подавить появление стандартного окна об ошибке. Посему родился unit-тест для этого модуля.</p>
+
+<p>Модифицированный текст файла <code>coredump.cpp</code>, в котором с помощью макроса <code>UNIT_TESTING</code> встроена поддержка для тестирования. Если этот макрос определен, то, как я уже сказал, подавляется появление окна с ошибкой, и <code>coredump</code> файл создается с постоянным именем.</p>
+
+<p>Файл <code>coredump.cpp</code>:</p>
+
+<pre><code class="cpp">#include &lt;windows.h&gt;
+#include &lt;dbghelp.h&gt;   
+#include &lt;stdio.h&gt;       // _snprintf
+
+// Наш обработчик непойманного исключения.
+static LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS* ExceptionInfo);
+
+// Статический экземпляр переменной, конструктор которой
+// вызывается до начала функции main().
+static struct CoredumpInitializer {
+  CoredumpInitializer() {
+    SetUnhandledExceptionFilter(&amp;ExceptionFilter);
+  }
+} coredumpInitializer;
+
+LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS* ExceptionInfo) {
+  char fname[_MAX_PATH];
+
+  SYSTEMTIME st;
+  GetLocalTime(&amp;st);
+
+  HANDLE proc = GetCurrentProcess();
+
+#ifdef UNIT_TESTING
+  lstrcpy(fname, &quot;___coredump.dmp&quot;);
+#else
+  // Формируем имя для coredump'а.
+  _snprintf(
+    fname, _MAX_PATH, 
+    &quot;coredump-%ld-%ld-%04d%02d%02d%02d%02d%02d%03d.dmp&quot;, 
+    GetProcessId(proc), GetCurrentThreadId(),
+    st.wYear, st.wMonth, st.wDay, 
+    st.wHour, st.wMinute, st.wSecond, st.wMilliseconds
+  );
+#endif
+
+  // Открываем файл.
+  HANDLE file = CreateFile(
+    fname, 
+    GENERIC_READ|GENERIC_WRITE, 
+    FILE_SHARE_READ, 
+    NULL,
+    CREATE_ALWAYS, 
+    FILE_ATTRIBUTE_NORMAL, 
+    NULL
+  );
+
+  MINIDUMP_EXCEPTION_INFORMATION info;
+  info.ExceptionPointers = ExceptionInfo;
+  info.ThreadId = GetCurrentThreadId();
+  info.ClientPointers = NULL;
+
+  // Собственно, сбрасываем образ памяти в файл.
+  MiniDumpWriteDump(  
+    proc, 
+    GetProcessId(proc), 
+    file,
+    MiniDumpWithFullMemory,
+    ExceptionInfo ? &amp;info : NULL,
+    NULL, NULL
+  );
+
+  CloseHandle(file);
+
+#ifdef UNIT_TESTING
+  return EXCEPTION_EXECUTE_HANDLER;
+#else
+  return EXCEPTION_CONTINUE_SEARCH;
+#endif
+}
+</code></pre>
+
+<p>Теперь, собственно, тест:</p>
+
+<p>Файл <code>coredump_unittest.cpp</code>:</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+
+#include &lt;fstream&gt;
+#include &lt;windows.h&gt;
+#include &lt;stdlib.h&gt;
+
+TEST(Coredump, CoredumpCreation) {
+   const char* coredump = &quot;___coredump.dmp&quot;;
+
+   // На всякий случай заведомо стираем старые файлы.
+   EXPECT_EQ(0, std::system(&quot;cmd.exe /c del ___coredump_main.* 1&gt;nul 2&gt;&amp;1&quot;));
+
+   // Создаем файл с тестовой программой.
+   std::string program = &quot;int main() { *(char *)0 = 0; return 0; }&quot;;
+   std::ofstream os(&quot;___coredump_main.cpp&quot;);
+   os &lt;&lt; program &lt;&lt; std::endl;
+   os.close();
+
+   // Компилируем тестовую программу с опцией UNIT_TESTING.
+   // С этой опцией coredump файл будет создаваться с постоянным
+   // именем &quot;___coredump.dmp&quot;, и будет подавляется окно с сообщением
+   // об ошибке. 
+   EXPECT_EQ(
+      0, std::system(
+         &quot;cl /Zi /DUNIT_TESTING /Fe___coredump_main.exe&quot;
+         &quot; ___coredump_main.cpp coredump.cpp dbghelp.lib&quot;
+         &quot; 1&gt;nul 2&gt;&amp;1&quot;
+      )
+   );
+
+   // На всякий случая удаляем старый coredump файл.
+   std::remove(coredump);
+
+   // Убеждаемся, что файл действительно удалился.
+   std::ifstream isdel(coredump);
+   EXPECT_FALSE(isdel.good());
+   isdel.close();
+
+   // Запускаем тестовую программу.
+   ASSERT_EQ(0xC0000005, std::system(&quot;___coredump_main.exe&quot;));
+
+   // Проверяем, создался ли файл coredump.dmp.
+   std::ifstream is(coredump);
+   EXPECT_TRUE(is.good());
+   is.close();
+
+   // Удаляем за собой временные файлы.
+   EXPECT_EQ(0, std::system(&quot;cmd.exe /c del ___coredump_main.* 1&gt;nul 2&gt;&amp;1&quot;));
+   std::remove(coredump);
+}
+</code></pre>
+
+<p>Данный тест имеет ряд существенных недостатков. Во-первых, он использует файловую систему, и во-вторых, он вызывает компилятор, что занимает небольшое, но все же время. Недостатки неприятные, но в целом приемлемые.</p>
+
+<p>Кстати, <a href="http://code.google.com/p/googletest/">Google Test Framework</a> умеет делать так называемые &ldquo;<a href="http://code.google.com/p/googletest/wiki/GoogleTestAdvancedGuide#Death_Tests">смертельные</a>&rdquo; (death) тесты. То есть можно протестировать именно аварийное &ldquo;падение&rdquo; фрагмента кода, например, из-за нарушения защиты памяти, и для проведения такого теста не надо вручную компилировать что-либо, как мы делали тут. К сожалению, эта возможность основана на использования юниксового системного вызова <code>fork()</code> и поэтому доступна только на UNIX платформах.</p>
+
+<p>Дежурный файл для запуска тестов (<code>runner.cpp</code>):</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+int main(int argc, char* argv[]) {
+  testing::InitGoogleTest(&amp;argc, argv);
+  return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>Традиционно, для компиляции тестов нам нужна <a href="http://code.google.com/p/googletest/">Google Test Framework</a>. Как я уже <a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">писал</a>, вы можете скачать <a href="/downloads/gtest-amalgamation-1.2.1.zip">мою модификацию</a>  этой библиотеки, которая сокращена до двух необходимых файлов <code>gtest/gtest.h</code> и <code>gtest-all.cc</code>.</p>
+
+<p>Компилируем, например в Visual Studio 2008:</p>
+
+<pre><code>cl /EHsc /I. /Fecoredump_unittest_vs2008.exe /DWIN32 runner.cpp coredump_unittest.cpp gtest\gtest-all.cc`
+</code></pre>
+
+<p>Запускаем:</p>
+
+<pre><code>[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from Coredump
+[ RUN      ] Coredump.CoredumpCreation
+[       OK ] Coredump.CoredumpCreation
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran.
+[  PASSED  ] 1 test.
+</code></pre>
+
+<p>Работает.</p>
+
+<p>Сразу скажу, я проверял все это только под Windows XP SP2 и Server 2003. Пожалуйста, сообщайте, если есть какие-то проблемы или тонкости под другими виндами.</p>
+
+<p>Как это часто бывает в unit-тестировании, тест получился больше, чем сам тестируемый код. Но повторюсь — это того стоит. Буквально скоро расскажу о моих приключениях с <a href="/blog/russian/2009/01/29/milliseconds-timer-for-windows-and-unix/">модулем таймера</a>, и как меня выручили тесты.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/02/25/coredump-for-windows/">Coredump для Windows</a></li>
+<li><a href="/blog/russian/2009/03/05/queryperformancecounter-on-multicore-and-virtual-systems/">QueryPerformanceCounter на мультиядерных и виртуальных системах</a></li>
+<li><a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">Unit-тестирование для параллельных потоков</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/02/unit-coredump.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/02/unit-coredump.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/02/unit-coredump.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Динамическая линковка C++ на AIX</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Динамическая линковка C++ на AIX</h1>
+<div id="post">
+  <p>AIX мне всегда нравился своим особо изощренным отношением к линковке.</p>
+
+<p>Итак, рассмотрим пример (система AIX 5.3).</p>
+
+<p>Файл <code>alib.cpp</code> компилируем как динамическую библиотеку.</p>
+
+<pre><code class="cpp">struct A {
+  A() {
+    value_ = 123;
+  }
+  int value_;
+};
+
+A a = A();
+
+extern &quot;C&quot;
+int value() {
+  return a.value_;
+}
+</code></pre>
+
+<p>В этой библиотеке создается статический объект класса <code>А</code>, и значение его поля возвращается функцией <code>value()</code>.</p>
+
+<p>Компилируем:</p>
+
+<pre><code>xlC -o alib.so -qrtti=all -qmkshrobj=-100 -G -brtl -bnolibpath alib.cpp
+</code></pre>
+
+<p><code>xlC</code> - это компилятор С++ на AIX.</p>
+
+<p>Далее, файл <code>main.c</code>. Это головной модуль на <code>С</code>, который вызывает функцию <code>value()</code>.</p>
+
+<pre><code class="cpp">extern int value();
+
+int main() {
+  return value();
+}
+</code></pre>
+
+<p>Этот модуль вызывает <code>value()</code>, и значение становится кодом возврата процесса.</p>
+
+<p>Компилируем:</p>
+
+<pre><code>xlc -c -o main.o main.c
+</code></pre>
+
+<p><code>xlc</code> (маленькая &ldquo;с&rdquo; на конце) - это компилятор С на AIX.</p>
+
+<p>Линкуем, используя компилятор С, запускаем и печатаем код возврата (<code>$?</code>)</p>
+
+<pre><code>xlc -o main main.o alib.so &amp;&amp; LIBPATH=.:$LIBPATH ./main ; echo $?
+</code></pre>
+
+<p>Результат на экране:</p>
+
+<pre><code>0
+</code></pre>
+
+<p>Интересно?! Почему не ожидаемое 123?</p>
+
+<p>Теперь линкуем, используя компилятор &ldquo;С++&rdquo;, запускаем и печатаем код возврата:</p>
+
+<pre><code>xlC -o main main.o alib.so &amp;&amp; LIBPATH=.:$LIBPATH ./main ; echo $?
+</code></pre>
+
+<p>Результат на экране:</p>
+
+<pre><code>123
+</code></pre>
+
+<p><strong>Мораль</strong>: на AIX, при динамической линковке библиотек, чтобы правильно работала статическая инициализация на С++, надо принудительно линковать конечный бинарь в режиме С++ (как бы это странно не звучало). Иначе конструкторы статических объектов вызваны не будут, и их инициализация будет произведена не ДО функции <code>main()</code>, а непонятно когда.</p>
+
+<p>Можно принудительно заставить таки систему вызвать конструкторы статических объектов, написав что-то вроде:</p>
+
+<pre><code class="cpp">#include &lt;dlfcn.h&gt;
+
+static int module_initialised = 0;
+static void ManualInitilizationForStatics() {
+  if (module_initialised) return;
+  dlopen(&quot;blah.so&quot;, RTLD_NOW);
+  module_initialised = 1;
+}
+</code></pre>
+
+<p>Но это не программирование, а ерзанье.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/06/c-aix.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/06/c-aix.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/06/c-aix.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

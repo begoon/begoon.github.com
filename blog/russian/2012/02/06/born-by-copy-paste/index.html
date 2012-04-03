@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Рожденный копипастом</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Рожденный копипастом</h1>
+<div id="post">
+  <p>Всем своими фибрами ненавижу копипаст с участием переменных с номерами. При очередном копипасте вероятность забыть исправить одну циферку крайне велика. Например, ужасный кусок кода (не правда ли, просто найти опечатку?):</p>
+
+<pre><code class="cpp">void Test_SplitPair() {
+  typedef std::pair&lt;std::string, std::string&gt; Pair;
+  using string::SplitPair;
+
+  const Pair p1 = SplitPair(&quot;&quot;, '=');
+  assert(p1.first.empty());
+  assert(p1.second.empty());
+
+  const Pair p2 = SplitPair(&quot;=&quot;, '=');
+  assert(p2.first.empty());
+  assert(p2.second.empty());
+
+  const Pair p3 = SplitPair(&quot;name=value&quot;, '=');
+  assert(p3.first == &quot;name&quot;);
+  assert(p3.second == &quot;value&quot;);
+
+  const Pair p4 = SplitPair(&quot;name = value&quot;, '=');
+  assert(p3.first == &quot;name&quot;);
+  assert(p3.second == &quot;value&quot;);
+
+  const Pair p5 = SplitPair(&quot; n ame  \t =  va lue  \r\n&quot;, '=');
+  assert(p5.first == &quot; n ame  \t &quot;);
+  assert(p5.second == &quot;  va lue  \r\n&quot;);
+}
+</code></pre>
+
+<p>Как его можно улучшить? Например, разбить на отдельные тесты. Это идеальный вариант. Но можно сделать и так (что лично на мой взгляд не так уж и плохо), чтобы решить проблему копипаста новых примеров:</p>
+
+<pre><code class="cpp">void Test_SplitPair() {
+  typedef std::pair&lt;std::string, std::string&gt; Pair;
+  using string::SplitPair;
+  {
+  const Pair p = SplitPair(&quot;&quot;, '=');
+  assert(p.first.empty());
+  assert(p.second.empty());
+  }
+  {
+  const Pair p = SplitPair(&quot;=&quot;, '=');
+  assert(p.first.empty());
+  assert(p.second.empty());
+  }
+  {
+  const Pair p = SplitPair(&quot;name=value&quot;, '=');
+  assert(p.first == &quot;name&quot;);
+  assert(p.second == &quot;value&quot;);
+  }
+  {
+  const Pair p = SplitPair(&quot;name = value&quot;, '=');
+  assert(p.first == &quot;name&quot;);
+  assert(p.second == &quot;value&quot;);
+  }
+  {
+  const Pair p = SplitPair(&quot; n ame  \t =  va lue  \r\n&quot;, '=');
+  assert(p.first == &quot; n ame  \t &quot;);
+  assert(p.second == &quot;  va lue  \r\n&quot;);
+  }
+}
+</code></pre>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2012/02/blog-post.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2012/02/blog-post.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2012/02/blog-post.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

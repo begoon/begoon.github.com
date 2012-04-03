@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Скрипты на Lua в С++</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Скрипты на Lua в С++</h1>
+<div id="post">
+  <p><a href="http://lua.org/">Lua</a> отличный язык для встраеваемых сценариев. Продуманная структура языка, полный арсенал для процедурного и модульного программирования, а-ля функциональные возможности в виде функций-объектов и замыканий, работа со списками, кооперативная многопотоковость, зачатки объектно-ориентированности в достаточной мере для языка подобного рода, и вообще приятный синтаксис. Написан на стандартном С, поэтому отлично компилируется на разных платформах.</p>
+
+<p>Есть великое множество оберток Lua для С++, но я не нашел ни одной, где не надо вообще вызывать С-шные функции Lua вручную из основной программы. Также для создания новых функций на С++, которые можно будет вызывать из Lua, должен быть только С++&lsquo;ый подход.</p>
+
+<p>Моя идея была в создании чисто плюсого интерфейса для Lua с максимально простой интеграцией в рабочий проект.</p>
+
+<p>То, что пока вышло называется <a href="http://code.google.com/p/luascript/">luascript</a>.</p>
+
+<p>Для включения в свой проект надо скопировать библиотеку в подкаталог <code>luascript/</code> и добавить в проект два файла: <code>luascript/luascript.cpp</code> и <code>luascript/lua/lua-files.c</code>.</p>
+
+<p>После этого можно писать вот такие куски кода:</p>
+
+<pre><code class="cpp">lua script;
+script.set_variable&lt;lua::string_arg_t&gt;(&quot;a&quot;, &quot;test&quot;);
+script.exec(&quot;b = a .. '123';&quot;);
+std::cout &lt;&lt; script.get_variable&lt;lua::string_arg_t&gt;(&quot;b&quot;).value());
+</code></pre>
+
+<p>Данный простой скрипт принимает строку через переменню <code>a</code>, добавляет к ней <code>123</code> и записывает результат в переменную <code>b</code>, которая потом подхватывается из С++.</p>
+
+<p>Если надо добавить свою функцию, например, для проверки существования файла, можно написать так:</p>
+
+<pre><code class="cpp">class file_exists_func_t {
+ public:
+  // Регистрируем аргументы функции. В данном случае один аргумент типа &quot;строка&quot;.
+  static const lua::args_t* in_args() {
+    lua::args_t* args = new lua::args_t();
+    args-&gt;add(new lua::string_arg_t());
+    return args;
+  }
+
+  // Регистрируем выходные параметры. В данном случае это просто bool.
+  // Фукнция в Lua может возвращать не только одно значение, а несколько,
+  // поэтому можно задать список типов выходных параметров.
+  static const lua::args_t* out_args() {
+    lua::args_t* args = new lua::args_t();
+    args-&gt;add(new lua::bool_arg_t());
+    return args;
+  }
+
+  // Задаем namespace и, собственно, имя фукнции. 
+  // Получается &quot;fs.file_exits()&quot;.
+  static const std::string ns() { return &quot;fs&quot;; }
+  static const std::string name() { return &quot;file_exists&quot;; }
+
+  // Данный метод вычисляет значение функции.
+  // Сначала надо разобрать входные параметры, вычислить функцию и
+  // положить результы с массив выходных значений. Правильность
+  // работы с типами аргументов, выходных данных и индексов в массивах,
+  // их описывающих, лежит на плечах автора функции.
+  static void calc(const lua::args_t&amp; in, lua::args_t&amp; out) {
+    std::string filename = dynamic_cast&lt;lua::string_arg_t&amp;&gt;(*in[0]).value();
+    std::ifstream is(filename.c_str());
+    dynamic_cast&lt;lua::bool_arg_t&amp;&gt;(*out[0]).value() = is.good();
+  }
+};
+...
+try {
+  // Создаем исполнителя скрипта.
+  lua script;
+  // Регистрируем нашу функцию &quot;fs.file_exists()&quot;.
+  script.register_function&lt; file_exists_func_t &gt;();
+  // Устанавливаем переменную &quot;fname&quot; в &quot;readme.txt&quot;.
+  script.set_variable&lt;lua::string_arg_t&gt;(&quot;fname&quot;, &quot;readme.txt&quot;);
+  // Вызываем скрипт.
+  script.exec(&quot;exists = fs.file_exists(fname);&quot;);
+  // Получаем результат через переменную &quot;exists&quot;.
+  bool exists = script.get_variable&lt;lua::bool_arg_t&gt;(&quot;exists&quot;).value();
+} catch (lua::exception&amp; e) {
+  std::cerr &lt;&lt; &quot;error: &quot; &lt;&lt; e.error() &lt;&lt; &quot;, line &quot; &lt;&lt; e.line();
+}
+</code></pre>
+
+<p>Что пока не поддерживается, так это параметры типа <a href="http://www.lua.org/manual/5.1/manual.html#2.5.7">таблица (хеш)</a> для передачи их в функцию и получения их в качестве результата.</p>
+
+<p>В каталоге <code>lib</code> лежат несколько мини примеров на Lua. Например, вот так можно вызвать внешнюю функцию для <code>base64</code> кодирования или декодирования:</p>
+
+<pre><code class="cpp">lua script;
+script.exec(&quot;package.path = package.path .. ';./lib/?.lua'&quot;);
+script.exec(&quot;require('base64'); a = base64.encode('test');&quot;);
+// Данный пример напечатает &quot;dGVzdA==&quot;.
+std::cout &lt;&lt; script.get_variable&lt;lua::string_arg_t&gt;(&quot;a&quot;).value();
+</code></pre>
+
+<p><a href="http://code.google.com/p/luascript/source/browse/">Исходники</a> доступны для просмотра в онлайне, или через <a href="http://code.google.com/p/luascript/source/checkout">Mercurial</a>.</p>
+
+<p>Сборка.</p>
+
+<p>Пока я проверял только в Студии 2008. <a href="http://luascript.googlecode.com/files/luascript-0.0.1.zip">Тестовый проект</a> включает в себя библиотеку, <a href="http://www.lua.org/ftp/lua-5.1.4.tar.gz">lua 5.1.4</a>, Google Test 1.3.0 и несколько тестов, чтобы почувствовать вкус библиотеки. Все в одном флаконе.</p>
+
+<p>Те, у кого есть <a href="http://www.scons.org/">SCons</a>, могут собрать, набрав <code>scons -Q</code>. У кого нет, могут запустить скрипт <code>compile-vs2008.cmd</code>. Собранный runner для тестов <code>luascript_unittest_vs2008.exe</code> должен работать без ошибок. Посмотрев сами тесты в файле <code>luascript_unittest.cpp</code> можно в целом понять, как работать с библиотекой. Документация, конечно, будет, но пока так.</p>
+
+<p>Общие замечания.</p>
+
+<p>Забавно, в этих исходниках я попытался в качестве эксперимента максимально работать по <a href="http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml">стандарту кодирования Google</a>. Из основного, что затронуло лично меня, это:</p>
+
+<ul>
+<li>Отступ в 2 пробела (естественно, никаких табов). Для слов <code>public</code>, <code>protected</code>, <code>private</code> отступ в один пробел.</li>
+<li>Максимальная экономия вертикального места (по возможности не лепить лишних пустых строк).
+Открывающая скобка <code>{</code> практически всегда на той же строке (для классов, функций, циклов, условий и т.д.). Я раньше так не делал для классов и функций.</li>
+<li>Никаких <code>cast</code>&lsquo;ов в стиле С, даже для элементарных типов. Только приведения в стиле С++. Мне это очень нравится.</li>
+<li>Забота о длинных строках. Как только можно избегать строк длинее 80 символов.
+В именах закрытых членов класса использовать не &ldquo;_<em>&rdquo; в качестве префикса, а &ldquo;</em>&rdquo; в качестве суффикса.</li>
+</ul>
+
+<p>Это был снова эксперимент на Google Code и в opensource&rsquo;e в целом. Если честно, то выкладывание исходников на публику страшно оздоравливает код, причем по всем статьям.</p>
+
+<p>Данный проект не такой сухой как ранее выложенный <a href="/blog/russian/2009/06/07/googlecode-hosting-serialcom/">SerialCom</a>. Я с ним более менее активно работаю, так что должны быть точно улучшения. На работе, например, я его примастырил для гибко сконфирурированного фильтрования при журналировании. Есть, конечно, проблемы с производительностью (интерпретатор, все-таки, хоть и с виртуальной машиной), но есть пути улучшения.</p>
+
+<p>Посты и ссылки по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2009/06/07/googlecode-hosting-serialcom/">Хостинг на Google Code: SerialCom</a></li>
+<li><a href="http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml">Стандарт кодирования для С++ от Google</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/06/lua.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/06/lua.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/06/lua.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

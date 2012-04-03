@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Парадокс Монти-Холла</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Парадокс Монти-Холла</h1>
+<div id="post">
+  <p>Есть такая интересная задача - парадокс Монти-Холла.</p>
+
+<p>Суть ее в следующем. Представьте, вы играете в следующую игру: перед вами три ящика, и в одном из них приз. Два остальных пустые. Вам надо угадать ящик с призом. Вы делаете первую попытку и наугад выбираете один ящик из трех, но ящик пока не открывают. Вместо этого ведущий игры берет и открывает один из двух оставшихся ящиков, и тот оказывается пустым. После этого ведущий вам предлагает возможность изменить первоначальный выбор в свете новой информации о пустом ящике.</p>
+
+<p>Естественно, ведущий точно заранее знает где приз и заведомо открывает пустой ящик. Итак, вы изначально выбрали ящик, но потом ведущий открыл один из оставшихся и выяснилось, что он пустой. Перед вами выбор: оставить свой изначальный выбор неизменным или изменить его, выбрав третий ящик (тот, что остался после вашего первого выбора и после открытия ведущим пустого ящика). При какой стратегии вероятность выигрыша выше?</p>
+
+<p>Самое прямолинейное решение, приходящее в голову: смена ящика ничего особенно не даст. Вы выбрали один ящик из трех - вероятность выиграть <sup>1</sup>&frasl;<sub>3</sub>. После открытия одного ящика ведущим их осталось два, поэтому вероятность угадать где приз <sup>50</sup>&frasl;<sub>50</sub>. Выбор вы уже сделали, и он и так является одним из текущих вариантов. Выходит, что нет особого смысла менять выбор.</p>
+
+<p>Но эта задачка тем и интересна, что при столь тривиальной постановке ее правильное решение не совсем очевидно, хотя с точки зрения теории вероятности тут все прозрачно - <a href="http://ru.wikipedia.org/wiki/%D0%A2%D0%B5%D0%BE%D1%80%D0%B5%D0%BC%D0%B0_%D0%91%D0%B0%D0%B9%D0%B5%D1%81%D0%B0">теорему Байеса</a> еще никто не отменял.</p>
+
+<p>Правильный ответ - <strong>да</strong>, надо менять выбор, так как в этом случае вероятность угадать повышается с <code>1/3</code> до <code>2/3</code> (и даже не <code>1/2</code>).</p>
+
+<p>В Википедии приведено <a href="http://ru.wikipedia.org/wiki/%D0%9F%D0%B0%D1%80%D0%B0%D0%B4%D0%BE%D0%BA%D1%81_%D0%9C%D0%BE%D0%BD%D1%82%D0%B8_%D0%A5%D0%BE%D0%BB%D0%BB%D0%B0">исчерпывающее объяснение</a>.</p>
+
+<p>Ну а чтобы уж окончательно развеять все сомнения, пришлось провести эксперимент.</p>
+
+<p><code>montihall.cpp</code>:</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;set&gt;
+#include &lt;cstdlib&gt;
+#include &lt;cassert&gt;
+#include &lt;ctime&gt;
+
+int all_doors[] = { 1, 2, 3 };
+
+bool no_change_strategy() {
+  // doors - это множество доступных дверей (1, 2, 3) для выбора игроком.
+  std::set&lt;int&gt; doors(all_doors, all_doors + 3);
+
+  // Выбираем истинную дверь (от 1 до 3).
+  int real_door = (std::rand() % 3) + 1;
+
+  // Выбираем первый и окончательный выбор игрока (от 1 до 3).
+  int primary_choice_door = (std::rand() % 3) + 1;
+
+  return real_door == primary_choice_door;
+}
+
+bool change_strategy() {
+  // doors - это множество доступных дверей (1, 2, 3) для выбора двери,
+  // открываемой ведущим после первого выбора игрока.
+  std::set&lt;int&gt; doors(all_doors, all_doors + 3);
+
+  // Выбираем истинную дверь (от 1 до 3).
+  int real_door = (std::rand() % 3) + 1;
+
+  // Выбираем первый выбор игрока (от 1 до 3)
+  int primary_choice_door = (std::rand() % 3) + 1;
+
+  // Исключаем из множества дверей истинную дверь и выбор игрока.
+  doors.erase(real_door);
+  doors.erase(primary_choice_door);
+  // На всякий пожарный проверим целостность данных.
+  assert(doors.size() == 1 || doors.size() == 2);
+
+  // Из оставшихся элементов (их может быть 1 или 2 штуки) выбираем дверь,
+  // которую откроет ведущий. reveal_door равно либо 1, либо 2.
+  int reveal_door = (std::rand() % doors.size()) + 1;
+
+  // i указывает на первый элемент в множестве (всего в нем 1 или 2 элемента).
+  std::set&lt;int&gt;::const_iterator i = doors.begin();
+  // Сдвигаем итератор на элемент, номер которого равен reveal_door.
+  // Можно было бы написать &quot;if (reveal_door == 2) ++i;&quot;, но цикл как-то
+  // универсальнее.
+  while (--reveal_door) ++i;
+  reveal_door = *i;
+
+  // 'doors2' - это множество доступных дверей (1, 2, 3) для игрока,
+  // меняющего свой первоначальный выбор.
+  std::set&lt;int&gt; doors2(all_doors, all_doors + 3);
+
+  // Исключаем из множества дверей первый выбор игрока и
+  // и дверь, открытую ведущим.
+  doors2.erase(primary_choice_door);
+  doors2.erase(reveal_door);
+  // На всякий пожарный проверим целостность данных.
+  assert(doors2.size() == 1);
+
+  // В множестве оставшихся дверей будет только одна дверь, так как истинная 
+  // дверь точно не равна двери, открытой ведущим, во второй выбор игрока
+  // точно отличается от первоначального. Поэтому просто берем из этого 
+  // множества первый элемент.
+  int second_choice = *doors2.begin();
+
+  return real_door == second_choice;
+}
+
+int main() {
+  std::srand(std::time(0));
+  int guess_on_change = 0;
+  int guess_on_not_change = 0;
+  int N = 100000;
+  for (int i = 0; i &lt; N; ++i) {
+    if (change_strategy())
+      guess_on_change = guess_on_change + 1;
+    if (no_change_strategy())
+      guess_on_not_change = guess_on_not_change + 1;
+  }
+  std::cout &lt;&lt; &quot;Вероятность выиграть при смене изначального выбора: &quot;
+    &lt;&lt; guess_on_change * 1.0 / N &lt;&lt; std::endl;
+  std::cout &lt;&lt; &quot;Вероятность выиграть не меняя изначального выбора: &quot;
+    &lt;&lt; guess_on_not_change * 1.0 / N &lt;&lt; std::endl;
+  return 0;
+}
+</code></pre>
+
+<p>Компилируем и запускаем:</p>
+
+<pre><code>cl /EHsc /D_NDEBUG montihall.cpp &amp;&amp; montihall
+</code></pre>
+
+<p>Результат подтверждает теорию:</p>
+
+<pre><code>Вероятность выиграть при смене изначального выбора: 0.67005
+Вероятность выиграть не меняя изначального выбора: 0.33347
+</code></pre>
+
+<p>Лично я провел замечательные несколько часов, вспоминая всю эту тему условных вероятностей. А вы?</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2009/07/blog-post_26.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2009/07/blog-post_26.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2009/07/blog-post_26.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

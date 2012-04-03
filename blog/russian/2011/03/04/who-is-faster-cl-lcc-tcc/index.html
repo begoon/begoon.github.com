@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Кто из компиляторов быстрее: cl, lcc или tcc</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Кто из компиляторов быстрее: cl, lcc или tcc</h1>
+<div id="post">
+  <p>Люблю делать всякие сравнения компиляторов.</p>
+
+<p>Сегодня на ринге Студия 2010, <a href="http://www.cs.virginia.edu/~lcc-win32/">lcc</a> и <a href="http://bellard.org/tcc/">tcc</a>. Все три я активно использую под Windows для языка С.</p>
+
+<p>Сравнивать будем на любимом решете Эратосфена (<code>erato-c-int.c</code>):</p>
+
+<pre><code class="cpp">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;memory.h&gt;
+#include &lt;string.h&gt;
+#include &lt;math.h&gt;
+
+int main(int argc, char* argv[]) {
+  int n = argc &gt; 1 ? atoi(argv[1]) : 100;
+  int* S;
+  int count;
+  int sz = n * sizeof(*S);
+  int i, j;
+
+  long sqrt_n = sqrt(n) + 1;
+
+  printf(&quot;%d\n&quot;, n);
+
+  S = malloc(sz);
+  memset(S, 0, sz);
+
+  for (i = 2; i &lt; sqrt_n; ++i)
+    if (S[i] == 0)
+      for (j = i*i; j &lt; n; j+=i)
+        S[j] = 1;
+
+  count = 0;
+  for (i = 2; i &lt; n; ++i)
+    if (S[i] == 0)
+      count++;
+
+  printf(&quot;%d\n&quot;, count);
+
+  free(S);
+  return 0;
+}
+</code></pre>
+
+<p>Скрипт для запуска (Makefile):</p>
+
+<pre><code class="makefile">SRC=erato-c-int
+N=100000000
+
+all:  build run
+
+build: build-cl build-lcc build-tcc
+
+run: run-cl run-lcc run-tcc
+
+build-cl:
+  @cl /nologo /O2 -Fe$(SRC)-cl.exe $(SRC).c
+
+run-cl:
+  @echo ---
+  -@cl 2&gt;&amp;1 | findstr Compiler
+  @ntimer.exe $(SRC)-cl.exe $(N) | findstr ETime
+
+build-lcc:
+  @c:\lcc\bin\lcc -O2 -o $(SRC)-lcc.obj $(SRC).c
+  @c:\lcc\bin\lcclnk -o $(SRC)-lcc.exe $(SRC)-lcc.obj
+
+run-lcc:
+  @echo ---
+  @c:\lcc\bin\lcc -v
+  @ntimer.exe $(SRC)-lcc.exe $(N) | findstr ETime
+
+build-tcc:
+  @c:\tcc\tcc -O2 -o $(SRC)-tcc.exe $(SRC).c
+
+run-tcc:
+  @echo ---
+  @c:\tcc\tcc -v
+  @ntimer.exe $(SRC)-tcc.exe $(N) | findstr ETime
+</code></pre>
+
+<p>Погнали:</p>
+
+<pre><code>---
+Microsoft (R) 32-bit C/C++ Optimizing Compiler Version 16.00.30319.01 for 80x86
+ETime(   0:00:04.374 ) UTime(   0:00:04.196 ) KTime(   0:00:00.124 )
+---
+Logiciels/Informatique lcc-win32 version 3.8. Compilation date: Jan 29 2011 11:51:05
+ETime(   0:00:04.415 ) UTime(   0:00:04.102 ) KTime(   0:00:00.202 )
+---
+tcc version 0.9.25
+ETime(   0:00:04.944 ) UTime(   0:00:04.492 ) KTime(   0:00:00.280 )
+</code></pre>
+
+<p>Вывод не особо захватывающий. Все выступили примерно одинаково.</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="/blog/russian/2010/03/06/what-is-faster-on-eratosthenes-seive-go-c-cpp/">Решето Эратосфена - кто быстрее: Go, C или C++?</a></li>
+<li><a href="/blog/russian/2009/02/01/what-is-faster-vector-int-or-bool/">Кто быстрее: vector<bool> или vector<int></a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+  <a href="http://easy-coding.blogspot.com/2011/03/cl-lcc-tcc.html"><small>Оригинальный пост</small></a>
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'easy-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://easy-coding.blogspot.com/2011/03/cl-lcc-tcc.html';
+  var disqus_url = 'http://easy-coding.blogspot.com/2011/03/cl-lcc-tcc.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>

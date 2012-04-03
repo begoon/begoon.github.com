@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>const T* vs T const*</title>
+   <link href="/favicon.png" rel="icon">
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet">
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet"> 
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>const T* vs T const*</h1>
+<div id="post">
+  <p>Not a secret that using of <code>const T*</code> to declare a pointer is exactly the same to <code>T const*</code> because it is only important here to use <code>const</code> before <code>*</code> but the order of <code>T</code> and <code>const</code> doesn&rsquo;t matter.</p>
+
+<p>The both:</p>
+
+<pre><code class="cpp">const T* p;
+</code></pre>
+
+<p>and</p>
+
+<pre><code class="cpp">T const* p;
+</code></pre>
+
+<p>declare the pointer <code>p</code> to a const object but not the const pointer. The pointer itself can be modified:</p>
+
+<pre><code class="cpp">T const* p;
+...
+p = NULL;
+</code></pre>
+
+<p>But it&rsquo;s impossible to modify the object:</p>
+
+<pre><code class="cpp">T const* p;
+...
+p-&gt;some_member = 0;   // ERROR: error C2166: l-value specifies const object
+</code></pre>
+
+<p>This was the introductory and let&rsquo;s talk about the topic.</p>
+
+<p>I&rsquo;m really keen to have readable sources. I could be wrong but in my opinion from the universal point of view using const at the beginning of an expression (for, instance, <code>const T* p;</code>) implies that the entire expression is <code>const</code> and it does not really matter that in this particular case according to the C++ rules it means only that the object is <code>const</code> but not the pointer.</p>
+
+<p>That is why <code>T const* p;</code> could be treated differently, notably &ldquo;a type <code>T</code> which is <code>const</code> and the pointer to this type&rdquo;. Readability becomes a bit better.</p>
+
+<p>Of course all these are questions of a coding style and it is always recommended to be consistent in modifying existing sources. But if you are just learning or beginning a new project or something when it is feasible to try something fresh, it may worth not to refuse yourself in this experience.</p>
+
+</div>
+
+<hr />
+
+
+  <a href="http://meta-coding.blogspot.com/2009/09/const-t-vs-t-const.html"><small>Original post</small></a>
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'meta-coding';
+  var disqus_developer = 0;
+  var disqus_identifier = 'http://meta-coding.blogspot.com/2009/09/const-t-vs-t-const.html';
+  var disqus_url = 'http://meta-coding.blogspot.com/2009/09/const-t-vs-t-const.html';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+
+
+</body>
+</html>
