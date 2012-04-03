@@ -1,0 +1,19 @@
+---
+layout: default
+---
+<h1>{{html .Page.title}}</h1>
+<div id="post">
+  {{.Page.child}}
+</div>
+
+<hr />
+
+{{if .Page.blogspot_url}}
+  <a href="{{.Page.blogspot_url}}"><small>Original post</small></a>
+{{end}}
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+{{include "disqus.html"}}

@@ -1,0 +1,13 @@
+---
+layout: post
+title: "codepad.org"
+language: english
+date: 2009-10-29 00:00
+comments: true
+blogspot: http://meta-coding.blogspot.com/2009/10/codepadorg.html
+categories: 
+- english
+---
+I've recently discovered for myself [codepad.org][] and amazingly started to use quite regularly when something needs to try out when sitting in the middle of nowhere (for instance, in a meeting room).
+
+[codepad.org]: http://codepad.org

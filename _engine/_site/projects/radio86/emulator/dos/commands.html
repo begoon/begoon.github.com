@@ -1,0 +1,265 @@
+<html>
+<head>
+<title>Растактовка команда процессора</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="style.css"></head>
+
+<body bgcolor="#FFFFFF" background="jpgs/exptextb.jpg">
+<div align="center">
+  <h1>Растактовка команд процессора i8080 (КР580)<br>
+  </h1>
+</div>
+<p>Я буду Вам весьма признателен, если Вы поделитесь со мной информацией о процессоре 
+  i8080 в электронном виде и пришлете мне ее вот <a href="mailto:alexander@demin.ws">сюда</a>.<br>
+</p>
+<table width="51%" align="center">
+  <tr bordercolor="0"> 
+    <td>Команда</td>
+    <td>Число тактов</td>
+  </tr>
+  <tr> 
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <td><code>aci data</code></td>
+    <td>7 </td>
+  </tr>
+  <tr> 
+    <td><code>adc r/m</code></td>
+    <td>4/7</td>
+  </tr>
+  <tr> 
+    <td><code>adi data</code></td>
+    <td>7</td>
+  </tr>
+  <tr> 
+    <td><code>ana r/m</code></td>
+    <td>4/7</td>
+  </tr>
+  <tr> 
+    <td><code>ani data</code></td>
+    <td>7</td>
+  </tr>
+  <tr> 
+    <td><code>call addr</code></td>
+    <td>17</td>
+  </tr>
+  <tr> 
+    <td><code><a href="#call">Ccnd</a> addr</code></td>
+    <td>11/17</td>
+  </tr>
+  <tr> 
+    <td><code>cma</code></td>
+    <td>4</td>
+  </tr>
+  <tr> 
+    <td><code>cmc</code></td>
+    <td>4</td>
+  </tr>
+  <tr> 
+    <td><code>cmp r/m</code></td>
+    <td>4/7</td>
+  </tr>
+  <tr> 
+    <td><code>cpi data</code></td>
+    <td>7</td>
+  </tr>
+  <tr> 
+    <td><code>daa</code></td>
+    <td>4</td>
+  </tr>
+  <tr> 
+    <td><code>dad rs</code></td>
+    <td>10</td>
+  </tr>
+  <tr> 
+    <td><code>dcr r/m</code></td>
+    <td>5/10</td>
+  </tr>
+  <tr> 
+    <td><code>dcx rs</code></td>
+    <td>5</td>
+  </tr>
+  <tr> 
+    <td><code>pop rp</code></td>
+    <td>10</td>
+  </tr>
+  <tr> 
+    <td><code>pop psw</code></td>
+    <td>10</td>
+  </tr>
+  <tr> 
+    <td><code>push rp</code></td>
+    <td>11</td>
+  </tr>
+  <tr> 
+    <td><code>ral</code></td>
+    <td>4</td>
+  </tr>
+  <tr> 
+    <td><code>rar</code></td>
+    <td>4</td>
+  </tr>
+  <tr> 
+    <td><code>ret</code></td>
+    <td>10</td>
+  </tr>
+  <tr> 
+    <td><code><a href="#ret">Rcnd</a></code></td>
+    <td>5/11</td>
+  </tr>
+  <tr> 
+    <td><code>rlc</code></td>
+    <td>4</td>
+  </tr>
+  <tr> 
+    <td><code>rrc</code></td>
+    <td>4</td>
+  </tr>
+  <tr> 
+    <td><code>rst num</code></td>
+    <td>11</td>
+  </tr>
+  <tr> 
+    <td><code>sbb r/m</code></td>
+    <td>4/7</td>
+  </tr>
+  <tr> 
+    <td><code>sbi data</code></td>
+    <td>7</td>
+  </tr>
+  <tr> 
+    <td><code>shld addr</code></td>
+    <td>16</td>
+  </tr>
+  <tr> 
+    <td><code>sphl</code></td>
+    <td>5</td>
+  </tr>
+  <tr> 
+    <td><code>sta addr</code></td>
+    <td>13</td>
+  </tr>
+  <tr> 
+    <td><code>stax rs</code></td>
+    <td>7</td>
+  </tr>
+  <tr> 
+    <td><code>stc</code></td>
+    <td>4</td>
+  </tr>
+  <tr> 
+    <td><code>sub r/m</code></td>
+    <td>4/7</td>
+  </tr>
+  <tr> 
+    <td><code>sui data</code></td>
+    <td>7</td>
+  </tr>
+  <tr> 
+    <td><code>xchg</code></td>
+    <td>4</td>
+  </tr>
+  <tr> 
+    <td><code>xra r/m</code></td>
+    <td>4/7</td>
+  </tr>
+  <tr> 
+    <td><code>xri data</code></td>
+    <td>7</td>
+  </tr>
+  <tr> 
+    <td><code>xthl</code></td>
+    <td>18</td>
+  </tr>
+  <tr> 
+    <td><code>di</code></td>
+    <td>4</td>
+  </tr>
+  <tr> 
+    <td><code>ei</code></td>
+    <td>4</td>
+  </tr>
+  <tr> 
+    <td><code>hlt</code></td>
+    <td>7</td>
+  </tr>
+  <tr> 
+    <td><code>in port</code></td>
+    <td> 
+      <p>10</p>
+    </td>
+  </tr>
+  <tr> 
+    <td><code>inr r/m</code></td>
+    <td>5/10</td>
+  </tr>
+  <tr> 
+    <td><code>inx rs</code></td>
+    <td>5</td>
+  </tr>
+  <tr> 
+    <td><code>jmp addr</code></td>
+    <td>10</td>
+  </tr>
+  <tr> 
+    <td><code><a href="#jmp">Jcnd</a> addr</code></td>
+    <td>10</td>
+  </tr>
+  <tr> 
+    <td><code>lda addr</code></td>
+    <td>13</td>
+  </tr>
+  <tr> 
+    <td><code>ldax rs</code></td>
+    <td>7</td>
+  </tr>
+  <tr> 
+    <td><code>lhld addr</code></td>
+    <td>16</td>
+  </tr>
+  <tr> 
+    <td><code>lxi rs, data</code></td>
+    <td>10</td>
+  </tr>
+  <tr> 
+    <td><code>mov r/m, r/m</code></td>
+    <td>5/7</td>
+  </tr>
+  <tr> 
+    <td><code>mvi r/m, data</code></td>
+    <td>5/10</td>
+  </tr>
+  <tr> 
+    <td><code>nop</code></td>
+    <td>4</td>
+  </tr>
+  <tr> 
+    <td><code>ora r/m</code></td>
+    <td>4/7</td>
+  </tr>
+  <tr> 
+    <td><code>ori data</code></td>
+    <td>7</td>
+  </tr>
+  <tr> 
+    <td><code>out port</code></td>
+    <td>10</td>
+  </tr>
+  <tr> 
+    <td><code>pchl</code></td>
+    <td>5</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p><a name="call"></a>Ccnd обозначает группу команд <code>cnz,cz,cnc,cc,cpo,cpe,cp,cm</code>. 
+</p>
+<p> <a name="ret"></a>Rcnd обозначает группу команд <code>rnz,rz,rnc,rc,rpo,rpe,rp,rm</code>. 
+</p>
+<p> <a name="jmp"></a>Jcnd обозначает группу команд <code>jnz,jz,jnc,jc,jpo,jpe,jp,jm</code>. 
+</p>
+<div align="right"> <a href="index.html"><img src="gifs/back1.gif" border="0" alt="back"></a> 
+</div>
+</body>
+</html>

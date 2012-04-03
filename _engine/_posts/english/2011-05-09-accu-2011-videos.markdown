@@ -1,0 +1,38 @@
+---
+layout: post
+title: "ACCU 2011 videos"
+language: english
+date: 2011-05-09 00:00
+comments: true
+blogspot: http://meta-coding.blogspot.com/2011/05/accu-2011-videos.html
+categories: 
+- accu
+- english
+---
+Alas, it is necessary to give just links, because they don't allow embedding code for viewing directly from the page.
+
+Scott Meyers
+
+[CPU caches and why you care][]
+
+[CPU caches and why you care]: http://skillsmatter.com/podcast/home/cpu-caches-and-why-you-care
+
+[Move semantics, perfect forwarding, and rvalue references][]
+
+[Move semantics, perfect forwarding, and rvalue references]: http://skillsmatter.com/podcast/home/move-semanticsperfect-forwarding-and-rvalue-references
+
+John Lakos (Bloomberg)
+
+[Defensive programming done right][]
+
+[Defensive programming done right]: http://skillsmatter.com/podcast/home/defensive-programming-done-right
+
+Dietmar Kuhl (Bloomberg)
+
+[Generic Programming with C++ 0x][]
+
+[Generic Programming with C++ 0x]: http://skillsmatter.com/podcast/home/generic-programming-with-c-plus-plus-0x
+
+[Other videos are also available][All videos].
+
+[All videos]: http://skillsmatter.com/event/home/accu-2011

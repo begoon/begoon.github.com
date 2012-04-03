@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  {{$host := .Host}}
+  <title><![CDATA[{{include "russian/title.html"}}]]></title>
+  <link href="{{$host}}/atom.xml" rel="self"/>
+  <link href="{{$host}}/"/>
+  <updated>{{now}}</updated>
+  <id>{{$host}}/</id>
+  <author>
+    <name><![CDATA[{{include "russian/author.html"}}]]></name>
+    <email><![CDATA[{{include "email.html"}}]]></email>
+  </author>
+
+  {{range .Posts}}{{if .russian}}
+  <entry>
+    <title type="html"><![CDATA[{{.title}}]]></title>
+    <link href="{{$host}}{{.url}}"/>
+    <updated>{{.date_only}}T00:00:00+00:00</updated>
+    <id>{{$host}}{{.url}}/</id>
+    <content type="html"><![CDATA[{{.rss | replace_relative_urls}}]]></content>
+  </entry>
+  {{end}}{{end}}
+
+</feed>

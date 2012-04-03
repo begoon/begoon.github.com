@@ -1,0 +1,31 @@
+---
+layout: post
+title: "MicroXP - a lightweight Windows XP"
+language: english
+date: 2011-02-23 00:00
+comments: true
+blogspot: http://meta-coding.blogspot.com/2011/02/microxp-lightweight-windows-xp.html
+categories: 
+- english
+---
+The problem -- a need to connect to a remote network via [RDP][]. To establish such connection, special software must be installed on a client workstation to create an encrypted tunnel between the workstation and the remote network. When that software is up and running, any application (telnet/ssh, ftp, radmin etc), including RDP client (mstsc.exe), might access to the remote network.
+
+[RDP]: http://en.wikipedia.org/wiki/Remote_Desktop_Protocol
+
+Not a problem when a client workstation runs Windows. You just go to a web site and logon, and then an ActiveX component gets started from the page, installs and runs everything required.
+
+It becomes complicated if the workstation is not Windows. Indeed, there are RDP clients available for Linux and Mac, but it doesn't help much because without that encrypted channel it just doesn't have any meaning.
+
+What do Linux and Mac users have to do? Install Windows in a virtual machine and run RDP in there. This is a good solution but with a drawback. A virtual machine hosting standard Windows usually takes a few gigabytes minimum and boots considerably slow.
+
+I googled a bit and found [MicroXP][]. This is a very stripped-down version of XP SP3. The distribution ISO takes around ~100 MB, and when installed ~250. In VirtualBox on Mac Air the installation lasts five minutes and the already installed system boots in 10 seconds or less. The virtual machine requirements are minimal -- a dynamic 300 MB disk and 64 MB of RAM.
+
+[MicroXP]: http://www.google.co.uk/search?q=MicroXP-0.82.iso
+
+After the installation of MicroXP you have to add Virtual Box Guest Additions (~200 KB) to share directories and not to struggle with the mouse, and then add a [RDP client][] (it can be transferred to the VM via the shared folders).
+
+[RDP client]: http://www.google.co.uk/search?q=RemoteDesktop-MicroXp-0.82.zip
+
+In summary, if you need minimalistic and fast XP, MicroXP is a very good candidate.
+
+P.S. Don't visit microxp.org. This is a fake to fish e-mails.

@@ -1,0 +1,16 @@
+---
+layout: default
+title: Programming DIY
+language: english
+---
+<div class="title">{{.Page.title}} / Blog about programming for beginners and beyond</div>
+
+<ul class="posts">
+{{range .Posts}}{{if .english}}
+  <li>
+    <span>{{.year}}-{{.month}}-{{.day}}</span> 
+    &raquo; 
+    <a href="{{.url}}">{{html .title}}</a>
+  </li>
+{{end}}{{end}}
+</ul>

@@ -1,0 +1,225 @@
+<HTML>
+<HEAD>
+<title>Radio-86RK Emulator / Эмулятор Радио-86РК</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<META NAME="Description"
+      CONTENT="Эмулятор ПК Радио-86РК">
+<META NAME="Keywords" CONTENT="Радио-86РК,эмулятор,Radio-86RK,emulator,КР580,I8080">
+<link rel="stylesheet" href="style.css">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF" background="jpgs/exptextb.jpg">
+<table width="100%" name="menu" border="0">
+  <tr> 
+    <td width="19%" valign="top" rowspan="7"> 
+      <div align="center"></div>
+      <table width="100%">
+        <tr> 
+          <td width="83%"><a href="news.html">Новости</a></td>
+          <td width="17%"><img src="gifs/new.gif" align="absmiddle" alt="new"></td>
+        </tr>
+      </table>
+      <hr>
+      <a href="#emulator">Эмулятор</a>
+      <hr>
+      <table width="100%" border="0">
+        <tr> 
+          <td width="82%"><a href="dox.html">Документация</a></td>
+          <td width="18%">&nbsp;</td>
+        </tr>
+      </table>
+      <hr>
+      <a href="debug.html">Встроенный отладчик</a>
+      <hr>
+      <div align="left">
+        <table width="100%">
+          <tr> 
+            <td width="83%"><a href="download.html">Download</a></td>
+            <td width="17%"><img src="gifs/new.gif" align="absmiddle" alt="new"></td>
+          </tr>
+        </table>
+        
+      </div>
+      <hr>
+      <a href="hackgames.html">Ломание игр</a> 
+      <hr>
+      <a href="todo.html">Планы на будущее</a>
+      <hr>
+      <table width="100%" border="0">
+        <tr> 
+          <td width="77%"><a href="links.html">Ссылки</a></td>
+          <td width="23%">&nbsp;</td>
+        </tr>
+      </table>
+      <hr>
+      <a href="design.html">Разработчикам</a> 
+      <hr>
+      <a href="thanx.html">Благодарности</a> 
+      <hr>
+      <p>Посещения <img src="http://counter.digits.com/wc/-d/4/radio86rk" align=absmiddle
+      width=60 height=20 border=0 hspace=4 vspace=2></p>
+      </td>
+    <td width="4%" rowspan="7" valign="top"></td>
+    <td width="76%" rowspan="7"> 
+      <h1 align="center">Радио-86РК Эмулятор </h1>
+      <table width="100%" border="0">
+        <tr> 
+          <td width="95%"> 
+            <div align="center"><a href="news.html#hot"><font color="#FF3333" size="+1">Новости 
+              от 16.06.1999. Версия 1.0 + Исходные тексты эмулятора</font></a></div>
+          </td>
+          <td width="5%"> 
+            <div align="right"><font size="+1"><img src="gifs/alarm.gif" align="absmiddle" alt="alarm" border="0"></font></div>
+          </td>
+        </tr>
+      </table>
+      <hr>
+      <p><img src="gifs/rk.gif" alt="prompt"></p>
+      <p>Посвящается любителям почетной старины. Все желающие вспомнить былое 
+        и поиграть в чрезвычайно старенькие игры для РК могут оттянуться по полной 
+        программе с помощью данного эмулятора. А особые извращенцы могут испытать 
+        истинное наслаждение от процесса хака РК'шных игрушек встроенным отладчиком 
+        этого же эмулятора. Технология этого дела описана <a href="hackgames.html">здесь</a>. 
+      </p>
+      <p>Кстати, вот несколько screenshot'ов с моих любимых игр с РК:</p>
+      <ul>
+        <li> <a href="volcano.html">Volcano</a></li>
+        <li><a href="lest.html">Лестница</a></li>
+        <li><a href="cirk.html">Цирк</a></li>
+        <li><a href="piton.html">Питон</a></li>
+        <li><a href="xonix.html">Xonix</a></li>
+        <li><a href="chess.html">Chess</a> &#150; ну! обыграете?!</li>
+        <li><a href="labirint.html">Лабиринт</a></li>
+        <li><a href="pacman.html">Pacman</a></li>
+      </ul>
+      <p>А вот <a href="oops.html">так</a> я делал, когда у меня слишком долго 
+        что-то не получалось на РК... <img src="gifs/smile.gif" align="absmiddle" alt="smile"> 
+        Очень надеюсь, что с этим эмулятором подобного не произойдет...</p>
+      <hr noshade>
+      <h4><a name="emulator"></a>Итак, что здесь есть по поводу эмулятора:</h4>
+      <ul>
+        <li><a href="#intro">введение</a></li>
+        <li><a href="#possibilities">возможности эмулятора</a></li>
+        <li><a href="#hardware">аппаратные требования</a></li>
+        <li><a href="news.html">новости</a></li>
+        <li><a href="download.html">скачать эмулятор и программы для него</a></li>
+        <li><a href="links.html">ссылки</a></li>
+        <li><a href="#author">а кто у нас автор ?!</a> </li>
+      </ul>
+      <hr noshade>
+      <h3><a name="intro"></a>Введение</h3>
+      <p> Единственной причиной того, что занялся написание эмулятора РК, было 
+        мое желание поиграть в старые игры и главное &#150; вспомнить прошлое 
+        <img src="gifs/smile.gif" alt="smile" align="absmiddle">.<br>
+        Хм... ведь это был мой первый компьютер, собранный моим старшим братом 
+        во время диплома, когда он учился в МАИ на радио-факультете. На этом компьютере 
+        я начал что-то делать, в том числе и программировать. Сам РК, к сожалению, 
+        не сохранился из-за переезда. Остались только кассеты, несколько журналов 
+        &quot;Радио&quot;, книга про РК &quot;Домашний компьютер&quot; и воспоминания.<br>
+        Наш с братом РК так и остался без цвета, дисковода, нового дешифратора 
+        памяти для внешних устройств и музыкального таймера &#150; только с 32 
+        кб памяти.<br>
+        К сожалению, 2-х килобайтный &quot;Монитор&quot; не сохранился на ленте, 
+        и его пришлось набрать из книги &quot;Домашний компьютер&quot;.<br>
+      </p>
+      <p> В эмуляторе сохранен черно-белый стиль РК.</p>
+      <p>P.S. Сокращение от РАДИО-86РК в просто РК пойдет далее по тексту везде 
+        &#150; как в русском контексте, так и английском &#150; везде просто PK. 
+        Почему? Не знаю... <img src="gifs/smile.gif" align="absmiddle" alt="smile"> 
+      <hr noshade>
+      <h3 align="left"><a name="possibilities"></a>Кратенькое описание возможностей 
+        эмулятора</h3>
+      <h4 align="left"> Эмулируемые устройства:</h4>
+      <menu> 
+        <li> процессор i8080 (КР580)</li>
+        <li> контроллер прямого доступа в память (ПДП) ИК-57</li>
+        <li> видео контроллер ВГ-75</li>
+        <li> память (16 или 32 кб)</li>
+        <li> клавиатура (первый программируемый периферийный адаптер ВВ-55 &#150; 
+          адреса 800Xh)</li>
+        <li> ввод/вывод с ленты на уровне процедуры ввода/вывода байта</li>
+        <li> РК'овская пищалочка</li>
+        <li> экран (78 позиций в строке, а количество строк выбирается в зависимости 
+          от настроек ПДП и ВГ-75).</li>
+      </menu>
+      <h4> НЕ эмулируемые устройства:</h4>
+      <ul>
+        <li> второй программируемый периферийный адаптер ВВ-55 (адреса A00Xh)</li>
+        <li> расширения памяти больше 32 кб</li>
+        <li> цветность</li>
+        <li> дисковод</li>
+        <li> музыкальный таймер</li>
+      </ul>
+      <table width="100%" border="0">
+        <tr> 
+          <td> 
+            <h3>Дополнительные возможности:</h3>
+          </td>
+          <td> 
+            <div align="right"><img src="gifs/new.gif" align="middle" alt="new"></div>
+          </td>
+        </tr>
+      </table>
+      <ul>
+        <li>возможность записи и чтения Snapshot'ов, в которые кроке образа рабочей 
+          памяти можно записывать текущую конфигурацию эмулятора и &quot;Монитор&quot;</li>
+      </ul>
+      <hr noshade>
+      <h3><a name="hardware"></a>Аппаратные требования</h3>
+      <dir> 
+        <li> компьютер, совместимый с IBM AT 386</li>
+        <li> VGA-совместимый видеоадаптер (эмулятор иногда использует нестандартный 
+          текcтовый режим монитора 80x30, а также 80x50)</li>
+        <li> Не менее 500кб оперативной памяти</li>
+        <li> MS-DOS версии 3.00 или выше (также проверено под win95 и NT &#150; 
+          но не в окне из-за используемого нестандартного текстового видеорежима 
+          80x30, и под Linux через dosemu)</li>
+      </dir>
+      <hr noshade>
+      <h3>А как же лицензия...</h3>
+      <p>Данная программа распространяется свободно по принципу 'AS IS', то есть 
+        автор (которым являюсь я) не несет никакой ответственности за проблемы, 
+        вред или упущенную выгоду, которые могут возникнуть при использования 
+        данного программного продукта. Автор ничего не имеет против распространения 
+        этого программного продукта, если в него не вносятся изменения и если 
+        при этом не извлекается коммерческая выгода. При цитировании документации 
+        программы ссылка на источник обязательна.</p>
+      <hr noshade>
+      <h3><a name="author"></a>Контактная информация</h3>
+      <p>Автор данного эмулятора я - <a href="mailto:alexander@demin.ws">Александр 
+        Демин</a>, &#169 1998-99. 
+      <p></p>
+      <p>Я Вам весьма признателен, если Вы поделитесь со мной имеющимися у Вас 
+        программами для РК. 
+      <p> Замечания, предложения, дополнения, bug-report'ы, информацию об РК, 
+        замечания о неточностях или ошибках в документации, программы для РК, 
+        не вошедшие в данный релиз эмулятора, которые Вы бы хотели видеть в нем, 
+        присылайте мне (ссылка на Вас будет, конечно, сохранена, и я буду Вам 
+        весьма признателен) <a href="mailto:alexander@demin.ws"><img src="gifs/email.gif" border="0" align="absmiddle" alt="Пишите мне"></a>. 
+      <hr noshade>
+      <p>Дата последнего обновления 
+        <script language="JavaScript">
+<!--
+aDate=document.lastModified;
+document.write(aDate.substring(1,aDate.indexOf(' ')));
+//-->
+</script>
+        .</p>
+      <hr noshade>
+      <p>Общий дизайн сайта был сделан в <b><a href="http://www.macromedia.com"><img src="gifs/mdw.gif" alt="Macromedia Dreamweaver" align="absmiddle" name="Dreamweaver" border="0"></a></b>'е 
+        и частично в FAR'е, авторам которых я выражаю большую признательность.</p>
+      <p align="left">Рекомендуемое разрешение экрана - 800x600.</p>
+      <hr>
+      <div align="center"> 
+        <p><font size="-1"> <a href="news.html">Новости</a> | <a href="#emulator">Эмулятор</a> 
+          | <a href="dox.html">Документация</a> | <a href="debug.html">Отладчик</a> 
+          | <a href="hackgames.html">Ломание игр</a> <br>
+          <a href="todo.html">Планы на будущее</a> | <a href="links.html">Ссылки</a> 
+          | <a href="design.html">Разработчикам</a></font></p>
+        <hr>
+      </div>
+    </td>
+    <td width="1%" rowspan="7" valign="top"></td>
+  </tr>
+</table>
+</BODY>
+</HTML>

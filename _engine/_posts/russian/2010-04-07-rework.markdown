@@ -1,0 +1,59 @@
+---
+layout: post
+title: 'Jason Fried, David Heinemeier Hansson, "Rework"'
+language: russian
+date: 2010-04-07 00:00
+comments: true
+blogspot: http://easy-coding.blogspot.com/2010/04/jason-fried-david-heinemeier-hansson.html
+categories:
+- book
+- russian
+---
+Книга от создателей компании [37 signals][] и [Ruby on Rails][] о том, как можно вести малый бизнес в IT, не разрывая зад по 10-12 часов в день, а только с 9 до 5, и при этом достойно и даже очень зарабатывать.
+
+[37 signals]: http://37signals.com/
+[Ruby on Rails]: http://rubyonrails.org/
+
+[Jason Fried, David Heinemeier Hansson, "Rework"][]
+
+[Jason Fried, David Heinemeier Hansson, "Rework"]: http://www.amazon.co.uk/Rework-Jason-Fried/dp/0307463745
+
+{% img /images/covers/english/rework-cover.jpg %}
+
+Довольно пафосная книга, состоящая из мини глав, похожих на посты в блоге (эта книга и родилась из блога), но многие ее посылы стоит усвоить. С ними легче и приятнее жить, и во многом ранее скучном и нудном может появиться вдруг смысл. Также книга может подтолкнуть в мир самостоятельной работы на самого себя, например, написание shareware.
+
+Но одна глава мне очень понравилась. Про резюме и сопроводительные письма.
+
+Приведу ее целиком как есть и собственный вольный перевод, если кому надо.
+
+*Resumes are ridiculous*
+
+*We all know resumes are a joke. They're exaggerations. They're filled with "action verbs" that don't mean anything. They list job titles and responsibilities that are vaguely accurate at best. And there's no way to verify most of what's on there. The whole thing is a face.*
+
+*Worst of all, they're too easy. Anyone can create a decent-enough resume. That's why half-assed applicants love them so much. They can shotgun out hundreds at a time to potential employers. It's another form of spam. They don't care about landing your job; they just care about landing any job.*
+
+*If someone sends out a resume to three hundred companies, that's a huge red flag right there. There's no way that applicant has researched you. There's no way he knows what's different about your company.*
+
+*If you hire based on this garbage, you're missing the point of what hiring is about. You want a specific candidate who cares specifically about your company, your products, your customers, and your job.*
+
+*So how do you find these candidates? First step: Check the cover letter. In a cover letter, you get actual communication instead of a list of skills, verbs, and years of irrelevance. There's no way an applicant can churn out hundreds of personalized letters. That's why the cover letter is a much better test than a resume. You hear someone's actual voice and are able to recognize if it's in tune with you and your company.*
+
+*Trust you gut reaction. If the first paragraph sucks, the second has to work that much harder. If there's no hook in the first three, it's unlikely there's a match there. On the other hand, if your gut is telling you there's a chance at a real match, then move on to the interview stage.*
+
+Перевод:
+
+*Всем известно, что резюме – это ерунда. Одни преувеличения. В них полно «правильных» глаголов, которые ничего не значат. В них перечисляются должности и обязанности, которые в лучшем случае сомнительны. И нет никакой возможности проверить, что за всем этим стоит. Сплошной фарс.*
+
+*И хуже все то, что их очень просто сделать. Любой может написать приличное резюме. Вот почему недоразвитые кандидаты так их любят. Они могут наплодить их сотни для потенциальных работодателей. Это еще один тип спама. Им не важно получить работу у вас. Им нужна какая-то работа.*
+
+*Если кто-то посылает резюме в три сотни компаний, это плохой знак. Такой кандидат не пытался ничего о вас узнать, и чем ваша компания отличается от других.*
+
+*Если вы нанимаете, основываясь на такой ерунде, теряется сам смысл найма. Вам нужен конкретный человек, интересующийся именно вашей компанию, вашими продуктами, вашими клиентами и вашей работой.*
+
+*Так что делать, чтобы найти таких кандидатов? Во-первых, обратите внимание на сопроводительное письмо. В нем вы найдете настоящее обращение от кандидата, а не список умений, глаголов и кучи всего, не относящегося к делу. Вряд ли кандидат будет писать сотни личных писем. Поэтому сопроводительное письмо – это гораздо лучшая проверка, чем резюме. Вы услышите голос живого человека и сможете понять, подходит ли он вам и вашей компании.*
+
+*Доверяйте нутру. Если в первом параграфе все плохо, во втором шансов уже мало. Если первые три вас не зацепили, вряд ли это ваш случай. С другой стороны, если вы чувствуете, что-то тут есть – переходите к интервью.*
+
+От себя могу добавить. Всегда стоит писать cover letter, причем вдумчивые и персонализированные. В процессе их написания часто приходит понимание - "а хочу ли сам я там работать?"
+
+Книгу после прочтения я продал назад через Амазон.

@@ -1,0 +1,13 @@
+---
+layout: post
+title: "codepad.org"
+language: russian
+date: 2009-10-29 00:00
+comments: true
+blogspot: http://easy-coding.blogspot.com/2009/10/codepadorg.html
+categories:
+- russian
+---
+Открыл для себя [codepad.org][], и начал пользоваться с завидной регулярностью, когда надо быстренько что-нибудь попробовать - откомпилировать и запустить, а потом еще и показать кому-нибудь.
+
+[codepad.org]: http://codepad.org
