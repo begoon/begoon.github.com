@@ -5,13 +5,24 @@
   <title><![CDATA[Программирования - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-05T10:59:38+01:00</updated>
+  <updated>2012-04-05T13:59:08+01:00</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Первое тестовое сообщение]]></title>
+    <link href="http://demin.ws/blog/russian/2012/05/09/test-post-in-the-new-blog/"/>
+    <updated>2012-05-09T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/05/09/test-post-in-the-new-blog//</id>
+    <content type="html"><![CDATA[<h1>Тестовое сообщение</h1>
+
+<p>С несколькими ошибками.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[NOR Machine на Ruby]]></title>
@@ -2190,33 +2201,6 @@ HP C/aC++ for Integrity Servers B3910B A.06.22 [Nov 14 2008]
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Интересное: EKOPath Compiler, ASCII Flow, Address Sanitizer]]></title>
-    <link href="http://demin.ws/blog/russian/2011/06/16/news-ekopath-compiler-ascii-flow-address-sanitizer/"/>
-    <updated>2011-06-16T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2011/06/16/news-ekopath-compiler-ascii-flow-address-sanitizer//</id>
-    <content type="html"><![CDATA[<p><strong>EKOPath 4 Compiler Suite</strong></p>
-
-<p><a href="http://www.pathscale.com/">EKOPath</a> вроде как <a href="http://www.pathscale.com/ekopath4-open-source-announcement">собирается выпустить в open-source</a> их супер-пупер оптимизирующий компилятор C++.</p>
-
-<p>Как пишут в пресс-релизе:</p>
-
-<p><em>The PathScale EKOPath Compiler Suite has the world&rsquo;s <strong>most advanced optimization infrastructure</strong> and can fully exploit the potentials of many-core architectures.</em></p>
-
-<hr />
-
-<p>Вам хочется рисовать диаграммы и блок-схемы по-настоящему, в vi&rsquo;e, роняя скупую слезу юниксоида, взгляните на это <a href="http://www.asciiflow.com/">ASCII Flow</a>.</p>
-
-<p>Как говориться, почему рулит plain-text? А потому, что его можно поместить под контроль версий (1) и делать diff (2).</p>
-
-<hr />
-
-<p>Google <a href="http://blog.chromium.org/2011/06/testing-chromium-addresssanitizer-fast.html">выложил</a> в open-source <a href="http://code.google.com/p/address-sanitizer/wiki/AddressSanitizer">Address Sanitizer</a>.</p>
-
-<p>Address Sanitizer - это аналог Valgrind, но не совсем. Например, эта штука умеет ловить buffer over-/underrun не только на куче, но и на стеке. Работает только на Linux Intel 32 и 64 бит.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Динамическая линковка C++ на AIX]]></title>
     <link href="http://demin.ws/blog/russian/2011/06/16/dynamic-linking-cpp-in-aix/"/>
     <updated>2011-06-16T00:00:00+00:00</updated>
@@ -2306,6 +2290,33 @@ static void ManualInitilizationForStatics() {
 </code></pre>
 
 <p>Но это не программирование, а ерзанье.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Интересное: EKOPath Compiler, ASCII Flow, Address Sanitizer]]></title>
+    <link href="http://demin.ws/blog/russian/2011/06/16/news-ekopath-compiler-ascii-flow-address-sanitizer/"/>
+    <updated>2011-06-16T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2011/06/16/news-ekopath-compiler-ascii-flow-address-sanitizer//</id>
+    <content type="html"><![CDATA[<p><strong>EKOPath 4 Compiler Suite</strong></p>
+
+<p><a href="http://www.pathscale.com/">EKOPath</a> вроде как <a href="http://www.pathscale.com/ekopath4-open-source-announcement">собирается выпустить в open-source</a> их супер-пупер оптимизирующий компилятор C++.</p>
+
+<p>Как пишут в пресс-релизе:</p>
+
+<p><em>The PathScale EKOPath Compiler Suite has the world&rsquo;s <strong>most advanced optimization infrastructure</strong> and can fully exploit the potentials of many-core architectures.</em></p>
+
+<hr />
+
+<p>Вам хочется рисовать диаграммы и блок-схемы по-настоящему, в vi&rsquo;e, роняя скупую слезу юниксоида, взгляните на это <a href="http://www.asciiflow.com/">ASCII Flow</a>.</p>
+
+<p>Как говориться, почему рулит plain-text? А потому, что его можно поместить под контроль версий (1) и делать diff (2).</p>
+
+<hr />
+
+<p>Google <a href="http://blog.chromium.org/2011/06/testing-chromium-addresssanitizer-fast.html">выложил</a> в open-source <a href="http://code.google.com/p/address-sanitizer/wiki/AddressSanitizer">Address Sanitizer</a>.</p>
+
+<p>Address Sanitizer - это аналог Valgrind, но не совсем. Например, эта штука умеет ловить buffer over-/underrun не только на куче, но и на стеке. Работает только на Linux Intel 32 и 64 бит.</p>
 ]]></content>
   </entry>
   
@@ -4496,6 +4507,15 @@ ETime(   0:00:04.944 ) UTime(   0:00:04.492 ) KTime(   0:00:00.280 )
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Ссылка на анализ результатов взлома программы однокомандного процессора NORCPU]]></title>
+    <link href="http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challange-analysis-link/"/>
+    <updated>2011-02-16T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challange-analysis-link//</id>
+    <content type="html"><![CDATA[<p>По какой-то причине Google Reader не смог проиндексировать мой большой предыдущий пост - <a href="http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challange-analysis/">Анализ результатов взлома программы однокомандного процессора NORCPU</a>, посему для тех, кто читает через Google Reader, делаю этот пост-ссылку.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Анализ результатов взлома программы однокомандного процессора NORCPU]]></title>
     <link href="http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challange-analysis/"/>
     <updated>2011-02-16T00:00:00+00:00</updated>
@@ -6363,15 +6383,6 @@ f.close()
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Ссылка на анализ результатов взлома программы однокомандного процессора NORCPU]]></title>
-    <link href="http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challange-analysis-link/"/>
-    <updated>2011-02-16T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challange-analysis-link//</id>
-    <content type="html"><![CDATA[<p>По какой-то причине Google Reader не смог проиндексировать мой большой предыдущий пост - <a href="http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challange-analysis/">Анализ результатов взлома программы однокомандного процессора NORCPU</a>, посему для тех, кто читает через Google Reader, делаю этот пост-ссылку.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Windows борется с написанием вирусов]]></title>
     <link href="http://demin.ws/blog/russian/2011/02/14/windows-fights-against-viruses/"/>
     <updated>2011-02-14T00:00:00+00:00</updated>
@@ -6674,20 +6685,6 @@ int main() {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Сайты с алгоритмами на C++ и Java]]></title>
-    <link href="http://demin.ws/blog/russian/2011/01/18/web-sites-with-algorithms-on-cpp-and-java/"/>
-    <updated>2011-01-18T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2011/01/18/web-sites-with-algorithms-on-cpp-and-java//</id>
-    <content type="html"><![CDATA[<p>Не побоюсь повториться &ndash; две совершенно волшебные, на мой взгяд, ссылки на реализации множества алгоритмов на C++ и Java.</p>
-
-<p><a href="http://e-maxx.ru/algo/">http://e-maxx.ru/algo/</a> - алгоримты на С++ с минимумом теории
-<a href="http://sites.google.com/site/indy256/">http://sites.google.com/site/indy256/</a> - алгоритмы на Java и С++</p>
-
-<p>Если у вас есть в заначке ссылка на ресурс подобного качества, поделитесь пожалуйста.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Компилятор языка С: LCC-WIN32]]></title>
     <link href="http://demin.ws/blog/russian/2011/01/18/lcc-compiler-for-windows/"/>
     <updated>2011-01-18T00:00:00+00:00</updated>
@@ -6738,6 +6735,20 @@ tapi.h
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Сайты с алгоритмами на C++ и Java]]></title>
+    <link href="http://demin.ws/blog/russian/2011/01/18/web-sites-with-algorithms-on-cpp-and-java/"/>
+    <updated>2011-01-18T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2011/01/18/web-sites-with-algorithms-on-cpp-and-java//</id>
+    <content type="html"><![CDATA[<p>Не побоюсь повториться &ndash; две совершенно волшебные, на мой взгяд, ссылки на реализации множества алгоритмов на C++ и Java.</p>
+
+<p><a href="http://e-maxx.ru/algo/">http://e-maxx.ru/algo/</a> - алгоримты на С++ с минимумом теории
+<a href="http://sites.google.com/site/indy256/">http://sites.google.com/site/indy256/</a> - алгоритмы на Java и С++</p>
+
+<p>Если у вас есть в заначке ссылка на ресурс подобного качества, поделитесь пожалуйста.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Учет рабочего времени]]></title>
     <link href="http://demin.ws/blog/russian/2011/01/16/working-time-billing/"/>
     <updated>2011-01-16T00:00:00+00:00</updated>
@@ -6770,6 +6781,31 @@ tapi.h
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Коллекции электронных книг]]></title>
+    <link href="http://demin.ws/blog/russian/2010/12/28/ebook-collections/"/>
+    <updated>2010-12-28T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/12/28/ebook-collections//</id>
+    <content type="html"><![CDATA[<p>Решил собрать в одном месте ссылки на ресурсы с электронными книгами (в одном из недавних постов в коментах была отличная подборка).</p>
+
+<ul>
+<li><a href="http://www.mccme.ru/free-books/">http://www.mccme.ru/free-books/</a></li>
+<li><a href="http://e-maxx.ru/bookz/">http://e-maxx.ru/bookz/</a></li>
+<li><a href="http://eqworld.ipmnet.ru/indexr.htm">http://eqworld.ipmnet.ru/indexr.htm</a></li>
+<li><a href="http://infanata.com/category/computers">http://infanata.com/category/computers</a></li>
+<li><a href="http://www.avaxhome.ws/ebooks">http://www.avaxhome.ws/ebooks</a></li>
+<li><a href="http://gen.lib.rus.ec/">http://gen.lib.rus.ec/</a></li>
+<li><a href="http://ebdb.ru/">http://ebdb.ru/</a></li>
+<li><a href="http://bib.tiera.ru/">http://bib.tiera.ru/</a></li>
+<li><a href="http://all-ebooks.com/">http://all-ebooks.com/</a></li>
+<li><a href="http://www.flazx.us/">http://www.flazx.us/</a></li>
+<li><a href="http://www.pdfbook-s.com/">http://www.pdfbook-s.com/</a> (Добавлено!)</li>
+</ul>
+
+<p>Буду признателем за информацию на подобные ресурсы. Обновления буду добавлять в пост.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Opengrok]]></title>
     <link href="http://demin.ws/blog/russian/2010/12/28/opengrok/"/>
     <updated>2010-12-28T00:00:00+00:00</updated>
@@ -6797,31 +6833,6 @@ tapi.h
 <li><a href="http://demin.ws/blog/russian/2009/02/23/static-code-analysis-coverity-klocwork/">Статический анализ кода - Coverity, Klocwork</a></li>
 <li><a href="http://demin.ws/blog/russian/2009/04/03/code-bullseye-coverage/">Анализатор покрытия кода тестами Bullseye Coverage</a></li>
 </ul>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Коллекции электронных книг]]></title>
-    <link href="http://demin.ws/blog/russian/2010/12/28/ebook-collections/"/>
-    <updated>2010-12-28T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/12/28/ebook-collections//</id>
-    <content type="html"><![CDATA[<p>Решил собрать в одном месте ссылки на ресурсы с электронными книгами (в одном из недавних постов в коментах была отличная подборка).</p>
-
-<ul>
-<li><a href="http://www.mccme.ru/free-books/">http://www.mccme.ru/free-books/</a></li>
-<li><a href="http://e-maxx.ru/bookz/">http://e-maxx.ru/bookz/</a></li>
-<li><a href="http://eqworld.ipmnet.ru/indexr.htm">http://eqworld.ipmnet.ru/indexr.htm</a></li>
-<li><a href="http://infanata.com/category/computers">http://infanata.com/category/computers</a></li>
-<li><a href="http://www.avaxhome.ws/ebooks">http://www.avaxhome.ws/ebooks</a></li>
-<li><a href="http://gen.lib.rus.ec/">http://gen.lib.rus.ec/</a></li>
-<li><a href="http://ebdb.ru/">http://ebdb.ru/</a></li>
-<li><a href="http://bib.tiera.ru/">http://bib.tiera.ru/</a></li>
-<li><a href="http://all-ebooks.com/">http://all-ebooks.com/</a></li>
-<li><a href="http://www.flazx.us/">http://www.flazx.us/</a></li>
-<li><a href="http://www.pdfbook-s.com/">http://www.pdfbook-s.com/</a> (Добавлено!)</li>
-</ul>
-
-<p>Буду признателем за информацию на подобные ресурсы. Обновления буду добавлять в пост.</p>
 ]]></content>
   </entry>
   
@@ -6962,6 +6973,25 @@ Case #3 OK (line 318) time 1.495s
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[На какой языке вы более продуктивны?]]></title>
+    <link href="http://demin.ws/blog/russian/2010/11/17/most-productive-language/"/>
+    <updated>2010-11-17T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/11/17/most-productive-language//</id>
+    <content type="html"><![CDATA[<p>В <a href="http://experience.openquality.ru/alexander-demin-interview/">интервью</a> проекту &ldquo;<a href="http://openquality.ru/">OpenQuality</a>&rdquo; в сказал, что не имею особого пристрастия к конкретному языку. Важен проект, а не язык, на котором он реализуется.</p>
+
+<p>А как насчет вопроса «а на каком языке вы наиболее продуктивны»?</p>
+
+<p>Например, спортивное программирование, где нужно как можно быстрее выдать работающий код, нагруженный часто сложными алгоритмами.</p>
+
+<p>Кстати, есть распространенное заблуждение, что спортивное программирование – это обычно куча корявого и запутанного, хоть и работающего кода, который совершенно непригоден для «обычного» программирования. Это не так, и зависит от конкретного человека. Можно, например, посмотреть код двух ТопКодеровских лидеров – <a href="http://www.topcoder.com/tc?module=MemberProfile&amp;cr=19849563&amp;tab=alg">ACRush</a> и <a href="http://www.topcoder.com/tc?module=MemberProfile&amp;cr=10574855&amp;tab=alg">Petr</a>. Код второго очень чистый, начиная от нормального форматирования и заканчивая общей понятной структурой решения. Код же первого же – обычно по внешнему виду оставляет желать лучшего (хотя это нисколько не умаляет его бесспорного лидерства), и читать его гораздо сложнее.</p>
+
+<p>Так вот, я задал себе вопрос – а на каком языке я бы мог участвовать в контестах, где идет учет времени, и нет возможности копаться в документации по языку или библиотеке? И честно говоря, С++ находится далеко впереди Java и C# (Си не берем из-за бедности стандартной библиотеки). Мой уровень «погружения» в С++ (моменты языка, бесчисленные шаблоны уже виденного кода, знание библиотеки и т.д.) не сравним с той же Java.</p>
+
+<p>А сколько языков у вас «живут в пальцах»?</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Неконстантные ссылки]]></title>
     <link href="http://demin.ws/blog/russian/2010/11/17/non-const-references/"/>
     <updated>2010-11-17T00:00:00+00:00</updated>
@@ -7027,25 +7057,6 @@ assert(a == 10); // BOOM!!! WTF?! Who changed this?
 <li><a href="http://experience.openquality.ru/alexander-demin-interview/">Мое интервью</a> проекту &ldquo;<a href="http://openquality.ru/">OpenQuality</a>&rdquo;.</li>
 <li>Уверенно решил две задачи в недавней SRM 487. А достижение в том, что во второй задаче даже применил DP, хоть и тривиальное. В процессе контеста был последним в комнате, так как долго возился с первой задачей, но потом почти все упали на фазе challenge&rsquo;а и на тестах, и я оказался вторым в комнате. Кстати, настоятельно рекоммендую сайт <a href="http://codeforces.ru/">CodeForces</a>. Наши ребята сделали отличный сайт для контестов и регулярно их там проводят. В отличие от ТопКодера русский язык там в почете, задания предоставляются на обоих языках, и выбор язык программирования гораздо шире. Также можно там спросить совета по задачам и получить квалифицированный ответ от бойцов.</li>
 </ul>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[На какой языке вы более продуктивны?]]></title>
-    <link href="http://demin.ws/blog/russian/2010/11/17/most-productive-language/"/>
-    <updated>2010-11-17T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/11/17/most-productive-language//</id>
-    <content type="html"><![CDATA[<p>В <a href="http://experience.openquality.ru/alexander-demin-interview/">интервью</a> проекту &ldquo;<a href="http://openquality.ru/">OpenQuality</a>&rdquo; в сказал, что не имею особого пристрастия к конкретному языку. Важен проект, а не язык, на котором он реализуется.</p>
-
-<p>А как насчет вопроса «а на каком языке вы наиболее продуктивны»?</p>
-
-<p>Например, спортивное программирование, где нужно как можно быстрее выдать работающий код, нагруженный часто сложными алгоритмами.</p>
-
-<p>Кстати, есть распространенное заблуждение, что спортивное программирование – это обычно куча корявого и запутанного, хоть и работающего кода, который совершенно непригоден для «обычного» программирования. Это не так, и зависит от конкретного человека. Можно, например, посмотреть код двух ТопКодеровских лидеров – <a href="http://www.topcoder.com/tc?module=MemberProfile&amp;cr=19849563&amp;tab=alg">ACRush</a> и <a href="http://www.topcoder.com/tc?module=MemberProfile&amp;cr=10574855&amp;tab=alg">Petr</a>. Код второго очень чистый, начиная от нормального форматирования и заканчивая общей понятной структурой решения. Код же первого же – обычно по внешнему виду оставляет желать лучшего (хотя это нисколько не умаляет его бесспорного лидерства), и читать его гораздо сложнее.</p>
-
-<p>Так вот, я задал себе вопрос – а на каком языке я бы мог участвовать в контестах, где идет учет времени, и нет возможности копаться в документации по языку или библиотеке? И честно говоря, С++ находится далеко впереди Java и C# (Си не берем из-за бедности стандартной библиотеки). Мой уровень «погружения» в С++ (моменты языка, бесчисленные шаблоны уже виденного кода, знание библиотеки и т.д.) не сравним с той же Java.</p>
-
-<p>А сколько языков у вас «живут в пальцах»?</p>
 ]]></content>
   </entry>
   
@@ -7835,6 +7846,17 @@ f(&amp;a);
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Макросы для определения компилятора, библиотеки, операционной системы или архитектуры]]></title>
+    <link href="http://demin.ws/blog/russian/2010/06/26/macros-to-determine-compiler-library-os-architecture/"/>
+    <updated>2010-06-26T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/06/26/macros-to-determine-compiler-library-os-architecture//</id>
+    <content type="html"><![CDATA[<p>Очень полезный проект - <a href="http://predef.sourceforge.net/">http://predef.sourceforge.net/</a>.</p>
+
+<p>В одном месте собрано большое количество макросов для определения <a href="http://predef.sourceforge.net/precomp.html">компилятора</a>, <a href="http://predef.sourceforge.net/prelib.html">библиотеки</a>, <a href="http://predef.sourceforge.net/preos.html">операционной системы</a>, <a href="http://predef.sourceforge.net/prearch.html">архитектуры</a> и <a href="http://predef.sourceforge.net/prestd.html">стандарта языка</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Bloomberg: Вакансии]]></title>
     <link href="http://demin.ws/blog/russian/2010/06/26/roles-at-bloomberg-trading-systems/"/>
     <updated>2010-06-26T00:00:00+00:00</updated>
@@ -7870,28 +7892,6 @@ f(&amp;a);
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Макросы для определения компилятора, библиотеки, операционной системы или архитектуры]]></title>
-    <link href="http://demin.ws/blog/russian/2010/06/26/macros-to-determine-compiler-library-os-architecture/"/>
-    <updated>2010-06-26T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/06/26/macros-to-determine-compiler-library-os-architecture//</id>
-    <content type="html"><![CDATA[<p>Очень полезный проект - <a href="http://predef.sourceforge.net/">http://predef.sourceforge.net/</a>.</p>
-
-<p>В одном месте собрано большое количество макросов для определения <a href="http://predef.sourceforge.net/precomp.html">компилятора</a>, <a href="http://predef.sourceforge.net/prelib.html">библиотеки</a>, <a href="http://predef.sourceforge.net/preos.html">операционной системы</a>, <a href="http://predef.sourceforge.net/prearch.html">архитектуры</a> и <a href="http://predef.sourceforge.net/prestd.html">стандарта языка</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Отладчик в Visual Studio 2010]]></title>
-    <link href="http://demin.ws/blog/russian/2010/06/21/visual-studio-2010-debugger/"/>
-    <updated>2010-06-21T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/06/21/visual-studio-2010-debugger//</id>
-    <content type="html"><![CDATA[<p>В отладчике Visual Studio 2010 появилась просто фантастическая штука - отображение трассируемой переменной не где-то в особом окне, а прямо на тексте программы. Это позволяет обращать внимание на переменную, только когда доходишь до ее места в программе.</p>
-
-<p><img src="http://demin.ws/images/blog/vs2010-debugger-variables-view.png" /></p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Живая карта Лондонского метро]]></title>
     <link href="http://demin.ws/blog/russian/2010/06/21/london-tube-live-map/"/>
     <updated>2010-06-21T00:00:00+00:00</updated>
@@ -7903,6 +7903,17 @@ f(&amp;a);
 <p>Тут видно движение отдельных поездов.</p>
 
 <p>И опять-таки, идея нереволюционная. Но! Самое важное, что такой сервис есть благодаря <a href="http://data.london.gov.uk/apibeta">public API</a>, официально поддерживаемый <a href="http://www.tfl.gov.uk/tube/">Лондонским Метро</a>, которая является полугосударственной структурой. Теперь ясно, откуда такое изобилие приложений для айфона и андроида, предоставляющих разнообразную on-line информацию о метро. Я то думал, они просто парсят страницы официального сайт, а тут, оказывает, все дается на тарелочке.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Отладчик в Visual Studio 2010]]></title>
+    <link href="http://demin.ws/blog/russian/2010/06/21/visual-studio-2010-debugger/"/>
+    <updated>2010-06-21T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/06/21/visual-studio-2010-debugger//</id>
+    <content type="html"><![CDATA[<p>В отладчике Visual Studio 2010 появилась просто фантастическая штука - отображение трассируемой переменной не где-то в особом окне, а прямо на тексте программы. Это позволяет обращать внимание на переменную, только когда доходишь до ее места в программе.</p>
+
+<p><img src="http://demin.ws/images/blog/vs2010-debugger-variables-view.png" /></p>
 ]]></content>
   </entry>
   
@@ -7933,6 +7944,25 @@ f(&amp;a);
 <p>Я уже долгое время тщетно пытаюсь это делать. Но дело как-то не идет. Каждый пост занимает в разы больше времени, посты приходится укорачивать, упрощать язык (&ldquo;эдак&rdquo; уже не завернешь). А самое, что внутренне неприятно - я четко вижу разницу в качестве языка. Вместо более-менее живого и, надеюсь, интересного, способа выражения мыслей, что я себе могу позволить на русском (хех, все-таки 30 лет практики), на английском получается какое-то сухое школькое сочинение, часто с неочевидными ошибками. И уж точно выглядещее, как НЕклево..</p>
 
 <p>Кстати, а вы знаете интересные блоги на английском (хотя бы технические), которые пишут носители русского? (конечно, если человек вырос в английской среде с 5-6 лет, то это не в счет).</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Google I/O: all videos]]></title>
+    <link href="http://demin.ws/blog/russian/2010/06/18/google-io-2010-all-videos/"/>
+    <updated>2010-06-18T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/06/18/google-io-2010-all-videos//</id>
+    <content type="html"><![CDATA[<p>Тут собраны все видео с Google I/O 2010, по категориям.</p>
+
+<p><a href="http://code.google.com/events/io/2010/sessions.html">http://code.google.com/events/io/2010/sessions.html</a></p>
+
+<p>Мне, например, очень понравилась презентация про новую Java машину с JIT в Android 2.2:</p>
+
+<iframe width="640" height="385" src="http://www.youtube.com/embed/Ls0tM-c4Vfo?color=white&theme=light"></iframe>
+
+<p>И про язык программирования Go:</p>
+
+<iframe width="640" height="385" src="http://www.youtube.com/embed/jgVhBThJdXc?color=white&theme=light"></iframe>
 ]]></content>
   </entry>
   
@@ -8039,25 +8069,6 @@ else if (cmd == ‘R’)
 <p>А вот и сам график, кому интересно:</p>
 
 <p><img src="http://demin.ws/images/blog/sum-of-all-digits.png" /></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Google I/O: all videos]]></title>
-    <link href="http://demin.ws/blog/russian/2010/06/18/google-io-2010-all-videos/"/>
-    <updated>2010-06-18T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/06/18/google-io-2010-all-videos//</id>
-    <content type="html"><![CDATA[<p>Тут собраны все видео с Google I/O 2010, по категориям.</p>
-
-<p><a href="http://code.google.com/events/io/2010/sessions.html">http://code.google.com/events/io/2010/sessions.html</a></p>
-
-<p>Мне, например, очень понравилась презентация про новую Java машину с JIT в Android 2.2:</p>
-
-<iframe width="640" height="385" src="http://www.youtube.com/embed/Ls0tM-c4Vfo?color=white&theme=light"></iframe>
-
-<p>И про язык программирования Go:</p>
-
-<iframe width="640" height="385" src="http://www.youtube.com/embed/jgVhBThJdXc?color=white&theme=light"></iframe>
 ]]></content>
   </entry>
   
@@ -8239,6 +8250,17 @@ int main() {
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Опрос: как мы называем свою профессию]]></title>
+    <link href="http://demin.ws/blog/russian/2010/06/06/how-we-call-our-profession/"/>
+    <updated>2010-06-06T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/06/06/how-we-call-our-profession//</id>
+    <content type="html"><![CDATA[<p>Создал небольшой опрос: &ldquo;Как вы говорите про себя, когда вас спрашивают о профессии?&rdquo;.</p>
+
+<p>Так как я не нашел, как сделать голосование прямо в теле поста, поэтому вставил голосовалку в правую колонку блога. Так что если вы читаете блог через RSS и, возможно, не ходите на сайт напрямую, но хотите внести свой голос, то просто зайдите на главную страницу блога. Голосовалка прямо там, вверху справа.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Книги по олимпиадному программированию]]></title>
     <link href="http://demin.ws/blog/russian/2010/06/06/olympiad-programming-books/"/>
     <updated>2010-06-06T00:00:00+00:00</updated>
@@ -8277,17 +8299,6 @@ int main() {
 <li><a href="http://demin.ws/blog/russian/2009/07/07/fundamental-algorithms/">Роберт Седжвик, &ldquo;Фундаментальные алгоритмы&rdquo;</a></li>
 <li><a href="http://demin.ws/blog/russian/2010/05/17/sudoku-for-programmers-or-olympiad-programming/">Судоку для программистов или олимпиадные задачи</a></li>
 </ul>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Опрос: как мы называем свою профессию]]></title>
-    <link href="http://demin.ws/blog/russian/2010/06/06/how-we-call-our-profession/"/>
-    <updated>2010-06-06T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/06/06/how-we-call-our-profession//</id>
-    <content type="html"><![CDATA[<p>Создал небольшой опрос: &ldquo;Как вы говорите про себя, когда вас спрашивают о профессии?&rdquo;.</p>
-
-<p>Так как я не нашел, как сделать голосование прямо в теле поста, поэтому вставил голосовалку в правую колонку блога. Так что если вы читаете блог через RSS и, возможно, не ходите на сайт напрямую, но хотите внести свой голос, то просто зайдите на главную страницу блога. Голосовалка прямо там, вверху справа.</p>
 ]]></content>
   </entry>
   
@@ -8590,6 +8601,41 @@ b1 = 15
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Задача про поиск середины связного списка]]></title>
+    <link href="http://demin.ws/blog/russian/2010/04/16/find-middle-of-linked-list-problem/"/>
+    <updated>2010-04-16T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/04/16/find-middle-of-linked-list-problem//</id>
+    <content type="html"><![CDATA[<p>Сегодня был озадачен следующим вопросом (у нас его иногда задают на интервью), требующим потенциально ответа в 5-10 минут, желательно с примером кода.</p>
+
+<p><em>Найти середину связного списка за один проход. Длина заранее не известна, а есть только указатель на голову.</em></p>
+
+<p>Кто не догадается, смотрите комментарии. Уверен, там задачу быстро &ldquo;возьмут&rdquo;.</p>
+
+<p>Задача очень жизненная, и реально полезно знать решение.</p>
+
+<p>Как научиться решать задачи подобного рода? алгоритмические программистские задачи? В чем суть обучения?</p>
+
+<p>Есть определенная <a href="http://demin.ws/blog/russian/2010/03/31/productive-programmers-and-their-types/">категория программистов</a>, которым я профессионально завидую. Это бойцы спортивного программирования типа TopCoder&rsquo;а, Google Code Jam&rsquo;а и прочих контестов. Для которых что-то вроде поиска цепочек в <a href="http://ru.wikipedia.org/wiki/%D0%A7%D0%B0%D1%81%D1%82%D0%B8%D1%87%D0%BD%D0%BE_%D1%83%D0%BF%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D1%87%D0%B5%D0%BD%D0%BD%D0%BE%D0%B5_%D0%BC%D0%BD%D0%BE%D0%B6%D0%B5%D1%81%D1%82%D0%B2%D0%BE">частично упорядоченном множестве</a> как для меня сложить две переменные. Там, где мне надо открыть книгу или хотя бы Википедию, они это пишут сходу из головы.</p>
+
+<p>Из личного опыта, перед некоторыми интервью, я мог на память сходу написать любую базовую сортировку, вставку в красно-черное дерево, послойный обход дерева и многое другое. Но проблема в том, что это ни разу не помогало на интервью! Все что я в итоге решал (или не решал), было связанно с задачами, которые могли быть в разы проще любой сортировки или дерева, но требовали &ldquo;догадаться&rdquo;. И основном спортивное программирование построено на теме &ldquo;догадаться как&rdquo;.</p>
+
+<p>Но как научиться догадываться? Есть ли какая-то методика обучения? Именно методика, а не &ldquo;решай все подряд, и все тебе будет&rdquo;. Второй подход, конечно, работает, но методика могла бы ускорить процесс, сделать его более эффективным.</p>
+
+<p>Например, взять физику или математику. Обычно ты учишь теорию и ее отражение на физический мир вокруг нас, учишь уже выведенные законы, теоремы (возможно их доказательства) и построенные на них базовые формулы. Далее при решении конкретной задачи ты, основываясь на выученных основах, пытаешься понять, что за физическая или математическая модель могла бы иметь место в задаче. Далее пытаешься приложить эту модель и смотришь, что получается (или не получается).</p>
+
+<p>То есть тут есть методика, которая помогает тебе найти связь между теорией и задачей. Конечно, есть задачи, в которых &ldquo;надо догадаться&rdquo;, но это как опция, нежели норма. Тебе дается инструмент, когда зная малое, можно решать многое.</p>
+
+<p>В нашем же программистском мире, как мне кажется, все из серии &ldquo;надо догадаться&rdquo;. Взять, например, эту задачу про поиск середины связного списка в один проход. Я могу изучить всё про такие списки: как их строить, как их сортировать, как их обходить (просто линейно) и т.д. Но все эти знания не подвинут меня ни шаг к решению этой простой задачи. Тут надо &ldquo;просто догадаться&rdquo;. Как научить догадываться? Неужели есть только один путь - решать и решать, пока количество не перейдет в качество, и ты будешь легко решать задачи на &ldquo;догадаться&rdquo; просто потому, что ты это уже так или иначе видел раньше.</p>
+
+<p>Кстати, сравним среднего выпускника MIT и <a href="http://www.mai.ru/">МАИ</a> (я там учился). Наверное, выпускник MIT потенциально &ldquo;сильнее&rdquo; выпускника МАИ (при всей моей любви и уважении к Альма-матер). Почему? Там книги другие? Там профессора хуже? Я не могу пожаловаться, что мой курс программирования, где изучались алгоритмы был недостаточен.</p>
+
+<p>Пока у меня только одно объяснение - скажем так, в объективно престижных ВУЗах просто больше прессуют и фактически заставляют учиться (иначе - это пустая трата денег и большой шанс вылететь).</p>
+
+<p>Выходит, что количество так или иначе переходит в качество. И никакой магии.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Можно ли memset'ить float и double?]]></title>
     <link href="http://demin.ws/blog/russian/2010/04/16/is-it-possible-to-memset-float-and-double/"/>
     <updated>2010-04-16T00:00:00+00:00</updated>
@@ -8643,41 +8689,6 @@ b1 = 15
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Задача про поиск середины связного списка]]></title>
-    <link href="http://demin.ws/blog/russian/2010/04/16/find-middle-of-linked-list-problem/"/>
-    <updated>2010-04-16T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/04/16/find-middle-of-linked-list-problem//</id>
-    <content type="html"><![CDATA[<p>Сегодня был озадачен следующим вопросом (у нас его иногда задают на интервью), требующим потенциально ответа в 5-10 минут, желательно с примером кода.</p>
-
-<p><em>Найти середину связного списка за один проход. Длина заранее не известна, а есть только указатель на голову.</em></p>
-
-<p>Кто не догадается, смотрите комментарии. Уверен, там задачу быстро &ldquo;возьмут&rdquo;.</p>
-
-<p>Задача очень жизненная, и реально полезно знать решение.</p>
-
-<p>Как научиться решать задачи подобного рода? алгоритмические программистские задачи? В чем суть обучения?</p>
-
-<p>Есть определенная <a href="http://demin.ws/blog/russian/2010/03/31/productive-programmers-and-their-types/">категория программистов</a>, которым я профессионально завидую. Это бойцы спортивного программирования типа TopCoder&rsquo;а, Google Code Jam&rsquo;а и прочих контестов. Для которых что-то вроде поиска цепочек в <a href="http://ru.wikipedia.org/wiki/%D0%A7%D0%B0%D1%81%D1%82%D0%B8%D1%87%D0%BD%D0%BE_%D1%83%D0%BF%D0%BE%D1%80%D1%8F%D0%B4%D0%BE%D1%87%D0%B5%D0%BD%D0%BD%D0%BE%D0%B5_%D0%BC%D0%BD%D0%BE%D0%B6%D0%B5%D1%81%D1%82%D0%B2%D0%BE">частично упорядоченном множестве</a> как для меня сложить две переменные. Там, где мне надо открыть книгу или хотя бы Википедию, они это пишут сходу из головы.</p>
-
-<p>Из личного опыта, перед некоторыми интервью, я мог на память сходу написать любую базовую сортировку, вставку в красно-черное дерево, послойный обход дерева и многое другое. Но проблема в том, что это ни разу не помогало на интервью! Все что я в итоге решал (или не решал), было связанно с задачами, которые могли быть в разы проще любой сортировки или дерева, но требовали &ldquo;догадаться&rdquo;. И основном спортивное программирование построено на теме &ldquo;догадаться как&rdquo;.</p>
-
-<p>Но как научиться догадываться? Есть ли какая-то методика обучения? Именно методика, а не &ldquo;решай все подряд, и все тебе будет&rdquo;. Второй подход, конечно, работает, но методика могла бы ускорить процесс, сделать его более эффективным.</p>
-
-<p>Например, взять физику или математику. Обычно ты учишь теорию и ее отражение на физический мир вокруг нас, учишь уже выведенные законы, теоремы (возможно их доказательства) и построенные на них базовые формулы. Далее при решении конкретной задачи ты, основываясь на выученных основах, пытаешься понять, что за физическая или математическая модель могла бы иметь место в задаче. Далее пытаешься приложить эту модель и смотришь, что получается (или не получается).</p>
-
-<p>То есть тут есть методика, которая помогает тебе найти связь между теорией и задачей. Конечно, есть задачи, в которых &ldquo;надо догадаться&rdquo;, но это как опция, нежели норма. Тебе дается инструмент, когда зная малое, можно решать многое.</p>
-
-<p>В нашем же программистском мире, как мне кажется, все из серии &ldquo;надо догадаться&rdquo;. Взять, например, эту задачу про поиск середины связного списка в один проход. Я могу изучить всё про такие списки: как их строить, как их сортировать, как их обходить (просто линейно) и т.д. Но все эти знания не подвинут меня ни шаг к решению этой простой задачи. Тут надо &ldquo;просто догадаться&rdquo;. Как научить догадываться? Неужели есть только один путь - решать и решать, пока количество не перейдет в качество, и ты будешь легко решать задачи на &ldquo;догадаться&rdquo; просто потому, что ты это уже так или иначе видел раньше.</p>
-
-<p>Кстати, сравним среднего выпускника MIT и <a href="http://www.mai.ru/">МАИ</a> (я там учился). Наверное, выпускник MIT потенциально &ldquo;сильнее&rdquo; выпускника МАИ (при всей моей любви и уважении к Альма-матер). Почему? Там книги другие? Там профессора хуже? Я не могу пожаловаться, что мой курс программирования, где изучались алгоритмы был недостаточен.</p>
-
-<p>Пока у меня только одно объяснение - скажем так, в объективно престижных ВУЗах просто больше прессуют и фактически заставляют учиться (иначе - это пустая трата денег и большой шанс вылететь).</p>
-
-<p>Выходит, что количество так или иначе переходит в качество. И никакой магии.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Какие задачи задавать на интервью]]></title>
     <link href="http://demin.ws/blog/russian/2010/04/08/what-problems-to-ask-at-interviews/"/>
     <updated>2010-04-08T00:00:00+00:00</updated>
@@ -8695,6 +8706,25 @@ b1 = 15
 <p>А уж если есть желание «проверить сообразительность», то куда полезнее вопросы на общее представления о мире вокруг и взаимосвязях в нем. Я как-то был реально озадачен, когда меня спросили «А сколько весит Боинг-747?». Я хоть и учился в МАИ, но точной цифры ни разу не знал. Но исходя и элементарных понятий и количестве людей в самолете, грузе, соотношении топлива и массы и т.д. – можно дать оценку, или что более важно, показать умение логически и реально мыслить.</p>
 
 <p>Интервью – это не бенефис интервьюера. Это решение конкретной задачи поиска человека, максимально подходящего вашим требованиям (а неужели у кого-то в требованиях написано «должен уметь решать задачи школьной программы»? если да, это наем учителя средних классов, а не программиста).</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Задача про гномов и шапки]]></title>
+    <link href="http://demin.ws/blog/russian/2010/04/07/gnomes-and-hats-problem/"/>
+    <updated>2010-04-07T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/04/07/gnomes-and-hats-problem//</id>
+    <content type="html"><![CDATA[<p><a href="http://stas-blogspot.blogspot.com/">Товарищ</a> рассказал интересную задачку и был очень удивлен, что я ее не слышал.</p>
+
+<p>Поймал людоед несколько гномов (количество в задаче не задается), и сказал, что завтра он всех выстроит в колонну один за другим и оденет всем на головы либо черную, либо белую шапку. Гномы будут стоять так, что каждый будет видеть шапки только тех, кто впереди (последний видит всех, кроме себя, а первый – никого). Свою собственную шапку гномы не видят. Количество черных и белых шапок произвольное (хоть все белые, хоть все черные). Далее людоед, начиная с последнего, будет каждого спрашивать, какая шапка у него на голове. Гном может ответить только одним из двух слов «черная» или «белая». Если ответ неверный, но гном съедается, иначе переходят к следующему. В процессе поедания все пока еще живые гномы слышат, что проиходит сзади, то есть хоть они и не видят товарищей сзади, но слышат – когда кого съели, а кого нет, и также их ответы.</p>
+
+<p>В общем, за ночь гномы покумекали, и придумали стратегию, как они все останутся живыми кроме одного. Но и тот один будет иметь шанс выжить.</p>
+
+<p>Вопрос: что за стратегию придумали гномы?</p>
+
+<p>Задача имеет очень красивое решение, имеющее прямое отношение к компьютерной науке.</p>
+
+<p>Ответ будет позже, если кто вдруг не догадается.</p>
 ]]></content>
   </entry>
   
@@ -8763,40 +8793,6 @@ b1 = 15
 <p>Не могу сказать, что мне особо понравилось, хоть фактов в книге предостачно: и про самое начало, и про выход на <a href="http://ru.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D0%B2%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5">IPO</a> (работая сейчас в сфере finance, знаю, как обычно инвестиционные банкиры наживаются на процедуре IPO, но Гугл их сильно в этом плане разочаровал, не дав им кусок своего пирога), и про правило 20%, и про систему peer review, и про наличие технической иерархии и про многое другое.</p>
 
 <p>Разок прочитать можно, но не более того. Книгу продал назад через <a href="http://www.amazon.co.uk/gp/seller/sell-your-stuff.html">Amazon Market Place</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Задача про гномов и шапки]]></title>
-    <link href="http://demin.ws/blog/russian/2010/04/07/gnomes-and-hats-problem/"/>
-    <updated>2010-04-07T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/04/07/gnomes-and-hats-problem//</id>
-    <content type="html"><![CDATA[<p><a href="http://stas-blogspot.blogspot.com/">Товарищ</a> рассказал интересную задачку и был очень удивлен, что я ее не слышал.</p>
-
-<p>Поймал людоед несколько гномов (количество в задаче не задается), и сказал, что завтра он всех выстроит в колонну один за другим и оденет всем на головы либо черную, либо белую шапку. Гномы будут стоять так, что каждый будет видеть шапки только тех, кто впереди (последний видит всех, кроме себя, а первый – никого). Свою собственную шапку гномы не видят. Количество черных и белых шапок произвольное (хоть все белые, хоть все черные). Далее людоед, начиная с последнего, будет каждого спрашивать, какая шапка у него на голове. Гном может ответить только одним из двух слов «черная» или «белая». Если ответ неверный, но гном съедается, иначе переходят к следующему. В процессе поедания все пока еще живые гномы слышат, что проиходит сзади, то есть хоть они и не видят товарищей сзади, но слышат – когда кого съели, а кого нет, и также их ответы.</p>
-
-<p>В общем, за ночь гномы покумекали, и придумали стратегию, как они все останутся живыми кроме одного. Но и тот один будет иметь шанс выжить.</p>
-
-<p>Вопрос: что за стратегию придумали гномы?</p>
-
-<p>Задача имеет очень красивое решение, имеющее прямое отношение к компьютерной науке.</p>
-
-<p>Ответ будет позже, если кто вдруг не догадается.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Общий виртуальный десктоп]]></title>
-    <link href="http://demin.ws/blog/russian/2010/04/02/shared-virtual-desktop/"/>
-    <updated>2010-04-02T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/04/02/shared-virtual-desktop//</id>
-    <content type="html"><![CDATA[<p>В крупных конторах с множеством UNIX-программистов, работающих в основном через telnet/ssh/xterm, разумно сделать общий NFS-раздел, который виден всем, и также монтируется сразу на много машин. Во-первых, все имеют доступ практически ко всему в development пространстве, и во-вторых, содержимое моего <code>home</code> каталога всегда одно и то же на всех машинах (не надо вручную копировать файлы с машины на машину).</p>
-
-<p>Минуту назад я не смог залогиниться xterm&rsquo;ом из-за каких-то временных проблем в сети и попросил коллегу проверить, все ли работает. У него получилось, и он типа сказал в шутку, что жаль не может передать мне его телнетное окно.</p>
-
-<p>Так вот, только родилась мысль &ndash; а что, если все разработчики будут также &ldquo;шарить&rdquo; общий огро-о-о-мный виртуальный десктоп? Захотел что-то передать/показать коллеге &ndash; просто перебросил окно в его &ldquo;зону видимости&rdquo;.</p>
-
-<p>Идея, конечно, утопичная, но красивая.</p>
 ]]></content>
   </entry>
   
@@ -8885,6 +8881,21 @@ Converted: 1 5 7 4 2 9 8 6
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Общий виртуальный десктоп]]></title>
+    <link href="http://demin.ws/blog/russian/2010/04/02/shared-virtual-desktop/"/>
+    <updated>2010-04-02T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/04/02/shared-virtual-desktop//</id>
+    <content type="html"><![CDATA[<p>В крупных конторах с множеством UNIX-программистов, работающих в основном через telnet/ssh/xterm, разумно сделать общий NFS-раздел, который виден всем, и также монтируется сразу на много машин. Во-первых, все имеют доступ практически ко всему в development пространстве, и во-вторых, содержимое моего <code>home</code> каталога всегда одно и то же на всех машинах (не надо вручную копировать файлы с машины на машину).</p>
+
+<p>Минуту назад я не смог залогиниться xterm&rsquo;ом из-за каких-то временных проблем в сети и попросил коллегу проверить, все ли работает. У него получилось, и он типа сказал в шутку, что жаль не может передать мне его телнетное окно.</p>
+
+<p>Так вот, только родилась мысль &ndash; а что, если все разработчики будут также &ldquo;шарить&rdquo; общий огро-о-о-мный виртуальный десктоп? Захотел что-то передать/показать коллеге &ndash; просто перебросил окно в его &ldquo;зону видимости&rdquo;.</p>
+
+<p>Идея, конечно, утопичная, но красивая.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[parseInt() в JavaScript]]></title>
     <link href="http://demin.ws/blog/russian/2010/04/02/parseint-in-javascript/"/>
     <updated>2010-04-02T00:00:00+00:00</updated>
@@ -8916,21 +8927,6 @@ for (var i = 0; i &lt; n.length; ++i)
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Приведение последовательности через обмен соседних элементов]]></title>
-    <link href="http://demin.ws/blog/russian/2010/03/31/sequence-transformation-by-swap-of-adjacent-elements/"/>
-    <updated>2010-03-31T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/03/31/sequence-transformation-by-swap-of-adjacent-elements//</id>
-    <content type="html"><![CDATA[<p>Вдогонку к <a href="http://demin.ws/blog/russian/2010/03/31/adding-elements-to-vector/">вопросу о векторе</a> предлагаю еще блиц вопрос (ни разу не претендую на оригинальность, но вопрос родился лично у меня в процессе обдумывания алгоритма формирования таблиц <a href="http://demin.ws/blog/russian/2010/03/04/trading-systems-for-dummies/">market depth</a>): есть некоторая произвольная конечная последовательность (массив, строка и т.д.). Повторения значений возможны. Также задана вторая последовательность такой же длины, состоящая в точности из тех же элементов, что и первая, но расположенных в другом порядке.</p>
-
-<p>Вопрос: как на месте преобразовать первую последовательность во вторую, если в плане перемещения/копирования элементов есть только одна функция - обмен двух соседних элементов. Произвольный доступ к одиночным элементам есть только на чтение. Для перезаписи/изменения элементов надо пользоваться данной функцией обмена.</p>
-
-<p>Конечно, интересно иметь и оценку сложности.</p>
-
-<p>Мой ответ, если кому интересно, будет завтра.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Продуктивные программисты и их типы]]></title>
     <link href="http://demin.ws/blog/russian/2010/03/31/productive-programmers-and-their-types/"/>
     <updated>2010-03-31T00:00:00+00:00</updated>
@@ -8954,6 +8950,21 @@ for (var i = 0; i &lt; n.length; ++i)
 <p>Теперь совсем к теме. Интересно слушать, как люди проводят интервью по телефону. Что они спрашивают, на чем делают акценты. Тут сразу становится видно, кто какой категории принадлежит человек (алгоритмист, языковед, API’ист, теоретик и т.д.)</p>
 
 <p>Конечно, в продуктивном программисте весь должно быть развито. Какой толк от алгоритмиста, который напишет так, что другой никогда не поймет и тем более не протестирует? Или от теоретика, не имеющего представления о вычислительных сложностях базовых алгоритмов?</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Приведение последовательности через обмен соседних элементов]]></title>
+    <link href="http://demin.ws/blog/russian/2010/03/31/sequence-transformation-by-swap-of-adjacent-elements/"/>
+    <updated>2010-03-31T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/03/31/sequence-transformation-by-swap-of-adjacent-elements//</id>
+    <content type="html"><![CDATA[<p>Вдогонку к <a href="http://demin.ws/blog/russian/2010/03/31/adding-elements-to-vector/">вопросу о векторе</a> предлагаю еще блиц вопрос (ни разу не претендую на оригинальность, но вопрос родился лично у меня в процессе обдумывания алгоритма формирования таблиц <a href="http://demin.ws/blog/russian/2010/03/04/trading-systems-for-dummies/">market depth</a>): есть некоторая произвольная конечная последовательность (массив, строка и т.д.). Повторения значений возможны. Также задана вторая последовательность такой же длины, состоящая в точности из тех же элементов, что и первая, но расположенных в другом порядке.</p>
+
+<p>Вопрос: как на месте преобразовать первую последовательность во вторую, если в плане перемещения/копирования элементов есть только одна функция - обмен двух соседних элементов. Произвольный доступ к одиночным элементам есть только на чтение. Для перезаписи/изменения элементов надо пользоваться данной функцией обмена.</p>
+
+<p>Конечно, интересно иметь и оценку сложности.</p>
+
+<p>Мой ответ, если кому интересно, будет завтра.</p>
 ]]></content>
   </entry>
   
@@ -12787,41 +12798,49 @@ std::cout &lt;&lt; script.get_variable&lt;lua::string_arg_t&gt;(&quot;a&quot;).v
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Стратегии выпуска релизов]]></title>
-    <link href="http://demin.ws/blog/russian/2009/05/17/releases-strategy/"/>
+    <title type="html"><![CDATA[Дж. Ханк Рейнвотер, "Наставление для программистов, руководящих другими программистами"]]></title>
+    <link href="http://demin.ws/blog/russian/2009/05/17/herding-cats/"/>
     <updated>2009-05-17T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/05/17/releases-strategy//</id>
-    <content type="html"><![CDATA[<p>Как мне кажется, в нынешнем мире программного обеспечения появилась доминирующая политика выпуска релизов/версий продукта. Эта политика основана не на факте появления новых возможностей или исправления ошибок, а просто на временных интервалах. А новые возможности и исправления ошибок просто вписываются в график релизов. То есть фраза «когда выйдет новая версия, то мы…» трансформируется в «когда такого-то числа выйдет следующая версия, то мы…».</p>
+    <id>http://demin.ws/blog/russian/2009/05/17/herding-cats//</id>
+    <content type="html"><![CDATA[<p>Дж. Ханк Рейнвотер</p>
 
-<p>Данный подход удобен всем. Разработчики в этом случае могу спокойно планировать свои спринты, распределяя по ним план развития продукта, а клиенты могут посмотреть на план этот развития (например, мы его публикуем на сайте поддержки) и понять, что и когда им ждать. Их планирование также упрощается.</p>
+<p><a href="http://www.ozon.ru/context/detail/id/2409500/?partner=easy-coding">Наставление для программистов, руководящих другими программистами</a></p>
 
-<p>Есть тут небольшая загвоздка – это исправление ошибок. Оценить время исправления коварного бага порой не так просто. Хорошо, что такие случаи, скорее всего исключения, так как если они становятся правилом, то возникает вопрос просто о качестве софта в целом.</p>
+<p><img src="http://demin.ws/images/covers/russian/herding-cats-cover.jpg" /></p>
 
-<p>Мы выпускаем релизы каждый месяц. Мне, как так называемому branch owner’у (я не очень люблю использовать английские слова, но вот «ответственный за версию» как-то уж очень коряво звучит), гораздо проще составлять списки патчей для включения в релиз и планировать окна тестирования, когда дата выпуска всегда постоянна. Конечно, интервал релизов подобран так, чтобы не приходилось выпускать пустые релизы без каких-либо патчей.</p>
+<p>Продолжая тему про <a href="http://demin.ws/blog/russian/2009/05/17/peopleware/">книги для программистов</a>, начавших заниматься управлением, расскажу про эту книгу.</p>
 
-<p>И каковы ваши наблюдения на этот счет?</p>
+<p>Ее многие рекомендуют, поэтому я ее купил. Если честно, я мусолил ее несколько месяцев урывками (недавно добил таки). Крайне тяжелый и корявый язык (может это просто проблема плохого перевода?), читается поэтому очень муторно. Повсюду цитаты, повторяющиеся в самом тексте, что сбивает напрочь ход мысли. Порой автор говорит какую-то очевидную банальщину типа:
+Техническое лидерство взращивается на почве знания и питается готовностью учиться на собственных ошибках — в конечном итоге какая практика обязательно увенчается успехом.
+Можно заменить &ldquo;техническое лидерство&rdquo; на программирование, учебу, игру в шахматы или гольф и суть высказывания не изменится. Тогда о чем все этом?</p>
+
+<p>В целом, лично мне книга не понравилась и рекомендовать ее я не буду. Может вам с ней повезет больше.</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="http://demin.ws/blog/russian/2009/05/17/peopleware/">Том Демарко, Тимати Листер, &ldquo;Человеческий фактор: успешные проекты и команды&rdquo;</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/03/03/mythical-man-month/">Фредерик Брукс, &ldquo;Мифический человеко-месяц или как создаются программные системы&rdquo;</a></li>
+</ul>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Список процессов в Windows]]></title>
-    <link href="http://demin.ws/blog/russian/2009/05/17/process-list-in-windows/"/>
+    <title type="html"><![CDATA[Как вы пишете в Blogspot?]]></title>
+    <link href="http://demin.ws/blog/russian/2009/05/17/how-do-you-write-to-blogspot/"/>
     <updated>2009-05-17T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/05/17/process-list-in-windows//</id>
-    <content type="html"><![CDATA[<p>Писал я как-то один QA тест, и нужно мне было понять — выполнятся ли сейчас определенный процесс или нет, и если да, то с какой командной строкой. Естественно, нужно и для UNIX и для Windows.</p>
+    <id>http://demin.ws/blog/russian/2009/05/17/how-do-you-write-to-blogspot//</id>
+    <content type="html"><![CDATA[<p>Лично я считаю, что Blogspot имеет радикально неудобный интерфейс для ввода и тем более последующего редактирования постов. Полное “сведение” поста в нем — это кошмар. Сначала ты пишешь основной текст в Ворде, затем вставляешь исходники, если нужно, и потом начинается длительное ёрзанье в html для придания посту правильного вида в браузере.</p>
 
-<p>В UNIX в порядке вещей просто вызвать команду <a href="http://en.wikipedia.org/wiki/Ps_(Unix)">ps</a> через <a href="http://www.opengroup.org/onlinepubs/007908799/xsh/popen.html">popen()</a> и распарсить текстовый вывод. Переносимо и надежно, так как для всех UNIXов ps всегда существует, и на этот факт можно положиться.</p>
+<p>Так как предварительный просмотр поста в Blogspot не дает полной картины, то единственный способ проверить вид поста, это его, собственно, запостить. Но кому охота выкладывать недоделанный пост? Итерация правки поста крайне неудобна и медленна — цикл “правка –&gt; просмотр –&gt; постинг –&gt; ошибка –&gt; правка –&gt; &hellip;” очень коряв.</p>
 
-<p>Для Windows же все оказалось чуть сложнее. Известная утилита <code>pslist</code> не является стандартной, и полагаться на нее опасно. Возиться с Windows API тоже не хотелось.</p>
+<p>После некоторого времени использования Blogspot я пришел вот к такой схеме.</p>
 
-<p>Я нашел вот такой способ. Через <a href="http://msdn.microsoft.com/en-us/library/96ayss4b(VS.80).aspx">_popen()</a> (аналог UNIXового <code>popen()</code>) можно вызвать вот такую команду:</p>
+<p>Для начала, нужен таки блог-клиент, как бы этого не хотелось. Тут тебе и вордовая проверка текста встроена, и preview какой никакой есть, и сохранение черновика и много прочих мелких радостей. Перебрав Semagic, BlogJet, несколько клиентов на Яве и придя от всего увиденного в ужас, а остановился, как ни странно на <a href="http://windowslivewriter.spaces.live.com/">Microsoft Live Writer</a>. Бесплатный (чудо для продукта от Microsoft), понимает Blogspot, много плагинов и встроенная вордовая проверка текста (то есть можно сразу в нем писать). В целом, почти все хорошо.</p>
 
-<pre><code>WMIC PROCESS get Caption,Commandline,Processid
-</code></pre>
+<p>Но как бы не был хорош preview блог-клиента, единственный способ полностью проверить верстку в Blogspot — это запостить. Для этого можно завести еще один блог, тестовый, который должен быть точной копией основного блога в плане стилей и макета страницы. Теперь можно спокойно постить черновик в тестовый блог и отлаживать верстку окончательно. Причем цикл отладки выглядит так: редактирование в блог-клиента -&gt; постинг в тестовый блог -&gt; refresh страницы в браузере. Гораздо быстрее чем была, так как надо просто переключаться между окнами.</p>
 
-<p>Получаем название процесса, командную строку и идентификатор процесса.</p>
-
-<p>Конечно, не так задорно, как через ps, но зато стандартно.</p>
+<p>В конце отлаженный пост переносится в основной блог просто копированием html-кода.</p>
 ]]></content>
   </entry>
   
@@ -12849,6 +12868,45 @@ std::cout &lt;&lt; script.get_variable&lt;lua::string_arg_t&gt;(&quot;a&quot;).v
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Список процессов в Windows]]></title>
+    <link href="http://demin.ws/blog/russian/2009/05/17/process-list-in-windows/"/>
+    <updated>2009-05-17T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/05/17/process-list-in-windows//</id>
+    <content type="html"><![CDATA[<p>Писал я как-то один QA тест, и нужно мне было понять — выполнятся ли сейчас определенный процесс или нет, и если да, то с какой командной строкой. Естественно, нужно и для UNIX и для Windows.</p>
+
+<p>В UNIX в порядке вещей просто вызвать команду <a href="http://en.wikipedia.org/wiki/Ps_(Unix)">ps</a> через <a href="http://www.opengroup.org/onlinepubs/007908799/xsh/popen.html">popen()</a> и распарсить текстовый вывод. Переносимо и надежно, так как для всех UNIXов ps всегда существует, и на этот факт можно положиться.</p>
+
+<p>Для Windows же все оказалось чуть сложнее. Известная утилита <code>pslist</code> не является стандартной, и полагаться на нее опасно. Возиться с Windows API тоже не хотелось.</p>
+
+<p>Я нашел вот такой способ. Через <a href="http://msdn.microsoft.com/en-us/library/96ayss4b(VS.80).aspx">_popen()</a> (аналог UNIXового <code>popen()</code>) можно вызвать вот такую команду:</p>
+
+<pre><code>WMIC PROCESS get Caption,Commandline,Processid
+</code></pre>
+
+<p>Получаем название процесса, командную строку и идентификатор процесса.</p>
+
+<p>Конечно, не так задорно, как через ps, но зато стандартно.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Стратегии выпуска релизов]]></title>
+    <link href="http://demin.ws/blog/russian/2009/05/17/releases-strategy/"/>
+    <updated>2009-05-17T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/05/17/releases-strategy//</id>
+    <content type="html"><![CDATA[<p>Как мне кажется, в нынешнем мире программного обеспечения появилась доминирующая политика выпуска релизов/версий продукта. Эта политика основана не на факте появления новых возможностей или исправления ошибок, а просто на временных интервалах. А новые возможности и исправления ошибок просто вписываются в график релизов. То есть фраза «когда выйдет новая версия, то мы…» трансформируется в «когда такого-то числа выйдет следующая версия, то мы…».</p>
+
+<p>Данный подход удобен всем. Разработчики в этом случае могу спокойно планировать свои спринты, распределяя по ним план развития продукта, а клиенты могут посмотреть на план этот развития (например, мы его публикуем на сайте поддержки) и понять, что и когда им ждать. Их планирование также упрощается.</p>
+
+<p>Есть тут небольшая загвоздка – это исправление ошибок. Оценить время исправления коварного бага порой не так просто. Хорошо, что такие случаи, скорее всего исключения, так как если они становятся правилом, то возникает вопрос просто о качестве софта в целом.</p>
+
+<p>Мы выпускаем релизы каждый месяц. Мне, как так называемому branch owner’у (я не очень люблю использовать английские слова, но вот «ответственный за версию» как-то уж очень коряво звучит), гораздо проще составлять списки патчей для включения в релиз и планировать окна тестирования, когда дата выпуска всегда постоянна. Конечно, интервал релизов подобран так, чтобы не приходилось выпускать пустые релизы без каких-либо патчей.</p>
+
+<p>И каковы ваши наблюдения на этот счет?</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Том Демарко, Тимати Листер, "Человеческий фактор: успешные проекты и команды"]]></title>
     <link href="http://demin.ws/blog/russian/2009/05/17/peopleware/"/>
     <updated>2009-05-17T00:00:00+00:00</updated>
@@ -12868,53 +12926,6 @@ std::cout &lt;&lt; script.get_variable&lt;lua::string_arg_t&gt;(&quot;a&quot;).v
 <p>Посты по теме:</p>
 
 <ul>
-<li><a href="http://demin.ws/blog/russian/2009/03/03/mythical-man-month/">Фредерик Брукс, &ldquo;Мифический человеко-месяц или как создаются программные системы&rdquo;</a></li>
-</ul>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Как вы пишете в Blogspot?]]></title>
-    <link href="http://demin.ws/blog/russian/2009/05/17/how-do-you-write-to-blogspot/"/>
-    <updated>2009-05-17T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/05/17/how-do-you-write-to-blogspot//</id>
-    <content type="html"><![CDATA[<p>Лично я считаю, что Blogspot имеет радикально неудобный интерфейс для ввода и тем более последующего редактирования постов. Полное “сведение” поста в нем — это кошмар. Сначала ты пишешь основной текст в Ворде, затем вставляешь исходники, если нужно, и потом начинается длительное ёрзанье в html для придания посту правильного вида в браузере.</p>
-
-<p>Так как предварительный просмотр поста в Blogspot не дает полной картины, то единственный способ проверить вид поста, это его, собственно, запостить. Но кому охота выкладывать недоделанный пост? Итерация правки поста крайне неудобна и медленна — цикл “правка –&gt; просмотр –&gt; постинг –&gt; ошибка –&gt; правка –&gt; &hellip;” очень коряв.</p>
-
-<p>После некоторого времени использования Blogspot я пришел вот к такой схеме.</p>
-
-<p>Для начала, нужен таки блог-клиент, как бы этого не хотелось. Тут тебе и вордовая проверка текста встроена, и preview какой никакой есть, и сохранение черновика и много прочих мелких радостей. Перебрав Semagic, BlogJet, несколько клиентов на Яве и придя от всего увиденного в ужас, а остановился, как ни странно на <a href="http://windowslivewriter.spaces.live.com/">Microsoft Live Writer</a>. Бесплатный (чудо для продукта от Microsoft), понимает Blogspot, много плагинов и встроенная вордовая проверка текста (то есть можно сразу в нем писать). В целом, почти все хорошо.</p>
-
-<p>Но как бы не был хорош preview блог-клиента, единственный способ полностью проверить верстку в Blogspot — это запостить. Для этого можно завести еще один блог, тестовый, который должен быть точной копией основного блога в плане стилей и макета страницы. Теперь можно спокойно постить черновик в тестовый блог и отлаживать верстку окончательно. Причем цикл отладки выглядит так: редактирование в блог-клиента -&gt; постинг в тестовый блог -&gt; refresh страницы в браузере. Гораздо быстрее чем была, так как надо просто переключаться между окнами.</p>
-
-<p>В конце отлаженный пост переносится в основной блог просто копированием html-кода.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Дж. Ханк Рейнвотер, "Наставление для программистов, руководящих другими программистами"]]></title>
-    <link href="http://demin.ws/blog/russian/2009/05/17/herding-cats/"/>
-    <updated>2009-05-17T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/05/17/herding-cats//</id>
-    <content type="html"><![CDATA[<p>Дж. Ханк Рейнвотер</p>
-
-<p><a href="http://www.ozon.ru/context/detail/id/2409500/?partner=easy-coding">Наставление для программистов, руководящих другими программистами</a></p>
-
-<p><img src="http://demin.ws/images/covers/russian/herding-cats-cover.jpg" /></p>
-
-<p>Продолжая тему про <a href="http://demin.ws/blog/russian/2009/05/17/peopleware/">книги для программистов</a>, начавших заниматься управлением, расскажу про эту книгу.</p>
-
-<p>Ее многие рекомендуют, поэтому я ее купил. Если честно, я мусолил ее несколько месяцев урывками (недавно добил таки). Крайне тяжелый и корявый язык (может это просто проблема плохого перевода?), читается поэтому очень муторно. Повсюду цитаты, повторяющиеся в самом тексте, что сбивает напрочь ход мысли. Порой автор говорит какую-то очевидную банальщину типа:
-Техническое лидерство взращивается на почве знания и питается готовностью учиться на собственных ошибках — в конечном итоге какая практика обязательно увенчается успехом.
-Можно заменить &ldquo;техническое лидерство&rdquo; на программирование, учебу, игру в шахматы или гольф и суть высказывания не изменится. Тогда о чем все этом?</p>
-
-<p>В целом, лично мне книга не понравилась и рекомендовать ее я не буду. Может вам с ней повезет больше.</p>
-
-<p>Посты по теме:</p>
-
-<ul>
-<li><a href="http://demin.ws/blog/russian/2009/05/17/peopleware/">Том Демарко, Тимати Листер, &ldquo;Человеческий фактор: успешные проекты и команды&rdquo;</a></li>
 <li><a href="http://demin.ws/blog/russian/2009/03/03/mythical-man-month/">Фредерик Брукс, &ldquo;Мифический человеко-месяц или как создаются программные системы&rdquo;</a></li>
 </ul>
 ]]></content>
@@ -14548,49 +14559,6 @@ string_resize_test: Test failed.
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Чарльз Уэзерелл, "Этюды для программистов"]]></title>
-    <link href="http://demin.ws/blog/russian/2009/02/26/etudes-for-programmers/"/>
-    <updated>2009-02-26T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/02/26/etudes-for-programmers//</id>
-    <content type="html"><![CDATA[<p>Лет пятнадцать назад мне в руки попала книга Чарльза Уэзерелла &ldquo;<a href="http://www.ozon.ru/context/detail/id/1940685/?partner=easy-coding">Этюды для программистов</a>&rdquo;.</p>
-
-<p><img src="http://demin.ws/images/covers/russian/etudes-for-programmers-cover.jpg" /></p>
-
-<p>Книга содержит 27 “этюдов”. Каждый этюд – это законченная задача для обучающихся программированию. Удивительно, книге более 30 лет, но любой из этюдов может быть до сих пор использован по назначению. Я сам с удовольствием давал этюды из этой книги студентам.</p>
-
-<p>Тематика задач совершенно разная: ретроспективная задача по программе, которая печатает свой текст, игра Джона Конвея “<a href="http://ru.wikipedia.org/wiki/%D0%98%D0%B3%D1%80%D0%B0_%D0%B6%D0%B8%D0%B7%D0%BD%D1%8C">Жизнь</a>”, игровое и имитационное моделирование, интерпретаторы форматов и форматирование текста, статистический анализ карточных игр, символьные алгебраические вычисления, плавающая арифметика и работа с числами большой разрядности, математические методы взлома шифров, искусственный интеллект, <a href="http://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D1%88%D0%B8%D0%BD%D0%B0_%D1%82%D1%8C%D1%8E%D1%80%D0%B8%D0%BD%D0%B3%D0%B0">машина Тьюринга</a>, рекурсивные алгоритмы поиска, компрессия данных, эмуляция виртуальной компьютерной архитектуры, связывающий загрузчик, компилятор, интерпретатор символьного а-ля функционального языка и т.д. И все эти задачи времен, когда программировали на фортране с помощью перфокарт!</p>
-
-<p>Удивительно, как человек смог написать столь долгоживущую книгу, легкого и неперегруженного чрезмерной научностью содержания. Я пытался найти какие-то еще книги Уэзерелла, но безуспешно. Может это его единственная книга.</p>
-
-<p>И я бережно храню переведенный на русский экземпляр до сих пор. Не исключено, что эта книга пришлась мне в нужное время, и поэтому она стала моей главной книгой.</p>
-
-<p>С различным успехом, но с огромным азартом, я возился в разные времена со всеми этюдами.</p>
-
-<p>Был интересный эпизод с одним из этюдов. В главе 24, под названием “Секрет фирмы, или Математический подход к раскрытию шифров” описывается задача по взлому <a href="http://ru.wikipedia.org/wiki/%D0%A8%D0%B8%D1%84%D1%80_%D0%92%D0%B8%D0%B6%D0%B5%D0%BD%D0%B5%D1%80%D0%B0">шифра Виженера</a> (точнее, одной из его модификаций). В книге давался зашифрованный текст, описывался метод взлома и предлагалось расшифровать секретное послание.</p>
-
-<p><img src="http://demin.ws/images/blog/efp-vigenere-cryptotext-russian.jpg" /></p>
-
-<p>И так меня эта задача торкнула, что я даже списался с одним из технических переводчиков этой книги. Тогда еще мне пришлось делать это по обычной бумажной почте России. У меня была масса вопросов, так как расшифровать предлагаемый в книге пример не получалось (математический анализ я тогда еще не изучал). Мне ответили, и среди всего прочего рассказали, как они сами (те, кто переводил книгу) расшифровывали. Ведь им, чтобы опубликовать это на русском языке, надо было иметь исходное сообщение, но в книге не приводился ответ, так что пришлось засучить рукава и заняться английской шифровкой:</p>
-
-<p><img src="http://demin.ws/images/blog/efp-vigenere-cryptotext-english.jpg" /></p>
-
-<p>Решить задачу предложенным автором способом не получилось, и наши решили все по-своему (советская математическая школа показала себя), выявив, что метод автора не совсем правильный. В русском варианте в главе 24 есть “партия переводчика”, где описывается “советский” способ решения. Попутно наши переводчики выяснили, что в <a href="http://www.amazon.com/Etudes-Programmers-Charles-Wetherell/dp/0132918072/">английском оригинале</a> есть опечатка! Одна из строк шифровки просто пропущена. Уже после перевода они связывались с господином Уэзереллом, и тот подтвердил факт наличия досадной опечатки.</p>
-
-<p>Кстати, в интернете ходит много решений “этюдов” Уэзерелла. Например, программа, <a href="http://vak.ru/doku.php/proj/kalah/kalah">играющая в Калах</a>, или <a href="http://vak.ru/doku.php/proj/trac/trac">интерпретатор символьного интерактивного языка TRAC</a>.</p>
-
-<p>Но теперь к самому главному.</p>
-
-<p>Пару дней назад королевская почта доставила мне то, что я так давно мечтал полистать лично — это английский оригинал этой книги.</p>
-
-<p><img src="http://demin.ws/images/covers/english/etudes-for-programmers-cover.jpg" /></p>
-
-<p>Книга была издана аж в 1978 (я тогда даже не ходил пешком под стол, а просто лежал) и более не переиздавалась. Я купил списанный библиотечный экземпляр. Немного потертый, переклеенный скотчем по корешку, с библиотечным кармашком для карточки на обратной стороне обложки. Экстаз, один словом.</p>
-
-<p>Если в мире программирования могут существовать иконы, то “Этюды для программистов” Чальза Уэзеррела одна из них.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Unit-тест для Coredump в Windows]]></title>
     <link href="http://demin.ws/blog/russian/2009/02/26/coredump-for-windows-unittest/"/>
     <updated>2009-02-26T00:00:00+00:00</updated>
@@ -14774,6 +14742,49 @@ int main(int argc, char* argv[]) {
 <li><a href="http://demin.ws/blog/russian/2009/03/05/queryperformancecounter-on-multicore-and-virtual-systems/">QueryPerformanceCounter на мультиядерных и виртуальных системах</a></li>
 <li><a href="http://demin.ws/blog/russian/2009/01/28/unit-testing-concurrent-threads/">Unit-тестирование для параллельных потоков</a></li>
 </ul>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Чарльз Уэзерелл, "Этюды для программистов"]]></title>
+    <link href="http://demin.ws/blog/russian/2009/02/26/etudes-for-programmers/"/>
+    <updated>2009-02-26T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/02/26/etudes-for-programmers//</id>
+    <content type="html"><![CDATA[<p>Лет пятнадцать назад мне в руки попала книга Чарльза Уэзерелла &ldquo;<a href="http://www.ozon.ru/context/detail/id/1940685/?partner=easy-coding">Этюды для программистов</a>&rdquo;.</p>
+
+<p><img src="http://demin.ws/images/covers/russian/etudes-for-programmers-cover.jpg" /></p>
+
+<p>Книга содержит 27 “этюдов”. Каждый этюд – это законченная задача для обучающихся программированию. Удивительно, книге более 30 лет, но любой из этюдов может быть до сих пор использован по назначению. Я сам с удовольствием давал этюды из этой книги студентам.</p>
+
+<p>Тематика задач совершенно разная: ретроспективная задача по программе, которая печатает свой текст, игра Джона Конвея “<a href="http://ru.wikipedia.org/wiki/%D0%98%D0%B3%D1%80%D0%B0_%D0%B6%D0%B8%D0%B7%D0%BD%D1%8C">Жизнь</a>”, игровое и имитационное моделирование, интерпретаторы форматов и форматирование текста, статистический анализ карточных игр, символьные алгебраические вычисления, плавающая арифметика и работа с числами большой разрядности, математические методы взлома шифров, искусственный интеллект, <a href="http://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D1%88%D0%B8%D0%BD%D0%B0_%D1%82%D1%8C%D1%8E%D1%80%D0%B8%D0%BD%D0%B3%D0%B0">машина Тьюринга</a>, рекурсивные алгоритмы поиска, компрессия данных, эмуляция виртуальной компьютерной архитектуры, связывающий загрузчик, компилятор, интерпретатор символьного а-ля функционального языка и т.д. И все эти задачи времен, когда программировали на фортране с помощью перфокарт!</p>
+
+<p>Удивительно, как человек смог написать столь долгоживущую книгу, легкого и неперегруженного чрезмерной научностью содержания. Я пытался найти какие-то еще книги Уэзерелла, но безуспешно. Может это его единственная книга.</p>
+
+<p>И я бережно храню переведенный на русский экземпляр до сих пор. Не исключено, что эта книга пришлась мне в нужное время, и поэтому она стала моей главной книгой.</p>
+
+<p>С различным успехом, но с огромным азартом, я возился в разные времена со всеми этюдами.</p>
+
+<p>Был интересный эпизод с одним из этюдов. В главе 24, под названием “Секрет фирмы, или Математический подход к раскрытию шифров” описывается задача по взлому <a href="http://ru.wikipedia.org/wiki/%D0%A8%D0%B8%D1%84%D1%80_%D0%92%D0%B8%D0%B6%D0%B5%D0%BD%D0%B5%D1%80%D0%B0">шифра Виженера</a> (точнее, одной из его модификаций). В книге давался зашифрованный текст, описывался метод взлома и предлагалось расшифровать секретное послание.</p>
+
+<p><img src="http://demin.ws/images/blog/efp-vigenere-cryptotext-russian.jpg" /></p>
+
+<p>И так меня эта задача торкнула, что я даже списался с одним из технических переводчиков этой книги. Тогда еще мне пришлось делать это по обычной бумажной почте России. У меня была масса вопросов, так как расшифровать предлагаемый в книге пример не получалось (математический анализ я тогда еще не изучал). Мне ответили, и среди всего прочего рассказали, как они сами (те, кто переводил книгу) расшифровывали. Ведь им, чтобы опубликовать это на русском языке, надо было иметь исходное сообщение, но в книге не приводился ответ, так что пришлось засучить рукава и заняться английской шифровкой:</p>
+
+<p><img src="http://demin.ws/images/blog/efp-vigenere-cryptotext-english.jpg" /></p>
+
+<p>Решить задачу предложенным автором способом не получилось, и наши решили все по-своему (советская математическая школа показала себя), выявив, что метод автора не совсем правильный. В русском варианте в главе 24 есть “партия переводчика”, где описывается “советский” способ решения. Попутно наши переводчики выяснили, что в <a href="http://www.amazon.com/Etudes-Programmers-Charles-Wetherell/dp/0132918072/">английском оригинале</a> есть опечатка! Одна из строк шифровки просто пропущена. Уже после перевода они связывались с господином Уэзереллом, и тот подтвердил факт наличия досадной опечатки.</p>
+
+<p>Кстати, в интернете ходит много решений “этюдов” Уэзерелла. Например, программа, <a href="http://vak.ru/doku.php/proj/kalah/kalah">играющая в Калах</a>, или <a href="http://vak.ru/doku.php/proj/trac/trac">интерпретатор символьного интерактивного языка TRAC</a>.</p>
+
+<p>Но теперь к самому главному.</p>
+
+<p>Пару дней назад королевская почта доставила мне то, что я так давно мечтал полистать лично — это английский оригинал этой книги.</p>
+
+<p><img src="http://demin.ws/images/covers/english/etudes-for-programmers-cover.jpg" /></p>
+
+<p>Книга была издана аж в 1978 (я тогда даже не ходил пешком под стол, а просто лежал) и более не переиздавалась. Я купил списанный библиотечный экземпляр. Немного потертый, переклеенный скотчем по корешку, с библиотечным кармашком для карточки на обратной стороне обложки. Экстаз, один словом.</p>
+
+<p>Если в мире программирования могут существовать иконы, то “Этюды для программистов” Чальза Уэзеррела одна из них.</p>
 ]]></content>
   </entry>
   
@@ -15046,6 +15057,59 @@ KeyWord -&gt; Lime/(фон оставить по умолчанию)
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Разница между "T()" и "T"]]></title>
+    <link href="http://demin.ws/blog/russian/2009/02/21/difference-between-type-and-type-with-brackets/"/>
+    <updated>2009-02-21T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/02/21/difference-between-type-and-type-with-brackets//</id>
+    <content type="html"><![CDATA[<p>Как совершенно справедливо было замечено в комментариях в <a href="http://demin.ws/blog/russian/2009/02/20/difference-between-new-and-new-with-brackets/">посте про разницу между &ldquo;new T()&rdquo; и &ldquo;new T&rdquo;</a> — при объявлении автоматической переменной, а не динамической через new, нельзя использовать скобки, если подразумевается вызвать конструктор по умолчанию. То есть нельзя писать:</p>
+
+<pre><code class="cpp">T a();
+</code></pre>
+
+<p>а надо писать:</p>
+
+<pre><code class="cpp">T a;
+</code></pre>
+
+<p>так как в первом случае такая запись будет означать декларацию функции a, которая возвращает тип <code>T</code>, а далеко не декларацию переменной класса <code>T</code> с вызовом конструктора по умолчанию.</p>
+
+<p>Не спорю, это очевидно для профессионалов. Для новичков же порой подобная &ldquo;неочевидная&rdquo; разница вызывает затруднения, поэтому приведу простейший пример, которые расставит все на свои места.</p>
+
+<pre><code class="cpp">#include &lt;iostream&gt;
+class T {
+public:
+  T() { std::cout &lt;&lt; &quot;constructor T()&quot;; }
+};
+
+int main() {
+  std::cout &lt;&lt; &quot;T a: &quot;;
+  // Это синтаксис создания экземпляра класса T с вызовом
+  // конструктора по умолчанию.
+  T a;
+  std::cout &lt;&lt; std::endl;
+
+  std::cout &lt;&lt; &quot;T b(): &quot;;
+  // А вот это декларация функции &quot;b&quot; без аргументов,
+  // которая возвращает тип T.
+  T b();
+  std::cout &lt;&lt; std::endl;
+  return 0;
+}
+</code></pre>
+
+<p>Результат:</p>
+
+<pre><code>T a: constructor T()
+T b():
+</code></pre>
+
+<p>Видно, что для <code>T b();</code> никакой конструктор не был вызван. Что в целом и ожидалось.</p>
+
+<p>Использование круглых скобок может быть весьма <a href="http://demin.ws/blog/russian/2009/02/09/dark-corners-of-cpp/">тонким вопросом в С++</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Спрятать кнопку "Пуск" и помигать клавиатурой]]></title>
     <link href="http://demin.ws/blog/russian/2009/02/21/hide-start-button-and-flash-keyboard-lights/"/>
     <updated>2009-02-21T00:00:00+00:00</updated>
@@ -15122,59 +15186,6 @@ int main(void) {
 <p>Если у вас есть интересные исходнички подобного рода — прикладывайте в комментарии.</p>
 
 <p>Не все же нам в каких-то конструкторах копаться.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Разница между "T()" и "T"]]></title>
-    <link href="http://demin.ws/blog/russian/2009/02/21/difference-between-type-and-type-with-brackets/"/>
-    <updated>2009-02-21T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/02/21/difference-between-type-and-type-with-brackets//</id>
-    <content type="html"><![CDATA[<p>Как совершенно справедливо было замечено в комментариях в <a href="http://demin.ws/blog/russian/2009/02/20/difference-between-new-and-new-with-brackets/">посте про разницу между &ldquo;new T()&rdquo; и &ldquo;new T&rdquo;</a> — при объявлении автоматической переменной, а не динамической через new, нельзя использовать скобки, если подразумевается вызвать конструктор по умолчанию. То есть нельзя писать:</p>
-
-<pre><code class="cpp">T a();
-</code></pre>
-
-<p>а надо писать:</p>
-
-<pre><code class="cpp">T a;
-</code></pre>
-
-<p>так как в первом случае такая запись будет означать декларацию функции a, которая возвращает тип <code>T</code>, а далеко не декларацию переменной класса <code>T</code> с вызовом конструктора по умолчанию.</p>
-
-<p>Не спорю, это очевидно для профессионалов. Для новичков же порой подобная &ldquo;неочевидная&rdquo; разница вызывает затруднения, поэтому приведу простейший пример, которые расставит все на свои места.</p>
-
-<pre><code class="cpp">#include &lt;iostream&gt;
-class T {
-public:
-  T() { std::cout &lt;&lt; &quot;constructor T()&quot;; }
-};
-
-int main() {
-  std::cout &lt;&lt; &quot;T a: &quot;;
-  // Это синтаксис создания экземпляра класса T с вызовом
-  // конструктора по умолчанию.
-  T a;
-  std::cout &lt;&lt; std::endl;
-
-  std::cout &lt;&lt; &quot;T b(): &quot;;
-  // А вот это декларация функции &quot;b&quot; без аргументов,
-  // которая возвращает тип T.
-  T b();
-  std::cout &lt;&lt; std::endl;
-  return 0;
-}
-</code></pre>
-
-<p>Результат:</p>
-
-<pre><code>T a: constructor T()
-T b():
-</code></pre>
-
-<p>Видно, что для <code>T b();</code> никакой конструктор не был вызван. Что в целом и ожидалось.</p>
-
-<p>Использование круглых скобок может быть весьма <a href="http://demin.ws/blog/russian/2009/02/09/dark-corners-of-cpp/">тонким вопросом в С++</a>.</p>
 ]]></content>
   </entry>
   

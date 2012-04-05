@@ -5,7 +5,7 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-05T10:59:38+01:00</updated>
+  <updated>2012-04-05T13:59:09+01:00</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
@@ -873,6 +873,23 @@ HP C/aC++ for Integrity Servers B3910B A.06.22 [Nov 14 2008]
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Number of crossings in bipartite graph]]></title>
+    <link href="http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph/"/>
+    <updated>2011-05-24T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph//</id>
+    <content type="html"><![CDATA[<p>Given a <a href="http://en.wikipedia.org/wiki/Bipartite_graph">bipartite graph</a>: &ldquo;n&rdquo; vertices on the left, &ldquo;m&rdquo; on the right and edges. The question is: how many edges in this graph are crossed?</p>
+
+<p>In this example n=5, m=4, ten edges: 1-1, 1-2, 2-1, 2-2, 3-3, 4-1, 4-3, 5-1, 5-2, 5-4, a number of crossings: 10.</p>
+
+<p><img src="http://demin.ws/images/blog/bipartite-graph.gif" /></p>
+
+<p>Crossings are always considered in pairs. For example, if three edges are crossed in one physical point, formally there are still three crossings, not one.</p>
+
+<p>O(n*m) solution exists.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Safer sizeof for arrays in C++]]></title>
     <link href="http://demin.ws/blog/english/2011/05/24/safer-sizeof-for-arrays-in-cpp/"/>
     <updated>2011-05-24T00:00:00+00:00</updated>
@@ -943,23 +960,6 @@ int main() {
 </code></pre>
 
 <p>It prints out <code>1024</code> twice.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Number of crossings in bipartite graph]]></title>
-    <link href="http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph/"/>
-    <updated>2011-05-24T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph//</id>
-    <content type="html"><![CDATA[<p>Given a <a href="http://en.wikipedia.org/wiki/Bipartite_graph">bipartite graph</a>: &ldquo;n&rdquo; vertices on the left, &ldquo;m&rdquo; on the right and edges. The question is: how many edges in this graph are crossed?</p>
-
-<p>In this example n=5, m=4, ten edges: 1-1, 1-2, 2-1, 2-2, 3-3, 4-1, 4-3, 5-1, 5-2, 5-4, a number of crossings: 10.</p>
-
-<p><img src="http://demin.ws/images/blog/bipartite-graph.gif" /></p>
-
-<p>Crossings are always considered in pairs. For example, if three edges are crossed in one physical point, formally there are still three crossings, not one.</p>
-
-<p>O(n*m) solution exists.</p>
 ]]></content>
   </entry>
   
@@ -4050,15 +4050,6 @@ int main(int argc, char* argv[]) {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[codepad.org]]></title>
-    <link href="http://demin.ws/blog/english/2009/10/29/codepad/"/>
-    <updated>2009-10-29T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/10/29/codepad//</id>
-    <content type="html"><![CDATA[<p>I&rsquo;ve recently discovered for myself <a href="http://codepad.org">codepad.org</a> and amazingly started to use quite regularly when something needs to try out when sitting in the middle of nowhere (for instance, in a meeting room).</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Artificial typification of homogeneous arguments in C++]]></title>
     <link href="http://demin.ws/blog/english/2009/10/29/artificial-typification-of-homogeneous-arguments-in-cpp/"/>
     <updated>2009-10-29T00:00:00+00:00</updated>
@@ -4124,6 +4115,15 @@ class Day { ... };
 <p>I agree there is more typing job but it fully gets you rid of any typos and consequently of silly but annoying bugs.</p>
 
 <p>Any objections?</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[codepad.org]]></title>
+    <link href="http://demin.ws/blog/english/2009/10/29/codepad/"/>
+    <updated>2009-10-29T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2009/10/29/codepad//</id>
+    <content type="html"><![CDATA[<p>I&rsquo;ve recently discovered for myself <a href="http://codepad.org">codepad.org</a> and amazingly started to use quite regularly when something needs to try out when sitting in the middle of nowhere (for instance, in a meeting room).</p>
 ]]></content>
   </entry>
   
@@ -5181,6 +5181,36 @@ Error E2140 vs_double_semicolumn.c 3: Declaration is not allowed here in functio
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Pointer cast bug in Codegear (Borland) C++ compiler]]></title>
+    <link href="http://demin.ws/blog/english/2009/09/12/pointer-cast-bug-in-codegear-borland-compiler/"/>
+    <updated>2009-09-12T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2009/09/12/pointer-cast-bug-in-codegear-borland-compiler//</id>
+    <content type="html"><![CDATA[<p>Here is the trivial program (<code>bcc32_5.93_cast_bug.cpp</code>):</p>
+
+<pre><code class="cpp">class A {};
+class C {};
+A* a;
+A* b = static_cast&lt;C*&gt;(a);
+</code></pre>
+
+<p>When using <code>bcc32.exe</code> (version 5.93) from the Codegear RAD Studio 2007:</p>
+
+<pre><code>bcc32 -c bcc32_5.93_cast_bug.cpp
+</code></pre>
+
+<p>It dies with an internal compiler error:</p>
+
+<pre><code>CodeGear C++ 5.93 for Win32 Copyright (c) 1993, 2007 CodeGear
+bcc32_5.93_cast_bug.cpp:
+Fatal F1004 bcc32_5.93_cast_bug.cpp 4: Internal compiler error at 0x44b34e with base 0x400000
+Fatal F1004 bcc32_5.93_cast_bug.cpp 4: Internal compiler error
+</code></pre>
+
+<p>Nice one. I love internal compiler errors. Do you have some similar stuff in your stash?</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Virtual functions in constructors and destructors]]></title>
     <link href="http://demin.ws/blog/english/2009/09/12/virtual-functions-in-constructors-and-destructors/"/>
     <updated>2009-09-12T00:00:00+00:00</updated>
@@ -5254,36 +5284,6 @@ A::destruct()
 <p>For a destructor everything works vice versa. A destructor knows that all child classes are already destructed and nothing can be called from them. Therefore it just changes an address of the virtual functions table to the address of its own table address and nicely calls an implementation of the virtual function defined in its own class.</p>
 
 <p>Thus a virtual function is not virtual if it is called from a constructor or a destructor.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Pointer cast bug in Codegear (Borland) C++ compiler]]></title>
-    <link href="http://demin.ws/blog/english/2009/09/12/pointer-cast-bug-in-codegear-borland-compiler/"/>
-    <updated>2009-09-12T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/09/12/pointer-cast-bug-in-codegear-borland-compiler//</id>
-    <content type="html"><![CDATA[<p>Here is the trivial program (<code>bcc32_5.93_cast_bug.cpp</code>):</p>
-
-<pre><code class="cpp">class A {};
-class C {};
-A* a;
-A* b = static_cast&lt;C*&gt;(a);
-</code></pre>
-
-<p>When using <code>bcc32.exe</code> (version 5.93) from the Codegear RAD Studio 2007:</p>
-
-<pre><code>bcc32 -c bcc32_5.93_cast_bug.cpp
-</code></pre>
-
-<p>It dies with an internal compiler error:</p>
-
-<pre><code>CodeGear C++ 5.93 for Win32 Copyright (c) 1993, 2007 CodeGear
-bcc32_5.93_cast_bug.cpp:
-Fatal F1004 bcc32_5.93_cast_bug.cpp 4: Internal compiler error at 0x44b34e with base 0x400000
-Fatal F1004 bcc32_5.93_cast_bug.cpp 4: Internal compiler error
-</code></pre>
-
-<p>Nice one. I love internal compiler errors. Do you have some similar stuff in your stash?</p>
 ]]></content>
   </entry>
   
