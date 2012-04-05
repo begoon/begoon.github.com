@@ -313,11 +313,8 @@ func process_post(filename string) {
     BlogPrefix, p["language"], p["year"], p["month"], p["day"], p["slug"],
   }, "/") + "/"
 
-  if p["language"] == "" {
-    die("No 'language' attribute")
-  }
-  if p["layout"] == "" {
-    die("No 'layout' attribute")
+  if p["layout"] == "none" {
+    die("'layout' attribute can't be 'none'")
   }
 
   date, err := time.Parse(DateFormat, p["date_only"])
