@@ -25,6 +25,10 @@ const (
   PublicDir   = ".."
   SiteHost    = "http://demin.ws"
 
+  // This format must use "magic" values (like 2006 for year, 01 for month etc.)
+  // http://golang.org/src/pkg/time/format.go?s=15402:15448#L58
+  DateFormat = "2006-01-02"
+
   LogFile = "trace.log"
 )
 
@@ -50,6 +54,8 @@ var (
   CheckImgRE,
   DisqusShortNameRE regexp.Regexp
 
+  CutDate time.Time
+
   files_cache map[string]*string
 )
 
@@ -73,6 +79,12 @@ func init() {
   CheckHrefRE = *regexp.MustCompile("(?s)<(?:a|link) .*?href=[\"']([^#][^\"']*?)[\"'].*?>")
   CheckImgRE = *regexp.MustCompile("(?s)<img .*?src=[\"']([^\"']+?)[\"'].*?>")
   DisqusShortNameRE = *regexp.MustCompile("http\\:\\/\\/((easy|meta)-coding).blogspot.com\\/\\d\\d\\d\\d\\/\\d\\d\\/.+?\\.html")
+
+  var err error
+  CutDate, err = time.Parse(DateFormat, "2012-04-01")
+  if err != nil {
+    die("Unable to parse the cut date, error [%v]", err)
+  }
 
   files_cache = map[string]*string{}
 }
@@ -308,12 +320,14 @@ func process_post(filename string) {
     die("No 'layout' attribute")
   }
 
-  if p["blogspot"] == "" {
-    die("No 'blogspot' attribute")
+  date, err := time.Parse(DateFormat, p["date_only"])
+  if err != nil {
+    die("Unable to parse the post date, error [%v]", err)
   }
 
-  if !BlogspotRE.MatchString(p["blogspot"]) {
-    die("Bad Blogspot URL [%s]", p["blogspot"])
+  // All posts before this date must have a blogspot id attribute.
+  if date.Before(CutDate) && p["blogspot"] == "" {
+    die("All posts before '%s' must have a blogspot id", CutDate.String())
   }
 
   p["disqus_developer"] = "0"
