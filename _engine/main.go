@@ -438,8 +438,8 @@ func process_site() {
   }
 }
 
-func check_links_re(s, filename string, re *regexp.Regexp) {
-  if m := re.FindAllStringSubmatch(s, -1); m != nil {
+func check_links_re(s *string, filename string, re *regexp.Regexp) {
+  if m := re.FindAllStringSubmatch(*s, -1); m != nil {
     for _, link := range m {
       l := link[1]
       trace("|| [%s]", l)
@@ -457,12 +457,19 @@ func check_links_re(s, filename string, re *regexp.Regexp) {
   }
 }
 
+func check_unexpanded_placeholders(s *string) {
+  if strings.Contains(*s, "<no value>") {
+    die("'<no value>' string is found")
+  }
+}
+
 func check_links_in_file(filename string) {
   trace("-> Check links in [%s]", filename)
   f := load_file(filename)
 
-  check_links_re(*f, filename, &CheckHrefRE)
-  check_links_re(*f, filename, &CheckImgRE)
+  check_links_re(f, filename, &CheckHrefRE)
+  check_links_re(f, filename, &CheckImgRE)
+  check_unexpanded_placeholders(f)
 }
 
 func check_links() {
