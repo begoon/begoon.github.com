@@ -334,6 +334,10 @@ func process_post(filename string) {
   p["disqus_url"] = SiteHost + p["url"]
 
   if p["blogspot"] != "" {
+    if !BlogspotRE.MatchString(p["blogspot"]) {
+      die("Bad Blogspot URL [%s]", p["blogspot"])
+    }
+
     p["blogspot_url"] = BlogspotEnglishRE.ReplaceAllString(p["blogspot"], "$1")
 
     m := DisqusShortNameRE.FindStringSubmatch(p["blogspot"])
