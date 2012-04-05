@@ -299,7 +299,7 @@ func process_post(filename string) {
 
   p["url"] = "/" + strings.Join([]string{
     BlogPrefix, p["language"], p["year"], p["month"], p["day"], p["slug"],
-  }, "/")
+  }, "/") + "/"
 
   if p["language"] == "" {
     die("No 'language' attribute")

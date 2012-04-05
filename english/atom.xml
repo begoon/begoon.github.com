@@ -5,7 +5,7 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-05T10:43:50+01:00</updated>
+  <updated>2012-04-05T10:59:38+01:00</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[NOR Machine in Ruby]]></title>
-    <link href="http://demin.ws/blog/english/2012/03/07/nor-machine-in-ruby"/>
+    <link href="http://demin.ws/blog/english/2012/03/07/nor-machine-in-ruby/"/>
     <updated>2012-03-07T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2012/03/07/nor-machine-in-ruby/</id>
+    <id>http://demin.ws/blog/english/2012/03/07/nor-machine-in-ruby//</id>
     <content type="html"><![CDATA[<p>My <a href="http://pragprog.com/magazines/2012-03/the-nor-machine">article about a virtual CPU, a machine, computing only one instruction - NOR</a>, in The Pragmatic Bookshelf magazine.</p>
 
 <p>The idea was previously described in a series of posts:</p>
@@ -34,9 +34,9 @@
   
   <entry>
     <title type="html"><![CDATA[Born by copy-paste]]></title>
-    <link href="http://demin.ws/blog/english/2012/02/06/born-by-copy-paste"/>
+    <link href="http://demin.ws/blog/english/2012/02/06/born-by-copy-paste/"/>
     <updated>2012-02-06T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2012/02/06/born-by-copy-paste/</id>
+    <id>http://demin.ws/blog/english/2012/02/06/born-by-copy-paste//</id>
     <content type="html"><![CDATA[<p>I usually start crying when see a copy-paste with numbered variables. A probability to screw up is very high, just forget to change a single number after pasting. Here is a horrifying piece of code (don&rsquo;t you mind to spot on an incy wincy typo?)</p>
 
 <pre><code class="cpp">void Test_SplitPair() {
@@ -102,9 +102,9 @@
   
   <entry>
     <title type="html"><![CDATA[Bruce Tate, &#34;Seven languages in seven weeks&#34;]]></title>
-    <link href="http://demin.ws/blog/english/2012/02/02/seven-languages-in-seven-weeks"/>
+    <link href="http://demin.ws/blog/english/2012/02/02/seven-languages-in-seven-weeks/"/>
     <updated>2012-02-02T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2012/02/02/seven-languages-in-seven-weeks/</id>
+    <id>http://demin.ws/blog/english/2012/02/02/seven-languages-in-seven-weeks//</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve finished accelerated reading of &ldquo;<a href="http://pragprog.com/book/btlang/seven-languages-in-seven-weeks">Seven languages in seven weeks</a>&rdquo; by Bruce Tate.</p>
 
 <p><img src="http://demin.ws/images/covers/english/7-languages-in-7-weeks-cover.jpg" /></p>
@@ -189,9 +189,9 @@ writeln(&quot;fetched &quot;, futureResult size, &quot; bytes&quot;)
   
   <entry>
     <title type="html"><![CDATA[My current languages]]></title>
-    <link href="http://demin.ws/blog/english/2012/01/30/my-current-languages"/>
+    <link href="http://demin.ws/blog/english/2012/01/30/my-current-languages/"/>
     <updated>2012-01-30T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2012/01/30/my-current-languages/</id>
+    <id>http://demin.ws/blog/english/2012/01/30/my-current-languages//</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve realised recently that I like to learn new programming languages. A symptom is a very easy to spot: I have a permanent pile of books I&rsquo;m reading. Thanks for the iPad, I can have them all with me all the time and choose depending on mood. Surprisingly, but books about languages are being read first and replaced with new ones.</p>
 
 <p>Simply wanted to share current interests.</p>
@@ -223,9 +223,9 @@ writeln(&quot;fetched &quot;, futureResult size, &quot; bytes&quot;)
   
   <entry>
     <title type="html"><![CDATA[Graph visualization in DOT]]></title>
-    <link href="http://demin.ws/blog/english/2012/01/26/graph-visualization-in-dot"/>
+    <link href="http://demin.ws/blog/english/2012/01/26/graph-visualization-in-dot/"/>
     <updated>2012-01-26T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2012/01/26/graph-visualization-in-dot/</id>
+    <id>http://demin.ws/blog/english/2012/01/26/graph-visualization-in-dot//</id>
     <content type="html"><![CDATA[<p>Background. We do financial transactions processing. At some point we decided that we need profiling. We could record a path of how a transaction being passed amongst modules. There are two options - either to do static analysis or to trace the runtime.</p>
 
 <p>So, the connections are determined and now we have to formalize and visualize them.</p>
@@ -259,9 +259,9 @@ writeln(&quot;fetched &quot;, futureResult size, &quot; bytes&quot;)
   
   <entry>
     <title type="html"><![CDATA[Maximite - 8-bit nostalgia with a soldering iron]]></title>
-    <link href="http://demin.ws/blog/english/2012/01/19/maximite-kit"/>
+    <link href="http://demin.ws/blog/english/2012/01/19/maximite-kit/"/>
     <updated>2012-01-19T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2012/01/19/maximite-kit/</id>
+    <id>http://demin.ws/blog/english/2012/01/19/maximite-kit//</id>
     <content type="html"><![CDATA[<p>Recently I have come across an interesting project - Maximite.</p>
 
 <p>This is a micro-computer based on Microchip PIC32 running BASIC. It is so simple that even a novice can build it in a few hours.</p>
@@ -405,9 +405,9 @@ writeln(&quot;fetched &quot;, futureResult size, &quot; bytes&quot;)
   
   <entry>
     <title type="html"><![CDATA[Stuck process detector]]></title>
-    <link href="http://demin.ws/blog/english/2012/01/05/stuck-process-detector"/>
+    <link href="http://demin.ws/blog/english/2012/01/05/stuck-process-detector/"/>
     <updated>2012-01-05T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2012/01/05/stuck-process-detector/</id>
+    <id>http://demin.ws/blog/english/2012/01/05/stuck-process-detector//</id>
     <content type="html"><![CDATA[<p>There is a problem — how to automatically detect stuck long running server processes? Say if a process is stuck it means there is a deadlock or it is spinning in an infinite loop.</p>
 
 <p>An idea — periodically take a snapshot of the process stack trace. For instance:</p>
@@ -442,9 +442,9 @@ writeln(&quot;fetched &quot;, futureResult size, &quot; bytes&quot;)
   
   <entry>
     <title type="html"><![CDATA[Trade-off with const in legacy code]]></title>
-    <link href="http://demin.ws/blog/english/2012/01/04/trade-off-with-const-in-legacy-code"/>
+    <link href="http://demin.ws/blog/english/2012/01/04/trade-off-with-const-in-legacy-code/"/>
     <updated>2012-01-04T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2012/01/04/trade-off-with-const-in-legacy-code/</id>
+    <id>http://demin.ws/blog/english/2012/01/04/trade-off-with-const-in-legacy-code//</id>
     <content type="html"><![CDATA[<p>Today we argued an hour with a colleague regarding the following code:</p>
 
 <pre><code class="cpp">void foo(T* t) {
@@ -477,9 +477,9 @@ writeln(&quot;fetched &quot;, futureResult size, &quot; bytes&quot;)
   
   <entry>
     <title type="html"><![CDATA[Walter Isaacson, &#34;Steve Jobs: The Exclusive Biography&#34;]]></title>
-    <link href="http://demin.ws/blog/english/2011/12/27/steve-jobs-the-exclusive-biography"/>
+    <link href="http://demin.ws/blog/english/2011/12/27/steve-jobs-the-exclusive-biography/"/>
     <updated>2011-12-27T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/12/27/steve-jobs-the-exclusive-biography/</id>
+    <id>http://demin.ws/blog/english/2011/12/27/steve-jobs-the-exclusive-biography//</id>
     <content type="html"><![CDATA[<p>&ldquo;<a href="http://www.amazon.co.uk/Steve-Jobs-Exclusive-Walter-Isaacson/dp/1408703742">Steve Jobs: The Exclusive Biography</a>&rdquo; by Walter Isaacson</p>
 
 <p><img src="http://demin.ws/images/covers/english/steve-jobs-exclusive-biography-cover.jpg" /></p>
@@ -498,9 +498,9 @@ writeln(&quot;fetched &quot;, futureResult size, &quot; bytes&quot;)
   
   <entry>
     <title type="html"><![CDATA[Thomas L. Friedman, &#34;The world is flat 3.0: A Brief History of the Twenty-first Century&#34;]]></title>
-    <link href="http://demin.ws/blog/english/2011/12/24/world-is-flat"/>
+    <link href="http://demin.ws/blog/english/2011/12/24/world-is-flat/"/>
     <updated>2011-12-24T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/12/24/world-is-flat/</id>
+    <id>http://demin.ws/blog/english/2011/12/24/world-is-flat//</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve come back to audiobooks. 40-50 minutes per day when heading an office and then back allow to consume books with decent speed.</p>
 
 <p>A recent.</p>
@@ -529,9 +529,9 @@ permanent self education and nurturing your curiosity (CQ + PQ always greater th
   
   <entry>
     <title type="html"><![CDATA[Virtual private functions in C++]]></title>
-    <link href="http://demin.ws/blog/english/2011/12/21/virtual-private-functions-in-cpp"/>
+    <link href="http://demin.ws/blog/english/2011/12/21/virtual-private-functions-in-cpp/"/>
     <updated>2011-12-21T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/12/21/virtual-private-functions-in-cpp/</id>
+    <id>http://demin.ws/blog/english/2011/12/21/virtual-private-functions-in-cpp//</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve come across an interesting in my point of view bit of code. There was a virtual private function. The approach is odd at the first place and I thought it shouldn&rsquo;t even compile, but surprisingly it did. I felt that this was yet another gap in my C++.</p>
 
 <p>I wrote this code:</p>
@@ -566,9 +566,9 @@ int main(int argc, char* argv[]) {
   
   <entry>
     <title type="html"><![CDATA[GitHub as a blog engine]]></title>
-    <link href="http://demin.ws/blog/english/2011/12/18/blogging-on-github"/>
+    <link href="http://demin.ws/blog/english/2011/12/18/blogging-on-github/"/>
     <updated>2011-12-18T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/12/18/blogging-on-github/</id>
+    <id>http://demin.ws/blog/english/2011/12/18/blogging-on-github//</id>
     <content type="html"><![CDATA[<p>To say that Blogspot (Blogger) infuriates me is to say nothing. The only benefit of it is fast indexing by Google.</p>
 
 <p>Artemy Lebedev said that he despises all this <a href="http://en.wikipedia.org/wiki/Search_engine_optimization">SEO</a> bullshit because it is much more productive to focus on creating great posts rather than thinking how to attract more readers. His <a href="http://tema.livejournal.com/">LJ</a> uses a default template without even minor tweaks to make it looking “cool”. Despite of this his blog is in Russian Top 10.</p>
@@ -605,9 +605,9 @@ int main(int argc, char* argv[]) {
   
   <entry>
     <title type="html"><![CDATA[Chromebook Samsung 5 5G review]]></title>
-    <link href="http://demin.ws/blog/english/2011/10/02/chromebook-samsumg-5-3g-review"/>
+    <link href="http://demin.ws/blog/english/2011/10/02/chromebook-samsumg-5-3g-review/"/>
     <updated>2011-10-02T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/10/02/chromebook-samsumg-5-3g-review/</id>
+    <id>http://demin.ws/blog/english/2011/10/02/chromebook-samsumg-5-3g-review//</id>
     <content type="html"><![CDATA[<p>I read in papers that Google has <a href="http://www.telegraph.co.uk/technology/google/8800002/Worlds-first-Google-store-opens-in-London.html">launched an offline shop for Chromebooks</a>.</p>
 
 <p>I went to check out the stop and the Chromebook.</p>
@@ -722,9 +722,9 @@ int main(int argc, char* argv[]) {
   
   <entry>
     <title type="html"><![CDATA[Cast to incomplete type in C and C++]]></title>
-    <link href="http://demin.ws/blog/english/2011/08/17/cast-to-incomplete-type-in-c-and-cpp"/>
+    <link href="http://demin.ws/blog/english/2011/08/17/cast-to-incomplete-type-in-c-and-cpp/"/>
     <updated>2011-08-17T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/08/17/cast-to-incomplete-type-in-c-and-cpp/</id>
+    <id>http://demin.ws/blog/english/2011/08/17/cast-to-incomplete-type-in-c-and-cpp//</id>
     <content type="html"><![CDATA[<p>This compiles in C and C++ without any problems:</p>
 
 <pre><code class="cpp">void* p = (struct this_does_not_exist *) -1;
@@ -753,9 +753,9 @@ void* p = (this_does_not_exist *) -1;
   
   <entry>
     <title type="html"><![CDATA[Software development in one picture]]></title>
-    <link href="http://demin.ws/blog/english/2011/07/17/software-development-in-one-picture"/>
+    <link href="http://demin.ws/blog/english/2011/07/17/software-development-in-one-picture/"/>
     <updated>2011-07-17T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/07/17/software-development-in-one-picture/</id>
+    <id>http://demin.ws/blog/english/2011/07/17/software-development-in-one-picture//</id>
     <content type="html"><![CDATA[<p>I don&rsquo;t remember where and when I dug this picture but since then I keep it. It nicely visualizes a software development process.</p>
 
 <p><img src="http://demin.ws/images/blog/software-development-in-one-picture.jpg" /></p>
@@ -766,9 +766,9 @@ void* p = (this_does_not_exist *) -1;
   
   <entry>
     <title type="html"><![CDATA[strcpy() on overlapped strings]]></title>
-    <link href="http://demin.ws/blog/english/2011/07/14/strcpy-on-overlapped-strings"/>
+    <link href="http://demin.ws/blog/english/2011/07/14/strcpy-on-overlapped-strings/"/>
     <updated>2011-07-14T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/07/14/strcpy-on-overlapped-strings/</id>
+    <id>http://demin.ws/blog/english/2011/07/14/strcpy-on-overlapped-strings//</id>
     <content type="html"><![CDATA[<p>Consider the code:</p>
 
 <pre><code class="cpp">#include &lt;string.h&gt;
@@ -874,9 +874,9 @@ HP C/aC++ for Integrity Servers B3910B A.06.22 [Nov 14 2008]
   
   <entry>
     <title type="html"><![CDATA[Safer sizeof for arrays in C++]]></title>
-    <link href="http://demin.ws/blog/english/2011/05/24/safer-sizeof-for-arrays-in-cpp"/>
+    <link href="http://demin.ws/blog/english/2011/05/24/safer-sizeof-for-arrays-in-cpp/"/>
     <updated>2011-05-24T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/05/24/safer-sizeof-for-arrays-in-cpp/</id>
+    <id>http://demin.ws/blog/english/2011/05/24/safer-sizeof-for-arrays-in-cpp//</id>
     <content type="html"><![CDATA[<p>Sometimes you have to deal with raw arrays and pointers to them in C++, and also determine a number of elements in the array at compile time.</p>
 
 <p>For example, it can be done this way:</p>
@@ -948,9 +948,9 @@ int main() {
   
   <entry>
     <title type="html"><![CDATA[Number of crossings in bipartite graph]]></title>
-    <link href="http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph"/>
+    <link href="http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph/"/>
     <updated>2011-05-24T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph/</id>
+    <id>http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph//</id>
     <content type="html"><![CDATA[<p>Given a <a href="http://en.wikipedia.org/wiki/Bipartite_graph">bipartite graph</a>: &ldquo;n&rdquo; vertices on the left, &ldquo;m&rdquo; on the right and edges. The question is: how many edges in this graph are crossed?</p>
 
 <p>In this example n=5, m=4, ten edges: 1-1, 1-2, 2-1, 2-2, 3-3, 4-1, 4-3, 5-1, 5-2, 5-4, a number of crossings: 10.</p>
@@ -965,9 +965,9 @@ int main() {
   
   <entry>
     <title type="html"><![CDATA[In-place string literal subscripting]]></title>
-    <link href="http://demin.ws/blog/english/2011/05/22/in-place-string-literal-subscripting"/>
+    <link href="http://demin.ws/blog/english/2011/05/22/in-place-string-literal-subscripting/"/>
     <updated>2011-05-22T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/05/22/in-place-string-literal-subscripting/</id>
+    <id>http://demin.ws/blog/english/2011/05/22/in-place-string-literal-subscripting//</id>
     <content type="html"><![CDATA[<p>I confess, I had never occurred before to subscript a string literal in-place. For example:</p>
 
 <pre><code class="cpp">#include &lt;stdio.h&gt;
@@ -987,9 +987,9 @@ int main() {
   
   <entry>
     <title type="html"><![CDATA[Symbolic links to files and directories in Windows]]></title>
-    <link href="http://demin.ws/blog/english/2011/05/09/symbolic-links-to-files-and-directories-in-windows"/>
+    <link href="http://demin.ws/blog/english/2011/05/09/symbolic-links-to-files-and-directories-in-windows/"/>
     <updated>2011-05-09T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/05/09/symbolic-links-to-files-and-directories-in-windows/</id>
+    <id>http://demin.ws/blog/english/2011/05/09/symbolic-links-to-files-and-directories-in-windows//</id>
     <content type="html"><![CDATA[<p>To my shame, I thought that Windows still lives in the previous century without links in the file system. I knew about junctions, links to directories, which can be created, for instance, in FAR via Alt-F6.</p>
 
 <p>But today, thumbing through &ldquo;<a href="http://www.amazon.co.uk/Windows-Internals-PRO-Developer-Mark-Russinovich/dp/0735625301/">Windows Internals</a>&rdquo;, I came across a paragraph about it.</p>
@@ -1063,9 +1063,9 @@ symbolic link created for link4 &lt;&lt;===&gt;&gt; file
   
   <entry>
     <title type="html"><![CDATA[ACCU 2011 videos]]></title>
-    <link href="http://demin.ws/blog/english/2011/05/09/accu-2011-videos"/>
+    <link href="http://demin.ws/blog/english/2011/05/09/accu-2011-videos/"/>
     <updated>2011-05-09T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/05/09/accu-2011-videos/</id>
+    <id>http://demin.ws/blog/english/2011/05/09/accu-2011-videos//</id>
     <content type="html"><![CDATA[<p>Alas, it is necessary to give just links, because they don&rsquo;t allow embedding code for viewing directly from the page.</p>
 
 <p>Scott Meyers</p>
@@ -1088,9 +1088,9 @@ symbolic link created for link4 &lt;&lt;===&gt;&gt; file
   
   <entry>
     <title type="html"><![CDATA[Process exit code after crash]]></title>
-    <link href="http://demin.ws/blog/english/2011/04/06/process-exit-code-after-crash"/>
+    <link href="http://demin.ws/blog/english/2011/04/06/process-exit-code-after-crash/"/>
     <updated>2011-04-06T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/04/06/process-exit-code-after-crash/</id>
+    <id>http://demin.ws/blog/english/2011/04/06/process-exit-code-after-crash//</id>
     <content type="html"><![CDATA[<p>Just come across an interesting bug. Being executed from a Makefile script a unit test runner crashed. It looked like another memory corruption. But the consequence was more interesting. That Makefile kept going regardless the crash of the unit test runner. It means the runner still returned zero exit code instead of non-zero.</p>
 
 <p>We fixed that bug (including Makefile problem) but a generic question occured: what exit code is returned to the parent when the process crashes before executing <a href="http://linux.die.net/man/3/exit">exit()</a>?</p>
@@ -1162,9 +1162,9 @@ Crash : FFFFFFFF</p>
   
   <entry>
     <title type="html"><![CDATA[Unit tests for syntax highlighting]]></title>
-    <link href="http://demin.ws/blog/english/2011/04/02/unit-tests-for-syntax-highlighting"/>
+    <link href="http://demin.ws/blog/english/2011/04/02/unit-tests-for-syntax-highlighting/"/>
     <updated>2011-04-02T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/04/02/unit-tests-for-syntax-highlighting/</id>
+    <id>http://demin.ws/blog/english/2011/04/02/unit-tests-for-syntax-highlighting//</id>
     <content type="html"><![CDATA[<p>Quite often people argue whether all those efforts to use unit tests are worth those benefits in code maintenance and regression bugs. Despite of many pros and cons being said there could be situations when it is not obvious that is better, but I can give a very representative example below.</p>
 
 <p>At the moment I&rsquo;m working on a project customizing putty to support of-the-fly syntax highlighting for a proprietary programming language. The main difficulty is that the language has very complicated and not well defined and irregular grammar with lots of ambiguities.</p>
@@ -1183,9 +1183,9 @@ Crash : FFFFFFFF</p>
   
   <entry>
     <title type="html"><![CDATA[Common misconceptions about plastic bank cards]]></title>
-    <link href="http://demin.ws/blog/english/2011/03/27/common-misconceptions-about-plastic-bank-cards"/>
+    <link href="http://demin.ws/blog/english/2011/03/27/common-misconceptions-about-plastic-bank-cards/"/>
     <updated>2011-03-27T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/03/27/common-misconceptions-about-plastic-bank-cards/</id>
+    <id>http://demin.ws/blog/english/2011/03/27/common-misconceptions-about-plastic-bank-cards//</id>
     <content type="html"><![CDATA[<p>Having more than ten years of experience working in banking, in particular with electronic payments, with the help of colleagues I&rsquo;ve created a mini FAQ about plastic bank cards. Some questions are obvious, but some can be quite vague.</p>
 
 <p>Thus, there are ten common misconceptions.</p>
@@ -1246,9 +1246,9 @@ Crash : FFFFFFFF</p>
   
   <entry>
     <title type="html"><![CDATA[MicroXP - a lightweight Windows XP]]></title>
-    <link href="http://demin.ws/blog/english/2011/02/23/microxp"/>
+    <link href="http://demin.ws/blog/english/2011/02/23/microxp/"/>
     <updated>2011-02-23T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/02/23/microxp/</id>
+    <id>http://demin.ws/blog/english/2011/02/23/microxp//</id>
     <content type="html"><![CDATA[<p>The problem &ndash; a need to connect to a remote network via <a href="http://en.wikipedia.org/wiki/Remote_Desktop_Protocol">RDP</a>. To establish such connection, special software must be installed on a client workstation to create an encrypted tunnel between the workstation and the remote network. When that software is up and running, any application (telnet/ssh, ftp, radmin etc), including RDP client (mstsc.exe), might access to the remote network.</p>
 
 <p>Not a problem when a client workstation runs Windows. You just go to a web site and logon, and then an ActiveX component gets started from the page, installs and runs everything required.</p>
@@ -1269,9 +1269,9 @@ Crash : FFFFFFFF</p>
   
   <entry>
     <title type="html"><![CDATA[One-command NORCPU program hacking challenge: analysis and solutions]]></title>
-    <link href="http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions"/>
+    <link href="http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions/"/>
     <updated>2011-02-16T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions/</id>
+    <id>http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions//</id>
     <content type="html"><![CDATA[<p>Publishing the <a href="http://demin.ws/blog/english/2011/02/08/norcpu-hackme-challenge/">announcement of the problem to hack</a> a program running on the CPU executing just one single command, I hoped to get a solution to the end of March, not earlier.</p>
 
 <p>Note: Quoted materials below are provided &ldquo;as is&rdquo; in the original author edition. Only minor formatting changes are applied. Of course, the texts on Russian are translated to English.</p>
@@ -3138,18 +3138,18 @@ f.close()
   
   <entry>
     <title type="html"><![CDATA[One-command NORCPU program hacking challenge: analysis and solutions (link)]]></title>
-    <link href="http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions-link"/>
+    <link href="http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions-link/"/>
     <updated>2011-02-16T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions-link/</id>
+    <id>http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions-link//</id>
     <content type="html"><![CDATA[<p>For some reason Google Reader wasn&rsquo;t able to index my last huge post - <a href="http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions/">One-command NORCPU program hacking challenge: analysis and solutions</a>.</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[NORCPU hackme challenge]]></title>
-    <link href="http://demin.ws/blog/english/2011/02/08/norcpu-hackme-challenge"/>
+    <link href="http://demin.ws/blog/english/2011/02/08/norcpu-hackme-challenge/"/>
     <updated>2011-02-08T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/02/08/norcpu-hackme-challenge/</id>
+    <id>http://demin.ws/blog/english/2011/02/08/norcpu-hackme-challenge//</id>
     <content type="html"><![CDATA[<p>Different kinds of &ldquo;abnormal&rdquo; programming is quite popular among problem solvers. Sometimes it&rsquo;s even impossible to write code manually anymore for just another &ldquo;abnormal&rdquo; programming environment. You have to write a code generator to create even a trivial program.</p>
 
 <p>In the environment I&rsquo;m describing here you can easily write code manually on the high level macro assembler.</p>
@@ -3176,9 +3176,9 @@ f.close()
   
   <entry>
     <title type="html"><![CDATA[Screencasts]]></title>
-    <link href="http://demin.ws/blog/english/2010/11/13/screencasts"/>
+    <link href="http://demin.ws/blog/english/2010/11/13/screencasts/"/>
     <updated>2010-11-13T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2010/11/13/screencasts/</id>
+    <id>http://demin.ws/blog/english/2010/11/13/screencasts//</id>
     <content type="html"><![CDATA[<p>Do you watch screencasts?</p>
 
 <p>I&rsquo;ve discovered this way of getting technical information for myself only recently. Impression is only positive so far - the perceptual speed is much faster comparing to reading.</p>
@@ -3197,9 +3197,9 @@ f.close()
   
   <entry>
     <title type="html"><![CDATA[Naming convension for getters and setters in C++]]></title>
-    <link href="http://demin.ws/blog/english/2010/11/09/naming-convension-for-getters-and-setters-in-cpp"/>
+    <link href="http://demin.ws/blog/english/2010/11/09/naming-convension-for-getters-and-setters-in-cpp/"/>
     <updated>2010-11-09T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2010/11/09/naming-convension-for-getters-and-setters-in-cpp/</id>
+    <id>http://demin.ws/blog/english/2010/11/09/naming-convension-for-getters-and-setters-in-cpp//</id>
     <content type="html"><![CDATA[<p>When writing getter and setter methods in standard C++ there are three main approaches for naming.</p>
 
 <p>1. Pure C++ method based on the references.</p>
@@ -3271,9 +3271,9 @@ field_instance = foo.field();
   
   <entry>
     <title type="html"><![CDATA[Chinese method of multiplication on paper]]></title>
-    <link href="http://demin.ws/blog/english/2010/10/20/chinese-method-of-multiplication-on-paper"/>
+    <link href="http://demin.ws/blog/english/2010/10/20/chinese-method-of-multiplication-on-paper/"/>
     <updated>2010-10-20T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2010/10/20/chinese-method-of-multiplication-on-paper/</id>
+    <id>http://demin.ws/blog/english/2010/10/20/chinese-method-of-multiplication-on-paper//</id>
     <content type="html"><![CDATA[<p>I don&rsquo;t claim that is more efficient rather the traditional method but looks very cool.</p>
 
 <iframe width="425" height="344" src="http://www.youtube.com/embed/EsgMzkUivKo?color=white&theme=light"></iframe>
@@ -3282,9 +3282,9 @@ field_instance = foo.field();
   
   <entry>
     <title type="html"><![CDATA[Tricky floating point]]></title>
-    <link href="http://demin.ws/blog/english/2010/05/12/tricky-floating-point"/>
+    <link href="http://demin.ws/blog/english/2010/05/12/tricky-floating-point/"/>
     <updated>2010-05-12T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2010/05/12/tricky-floating-point/</id>
+    <id>http://demin.ws/blog/english/2010/05/12/tricky-floating-point//</id>
     <content type="html"><![CDATA[<p>How do you think what the code below should print out? I expected two numbers <code>115</code>.</p>
 
 <pre><code class="cpp">#include &lt;iostream&gt;
@@ -3313,9 +3313,9 @@ int main(int argc, char* argv[]) {
   
   <entry>
     <title type="html"><![CDATA[Modelling a CPU with only one operation]]></title>
-    <link href="http://demin.ws/blog/english/2010/04/06/modelling-a-cpu-with-only-one-operation"/>
+    <link href="http://demin.ws/blog/english/2010/04/06/modelling-a-cpu-with-only-one-operation/"/>
     <updated>2010-04-06T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2010/04/06/modelling-a-cpu-with-only-one-operation/</id>
+    <id>http://demin.ws/blog/english/2010/04/06/modelling-a-cpu-with-only-one-operation//</id>
     <content type="html"><![CDATA[<p>Going further with bitwise tips and tricks I will tell about a model of a CPU based on a single operation - NOR (or Peirce arrow).</p>
 
 <p>In the mid-nineties in the FIDO discussion group RU.HACKER I come across an interesting hackme.</p>
@@ -3491,9 +3491,9 @@ carry = (a &amp; b) | (carry &amp; (a ^ b))
   
   <entry>
     <title type="html"><![CDATA[Swap two numeric variables using XOR]]></title>
-    <link href="http://demin.ws/blog/english/2010/03/17/swap-two-numeric-variable-using-xor"/>
+    <link href="http://demin.ws/blog/english/2010/03/17/swap-two-numeric-variable-using-xor/"/>
     <updated>2010-03-17T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2010/03/17/swap-two-numeric-variable-using-xor/</id>
+    <id>http://demin.ws/blog/english/2010/03/17/swap-two-numeric-variable-using-xor//</id>
     <content type="html"><![CDATA[<p>Two numeric variables could be swapped not only via a temporary one. It could be done this way:</p>
 
 <pre><code>a += b;
@@ -3519,9 +3519,9 @@ a ^= b;
   
   <entry>
     <title type="html"><![CDATA[What is faster on Sieve of Eratosthenes: Go, C or C++?]]></title>
-    <link href="http://demin.ws/blog/english/2010/03/06/what-is-faster-on-eratosthenes-seive-go-c-or-cpp"/>
+    <link href="http://demin.ws/blog/english/2010/03/06/what-is-faster-on-eratosthenes-seive-go-c-or-cpp/"/>
     <updated>2010-03-06T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2010/03/06/what-is-faster-on-eratosthenes-seive-go-c-or-cpp/</id>
+    <id>http://demin.ws/blog/english/2010/03/06/what-is-faster-on-eratosthenes-seive-go-c-or-cpp//</id>
     <content type="html"><![CDATA[<p>Go is a very interesting language. It compiles to native-code (no VM or JIT) and it comes with automatic garbage collection and built-in concurrency support, the object-oriented model and on top of it - extremely fast compilation.</p>
 
 <p>I love to use <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">Sieve of Eratosthenes</a> as &ldquo;Hello, world!&rdquo; when exploring a new language.</p>
@@ -3763,18 +3763,18 @@ parse-log:
   
   <entry>
     <title type="html"><![CDATA[What is sizeof for composite types]]></title>
-    <link href="http://demin.ws/blog/english/2010/02/24/what-is-sizeof-for-composite-types"/>
+    <link href="http://demin.ws/blog/english/2010/02/24/what-is-sizeof-for-composite-types/"/>
     <updated>2010-02-24T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2010/02/24/what-is-sizeof-for-composite-types/</id>
+    <id>http://demin.ws/blog/english/2010/02/24/what-is-sizeof-for-composite-types//</id>
     <content type="html"><![CDATA[<p>The simplest way to understand the value of <code>sizeof</code> for composite types (structures and classes) before digging in to the alignment is to remember that sizeof returns the difference between addresses of two consequent elements of an array containing instances of the type.</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Print a container with delimiters]]></title>
-    <link href="http://demin.ws/blog/english/2010/02/24/print-container-with-delimiters"/>
+    <link href="http://demin.ws/blog/english/2010/02/24/print-container-with-delimiters/"/>
     <updated>2010-02-24T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2010/02/24/print-container-with-delimiters/</id>
+    <id>http://demin.ws/blog/english/2010/02/24/print-container-with-delimiters//</id>
     <content type="html"><![CDATA[<p>It&rsquo;s nice to skip a trailing delimiter when printing out a container.</p>
 
 <p>A straightforward solution could be:</p>
@@ -3865,9 +3865,9 @@ int main(int argc, char* argv[]) {
   
   <entry>
     <title type="html"><![CDATA[cmockery staging project]]></title>
-    <link href="http://demin.ws/blog/english/2010/02/13/cmockery-staging-project"/>
+    <link href="http://demin.ws/blog/english/2010/02/13/cmockery-staging-project/"/>
     <updated>2010-02-13T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2010/02/13/cmockery-staging-project/</id>
+    <id>http://demin.ws/blog/english/2010/02/13/cmockery-staging-project//</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve launched a project hosting the staging area of the cmockery (the great unit testing framework for C language) — <a href="http://code.google.com/p/cmockery-staging/">cmockery staging</a>.</p>
 
 <p>I will put the latest features and hot bug fixes there, and also merge back the cmockery trunk as well.</p>
@@ -3882,9 +3882,9 @@ int main(int argc, char* argv[]) {
   
   <entry>
     <title type="html"><![CDATA[Steve Dewhurst, &#34;C++ Common Knowledge&#34;]]></title>
-    <link href="http://demin.ws/blog/english/2009/12/16/cpp-common-knowledge"/>
+    <link href="http://demin.ws/blog/english/2009/12/16/cpp-common-knowledge/"/>
     <updated>2009-12-16T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/12/16/cpp-common-knowledge/</id>
+    <id>http://demin.ws/blog/english/2009/12/16/cpp-common-knowledge//</id>
     <content type="html"><![CDATA[<p>I went to the <a href="http://semantics.org/instructorbio.html">Steve Dewhurst</a>&rsquo;s training &ldquo;<a href="http://semantics.org/courses/Cpp-Common-Knowledge-Training.html">C++ Common Knowledge course</a>&rdquo;. I&rsquo;ve been having his book quite a long time:</p>
 
 <p>Stephen Dewhurst, &ldquo;<a href="http://www.amazon.co.uk/Common-Knowledge-Essential-Intermediate-Programming/dp/0321321928/">C++ Common Knowledge</a>&ldquo;</p>
@@ -3919,9 +3919,9 @@ int main(int argc, char* argv[]) {
   
   <entry>
     <title type="html"><![CDATA[Peter Seibel, &#34;Coders at Work&#34;]]></title>
-    <link href="http://demin.ws/blog/english/2009/12/15/coders-at-work"/>
+    <link href="http://demin.ws/blog/english/2009/12/15/coders-at-work/"/>
     <updated>2009-12-15T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/12/15/coders-at-work/</id>
+    <id>http://demin.ws/blog/english/2009/12/15/coders-at-work//</id>
     <content type="html"><![CDATA[<p>Slowly finished reading &ldquo;<a href="http://www.amazon.co.uk/Coders-Work-Reflections-Craft-Programming/dp/1430219483/">Coders at Work</a>&rdquo;.</p>
 
 <p>Peter Seibel, &ldquo;<a href="http://www.amazon.co.uk/Coders-Work-Reflections-Craft-Programming/dp/1430219483/">Coders at Work</a>&ldquo;</p>
@@ -3948,9 +3948,9 @@ int main(int argc, char* argv[]) {
   
   <entry>
     <title type="html"><![CDATA[Travis Swicegood, &#34;Pragmatic Version Control using Git&#34;]]></title>
-    <link href="http://demin.ws/blog/english/2009/11/14/pragmatic-version-control-using-git"/>
+    <link href="http://demin.ws/blog/english/2009/11/14/pragmatic-version-control-using-git/"/>
     <updated>2009-11-14T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/11/14/pragmatic-version-control-using-git/</id>
+    <id>http://demin.ws/blog/english/2009/11/14/pragmatic-version-control-using-git//</id>
     <content type="html"><![CDATA[<p>At work I am involved in the following routine: there is a branch of sources which stability is monstrously important. Not even saying about breaking the build every commit goes through a few stages of automated checks (compiling by several compilers on several platforms, running through a variety of analyzer etc). Then it has to be approved at least by four/five people who take the responsibility of the commit. The routine is quite painful and long even from a technical point of view. On top of it the procedure is lined up over the years and based on very old SCM and we will not it&rsquo;s called in vain. Therefore the possibility of merging and conflict resolution is manual mostly. It can normally do only check-out and check-in.</p>
 
 <p>As a consequence of the fact that every commit is prepared, debugged and tested a sizable time (the benefit is that there are bug fixes only which are typically small) and even formal aspect of an issue may take a couple of days, often happens that when it comes directly to the command &ldquo;commit&rdquo; all ends up with a conflict because someone has already managed to touch a piece of your code and pour it on the server. Then it needs to merge manually. And if the file is not one then a headache begins.</p>
@@ -4001,9 +4001,9 @@ int main(int argc, char* argv[]) {
   
   <entry>
     <title type="html"><![CDATA[Google Wave invites]]></title>
-    <link href="http://demin.ws/blog/english/2009/11/12/google-wave-invites"/>
+    <link href="http://demin.ws/blog/english/2009/11/12/google-wave-invites/"/>
     <updated>2009-11-12T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/11/12/google-wave-invites/</id>
+    <id>http://demin.ws/blog/english/2009/11/12/google-wave-invites//</id>
     <content type="html"><![CDATA[<p>I have a dozen of invites to Google Wave.</p>
 
 <p>I could send it off to all interested in the order of requests. Naturally it is relevant only if you have a Gmail account. So please please indicate an address at Gmail to send the invitation.</p>
@@ -4016,9 +4016,9 @@ int main(int argc, char* argv[]) {
   
   <entry>
     <title type="html"><![CDATA[Updates on Radio-86RK emulator in JavaScript]]></title>
-    <link href="http://demin.ws/blog/english/2009/11/08/updates-on-radio86rk-emulator-in-javascript"/>
+    <link href="http://demin.ws/blog/english/2009/11/08/updates-on-radio86rk-emulator-in-javascript/"/>
     <updated>2009-11-08T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/11/08/updates-on-radio86rk-emulator-in-javascript/</id>
+    <id>http://demin.ws/blog/english/2009/11/08/updates-on-radio86rk-emulator-in-javascript//</id>
     <content type="html"><![CDATA[<p>In spare time I have been slowly, savouring and gladly working on <a href="http://demin.ws/blog/english/2009/10/02/radio86rk-emulator-in-javascript/">the emulator in JavaScript of the vintage 8-bit computer Radio-86RK</a>.</p>
 
 <p>Just as in the good old days but now it <a href="http://radio86.googlecode.com/hg/online/radio86.html">works in a browser</a>.</p>
@@ -4051,18 +4051,18 @@ int main(int argc, char* argv[]) {
   
   <entry>
     <title type="html"><![CDATA[codepad.org]]></title>
-    <link href="http://demin.ws/blog/english/2009/10/29/codepad"/>
+    <link href="http://demin.ws/blog/english/2009/10/29/codepad/"/>
     <updated>2009-10-29T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/10/29/codepad/</id>
+    <id>http://demin.ws/blog/english/2009/10/29/codepad//</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve recently discovered for myself <a href="http://codepad.org">codepad.org</a> and amazingly started to use quite regularly when something needs to try out when sitting in the middle of nowhere (for instance, in a meeting room).</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Artificial typification of homogeneous arguments in C++]]></title>
-    <link href="http://demin.ws/blog/english/2009/10/29/artificial-typification-of-homogeneous-arguments-in-cpp"/>
+    <link href="http://demin.ws/blog/english/2009/10/29/artificial-typification-of-homogeneous-arguments-in-cpp/"/>
     <updated>2009-10-29T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/10/29/artificial-typification-of-homogeneous-arguments-in-cpp/</id>
+    <id>http://demin.ws/blog/english/2009/10/29/artificial-typification-of-homogeneous-arguments-in-cpp//</id>
     <content type="html"><![CDATA[<p>Let&rsquo;s say there is a class with following interface:</p>
 
 <pre><code class="cpp">class Date {
@@ -4129,9 +4129,9 @@ class Day { ... };
   
   <entry>
     <title type="html"><![CDATA[Subtle printf()]]></title>
-    <link href="http://demin.ws/blog/english/2009/10/22/subtle-printf"/>
+    <link href="http://demin.ws/blog/english/2009/10/22/subtle-printf/"/>
     <updated>2009-10-22T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/10/22/subtle-printf/</id>
+    <id>http://demin.ws/blog/english/2009/10/22/subtle-printf//</id>
     <content type="html"><![CDATA[<p>Yesterday I&rsquo;d come across an interesting glitch which confused me for a while.</p>
 
 <p>I was debugging a brand new online assembler for my <a href="http://code.google.com/p/radio86">Radio-86RK emulator</a>. That debugging meant some dancing around HTML.</p>
@@ -4182,9 +4182,9 @@ class Day { ... };
   
   <entry>
     <title type="html"><![CDATA[Introduction to Google Mock (video)]]></title>
-    <link href="http://demin.ws/blog/english/2009/10/16/introduction-to-google-mock-video"/>
+    <link href="http://demin.ws/blog/english/2009/10/16/introduction-to-google-mock-video/"/>
     <updated>2009-10-16T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/10/16/introduction-to-google-mock-video/</id>
+    <id>http://demin.ws/blog/english/2009/10/16/introduction-to-google-mock-video//</id>
     <content type="html"><![CDATA[<p>This is a great video about Google Mock from the authors.</p>
 
 <iframe width="425" height="344" src="http://www.youtube.com/embed/sYpCyLI47rM?color=white&theme=light"></iframe>
@@ -4193,9 +4193,9 @@ class Day { ... };
   
   <entry>
     <title type="html"><![CDATA[Project cloning on Google Code]]></title>
-    <link href="http://demin.ws/blog/english/2009/10/09/project-cloning-on-google-code"/>
+    <link href="http://demin.ws/blog/english/2009/10/09/project-cloning-on-google-code/"/>
     <updated>2009-10-09T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/10/09/project-cloning-on-google-code/</id>
+    <id>http://demin.ws/blog/english/2009/10/09/project-cloning-on-google-code//</id>
     <content type="html"><![CDATA[<p>Last day Mercurial repositories on Google Code were read-only due to maintenance works.</p>
 
 <p>I have come over today and see this:</p>
@@ -4212,9 +4212,9 @@ class Day { ... };
   
   <entry>
     <title type="html"><![CDATA[Google C++ Testing Framework presentation]]></title>
-    <link href="http://demin.ws/blog/english/2009/10/07/google-test-framework-presentation"/>
+    <link href="http://demin.ws/blog/english/2009/10/07/google-test-framework-presentation/"/>
     <updated>2009-10-07T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/10/07/google-test-framework-presentation/</id>
+    <id>http://demin.ws/blog/english/2009/10/07/google-test-framework-presentation//</id>
     <content type="html"><![CDATA[<p>Following up to the <a href="http://demin.ws/blog/english/2009/10/03/google-test-framework-140/">post about the new version of Google Test</a>, there is the presentation available from its developers:</p>
 
 <iframe src="http://docs.google.com/present/embed?id=dfsbxvm5_0f5s4pvf9&amp;size=m" frameborder="0" width="555" height="451"></iframe>
@@ -4227,9 +4227,9 @@ class Day { ... };
   
   <entry>
     <title type="html"><![CDATA[Lego NXT remote control via bluetooth]]></title>
-    <link href="http://demin.ws/blog/english/2009/10/05/lego-nxt-remote-control-via-bluetooth"/>
+    <link href="http://demin.ws/blog/english/2009/10/05/lego-nxt-remote-control-via-bluetooth/"/>
     <updated>2009-10-05T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/10/05/lego-nxt-remote-control-via-bluetooth/</id>
+    <id>http://demin.ws/blog/english/2009/10/05/lego-nxt-remote-control-via-bluetooth//</id>
     <content type="html"><![CDATA[<p>I keep going to spread out my projects on Google Code.</p>
 
 <p>This bit is roughly one year old project — the remote control over Bluetooth for <a href="http://mindstorms.lego.com/en-us/Default.aspx">Lego NXT</a> using the applet running on a mobile phone.</p>
@@ -4254,9 +4254,9 @@ class Day { ... };
   
   <entry>
     <title type="html"><![CDATA[Google C++ Testing Framework 1.4.0]]></title>
-    <link href="http://demin.ws/blog/english/2009/10/03/google-test-framework-140"/>
+    <link href="http://demin.ws/blog/english/2009/10/03/google-test-framework-140/"/>
     <updated>2009-10-03T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/10/03/google-test-framework-140/</id>
+    <id>http://demin.ws/blog/english/2009/10/03/google-test-framework-140//</id>
     <content type="html"><![CDATA[<p>Yesterday Googlers announced the next version of my favourite testing framework for C++ <a href="http://code.google.com/p/googletest">Google Testing Framework</a> - 1.4.0.</p>
 
 <p>Any changes? Indeed.</p>
@@ -4404,9 +4404,9 @@ Expected: 1
   
   <entry>
     <title type="html"><![CDATA[Radio-86RK emulator in JavaScript]]></title>
-    <link href="http://demin.ws/blog/english/2009/10/02/radio86rk-emulator-in-javascript"/>
+    <link href="http://demin.ws/blog/english/2009/10/02/radio86rk-emulator-in-javascript/"/>
     <updated>2009-10-02T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/10/02/radio86rk-emulator-in-javascript/</id>
+    <id>http://demin.ws/blog/english/2009/10/02/radio86rk-emulator-in-javascript//</id>
     <content type="html"><![CDATA[<p><em>Note: This post contains lots of information on Russian and links to resources on Russian. Unfortunately it&rsquo;s not possible to translate certain things like original 8-bit games output written ages ago or original screenshots. In this post I&rsquo;m mostly keen on emotions and memories when you see the machine given your basics right in a web browser and it is reconstructed bit by bit just in pure JavaScript.</em></p>
 
 <p>The first computer I started programming on was <a href="http://en.wikipedia.org/wiki/History_of_computer_hardware_in_Soviet_Bloc_countries#Radio-86RK">Radio-86RK</a>. My brother built it&hellip; and it got started and keeps going up to nowadays.</p>
@@ -4442,9 +4442,9 @@ Even if you do not understand Russian there is no problem at all. Just launch th
   
   <entry>
     <title type="html"><![CDATA[const T* vs T const*]]></title>
-    <link href="http://demin.ws/blog/english/2009/09/30/const-t-t-const"/>
+    <link href="http://demin.ws/blog/english/2009/09/30/const-t-t-const/"/>
     <updated>2009-09-30T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/09/30/const-t-t-const/</id>
+    <id>http://demin.ws/blog/english/2009/09/30/const-t-t-const//</id>
     <content type="html"><![CDATA[<p>Not a secret that using of <code>const T*</code> to declare a pointer is exactly the same to <code>T const*</code> because it is only important here to use <code>const</code> before <code>*</code> but the order of <code>T</code> and <code>const</code> doesn&rsquo;t matter.</p>
 
 <p>The both:</p>
@@ -4483,9 +4483,9 @@ p-&gt;some_member = 0;   // ERROR: error C2166: l-value specifies const object
   
   <entry>
     <title type="html"><![CDATA[Cross platform Perforce source patcher]]></title>
-    <link href="http://demin.ws/blog/english/2009/09/28/cross-platform-perforce-source-patcher"/>
+    <link href="http://demin.ws/blog/english/2009/09/28/cross-platform-perforce-source-patcher/"/>
     <updated>2009-09-28T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/09/28/cross-platform-perforce-source-patcher/</id>
+    <id>http://demin.ws/blog/english/2009/09/28/cross-platform-perforce-source-patcher//</id>
     <content type="html"><![CDATA[<p>It&rsquo;s almost impossible to imagine modern software development without using version control systems. There are quite a few players on the market - open sourced, proprietary and in between. One of the last ones is Perforce. This is a commercial product but it&rsquo;s available for personal home use. I work for the big software house in the UK and we intensively use Perforce as SCM backend. Perforce is quite handy and flexible SCM despite of a few minor problems but I would say in general these are conceptual issues which are coming from the different approaches I might have vs. Perforce authors on how the source version control should or should not be implemented.</p>
 
 <p>For instance, the specifics of the development in our company are that we support and develop our products on many platforms such as Linux, SunOS, AIX, HP-UX, Tru64, Windows etc. Talking about platforms, even for UNIX family the development of portable software is quite a challenging problem. For example, multithreading and networking are not straightforward enough to be implemented portably right away. Every time a new piece of code or a patch is coming up it must be verified on all supported platforms starting from just compilation up to unit testing and QA.</p>
@@ -4608,9 +4608,9 @@ p-&gt;some_member = 0;   // ERROR: error C2166: l-value specifies const object
   
   <entry>
     <title type="html"><![CDATA[The first little step into Test Driven Development]]></title>
-    <link href="http://demin.ws/blog/english/2009/09/23/first-little-step-into-test-driven-development"/>
+    <link href="http://demin.ws/blog/english/2009/09/23/first-little-step-into-test-driven-development/"/>
     <updated>2009-09-23T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/09/23/first-little-step-into-test-driven-development/</id>
+    <id>http://demin.ws/blog/english/2009/09/23/first-little-step-into-test-driven-development//</id>
     <content type="html"><![CDATA[<p>The software development world is changing rapidly – new versions of the operating systems, compilers, libraries are coming up faster and faster. It’s actually great. Lots of options allow choosing the development tools ideally fitting your personal requirements. Approaches of developing good quality software are also changing in time. Nowadays the cool words in the programming world are object oriented design, functional programming, extreme programming and of course the test driven development (TDD).</p>
 
 <p>Though my programming experience is more than ten years and it covers various languages from machine codes and assembler up to the functional programming I have discovered the test driven development world quite recently. Programmers are often very conservative (and quite lazy!) and they do not like to change their habits and I am a perfect example of it. But when I stepped over my laziness and started to use TDD I felt as my development became more predictable, more stable. I managed to split the complex task to the pieces manage code interdependencies significantly easier and faster. More importantly: I have stopped repeating my coding mistakes, reintroducing already fixed bugs and now I am able to refactor my code anytime without any fear of breaking something important a day before the release. Why? All thanks to the test driven development.</p>
@@ -5139,9 +5139,9 @@ All 3 tests passed
   
   <entry>
     <title type="html"><![CDATA[Doubled semi-colon in variable declarations]]></title>
-    <link href="http://demin.ws/blog/english/2009/09/21/doubled-semi-colon-in-variable-declarations"/>
+    <link href="http://demin.ws/blog/english/2009/09/21/doubled-semi-colon-in-variable-declarations/"/>
     <updated>2009-09-21T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/09/21/doubled-semi-colon-in-variable-declarations/</id>
+    <id>http://demin.ws/blog/english/2009/09/21/doubled-semi-colon-in-variable-declarations//</id>
     <content type="html"><![CDATA[<p>It seems to be completely innocent example (<code>vs_double_semicolumn.c</code>):</p>
 
 <pre><code class="cpp">void main() {
@@ -5182,9 +5182,9 @@ Error E2140 vs_double_semicolumn.c 3: Declaration is not allowed here in functio
   
   <entry>
     <title type="html"><![CDATA[Virtual functions in constructors and destructors]]></title>
-    <link href="http://demin.ws/blog/english/2009/09/12/virtual-functions-in-constructors-and-destructors"/>
+    <link href="http://demin.ws/blog/english/2009/09/12/virtual-functions-in-constructors-and-destructors/"/>
     <updated>2009-09-12T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/09/12/virtual-functions-in-constructors-and-destructors/</id>
+    <id>http://demin.ws/blog/english/2009/09/12/virtual-functions-in-constructors-and-destructors//</id>
     <content type="html"><![CDATA[<p>Have a look at the simple example (<code>virtual_funct_const.cpp</code>):</p>
 
 <pre><code class="cpp">#include &lt;iostream&gt;
@@ -5259,9 +5259,9 @@ A::destruct()
   
   <entry>
     <title type="html"><![CDATA[Pointer cast bug in Codegear (Borland) C++ compiler]]></title>
-    <link href="http://demin.ws/blog/english/2009/09/12/pointer-cast-bug-in-codegear-borland-compiler"/>
+    <link href="http://demin.ws/blog/english/2009/09/12/pointer-cast-bug-in-codegear-borland-compiler/"/>
     <updated>2009-09-12T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/09/12/pointer-cast-bug-in-codegear-borland-compiler/</id>
+    <id>http://demin.ws/blog/english/2009/09/12/pointer-cast-bug-in-codegear-borland-compiler//</id>
     <content type="html"><![CDATA[<p>Here is the trivial program (<code>bcc32_5.93_cast_bug.cpp</code>):</p>
 
 <pre><code class="cpp">class A {};
@@ -5289,9 +5289,9 @@ Fatal F1004 bcc32_5.93_cast_bug.cpp 4: Internal compiler error
   
   <entry>
     <title type="html"><![CDATA[Google Code Jam Qualification Round 2009]]></title>
-    <link href="http://demin.ws/blog/english/2009/09/04/google-code-jam-qualification-round-2009"/>
+    <link href="http://demin.ws/blog/english/2009/09/04/google-code-jam-qualification-round-2009/"/>
     <updated>2009-09-04T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/09/04/google-code-jam-qualification-round-2009/</id>
+    <id>http://demin.ws/blog/english/2009/09/04/google-code-jam-qualification-round-2009//</id>
     <content type="html"><![CDATA[<p>Google Code Jam Qualification round is finished. After the successful submission of the problem A (Alien Language), B (Watersheds) and the small dataset of the problem C (Welcome to Code Jam) I have failed on the large dataset of C. It was not about 8 minutes given for the calculation at all. The bug has been found but it does not help much - time&rsquo;s up and there was only one attempt permitted for a large dataset.</p>
 
 <p>The traditional conclusion: Good algorithms are better than supercomputers.</p>
@@ -5308,9 +5308,9 @@ Fatal F1004 bcc32_5.93_cast_bug.cpp 4: Internal compiler error
   
   <entry>
     <title type="html"><![CDATA[It is worth to use STL string?]]></title>
-    <link href="http://demin.ws/blog/english/2009/08/15/is-it-worth-to-use-stl-string"/>
+    <link href="http://demin.ws/blog/english/2009/08/15/is-it-worth-to-use-stl-string/"/>
     <updated>2009-08-15T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/08/15/is-it-worth-to-use-stl-string/</id>
+    <id>http://demin.ws/blog/english/2009/08/15/is-it-worth-to-use-stl-string//</id>
     <content type="html"><![CDATA[<p>I regularly have arguments with colleagues about using <code>std::string</code>. Is it worth to use it at all or our own string class implementation could be better?</p>
 
 <p>The first question is about <code>std::string</code> quality. Amusingly the majority of people which I asked to draft more or less efficient implementation of the string class wrote roughly this:</p>
@@ -5531,9 +5531,9 @@ int main(int argc, char* argv[]) {
   
   <entry>
     <title type="html"><![CDATA[Why I have started this blog?]]></title>
-    <link href="http://demin.ws/blog/english/2009/01/24/why-i-have-started-this-blog"/>
+    <link href="http://demin.ws/blog/english/2009/01/24/why-i-have-started-this-blog/"/>
     <updated>2009-01-24T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2009/01/24/why-i-have-started-this-blog/</id>
+    <id>http://demin.ws/blog/english/2009/01/24/why-i-have-started-this-blog//</id>
     <content type="html"><![CDATA[<p>This is the first and most likely the last non-technical post in this blog. Everything further will be extremely technical about computers, programming, and robots and so on, and so forth. The original idea was to create a collection of my own tips and tricks invented or grabbed. Many things are being forgotten very quickly and the online collection tends to help keeping it at hand. In addition it is silly to keep ideas under the pillow. Ideas should be shared that I am going to do right here.</p>
 
 <p>Follow the announcements.</p>
