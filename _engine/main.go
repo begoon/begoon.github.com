@@ -356,10 +356,6 @@ func process_post(filename string) {
     die("Disqus and Blogspot ids are given at the same time")
   }
 
-  if p["disqus"] == "" {
-    p["disqus"] = p["blogspot"]
-  }
-
   if !strings.HasPrefix(p["date"], p["date_only"]) {
     die("Slug date [%s] isn't a prefix of [%s]", p["date_only"], p["date"])
   }
