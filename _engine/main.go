@@ -512,4 +512,5 @@ func main() {
   process_site()
   check_links()
   println(time.Since(started).String())
+  fmt.Printf("Processed %d posts.\n", len(posts))
 }
