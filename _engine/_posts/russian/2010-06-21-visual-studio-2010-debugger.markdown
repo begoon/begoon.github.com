@@ -2,7 +2,7 @@
 layout: post
 title: "Отладчик в Visual Studio 2010"
 language: russian
-date: 2010-06-21 00:00
+date: 2010-06-21 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/06/visual-studio-2010.html
 categories:

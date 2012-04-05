@@ -2,7 +2,7 @@
 layout: post
 title: "На какой языке вы более продуктивны?"
 language: russian
-date: 2010-11-17 00:00
+date: 2010-11-17 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/11/blog-post_17.html
 categories:

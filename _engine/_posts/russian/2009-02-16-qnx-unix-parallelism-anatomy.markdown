@@ -2,7 +2,7 @@
 layout: post
 title: 'Олег Цилюрик, Егор Горошко, "QNX/UNIX. Анатомия параллелизма"'
 language: russian
-date: 2009-02-16 00:00
+date: 2009-02-16 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/02/qnxunix.html
 categories:

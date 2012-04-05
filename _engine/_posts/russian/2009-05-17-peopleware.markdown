@@ -2,7 +2,7 @@
 layout: post
 title: 'Том Демарко, Тимати Листер, "Человеческий фактор: успешные проекты и команды"'
 language: russian
-date: 2009-05-17 00:00
+date: 2009-05-17 03:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/05/blog-post_17.html
 categories:

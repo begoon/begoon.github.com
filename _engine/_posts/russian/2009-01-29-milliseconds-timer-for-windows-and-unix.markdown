@@ -2,7 +2,7 @@
 layout: post
 title: "Миллисекундный таймер для Windows и UNIX"
 language: russian
-date: 2009-01-29 00:00
+date: 2009-01-29 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/01/blog-post_29.html
 categories:

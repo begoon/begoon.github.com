@@ -34,7 +34,11 @@ const (
 )
 
 var (
-  posts       Posts
+  posts Posts
+
+  // This map is used to check whether a post with a given date already exists.
+  post_dates map[string]string
+
   no_binaries *bool = flag.Bool("no-binaries", false, "don't publish binaries")
   logging     *bool = flag.Bool("logging", false, "log to 'trace.log'")
 
@@ -62,6 +66,7 @@ var (
 
 func init() {
   posts = Posts{}
+  post_dates = map[string]string{}
 
   // Pre-compile regexps.
   HeaderRE = *regexp.MustCompile("(?s)^(---\n(.+)\n---\n)")
@@ -383,6 +388,12 @@ func process_post(filename string) {
   trace("= Written file [%s]", t)
 
   posts = append(posts, &p)
+
+  post_id := p["language"] + "-" + p["date"]
+  if existing, ok := post_dates[post_id]; ok {
+    die("Post with [%s] id (URL [%s]) already exists, URL [%s]", post_id, p["url"], existing)
+  }
+  post_dates[post_id] = p["url"]
 }
 
 func process_posts() {

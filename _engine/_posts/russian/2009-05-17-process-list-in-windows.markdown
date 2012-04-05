@@ -2,7 +2,7 @@
 layout: post
 title: "Список процессов в Windows"
 language: russian
-date: 2009-05-17 00:00
+date: 2009-05-17 05:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/05/windows.html
 categories:

@@ -2,7 +2,7 @@
 layout: post
 title: "Git для работы на нескольких платформах"
 language: russian
-date: 2011-11-22 00:00
+date: 2011-11-22 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/11/git.html
 categories: 

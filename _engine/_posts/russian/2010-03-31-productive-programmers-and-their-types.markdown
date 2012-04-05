@@ -2,7 +2,7 @@
 layout: post
 title: "Продуктивные программисты и их типы"
 language: russian
-date: 2010-03-31 00:00
+date: 2010-03-31 02:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/03/blog-post_5615.html
 categories:

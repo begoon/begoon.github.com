@@ -2,7 +2,7 @@
 layout: post
 title: "Примеры хорошого кода"
 language: russian
-date: 2011-02-08 00:00
+date: 2011-02-08 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/02/blog-post_08.html
 categories:

@@ -2,7 +2,7 @@
 layout: post
 title: "Google Test Framework 1.3.0"
 language: russian
-date: 2009-03-19 00:00
+date: 2009-03-19 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/03/google-test-framework-130.html
 categories:

@@ -2,7 +2,7 @@
 layout: post
 title: "parseInt() в JavaScript"
 language: russian
-date: 2010-04-02 00:00
+date: 2010-04-02 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/04/parsetint-javascripte.html
 categories:

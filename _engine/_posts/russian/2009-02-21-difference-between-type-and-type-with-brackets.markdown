@@ -2,7 +2,7 @@
 layout: post
 title: 'Разница между "T()" и "T"'
 language: russian
-date: 2009-02-21 00:00
+date: 2009-02-21 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/02/t-t.html
 categories:

@@ -2,7 +2,7 @@
 layout: post
 title: "Задача про поиск середины связного списка"
 language: russian
-date: 2010-04-16 00:00
+date: 2010-04-16 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/04/blog-post_16.html
 categories:

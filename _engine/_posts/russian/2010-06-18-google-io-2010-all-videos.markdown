@@ -2,7 +2,7 @@
 layout: post
 title: "Google I/O: all videos"
 language: russian
-date: 2010-06-18 00:00
+date: 2010-06-18 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/06/google-io-all-videos.html
 categories:

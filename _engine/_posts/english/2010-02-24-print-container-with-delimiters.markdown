@@ -2,7 +2,7 @@
 layout: post
 title: "Print a container with delimiters"
 language: english
-date: 2010-02-24 00:00
+date: 2010-02-24 01:00
 comments: true
 blogspot: http://meta-coding.blogspot.com/2010/02/print-container-with-delimiters.html
 categories: 

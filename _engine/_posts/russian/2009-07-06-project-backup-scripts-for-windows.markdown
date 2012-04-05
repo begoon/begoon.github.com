@@ -2,7 +2,7 @@
 layout: post
 title: "Скрипты для архивации проектов под Windows"
 language: russian
-date: 2009-07-06 00:00
+date: 2009-07-06 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/07/windows.html
 categories:

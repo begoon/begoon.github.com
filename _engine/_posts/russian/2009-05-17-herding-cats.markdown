@@ -2,7 +2,7 @@
 layout: post
 title: 'Дж. Ханк Рейнвотер, "Наставление для программистов, руководящих другими программистами"'
 language: russian
-date: 2009-05-17 00:00
+date: 2009-05-17 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/05/blog-post_9173.html
 categories:

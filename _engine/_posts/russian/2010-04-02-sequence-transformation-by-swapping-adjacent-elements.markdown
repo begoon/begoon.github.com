@@ -2,7 +2,7 @@
 layout: post
 title: "Приведение последовательности через обмен соседних элементов (решение)"
 language: russian
-date: 2010-04-02 00:00
+date: 2010-04-02 02:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/04/blog-post.html
 categories:

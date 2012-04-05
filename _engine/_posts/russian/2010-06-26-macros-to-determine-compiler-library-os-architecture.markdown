@@ -2,7 +2,7 @@
 layout: post
 title: "Макросы для определения компилятора, библиотеки, операционной системы или архитектуры"
 language: russian
-date: 2010-06-26 00:00
+date: 2010-06-26 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/06/blog-post_26.html
 categories:

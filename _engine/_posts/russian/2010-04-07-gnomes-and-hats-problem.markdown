@@ -2,7 +2,7 @@
 layout: post
 title: "Задача про гномов и шапки"
 language: russian
-date: 2010-04-07 00:00
+date: 2010-04-07 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/04/blog-post_07.html
 categories:

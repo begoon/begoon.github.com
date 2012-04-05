@@ -2,7 +2,7 @@
 layout: post
 title: "Google Test Framework 1.5.0"
 language: russian
-date: 2010-04-16 00:00
+date: 2010-04-16 02:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/04/google-test-150.html
 categories:

@@ -2,7 +2,7 @@
 layout: post
 title: "Ведение блога на Google Code"
 language: russian
-date: 2009-07-26 00:00
+date: 2009-07-26 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/07/google-code.html
 categories:

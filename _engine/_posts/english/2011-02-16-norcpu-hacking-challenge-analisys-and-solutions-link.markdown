@@ -2,7 +2,7 @@
 layout: post
 title: "One-command NORCPU program hacking challenge: analysis and solutions (link)"
 language: english
-date: 2011-02-16 00:00
+date: 2011-02-16 01:00
 comments: true
 blogspot: http://meta-coding.blogspot.com/2011/02/one-command-norcpu-program-hacking_16.html
 categories: 

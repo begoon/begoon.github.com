@@ -2,7 +2,7 @@
 layout: post
 title: 'Роберт Седжвик, "Фундаментальные алгоритмы"'
 language: russian
-date: 2009-07-07 00:00
+date: 2009-07-07 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/07/blog-post.html
 categories:

@@ -2,7 +2,7 @@
 layout: post
 title: "Динамическая линковка C++ на AIX"
 language: russian
-date: 2011-06-16 00:00
+date: 2011-06-16 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/06/c-aix.html
 categories: 

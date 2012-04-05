@@ -5,7 +5,7 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-05T17:49:29+01:00</updated>
+  <updated>2012-04-05T18:17:02+01:00</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
@@ -882,6 +882,23 @@ HP C/aC++ for Integrity Servers B3910B A.06.22 [Nov 14 2008]
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Number of crossings in bipartite graph]]></title>
+    <link href="http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph/"/>
+    <updated>2011-05-24T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph/</id>
+    <content type="html"><![CDATA[<p>Given a <a href="http://en.wikipedia.org/wiki/Bipartite_graph">bipartite graph</a>: &ldquo;n&rdquo; vertices on the left, &ldquo;m&rdquo; on the right and edges. The question is: how many edges in this graph are crossed?</p>
+
+<p>In this example n=5, m=4, ten edges: 1-1, 1-2, 2-1, 2-2, 3-3, 4-1, 4-3, 5-1, 5-2, 5-4, a number of crossings: 10.</p>
+
+<p><img src="http://demin.ws/images/blog/bipartite-graph.gif" /></p>
+
+<p>Crossings are always considered in pairs. For example, if three edges are crossed in one physical point, formally there are still three crossings, not one.</p>
+
+<p>O(n*m) solution exists.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Safer sizeof for arrays in C++]]></title>
     <link href="http://demin.ws/blog/english/2011/05/24/safer-sizeof-for-arrays-in-cpp/"/>
     <updated>2011-05-24T00:00:00+00:00</updated>
@@ -956,23 +973,6 @@ int main() {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Number of crossings in bipartite graph]]></title>
-    <link href="http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph/"/>
-    <updated>2011-05-24T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph/</id>
-    <content type="html"><![CDATA[<p>Given a <a href="http://en.wikipedia.org/wiki/Bipartite_graph">bipartite graph</a>: &ldquo;n&rdquo; vertices on the left, &ldquo;m&rdquo; on the right and edges. The question is: how many edges in this graph are crossed?</p>
-
-<p>In this example n=5, m=4, ten edges: 1-1, 1-2, 2-1, 2-2, 3-3, 4-1, 4-3, 5-1, 5-2, 5-4, a number of crossings: 10.</p>
-
-<p><img src="http://demin.ws/images/blog/bipartite-graph.gif" /></p>
-
-<p>Crossings are always considered in pairs. For example, if three edges are crossed in one physical point, formally there are still three crossings, not one.</p>
-
-<p>O(n*m) solution exists.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[In-place string literal subscripting]]></title>
     <link href="http://demin.ws/blog/english/2011/05/22/in-place-string-literal-subscripting/"/>
     <updated>2011-05-22T00:00:00+00:00</updated>
@@ -991,6 +991,31 @@ int main() {
 </code></pre>
 
 <p>To me personally the expression <code>&quot;12345678&quot;[i]</code> cuts the eye. But from the language point of view everything is fine.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ACCU 2011 videos]]></title>
+    <link href="http://demin.ws/blog/english/2011/05/09/accu-2011-videos/"/>
+    <updated>2011-05-09T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2011/05/09/accu-2011-videos/</id>
+    <content type="html"><![CDATA[<p>Alas, it is necessary to give just links, because they don&rsquo;t allow embedding code for viewing directly from the page.</p>
+
+<p>Scott Meyers</p>
+
+<p><a href="http://skillsmatter.com/podcast/home/cpu-caches-and-why-you-care">CPU caches and why you care</a></p>
+
+<p><a href="http://skillsmatter.com/podcast/home/move-semanticsperfect-forwarding-and-rvalue-references">Move semantics, perfect forwarding, and rvalue references</a></p>
+
+<p>John Lakos (Bloomberg)</p>
+
+<p><a href="http://skillsmatter.com/podcast/home/defensive-programming-done-right">Defensive programming done right</a></p>
+
+<p>Dietmar Kuhl (Bloomberg)</p>
+
+<p><a href="http://skillsmatter.com/podcast/home/generic-programming-with-c-plus-plus-0x">Generic Programming with C++ 0x</a></p>
+
+<p><a href="http://skillsmatter.com/event/home/accu-2011">Other videos are also available</a>.</p>
 ]]></content>
   </entry>
   
@@ -1067,31 +1092,6 @@ symbolic link created for link4 &lt;&lt;===&gt;&gt; file
 <p>In general, such simple task as links in the file system, solved in UNIX more than twenty years ago, has been solved in Windows in traditional for this operating system way - there are multiple solutions with different level of compatibility.</p>
 
 <p>By the way, &ldquo;<a href="http://www.amazon.co.uk/Windows-Internals-PRO-Developer-Mark-Russinovich/dp/0735625301/">Windows Internals</a>&rdquo; is bloody fantastic, strongly recommend.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[ACCU 2011 videos]]></title>
-    <link href="http://demin.ws/blog/english/2011/05/09/accu-2011-videos/"/>
-    <updated>2011-05-09T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/05/09/accu-2011-videos/</id>
-    <content type="html"><![CDATA[<p>Alas, it is necessary to give just links, because they don&rsquo;t allow embedding code for viewing directly from the page.</p>
-
-<p>Scott Meyers</p>
-
-<p><a href="http://skillsmatter.com/podcast/home/cpu-caches-and-why-you-care">CPU caches and why you care</a></p>
-
-<p><a href="http://skillsmatter.com/podcast/home/move-semanticsperfect-forwarding-and-rvalue-references">Move semantics, perfect forwarding, and rvalue references</a></p>
-
-<p>John Lakos (Bloomberg)</p>
-
-<p><a href="http://skillsmatter.com/podcast/home/defensive-programming-done-right">Defensive programming done right</a></p>
-
-<p>Dietmar Kuhl (Bloomberg)</p>
-
-<p><a href="http://skillsmatter.com/podcast/home/generic-programming-with-c-plus-plus-0x">Generic Programming with C++ 0x</a></p>
-
-<p><a href="http://skillsmatter.com/event/home/accu-2011">Other videos are also available</a>.</p>
 ]]></content>
   </entry>
   

@@ -2,7 +2,7 @@
 layout: post
 title: "Artificial typification of homogeneous arguments in C++"
 language: english
-date: 2009-10-29 00:00
+date: 2009-10-29 01:00
 comments: true
 blogspot: http://meta-coding.blogspot.com/2009/10/artificial-typification-of-homogeneous.html
 categories: 

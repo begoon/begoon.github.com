@@ -2,7 +2,7 @@
 layout: post
 title: "Простое понимание, что возвращает sizeof"
 language: russian
-date: 2010-02-24 00:00
+date: 2010-02-24 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/02/sizeof.html
 categories:

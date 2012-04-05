@@ -2,7 +2,7 @@
 layout: post
 title: "Number of crossings in bipartite graph"
 language: english
-date: 2011-05-24 00:00
+date: 2011-05-24 01:00
 comments: true
 blogspot: http://meta-coding.blogspot.com/2011/05/number-of-crossings-in-bipartite-graph.html
 categories: 

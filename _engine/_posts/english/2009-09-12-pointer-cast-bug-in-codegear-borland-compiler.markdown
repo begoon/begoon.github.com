@@ -2,7 +2,7 @@
 layout: post
 title: "Pointer cast bug in Codegear (Borland) C++ compiler"
 language: english
-date: 2009-09-12 00:00
+date: 2009-09-12 01:00
 comments: true
 blogspot: http://meta-coding.blogspot.com/2009/09/pointer-cast-bug-in-codegear-borland-c.html
 categories: 

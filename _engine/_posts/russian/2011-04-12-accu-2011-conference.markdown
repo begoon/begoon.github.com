@@ -2,7 +2,7 @@
 layout: post
 title: "Конференция ACCU 2011"
 language: russian
-date: 2011-04-12 00:00
+date: 2011-04-12 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/04/accu-2011.html
 categories:

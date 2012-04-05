@@ -2,7 +2,7 @@
 layout: post
 title: "Искусственная типизация однородных параметров в C++"
 language: russian
-date: 2009-10-29 00:00
+date: 2009-10-29 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/10/c.html
 categories:

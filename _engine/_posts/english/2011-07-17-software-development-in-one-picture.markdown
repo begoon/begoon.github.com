@@ -2,7 +2,7 @@
 layout: post
 title: "Software development in one picture"
 language: english
-date: 2011-07-17 00:00
+date: 2011-07-17 01:00
 comments: true
 blogspot: http://meta-coding.blogspot.com/2011/07/to-refactor-and-not-to-refactor.html
 categories: 

@@ -2,7 +2,7 @@
 layout: post
 title: "Статический аргумент функции putenv"
 language: russian
-date: 2009-02-01 00:00
+date: 2009-02-01 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/02/putenv.html
 categories:

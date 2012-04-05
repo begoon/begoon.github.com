@@ -2,7 +2,7 @@
 layout: post
 title: "Компилятор языка С: LCC-WIN32"
 language: russian
-date: 2011-01-18 00:00
+date: 2011-01-18 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/01/lcc-win32.html
 categories:

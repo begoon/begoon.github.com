@@ -2,7 +2,7 @@
 layout: post
 title: "Сумма цифр числа в Excel'е"
 language: russian
-date: 2010-06-18 00:00
+date: 2010-06-18 02:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/06/excel.html
 categories:

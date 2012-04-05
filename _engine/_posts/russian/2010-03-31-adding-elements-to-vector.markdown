@@ -2,7 +2,7 @@
 layout: post
 title: "Добавление элементов в std::vector"
 language: russian
-date: 2010-03-31 00:00
+date: 2010-03-31 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/03/stdvector.html
 categories:

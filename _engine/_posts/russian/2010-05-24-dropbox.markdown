@@ -2,7 +2,7 @@
 layout: post
 title: "Dropbox"
 language: russian
-date: 2010-05-24 00:00
+date: 2010-05-24 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/05/dropbox.html
 categories:

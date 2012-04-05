@@ -2,7 +2,7 @@
 layout: post
 title: "Опрос: как мы называем свою профессию"
 language: russian
-date: 2010-06-06 00:00
+date: 2010-06-06 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/06/blog-post_06.html
 categories:

@@ -2,7 +2,7 @@
 layout: post
 title: 'Bernard Girard, "The Google Way"'
 language: russian
-date: 2010-04-07 00:00
+date: 2010-04-07 02:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/04/bernard-girard-google-way.html
 categories:

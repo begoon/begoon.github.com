@@ -2,7 +2,7 @@
 layout: post
 title: "Unit-тест для Coredump в Windows"
 language: russian
-date: 2009-02-26 00:00
+date: 2009-02-26 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/02/unit-coredump.html
 categories:

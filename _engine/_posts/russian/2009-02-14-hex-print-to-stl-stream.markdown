@@ -2,7 +2,7 @@
 layout: post
 title: "Шестнадцатеричная печать в STL поток"
 language: russian
-date: 2009-02-14 00:00
+date: 2009-02-14 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/02/stl_14.html
 categories:

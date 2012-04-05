@@ -5,7 +5,7 @@
   <title><![CDATA[Программирования - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-05T16:29:55+01:00</updated>
+  <updated>2012-04-05T18:17:01+01:00</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
@@ -1008,6 +1008,56 @@ Window 2: curl http://localhost:50000/download/otp_src_R14B04.tar.gz &gt;via-pro
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Git для работы на нескольких платформах]]></title>
+    <link href="http://demin.ws/blog/russian/2011/11/22/git-to-work-on-multiple-platforms/"/>
+    <updated>2011-11-22T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2011/11/22/git-to-work-on-multiple-platforms/</id>
+    <content type="html"><![CDATA[<p>Мне приходится часто проверять один и тот же код на нескольких платформах. Это означает, что исходники надо физически копировать с машины на машину. Далее начинаются мелкие правки на каждой платформе, которые надо в конце собрать вместе и пробовать снова.</p>
+
+<p>После десятков версий изощренных скриптов я решил собрать волю в кулак и начать использовать Git.</p>
+
+<p>Задача: на виндовой машине (это мой основной рабочий ноутбук) установить Git как сервер, чтобы я мог всегда иметь на нем самую актуальную копию всего. Затем установить Git как клиент на рабочих машинах и обмениваться commit&rsquo;ами через центральный репозиторий на Windows.</p>
+
+<p>Для простоты я решил использовать SSH как протокол. Благо все UNIX машины имеют ssh-клиент.</p>
+
+<p>Плюсы - везде Git, все локальные изменения имеют версии и можно вести локальные ветки. Ну и центральная копия - тоже под Git. Минусы - потратить время и все это настроить.</p>
+
+<p>Git/ssh как сервер на Windows - это целая тема, так как нужно поставить SSH сервер и правильно прикрутить к нему Git.</p>
+
+<p>Благодаря двум (<a href="http://www.timdavis.com.au/git/setting-up-a-msysgit-server-with-copssh-on-windows/">1</a>, <a href="http://java2cs2.blogspot.com/2010/03/setup-git-server-on-windows-machine.html">2</a>) ссылкам удалось настроить <a href="http://www.itefix.no/i2/copssh">CopSSH</a> в паре с <a href="http://code.google.com/p/msysgit/">msysgit</a>.</p>
+
+<p>Далее Git на клиентских машинах. С Linux и Windows все совсем просто (на Windows используется тот же msysgit).</p>
+
+<p>На Solaris пришлось собрать GNU Make до 3.82 (на 3.75 Git не собирается).</p>
+
+<p>На HPUX and AIX пришлось собрать coreutils (для нормального install), less (представляете, на HPUX нету less по умолчанию), python (опять для HPUX), zlib и свежие tcl/tk.</p>
+
+<p>Один день на борьбу c CopSSH на Windows и день на сборки под UNIXами.</p>
+
+<p>Зато теперь радость и благодать.</p>
+
+<p>P.S. С CopSSH интересная история. Вчера (21 ноября) на их сайте можно было все скачать. Сегодня (22 ноября) читаю на том же сайте:</p>
+
+<blockquote>
+<p>Termination of free solutions from ITeF!x</p>
+
+<p>Submitted by tk on Tue, <sup>22</sup>&frasl;<sub>11</sub>/2011 - 08:18 itefix</p>
+
+<p>Development,distribution and support of free solutions from Itefix are now terminated due to lack of time and changes in priorities.</p>
+</blockquote>
+
+<p>С их зеркала на sourceforge.net также пропали все файлы. Хорошо, что я не удалил дистрибутив CopSSH, скачанный вчера.</p>
+
+<p>Ссылки по теме:</p>
+
+<ul>
+<li><a href="http://www.timdavis.com.au/git/setting-up-a-msysgit-server-with-copssh-on-windows/">Setting up a Msysgit Server with copSSH on Windows</a></li>
+<li><a href="http://java2cs2.blogspot.com/2010/03/setup-git-server-on-windows-machine.html">Setup a Git server on Windows machine, with MSysGit and CopSSH</a></li>
+</ul>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[TCP/IP proxy на Erlang'e]]></title>
     <link href="http://demin.ws/blog/russian/2011/11/22/tcpip-proxy-in-erlang/"/>
     <updated>2011-11-22T00:00:00+00:00</updated>
@@ -1199,56 +1249,6 @@ Listener socket is started 0.0.0.0:50000
 <ul>
 <li><a href="http://demin.ws/blog/russian/2011/11/19/problem-to-try-new-languages/">Задача для освоения новых языков</a></li>
 <li><a href="http://demin.ws/blog/russian/2009/09/04/multi-threaded-tcpip-debugger/">Мультипотоковый отладчик TCP/IP соединений</a></li>
-</ul>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Git для работы на нескольких платформах]]></title>
-    <link href="http://demin.ws/blog/russian/2011/11/22/git-to-work-on-multiple-platforms/"/>
-    <updated>2011-11-22T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2011/11/22/git-to-work-on-multiple-platforms/</id>
-    <content type="html"><![CDATA[<p>Мне приходится часто проверять один и тот же код на нескольких платформах. Это означает, что исходники надо физически копировать с машины на машину. Далее начинаются мелкие правки на каждой платформе, которые надо в конце собрать вместе и пробовать снова.</p>
-
-<p>После десятков версий изощренных скриптов я решил собрать волю в кулак и начать использовать Git.</p>
-
-<p>Задача: на виндовой машине (это мой основной рабочий ноутбук) установить Git как сервер, чтобы я мог всегда иметь на нем самую актуальную копию всего. Затем установить Git как клиент на рабочих машинах и обмениваться commit&rsquo;ами через центральный репозиторий на Windows.</p>
-
-<p>Для простоты я решил использовать SSH как протокол. Благо все UNIX машины имеют ssh-клиент.</p>
-
-<p>Плюсы - везде Git, все локальные изменения имеют версии и можно вести локальные ветки. Ну и центральная копия - тоже под Git. Минусы - потратить время и все это настроить.</p>
-
-<p>Git/ssh как сервер на Windows - это целая тема, так как нужно поставить SSH сервер и правильно прикрутить к нему Git.</p>
-
-<p>Благодаря двум (<a href="http://www.timdavis.com.au/git/setting-up-a-msysgit-server-with-copssh-on-windows/">1</a>, <a href="http://java2cs2.blogspot.com/2010/03/setup-git-server-on-windows-machine.html">2</a>) ссылкам удалось настроить <a href="http://www.itefix.no/i2/copssh">CopSSH</a> в паре с <a href="http://code.google.com/p/msysgit/">msysgit</a>.</p>
-
-<p>Далее Git на клиентских машинах. С Linux и Windows все совсем просто (на Windows используется тот же msysgit).</p>
-
-<p>На Solaris пришлось собрать GNU Make до 3.82 (на 3.75 Git не собирается).</p>
-
-<p>На HPUX and AIX пришлось собрать coreutils (для нормального install), less (представляете, на HPUX нету less по умолчанию), python (опять для HPUX), zlib и свежие tcl/tk.</p>
-
-<p>Один день на борьбу c CopSSH на Windows и день на сборки под UNIXами.</p>
-
-<p>Зато теперь радость и благодать.</p>
-
-<p>P.S. С CopSSH интересная история. Вчера (21 ноября) на их сайте можно было все скачать. Сегодня (22 ноября) читаю на том же сайте:</p>
-
-<blockquote>
-<p>Termination of free solutions from ITeF!x</p>
-
-<p>Submitted by tk on Tue, <sup>22</sup>&frasl;<sub>11</sub>/2011 - 08:18 itefix</p>
-
-<p>Development,distribution and support of free solutions from Itefix are now terminated due to lack of time and changes in priorities.</p>
-</blockquote>
-
-<p>С их зеркала на sourceforge.net также пропали все файлы. Хорошо, что я не удалил дистрибутив CopSSH, скачанный вчера.</p>
-
-<p>Ссылки по теме:</p>
-
-<ul>
-<li><a href="http://www.timdavis.com.au/git/setting-up-a-msysgit-server-with-copssh-on-windows/">Setting up a Msysgit Server with copSSH on Windows</a></li>
-<li><a href="http://java2cs2.blogspot.com/2010/03/setup-git-server-on-windows-machine.html">Setup a Git server on Windows machine, with MSysGit and CopSSH</a></li>
 </ul>
 ]]></content>
   </entry>
@@ -3426,78 +3426,6 @@ Float: '10.'
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Google Test Framework 1.6.0]]></title>
-    <link href="http://demin.ws/blog/russian/2011/04/18/google-test-framework-160/"/>
-    <updated>2011-04-18T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2011/04/18/google-test-framework-160/</id>
-    <content type="html"><![CDATA[<p>Только что вышла <a href="http://code.google.com/p/googletest/downloads/list">новая версия</a> отличной библиотеки для unit-тестирования на С++ - Google C++ Testing Framework.</p>
-
-<p>Вот список изменений:</p>
-
-<ul>
-<li>New feature: ADD_FAILURE_AT() for reporting a test failure at the given source location &ndash; useful for writing testing utilities.</li>
-<li>New feature: the universal value printer is moved from Google Mock to Google Test.</li>
-<li>New feature: type parameters and value parameters are reported in the XML report now.</li>
-<li>A gtest_disable_pthreads CMake option.</li>
-<li>Colored output works in GNU Screen sessions now.</li>
-<li>Parameters of value-parameterized tests are now printed in the textual output.</li>
-<li>Failures from ad hoc test assertions run before RUN_ALL_TESTS() are now correctly reported.</li>
-<li>Arguments of ASSERT_XY and EXPECT_XY no longer need to support &lt;&lt; to ostream.</li>
-<li>More complete handling of exceptions.</li>
-<li>GTEST_ASSERT_XY can be used instead of ASSERT_XY in case the latter name is already used by another library.</li>
-<li>&ndash;gtest_catch_exceptions is now true by default, allowing a test program to continue after an exception is thrown.</li>
-<li>Value-parameterized test fixtures can now derive from Test and</li>
-<li>WithParamInterface<T> separately, easing conversion of legacy tests.</li>
-<li>Death test messages are clearly marked to make them more distinguishable from other messages.</li>
-<li>Compatibility fixes for Android, Google Native Client, MinGW, HP UX, PowerPC, Lucid autotools, libCStd, Sun C++, Borland C++ Builder (Code Gear), IBM XL C++ (Visual Age C++), and C++0x.</li>
-<li>Bug fixes and implementation clean-ups.</li>
-<li>Potentially incompatible changes: disables the harmful &lsquo;make install&rsquo; command in autotools.</li>
-</ul>
-
-<p><a href="http://code.google.com/p/googletest/source/browse/trunk/CHANGES">Полная история версий Google Test</a>.</p>
-
-<p>Каких-то радикально новых возможностей вроде нет, но исправлено несколько неприятных багов.</p>
-
-<p>Лично я очень ждал исправления мелких, но неприятных несовместимостей с компиляторами HP-UX, Sun и AIX.</p>
-
-<p>Посты по теме и почти по теме:</p>
-
-<ul>
-<li><a href="http://demin.ws/blog/russian/2010/04/16/google-test-framework-150/">Google Test Framework 1.5.0</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/10/03/google-test-framework-140/">Google Test Framework 1.4.0</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/03/19/google-test-framework-130/">Google Test Framework 1.3.0</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/07/15/googletest-for-beginners-in-russian/">Руководство для начинающих по Google Test на русском</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/10/13/googlemock-for-beginner-in-russian/">Руководство для начинающих по Google Mock на русском</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/10/07/google-test-framework-authors-presentation/">Презентация от авторов Google C++ Testing Framework</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/10/15/introduction-to-googlemock-talk/">Введение в Google Mock (видео)</a></li>
-</ul>
-
-<p><strong>UPDATE</strong></p>
-
-<p>По ходу вышел еще и Google Mock 1.6.0.</p>
-
-<p>Что нового тут:</p>
-
-<ul>
-<li>Compilation is much faster and uses much less memory, especially when the constructor and destructor of a mock class are moved out of the class body.</li>
-<li>New matchers: Pointwise(), Each().</li>
-<li>New actions: ReturnPointee() and ReturnRefOfCopy().</li>
-<li>CMake support.</li>
-<li>Project files for Visual Studio 2010.</li>
-<li>AllOf() and AnyOf() can handle up-to 10 arguments now.</li>
-<li>Google Mock doctor understands Clang error messages now.</li>
-<li>SetArgPointee&lt;&gt; now accepts string literals.</li>
-<li>gmock_gen.py handles storage specifier macros and template return types now.</li>
-<li>Compatibility fixes.</li>
-<li>Bug fixes and implementation clean-ups.</li>
-<li>Potentially incompatible changes: disables the harmful &lsquo;make install&rsquo; command in autotools.</li>
-</ul>
-
-<p><a href="http://code.google.com/p/googlemock/source/browse/trunk/CHANGES">Полная история версий Google Mock</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Потоки в C++ против потоков в Go]]></title>
     <link href="http://demin.ws/blog/russian/2011/04/18/boost-threads-vs-goroutines/"/>
     <updated>2011-04-18T00:00:00+00:00</updated>
@@ -3748,6 +3676,107 @@ g++ -O2 -I ~/opt/boost-1.46.1 -o boost_threading \
 <ul>
 <li><a href="http://demin.ws/blog/russian/2011/04/12/multithreading-in-go/">Пример многопоточного программирования в Go</a></li>
 </ul>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Google Test Framework 1.6.0]]></title>
+    <link href="http://demin.ws/blog/russian/2011/04/18/google-test-framework-160/"/>
+    <updated>2011-04-18T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2011/04/18/google-test-framework-160/</id>
+    <content type="html"><![CDATA[<p>Только что вышла <a href="http://code.google.com/p/googletest/downloads/list">новая версия</a> отличной библиотеки для unit-тестирования на С++ - Google C++ Testing Framework.</p>
+
+<p>Вот список изменений:</p>
+
+<ul>
+<li>New feature: ADD_FAILURE_AT() for reporting a test failure at the given source location &ndash; useful for writing testing utilities.</li>
+<li>New feature: the universal value printer is moved from Google Mock to Google Test.</li>
+<li>New feature: type parameters and value parameters are reported in the XML report now.</li>
+<li>A gtest_disable_pthreads CMake option.</li>
+<li>Colored output works in GNU Screen sessions now.</li>
+<li>Parameters of value-parameterized tests are now printed in the textual output.</li>
+<li>Failures from ad hoc test assertions run before RUN_ALL_TESTS() are now correctly reported.</li>
+<li>Arguments of ASSERT_XY and EXPECT_XY no longer need to support &lt;&lt; to ostream.</li>
+<li>More complete handling of exceptions.</li>
+<li>GTEST_ASSERT_XY can be used instead of ASSERT_XY in case the latter name is already used by another library.</li>
+<li>&ndash;gtest_catch_exceptions is now true by default, allowing a test program to continue after an exception is thrown.</li>
+<li>Value-parameterized test fixtures can now derive from Test and</li>
+<li>WithParamInterface<T> separately, easing conversion of legacy tests.</li>
+<li>Death test messages are clearly marked to make them more distinguishable from other messages.</li>
+<li>Compatibility fixes for Android, Google Native Client, MinGW, HP UX, PowerPC, Lucid autotools, libCStd, Sun C++, Borland C++ Builder (Code Gear), IBM XL C++ (Visual Age C++), and C++0x.</li>
+<li>Bug fixes and implementation clean-ups.</li>
+<li>Potentially incompatible changes: disables the harmful &lsquo;make install&rsquo; command in autotools.</li>
+</ul>
+
+<p><a href="http://code.google.com/p/googletest/source/browse/trunk/CHANGES">Полная история версий Google Test</a>.</p>
+
+<p>Каких-то радикально новых возможностей вроде нет, но исправлено несколько неприятных багов.</p>
+
+<p>Лично я очень ждал исправления мелких, но неприятных несовместимостей с компиляторами HP-UX, Sun и AIX.</p>
+
+<p>Посты по теме и почти по теме:</p>
+
+<ul>
+<li><a href="http://demin.ws/blog/russian/2010/04/16/google-test-framework-150/">Google Test Framework 1.5.0</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/10/03/google-test-framework-140/">Google Test Framework 1.4.0</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/03/19/google-test-framework-130/">Google Test Framework 1.3.0</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/07/15/googletest-for-beginners-in-russian/">Руководство для начинающих по Google Test на русском</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/10/13/googlemock-for-beginner-in-russian/">Руководство для начинающих по Google Mock на русском</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/10/07/google-test-framework-authors-presentation/">Презентация от авторов Google C++ Testing Framework</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/10/15/introduction-to-googlemock-talk/">Введение в Google Mock (видео)</a></li>
+</ul>
+
+<p><strong>UPDATE</strong></p>
+
+<p>По ходу вышел еще и Google Mock 1.6.0.</p>
+
+<p>Что нового тут:</p>
+
+<ul>
+<li>Compilation is much faster and uses much less memory, especially when the constructor and destructor of a mock class are moved out of the class body.</li>
+<li>New matchers: Pointwise(), Each().</li>
+<li>New actions: ReturnPointee() and ReturnRefOfCopy().</li>
+<li>CMake support.</li>
+<li>Project files for Visual Studio 2010.</li>
+<li>AllOf() and AnyOf() can handle up-to 10 arguments now.</li>
+<li>Google Mock doctor understands Clang error messages now.</li>
+<li>SetArgPointee&lt;&gt; now accepts string literals.</li>
+<li>gmock_gen.py handles storage specifier macros and template return types now.</li>
+<li>Compatibility fixes.</li>
+<li>Bug fixes and implementation clean-ups.</li>
+<li>Potentially incompatible changes: disables the harmful &lsquo;make install&rsquo; command in autotools.</li>
+</ul>
+
+<p><a href="http://code.google.com/p/googlemock/source/browse/trunk/CHANGES">Полная история версий Google Mock</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Конференция ACCU 2011]]></title>
+    <link href="http://demin.ws/blog/russian/2011/04/12/accu-2011-conference/"/>
+    <updated>2011-04-12T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2011/04/12/accu-2011-conference/</id>
+    <content type="html"><![CDATA[<p>Хоть на Google I/O в этом году не получилось попасть, так как все было распродано менее чем за час, есть другие интересные конференции.</p>
+
+<p>Например, <a href="http://accu.org/index.php/conferences/accu_conference_2011">ACCU 2011</a>. Место проведения от моего офиса всего в часе езды, не пришлось платить за гостиницу.</p>
+
+<p>Тематики <a href="http://accu.org/index.php/conferences/accu_conference_2011/accu2011_schedule">сессий</a> весьма разнообразные.</p>
+
+<p>Сегодня я посетил:</p>
+
+<ul>
+<li><p><a href="http://accu.org/index.php/conferences/accu_conference_2011/accu2011_speakers#Peter%20Pilgrim">Introduction to Scala</a>. До этого я про язык Scala только название, поэтому это были весьма полезные полтора часа. Если вы любите Java, но вам не хватает функциональных примочек типа списковых выражений, currying, pattern matching, call by name и более краткого синтаксиса в целом, но при этом вы хотите иметь обьектно- и функционально- ориентированный язык, компилирующий для JVM, то Scala - это самое оно. Хотя лично у меня впечатление неоднозначное из-за дикой перегруженности языка наворотами, из-за которой для &ldquo;правильного программирования&rdquo; надо также овладеть &ldquo;правильными шаблонами&rdquo;. А тут уже какой-то С++ получается. Сама презентация была весьма живая и информативная. Для интересующихся - <a href="http://www.xenonique.co.uk/blog/">блог автора</a>.</p></li>
+
+<li><p><a href="http://accu.org/index.php/conferences/accu_conference_2011/accu2011_speakers#Juha-Pekka%20Tolvanen">Worst practices for creating domain-specific modelling languages</a>. Не самая захватывающая, но таки полезная презентация о том, почему и как создаются проблемно ориентированные языки.</p></li>
+
+<li><p><a href="http://accu.org/index.php/conferences/accu_conference_2011/accu2011_speakers#Eleanor%20McHugh">GoLightly: Building VM-based Language Runtimes In Go</a>. Меня презентация реально вставила. Тетка отожгла неимоверно. За полтора часа она умудрилась дать очень понятную вводную по ключевым возможностям Go, успев даже коснуться недокументированных модулей типа &ldquo;unsafe&rdquo; и показать как можно обойти стройную систему безопасной типизации в Go, и затем описала свой проект по моделированию разных процессорных архитектур на этом языке. Ниже есть слайды ее презентации, но к сожалению в них нет той части про надругательноство на системой типов в Go. Может она выложит обновленную версию сегодня-завтра.</p></li>
+</ul>
+
+<div style="width:425px" id="__ss_5446102"><iframe src="http://www.slideshare.net/slideshow/embed_code/5446102" width="425" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe></div>
+
+<p>Завтра хочу сходить на &ldquo;<a href="http://accu.org/index.php/conferences/accu_conference_2011/accu2011_sessions#Distributed%20Computing%202.0">Distributed Computing 2.0</a>&rdquo;, &ldquo;<a href="http://accu.org/index.php/conferences/accu_conference_2011/accu2011_sessions#ComputErl%20-%20Erlang-based%20Framework%20for%20Many%20Task%20Computing">ComputErl - Erlang-based Framework for Many Task Computing</a>&rdquo;, &ldquo;<a href="http://accu.org/index.php/conferences/accu_conference_2011/accu2011_sessions#CPU%20Caches%20and%20Why%20You%20Care">CPU Caches and Why You Care</a>&rdquo; Скотта Меерса.</p>
+
+<p>Кстати, чтобы уж два раза не вставать, в последнем выпуске ACCU&rsquo;шного журнала CVu была моя статейка &ldquo;<a href="http://accu.org/var/uploads/journals/cvu241.pdf">The First Little Step into Test-Driven Development</a>&rdquo; (так как электронная версия журнала находится в платной части сайта, то я выложил только страницы с моей статьей).</p>
 ]]></content>
   </entry>
   
@@ -4034,35 +4063,6 @@ Cpu7  : 56.5%us, 27.2%sy,  0.0%ni, 16.3%id,  0.0%wa,  0.0%hi,  0.0%si,  0.0%st
 <li><a href="http://demin.ws/blog/russian/2011/02/24/url-shortener-in-go-in-one-hour/">Язык Go в действии - мультисерверная сокращалка URL&rsquo;ов менее чем за час</a></li>
 <li><a href="http://demin.ws/blog/russian/2010/03/06/what-is-faster-on-eratosthenes-seive-go-c-cpp/">Решето Эратосфена - кто быстрее: Go, C или C++?</a></li>
 </ul>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Конференция ACCU 2011]]></title>
-    <link href="http://demin.ws/blog/russian/2011/04/12/accu-2011-conference/"/>
-    <updated>2011-04-12T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2011/04/12/accu-2011-conference/</id>
-    <content type="html"><![CDATA[<p>Хоть на Google I/O в этом году не получилось попасть, так как все было распродано менее чем за час, есть другие интересные конференции.</p>
-
-<p>Например, <a href="http://accu.org/index.php/conferences/accu_conference_2011">ACCU 2011</a>. Место проведения от моего офиса всего в часе езды, не пришлось платить за гостиницу.</p>
-
-<p>Тематики <a href="http://accu.org/index.php/conferences/accu_conference_2011/accu2011_schedule">сессий</a> весьма разнообразные.</p>
-
-<p>Сегодня я посетил:</p>
-
-<ul>
-<li><p><a href="http://accu.org/index.php/conferences/accu_conference_2011/accu2011_speakers#Peter%20Pilgrim">Introduction to Scala</a>. До этого я про язык Scala только название, поэтому это были весьма полезные полтора часа. Если вы любите Java, но вам не хватает функциональных примочек типа списковых выражений, currying, pattern matching, call by name и более краткого синтаксиса в целом, но при этом вы хотите иметь обьектно- и функционально- ориентированный язык, компилирующий для JVM, то Scala - это самое оно. Хотя лично у меня впечатление неоднозначное из-за дикой перегруженности языка наворотами, из-за которой для &ldquo;правильного программирования&rdquo; надо также овладеть &ldquo;правильными шаблонами&rdquo;. А тут уже какой-то С++ получается. Сама презентация была весьма живая и информативная. Для интересующихся - <a href="http://www.xenonique.co.uk/blog/">блог автора</a>.</p></li>
-
-<li><p><a href="http://accu.org/index.php/conferences/accu_conference_2011/accu2011_speakers#Juha-Pekka%20Tolvanen">Worst practices for creating domain-specific modelling languages</a>. Не самая захватывающая, но таки полезная презентация о том, почему и как создаются проблемно ориентированные языки.</p></li>
-
-<li><p><a href="http://accu.org/index.php/conferences/accu_conference_2011/accu2011_speakers#Eleanor%20McHugh">GoLightly: Building VM-based Language Runtimes In Go</a>. Меня презентация реально вставила. Тетка отожгла неимоверно. За полтора часа она умудрилась дать очень понятную вводную по ключевым возможностям Go, успев даже коснуться недокументированных модулей типа &ldquo;unsafe&rdquo; и показать как можно обойти стройную систему безопасной типизации в Go, и затем описала свой проект по моделированию разных процессорных архитектур на этом языке. Ниже есть слайды ее презентации, но к сожалению в них нет той части про надругательноство на системой типов в Go. Может она выложит обновленную версию сегодня-завтра.</p></li>
-</ul>
-
-<div style="width:425px" id="__ss_5446102"><iframe src="http://www.slideshare.net/slideshow/embed_code/5446102" width="425" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no"></iframe></div>
-
-<p>Завтра хочу сходить на &ldquo;<a href="http://accu.org/index.php/conferences/accu_conference_2011/accu2011_sessions#Distributed%20Computing%202.0">Distributed Computing 2.0</a>&rdquo;, &ldquo;<a href="http://accu.org/index.php/conferences/accu_conference_2011/accu2011_sessions#ComputErl%20-%20Erlang-based%20Framework%20for%20Many%20Task%20Computing">ComputErl - Erlang-based Framework for Many Task Computing</a>&rdquo;, &ldquo;<a href="http://accu.org/index.php/conferences/accu_conference_2011/accu2011_sessions#CPU%20Caches%20and%20Why%20You%20Care">CPU Caches and Why You Care</a>&rdquo; Скотта Меерса.</p>
-
-<p>Кстати, чтобы уж два раза не вставать, в последнем выпуске ACCU&rsquo;шного журнала CVu была моя статейка &ldquo;<a href="http://accu.org/var/uploads/journals/cvu241.pdf">The First Little Step into Test-Driven Development</a>&rdquo; (так как электронная версия журнала находится в платной части сайта, то я выложил только страницы с моей статьей).</p>
 ]]></content>
   </entry>
   
@@ -6383,25 +6383,6 @@ f.close()
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Windows борется с написанием вирусов]]></title>
-    <link href="http://demin.ws/blog/russian/2011/02/14/windows-fights-against-viruses/"/>
-    <updated>2011-02-14T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2011/02/14/windows-fights-against-viruses/</id>
-    <content type="html"><![CDATA[<p>Мы тут столкнулись с интересной проблемой - какая-то катастрофически медленная скорость сборки системы под Windows на одной из наших сборочных машин.</p>
-
-<p>Но когда я узнал причину - вот это действительно вызвало у меня минуту молчания.</p>
-
-<p>Причина - это антивирус, а точнее его &ldquo;активная защита&rdquo;, которая проверяла каждый божий файл (а их там тысячи), генерируемый при сборке. Просто забыли ее выключить при установке системы.</p>
-
-<p>Получается, в принципе, пишу я вирус, компилирую, а тут бабах - и при сборке мне говорят, что результат вашей компиляции был убит, убит еще до того, как успел в первый раз родиться, так как бинарь содержит код, похожий на вирус (я же вирус пишу!).</p>
-
-<p>Ведь антивирус не знает, является ли этот новый файл просто результатом компиляции из исходника, или файл скачивается из интернета.</p>
-
-<p>В общем, отключили антивирус &ndash; сборка ускорилась в разы.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Challenge 24 Pre Electronic Сontest]]></title>
     <link href="http://demin.ws/blog/russian/2011/02/14/challenge-24-pre-electronic-contest/"/>
     <updated>2011-02-14T00:00:00+00:00</updated>
@@ -6457,33 +6438,21 @@ def make_soundfile(sample, freq, fname):
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[NORCPU hackme challenge или взлом программы для однокомандного процессора]]></title>
-    <link href="http://demin.ws/blog/russian/2011/02/08/norcpu-hack-me-challenge/"/>
-    <updated>2011-02-08T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2011/02/08/norcpu-hack-me-challenge/</id>
-    <content type="html"><![CDATA[<p>Разного рода &ldquo;ненормальное&rdquo; программирование весьма популярно среди любителей поломать голову над разными задачками. Порой программу для очередной &ldquo;ненормальной&rdquo; среды программирования уже нереально написать вручную, а надо писать генератор, создающий код.</p>
+    <title type="html"><![CDATA[Windows борется с написанием вирусов]]></title>
+    <link href="http://demin.ws/blog/russian/2011/02/14/windows-fights-against-viruses/"/>
+    <updated>2011-02-14T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2011/02/14/windows-fights-against-viruses/</id>
+    <content type="html"><![CDATA[<p>Мы тут столкнулись с интересной проблемой - какая-то катастрофически медленная скорость сборки системы под Windows на одной из наших сборочных машин.</p>
 
-<p>В задаче, что предлагаю я, программы все еще можно писать вручную на некотором высокоуровневом макроассемблере.</p>
+<p>Но когда я узнал причину - вот это действительно вызвало у меня минуту молчания.</p>
 
-<p>Итак, имеется модель некоторого виртуального процессора, выполняющего только одну логическую операцию - <a href="http://ru.wikipedia.org/wiki/%D0%A1%D1%82%D1%80%D0%B5%D0%BB%D0%BA%D0%B0_%D0%9F%D0%B8%D1%80%D1%81%D0%B0">Стрелку Пирса</a>.</p>
+<p>Причина - это антивирус, а точнее его &ldquo;активная защита&rdquo;, которая проверяла каждый божий файл (а их там тысячи), генерируемый при сборке. Просто забыли ее выключить при установке системы.</p>
 
-<p>На этом процессоре написана программа, на вход которой подается некоторый пароль. Если пароль неверный, то в ответ выдается строка &ldquo;Wrong password!&rdquo;. Если верный, то выдается определенное волшебное сообщение.</p>
+<p>Получается, в принципе, пишу я вирус, компилирую, а тут бабах - и при сборке мне говорят, что результат вашей компиляции был убит, убит еще до того, как успел в первый раз родиться, так как бинарь содержит код, похожий на вирус (я же вирус пишу!).</p>
 
-<p>Задача: любым образом выяснить это волшебное сообщение. Как вариант, можно, например, угадать пароль, и программа сама выдаст секрет.</p>
+<p>Ведь антивирус не знает, является ли этот новый файл просто результатом компиляции из исходника, или файл скачивается из интернета.</p>
 
-<p>Логика написана таким образом, что разобравшись в алгоритме, можно без труда расшифровать волшебное сообщение.</p>
-
-<p>В прошлом году <a href="http://demin.ws/blog/russian/2010/03/26/one-command-cpu/">я описал использованный подход во всех деталях</a>.</p>
-
-<p>Оригинальный подход, на котором основан мой эксперимент, был не совсем &ldquo;чистым&rdquo;, так как команда сложения был вынесена за логику процессора. В моей версии все до единой команды реализованы на самом процессоре. Для этого потребовалось немного изменить интерпретатор, добавив в него сдвиговый регистр.</p>
-
-<p>Для желающих попробовать взломать мой эксперимент, я сделал страничку, на которой на JavaScript&rsquo;e реализован выше описанный виртуальный процессор с одной командой и программа для него, проверяющая пароль.</p>
-
-<p>Итак, <a href="http://demin.ws/projects/norcpu/challenge/norcpu.html">прошу на взлом!</a></p>
-
-<p>Удачи.</p>
-
-<p>P.S. Для первого взломавшего - небольшой приз! Информация по ссылке.</p>
+<p>В общем, отключили антивирус &ndash; сборка ускорилась в разы.</p>
 ]]></content>
   </entry>
   
@@ -6512,6 +6481,37 @@ def make_soundfile(sample, freq, fname):
 <p>У вас есть подобные примеры?</p>
 
 <p>Будем добавлять в список.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[NORCPU hackme challenge или взлом программы для однокомандного процессора]]></title>
+    <link href="http://demin.ws/blog/russian/2011/02/08/norcpu-hack-me-challenge/"/>
+    <updated>2011-02-08T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2011/02/08/norcpu-hack-me-challenge/</id>
+    <content type="html"><![CDATA[<p>Разного рода &ldquo;ненормальное&rdquo; программирование весьма популярно среди любителей поломать голову над разными задачками. Порой программу для очередной &ldquo;ненормальной&rdquo; среды программирования уже нереально написать вручную, а надо писать генератор, создающий код.</p>
+
+<p>В задаче, что предлагаю я, программы все еще можно писать вручную на некотором высокоуровневом макроассемблере.</p>
+
+<p>Итак, имеется модель некоторого виртуального процессора, выполняющего только одну логическую операцию - <a href="http://ru.wikipedia.org/wiki/%D0%A1%D1%82%D1%80%D0%B5%D0%BB%D0%BA%D0%B0_%D0%9F%D0%B8%D1%80%D1%81%D0%B0">Стрелку Пирса</a>.</p>
+
+<p>На этом процессоре написана программа, на вход которой подается некоторый пароль. Если пароль неверный, то в ответ выдается строка &ldquo;Wrong password!&rdquo;. Если верный, то выдается определенное волшебное сообщение.</p>
+
+<p>Задача: любым образом выяснить это волшебное сообщение. Как вариант, можно, например, угадать пароль, и программа сама выдаст секрет.</p>
+
+<p>Логика написана таким образом, что разобравшись в алгоритме, можно без труда расшифровать волшебное сообщение.</p>
+
+<p>В прошлом году <a href="http://demin.ws/blog/russian/2010/03/26/one-command-cpu/">я описал использованный подход во всех деталях</a>.</p>
+
+<p>Оригинальный подход, на котором основан мой эксперимент, был не совсем &ldquo;чистым&rdquo;, так как команда сложения был вынесена за логику процессора. В моей версии все до единой команды реализованы на самом процессоре. Для этого потребовалось немного изменить интерпретатор, добавив в него сдвиговый регистр.</p>
+
+<p>Для желающих попробовать взломать мой эксперимент, я сделал страничку, на которой на JavaScript&rsquo;e реализован выше описанный виртуальный процессор с одной командой и программа для него, проверяющая пароль.</p>
+
+<p>Итак, <a href="http://demin.ws/projects/norcpu/challenge/norcpu.html">прошу на взлом!</a></p>
+
+<p>Удачи.</p>
+
+<p>P.S. Для первого взломавшего - небольшой приз! Информация по ссылке.</p>
 ]]></content>
   </entry>
   
@@ -6608,23 +6608,6 @@ Error t.c 3 Compiler error (trap). Stopping compilation
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Самые глупые ответы на интервью, что я когда-либо давал]]></title>
-    <link href="http://demin.ws/blog/russian/2011/01/20/my-most-stupid-answers-on-interviews/"/>
-    <updated>2011-01-20T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2011/01/20/my-most-stupid-answers-on-interviews/</id>
-    <content type="html"><![CDATA[<p>Решил я вспомнить, какие самые невозможно глупые ответы я когда-либо давал на интервью, за которые мне до сих пор даже перед самим собой стыдно неимоверно.</p>
-
-<p>Как-то яростно пытался доказать, что тип int является за 100% атомарным без каких-либо гвоздей на платформе x86. Не доказал (<a href="http://demin.ws/blog/russian/2010/12/27/atomicy-of-int-and-pointer/">и вот почему</a>).</p>
-
-<p>Вопрос: «При множественном виртуальном наследовании в С++, кто и как должен заботиться о правильном однократном вызове конструктора базового класса (подразумевается, что у этого конструктора есть параметр)?». Я сказал, что это компилятор, и вдобавок еще не смог объяснить почему.</p>
-
-<p>Ну и лидер нашего хит-парада. Вопрос: «В С++ таблица виртуальных функций принадлежит классу или экземпляру класса?» Барабанная дробь: я сказал, что каждый экземпляр одного класса имеет собственную копию таблицу. Почему я так сказал, я до сих пор не знаю.</p>
-
-<p>Все это еще раз подтверждает факт того, что на нервах можно сморозить такое, что потом сам будешь думать о причинах сказанного.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Вопросы на интервью, на которые нельзя не знать ответы]]></title>
     <link href="http://demin.ws/blog/russian/2011/01/20/must-know-question-for-interviews/"/>
     <updated>2011-01-20T00:00:00+00:00</updated>
@@ -6681,6 +6664,23 @@ int main() {
 <p>Но все же есть такая черта, ниже которой уже нельзя.</p>
 
 <p>А у вас есть вопросы, &ldquo;неответы&rdquo; на которые вы лично можете считать поводом для практически однозначного отказа?</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Самые глупые ответы на интервью, что я когда-либо давал]]></title>
+    <link href="http://demin.ws/blog/russian/2011/01/20/my-most-stupid-answers-on-interviews/"/>
+    <updated>2011-01-20T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2011/01/20/my-most-stupid-answers-on-interviews/</id>
+    <content type="html"><![CDATA[<p>Решил я вспомнить, какие самые невозможно глупые ответы я когда-либо давал на интервью, за которые мне до сих пор даже перед самим собой стыдно неимоверно.</p>
+
+<p>Как-то яростно пытался доказать, что тип int является за 100% атомарным без каких-либо гвоздей на платформе x86. Не доказал (<a href="http://demin.ws/blog/russian/2010/12/27/atomicy-of-int-and-pointer/">и вот почему</a>).</p>
+
+<p>Вопрос: «При множественном виртуальном наследовании в С++, кто и как должен заботиться о правильном однократном вызове конструктора базового класса (подразумевается, что у этого конструктора есть параметр)?». Я сказал, что это компилятор, и вдобавок еще не смог объяснить почему.</p>
+
+<p>Ну и лидер нашего хит-парада. Вопрос: «В С++ таблица виртуальных функций принадлежит классу или экземпляру класса?» Барабанная дробь: я сказал, что каждый экземпляр одного класса имеет собственную копию таблицу. Почему я так сказал, я до сих пор не знаю.</p>
+
+<p>Все это еще раз подтверждает факт того, что на нервах можно сморозить такое, что потом сам будешь думать о причинах сказанного.</p>
 ]]></content>
   </entry>
   
@@ -7716,6 +7716,41 @@ int main() {
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[О том, как я «ломал» RSA]]></title>
+    <link href="http://demin.ws/blog/russian/2010/07/19/how-i-was-cracking-rsa/"/>
+    <updated>2010-07-19T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/07/19/how-i-was-cracking-rsa/</id>
+    <content type="html"><![CDATA[<p>Решал я как-то <a href="http://acmp.ru/?main=task&amp;id_task=47">очередную задачу</a>:</p>
+
+<p><em>Будем говорить, что число a лучше числа b, если сумма цифр a больше суммы цифр числа b, а в случае равенства сумм их цифр, если число a меньше числа b. Например, число 124 лучше числа 123, так как у первого из них сумма цифр равна семи, а у второго – шести. Также, число 3 лучше числа 111, так как у них равны суммы цифр, но первое из них меньше.</em></p>
+
+<p><em>Дано число n (1 ≤ n ≤ 10^5). Найдите такой его делитель (само число n и единица считаются делителями числа n), который лучше любого другого делителя числа n.</em></p>
+
+<p>Простая задача: ищем все делители n, у каждого делителя считаем сумму цифр, и среди найденного выделяем все делители с минимальной суммой, и уже среди них находим минимальное по значению. Просто надо аккуратно запрограммировать.</p>
+
+<p>Я все сделал, и решение прошло.</p>
+
+<p>Далее была <a href="http://acmp.ru/?main=task&amp;id_task=48">вторая задача</a>:</p>
+
+<p><em>Будем говорить, что число a лучше числа b, если сумма цифр a больше суммы цифр числа b, а в случае равенства сумм их цифр, если число a меньше числа b. Например, число 124 лучше числа 123, так как у первого из них сумма цифр равна семи, а у второго — шести. Также, число 3 лучше числа 111, так как у них равны суммы цифр, но первое из них меньше.</em></p>
+
+<p><em>Дано число n (1 ≤ n ≤ 10^5000). Найдите такой его делитель d (само число n и единица считаются делителями числа n), что любой другой делитель c числа n лучше, чем d.</em></p>
+
+<p>По сути, такая же задача, что и предыдущая – просто нужно в паре мест поменять «больше» на «меньше» и наоборот. Я поменял, и на небольших тестах решение прошло.</p>
+
+<p>Но тут я замечаю, что в это задаче верхнее ограничение на n какое-то очень большое. Я заменяют тип <code>int</code> на класс «длинной» арифметики (5000 тысяч знаков – пустяк, было и более) и пробую: на малых тестах работает, значит, алгоритм верный.</p>
+
+<p>Посылаю решение, и конечно, получаю ответ «Time limit exceeded». После небольшого раздумья становится ясно, что слишком много надо считать, и подход в целом неправильный.</p>
+
+<p>Пишу письмо <a href="http://www.topcoder.com/tc?module=MemberProfile&amp;cr=19825431">Leonid</a>’у с просьбой прояснить ситуацию.</p>
+
+<p>Приходит ответ типа, что моя попытка, ища все делители громадного числа, взломать RSA брутборсом конечно похвальная, но исполнена жиденько, да и врядли она вообще под силу современным компьютерам. К тому я же ищу все делители, а не только простые, а их будет еще больше.</p>
+
+<p>В итоге выяснилось, что данная задача решается не только без «длинной» арифметики, но даже и без короткой, одним циклом в пару строк. Просто надо понять, что за тип чисел просят найти.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Нулевые ссылки в С++]]></title>
     <link href="http://demin.ws/blog/russian/2010/07/19/null-references-in-cpp/"/>
     <updated>2010-07-19T00:00:00+00:00</updated>
@@ -7755,41 +7790,6 @@ int main() { a = 123; }
 <p>Данный код прекрасно компилируется Студией (2010) и компилятором SUN (этот хоть предупреждение выдает), и также прекрасно падается при запуске по понятой причине.</p>
 
 <p>Вы получили ссылку в качестве параметра и думаете, что она лучше чем указатель, так как ее не надо проверять на <code>NULL</code>? Зря!</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[О том, как я «ломал» RSA]]></title>
-    <link href="http://demin.ws/blog/russian/2010/07/19/how-i-was-cracking-rsa/"/>
-    <updated>2010-07-19T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/07/19/how-i-was-cracking-rsa/</id>
-    <content type="html"><![CDATA[<p>Решал я как-то <a href="http://acmp.ru/?main=task&amp;id_task=47">очередную задачу</a>:</p>
-
-<p><em>Будем говорить, что число a лучше числа b, если сумма цифр a больше суммы цифр числа b, а в случае равенства сумм их цифр, если число a меньше числа b. Например, число 124 лучше числа 123, так как у первого из них сумма цифр равна семи, а у второго – шести. Также, число 3 лучше числа 111, так как у них равны суммы цифр, но первое из них меньше.</em></p>
-
-<p><em>Дано число n (1 ≤ n ≤ 10^5). Найдите такой его делитель (само число n и единица считаются делителями числа n), который лучше любого другого делителя числа n.</em></p>
-
-<p>Простая задача: ищем все делители n, у каждого делителя считаем сумму цифр, и среди найденного выделяем все делители с минимальной суммой, и уже среди них находим минимальное по значению. Просто надо аккуратно запрограммировать.</p>
-
-<p>Я все сделал, и решение прошло.</p>
-
-<p>Далее была <a href="http://acmp.ru/?main=task&amp;id_task=48">вторая задача</a>:</p>
-
-<p><em>Будем говорить, что число a лучше числа b, если сумма цифр a больше суммы цифр числа b, а в случае равенства сумм их цифр, если число a меньше числа b. Например, число 124 лучше числа 123, так как у первого из них сумма цифр равна семи, а у второго — шести. Также, число 3 лучше числа 111, так как у них равны суммы цифр, но первое из них меньше.</em></p>
-
-<p><em>Дано число n (1 ≤ n ≤ 10^5000). Найдите такой его делитель d (само число n и единица считаются делителями числа n), что любой другой делитель c числа n лучше, чем d.</em></p>
-
-<p>По сути, такая же задача, что и предыдущая – просто нужно в паре мест поменять «больше» на «меньше» и наоборот. Я поменял, и на небольших тестах решение прошло.</p>
-
-<p>Но тут я замечаю, что в это задаче верхнее ограничение на n какое-то очень большое. Я заменяют тип <code>int</code> на класс «длинной» арифметики (5000 тысяч знаков – пустяк, было и более) и пробую: на малых тестах работает, значит, алгоритм верный.</p>
-
-<p>Посылаю решение, и конечно, получаю ответ «Time limit exceeded». После небольшого раздумья становится ясно, что слишком много надо считать, и подход в целом неправильный.</p>
-
-<p>Пишу письмо <a href="http://www.topcoder.com/tc?module=MemberProfile&amp;cr=19825431">Leonid</a>’у с просьбой прояснить ситуацию.</p>
-
-<p>Приходит ответ типа, что моя попытка, ища все делители громадного числа, взломать RSA брутборсом конечно похвальная, но исполнена жиденько, да и врядли она вообще под силу современным компьютерам. К тому я же ищу все делители, а не только простые, а их будет еще больше.</p>
-
-<p>В итоге выяснилось, что данная задача решается не только без «длинной» арифметики, но даже и без короткой, одним циклом в пару строк. Просто надо понять, что за тип чисел просят найти.</p>
 ]]></content>
   </entry>
   
@@ -7892,6 +7892,17 @@ f(&amp;a);
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Отладчик в Visual Studio 2010]]></title>
+    <link href="http://demin.ws/blog/russian/2010/06/21/visual-studio-2010-debugger/"/>
+    <updated>2010-06-21T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/06/21/visual-studio-2010-debugger/</id>
+    <content type="html"><![CDATA[<p>В отладчике Visual Studio 2010 появилась просто фантастическая штука - отображение трассируемой переменной не где-то в особом окне, а прямо на тексте программы. Это позволяет обращать внимание на переменную, только когда доходишь до ее места в программе.</p>
+
+<p><img src="http://demin.ws/images/blog/vs2010-debugger-variables-view.png" /></p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Живая карта Лондонского метро]]></title>
     <link href="http://demin.ws/blog/russian/2010/06/21/london-tube-live-map/"/>
     <updated>2010-06-21T00:00:00+00:00</updated>
@@ -7907,13 +7918,15 @@ f(&amp;a);
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Отладчик в Visual Studio 2010]]></title>
-    <link href="http://demin.ws/blog/russian/2010/06/21/visual-studio-2010-debugger/"/>
-    <updated>2010-06-21T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/06/21/visual-studio-2010-debugger/</id>
-    <content type="html"><![CDATA[<p>В отладчике Visual Studio 2010 появилась просто фантастическая штука - отображение трассируемой переменной не где-то в особом окне, а прямо на тексте программы. Это позволяет обращать внимание на переменную, только когда доходишь до ее места в программе.</p>
+    <title type="html"><![CDATA[Блог на английском для носителя русского языка?]]></title>
+    <link href="http://demin.ws/blog/russian/2010/06/20/blogging-in-english-for-non-native-speaker/"/>
+    <updated>2010-06-20T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/06/20/blogging-in-english-for-non-native-speaker/</id>
+    <content type="html"><![CDATA[<p>Вы пробовали вести блог на английском?</p>
 
-<p><img src="http://demin.ws/images/blog/vs2010-debugger-variables-view.png" /></p>
+<p>Я уже долгое время тщетно пытаюсь это делать. Но дело как-то не идет. Каждый пост занимает в разы больше времени, посты приходится укорачивать, упрощать язык (&ldquo;эдак&rdquo; уже не завернешь). А самое, что внутренне неприятно - я четко вижу разницу в качестве языка. Вместо более-менее живого и, надеюсь, интересного, способа выражения мыслей, что я себе могу позволить на русском (хех, все-таки 30 лет практики), на английском получается какое-то сухое школькое сочинение, часто с неочевидными ошибками. И уж точно выглядещее, как НЕклево..</p>
+
+<p>Кстати, а вы знаете интересные блоги на английском (хотя бы технические), которые пишут носители русского? (конечно, если человек вырос в английской среде с 5-6 лет, то это не в счет).</p>
 ]]></content>
   </entry>
   
@@ -7935,15 +7948,20 @@ f(&amp;a);
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Блог на английском для носителя русского языка?]]></title>
-    <link href="http://demin.ws/blog/russian/2010/06/20/blogging-in-english-for-non-native-speaker/"/>
-    <updated>2010-06-20T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/06/20/blogging-in-english-for-non-native-speaker/</id>
-    <content type="html"><![CDATA[<p>Вы пробовали вести блог на английском?</p>
+    <title type="html"><![CDATA[Сумма цифр числа в Excel'е]]></title>
+    <link href="http://demin.ws/blog/russian/2010/06/18/sub-of-all-digits-in-excel/"/>
+    <updated>2010-06-18T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/06/18/sub-of-all-digits-in-excel/</id>
+    <content type="html"><![CDATA[<p>Разбираясь с задачей из <a href="http://demin.ws/blog/russian/2010/06/18/topcoder-srm-473/">последней SRM&rsquo;ки</a>, решил я посмотреть, как будет выглядеть график у функции <code>Y=D(X)</code>, где <code>X</code> - натуральное число, а <code>D(X)</code> - сумма цифр его десятичной записи. Оказывается, вот такой хитрой формулой:</p>
 
-<p>Я уже долгое время тщетно пытаюсь это делать. Но дело как-то не идет. Каждый пост занимает в разы больше времени, посты приходится укорачивать, упрощать язык (&ldquo;эдак&rdquo; уже не завернешь). А самое, что внутренне неприятно - я четко вижу разницу в качестве языка. Вместо более-менее живого и, надеюсь, интересного, способа выражения мыслей, что я себе могу позволить на русском (хех, все-таки 30 лет практики), на английском получается какое-то сухое школькое сочинение, часто с неочевидными ошибками. И уж точно выглядещее, как НЕклево..</p>
+<pre><code>=SUMPRODUCT(MID(A1,ROW(INDIRECT(&quot;1:&quot; &amp; LEN(A1))),1)) 
+</code></pre>
 
-<p>Кстати, а вы знаете интересные блоги на английском (хотя бы технические), которые пишут носители русского? (конечно, если человек вырос в английской среде с 5-6 лет, то это не в счет).</p>
+<p>можно в Экселе посчитать этот самый <code>D(X)</code>. Ума не приложу, что это формула значит, но точно работает.</p>
+
+<p>А вот и сам график, кому интересно:</p>
+
+<p><img src="http://demin.ws/images/blog/sum-of-all-digits.png" /></p>
 ]]></content>
   </entry>
   
@@ -8055,24 +8073,6 @@ else if (cmd == ‘R’)
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Сумма цифр числа в Excel'е]]></title>
-    <link href="http://demin.ws/blog/russian/2010/06/18/sub-of-all-digits-in-excel/"/>
-    <updated>2010-06-18T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/06/18/sub-of-all-digits-in-excel/</id>
-    <content type="html"><![CDATA[<p>Разбираясь с задачей из <a href="http://demin.ws/blog/russian/2010/06/18/topcoder-srm-473/">последней SRM&rsquo;ки</a>, решил я посмотреть, как будет выглядеть график у функции <code>Y=D(X)</code>, где <code>X</code> - натуральное число, а <code>D(X)</code> - сумма цифр его десятичной записи. Оказывается, вот такой хитрой формулой:</p>
-
-<pre><code>=SUMPRODUCT(MID(A1,ROW(INDIRECT(&quot;1:&quot; &amp; LEN(A1))),1)) 
-</code></pre>
-
-<p>можно в Экселе посчитать этот самый <code>D(X)</code>. Ума не приложу, что это формула значит, но точно работает.</p>
-
-<p>А вот и сам график, кому интересно:</p>
-
-<p><img src="http://demin.ws/images/blog/sum-of-all-digits.png" /></p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Перебор всех разбиений множества на два подмножества]]></title>
     <link href="http://demin.ws/blog/russian/2010/06/13/search-all-splits-of-set-to-two-subsets/"/>
     <updated>2010-06-13T00:00:00+00:00</updated>
@@ -8101,25 +8101,6 @@ for (int i = 1; i &lt; (1 &lt;&lt; v.size()); ++i) {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[return со значением для void-функции]]></title>
-    <link href="http://demin.ws/blog/russian/2010/06/12/return-void-value/"/>
-    <updated>2010-06-12T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/06/12/return-void-value/</id>
-    <content type="html"><![CDATA[<p>Я как-то думал, что для void-функций оператор return не может иметь ничего, кроме пробелов, перед завершающей его точкой с запятой. Оказывается, что нет. Visual Studio съела без каких-либо жалоб вот такой код:</p>
-
-<pre><code class="cpp">void v() {}
-void f(){ 
-  return v();
-}
-
-int main() {
-  f();
-}
-</code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Разностная машина из Лего, или динамическое программирование в жизни]]></title>
     <link href="http://demin.ws/blog/russian/2010/06/12/difference-engine-in-lego/"/>
     <updated>2010-06-12T00:00:00+00:00</updated>
@@ -8141,6 +8122,25 @@ int main() {
 <ul>
 <li><a href="http://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D0%B7%D0%BD%D0%BE%D1%81%D1%82%D0%BD%D0%B0%D1%8F_%D0%BC%D0%B0%D1%88%D0%B8%D0%BD%D0%B0_%D0%A7%D0%B0%D1%80%D0%BB%D1%8C%D0%B7%D0%B0_%D0%91%D1%8D%D0%B1%D0%B1%D0%B8%D0%B4%D0%B6%D0%B0">Разностная машина Чарльза Бэббиджа</a></li>
 </ul>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[return со значением для void-функции]]></title>
+    <link href="http://demin.ws/blog/russian/2010/06/12/return-void-value/"/>
+    <updated>2010-06-12T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/06/12/return-void-value/</id>
+    <content type="html"><![CDATA[<p>Я как-то думал, что для void-функций оператор return не может иметь ничего, кроме пробелов, перед завершающей его точкой с запятой. Оказывается, что нет. Visual Studio съела без каких-либо жалоб вот такой код:</p>
+
+<pre><code class="cpp">void v() {}
+void f(){ 
+  return v();
+}
+
+int main() {
+  f();
+}
+</code></pre>
 ]]></content>
   </entry>
   
@@ -8303,6 +8303,23 @@ int main() {
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Dropbox]]></title>
+    <link href="http://demin.ws/blog/russian/2010/05/24/dropbox/"/>
+    <updated>2010-05-24T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/05/24/dropbox/</id>
+    <content type="html"><![CDATA[<p>Как-то осознал, что реально подсел на <a href="http://dropbox.com">Dropbox</a>.</p>
+
+<p>Как это реально выглядит: просто у меня есть папка, которая автоматически синхронизируется через интернет на любом компьютере, где я залогинен в Dropbox. Не надо ничего вручную копировать и синхронизировать. Ты просто работаешь с локальными файлами, а все в фоне уходит на сервер и оттуда раздается на другие компьютеры.</p>
+
+<p>Все файлы имеют историю ревизий, и их можно делать выборочно публичными. Почти как Google Docs, только есть автоматическое синхронизирование с локальными файлами.</p>
+
+<p>Недавно вышел официальный клиент Dropbox для Android, так что теперь файлы еще и доступны прямо с телефона. Захотел в метро исходничек глянуть или pdf-ку - пожалуйста.</p>
+
+<p>Конечно, класть в эту папку более менее конфиденциальные данные было бы глупо, хотя Dropbox гарантирует их сохранность, но для рабочих документов и исходников - это самое оно. Они и так у меня почти все лежат на Google Code.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Совершенные числа]]></title>
     <link href="http://demin.ws/blog/russian/2010/05/24/perfect-numbers/"/>
     <updated>2010-05-24T00:00:00+00:00</updated>
@@ -8365,23 +8382,6 @@ int main() {
 <p>Еще интересный момент. В подраунде <a href="http://code.google.com/codejam/contest/scoreboard?c=635101">Round 1B</a> участвовал известный своим юным возрастом &ldquo;спортивный&rdquo; программист <a href="http://habrahabr.ru/tag/%D0%93%D0%B5%D0%BD%D0%BD%D0%B0%D0%B4%D0%B8%D0%B9%20%D0%9A%D0%BE%D1%80%D0%BE%D1%82%D0%BA%D0%B5%D0%B2%D0%B8%D1%87/">Геннадий Короткевич</a> (третья позиция сверху таблице результатов). Я всегда очень люблю смотреть решения других людей. Поглядев на его решения, а был реально поражен тем, что они написаны на Дельфи! (а фактически на Паскале) (на Code Jam&rsquo;е по статистике есть решения и на более &ldquo;экзотических&rdquo; языках типа BrainFuck&rsquo;а или PostScript&rsquo;а, но такие программы скорее всего сгенерированы из &ldquo;традиционного&rdquo; языка, и это уже иная тема). И эти решения кратки и понятны, и не используют различные шаблонные заготовки, которые в целом в ходу в спортивном программировании. Это еще одно подтверждение, что даже для алгоритмических задач &ldquo;неудобный&rdquo; язык не является проблемой в написании быстрой и понятной программы.</p>
 
 <p>P.P.S. Один мой друг учавствовал в раунде 1, сидя с ноутом на полу в аэропорту через Wifi. Это не помешало ему получить 127-е место и проход в следующий раунд.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Dropbox]]></title>
-    <link href="http://demin.ws/blog/russian/2010/05/24/dropbox/"/>
-    <updated>2010-05-24T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/05/24/dropbox/</id>
-    <content type="html"><![CDATA[<p>Как-то осознал, что реально подсел на <a href="http://dropbox.com">Dropbox</a>.</p>
-
-<p>Как это реально выглядит: просто у меня есть папка, которая автоматически синхронизируется через интернет на любом компьютере, где я залогинен в Dropbox. Не надо ничего вручную копировать и синхронизировать. Ты просто работаешь с локальными файлами, а все в фоне уходит на сервер и оттуда раздается на другие компьютеры.</p>
-
-<p>Все файлы имеют историю ревизий, и их можно делать выборочно публичными. Почти как Google Docs, только есть автоматическое синхронизирование с локальными файлами.</p>
-
-<p>Недавно вышел официальный клиент Dropbox для Android, так что теперь файлы еще и доступны прямо с телефона. Захотел в метро исходничек глянуть или pdf-ку - пожалуйста.</p>
-
-<p>Конечно, класть в эту папку более менее конфиденциальные данные было бы глупо, хотя Dropbox гарантирует их сохранность, но для рабочих документов и исходников - это самое оно. Они и так у меня почти все лежат на Google Code.</p>
 ]]></content>
   </entry>
   
@@ -8601,6 +8601,42 @@ b1 = 15
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Google Test Framework 1.5.0]]></title>
+    <link href="http://demin.ws/blog/russian/2010/04/16/google-test-framework-150/"/>
+    <updated>2010-04-16T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/04/16/google-test-framework-150/</id>
+    <content type="html"><![CDATA[<p>Сегодня вышла новая версия правильной библиотеки для unit-тестирования Google <a href="http://code.google.com/p/googletest/">C++ Testing Framework 1.5.0</a>.</p>
+
+<p>Пока обзор будет краткий (фактически, это просто перевод официального анонса):</p>
+
+<ul>
+<li><code>assert</code>&lsquo;ы теперь можно безопасно запускать из разных потоков (работает на платформах, где есть pthreads)</li>
+<li>при использовании предикатов в <code>EXPECT_TRUE()</code> теперь можно самому задавать сообщения их ошибках</li>
+<li>библиотеку теперь можно собрать как DLL (эту возможность многие ждали)</li>
+<li>&ldquo;упакованная&rdquo; версия теперь входит состав дистрибутива, и ее не надо создавать самому через скрипт (&ldquo;упакованная&rdquo; версия - это просто два файла <code>gtest.h</code> и <code>gtest-all.cc</code>, которые можно добавить в проект и не возиться с двоичной библиотекой)</li>
+<li>система сборки теперь работает через <code>CMake</code> (это фантастически удобно)</li>
+<li>добавлены две новые платформы: Solaris и AIX</li>
+<li>убрана поддержка VC++ 7.1 с отключенными исключениями (если исключения включены, то все еще можно компилировать в VC++ 7.1)</li>
+</ul>
+
+<p>Для тех, кто слышит про Google Test впервые, ниже предыдущие посты об этой библиотеке и о тестировании в целом (многие на русском языке):</p>
+
+<ul>
+<li><a href="http://code.google.com/p/googletest-translations/">Руководство для начинающих по Google Test и Google Mock</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/10/03/google-test-framework-140/">Google Test Framework 1.4.0</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/03/19/google-test-framework-130/">Google Test Framework 1.3.0</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/10/15/introduction-to-googlemock-talk/">Введение в Google Mock (видео)</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/10/07/google-test-framework-authors-presentation/">Презентация от авторов Google C++ Testing Framework</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/04/03/code-bullseye-coverage/">Анализатор покрытия кода тестами Bullseye Coverage</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/02/23/static-code-analysis-coverity-klocwork/">Статический анализ кода - Coverity, Klocwork</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/03/01/unit-testing-in-c/">Unit-тестирование в языке С</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/05/04/automated-product-build/">Автоматизация сборки продукта</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/04/26/continuous-integration-with-hudson/">Система автоматизированной интеграции Hudson</a></li>
+</ul>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Задача про поиск середины связного списка]]></title>
     <link href="http://demin.ws/blog/russian/2010/04/16/find-middle-of-linked-list-problem/"/>
     <updated>2010-04-16T00:00:00+00:00</updated>
@@ -8653,42 +8689,6 @@ b1 = 15
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Google Test Framework 1.5.0]]></title>
-    <link href="http://demin.ws/blog/russian/2010/04/16/google-test-framework-150/"/>
-    <updated>2010-04-16T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/04/16/google-test-framework-150/</id>
-    <content type="html"><![CDATA[<p>Сегодня вышла новая версия правильной библиотеки для unit-тестирования Google <a href="http://code.google.com/p/googletest/">C++ Testing Framework 1.5.0</a>.</p>
-
-<p>Пока обзор будет краткий (фактически, это просто перевод официального анонса):</p>
-
-<ul>
-<li><code>assert</code>&lsquo;ы теперь можно безопасно запускать из разных потоков (работает на платформах, где есть pthreads)</li>
-<li>при использовании предикатов в <code>EXPECT_TRUE()</code> теперь можно самому задавать сообщения их ошибках</li>
-<li>библиотеку теперь можно собрать как DLL (эту возможность многие ждали)</li>
-<li>&ldquo;упакованная&rdquo; версия теперь входит состав дистрибутива, и ее не надо создавать самому через скрипт (&ldquo;упакованная&rdquo; версия - это просто два файла <code>gtest.h</code> и <code>gtest-all.cc</code>, которые можно добавить в проект и не возиться с двоичной библиотекой)</li>
-<li>система сборки теперь работает через <code>CMake</code> (это фантастически удобно)</li>
-<li>добавлены две новые платформы: Solaris и AIX</li>
-<li>убрана поддержка VC++ 7.1 с отключенными исключениями (если исключения включены, то все еще можно компилировать в VC++ 7.1)</li>
-</ul>
-
-<p>Для тех, кто слышит про Google Test впервые, ниже предыдущие посты об этой библиотеке и о тестировании в целом (многие на русском языке):</p>
-
-<ul>
-<li><a href="http://code.google.com/p/googletest-translations/">Руководство для начинающих по Google Test и Google Mock</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/10/03/google-test-framework-140/">Google Test Framework 1.4.0</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/03/19/google-test-framework-130/">Google Test Framework 1.3.0</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/10/15/introduction-to-googlemock-talk/">Введение в Google Mock (видео)</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/10/07/google-test-framework-authors-presentation/">Презентация от авторов Google C++ Testing Framework</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/04/03/code-bullseye-coverage/">Анализатор покрытия кода тестами Bullseye Coverage</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/02/23/static-code-analysis-coverity-klocwork/">Статический анализ кода - Coverity, Klocwork</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/03/01/unit-testing-in-c/">Unit-тестирование в языке С</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/05/04/automated-product-build/">Автоматизация сборки продукта</a></li>
-<li><a href="http://demin.ws/blog/russian/2009/04/26/continuous-integration-with-hudson/">Система автоматизированной интеграции Hudson</a></li>
-</ul>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Какие задачи задавать на интервью]]></title>
     <link href="http://demin.ws/blog/russian/2010/04/08/what-problems-to-ask-at-interviews/"/>
     <updated>2010-04-08T00:00:00+00:00</updated>
@@ -8706,6 +8706,23 @@ b1 = 15
 <p>А уж если есть желание «проверить сообразительность», то куда полезнее вопросы на общее представления о мире вокруг и взаимосвязях в нем. Я как-то был реально озадачен, когда меня спросили «А сколько весит Боинг-747?». Я хоть и учился в МАИ, но точной цифры ни разу не знал. Но исходя и элементарных понятий и количестве людей в самолете, грузе, соотношении топлива и массы и т.д. – можно дать оценку, или что более важно, показать умение логически и реально мыслить.</p>
 
 <p>Интервью – это не бенефис интервьюера. Это решение конкретной задачи поиска человека, максимально подходящего вашим требованиям (а неужели у кого-то в требованиях написано «должен уметь решать задачи школьной программы»? если да, это наем учителя средних классов, а не программиста).</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Bernard Girard, "The Google Way"]]></title>
+    <link href="http://demin.ws/blog/russian/2010/04/07/google-way/"/>
+    <updated>2010-04-07T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/04/07/google-way/</id>
+    <content type="html"><![CDATA[<p>Было интересно почитать про историю Google, посему купил вот эту книгу.</p>
+
+<p><a href="http://www.amazon.co.uk/Google-Way-Revolutionary-Management-Revolutionizing/dp/1593271840">Bernard Girard, &ldquo;The Google Way&rdquo;</a></p>
+
+<p><img src="http://demin.ws/images/covers/english/google-way-cover.jpg" /></p>
+
+<p>Не могу сказать, что мне особо понравилось, хоть фактов в книге предостачно: и про самое начало, и про выход на <a href="http://ru.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D0%B2%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5">IPO</a> (работая сейчас в сфере finance, знаю, как обычно инвестиционные банкиры наживаются на процедуре IPO, но Гугл их сильно в этом плане разочаровал, не дав им кусок своего пирога), и про правило 20%, и про систему peer review, и про наличие технической иерархии и про многое другое.</p>
+
+<p>Разок прочитать можно, но не более того. Книгу продал назад через <a href="http://www.amazon.co.uk/gp/seller/sell-your-stuff.html">Amazon Market Place</a>.</p>
 ]]></content>
   </entry>
   
@@ -8776,23 +8793,6 @@ b1 = 15
 <p>От себя могу добавить. Всегда стоит писать cover letter, причем вдумчивые и персонализированные. В процессе их написания часто приходит понимание - &ldquo;а хочу ли сам я там работать?&rdquo;</p>
 
 <p>Книгу после прочтения я продал назад через Амазон.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Bernard Girard, "The Google Way"]]></title>
-    <link href="http://demin.ws/blog/russian/2010/04/07/google-way/"/>
-    <updated>2010-04-07T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/04/07/google-way/</id>
-    <content type="html"><![CDATA[<p>Было интересно почитать про историю Google, посему купил вот эту книгу.</p>
-
-<p><a href="http://www.amazon.co.uk/Google-Way-Revolutionary-Management-Revolutionizing/dp/1593271840">Bernard Girard, &ldquo;The Google Way&rdquo;</a></p>
-
-<p><img src="http://demin.ws/images/covers/english/google-way-cover.jpg" /></p>
-
-<p>Не могу сказать, что мне особо понравилось, хоть фактов в книге предостачно: и про самое начало, и про выход на <a href="http://ru.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D0%B2%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5">IPO</a> (работая сейчас в сфере finance, знаю, как обычно инвестиционные банкиры наживаются на процедуре IPO, но Гугл их сильно в этом плане разочаровал, не дав им кусок своего пирога), и про правило 20%, и про систему peer review, и про наличие технической иерархии и про многое другое.</p>
-
-<p>Разок прочитать можно, но не более того. Книгу продал назад через <a href="http://www.amazon.co.uk/gp/seller/sell-your-stuff.html">Amazon Market Place</a>.</p>
 ]]></content>
   </entry>
   
@@ -8881,21 +8881,6 @@ Converted: 1 5 7 4 2 9 8 6
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Общий виртуальный десктоп]]></title>
-    <link href="http://demin.ws/blog/russian/2010/04/02/shared-virtual-desktop/"/>
-    <updated>2010-04-02T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/04/02/shared-virtual-desktop/</id>
-    <content type="html"><![CDATA[<p>В крупных конторах с множеством UNIX-программистов, работающих в основном через telnet/ssh/xterm, разумно сделать общий NFS-раздел, который виден всем, и также монтируется сразу на много машин. Во-первых, все имеют доступ практически ко всему в development пространстве, и во-вторых, содержимое моего <code>home</code> каталога всегда одно и то же на всех машинах (не надо вручную копировать файлы с машины на машину).</p>
-
-<p>Минуту назад я не смог залогиниться xterm&rsquo;ом из-за каких-то временных проблем в сети и попросил коллегу проверить, все ли работает. У него получилось, и он типа сказал в шутку, что жаль не может передать мне его телнетное окно.</p>
-
-<p>Так вот, только родилась мысль &ndash; а что, если все разработчики будут также &ldquo;шарить&rdquo; общий огро-о-о-мный виртуальный десктоп? Захотел что-то передать/показать коллеге &ndash; просто перебросил окно в его &ldquo;зону видимости&rdquo;.</p>
-
-<p>Идея, конечно, утопичная, но красивая.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[parseInt() в JavaScript]]></title>
     <link href="http://demin.ws/blog/russian/2010/04/02/parseint-in-javascript/"/>
     <updated>2010-04-02T00:00:00+00:00</updated>
@@ -8927,6 +8912,21 @@ for (var i = 0; i &lt; n.length; ++i)
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Общий виртуальный десктоп]]></title>
+    <link href="http://demin.ws/blog/russian/2010/04/02/shared-virtual-desktop/"/>
+    <updated>2010-04-02T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/04/02/shared-virtual-desktop/</id>
+    <content type="html"><![CDATA[<p>В крупных конторах с множеством UNIX-программистов, работающих в основном через telnet/ssh/xterm, разумно сделать общий NFS-раздел, который виден всем, и также монтируется сразу на много машин. Во-первых, все имеют доступ практически ко всему в development пространстве, и во-вторых, содержимое моего <code>home</code> каталога всегда одно и то же на всех машинах (не надо вручную копировать файлы с машины на машину).</p>
+
+<p>Минуту назад я не смог залогиниться xterm&rsquo;ом из-за каких-то временных проблем в сети и попросил коллегу проверить, все ли работает. У него получилось, и он типа сказал в шутку, что жаль не может передать мне его телнетное окно.</p>
+
+<p>Так вот, только родилась мысль &ndash; а что, если все разработчики будут также &ldquo;шарить&rdquo; общий огро-о-о-мный виртуальный десктоп? Захотел что-то передать/показать коллеге &ndash; просто перебросил окно в его &ldquo;зону видимости&rdquo;.</p>
+
+<p>Идея, конечно, утопичная, но красивая.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Продуктивные программисты и их типы]]></title>
     <link href="http://demin.ws/blog/russian/2010/03/31/productive-programmers-and-their-types/"/>
     <updated>2010-03-31T00:00:00+00:00</updated>
@@ -8950,21 +8950,6 @@ for (var i = 0; i &lt; n.length; ++i)
 <p>Теперь совсем к теме. Интересно слушать, как люди проводят интервью по телефону. Что они спрашивают, на чем делают акценты. Тут сразу становится видно, кто какой категории принадлежит человек (алгоритмист, языковед, API’ист, теоретик и т.д.)</p>
 
 <p>Конечно, в продуктивном программисте весь должно быть развито. Какой толк от алгоритмиста, который напишет так, что другой никогда не поймет и тем более не протестирует? Или от теоретика, не имеющего представления о вычислительных сложностях базовых алгоритмов?</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Приведение последовательности через обмен соседних элементов]]></title>
-    <link href="http://demin.ws/blog/russian/2010/03/31/sequence-transformation-by-swap-of-adjacent-elements/"/>
-    <updated>2010-03-31T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/03/31/sequence-transformation-by-swap-of-adjacent-elements/</id>
-    <content type="html"><![CDATA[<p>Вдогонку к <a href="http://demin.ws/blog/russian/2010/03/31/adding-elements-to-vector/">вопросу о векторе</a> предлагаю еще блиц вопрос (ни разу не претендую на оригинальность, но вопрос родился лично у меня в процессе обдумывания алгоритма формирования таблиц <a href="http://demin.ws/blog/russian/2010/03/04/trading-systems-for-dummies/">market depth</a>): есть некоторая произвольная конечная последовательность (массив, строка и т.д.). Повторения значений возможны. Также задана вторая последовательность такой же длины, состоящая в точности из тех же элементов, что и первая, но расположенных в другом порядке.</p>
-
-<p>Вопрос: как на месте преобразовать первую последовательность во вторую, если в плане перемещения/копирования элементов есть только одна функция - обмен двух соседних элементов. Произвольный доступ к одиночным элементам есть только на чтение. Для перезаписи/изменения элементов надо пользоваться данной функцией обмена.</p>
-
-<p>Конечно, интересно иметь и оценку сложности.</p>
-
-<p>Мой ответ, если кому интересно, будет завтра.</p>
 ]]></content>
   </entry>
   
@@ -9067,6 +9052,21 @@ int main() {
 <p>Получаем в этоге: <code>O(k*log2(k))</code>.</p>
 
 <p><strong>Update 3</strong>: В комментариях меня поправили: <code>O(k + log2(k))</code> или просто <code>O(k)</code>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Приведение последовательности через обмен соседних элементов]]></title>
+    <link href="http://demin.ws/blog/russian/2010/03/31/sequence-transformation-by-swap-of-adjacent-elements/"/>
+    <updated>2010-03-31T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/03/31/sequence-transformation-by-swap-of-adjacent-elements/</id>
+    <content type="html"><![CDATA[<p>Вдогонку к <a href="http://demin.ws/blog/russian/2010/03/31/adding-elements-to-vector/">вопросу о векторе</a> предлагаю еще блиц вопрос (ни разу не претендую на оригинальность, но вопрос родился лично у меня в процессе обдумывания алгоритма формирования таблиц <a href="http://demin.ws/blog/russian/2010/03/04/trading-systems-for-dummies/">market depth</a>): есть некоторая произвольная конечная последовательность (массив, строка и т.д.). Повторения значений возможны. Также задана вторая последовательность такой же длины, состоящая в точности из тех же элементов, что и первая, но расположенных в другом порядке.</p>
+
+<p>Вопрос: как на месте преобразовать первую последовательность во вторую, если в плане перемещения/копирования элементов есть только одна функция - обмен двух соседних элементов. Произвольный доступ к одиночным элементам есть только на чтение. Для перезаписи/изменения элементов надо пользоваться данной функцией обмена.</p>
+
+<p>Конечно, интересно иметь и оценку сложности.</p>
+
+<p>Мой ответ, если кому интересно, будет завтра.</p>
 ]]></content>
   </entry>
   
@@ -9689,6 +9689,15 @@ parse-log:
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Простое понимание, что возвращает sizeof]]></title>
+    <link href="http://demin.ws/blog/russian/2010/02/24/meaning-of-sizeof/"/>
+    <updated>2010-02-24T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2010/02/24/meaning-of-sizeof/</id>
+    <content type="html"><![CDATA[<p>Чтобы просто и понятно осознать, что возвращает <code>sizeof</code> в С++ для сложных составных типов (структур и классов) и сходу не вдаваться в детали выравнивания &ndash; надо запомнить, что <code>sizeof</code> возвращает число, равное разности адресов двух соседних элементов массива, хранящего экземпляры вашего типа.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Печать контейнера с разделителями]]></title>
     <link href="http://demin.ws/blog/russian/2010/02/24/print-container-with-delimiters/"/>
     <updated>2010-02-24T00:00:00+00:00</updated>
@@ -9778,15 +9787,6 @@ int main(int argc, char* argv[]) {
 </code></pre>
 
 <p>Трюк с оператором <code>--</code> позволяет эффективно проверить на последний элемент контейнера.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Простое понимание, что возвращает sizeof]]></title>
-    <link href="http://demin.ws/blog/russian/2010/02/24/meaning-of-sizeof/"/>
-    <updated>2010-02-24T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2010/02/24/meaning-of-sizeof/</id>
-    <content type="html"><![CDATA[<p>Чтобы просто и понятно осознать, что возвращает <code>sizeof</code> в С++ для сложных составных типов (структур и классов) и сходу не вдаваться в детали выравнивания &ndash; надо запомнить, что <code>sizeof</code> возвращает число, равное разности адресов двух соседних элементов массива, хранящего экземпляры вашего типа.</p>
 ]]></content>
   </entry>
   
@@ -10505,15 +10505,6 @@ int main() {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[codepad.org]]></title>
-    <link href="http://demin.ws/blog/russian/2009/10/29/codepad/"/>
-    <updated>2009-10-29T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/10/29/codepad/</id>
-    <content type="html"><![CDATA[<p>Открыл для себя <a href="http://codepad.org">codepad.org</a>, и начал пользоваться с завидной регулярностью, когда надо быстренько что-нибудь попробовать - откомпилировать и запустить, а потом еще и показать кому-нибудь.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Искусственная типизация однородных параметров в C++]]></title>
     <link href="http://demin.ws/blog/russian/2009/10/29/artificial-classification-of-homogeneous-parameters/"/>
     <updated>2009-10-29T00:00:00+00:00</updated>
@@ -10579,6 +10570,15 @@ class Day { ... };
 <p>Согласен, писанины немного больше, но зато полная гарантия от опечаток и, как следствие, глупых, но коварных ошибок.</p>
 
 <p>Возражения есть?</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[codepad.org]]></title>
+    <link href="http://demin.ws/blog/russian/2009/10/29/codepad/"/>
+    <updated>2009-10-29T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/10/29/codepad/</id>
+    <content type="html"><![CDATA[<p>Открыл для себя <a href="http://codepad.org">codepad.org</a>, и начал пользоваться с завидной регулярностью, когда надо быстренько что-нибудь попробовать - откомпилировать и запустить, а потом еще и показать кому-нибудь.</p>
 ]]></content>
   </entry>
   
@@ -11882,6 +11882,37 @@ Y::f(): 1
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Ведение блога на Google Code]]></title>
+    <link href="http://demin.ws/blog/russian/2009/07/26/blogging-on-googlecode/"/>
+    <updated>2009-07-26T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/07/26/blogging-on-googlecode/</id>
+    <content type="html"><![CDATA[<p>Лично я пока не дозрел до ведения блога на собственном сайте. Конечно, собственный сайт - это удобно. Все можно поменять и сделать как хочется. Но это и обязанность - настраивать, обновлять версии, присматривать и т.д. Все это реально, но пока не для меня. Я как-то больше радею за контент, нежели за оформление.</p>
+
+<p>Теперь ближе к делу. <a href="http://blogspot.com/">Blogspot</a> как механизм для ведения блога меня вполне устраивает. Единственное, чего не хватает - это возможности форматирования постов не в HTML или WYSIWYG редакторе, а на каком-нибудь диалекте Wiki. Мне много-то не надо, хотя бы базовые элементы.</p>
+
+<p>Последнее время я как-то уж сблизился с <a href="http://code.google.com/">Google Code</a>. А там как раз есть Wiki для ведения документации. Вот и возникала мысль скрестить Blogspot и Google Code для ведения блога.</p>
+
+<p>Мой блог о программировании, поэтому задача удобного внедрения программного кода в посты стоит на первом месте. К тому же я люблю всегда давать по возможности полные компилируемые исходники, поэтому хостинг для исходников тоже нужен.</p>
+
+<p>Я пришел вот к такой схеме. Для начала я завел одноименный проект на Google Code - <a href="http://code.google.com/p/easy-coding/">Easy Coding</a>.</p>
+
+<p>Каждый пост пишется на Google Code в виде отдельной странички Wiki (лишний повод не писать двух-строчных одноразовых постов). Отлаживается верстка и общий внешний вид. Можно писать прямо в онлайне на страничке, но лично я изначально набиваю все в <code>notepad++</code> и <code>aspell</code>. Благо разметка Wiki не требует ежеминутного закольцованного ерзанья типа исправил-посмотрел-как-выглядит, как в HTML.</p>
+
+<p>Если надо повесить картинку, то она выкладывается в раздел <a href="http://code.google.com/p/easy-coding/downloads/list">Downloads</a>, и ссылка на картинку ведет туда. Исходники тоже можно было бы заливать в этот раздел, есть есть способ лучше. Исходники удобнее держать в разделе <a href="http://code.google.com/p/easy-coding/source/browse/">Source</a>. Там их можно удобно просматривать, скачивать, комментировать и т.д. И тут уже можно насладиться контролем версий для них (еще раз уточню - когда выкладываешь работающие исходники, это становится важно) - Subversion или Mercurial, кому что больше нравится. Кстати, раздел Wiki тоже под контролем версий.</p>
+
+<p>Я использую Mercurial, так как распределенная модель позволяет работать долго локально, а потом одним махом отправить изменения на сервер. Получается, что Mercurial в данном случае - это как файловый клиент для обмена файлами с Google Code.</p>
+
+<p>Итак, пост закончен и отлажен. Теперь его надо выложить на Blogspot.</p>
+
+<p>Для этого я написал элементарный <a href="http://code.google.com/p/easy-coding/source/browse/tools/wiki2blog.php">скрипт на php</a>. Данный скрипт преобразует пост из формата .wiki в .html с ориентацией на особенности шаблонов и стилей конкретно Blogspot&rsquo;а. Он, конечно, не идеален, но я решил так - я не буду делать универсального монстра, а буду править его по мере возникновения проблем или требования новых возможностей.</p>
+
+<p>Так так теперь у меня всегда локально лежат посты в виде <code>.wiki</code> файлов, то если мне надо исправить пост - сначала я вношу изменения в <code>.wiki</code>, затем конвертирую <code>.wiki</code> снова в <code>.html</code> и выкладываю через онлайновый редактор Blogspot&rsquo;а. Это позволяет всегда иметь посты в нормальной <code>.wiki</code> разметке и не думать, как их корежит онлайновый редактор Blogspot&rsquo;а.</p>
+
+<p>Соглашусь, многое из сказанного странно для владельцев собственных автономных блогов, но вот для клиентов Blogspot&rsquo;а подобная методика весьма жизненна.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Парадокс Монти-Холла]]></title>
     <link href="http://demin.ws/blog/russian/2009/07/26/montihall-paradox/"/>
     <updated>2009-07-26T00:00:00+00:00</updated>
@@ -12005,37 +12036,6 @@ int main() {
 </code></pre>
 
 <p>Лично я провел замечательные несколько часов, вспоминая всю эту тему условных вероятностей. А вы?</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Ведение блога на Google Code]]></title>
-    <link href="http://demin.ws/blog/russian/2009/07/26/blogging-on-googlecode/"/>
-    <updated>2009-07-26T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/07/26/blogging-on-googlecode/</id>
-    <content type="html"><![CDATA[<p>Лично я пока не дозрел до ведения блога на собственном сайте. Конечно, собственный сайт - это удобно. Все можно поменять и сделать как хочется. Но это и обязанность - настраивать, обновлять версии, присматривать и т.д. Все это реально, но пока не для меня. Я как-то больше радею за контент, нежели за оформление.</p>
-
-<p>Теперь ближе к делу. <a href="http://blogspot.com/">Blogspot</a> как механизм для ведения блога меня вполне устраивает. Единственное, чего не хватает - это возможности форматирования постов не в HTML или WYSIWYG редакторе, а на каком-нибудь диалекте Wiki. Мне много-то не надо, хотя бы базовые элементы.</p>
-
-<p>Последнее время я как-то уж сблизился с <a href="http://code.google.com/">Google Code</a>. А там как раз есть Wiki для ведения документации. Вот и возникала мысль скрестить Blogspot и Google Code для ведения блога.</p>
-
-<p>Мой блог о программировании, поэтому задача удобного внедрения программного кода в посты стоит на первом месте. К тому же я люблю всегда давать по возможности полные компилируемые исходники, поэтому хостинг для исходников тоже нужен.</p>
-
-<p>Я пришел вот к такой схеме. Для начала я завел одноименный проект на Google Code - <a href="http://code.google.com/p/easy-coding/">Easy Coding</a>.</p>
-
-<p>Каждый пост пишется на Google Code в виде отдельной странички Wiki (лишний повод не писать двух-строчных одноразовых постов). Отлаживается верстка и общий внешний вид. Можно писать прямо в онлайне на страничке, но лично я изначально набиваю все в <code>notepad++</code> и <code>aspell</code>. Благо разметка Wiki не требует ежеминутного закольцованного ерзанья типа исправил-посмотрел-как-выглядит, как в HTML.</p>
-
-<p>Если надо повесить картинку, то она выкладывается в раздел <a href="http://code.google.com/p/easy-coding/downloads/list">Downloads</a>, и ссылка на картинку ведет туда. Исходники тоже можно было бы заливать в этот раздел, есть есть способ лучше. Исходники удобнее держать в разделе <a href="http://code.google.com/p/easy-coding/source/browse/">Source</a>. Там их можно удобно просматривать, скачивать, комментировать и т.д. И тут уже можно насладиться контролем версий для них (еще раз уточню - когда выкладываешь работающие исходники, это становится важно) - Subversion или Mercurial, кому что больше нравится. Кстати, раздел Wiki тоже под контролем версий.</p>
-
-<p>Я использую Mercurial, так как распределенная модель позволяет работать долго локально, а потом одним махом отправить изменения на сервер. Получается, что Mercurial в данном случае - это как файловый клиент для обмена файлами с Google Code.</p>
-
-<p>Итак, пост закончен и отлажен. Теперь его надо выложить на Blogspot.</p>
-
-<p>Для этого я написал элементарный <a href="http://code.google.com/p/easy-coding/source/browse/tools/wiki2blog.php">скрипт на php</a>. Данный скрипт преобразует пост из формата .wiki в .html с ориентацией на особенности шаблонов и стилей конкретно Blogspot&rsquo;а. Он, конечно, не идеален, но я решил так - я не буду делать универсального монстра, а буду править его по мере возникновения проблем или требования новых возможностей.</p>
-
-<p>Так так теперь у меня всегда локально лежат посты в виде <code>.wiki</code> файлов, то если мне надо исправить пост - сначала я вношу изменения в <code>.wiki</code>, затем конвертирую <code>.wiki</code> снова в <code>.html</code> и выкладываю через онлайновый редактор Blogspot&rsquo;а. Это позволяет всегда иметь посты в нормальной <code>.wiki</code> разметке и не думать, как их корежит онлайновый редактор Blogspot&rsquo;а.</p>
-
-<p>Соглашусь, многое из сказанного странно для владельцев собственных автономных блогов, но вот для клиентов Blogspot&rsquo;а подобная методика весьма жизненна.</p>
 ]]></content>
   </entry>
   
@@ -12267,6 +12267,17 @@ c_jx_j
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Google Chrome OS]]></title>
+    <link href="http://demin.ws/blog/russian/2009/07/08/google-chrome-os/"/>
+    <updated>2009-07-08T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/07/08/google-chrome-os/</id>
+    <content type="html"><![CDATA[<p>Удивительное дело, как Google умудряется без предварительного шапкозакидательства в стиле Microsoft делать удивительно грандиозные вещи: Chrome, Android, <a href="http://code.google.com/p/nativeclient/">Native Client</a>, а теперь еще и <a href="http://googleblog.blogspot.com/2009/07/introducing-google-chrome-os.html">Google Chrome OS</a>.</p>
+
+<p>Обычно я не комментирую новости, но тут не мог стерпеть.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Google C++ coding standard прямо в Visual Studio]]></title>
     <link href="http://demin.ws/blog/russian/2009/07/08/google-coding-standard-in-visual-studio/"/>
     <updated>2009-07-08T00:00:00+00:00</updated>
@@ -12307,41 +12318,6 @@ c_jx_j
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Google Chrome OS]]></title>
-    <link href="http://demin.ws/blog/russian/2009/07/08/google-chrome-os/"/>
-    <updated>2009-07-08T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/07/08/google-chrome-os/</id>
-    <content type="html"><![CDATA[<p>Удивительное дело, как Google умудряется без предварительного шапкозакидательства в стиле Microsoft делать удивительно грандиозные вещи: Chrome, Android, <a href="http://code.google.com/p/nativeclient/">Native Client</a>, а теперь еще и <a href="http://googleblog.blogspot.com/2009/07/introducing-google-chrome-os.html">Google Chrome OS</a>.</p>
-
-<p>Обычно я не комментирую новости, но тут не мог стерпеть.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Static assert]]></title>
-    <link href="http://demin.ws/blog/russian/2009/07/07/static-assert/"/>
-    <updated>2009-07-07T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/07/07/static-assert/</id>
-    <content type="html"><![CDATA[<p>А какой у вас используется <code>assert</code> времени компиляции, если не использовать <code>boost/static_assert.hpp</code>?</p>
-
-<p>У меня вот такой:</p>
-
-<pre><code class="cpp">template &lt;bool&gt; struct STATIC_ASSERTION_FAILURE;
-template &lt;&gt; struct STATIC_ASSERTION_FAILURE&lt;true&gt; {};
-#define STATIC_CHECK(x) sizeof(STATIC_ASSERTION_FAILURE&lt; (bool)(x) &gt;)
-</code></pre>
-
-<p>Работает приемлемо сносно:</p>
-
-<pre><code class="cpp">int main() {
-  STATIC_CHECK(sizeof(int) &lt; sizeof(char));
-  return 0;
-}
-</code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Роберт Седжвик, "Фундаментальные алгоритмы"]]></title>
     <link href="http://demin.ws/blog/russian/2009/07/07/fundamental-algorithms/"/>
     <updated>2009-07-07T00:00:00+00:00</updated>
@@ -12375,37 +12351,26 @@ template &lt;&gt; struct STATIC_ASSERTION_FAILURE&lt;true&gt; {};
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Обертка генератора парсеров грамматик Lemon для C++]]></title>
-    <link href="http://demin.ws/blog/russian/2009/07/06/wrapper-for-lemon/"/>
-    <updated>2009-07-06T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/07/06/wrapper-for-lemon/</id>
-    <content type="html"><![CDATA[<p>Выложил на Google Code прототип библиотеки для удобного использования генератора <a href="http://en.wikipedia.org/wiki/LALR_parser">LALR</a> парсеров грамматик <a href="http://www.hwaci.com/sw/lemon/">Lemon</a> на С++.</p>
+    <title type="html"><![CDATA[Static assert]]></title>
+    <link href="http://demin.ws/blog/russian/2009/07/07/static-assert/"/>
+    <updated>2009-07-07T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/07/07/static-assert/</id>
+    <content type="html"><![CDATA[<p>А какой у вас используется <code>assert</code> времени компиляции, если не использовать <code>boost/static_assert.hpp</code>?</p>
 
-<p>Проект называется <a href="http://code.google.com/p/lemonbind/">lemonbind</a>.</p>
+<p>У меня вот такой:</p>
 
-<p>Lemon - это создающий исходник на C/C++ генератор, похожий на <a href="http://en.wikipedia.org/wiki/Yacc">yacc</a> или <a href="http://en.wikipedia.org/wiki/GNU_bison">bison</a>, для реализации заданой грамматики. Lemon был создан автором <a href="http://www.sqlite.org/">SQLite</a> для разбора SQL&rsquo;я.</p>
+<pre><code class="cpp">template &lt;bool&gt; struct STATIC_ASSERTION_FAILURE;
+template &lt;&gt; struct STATIC_ASSERTION_FAILURE&lt;true&gt; {};
+#define STATIC_CHECK(x) sizeof(STATIC_ASSERTION_FAILURE&lt; (bool)(x) &gt;)
+</code></pre>
 
-<p>Есть у Lemon несколько радикальных отличий от собратьев. В отличие от yacc/bison Lemon не использует обратные вызовы, то есть не парсер вызывает нас, когда готов принять очередной токен, а мы вызываем парсер, когда готовы скормить ему очередной токен. Также Lemon безопасен в потоковом плане и реентабелен. Именно эти отличия позволяют неплохо завернуть его в обертку C++ со всеми вытекающими радостями. Также Lemon использует более простую нотацию по именованию параметров в продукциях грамматики, значительно снижающую вероятность опечататься.</p>
+<p>Работает приемлемо сносно:</p>
 
-<p>Lemon представляет собой всего для файла: <a href="http://code.google.com/p/lemonbind/source/browse/tools/lemon.c">lemon.c</a> и <a href="http://code.google.com/p/lemonbind/source/browse/tools/lempar.c">lempar.c</a>. Первый - это, собственно, генератор грамматик. Компилируется практически любым компилятором C/C++. Второй - шаблон, который использует генератор для создания целевого файла-парсера на языке С. Сгенерированный парсер также прекрасно компилируется любым компилятором C/C++.</p>
-
-<p>Конечно, Lemon&rsquo;у нужен лексический анализатор. Я использовал <a href="http://en.wikipedia.org/wiki/Flex_lexical_analyser">flex</a>. Его тоже пришлось обернуть в С++.</p>
-
-<p>Возникает вопрос - а для чего этот велосипед, когда есть <a href="http://www.antlr.org/">ANTLR</a>, <a href="http://spirit.sourceforge.net/">Boost Spirit</a> и прочие навороченные инструменты. Ответ как всегда прост - простота и скорость. Парадоксальная ситуация - подход с генерацией исходника, реализующего требуемую грамматику, был придуман много лет назад и воплощен в виде старичков типа lex/yacc/bison, а до сих пор используется за неимением простых и быстрых альтернатив, работающих на сложных грамматиках и на больших объемах анализируемого текста.</p>
-
-<p>Собственно, моя мини библиотека на данный момент имеет три основных класса: <a href="http://code.google.com/p/lemonbind/source/browse/token.h">Token</a>, <a href="http://code.google.com/p/lemonbind/source/browse/tokenizer.h">Tokenizer</a> (обертка flex) и <a href="http://code.google.com/p/lemonbind/source/browse/parser.cpp">Parser</a> (обертка Lemon). Набор тестов демонстрирует, как работать с этими классами. Тест <a href="http://code.google.com/p/lemonbind/source/browse/parser_unittest.cpp">Parser.NestedSelect</a> разбирает вложенный SELECT тривиального диалекта SQL и строит дерево разбора.</p>
-
-<p>Все находится в начальной стадии, но основной функционал уже присутствует. Пока не до конца продуман универсальный интерфейс для генерации дерева разбора (пока его генерация жестко привязана к конкретной грамматике), но сам парсер уже закончен.</p>
-
-<p>P.S. Нашел <a href="http://code.google.com/p/lemon-parser-generator/">дружественный проект</a> по адаптированию Lemon&rsquo;а для генерации парсеров не только на C и C++, но и на D.</p>
-
-<p>P.P.S. Настоятельно рекомендую по теме вот эту книгу в заслуженной форме большего кирпича.</p>
-
-<p>Альфред В. Ахо, Моника С. Лам, Рави Сети, Джеффри Д. Ульман</p>
-
-<p><a href="http://www.ozon.ru/context/detail/id/3829076/?partner=easy-coding">Компиляторы. Принципы, технологии и инструментарий</a></p>
-
-<p><img src="http://demin.ws/images/covers/russian/compilers-cover.jpg" /></p>
+<pre><code class="cpp">int main() {
+  STATIC_CHECK(sizeof(int) &lt; sizeof(char));
+  return 0;
+}
+</code></pre>
 ]]></content>
   </entry>
   
@@ -12460,6 +12425,41 @@ endlocal
 <p>Это скрипт делает все как и раньше, но только для 7z.</p>
 
 <p>Конечно, под UNIX&rsquo;ом есть море путей сделать подобное, да и в Windows можно Cygwin использовать, но я всегда сначала пытаюсь сделать native решение, если это возможно.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Обертка генератора парсеров грамматик Lemon для C++]]></title>
+    <link href="http://demin.ws/blog/russian/2009/07/06/wrapper-for-lemon/"/>
+    <updated>2009-07-06T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/07/06/wrapper-for-lemon/</id>
+    <content type="html"><![CDATA[<p>Выложил на Google Code прототип библиотеки для удобного использования генератора <a href="http://en.wikipedia.org/wiki/LALR_parser">LALR</a> парсеров грамматик <a href="http://www.hwaci.com/sw/lemon/">Lemon</a> на С++.</p>
+
+<p>Проект называется <a href="http://code.google.com/p/lemonbind/">lemonbind</a>.</p>
+
+<p>Lemon - это создающий исходник на C/C++ генератор, похожий на <a href="http://en.wikipedia.org/wiki/Yacc">yacc</a> или <a href="http://en.wikipedia.org/wiki/GNU_bison">bison</a>, для реализации заданой грамматики. Lemon был создан автором <a href="http://www.sqlite.org/">SQLite</a> для разбора SQL&rsquo;я.</p>
+
+<p>Есть у Lemon несколько радикальных отличий от собратьев. В отличие от yacc/bison Lemon не использует обратные вызовы, то есть не парсер вызывает нас, когда готов принять очередной токен, а мы вызываем парсер, когда готовы скормить ему очередной токен. Также Lemon безопасен в потоковом плане и реентабелен. Именно эти отличия позволяют неплохо завернуть его в обертку C++ со всеми вытекающими радостями. Также Lemon использует более простую нотацию по именованию параметров в продукциях грамматики, значительно снижающую вероятность опечататься.</p>
+
+<p>Lemon представляет собой всего для файла: <a href="http://code.google.com/p/lemonbind/source/browse/tools/lemon.c">lemon.c</a> и <a href="http://code.google.com/p/lemonbind/source/browse/tools/lempar.c">lempar.c</a>. Первый - это, собственно, генератор грамматик. Компилируется практически любым компилятором C/C++. Второй - шаблон, который использует генератор для создания целевого файла-парсера на языке С. Сгенерированный парсер также прекрасно компилируется любым компилятором C/C++.</p>
+
+<p>Конечно, Lemon&rsquo;у нужен лексический анализатор. Я использовал <a href="http://en.wikipedia.org/wiki/Flex_lexical_analyser">flex</a>. Его тоже пришлось обернуть в С++.</p>
+
+<p>Возникает вопрос - а для чего этот велосипед, когда есть <a href="http://www.antlr.org/">ANTLR</a>, <a href="http://spirit.sourceforge.net/">Boost Spirit</a> и прочие навороченные инструменты. Ответ как всегда прост - простота и скорость. Парадоксальная ситуация - подход с генерацией исходника, реализующего требуемую грамматику, был придуман много лет назад и воплощен в виде старичков типа lex/yacc/bison, а до сих пор используется за неимением простых и быстрых альтернатив, работающих на сложных грамматиках и на больших объемах анализируемого текста.</p>
+
+<p>Собственно, моя мини библиотека на данный момент имеет три основных класса: <a href="http://code.google.com/p/lemonbind/source/browse/token.h">Token</a>, <a href="http://code.google.com/p/lemonbind/source/browse/tokenizer.h">Tokenizer</a> (обертка flex) и <a href="http://code.google.com/p/lemonbind/source/browse/parser.cpp">Parser</a> (обертка Lemon). Набор тестов демонстрирует, как работать с этими классами. Тест <a href="http://code.google.com/p/lemonbind/source/browse/parser_unittest.cpp">Parser.NestedSelect</a> разбирает вложенный SELECT тривиального диалекта SQL и строит дерево разбора.</p>
+
+<p>Все находится в начальной стадии, но основной функционал уже присутствует. Пока не до конца продуман универсальный интерфейс для генерации дерева разбора (пока его генерация жестко привязана к конкретной грамматике), но сам парсер уже закончен.</p>
+
+<p>P.S. Нашел <a href="http://code.google.com/p/lemon-parser-generator/">дружественный проект</a> по адаптированию Lemon&rsquo;а для генерации парсеров не только на C и C++, но и на D.</p>
+
+<p>P.P.S. Настоятельно рекомендую по теме вот эту книгу в заслуженной форме большего кирпича.</p>
+
+<p>Альфред В. Ахо, Моника С. Лам, Рави Сети, Джеффри Д. Ульман</p>
+
+<p><a href="http://www.ozon.ru/context/detail/id/3829076/?partner=easy-coding">Компиляторы. Принципы, технологии и инструментарий</a></p>
+
+<p><img src="http://demin.ws/images/covers/russian/compilers-cover.jpg" /></p>
 ]]></content>
   </entry>
   
@@ -12798,6 +12798,95 @@ std::cout &lt;&lt; script.get_variable&lt;lua::string_arg_t&gt;(&quot;a&quot;).v
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Список процессов в Windows]]></title>
+    <link href="http://demin.ws/blog/russian/2009/05/17/process-list-in-windows/"/>
+    <updated>2009-05-17T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/05/17/process-list-in-windows/</id>
+    <content type="html"><![CDATA[<p>Писал я как-то один QA тест, и нужно мне было понять — выполнятся ли сейчас определенный процесс или нет, и если да, то с какой командной строкой. Естественно, нужно и для UNIX и для Windows.</p>
+
+<p>В UNIX в порядке вещей просто вызвать команду <a href="http://en.wikipedia.org/wiki/Ps_(Unix)">ps</a> через <a href="http://www.opengroup.org/onlinepubs/007908799/xsh/popen.html">popen()</a> и распарсить текстовый вывод. Переносимо и надежно, так как для всех UNIXов ps всегда существует, и на этот факт можно положиться.</p>
+
+<p>Для Windows же все оказалось чуть сложнее. Известная утилита <code>pslist</code> не является стандартной, и полагаться на нее опасно. Возиться с Windows API тоже не хотелось.</p>
+
+<p>Я нашел вот такой способ. Через <a href="http://msdn.microsoft.com/en-us/library/96ayss4b(VS.80).aspx">_popen()</a> (аналог UNIXового <code>popen()</code>) можно вызвать вот такую команду:</p>
+
+<pre><code>WMIC PROCESS get Caption,Commandline,Processid
+</code></pre>
+
+<p>Получаем название процесса, командную строку и идентификатор процесса.</p>
+
+<p>Конечно, не так задорно, как через ps, но зато стандартно.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Travis Swicegood, "Pragmatic Version Control using Git"]]></title>
+    <link href="http://demin.ws/blog/russian/2009/05/17/pragmatic-version-control-using-git/"/>
+    <updated>2009-05-17T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/05/17/pragmatic-version-control-using-git/</id>
+    <content type="html"><![CDATA[<p>Travis Swicegood</p>
+
+<p><a href="http://www.amazon.co.uk/Pragmatic-Version-Control-Using-Git/dp/1934356158/">Pragmatic Version Control using Git</a></p>
+
+<p><img src="http://demin.ws/images/covers/english/pragmatic-version-control-using-git-cover.jpg" /></p>
+
+<p>Хорошее введение в распределенную систему контроля версий <a href="http://git-scm.org/">Git</a> от сообщества разработчиков ядра Линукса и от <a href="http://www.youtube.com/watch?v=4XpnKHJAok8">Линуса Торвальдса</a> в частности.</p>
+
+<p>Я ценю такие книги за начальное вовлечение в предмет. Это книга для начинающих, и если вы не новичок в области распределенных систем контроля версий, то вы ее проглотите за вечер и захотите более глубоких знаний по Git. Так и произошло со мной. Я прочитал книгу за вечер, она сформулировала в голове десятки неотвеченных вопросов и позволила мне понять — на какие вопросы мне нужны ответы.</p>
+
+<p>На официальном сайте есть превосходная электронная <a href="http://book.git-scm.com/">живая книга по Git</a>. Многие главы имеют дельные коротенькие видео уроки.</p>
+
+<p><strong>Вывод</strong>: обычно я не храню книги &ldquo;для начинающих&rdquo;, так как после них ты либо никогда предметом не интересуешься, либо копаешь глубже и знания для начинающих становятся очевидными. Но эту я оставлю.</p>
+
+<p>P.S. Для интересующихся распределенными системами контроля версий рекомендую отличный блог про альтернативую систему Bazaar &ldquo;<a href="http://bzr-day.blogspot.com/">Базарный день</a>&rdquo;. Прочтете несколько постов и будете готовы использовать Bazaar.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Том Демарко, Тимати Листер, "Человеческий фактор: успешные проекты и команды"]]></title>
+    <link href="http://demin.ws/blog/russian/2009/05/17/peopleware/"/>
+    <updated>2009-05-17T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/05/17/peopleware/</id>
+    <content type="html"><![CDATA[<p>Том Демарко, Тимати Листер</p>
+
+<p><a href="http://www.ozon.ru/context/detail/id/2338486/?partner=easy-coding">Человеский фактор: успешные проекты и команды</a></p>
+
+<p><img src="http://demin.ws/images/covers/russian/peopleware-cover.jpg" /></p>
+
+<p>Вы недавно помимо просто написания кода начали заниматься управлением командой?</p>
+
+<p>Значит пока включить в свой книжный рацион раздел по управлению. И это одна из первых книг. Я прочитал ее не отрываясь за два вечера. Очень легко и понятно написано. Так как управление — это не программирование, и тут нельзя дать четкий рецепт &ldquo;делай раз, делай два&rdquo;, поэтому книги такого рода стоит рассматривать как повод для размызшлений о том, о чем вы, будучи просто программистом, никогда раньше не думали.</p>
+
+<p><strong>Вывод</strong>: Прочитал и поставил на близкую рабочую полку по соседству с Макконнеллом и <a href="http://demin.ws/blog/russian/2009/03/03/mythical-man-month/">Бруксом</a>.</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="http://demin.ws/blog/russian/2009/03/03/mythical-man-month/">Фредерик Брукс, &ldquo;Мифический человеко-месяц или как создаются программные системы&rdquo;</a></li>
+</ul>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Как вы пишете в Blogspot?]]></title>
+    <link href="http://demin.ws/blog/russian/2009/05/17/how-do-you-write-to-blogspot/"/>
+    <updated>2009-05-17T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/05/17/how-do-you-write-to-blogspot/</id>
+    <content type="html"><![CDATA[<p>Лично я считаю, что Blogspot имеет радикально неудобный интерфейс для ввода и тем более последующего редактирования постов. Полное “сведение” поста в нем — это кошмар. Сначала ты пишешь основной текст в Ворде, затем вставляешь исходники, если нужно, и потом начинается длительное ёрзанье в html для придания посту правильного вида в браузере.</p>
+
+<p>Так как предварительный просмотр поста в Blogspot не дает полной картины, то единственный способ проверить вид поста, это его, собственно, запостить. Но кому охота выкладывать недоделанный пост? Итерация правки поста крайне неудобна и медленна — цикл “правка –&gt; просмотр –&gt; постинг –&gt; ошибка –&gt; правка –&gt; &hellip;” очень коряв.</p>
+
+<p>После некоторого времени использования Blogspot я пришел вот к такой схеме.</p>
+
+<p>Для начала, нужен таки блог-клиент, как бы этого не хотелось. Тут тебе и вордовая проверка текста встроена, и preview какой никакой есть, и сохранение черновика и много прочих мелких радостей. Перебрав Semagic, BlogJet, несколько клиентов на Яве и придя от всего увиденного в ужас, а остановился, как ни странно на <a href="http://windowslivewriter.spaces.live.com/">Microsoft Live Writer</a>. Бесплатный (чудо для продукта от Microsoft), понимает Blogspot, много плагинов и встроенная вордовая проверка текста (то есть можно сразу в нем писать). В целом, почти все хорошо.</p>
+
+<p>Но как бы не был хорош preview блог-клиента, единственный способ полностью проверить верстку в Blogspot — это запостить. Для этого можно завести еще один блог, тестовый, который должен быть точной копией основного блога в плане стилей и макета страницы. Теперь можно спокойно постить черновик в тестовый блог и отлаживать верстку окончательно. Причем цикл отладки выглядит так: редактирование в блог-клиента -&gt; постинг в тестовый блог -&gt; refresh страницы в браузере. Гораздо быстрее чем была, так как надо просто переключаться между окнами.</p>
+
+<p>В конце отлаженный пост переносится в основной блог просто копированием html-кода.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Дж. Ханк Рейнвотер, "Наставление для программистов, руководящих другими программистами"]]></title>
     <link href="http://demin.ws/blog/russian/2009/05/17/herding-cats/"/>
     <updated>2009-05-17T00:00:00+00:00</updated>
@@ -12826,70 +12915,6 @@ std::cout &lt;&lt; script.get_variable&lt;lua::string_arg_t&gt;(&quot;a&quot;).v
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Как вы пишете в Blogspot?]]></title>
-    <link href="http://demin.ws/blog/russian/2009/05/17/how-do-you-write-to-blogspot/"/>
-    <updated>2009-05-17T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/05/17/how-do-you-write-to-blogspot/</id>
-    <content type="html"><![CDATA[<p>Лично я считаю, что Blogspot имеет радикально неудобный интерфейс для ввода и тем более последующего редактирования постов. Полное “сведение” поста в нем — это кошмар. Сначала ты пишешь основной текст в Ворде, затем вставляешь исходники, если нужно, и потом начинается длительное ёрзанье в html для придания посту правильного вида в браузере.</p>
-
-<p>Так как предварительный просмотр поста в Blogspot не дает полной картины, то единственный способ проверить вид поста, это его, собственно, запостить. Но кому охота выкладывать недоделанный пост? Итерация правки поста крайне неудобна и медленна — цикл “правка –&gt; просмотр –&gt; постинг –&gt; ошибка –&gt; правка –&gt; &hellip;” очень коряв.</p>
-
-<p>После некоторого времени использования Blogspot я пришел вот к такой схеме.</p>
-
-<p>Для начала, нужен таки блог-клиент, как бы этого не хотелось. Тут тебе и вордовая проверка текста встроена, и preview какой никакой есть, и сохранение черновика и много прочих мелких радостей. Перебрав Semagic, BlogJet, несколько клиентов на Яве и придя от всего увиденного в ужас, а остановился, как ни странно на <a href="http://windowslivewriter.spaces.live.com/">Microsoft Live Writer</a>. Бесплатный (чудо для продукта от Microsoft), понимает Blogspot, много плагинов и встроенная вордовая проверка текста (то есть можно сразу в нем писать). В целом, почти все хорошо.</p>
-
-<p>Но как бы не был хорош preview блог-клиента, единственный способ полностью проверить верстку в Blogspot — это запостить. Для этого можно завести еще один блог, тестовый, который должен быть точной копией основного блога в плане стилей и макета страницы. Теперь можно спокойно постить черновик в тестовый блог и отлаживать верстку окончательно. Причем цикл отладки выглядит так: редактирование в блог-клиента -&gt; постинг в тестовый блог -&gt; refresh страницы в браузере. Гораздо быстрее чем была, так как надо просто переключаться между окнами.</p>
-
-<p>В конце отлаженный пост переносится в основной блог просто копированием html-кода.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Travis Swicegood, "Pragmatic Version Control using Git"]]></title>
-    <link href="http://demin.ws/blog/russian/2009/05/17/pragmatic-version-control-using-git/"/>
-    <updated>2009-05-17T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/05/17/pragmatic-version-control-using-git/</id>
-    <content type="html"><![CDATA[<p>Travis Swicegood</p>
-
-<p><a href="http://www.amazon.co.uk/Pragmatic-Version-Control-Using-Git/dp/1934356158/">Pragmatic Version Control using Git</a></p>
-
-<p><img src="http://demin.ws/images/covers/english/pragmatic-version-control-using-git-cover.jpg" /></p>
-
-<p>Хорошее введение в распределенную систему контроля версий <a href="http://git-scm.org/">Git</a> от сообщества разработчиков ядра Линукса и от <a href="http://www.youtube.com/watch?v=4XpnKHJAok8">Линуса Торвальдса</a> в частности.</p>
-
-<p>Я ценю такие книги за начальное вовлечение в предмет. Это книга для начинающих, и если вы не новичок в области распределенных систем контроля версий, то вы ее проглотите за вечер и захотите более глубоких знаний по Git. Так и произошло со мной. Я прочитал книгу за вечер, она сформулировала в голове десятки неотвеченных вопросов и позволила мне понять — на какие вопросы мне нужны ответы.</p>
-
-<p>На официальном сайте есть превосходная электронная <a href="http://book.git-scm.com/">живая книга по Git</a>. Многие главы имеют дельные коротенькие видео уроки.</p>
-
-<p><strong>Вывод</strong>: обычно я не храню книги &ldquo;для начинающих&rdquo;, так как после них ты либо никогда предметом не интересуешься, либо копаешь глубже и знания для начинающих становятся очевидными. Но эту я оставлю.</p>
-
-<p>P.S. Для интересующихся распределенными системами контроля версий рекомендую отличный блог про альтернативую систему Bazaar &ldquo;<a href="http://bzr-day.blogspot.com/">Базарный день</a>&rdquo;. Прочтете несколько постов и будете готовы использовать Bazaar.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Список процессов в Windows]]></title>
-    <link href="http://demin.ws/blog/russian/2009/05/17/process-list-in-windows/"/>
-    <updated>2009-05-17T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/05/17/process-list-in-windows/</id>
-    <content type="html"><![CDATA[<p>Писал я как-то один QA тест, и нужно мне было понять — выполнятся ли сейчас определенный процесс или нет, и если да, то с какой командной строкой. Естественно, нужно и для UNIX и для Windows.</p>
-
-<p>В UNIX в порядке вещей просто вызвать команду <a href="http://en.wikipedia.org/wiki/Ps_(Unix)">ps</a> через <a href="http://www.opengroup.org/onlinepubs/007908799/xsh/popen.html">popen()</a> и распарсить текстовый вывод. Переносимо и надежно, так как для всех UNIXов ps всегда существует, и на этот факт можно положиться.</p>
-
-<p>Для Windows же все оказалось чуть сложнее. Известная утилита <code>pslist</code> не является стандартной, и полагаться на нее опасно. Возиться с Windows API тоже не хотелось.</p>
-
-<p>Я нашел вот такой способ. Через <a href="http://msdn.microsoft.com/en-us/library/96ayss4b(VS.80).aspx">_popen()</a> (аналог UNIXового <code>popen()</code>) можно вызвать вот такую команду:</p>
-
-<pre><code>WMIC PROCESS get Caption,Commandline,Processid
-</code></pre>
-
-<p>Получаем название процесса, командную строку и идентификатор процесса.</p>
-
-<p>Конечно, не так задорно, как через ps, но зато стандартно.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Стратегии выпуска релизов]]></title>
     <link href="http://demin.ws/blog/russian/2009/05/17/releases-strategy/"/>
     <updated>2009-05-17T00:00:00+00:00</updated>
@@ -12903,31 +12928,6 @@ std::cout &lt;&lt; script.get_variable&lt;lua::string_arg_t&gt;(&quot;a&quot;).v
 <p>Мы выпускаем релизы каждый месяц. Мне, как так называемому branch owner’у (я не очень люблю использовать английские слова, но вот «ответственный за версию» как-то уж очень коряво звучит), гораздо проще составлять списки патчей для включения в релиз и планировать окна тестирования, когда дата выпуска всегда постоянна. Конечно, интервал релизов подобран так, чтобы не приходилось выпускать пустые релизы без каких-либо патчей.</p>
 
 <p>И каковы ваши наблюдения на этот счет?</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Том Демарко, Тимати Листер, "Человеческий фактор: успешные проекты и команды"]]></title>
-    <link href="http://demin.ws/blog/russian/2009/05/17/peopleware/"/>
-    <updated>2009-05-17T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/05/17/peopleware/</id>
-    <content type="html"><![CDATA[<p>Том Демарко, Тимати Листер</p>
-
-<p><a href="http://www.ozon.ru/context/detail/id/2338486/?partner=easy-coding">Человеский фактор: успешные проекты и команды</a></p>
-
-<p><img src="http://demin.ws/images/covers/russian/peopleware-cover.jpg" /></p>
-
-<p>Вы недавно помимо просто написания кода начали заниматься управлением командой?</p>
-
-<p>Значит пока включить в свой книжный рацион раздел по управлению. И это одна из первых книг. Я прочитал ее не отрываясь за два вечера. Очень легко и понятно написано. Так как управление — это не программирование, и тут нельзя дать четкий рецепт &ldquo;делай раз, делай два&rdquo;, поэтому книги такого рода стоит рассматривать как повод для размызшлений о том, о чем вы, будучи просто программистом, никогда раньше не думали.</p>
-
-<p><strong>Вывод</strong>: Прочитал и поставил на близкую рабочую полку по соседству с Макконнеллом и <a href="http://demin.ws/blog/russian/2009/03/03/mythical-man-month/">Бруксом</a>.</p>
-
-<p>Посты по теме:</p>
-
-<ul>
-<li><a href="http://demin.ws/blog/russian/2009/03/03/mythical-man-month/">Фредерик Брукс, &ldquo;Мифический человеко-месяц или как создаются программные системы&rdquo;</a></li>
-</ul>
 ]]></content>
   </entry>
   
@@ -13338,33 +13338,6 @@ TEST(Trigger, Generic) {
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Включение/выключение proxy в Internet Explorer]]></title>
-    <link href="http://demin.ws/blog/russian/2009/03/19/on-off-proxy-in-internet-explorer/"/>
-    <updated>2009-03-19T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/03/19/on-off-proxy-in-internet-explorer/</id>
-    <content type="html"><![CDATA[<p>Иногда таки приходится пользоваться Internet Explorer&rsquo;ом (всякие сайты кривые, web-интерфейсы некоторых роутеров и т.д.).</p>
-
-<p>Для включения/выключения proxy надо лазать в меню, что долго и неудобно. Лично мне удобнее просто скрипт запустить.</p>
-
-<p>Кстати, гугловский Chrome по каким-то причинам использует настройки интернета от IE (системные для всего Windows), поэтому все сказанное актуально и для него.</p>
-
-<p>Итак, привожу два скрипта для включения и отключения proxy в системных настройках интернета в Windows.</p>
-
-<p>Файл <code>iepon.cmd</code>:</p>
-
-<pre><code class="bat">reg add &quot;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&quot; /v ProxyEnable /t REG_DWORD /d 1 /f
-</code></pre>
-
-<p>Файл <code>iepoff.cmd</code>:</p>
-
-<pre><code class="bat">reg add &quot;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&quot; /v ProxyEnable /t REG_DWORD /d 0 /f
-</code></pre>
-
-<p>Я проверял это только в Windows XP.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Google Test Framework 1.3.0]]></title>
     <link href="http://demin.ws/blog/russian/2009/03/19/google-test-framework-130/"/>
     <updated>2009-03-19T00:00:00+00:00</updated>
@@ -13557,6 +13530,33 @@ runner.cpp(72): error: Failed
 <p>Под занавес отмечу, что появился еще один новый ключ командной строки <code>--gtest_help</code> для печати на экран всех весьма многочисленных параметров Google Test.</p>
 
 <p>Я уже обновился до версии 1.3.0, а вы?</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Включение/выключение proxy в Internet Explorer]]></title>
+    <link href="http://demin.ws/blog/russian/2009/03/19/on-off-proxy-in-internet-explorer/"/>
+    <updated>2009-03-19T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/03/19/on-off-proxy-in-internet-explorer/</id>
+    <content type="html"><![CDATA[<p>Иногда таки приходится пользоваться Internet Explorer&rsquo;ом (всякие сайты кривые, web-интерфейсы некоторых роутеров и т.д.).</p>
+
+<p>Для включения/выключения proxy надо лазать в меню, что долго и неудобно. Лично мне удобнее просто скрипт запустить.</p>
+
+<p>Кстати, гугловский Chrome по каким-то причинам использует настройки интернета от IE (системные для всего Windows), поэтому все сказанное актуально и для него.</p>
+
+<p>Итак, привожу два скрипта для включения и отключения proxy в системных настройках интернета в Windows.</p>
+
+<p>Файл <code>iepon.cmd</code>:</p>
+
+<pre><code class="bat">reg add &quot;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&quot; /v ProxyEnable /t REG_DWORD /d 1 /f
+</code></pre>
+
+<p>Файл <code>iepoff.cmd</code>:</p>
+
+<pre><code class="bat">reg add &quot;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&quot; /v ProxyEnable /t REG_DWORD /d 0 /f
+</code></pre>
+
+<p>Я проверял это только в Windows XP.</p>
 ]]></content>
   </entry>
   
@@ -13901,6 +13901,43 @@ int main() {
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Как обойтить без макроса NOMINMAX]]></title>
+    <link href="http://demin.ws/blog/russian/2009/03/05/how-to-do-without-nominmax/"/>
+    <updated>2009-03-05T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/03/05/how-to-do-without-nominmax/</id>
+    <content type="html"><![CDATA[<p>В комментариях к <a href="http://demin.ws/blog/russian/2009/02/15/min-max-in-visual-studio/">посту</a> про проблему конфликта имен STL&rsquo;евских <code>std::min</code> и <code>std::max</code> с одноименными макросами из файла <code>windows.h</code> мне подсказали интересное решение.</p>
+
+<p>Если вместо, например, <code>std::max(a, b)</code> написать <code>(std::max)(a, b)</code>, то результат работы препроцессора выглядит так:</p>
+
+<pre><code class="cpp">#line 3 &quot;minmax.cpp&quot;
+int main() {
+  int a = (std::min)(10, 20);
+  return 0;
+}
+</code></pre>
+
+<p>вместо:</p>
+
+<pre><code class="cpp">#line 3 &quot;minmax.cpp&quot;
+int main() {
+  int a = std::(((10) &lt; (20)) ? (10) : (20));
+  return 0;
+}
+</code></pre>
+
+<p>и конфликта не происходит. Все компилируется без проблем.</p>
+
+<p>Не берусь судить, на сколько это красивое решение, и я бы все-таки предпочел действовать напрямую через макрос NOMINMAX, но выход элегантный.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="http://demin.ws/blog/russian/2009/02/15/min-max-in-visual-studio/">std::min() и std::max() в Visual Studio</a></li>
+</ul>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[QueryPerformanceCounter на мультиядерных и виртуальных системах]]></title>
     <link href="http://demin.ws/blog/russian/2009/03/05/queryperformancecounter-on-multicore-and-virtual-systems/"/>
     <updated>2009-03-05T00:00:00+00:00</updated>
@@ -13992,43 +14029,6 @@ Expected: 10000
 
 <ul>
 <li><a href="http://demin.ws/blog/russian/2009/01/29/milliseconds-timer-for-windows-and-unix/">Миллисекундный таймер для Windows и UNIX</a></li>
-</ul>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Как обойтить без макроса NOMINMAX]]></title>
-    <link href="http://demin.ws/blog/russian/2009/03/05/how-to-do-without-nominmax/"/>
-    <updated>2009-03-05T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/03/05/how-to-do-without-nominmax/</id>
-    <content type="html"><![CDATA[<p>В комментариях к <a href="http://demin.ws/blog/russian/2009/02/15/min-max-in-visual-studio/">посту</a> про проблему конфликта имен STL&rsquo;евских <code>std::min</code> и <code>std::max</code> с одноименными макросами из файла <code>windows.h</code> мне подсказали интересное решение.</p>
-
-<p>Если вместо, например, <code>std::max(a, b)</code> написать <code>(std::max)(a, b)</code>, то результат работы препроцессора выглядит так:</p>
-
-<pre><code class="cpp">#line 3 &quot;minmax.cpp&quot;
-int main() {
-  int a = (std::min)(10, 20);
-  return 0;
-}
-</code></pre>
-
-<p>вместо:</p>
-
-<pre><code class="cpp">#line 3 &quot;minmax.cpp&quot;
-int main() {
-  int a = std::(((10) &lt; (20)) ? (10) : (20));
-  return 0;
-}
-</code></pre>
-
-<p>и конфликта не происходит. Все компилируется без проблем.</p>
-
-<p>Не берусь судить, на сколько это красивое решение, и я бы все-таки предпочел действовать напрямую через макрос NOMINMAX, но выход элегантный.</p>
-
-<p>Другие посты по теме:</p>
-
-<ul>
-<li><a href="http://demin.ws/blog/russian/2009/02/15/min-max-in-visual-studio/">std::min() и std::max() в Visual Studio</a></li>
 </ul>
 ]]></content>
   </entry>
@@ -14933,6 +14933,26 @@ LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS* ExceptionInfo) {
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Голубая (Борланд) палитра для Visual Studio]]></title>
+    <link href="http://demin.ws/blog/russian/2009/02/23/blue-borland-theme-for-visual-studio/"/>
+    <updated>2009-02-23T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/02/23/blue-borland-theme-for-visual-studio/</id>
+    <content type="html"><![CDATA[<p>В процессе перехода Visual Studio 2008 с Professional на Team System в очередной раз слетели настройки палитры. Так сложилось, годы работы на борланде приучили меня к голубому фону и желтым буквам, и ничего уже поделать нельзя. Как-то давно, покопав в интернете на тему разных палитр для Visual Studio, я пришел вот к такой трехшаговой комбинации, которая за минуту превращает стандартную микрософтовскую белую палитру в 90%-e подобие борландовой.</p>
+
+<pre><code>Menu -&gt; Tools -&gt; Options -&gt; Environment -&gt; Fonts and Colors:
+Font -&gt; Fixedsys
+TextEditor:
+Plain text -&gt; Yellow/Navy
+KeyWord -&gt; Lime/(фон оставить по умолчанию)
+</code></pre>
+
+<p>Конечно, тут есть еще что доработать по мелочам, но лично мне и этого хватает.</p>
+
+<p>А вот для чего я перешел с Professional на Team я расскажу <a href="http://demin.ws/blog/russian/2009/02/23/static-code-analysis-coverity-klocwork/">буквально скоро</a>.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Статический анализ кода - Coverity, Klocwork]]></title>
     <link href="http://demin.ws/blog/russian/2009/02/23/static-code-analysis-coverity-klocwork/"/>
     <updated>2009-02-23T00:00:00+00:00</updated>
@@ -15033,26 +15053,6 @@ c:\sandbox\analyze\bad.cpp(12) : warning C6386: Buffer overrun: accessing 'c', t
 <p>Отдельной строкой хочу отметить Borland/CodeGear Codeguard, входящий в состав одноименной студии. Данная библиотека может опционально встраиваться борландовым компилятором в код, шпигуя его сотнями проверок на различные утечки, неправильную работу с указателями и прочими неприятностями. Код при этом замедляется в разы и порой делает невозможным отладку вычислительно тяжелых алгоритмов, но вот находимые с помощью Codeguard’а ошибки порой дорогого стоят.</p>
 
 <p>Анализаторы кода (статические или динамические) являются крайне необходимым инструментом. А конкретно, статические, позволяют автоматизировано находится “плохие” места кода, которые проглядели программисты.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Голубая (Борланд) палитра для Visual Studio]]></title>
-    <link href="http://demin.ws/blog/russian/2009/02/23/blue-borland-theme-for-visual-studio/"/>
-    <updated>2009-02-23T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/02/23/blue-borland-theme-for-visual-studio/</id>
-    <content type="html"><![CDATA[<p>В процессе перехода Visual Studio 2008 с Professional на Team System в очередной раз слетели настройки палитры. Так сложилось, годы работы на борланде приучили меня к голубому фону и желтым буквам, и ничего уже поделать нельзя. Как-то давно, покопав в интернете на тему разных палитр для Visual Studio, я пришел вот к такой трехшаговой комбинации, которая за минуту превращает стандартную микрософтовскую белую палитру в 90%-e подобие борландовой.</p>
-
-<pre><code>Menu -&gt; Tools -&gt; Options -&gt; Environment -&gt; Fonts and Colors:
-Font -&gt; Fixedsys
-TextEditor:
-Plain text -&gt; Yellow/Navy
-KeyWord -&gt; Lime/(фон оставить по умолчанию)
-</code></pre>
-
-<p>Конечно, тут есть еще что доработать по мелочам, но лично мне и этого хватает.</p>
-
-<p>А вот для чего я перешел с Professional на Team я расскажу <a href="http://demin.ws/blog/russian/2009/02/23/static-code-analysis-coverity-klocwork/">буквально скоро</a>.</p>
 ]]></content>
   </entry>
   
@@ -15849,6 +15849,33 @@ int main(int argc, char* argv[]) {
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Олег Цилюрик, Егор Горошко, "QNX/UNIX. Анатомия параллелизма"]]></title>
+    <link href="http://demin.ws/blog/russian/2009/02/16/qnx-unix-parallelism-anatomy/"/>
+    <updated>2009-02-16T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/02/16/qnx-unix-parallelism-anatomy/</id>
+    <content type="html"><![CDATA[<p>Олег Цилюрик, Егор Горошко</p>
+
+<p><a href="http://www.ozon.ru/context/detail/id/2512096/?partner=easy-coding">QNX/UNIX. Анатомия параллелизма</a></p>
+
+<p><img src="http://demin.ws/images/covers/russian/qnx-unix-parallelism-anatomy-cover.jpg" /></p>
+
+<p>Хоть я в многопотоковом программировании далеко не новичок, я прочитал эту книгу от корки до корки, дважды. С удовольствием цеплялся на каждый абзац, перечитывал, обдумывал примеры, чтобы ничего не пропустить, компилировал их, крутил туда-сюда, сравнивал результаты с книгой, пробовал на разных системах и т.д.</p>
+
+<p>Несмотря на присутствие слова QNX в названии книги, она является прекрасным руководством по программированию потоков в UNIX в целом. Начиная прямо от печки, то есть от определения потока и его порой неверного отделения от термина &ldquo;процесс&rdquo;, далее, следуя по базовым способам синхронизации потоков (блокировки, семафоры, условные переменные), детально разжеваны все тонкости поточного программирования с точки зрения идей и концепций, и в конкретном применении их в потоках POSIX (pthreads), включая нестандартные расширения различных версий.</p>
+
+<p>Отдельной строкой укажу на отличную главу про взаимодействие механизма сигналов UNIX&rsquo;а и, собственно, потоков. Это весьма сложная тема, но тут она понятно расписана. Даны рекомендации “как надо” и “как не надо”.</p>
+
+<p>Полно показательных примеров на С++. Причем примеры не просто призваны показать типа &ldquo;о! работает в потоке!&rdquo;. Примеры демонстрируют особенности, проблемы потоков, позволяют оценить ресурсоемкость различных приемов. Везде авторы дают рекомендации типа как ускорить данный кусок кода, как его упростить, как сделать его надежнее, как его тестировать.</p>
+
+<p>Даются сравнительные оценки работы потоков в различных UNIX&rsquo;ах, например, QNX против Linux. Все плюсы и минусы обстоятельно, без эмоций разобраны. В конце книги рассматриваются некоторые чисто QNX&rsquo;овые возможности: пулы потоков, и как QNX избавляет программиста от огромного количества головной боли при их использовании, методика программирования сервисов на основе сообщений (для QNX это вообще родная тема благодаря микроядру).</p>
+
+<p>Авторы совершенно точно смогли сконцентрироваться именно на теме многопоточности, не тратя место в книге (всего ~280 страниц) на смежные вопросы, предоставив для “открытых” вопросов отличную библиографию.</p>
+
+<p>Есть книги, которые, как говориться, прочитал, передай другому, а некоторые уже не хочется никому отдавать. Это одна из таких немногих книг.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[RapidEE - Редактор переменных окружения для Windows]]></title>
     <link href="http://demin.ws/blog/russian/2009/02/16/rapidee-windows-environment-editor/"/>
     <updated>2009-02-16T00:00:00+00:00</updated>
@@ -15897,33 +15924,6 @@ C:\PROGRA~1\Borland\CBUILD~1\Bin
 <p>Скриншот:</p>
 
 <p><img src="http://demin.ws/images/blog/rapidee.png" /></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Олег Цилюрик, Егор Горошко, "QNX/UNIX. Анатомия параллелизма"]]></title>
-    <link href="http://demin.ws/blog/russian/2009/02/16/qnx-unix-parallelism-anatomy/"/>
-    <updated>2009-02-16T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/02/16/qnx-unix-parallelism-anatomy/</id>
-    <content type="html"><![CDATA[<p>Олег Цилюрик, Егор Горошко</p>
-
-<p><a href="http://www.ozon.ru/context/detail/id/2512096/?partner=easy-coding">QNX/UNIX. Анатомия параллелизма</a></p>
-
-<p><img src="http://demin.ws/images/covers/russian/qnx-unix-parallelism-anatomy-cover.jpg" /></p>
-
-<p>Хоть я в многопотоковом программировании далеко не новичок, я прочитал эту книгу от корки до корки, дважды. С удовольствием цеплялся на каждый абзац, перечитывал, обдумывал примеры, чтобы ничего не пропустить, компилировал их, крутил туда-сюда, сравнивал результаты с книгой, пробовал на разных системах и т.д.</p>
-
-<p>Несмотря на присутствие слова QNX в названии книги, она является прекрасным руководством по программированию потоков в UNIX в целом. Начиная прямо от печки, то есть от определения потока и его порой неверного отделения от термина &ldquo;процесс&rdquo;, далее, следуя по базовым способам синхронизации потоков (блокировки, семафоры, условные переменные), детально разжеваны все тонкости поточного программирования с точки зрения идей и концепций, и в конкретном применении их в потоках POSIX (pthreads), включая нестандартные расширения различных версий.</p>
-
-<p>Отдельной строкой укажу на отличную главу про взаимодействие механизма сигналов UNIX&rsquo;а и, собственно, потоков. Это весьма сложная тема, но тут она понятно расписана. Даны рекомендации “как надо” и “как не надо”.</p>
-
-<p>Полно показательных примеров на С++. Причем примеры не просто призваны показать типа &ldquo;о! работает в потоке!&rdquo;. Примеры демонстрируют особенности, проблемы потоков, позволяют оценить ресурсоемкость различных приемов. Везде авторы дают рекомендации типа как ускорить данный кусок кода, как его упростить, как сделать его надежнее, как его тестировать.</p>
-
-<p>Даются сравнительные оценки работы потоков в различных UNIX&rsquo;ах, например, QNX против Linux. Все плюсы и минусы обстоятельно, без эмоций разобраны. В конце книги рассматриваются некоторые чисто QNX&rsquo;овые возможности: пулы потоков, и как QNX избавляет программиста от огромного количества головной боли при их использовании, методика программирования сервисов на основе сообщений (для QNX это вообще родная тема благодаря микроядру).</p>
-
-<p>Авторы совершенно точно смогли сконцентрироваться именно на теме многопоточности, не тратя место в книге (всего ~280 страниц) на смежные вопросы, предоставив для “открытых” вопросов отличную библиографию.</p>
-
-<p>Есть книги, которые, как говориться, прочитал, передай другому, а некоторые уже не хочется никому отдавать. Это одна из таких немногих книг.</p>
 ]]></content>
   </entry>
   
@@ -16033,29 +16033,6 @@ int main() {
 <ul>
 <li><a href="http://demin.ws/blog/russian/2009/03/05/how-to-do-without-nominmax/">Как обойтить без макроса NOMINMAX</a></li>
 </ul>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Павел Агуров, "Интерфейс USB. Практика использования и программирования"]]></title>
-    <link href="http://demin.ws/blog/russian/2009/02/14/usb-interface-usage-and-programming/"/>
-    <updated>2009-02-14T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/02/14/usb-interface-usage-and-programming/</id>
-    <content type="html"><![CDATA[<p>Павел Агуров</p>
-
-<p><a href="http://www.ozon.ru/context/detail/id/1955129/?partner=easy-coding">Интерфейс USB. Практика использования и программирования</a></p>
-
-<p><img src="http://demin.ws/images/covers/russian/usb-interface-usage-and-programming-cover.jpg" /></p>
-
-<p>Очень целостная книга про USB от электрических основ и применяемых микросхем до написания драйверов под Windows. Я прочитал книгу на одном дыхании, и не пожалел ни капли о потраченном времени. Правда, если быть честным, то последние главы про написание драйверов под Windows я уже просматривал по диагонали, ехидно хихикая про себя на тему “как же можно было усложнить написание драйверов под винды…” и почему в <a href="http://libusb.wiki.sourceforge.net/">libusb</a> так просто и понятно даже с нуля, а в Windows DDK проще использовать всякие конструкторы драйверов для радикального сокращения времени “начального вхождения” в тему. Но это мои личные тараканы.</p>
-
-<p>Прочитав книгу вы как минимум точно будете знать почему конкретно нельзя два компьютера просто взять и соединить обычным USB кабелем. Я, например, со своим программистским сознанием недоумевал раньше, мол почему если принтер можно подсоединить к компьютеру по USB, то почему же нельзя вместо принтера поставить другой компьютер, написав для него программу по аналогии с принтерной прошивкой, и организовать тем самым мини сеть? Это же просто вопрос драйверов (я так думал)… А тут меня заставляют покупать какой-то хитрый кабель с логикой внутри…</p>
-
-<p>В общем, за себя могу сказать — я на капельку поумнел, что приятно.</p>
-
-<p>А если серьезно, то прочитав эту книгу, можно спокойно самостоятельно “набросать” USB-устройство и написать для него драйвера по Windows.</p>
-
-<p>Жалко, что в книге рассмотрено написание USB драйверов только под Windows. Было бы интересно написать один и то же драйвер под Windows и Linux, например, и оценить трудозатраты.</p>
 ]]></content>
   </entry>
   
@@ -16198,6 +16175,29 @@ int main(int argc, char* argv[]) {
 <ul>
 <li><a href="http://demin.ws/blog/russian/2009/01/28/unit-testing-concurrent-threads/">Unit-тестирование для параллельных потоков</a></li>
 </ul>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Павел Агуров, "Интерфейс USB. Практика использования и программирования"]]></title>
+    <link href="http://demin.ws/blog/russian/2009/02/14/usb-interface-usage-and-programming/"/>
+    <updated>2009-02-14T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/02/14/usb-interface-usage-and-programming/</id>
+    <content type="html"><![CDATA[<p>Павел Агуров</p>
+
+<p><a href="http://www.ozon.ru/context/detail/id/1955129/?partner=easy-coding">Интерфейс USB. Практика использования и программирования</a></p>
+
+<p><img src="http://demin.ws/images/covers/russian/usb-interface-usage-and-programming-cover.jpg" /></p>
+
+<p>Очень целостная книга про USB от электрических основ и применяемых микросхем до написания драйверов под Windows. Я прочитал книгу на одном дыхании, и не пожалел ни капли о потраченном времени. Правда, если быть честным, то последние главы про написание драйверов под Windows я уже просматривал по диагонали, ехидно хихикая про себя на тему “как же можно было усложнить написание драйверов под винды…” и почему в <a href="http://libusb.wiki.sourceforge.net/">libusb</a> так просто и понятно даже с нуля, а в Windows DDK проще использовать всякие конструкторы драйверов для радикального сокращения времени “начального вхождения” в тему. Но это мои личные тараканы.</p>
+
+<p>Прочитав книгу вы как минимум точно будете знать почему конкретно нельзя два компьютера просто взять и соединить обычным USB кабелем. Я, например, со своим программистским сознанием недоумевал раньше, мол почему если принтер можно подсоединить к компьютеру по USB, то почему же нельзя вместо принтера поставить другой компьютер, написав для него программу по аналогии с принтерной прошивкой, и организовать тем самым мини сеть? Это же просто вопрос драйверов (я так думал)… А тут меня заставляют покупать какой-то хитрый кабель с логикой внутри…</p>
+
+<p>В общем, за себя могу сказать — я на капельку поумнел, что приятно.</p>
+
+<p>А если серьезно, то прочитав эту книгу, можно спокойно самостоятельно “набросать” USB-устройство и написать для него драйвера по Windows.</p>
+
+<p>Жалко, что в книге рассмотрено написание USB драйверов только под Windows. Было бы интересно написать один и то же драйвер под Windows и Linux, например, и оценить трудозатраты.</p>
 ]]></content>
   </entry>
   
@@ -17482,6 +17482,167 @@ public:
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Статический аргумент функции putenv]]></title>
+    <link href="http://demin.ws/blog/russian/2009/02/01/static-argument-of-putenv/"/>
+    <updated>2009-02-01T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/02/01/static-argument-of-putenv/</id>
+    <content type="html"><![CDATA[<p>В мире программирования UNIX есть стандартная библиотечная функция <code>putenv()</code>. Она устанавливает переменную окружения для текущего процесса. В основном функция полезна, когда ваш процесс вызывает из под себя другой процесс и передает ему какие-либо параметры через переменные окружения.</p>
+
+<p>Прототип функции такой:</p>
+
+<pre><code class="cpp">int putenv(char* string);
+</code></pre>
+
+<p>Казалось бы, все предельно просто и понятно — вызываешь функцию, она делает свое дело, если надо проверятся код ошибки, и все пучком.</p>
+
+<p>Например:</p>
+
+<pre><code class="cpp">putenv(&quot;TESTVAR=testvalue&quot;);
+</code></pre>
+
+<p>Или так:</p>
+
+<pre><code class="cpp">...
+char var[1024];
+...
+strcpy(var, &quot;TESTVAR=&quot;);
+strcat(var, value);
+putenv(var);
+...
+</code></pre>
+
+<p>Вроде похожие примеры, хотя между ними есть огромное &ldquo;но&rdquo;. Первый пример будет работать нормально, а вот второй пример может приводить к неверному значению установленной переменной или даже к падению программы с нарушением защиты памяти на некоторых платформах. Почему?</p>
+
+<p>Отгадка кроется в том, что на некоторых операционных системах и версиях системной библиотеки libc значение параметра будет использоваться напрямую даже после возврата из функции. Другими словами, функция <code>putenv()</code> не копирует переданный ей параметр куда-либо. Если вы передадите в эту функцию буфер, размещенный в стеке (автоматическая переменная), то это прямой путь к серьезным ошибкам памяти, так в момент реального использования установленной переменной автоматический буфер может уже не существовать (функция, его создавшая, уже завершила работу и подчистила за собой стек). Отсюда вывод — указатель, передаваемый в функцию <code>putenv()</code>, всегда должен указывать на статические данные. Первый пример работает правильно, так как в С и C++ строковые константы размещены в статическом сегменте и постоянны во время всей жизни программы.</p>
+
+<p>Ситуация усугубляется еще и тем, что разные версии системной библиотеки ведут себя по разному. Нет четкого правила: копировать значение буфера или нет. Я лично наступил на эти грабли, когда начал писать программу под виндами на Visual Studio, все работало. А вот при запуске на юниксах или под виндами, но использовании компилятора gcc из <a href="http://www.cygwin.com/">Cygwin</a>, все падало. Конечно, чтение документации все сразу прояснило, но вот осадочек остался. Просто использование буфера напрямую, без создания внутренней копии, как-то противоречит здравому смыслу, но&hellip; как сделало, так сделано.</p>
+
+<p>Я набросал мини-тесты на всю эту тему.</p>
+
+<p>Традиционно, для компиляции тестов нам нужна <a href="http://code.google.com/p/googletest/">Google Test Framework</a>. Как я уже <a href="http://demin.ws/blog/russian/2009/01/28/unit-testing-concurrent-threads/">писал</a>, вы можете скачать <a href="http://demin.ws/downloads/gtest-amalgamation-1.2.1.zip">мою модификацию</a>  этой библиотеки, которая сокращена до двух необходимых файлов <code>gtest/gtest.h</code> и <code>gtest-all.cc</code>.</p>
+
+<p>Файл тестов (<code>putenv_unittest.cpp</code>):</p>
+
+<pre><code class="cpp">#include &lt;gtest/gtest.h&gt;
+#include &lt;cstdlib&gt;
+
+// Главная проверочная функция. Вызывает putenv() с указанным буфером
+// (автоматическим или статическим), если надо перезатирает буфер, чтобы
+// проверить тот ли это буфер, и после сверяет установленное значение
+// с ожидаемым эталоном.
+void checkPutEnv(char* buf, bool rewrite) {
+  // Эталон
+  const char* etalon = &quot;TESTVAR=testvalue&quot;;
+  // Копируем эталон в буфер
+  std::strcpy(buf, etalon);
+  // Устанавливаем переменную
+  putenv(buf);
+  // Если того требуют условия теста, то перезатираем буфер
+  // фальшивым значением.
+  if (rewrite)
+    std::strcpy(buf, &quot;TESTVAR=novalue&quot;);
+  // Копируем значение системной переменной.
+  std::string actual = getenv(&quot;TESTVAR&quot;);
+  // Сверяем результаты
+  EXPECT_EQ(std::string(&quot;testvalue&quot;), actual);
+}
+
+// Тест с использованием статического буфера без перезатирания.
+// Это должно работать стопудово на все платформах, так как
+// используется статический буфер, и мы его не перезатираем.
+TEST(PutEnv, UsingStaticVariable) {
+ static char buf[1024];
+ checkPutEnv(buf, false);
+}
+
+// Тест с использованием статического буфера с перезатиранием.
+// Данный тест будет рабоать только на системах, которые копируют
+// аргумент putenv()'а во внутренний буфер. То есть перезатирание
+// нами буфера не приведет к изменению значения установленной
+// переменной.
+TEST(PutEnv, UsingStaticVariableRewriteBuffer) {
+ static char buf[1024];
+ checkPutEnv(buf, true);
+}
+</code></pre>
+
+<p>Файл головной программы запуска тестов (<code>runner.cc</code>):</p>
+
+<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+int main(int argc, char* argv[]) {
+ testing::InitGoogleTest(&amp;argc, argv);
+ return RUN_ALL_TESTS();
+}
+</code></pre>
+
+<p>Сначала пробуем в Visual Studio.</p>
+
+<p>Компилируем:</p>
+
+<pre><code>cl /EHsc /I. /Feputenv_unittest_vs2008.exe runner.cpp putenv_unittest.cpp gtest\gtest-all.cc
+</code></pre>
+
+<p>Запускаем putenv_unittest_vs2008.exe&rsquo;:</p>
+
+<pre><code>[==========] Running 2 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 2 tests from PutEnv
+[ RUN      ] PutEnv.UsingStaticVariable
+[       OK ] PutEnv.UsingStaticVariable
+[ RUN      ] PutEnv.UsingStaticVariableRewriteBuffer
+[       OK ] PutEnv.UsingStaticVariableRewriteBuffer
+[----------] Global test environment tear-down
+[==========] 2 tests from 1 test case ran.
+[  PASSED  ] 2 tests.
+</code></pre>
+
+<p>Видно, что все тесты работают, а это значит, что микрософтовский <code>putenv()</code> копирует значение аргумента во внутренний буфер, и значит можно передавать в него указатель на нестатический блок памяти.</p>
+
+<p>Теперь пробуем тоже под виндами, но через Cygwin.</p>
+
+<p>Компилируем:</p>
+
+<pre><code>g++ -I. -o putenv_unittest_cygwin.exe putenv_unittest.cpp runner.cpp gtest/gtest-all.cc
+</code></pre>
+
+<p>Запускаем:</p>
+
+<pre><code>[==========] Running 2 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 2 tests from PutEnv
+[ RUN      ] PutEnv.UsingStaticVariable
+[       OK ] PutEnv.UsingStaticVariable
+[ RUN      ] PutEnv.UsingStaticVariableRewriteBuffer
+putenv_unittest.cpp:15: Failure
+Value of: actual
+  Actual: &quot;novalue&quot;
+Expected: std::string(&quot;testvalue&quot;)
+Which is: &quot;testvalue&quot;
+[  FAILED  ] PutEnv.UsingStaticVariableRewriteBuffer
+[----------] Global test environment tear-down
+[==========] 2 tests from 1 test case ran.
+[  PASSED  ] 1 test.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] PutEnv.UsingStaticVariableRewriteBuffer
+
+ 1 FAILED TEST
+</code></pre>
+
+<p>Видно, что тест <code>PutEnv.UsingStaticVariableRewriteBuffer</code>, ожидая получить значение переменной <code>testvalue</code>, получил <code>novalue</code>. Ясно, мы принудительно перезаписали оригинальное значение переменной прямо в буфере после вызова <code>putenv()</code>. Вывод: Cygwin&rsquo;овский <code>putenv()</code> не копирует значение аргумента куда-либо и, значение буфера используется напрямую, поэтому тут надо передавать указатель обязательно на статический блок памяти, или хотя бы такой блок, которые не исчезнет на момент обращения к переменной.</p>
+
+<p>Резюме.</p>
+
+<p>Будьте осторожны при использовании функции <code>putenv()</code>, так как на некоторых платформах ее аргумент не копируется во внутренний буфер, как бы это ни подсказывала вам очевидная логика, а используется прямо из вашего буфера.</p>
+
+<p>Другие посты по теме:</p>
+
+<ul>
+<li><a href="http://demin.ws/blog/russian/2009/01/28/unit-testing-concurrent-threads/">Unit-тестирование для параллельных потоков</a></li>
+</ul>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Кто быстрее: vector<bool> или vector<int>]]></title>
     <link href="http://demin.ws/blog/russian/2009/02/01/what-is-faster-vector-int-or-bool/"/>
     <updated>2009-02-01T00:00:00+00:00</updated>
@@ -17657,201 +17818,6 @@ Visual Studio 2005     14.00  bool         Выкл        23.75</p>
 <p>Конечно, пытливый читатель сразу заметит, что я как-то очень лихо проскочил один очень важный вопрос, а именно — версию STL. Не могу поручиться, что каждый из этих компиляторов поставляется с абсолютно неизменной и, как принято считать, &ldquo;стандартной&rdquo; версией этой библиотеки. Каждая фирма что-то меняет всегда под себя.</p>
 
 <p>В итоге, я так и не получил однозначного ответа на изначальный вопрос — пользоваться ли <code>std::vector&lt;int&gt;</code> вместо <code>std::vector&lt;bool&gt;</code> или нет. Слишком много побочных факторов. Поэтому я бы посоветовал, если вы встали перед такой же дилеммой в вашем проекте, провести эксперимент на месте с вашим конкретным компилятором, вашей версией STL, на вашей конкретной платформе и т.д., то есть с учетом всех ваших факторов. Можно использовать приведенные мной программы и скрипты. Если у вас будут интересные и неоднозначные результаты, пишите.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Статический аргумент функции putenv]]></title>
-    <link href="http://demin.ws/blog/russian/2009/02/01/static-argument-of-putenv/"/>
-    <updated>2009-02-01T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/02/01/static-argument-of-putenv/</id>
-    <content type="html"><![CDATA[<p>В мире программирования UNIX есть стандартная библиотечная функция <code>putenv()</code>. Она устанавливает переменную окружения для текущего процесса. В основном функция полезна, когда ваш процесс вызывает из под себя другой процесс и передает ему какие-либо параметры через переменные окружения.</p>
-
-<p>Прототип функции такой:</p>
-
-<pre><code class="cpp">int putenv(char* string);
-</code></pre>
-
-<p>Казалось бы, все предельно просто и понятно — вызываешь функцию, она делает свое дело, если надо проверятся код ошибки, и все пучком.</p>
-
-<p>Например:</p>
-
-<pre><code class="cpp">putenv(&quot;TESTVAR=testvalue&quot;);
-</code></pre>
-
-<p>Или так:</p>
-
-<pre><code class="cpp">...
-char var[1024];
-...
-strcpy(var, &quot;TESTVAR=&quot;);
-strcat(var, value);
-putenv(var);
-...
-</code></pre>
-
-<p>Вроде похожие примеры, хотя между ними есть огромное &ldquo;но&rdquo;. Первый пример будет работать нормально, а вот второй пример может приводить к неверному значению установленной переменной или даже к падению программы с нарушением защиты памяти на некоторых платформах. Почему?</p>
-
-<p>Отгадка кроется в том, что на некоторых операционных системах и версиях системной библиотеки libc значение параметра будет использоваться напрямую даже после возврата из функции. Другими словами, функция <code>putenv()</code> не копирует переданный ей параметр куда-либо. Если вы передадите в эту функцию буфер, размещенный в стеке (автоматическая переменная), то это прямой путь к серьезным ошибкам памяти, так в момент реального использования установленной переменной автоматический буфер может уже не существовать (функция, его создавшая, уже завершила работу и подчистила за собой стек). Отсюда вывод — указатель, передаваемый в функцию <code>putenv()</code>, всегда должен указывать на статические данные. Первый пример работает правильно, так как в С и C++ строковые константы размещены в статическом сегменте и постоянны во время всей жизни программы.</p>
-
-<p>Ситуация усугубляется еще и тем, что разные версии системной библиотеки ведут себя по разному. Нет четкого правила: копировать значение буфера или нет. Я лично наступил на эти грабли, когда начал писать программу под виндами на Visual Studio, все работало. А вот при запуске на юниксах или под виндами, но использовании компилятора gcc из <a href="http://www.cygwin.com/">Cygwin</a>, все падало. Конечно, чтение документации все сразу прояснило, но вот осадочек остался. Просто использование буфера напрямую, без создания внутренней копии, как-то противоречит здравому смыслу, но&hellip; как сделало, так сделано.</p>
-
-<p>Я набросал мини-тесты на всю эту тему.</p>
-
-<p>Традиционно, для компиляции тестов нам нужна <a href="http://code.google.com/p/googletest/">Google Test Framework</a>. Как я уже <a href="http://demin.ws/blog/russian/2009/01/28/unit-testing-concurrent-threads/">писал</a>, вы можете скачать <a href="http://demin.ws/downloads/gtest-amalgamation-1.2.1.zip">мою модификацию</a>  этой библиотеки, которая сокращена до двух необходимых файлов <code>gtest/gtest.h</code> и <code>gtest-all.cc</code>.</p>
-
-<p>Файл тестов (<code>putenv_unittest.cpp</code>):</p>
-
-<pre><code class="cpp">#include &lt;gtest/gtest.h&gt;
-#include &lt;cstdlib&gt;
-
-// Главная проверочная функция. Вызывает putenv() с указанным буфером
-// (автоматическим или статическим), если надо перезатирает буфер, чтобы
-// проверить тот ли это буфер, и после сверяет установленное значение
-// с ожидаемым эталоном.
-void checkPutEnv(char* buf, bool rewrite) {
-  // Эталон
-  const char* etalon = &quot;TESTVAR=testvalue&quot;;
-  // Копируем эталон в буфер
-  std::strcpy(buf, etalon);
-  // Устанавливаем переменную
-  putenv(buf);
-  // Если того требуют условия теста, то перезатираем буфер
-  // фальшивым значением.
-  if (rewrite)
-    std::strcpy(buf, &quot;TESTVAR=novalue&quot;);
-  // Копируем значение системной переменной.
-  std::string actual = getenv(&quot;TESTVAR&quot;);
-  // Сверяем результаты
-  EXPECT_EQ(std::string(&quot;testvalue&quot;), actual);
-}
-
-// Тест с использованием статического буфера без перезатирания.
-// Это должно работать стопудово на все платформах, так как
-// используется статический буфер, и мы его не перезатираем.
-TEST(PutEnv, UsingStaticVariable) {
- static char buf[1024];
- checkPutEnv(buf, false);
-}
-
-// Тест с использованием статического буфера с перезатиранием.
-// Данный тест будет рабоать только на системах, которые копируют
-// аргумент putenv()'а во внутренний буфер. То есть перезатирание
-// нами буфера не приведет к изменению значения установленной
-// переменной.
-TEST(PutEnv, UsingStaticVariableRewriteBuffer) {
- static char buf[1024];
- checkPutEnv(buf, true);
-}
-</code></pre>
-
-<p>Файл головной программы запуска тестов (<code>runner.cc</code>):</p>
-
-<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
-int main(int argc, char* argv[]) {
- testing::InitGoogleTest(&amp;argc, argv);
- return RUN_ALL_TESTS();
-}
-</code></pre>
-
-<p>Сначала пробуем в Visual Studio.</p>
-
-<p>Компилируем:</p>
-
-<pre><code>cl /EHsc /I. /Feputenv_unittest_vs2008.exe runner.cpp putenv_unittest.cpp gtest\gtest-all.cc
-</code></pre>
-
-<p>Запускаем putenv_unittest_vs2008.exe&rsquo;:</p>
-
-<pre><code>[==========] Running 2 tests from 1 test case.
-[----------] Global test environment set-up.
-[----------] 2 tests from PutEnv
-[ RUN      ] PutEnv.UsingStaticVariable
-[       OK ] PutEnv.UsingStaticVariable
-[ RUN      ] PutEnv.UsingStaticVariableRewriteBuffer
-[       OK ] PutEnv.UsingStaticVariableRewriteBuffer
-[----------] Global test environment tear-down
-[==========] 2 tests from 1 test case ran.
-[  PASSED  ] 2 tests.
-</code></pre>
-
-<p>Видно, что все тесты работают, а это значит, что микрософтовский <code>putenv()</code> копирует значение аргумента во внутренний буфер, и значит можно передавать в него указатель на нестатический блок памяти.</p>
-
-<p>Теперь пробуем тоже под виндами, но через Cygwin.</p>
-
-<p>Компилируем:</p>
-
-<pre><code>g++ -I. -o putenv_unittest_cygwin.exe putenv_unittest.cpp runner.cpp gtest/gtest-all.cc
-</code></pre>
-
-<p>Запускаем:</p>
-
-<pre><code>[==========] Running 2 tests from 1 test case.
-[----------] Global test environment set-up.
-[----------] 2 tests from PutEnv
-[ RUN      ] PutEnv.UsingStaticVariable
-[       OK ] PutEnv.UsingStaticVariable
-[ RUN      ] PutEnv.UsingStaticVariableRewriteBuffer
-putenv_unittest.cpp:15: Failure
-Value of: actual
-  Actual: &quot;novalue&quot;
-Expected: std::string(&quot;testvalue&quot;)
-Which is: &quot;testvalue&quot;
-[  FAILED  ] PutEnv.UsingStaticVariableRewriteBuffer
-[----------] Global test environment tear-down
-[==========] 2 tests from 1 test case ran.
-[  PASSED  ] 1 test.
-[  FAILED  ] 1 test, listed below:
-[  FAILED  ] PutEnv.UsingStaticVariableRewriteBuffer
-
- 1 FAILED TEST
-</code></pre>
-
-<p>Видно, что тест <code>PutEnv.UsingStaticVariableRewriteBuffer</code>, ожидая получить значение переменной <code>testvalue</code>, получил <code>novalue</code>. Ясно, мы принудительно перезаписали оригинальное значение переменной прямо в буфере после вызова <code>putenv()</code>. Вывод: Cygwin&rsquo;овский <code>putenv()</code> не копирует значение аргумента куда-либо и, значение буфера используется напрямую, поэтому тут надо передавать указатель обязательно на статический блок памяти, или хотя бы такой блок, которые не исчезнет на момент обращения к переменной.</p>
-
-<p>Резюме.</p>
-
-<p>Будьте осторожны при использовании функции <code>putenv()</code>, так как на некоторых платформах ее аргумент не копируется во внутренний буфер, как бы это ни подсказывала вам очевидная логика, а используется прямо из вашего буфера.</p>
-
-<p>Другие посты по теме:</p>
-
-<ul>
-<li><a href="http://demin.ws/blog/russian/2009/01/28/unit-testing-concurrent-threads/">Unit-тестирование для параллельных потоков</a></li>
-</ul>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Скрипты для Visual Studio]]></title>
-    <link href="http://demin.ws/blog/russian/2009/01/29/scripts-for-visual-studio-command-line/"/>
-    <updated>2009-01-29T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2009/01/29/scripts-for-visual-studio-command-line/</id>
-    <content type="html"><![CDATA[<p>По роду работы у меня на компьютере стоят сразу несколько версий Visual Studio: 2003, 2005 и 2008. В целом они легко уживаются на одной машине, и при работе в графической оболочке обычно не возникает каких-либо неудобств или конфликтов. Но вот при работе через командную строку обычно надо как-то понимать, какой именно компилятор хочется вызвать (ведь имя то у него одно - <code>cl.exe</code>, a версий три). В итоге я убрал из путей PATH все ссылки на каталоги разных версии студии, и сделал вот такие скрипты, помещенные в любой каталог, находящийся в списке путей PATH.</p>
-
-<p>Visual Studio 2003, файл: <code>cl2003.cmd</code>:</p>
-
-<pre><code>@&quot;%VS71COMNTOOLS%\vsvars32.bat&quot;
-</code></pre>
-
-<p>Visual Studio 2005, файл: <code>cl2005.cmd</code>:</p>
-
-<pre><code>@&quot;%VS80COMNTOOLS%\vsvars32.bat&quot;
-</code></pre>
-
-<p>Visual Studio 2008, файл: <code>cl2008.cmd</code>:</p>
-
-<pre><code>@&quot;%VS90COMNTOOLS%\vsvars32.bat&quot;
-</code></pre>
-
-<p>Если вы ставили студии по умолчанию стандартным образом, то в системе должны быть переменные окружения <code>VS71COMNTOOLS</code>, <code>VS80COMNTOOLS</code> и <code>VS90COMNTOOLS</code>, задающие расположение конкретной версии. Скрипт же <code>vsvars32.bat</code> поставляется вместе со студией и автоматически настраивает все необходимое для компилятора окружение.</p>
-
-<p>Теперь компиляция в версии 2005 делается, например, вот таким cmd-файлом:</p>
-
-<pre><code>call cl2005.cmd
-cl /Fetest.exe test.cpp
-</code></pre>
-
-<p>Очевидно, что для перехода на версию 2003 или 2008 надо заменить всего одну цифру. Очень удобно.</p>
 ]]></content>
   </entry>
   
@@ -18148,6 +18114,40 @@ int main(int argc, char* argv[]) {
 <li><a href="http://demin.ws/blog/russian/2009/03/05/queryperformancecounter-on-multicore-and-virtual-systems/">QueryPerformanceCounter на мультиядерных и виртуальных системах</a></li>
 <li><a href="http://demin.ws/blog/russian/2009/01/28/unit-testing-concurrent-threads/">Unit-тестирование для параллельных потоков</a></li>
 </ul>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Скрипты для Visual Studio]]></title>
+    <link href="http://demin.ws/blog/russian/2009/01/29/scripts-for-visual-studio-command-line/"/>
+    <updated>2009-01-29T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2009/01/29/scripts-for-visual-studio-command-line/</id>
+    <content type="html"><![CDATA[<p>По роду работы у меня на компьютере стоят сразу несколько версий Visual Studio: 2003, 2005 и 2008. В целом они легко уживаются на одной машине, и при работе в графической оболочке обычно не возникает каких-либо неудобств или конфликтов. Но вот при работе через командную строку обычно надо как-то понимать, какой именно компилятор хочется вызвать (ведь имя то у него одно - <code>cl.exe</code>, a версий три). В итоге я убрал из путей PATH все ссылки на каталоги разных версии студии, и сделал вот такие скрипты, помещенные в любой каталог, находящийся в списке путей PATH.</p>
+
+<p>Visual Studio 2003, файл: <code>cl2003.cmd</code>:</p>
+
+<pre><code>@&quot;%VS71COMNTOOLS%\vsvars32.bat&quot;
+</code></pre>
+
+<p>Visual Studio 2005, файл: <code>cl2005.cmd</code>:</p>
+
+<pre><code>@&quot;%VS80COMNTOOLS%\vsvars32.bat&quot;
+</code></pre>
+
+<p>Visual Studio 2008, файл: <code>cl2008.cmd</code>:</p>
+
+<pre><code>@&quot;%VS90COMNTOOLS%\vsvars32.bat&quot;
+</code></pre>
+
+<p>Если вы ставили студии по умолчанию стандартным образом, то в системе должны быть переменные окружения <code>VS71COMNTOOLS</code>, <code>VS80COMNTOOLS</code> и <code>VS90COMNTOOLS</code>, задающие расположение конкретной версии. Скрипт же <code>vsvars32.bat</code> поставляется вместе со студией и автоматически настраивает все необходимое для компилятора окружение.</p>
+
+<p>Теперь компиляция в версии 2005 делается, например, вот таким cmd-файлом:</p>
+
+<pre><code>call cl2005.cmd
+cl /Fetest.exe test.cpp
+</code></pre>
+
+<p>Очевидно, что для перехода на версию 2003 или 2008 надо заменить всего одну цифру. Очень удобно.</p>
 ]]></content>
   </entry>
   

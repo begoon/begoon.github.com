@@ -2,7 +2,7 @@
 layout: post
 title: "Как обойтить без макроса NOMINMAX"
 language: russian
-date: 2009-03-05 00:00
+date: 2009-03-05 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/03/nominmax.html
 categories:

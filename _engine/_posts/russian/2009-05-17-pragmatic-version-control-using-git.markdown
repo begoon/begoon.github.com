@@ -2,7 +2,7 @@
 layout: post
 title: 'Travis Swicegood, "Pragmatic Version Control using Git"'
 language: russian
-date: 2009-05-17 00:00
+date: 2009-05-17 04:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/05/travis-swicegood-pragmatic-version.html
 categories:

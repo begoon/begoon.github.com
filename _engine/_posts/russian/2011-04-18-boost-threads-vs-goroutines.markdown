@@ -2,7 +2,7 @@
 layout: post
 title: "Потоки в C++ против потоков в Go"
 language: russian
-date: 2011-04-18 00:00
+date: 2011-04-18 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/04/c-go.html
 categories:

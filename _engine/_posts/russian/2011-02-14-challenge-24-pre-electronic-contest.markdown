@@ -2,7 +2,7 @@
 layout: post
 title: "Challenge 24 Pre Electronic Сontest"
 language: russian
-date: 2011-02-14 00:00
+date: 2011-02-14 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/02/challenge-24-pre-electronic-ontest.html
 categories:

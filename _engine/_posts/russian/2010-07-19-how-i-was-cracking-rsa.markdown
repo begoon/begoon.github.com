@@ -2,7 +2,7 @@
 layout: post
 title: "О том, как я «ломал» RSA"
 language: russian
-date: 2010-07-19 00:00
+date: 2010-07-19 01:00
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/07/rsa.html
 categories:
