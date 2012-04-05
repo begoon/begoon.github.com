@@ -5,13 +5,22 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-05T16:29:56+01:00</updated>
+  <updated>2012-04-05T17:49:29+01:00</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[First post in English]]></title>
+    <link href="http://demin.ws/blog/english/2012/04/05/first-test-post-in-english/"/>
+    <updated>2012-04-05T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/04/05/first-test-post-in-english/</id>
+    <content type="html"><![CDATA[<p>Test post.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[NOR Machine in Ruby]]></title>
@@ -873,23 +882,6 @@ HP C/aC++ for Integrity Servers B3910B A.06.22 [Nov 14 2008]
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Number of crossings in bipartite graph]]></title>
-    <link href="http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph/"/>
-    <updated>2011-05-24T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph/</id>
-    <content type="html"><![CDATA[<p>Given a <a href="http://en.wikipedia.org/wiki/Bipartite_graph">bipartite graph</a>: &ldquo;n&rdquo; vertices on the left, &ldquo;m&rdquo; on the right and edges. The question is: how many edges in this graph are crossed?</p>
-
-<p>In this example n=5, m=4, ten edges: 1-1, 1-2, 2-1, 2-2, 3-3, 4-1, 4-3, 5-1, 5-2, 5-4, a number of crossings: 10.</p>
-
-<p><img src="http://demin.ws/images/blog/bipartite-graph.gif" /></p>
-
-<p>Crossings are always considered in pairs. For example, if three edges are crossed in one physical point, formally there are still three crossings, not one.</p>
-
-<p>O(n*m) solution exists.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Safer sizeof for arrays in C++]]></title>
     <link href="http://demin.ws/blog/english/2011/05/24/safer-sizeof-for-arrays-in-cpp/"/>
     <updated>2011-05-24T00:00:00+00:00</updated>
@@ -960,6 +952,23 @@ int main() {
 </code></pre>
 
 <p>It prints out <code>1024</code> twice.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Number of crossings in bipartite graph]]></title>
+    <link href="http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph/"/>
+    <updated>2011-05-24T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2011/05/24/number-of-crossings-in-bipartite-graph/</id>
+    <content type="html"><![CDATA[<p>Given a <a href="http://en.wikipedia.org/wiki/Bipartite_graph">bipartite graph</a>: &ldquo;n&rdquo; vertices on the left, &ldquo;m&rdquo; on the right and edges. The question is: how many edges in this graph are crossed?</p>
+
+<p>In this example n=5, m=4, ten edges: 1-1, 1-2, 2-1, 2-2, 3-3, 4-1, 4-3, 5-1, 5-2, 5-4, a number of crossings: 10.</p>
+
+<p><img src="http://demin.ws/images/blog/bipartite-graph.gif" /></p>
+
+<p>Crossings are always considered in pairs. For example, if three edges are crossed in one physical point, formally there are still three crossings, not one.</p>
+
+<p>O(n*m) solution exists.</p>
 ]]></content>
   </entry>
   
@@ -1264,6 +1273,15 @@ Crash : FFFFFFFF</p>
 <p>In summary, if you need minimalistic and fast XP, MicroXP is a very good candidate.</p>
 
 <p>P.S. Don&rsquo;t visit microxp.org. This is a fake to fish e-mails.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[One-command NORCPU program hacking challenge: analysis and solutions (link)]]></title>
+    <link href="http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions-link/"/>
+    <updated>2011-02-16T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions-link/</id>
+    <content type="html"><![CDATA[<p>For some reason Google Reader wasn&rsquo;t able to index my last huge post - <a href="http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions/">One-command NORCPU program hacking challenge: analysis and solutions</a>.</p>
 ]]></content>
   </entry>
   
@@ -3137,15 +3155,6 @@ f.close()
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[One-command NORCPU program hacking challenge: analysis and solutions (link)]]></title>
-    <link href="http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions-link/"/>
-    <updated>2011-02-16T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions-link/</id>
-    <content type="html"><![CDATA[<p>For some reason Google Reader wasn&rsquo;t able to index my last huge post - <a href="http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions/">One-command NORCPU program hacking challenge: analysis and solutions</a>.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[NORCPU hackme challenge]]></title>
     <link href="http://demin.ws/blog/english/2011/02/08/norcpu-hackme-challenge/"/>
     <updated>2011-02-08T00:00:00+00:00</updated>
@@ -3762,15 +3771,6 @@ parse-log:
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[What is sizeof for composite types]]></title>
-    <link href="http://demin.ws/blog/english/2010/02/24/what-is-sizeof-for-composite-types/"/>
-    <updated>2010-02-24T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/english/2010/02/24/what-is-sizeof-for-composite-types/</id>
-    <content type="html"><![CDATA[<p>The simplest way to understand the value of <code>sizeof</code> for composite types (structures and classes) before digging in to the alignment is to remember that sizeof returns the difference between addresses of two consequent elements of an array containing instances of the type.</p>
-]]></content>
-  </entry>
-  
-  <entry>
     <title type="html"><![CDATA[Print a container with delimiters]]></title>
     <link href="http://demin.ws/blog/english/2010/02/24/print-container-with-delimiters/"/>
     <updated>2010-02-24T00:00:00+00:00</updated>
@@ -3860,6 +3860,15 @@ int main(int argc, char* argv[]) {
 </code></pre>
 
 <p>The trick with pre-increment <code>--</code> operator allows to check effectively for the last element of a container.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[What is sizeof for composite types]]></title>
+    <link href="http://demin.ws/blog/english/2010/02/24/what-is-sizeof-for-composite-types/"/>
+    <updated>2010-02-24T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2010/02/24/what-is-sizeof-for-composite-types/</id>
+    <content type="html"><![CDATA[<p>The simplest way to understand the value of <code>sizeof</code> for composite types (structures and classes) before digging in to the alignment is to remember that sizeof returns the difference between addresses of two consequent elements of an array containing instances of the type.</p>
 ]]></content>
   </entry>
   
