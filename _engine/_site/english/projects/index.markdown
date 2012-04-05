@@ -9,7 +9,7 @@ title: Projects
 * [J2ME applet for NXT remote control][NXT Brick remote control over Bluetooth]
 * [lemonbind][] - Lemon parser generator wrapper for C++
 * [luascript][] - Lua script in С++
-* [p4patch][] - A utility to trasfer Perforce change sets across machines
+* [p4patch][] - A utility to transfer Perforce change sets across machines
 * [Biometrical identification system Handscan][]
 
 ## Blogs
