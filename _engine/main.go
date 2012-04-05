@@ -10,6 +10,7 @@ import (
   "os"
   "path/filepath"
   "regexp"
+  "sort"
   "strings"
   "text/template"
   "time"
@@ -33,7 +34,7 @@ const (
 )
 
 var (
-  posts       []Page
+  posts       Posts
   no_binaries *bool = flag.Bool("no-binaries", false, "don't publish binaries")
   logging     *bool = flag.Bool("logging", false, "log to 'trace.log'")
 
@@ -60,7 +61,7 @@ var (
 )
 
 func init() {
-  posts = []Page{}
+  posts = Posts{}
 
   // Pre-compile regexps.
   HeaderRE = *regexp.MustCompile("(?s)^(---\n(.+)\n---\n)")
@@ -91,10 +92,11 @@ func init() {
 
 type Page map[string]string
 
-// This function inserts an element to the beginning of the slice.
-func prepend(posts []Page, p Page) []Page {
-  return append([]Page{p}, posts[0:]...)
-}
+type Posts []*Page
+
+func (p Posts) Len() int           { return len(p) }
+func (p Posts) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+func (p Posts) Less(i, j int) bool { return (*p[i])["date"] > (*p[j])["date"] }
 
 func die(format string, v ...interface{}) {
   os.Stderr.WriteString(fmt.Sprintf(format+"\n", v...))
@@ -263,7 +265,7 @@ func render_page(p Page) string {
 
   type Data struct {
     Page  Page
-    Posts []Page
+    Posts Posts
     Host  string
   }
 
@@ -380,7 +382,7 @@ func process_post(filename string) {
   }
   trace("= Written file [%s]", t)
 
-  posts = prepend(posts, p)
+  posts = append(posts, &p)
 }
 
 func process_posts() {
@@ -395,6 +397,7 @@ func process_posts() {
   if err := filepath.Walk(PostsDir, callback); err != nil {
     die("Walking through posts failed, error %#v", err)
   }
+  sort.Sort(posts)
 }
 
 func process_parsable_file(filename string) {
