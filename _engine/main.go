@@ -330,7 +330,7 @@ func process_post(filename string) {
   p["disqus_developer"] = "0"
 
   p["disqus_shortname"] = "demin-ws"
-  p["disqus_indentifier"] = p["url"]
+  p["disqus_identifier"] = p["url"]
   p["disqus_url"] = SiteHost + p["url"]
 
   if p["blogspot"] != "" {
