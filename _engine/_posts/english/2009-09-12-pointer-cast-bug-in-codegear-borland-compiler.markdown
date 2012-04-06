@@ -30,4 +30,4 @@ It dies with an internal compiler error:
     Fatal F1004 bcc32_5.93_cast_bug.cpp 4: Internal compiler error at 0x44b34e with base 0x400000
     Fatal F1004 bcc32_5.93_cast_bug.cpp 4: Internal compiler error
 
-Nice one. I love internal compiler errors. Do you have some similar stuff in your stash?
+Nice one. I love internal compiler errors. Do you have some similar stuff in your collection?

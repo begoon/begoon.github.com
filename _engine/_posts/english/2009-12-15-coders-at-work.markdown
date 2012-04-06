@@ -17,7 +17,7 @@ Peter Seibel, "[Coders at Work][]"
 
 {% img /images/covers/english/coders-at-work-cover.jpg %}
 
-The book consists of interviews with a dozen well-known programmers. Here are the creators of UNIX, Netscape, JavaScript, Smalltalk, Haskell, Erlang, Ghostscript, LJ and also merely Donald Knuth.
+The book consists of interviews with a dozen well-known programmers. Here are creators of UNIX, Netscape, JavaScript, Smalltalk, Haskell, Erlang, Ghostscript, LJ and also merely Donald Knuth.
 
 The author asks them similar questions: when and why you started programming, how you usually work, where and on what you have worked and are working now, what do you think about the development of programming languages over the past decade, what you can advise the young etc. Some memoirs theme is dangerous because you can slip into elementary senile grumbling like "but at our times..." or "you'd better write in machine language and it'll teach you more...", but all proved to have very balanced view of reality. Of course, there is a radical separation between functional and imperative fans but this is the question of religion rather than age.
 

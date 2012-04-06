@@ -8,6 +8,6 @@ blogspot: http://meta-coding.blogspot.com/2009/06/opening-statement-why.html
 categories:
 - english
 ---
-This is the first and most likely the last non-technical post in this blog. Everything further will be extremely technical about computers, programming, and robots and so on, and so forth. The original idea was to create a collection of my own tips and tricks invented or grabbed. Many things are being forgotten very quickly and the online collection tends to help keeping it at hand. In addition it is silly to keep ideas under the pillow. Ideas should be shared that I am going to do right here.
+This is the first and probably the last non-technical post in this blog. Everything further will be extremely technical about computers, programming, robots etc. The idea was to create a collection of my personal tips and tricks invented or grabbed. Things are being forgotten very quickly, and the online collection might help keeping it at hand. In addition, it's silly to keep ideas under the pillow. Ideas must be shared, and I'm going to do right here.
 
 Follow the announcements.

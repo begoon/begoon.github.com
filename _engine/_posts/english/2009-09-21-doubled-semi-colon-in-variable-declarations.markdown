@@ -9,7 +9,7 @@ categories:
 - bug
 - english
 ---
-It seems to be completely innocent example (`vs_double_semicolumn.c`):
+It seems to be a completely innocent example (`vs_double_semicolumn.c`):
 
 {% codeblock lang:cpp %}
 void main() {
@@ -32,9 +32,9 @@ The result:
     Error E2140 vs_double_semicolumn.c 3: Declaration is not allowed here in function main
     *** 1 errors in Compile ***
 
-The problem hides behind the accidental typo of the double `;` character. By the way this example is absolutely real from life. Just one misprint raises a lot of questions.
+The problem hides behind an accidental typo of the doubled `;` character. By the way, this example is absolutely real from life. Just one misprint raises a lot of questions.
 
-It turns out that the second `;` character is treated as an empty statement but not as an empty declaration of a variable. The compiler decides that declarations of variables are finished and a block of statements begins, therefore it reasonably complains on the `b` declaration expecting statements.
+It turns out that the second `;` character is treated as an empty statement but not as an empty variable declaration. The compiler decides that declarations of variables are finished and a block of statements begins, therefore it reasonably complains on the `b` declaration expecting statements.
 
 I've checked it on gcc and native compilers of AIX, Solaris and HP-UX. All of those have eaten this example without any problems.
 

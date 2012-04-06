@@ -3937,7 +3937,7 @@ int main(int argc, char* argv[]) {
 
 <p><img src="http://demin.ws/images/covers/english/coders-at-work-cover.jpg" /></p>
 
-<p>The book consists of interviews with a dozen well-known programmers. Here are the creators of UNIX, Netscape, JavaScript, Smalltalk, Haskell, Erlang, Ghostscript, LJ and also merely Donald Knuth.</p>
+<p>The book consists of interviews with a dozen well-known programmers. Here are creators of UNIX, Netscape, JavaScript, Smalltalk, Haskell, Erlang, Ghostscript, LJ and also merely Donald Knuth.</p>
 
 <p>The author asks them similar questions: when and why you started programming, how you usually work, where and on what you have worked and are working now, what do you think about the development of programming languages over the past decade, what you can advise the young etc. Some memoirs theme is dangerous because you can slip into elementary senile grumbling like &ldquo;but at our times&hellip;&rdquo; or &ldquo;you&rsquo;d better write in machine language and it&rsquo;ll teach you more&hellip;&rdquo;, but all proved to have very balanced view of reality. Of course, there is a radical separation between functional and imperative fans but this is the question of religion rather than age.</p>
 
@@ -4424,7 +4424,7 @@ Expected: 1
 
 <p>The first one was for DOS. I still keep its <a href="http://demin.ws/projects/radio86/emulator/dos/">original web site</a> without any changes. That emulator was quite powerful: the built-in debugger, the game cracking mechanism etc. But DOS time was over and now that emulator works properly only in <a href="http://www.dosbox.com/">DosBox</a>. The sources are <a href="http://demin.ws/projects/radio86/emulator/dos/download.html">available for download</a>.</p>
 
-<p>The next generation of dear RK was already for Windows and based on <a href="http://www.libsdl.org/">SDL</a>. But there was no the built-in debugger and the project itself seems to be unfinished but runnable and allowing to still play games. That is why its <a href="http://demin.ws/projects/radio86/emulator/windows/radio86-0.0.1.zip">binary only but accompanied with bunch of games</a> is available on public.</p>
+<p>The next generation of dear RK was for Windows and based on <a href="http://www.libsdl.org/">SDL</a>. But there was no the built-in debugger and the project itself seems to be unfinished but runnable and allowing to still play games. That is why its <a href="http://demin.ws/projects/radio86/emulator/windows/radio86-0.0.1.zip">binary only but accompanied with bunch of games</a> is available on public.</p>
 
 <p>But a couple of days ago I have come across this - the <a href="http://matt.west.co.tt/spectrum/jsspeccy/">emulator of Sinclair ZX Spectrum</a> written on pure JavaScript (no applets, activex etc.)</p>
 
@@ -4454,7 +4454,7 @@ Even if you do not understand Russian there is no problem at all. Just launch th
     <link href="http://demin.ws/blog/english/2009/09/30/const-t-t-const/"/>
     <updated>2009-09-30T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/english/2009/09/30/const-t-t-const/</id>
-    <content type="html"><![CDATA[<p>Not a secret that using of <code>const T*</code> to declare a pointer is exactly the same to <code>T const*</code> because it is only important here to use <code>const</code> before <code>*</code> but the order of <code>T</code> and <code>const</code> doesn&rsquo;t matter.</p>
+    <content type="html"><![CDATA[<p>Not a secret that using <code>const T*</code> to declare a pointer is exactly the same to <code>T const*</code> because it&rsquo;s only important here to use <code>const</code> before <code>*</code> but the order of <code>T</code> and <code>const</code> doesn&rsquo;t matter.</p>
 
 <p>The both:</p>
 
@@ -4466,7 +4466,7 @@ Even if you do not understand Russian there is no problem at all. Just launch th
 <pre><code class="cpp">T const* p;
 </code></pre>
 
-<p>declare the pointer <code>p</code> to a const object but not the const pointer. The pointer itself can be modified:</p>
+<p>declare the pointer <code>p</code> to a const object but not a const pointer. The pointer itself can be modified:</p>
 
 <pre><code class="cpp">T const* p;
 ...
@@ -4482,11 +4482,11 @@ p-&gt;some_member = 0;   // ERROR: error C2166: l-value specifies const object
 
 <p>This was the introductory and let&rsquo;s talk about the topic.</p>
 
-<p>I&rsquo;m really keen to have readable sources. I could be wrong but in my opinion from the universal point of view using const at the beginning of an expression (for, instance, <code>const T* p;</code>) implies that the entire expression is <code>const</code> and it does not really matter that in this particular case according to the C++ rules it means only that the object is <code>const</code> but not the pointer.</p>
+<p>I&rsquo;m really keen to have readable sources. I could be wrong but in my opinion from the universal point of view using const at the beginning of an expression (for, instance, <code>const T* p;</code>) implies that the entire expression is <code>const</code>. It doesn&rsquo;t really matter that in this particular case according to the C++ rules it means only that the object is <code>const</code> but not the pointer.</p>
 
 <p>That is why <code>T const* p;</code> could be treated differently, notably &ldquo;a type <code>T</code> which is <code>const</code> and the pointer to this type&rdquo;. Readability becomes a bit better.</p>
 
-<p>Of course all these are questions of a coding style and it is always recommended to be consistent in modifying existing sources. But if you are just learning or beginning a new project or something when it is feasible to try something fresh, it may worth not to refuse yourself in this experience.</p>
+<p>Of course, all these are questions of a coding style and it&rsquo;s always recommended to be consistent modifying existing sources. But if you&rsquo;re just learning or beginning a new project or something when it&rsquo;s feasible to try something fresh, it may worth not to refuse yourself in this experience.</p>
 ]]></content>
   </entry>
   
@@ -5151,7 +5151,7 @@ All 3 tests passed
     <link href="http://demin.ws/blog/english/2009/09/21/doubled-semi-colon-in-variable-declarations/"/>
     <updated>2009-09-21T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/english/2009/09/21/doubled-semi-colon-in-variable-declarations/</id>
-    <content type="html"><![CDATA[<p>It seems to be completely innocent example (<code>vs_double_semicolumn.c</code>):</p>
+    <content type="html"><![CDATA[<p>It seems to be a completely innocent example (<code>vs_double_semicolumn.c</code>):</p>
 
 <pre><code class="cpp">void main() {
   int a;;
@@ -5175,9 +5175,9 @@ Error E2140 vs_double_semicolumn.c 3: Declaration is not allowed here in functio
 *** 1 errors in Compile ***
 </code></pre>
 
-<p>The problem hides behind the accidental typo of the double <code>;</code> character. By the way this example is absolutely real from life. Just one misprint raises a lot of questions.</p>
+<p>The problem hides behind an accidental typo of the doubled <code>;</code> character. By the way, this example is absolutely real from life. Just one misprint raises a lot of questions.</p>
 
-<p>It turns out that the second <code>;</code> character is treated as an empty statement but not as an empty declaration of a variable. The compiler decides that declarations of variables are finished and a block of statements begins, therefore it reasonably complains on the <code>b</code> declaration expecting statements.</p>
+<p>It turns out that the second <code>;</code> character is treated as an empty statement but not as an empty variable declaration. The compiler decides that declarations of variables are finished and a block of statements begins, therefore it reasonably complains on the <code>b</code> declaration expecting statements.</p>
 
 <p>I&rsquo;ve checked it on gcc and native compilers of AIX, Solaris and HP-UX. All of those have eaten this example without any problems.</p>
 

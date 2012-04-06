@@ -39,7 +39,7 @@
   <div id="home">
     <h1>Doubled semi-colon in variable declarations</h1>
 <div id="post">
-  <p>It seems to be completely innocent example (<code>vs_double_semicolumn.c</code>):</p>
+  <p>It seems to be a completely innocent example (<code>vs_double_semicolumn.c</code>):</p>
 
 <pre><code class="cpp">void main() {
   int a;;
@@ -63,9 +63,9 @@ Error E2140 vs_double_semicolumn.c 3: Declaration is not allowed here in functio
 *** 1 errors in Compile ***
 </code></pre>
 
-<p>The problem hides behind the accidental typo of the double <code>;</code> character. By the way this example is absolutely real from life. Just one misprint raises a lot of questions.</p>
+<p>The problem hides behind an accidental typo of the doubled <code>;</code> character. By the way, this example is absolutely real from life. Just one misprint raises a lot of questions.</p>
 
-<p>It turns out that the second <code>;</code> character is treated as an empty statement but not as an empty declaration of a variable. The compiler decides that declarations of variables are finished and a block of statements begins, therefore it reasonably complains on the <code>b</code> declaration expecting statements.</p>
+<p>It turns out that the second <code>;</code> character is treated as an empty statement but not as an empty variable declaration. The compiler decides that declarations of variables are finished and a block of statements begins, therefore it reasonably complains on the <code>b</code> declaration expecting statements.</p>
 
 <p>I&rsquo;ve checked it on gcc and native compilers of AIX, Solaris and HP-UX. All of those have eaten this example without any problems.</p>
 

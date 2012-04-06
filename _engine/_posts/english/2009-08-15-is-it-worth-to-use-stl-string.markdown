@@ -10,9 +10,9 @@ categories:
 - stl
 - english
 ---
-I regularly have arguments with colleagues about using `std::string`. Is it worth to use it at all or our own string class implementation could be better?
+Quite often I have to argue with colleagues regarding `std::string`. Is it worth using it at all or our own string class implementation could be better?
 
-The first question is about `std::string` quality. Amusingly the majority of people which I asked to draft more or less efficient implementation of the string class wrote roughly this:
+Amusingly, the majority of people, which I asked to sketch out more or less efficient implementation of the string class, wrote roughly the following:
 
 {% codeblock lang:cpp %}
 class String {
@@ -43,15 +43,15 @@ class String {
 };
 {% endcodeblock %}
 
-It's clear that in this implementation of an assignment operator a string will only grow in terms of memory utilisation. It is done deliberately to save some extra time on assigning.
+Obviously with such implementation of the assignment operator the string can only increase memory utilisation, not reduce. It's done deliberately to save some extra time on assigning.
 
-Practically nobody thought immediately about a moving operation, for example swap. For some reason the presence of a copy constructor and an assignment operator is considering to be sufficient.
+Practically nobody thought immediately about a moving operation, for example, a swap. For some reason the presence of a copy constructor and an assignment operator was considering to be sufficient.
 
-To answer this question for myself I have written the test. The test sorts an array of long strings. The strings are represented in four ways: a `std::string` object, a `std::string` pointer, an object of my homemade `String` class (see above) and a pointer to `String`.
+I've written a test. The test sorts an array of long strings. The strings are represented in four ways: a `std::string` object, a `std::string` pointer, an object of my homemade `String` class (see above) and a pointer to `String`.
 
-Apparently that usage of the pointer should be the most efficient method because in this case `std::sort()` swaps only pointers but not objects.
+Apparently, use of the pointer should be the most efficient method because in this case `std::sort()` swaps only pointers but not objects.
 
-But it would be interesting to compare how my simple implementation of the string will yield to `std::string`.
+But it would be interesting to compare how my simple implementation performs against `std::string`.
 
 So, `std_string.cpp`:
 
@@ -86,7 +86,7 @@ class String {
   String& operator=(const String& value) {
     if (this != &value) {
       // Memory is re-allocated only if a source is longer the current
-      // string. It is clear that this implementation will only increase 
+      // string. It's clear that this implementation will only increase 
       // memory allocated by the string.
       if (value.sz_ > sz_) data_ = (char*)std::realloc(data_, value.sz_);
       sz_ = value.sz_;
@@ -208,20 +208,20 @@ Run:
 
 Apparently, the tests using pointers work equally fast but when the objects are in use, `std::string` has overrun my homemade implementation 4 times - 203 ms vs 891 ms. 
 
-It is simply to figure out why it is so. To swap elements `std::sort()` uses the template function `std::swap()` which applied for `std::string` exchanges data without physical data copying.
+It's simply to figure out why. To swap elements `std::sort()` uses the template function `std::swap()` which exchanges objects without physical copying the string contents.
 
 Eventually I've convinced myself that in most cases `std::string` solves all problems. But what about adding more functionality to the `std::string`? For instance, a word search.
 
-The problem is that the destructor of `std::string` is not virtual (maybe from considerations of efficiency), but an inheritance from the class with a non-virtual destructor in C++ is not right undertaking.
+The problem is that the destructor of `std::string` isn't virtual (maybe from considerations of efficiency), but an inheritance from a class with the non-virtual destructor isn't right undertaking in C++.
 
-The STL author, Alexander Stepanov, in his article [Notes for the Programming course at Adobe][] advises to implement additional functionality for the standard STL containers as template algorithms. There are many advantages doing so, for example, any string parsing implemented via iterators as the template algorithm becomes usable automatically for all other containers having the same iterators.
+The STL author, Alexander Stepanov, in his article [Notes for the Programming course at Adobe][], advises to implement additional functionality for standard STL containers as template algorithms. There are many advantages doing so, for example, any string parser implemented via iterators as a template algorithm becomes usable automatically for all other containers having the same iterators.
 
 [Notes for the Programming course at Adobe]: http://www.stepanovpapers.com/notes.pdf
 
-Interestingly what Stepanov says about the length() function of STL containers (in the article above he describes the process of creation the efficient container step by step):
+Interestingly what Stepanov says about the `length()` function of STL containers (in the article above he describes the process of creation the efficient container step by step):
 
 > While we could make a member function to return length, it is better to make it a global friend function. If we do that, we will be able eventually to define the same function to work on built-in arrays and achieve greater uniformity of design. I made size into a member function in STL in an attempt to please the standard committee. I knew that begin, end and size should be global functions but was not willing to risk another fight with the committee.
 >
 > **Alexander Stepanov**
 
-Summarizing it is worth to trust `std::string`. The for majority of problems it does pretty well and its functionality can be extended by implementing template algorithms.
+Summarizing, it's worth to just trust `std::string`. For majority of problems it performs pretty well, and its functionality can be extended by template algorithms.

@@ -39,9 +39,9 @@
   <div id="home">
     <h1>It is worth to use STL string?</h1>
 <div id="post">
-  <p>I regularly have arguments with colleagues about using <code>std::string</code>. Is it worth to use it at all or our own string class implementation could be better?</p>
+  <p>Quite often I have to argue with colleagues regarding <code>std::string</code>. Is it worth using it at all or our own string class implementation could be better?</p>
 
-<p>The first question is about <code>std::string</code> quality. Amusingly the majority of people which I asked to draft more or less efficient implementation of the string class wrote roughly this:</p>
+<p>Amusingly, the majority of people, which I asked to sketch out more or less efficient implementation of the string class, wrote roughly the following:</p>
 
 <pre><code class="cpp">class String {
  public:
@@ -71,15 +71,15 @@
 };
 </code></pre>
 
-<p>It&rsquo;s clear that in this implementation of an assignment operator a string will only grow in terms of memory utilisation. It is done deliberately to save some extra time on assigning.</p>
+<p>Obviously with such implementation of the assignment operator the string can only increase memory utilisation, not reduce. It&rsquo;s done deliberately to save some extra time on assigning.</p>
 
-<p>Practically nobody thought immediately about a moving operation, for example swap. For some reason the presence of a copy constructor and an assignment operator is considering to be sufficient.</p>
+<p>Practically nobody thought immediately about a moving operation, for example, a swap. For some reason the presence of a copy constructor and an assignment operator was considering to be sufficient.</p>
 
-<p>To answer this question for myself I have written the test. The test sorts an array of long strings. The strings are represented in four ways: a <code>std::string</code> object, a <code>std::string</code> pointer, an object of my homemade <code>String</code> class (see above) and a pointer to <code>String</code>.</p>
+<p>I&rsquo;ve written a test. The test sorts an array of long strings. The strings are represented in four ways: a <code>std::string</code> object, a <code>std::string</code> pointer, an object of my homemade <code>String</code> class (see above) and a pointer to <code>String</code>.</p>
 
-<p>Apparently that usage of the pointer should be the most efficient method because in this case <code>std::sort()</code> swaps only pointers but not objects.</p>
+<p>Apparently, use of the pointer should be the most efficient method because in this case <code>std::sort()</code> swaps only pointers but not objects.</p>
 
-<p>But it would be interesting to compare how my simple implementation of the string will yield to <code>std::string</code>.</p>
+<p>But it would be interesting to compare how my simple implementation performs against <code>std::string</code>.</p>
 
 <p>So, <code>std_string.cpp</code>:</p>
 
@@ -113,7 +113,7 @@ class String {
   String&amp; operator=(const String&amp; value) {
     if (this != &amp;value) {
       // Memory is re-allocated only if a source is longer the current
-      // string. It is clear that this implementation will only increase 
+      // string. It's clear that this implementation will only increase 
       // memory allocated by the string.
       if (value.sz_ &gt; sz_) data_ = (char*)std::realloc(data_, value.sz_);
       sz_ = value.sz_;
@@ -237,15 +237,15 @@ int main(int argc, char* argv[]) {
 
 <p>Apparently, the tests using pointers work equally fast but when the objects are in use, <code>std::string</code> has overrun my homemade implementation 4 times - 203 ms vs 891 ms.</p>
 
-<p>It is simply to figure out why it is so. To swap elements <code>std::sort()</code> uses the template function <code>std::swap()</code> which applied for <code>std::string</code> exchanges data without physical data copying.</p>
+<p>It&rsquo;s simply to figure out why. To swap elements <code>std::sort()</code> uses the template function <code>std::swap()</code> which exchanges objects without physical copying the string contents.</p>
 
 <p>Eventually I&rsquo;ve convinced myself that in most cases <code>std::string</code> solves all problems. But what about adding more functionality to the <code>std::string</code>? For instance, a word search.</p>
 
-<p>The problem is that the destructor of <code>std::string</code> is not virtual (maybe from considerations of efficiency), but an inheritance from the class with a non-virtual destructor in C++ is not right undertaking.</p>
+<p>The problem is that the destructor of <code>std::string</code> isn&rsquo;t virtual (maybe from considerations of efficiency), but an inheritance from a class with the non-virtual destructor isn&rsquo;t right undertaking in C++.</p>
 
-<p>The STL author, Alexander Stepanov, in his article <a href="http://www.stepanovpapers.com/notes.pdf">Notes for the Programming course at Adobe</a> advises to implement additional functionality for the standard STL containers as template algorithms. There are many advantages doing so, for example, any string parsing implemented via iterators as the template algorithm becomes usable automatically for all other containers having the same iterators.</p>
+<p>The STL author, Alexander Stepanov, in his article <a href="http://www.stepanovpapers.com/notes.pdf">Notes for the Programming course at Adobe</a>, advises to implement additional functionality for standard STL containers as template algorithms. There are many advantages doing so, for example, any string parser implemented via iterators as a template algorithm becomes usable automatically for all other containers having the same iterators.</p>
 
-<p>Interestingly what Stepanov says about the length() function of STL containers (in the article above he describes the process of creation the efficient container step by step):</p>
+<p>Interestingly what Stepanov says about the <code>length()</code> function of STL containers (in the article above he describes the process of creation the efficient container step by step):</p>
 
 <blockquote>
 <p>While we could make a member function to return length, it is better to make it a global friend function. If we do that, we will be able eventually to define the same function to work on built-in arrays and achieve greater uniformity of design. I made size into a member function in STL in an attempt to please the standard committee. I knew that begin, end and size should be global functions but was not willing to risk another fight with the committee.</p>
@@ -253,7 +253,7 @@ int main(int argc, char* argv[]) {
 <p><strong>Alexander Stepanov</strong></p>
 </blockquote>
 
-<p>Summarizing it is worth to trust <code>std::string</code>. The for majority of problems it does pretty well and its functionality can be extended by implementing template algorithms.</p>
+<p>Summarizing, it&rsquo;s worth to just trust <code>std::string</code>. For majority of problems it performs pretty well, and its functionality can be extended by template algorithms.</p>
 
 </div>
 

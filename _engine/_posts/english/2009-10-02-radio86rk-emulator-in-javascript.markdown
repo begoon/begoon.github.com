@@ -24,7 +24,7 @@ The first one was for DOS. I still keep its [original web site][Emulator for DOS
 [DosBox]: http://www.dosbox.com/
 [Emulator for DOS sources]: /projects/radio86/emulator/dos/download.html
 
-The next generation of dear RK was already for Windows and based on [SDL][]. But there was no the built-in debugger and the project itself seems to be unfinished but runnable and allowing to still play games. That is why its [binary only but accompanied with bunch of games][Emulator for Windows] is available on public.
+The next generation of dear RK was for Windows and based on [SDL][]. But there was no the built-in debugger and the project itself seems to be unfinished but runnable and allowing to still play games. That is why its [binary only but accompanied with bunch of games][Emulator for Windows] is available on public.
 
 [SDL]: http://www.libsdl.org/
 [Emulator for Windows]: /projects/radio86/emulator/windows/radio86-0.0.1.zip
