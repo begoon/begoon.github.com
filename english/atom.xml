@@ -5,7 +5,7 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-05T18:17:02+01:00</updated>
+  <updated>2012-04-05T00:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
@@ -5215,7 +5215,7 @@ Fatal F1004 bcc32_5.93_cast_bug.cpp 4: Internal compiler error at 0x44b34e with 
 Fatal F1004 bcc32_5.93_cast_bug.cpp 4: Internal compiler error
 </code></pre>
 
-<p>Nice one. I love internal compiler errors. Do you have some similar stuff in your stash?</p>
+<p>Nice one. I love internal compiler errors. Do you have some similar stuff in your collection?</p>
 ]]></content>
   </entry>
   
@@ -5282,17 +5282,17 @@ B::destruct()
 A::destruct()
 </code></pre>
 
-<p>Seems that constructors and destructors of the classes <code>A</code> and <code>B</code> called the functions from its own class only even if those functions <code>construct()</code> and <code>destruct()</code> were declared as virtual.</p>
+<p>Seems that the constructors and destructors of the classes <code>A</code> and <code>B</code> called the functions from its own class even if those functions <code>construct()</code> and <code>destruct()</code> were declared as virtual.</p>
 
 <p>There is no magic here but the rule: a virtual function becomes non-virtual when called from a constructor or a destructor.</p>
 
-<p>Any rule has to be memorized which is not convenient. It is much better to just understand why it works this way. This behaviour is based on the main principle of the inheritance implementation in C++: when an object is being constructed its constructors are called in order starting from the base class of the hierarchy to the last inherited one. Destructors are called in the reversed order.</p>
+<p>Any rule has to be memorized which is not convenient. It&rsquo;s much better to just understand why it works this way. This behaviour is based on the main principle of the inheritance implementation in C++: when an object is being constructed, its constructors are called in order starting from the base class of the hierarchy to the last inherited one. Destructors are called in the reversed order.</p>
 
-<p>A constructor always works with the assumption that its child classes are not constructed yet that is why there is not way to call anything declared in the child classes. Therefore to call a virtual function the constructor has nothing else to do but to call its own implementation of that function. It seems the mechanism of virtual functions does not work here. It really does not because the virtual functions table of the child class does not override the current table yet.</p>
+<p>A constructor always works with the assumption that its child classes are not constructed yet, that is why there is no way to call anything declared in the child classes. Therefore when calling a virtual function, the constructor has nothing else to do but to call its own implementation of that function. It seems the mechanism of virtual functions doesn&rsquo;t work here. It really doesn&rsquo;t because the virtual functions table of the child class doesn&rsquo;t override the current table yet.</p>
 
 <p>For a destructor everything works vice versa. A destructor knows that all child classes are already destructed and nothing can be called from them. Therefore it just changes an address of the virtual functions table to the address of its own table address and nicely calls an implementation of the virtual function defined in its own class.</p>
 
-<p>Thus a virtual function is not virtual if it is called from a constructor or a destructor.</p>
+<p>Thus a virtual function is not virtual if it&rsquo;s called from a constructor or a destructor.</p>
 ]]></content>
   </entry>
   
@@ -5301,15 +5301,15 @@ A::destruct()
     <link href="http://demin.ws/blog/english/2009/09/04/google-code-jam-qualification-round-2009/"/>
     <updated>2009-09-04T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/english/2009/09/04/google-code-jam-qualification-round-2009/</id>
-    <content type="html"><![CDATA[<p>Google Code Jam Qualification round is finished. After the successful submission of the problem A (Alien Language), B (Watersheds) and the small dataset of the problem C (Welcome to Code Jam) I have failed on the large dataset of C. It was not about 8 minutes given for the calculation at all. The bug has been found but it does not help much - time&rsquo;s up and there was only one attempt permitted for a large dataset.</p>
+    <content type="html"><![CDATA[<p>Google Code Jam Qualification round is finished. After a successful submission of the problem A (Alien Language), B (Watersheds) and the small dataset of the problem C (Welcome to Code Jam) I failed on the large dataset of C. It wasn&rsquo;t about 8 minutes given for the calculation at all. The bug has been found but it doesn&rsquo;t help much - time&rsquo;s up and there was only one attempt permitted for the large dataset.</p>
 
 <p>The traditional conclusion: Good algorithms are better than supercomputers.</p>
 
 <p>Finally my rank is 2896 (nickname &lsquo;begoon&rsquo;) from all roughly 9700 competitors, almost closer to a pensionary level, and the score is 76.</p>
 
-<p>It is great that there are three Russian flags in the top twenty.</p>
+<p>It&rsquo;s great that there are three Russian flags in the top twenty.</p>
 
-<p>They say it is enough to get only 33 points for the Round 1 which means you had to solve one small dataset and one large dataset from any problem.</p>
+<p>They say it&rsquo;s enough to get only 33 points for the Round 1 which means you had to solve one small dataset and one large dataset from any problem.</p>
 
 <p>Does anybody participate?</p>
 ]]></content>
@@ -5320,9 +5320,9 @@ A::destruct()
     <link href="http://demin.ws/blog/english/2009/08/15/is-it-worth-to-use-stl-string/"/>
     <updated>2009-08-15T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/english/2009/08/15/is-it-worth-to-use-stl-string/</id>
-    <content type="html"><![CDATA[<p>I regularly have arguments with colleagues about using <code>std::string</code>. Is it worth to use it at all or our own string class implementation could be better?</p>
+    <content type="html"><![CDATA[<p>Quite often I have to argue with colleagues regarding <code>std::string</code>. Is it worth using it at all or our own string class implementation could be better?</p>
 
-<p>The first question is about <code>std::string</code> quality. Amusingly the majority of people which I asked to draft more or less efficient implementation of the string class wrote roughly this:</p>
+<p>Amusingly, the majority of people, which I asked to sketch out more or less efficient implementation of the string class, wrote roughly the following:</p>
 
 <pre><code class="cpp">class String {
  public:
@@ -5352,15 +5352,15 @@ A::destruct()
 };
 </code></pre>
 
-<p>It&rsquo;s clear that in this implementation of an assignment operator a string will only grow in terms of memory utilisation. It is done deliberately to save some extra time on assigning.</p>
+<p>Obviously with such implementation of the assignment operator the string can only increase memory utilisation, not reduce. It&rsquo;s done deliberately to save some extra time on assigning.</p>
 
-<p>Practically nobody thought immediately about a moving operation, for example swap. For some reason the presence of a copy constructor and an assignment operator is considering to be sufficient.</p>
+<p>Practically nobody thought immediately about a moving operation, for example, a swap. For some reason the presence of a copy constructor and an assignment operator was considering to be sufficient.</p>
 
-<p>To answer this question for myself I have written the test. The test sorts an array of long strings. The strings are represented in four ways: a <code>std::string</code> object, a <code>std::string</code> pointer, an object of my homemade <code>String</code> class (see above) and a pointer to <code>String</code>.</p>
+<p>I&rsquo;ve written a test. The test sorts an array of long strings. The strings are represented in four ways: a <code>std::string</code> object, a <code>std::string</code> pointer, an object of my homemade <code>String</code> class (see above) and a pointer to <code>String</code>.</p>
 
-<p>Apparently that usage of the pointer should be the most efficient method because in this case <code>std::sort()</code> swaps only pointers but not objects.</p>
+<p>Apparently, use of the pointer should be the most efficient method because in this case <code>std::sort()</code> swaps only pointers but not objects.</p>
 
-<p>But it would be interesting to compare how my simple implementation of the string will yield to <code>std::string</code>.</p>
+<p>But it would be interesting to compare how my simple implementation performs against <code>std::string</code>.</p>
 
 <p>So, <code>std_string.cpp</code>:</p>
 
@@ -5394,7 +5394,7 @@ class String {
   String&amp; operator=(const String&amp; value) {
     if (this != &amp;value) {
       // Memory is re-allocated only if a source is longer the current
-      // string. It is clear that this implementation will only increase 
+      // string. It's clear that this implementation will only increase 
       // memory allocated by the string.
       if (value.sz_ &gt; sz_) data_ = (char*)std::realloc(data_, value.sz_);
       sz_ = value.sz_;
@@ -5518,15 +5518,15 @@ int main(int argc, char* argv[]) {
 
 <p>Apparently, the tests using pointers work equally fast but when the objects are in use, <code>std::string</code> has overrun my homemade implementation 4 times - 203 ms vs 891 ms.</p>
 
-<p>It is simply to figure out why it is so. To swap elements <code>std::sort()</code> uses the template function <code>std::swap()</code> which applied for <code>std::string</code> exchanges data without physical data copying.</p>
+<p>It&rsquo;s simply to figure out why. To swap elements <code>std::sort()</code> uses the template function <code>std::swap()</code> which exchanges objects without physical copying the string contents.</p>
 
 <p>Eventually I&rsquo;ve convinced myself that in most cases <code>std::string</code> solves all problems. But what about adding more functionality to the <code>std::string</code>? For instance, a word search.</p>
 
-<p>The problem is that the destructor of <code>std::string</code> is not virtual (maybe from considerations of efficiency), but an inheritance from the class with a non-virtual destructor in C++ is not right undertaking.</p>
+<p>The problem is that the destructor of <code>std::string</code> isn&rsquo;t virtual (maybe from considerations of efficiency), but an inheritance from a class with the non-virtual destructor isn&rsquo;t right undertaking in C++.</p>
 
-<p>The STL author, Alexander Stepanov, in his article <a href="http://www.stepanovpapers.com/notes.pdf">Notes for the Programming course at Adobe</a> advises to implement additional functionality for the standard STL containers as template algorithms. There are many advantages doing so, for example, any string parsing implemented via iterators as the template algorithm becomes usable automatically for all other containers having the same iterators.</p>
+<p>The STL author, Alexander Stepanov, in his article <a href="http://www.stepanovpapers.com/notes.pdf">Notes for the Programming course at Adobe</a>, advises to implement additional functionality for standard STL containers as template algorithms. There are many advantages doing so, for example, any string parser implemented via iterators as a template algorithm becomes usable automatically for all other containers having the same iterators.</p>
 
-<p>Interestingly what Stepanov says about the length() function of STL containers (in the article above he describes the process of creation the efficient container step by step):</p>
+<p>Interestingly what Stepanov says about the <code>length()</code> function of STL containers (in the article above he describes the process of creation the efficient container step by step):</p>
 
 <blockquote>
 <p>While we could make a member function to return length, it is better to make it a global friend function. If we do that, we will be able eventually to define the same function to work on built-in arrays and achieve greater uniformity of design. I made size into a member function in STL in an attempt to please the standard committee. I knew that begin, end and size should be global functions but was not willing to risk another fight with the committee.</p>
@@ -5534,7 +5534,7 @@ int main(int argc, char* argv[]) {
 <p><strong>Alexander Stepanov</strong></p>
 </blockquote>
 
-<p>Summarizing it is worth to trust <code>std::string</code>. The for majority of problems it does pretty well and its functionality can be extended by implementing template algorithms.</p>
+<p>Summarizing, it&rsquo;s worth to just trust <code>std::string</code>. For majority of problems it performs pretty well, and its functionality can be extended by template algorithms.</p>
 ]]></content>
   </entry>
   
@@ -5543,7 +5543,7 @@ int main(int argc, char* argv[]) {
     <link href="http://demin.ws/blog/english/2009/01/24/why-i-have-started-this-blog/"/>
     <updated>2009-01-24T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/english/2009/01/24/why-i-have-started-this-blog/</id>
-    <content type="html"><![CDATA[<p>This is the first and most likely the last non-technical post in this blog. Everything further will be extremely technical about computers, programming, and robots and so on, and so forth. The original idea was to create a collection of my own tips and tricks invented or grabbed. Many things are being forgotten very quickly and the online collection tends to help keeping it at hand. In addition it is silly to keep ideas under the pillow. Ideas should be shared that I am going to do right here.</p>
+    <content type="html"><![CDATA[<p>This is the first and probably the last non-technical post in this blog. Everything further will be extremely technical about computers, programming, robots etc. The idea was to create a collection of my personal tips and tricks invented or grabbed. Things are being forgotten very quickly, and the online collection might help keeping it at hand. In addition, it&rsquo;s silly to keep ideas under the pillow. Ideas must be shared, and I&rsquo;m going to do right here.</p>
 
 <p>Follow the announcements.</p>
 ]]></content>

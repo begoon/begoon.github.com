@@ -5,7 +5,7 @@
   <title><![CDATA[{{include "russian/title.html"}}]]></title>
   <link href="{{$host}}/atom.xml" rel="self"/>
   <link href="{{$host}}/"/>
-  <updated>{{now}}</updated>
+  <updated>{{last_update "russian"}}</updated>
   <id>{{$host}}/</id>
   <author>
     <name><![CDATA[{{include "russian/author.html"}}]]></name>

@@ -28,9 +28,9 @@ const (
 
   // This format must use "magic" values (like 2006 for year, 01 for month etc.)
   // http://golang.org/src/pkg/time/format.go?s=15402:15448#L58
-  DateFormat = "2006-01-02"
-
-  LogFile = "trace.log"
+  DateFormat     = "2006-01-02"
+  DateTimeFormat = DateFormat + " 15:04"
+  LogFile        = "trace.log"
 )
 
 var (
@@ -252,8 +252,18 @@ func render_page(p Page) string {
     return render_page(inc)
   }
 
-  now := func() string {
-    return time.Now().Format(time.RFC3339)
+  last_update := func(language string) string {
+    for _, p := range posts {
+      if (*p)["language"] == language {
+        d, err := time.Parse(DateTimeFormat, (*p)["date"])
+        if err != nil {
+          die("Unable to parse the recent post [%s] date, error [%v]", (*p)["url"], err)
+        }
+        return d.Format(time.RFC3339)
+      }
+    }
+    die("Unable to find the recent post for language [%s]", language)
+    return "<no value>"
   }
 
   replace_relative_urls := func(s string) string {
@@ -263,8 +273,8 @@ func render_page(p Page) string {
   }
 
   funcs := template.FuncMap{
-    "include": include,
-    "now":     now,
+    "include":               include,
+    "last_update":           last_update,
     "replace_relative_urls": replace_relative_urls,
   }
 
