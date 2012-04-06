@@ -1,0 +1,154 @@
+<h1>NXT Brick remote control over Bluetooth</h1>
+
+<p>Version 1.1, 02.01.2008
+
+<style>
+   b { font-family: monospace; }
+</style>
+
+<p>
+This is a quick 2 days hack on Bluetooth based NXT remote control for J2ME compatible mobile phone.
+
+<p>
+So, we have the following:
+<ul>
+<li>NXT brick, firmware 1.04</li>
+<li>Mobile phone Nokia 6131</li>
+<li>Windows XP SP2</li>
+<li>USB Bluetooth Dongle handled by standard Windows Bluetooth driver</li>
+</ul>
+
+<p>
+I've run all tests on Nokia 6131 and Nokia 6230, therefore all used tools are for Nokia.
+
+<p>
+First, you need an applet. You can download it from:
+<ul>
+<li>
+  binaries directly from your phone:
+  <a href="NxtRemote.jar">NxtRemote.jar</a> (12.5K)
+  and
+  <a href="NxtRemote.jad">NxtRemote.jad</a>
+</li>
+<li>
+  full testing package:
+  <a href="nxt-bluetooth-rc-testing-1.1.zip">nxt-bluetooth-rc-testing-1.1.zip</a> (2240K)
+</li>
+</ul>
+
+<p>
+You can install the applet to you phone via:
+<ul>
+<li>Nokia PC Suite (get the latest one from <a href="http://nokia.com">nokia.com</a>)</li>
+<li>directly from web via your mobile phone web browser</li>
+</ul>
+
+<p>
+If you want to build an applet from the source, you need <a href="http://www.forum.nokia.com/info/sw.nokia.com/id/ef4e1bc9-d220-400c-a41d-b3d56349e984/Nokia_6131_NFC_SDK.html">Nokia 6131 NFC SDK 1.1</a>.
+Also, if you want to run the applet on your PC with Bluetooth support, you 
+can use <a href="http://www.bluecove.org/">BlueCove Bluetooth stack for Windows</a> and 
+<a href="http://www.microemu.org/">J2ME emulator for Windows</a>. You may want to install 
+the applet onto your phone over Bluetooth via <a href="http://www.bluecove.org/bluecove-examples/obex-install/">BlueCove OBEX Push J2ME application</a>, make sure your 
+Bluetooth dongle drivers are supported by BlueCove. Currently BlueCove supports 
+Mac OS X, WIDCOMM, BlueSoleil and Microsoft Bluetooth stack found in Windows XP SP2.
+
+<p>
+Now I will describe the content of the archive. Everything is based on batch files, as this is my favorite way to work. If you have any questions about using IDE for Java, such as Eclipse, for example, I will not be able to help with it. If something goes wrong, first thing is to check the paths settings in batch files. The good thing about batch files is clarity and simplicity.
+
+<p>
+This archive includes everything for playing with applet on the PC:
+<ul>
+<li>compiled applet (version 1.1)</li>
+<li>applet sources</li>
+<li>sources for NXT demo program</li>
+<li>BlueCove DLL and BlueCove OBEX Push J2ME application</li>
+<li>Micro J2ME Emulator</li>
+</ul>
+
+<h2>Subfolder <q>phone</q></h2>
+
+<p>
+<b>build.cmd</b> - Build the applet project. Correct your own settings of paths of the installed Nokia NFC SDK and Java.
+
+<p>
+<b>clean.cmd</b> - Clean-up temporary files.
+
+<p>
+<b>src/*.java</b> - Applet source files.
+
+<h2>Subfolder <q>brick</q></h2>
+
+<p>
+<b>btrc.nxc</b> - Demo program, which receives the commands from the phone and draws the arrows on the brick's screen. It is really simple. Most difficult part of it is about drawing the arrows on the screen. The protocol between the applet and the NXT is pretty simple - it uses just the strings up to 80 characters long.
+
+<p>
+<b>btio.nxc</b> - Very popular Bluetooth library for NXT by Daniele Benedettelli. I've made modified it a little bit.
+
+<p>
+<b>tools\nbc.exe</b> - <a href="http://bricxcc.sourceforge.net/nbc/">Command line NXC compiler</a> by John Hansen. Version 1.0.1.b32.
+
+<p>
+<b>tools\nexttools.exe</b> - <a href="http://bricxcc.sourceforge.net/nexttool.zip">NXT command line tool management tool</a> by John Hansen. Version 1.0.10.1.
+
+<p>
+<b>compile.cmd</b> - Build NXT demo program.
+
+<p>
+<b>download.cmd</b> - Download NXT demo program to the brick over USB.
+
+<p>
+<b>run.cmd</b> - Run NXT demo program on the brick over USB.
+
+<p>
+<b>clean.cmd</b> - Clean-up temporary files.
+
+<h2>Subfolder <q>lib\bluecove-2.0.1</q></h2>
+
+<p>
+BlueCove Bluetooth JSR-82 DLL and BlueCove OBEX Push J2ME application.
+
+<h2>Subfolder <q>lib\microemulator-2.0.1</q></h2>
+
+<p>
+J2ME Micro Emulator.
+
+<h2>Root folder of the archive</h2>
+
+<p>
+<b>run-microemulator.cmd</b> - Run the applet in Micro Emulator with Bluetooth support.
+
+<p>
+<b>run.cmd</b> - Run the applet in Nokia NFC Emulator. Bluetooth will not be emulated normally until you activate Nokia BT driver from Nokia Connectivity Framework which is included into Nokia NFC SDK. Be careful - Nokia BT driver can affect your real Bluetooth driver. Instead I recommend you use Micro Emulator because it uses BlueCove DLL which does not substitute Bluetooth driver but only uses the current stack.
+
+<p>
+<b>download-bluetooth.cmd</b> - Install the applet to the phone over Bluetooth. It requires BlueCove OBEX Push J2ME application installed  - a useful and handy tool because you do not need the monster like Nokia PC Suite installed. Make sure your Bluetooth driver is supported by BlueCove.
+
+<p>
+Basic steps to playing with applet:
+<ol>
+<li>Pair your NXT brick and your phone via Bluetooth.
+<li>Install Nokia 6131 NFC SDK, if you want to build the applet from the sources.
+<li>Build the applet. Go to subfolder 'phone' and run 'build.cmd'.
+<li>Run 'run.cmd' or 'run-microemulator.cmd' if you want to run the applet in the PC emulator.
+<li>Run 'download-bluetooth.cmd' if you want to install the applet via Bluetooth OBEX Push, or use Nokia PC Suite.
+<li>Run the installed applet on your phone (or emulator).
+<li>Make sure that brick is powered on.
+<li>Press 'Connect' in the applet. Then applet will search available Bluetooth device around, print the found device addresses first, then print the devices names. After it will discover the SPP Bluetooth service on the NXT. If everything is ok, the screen will become black with 'Command:' prompt and the Bluetooth connection indicator on the NXT screen (left top corner) will be changed from '<' to '<>'.
+<li>Now you can go to subfolder 'brick'. Build the demo program by 'build.cmd' and run it on the brick by 'run.cmd'. If brick starts to beep, it means that something wrong with Bluetooth connection. Otherwise, you can press '2', '4', '6', '8', '5' on the phone. The arrows on the brick's screen will be changed accordingly.
+</ol>
+
+<p>
+That is it!
+
+<p>
+There is a video about how this demo works - <a href="http://youtube.com/watch?v=F0HW3Mth0Pw">http://youtube.com/watch?v=F0HW3Mth0Pw</a>.
+
+<p>
+Special thanks for my brother Evgeny Demin (<a href="http://www.handshake.ru/en">http://www.handshake.ru/en</a>) for testing.
+    
+<p>
+If you have any question about these, feel free to ask me.
+
+<p>
+Copyright (C) 2007-2008 by Alexander Demin<br />
+alexander(@)demin.ws

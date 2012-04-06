@@ -100,15 +100,15 @@ ul.posts span {
   border-bottom: 4px solid #eee;
 }
 
-.site .menu a {
-  color: #000;
-}
-
 .title {
   color: #a00;
   font-weight: bold;
   margin-bottom: 0.5em;
   margin-top: 0em;
+}
+
+.site .title a {
+  color: #a00;
 }
 
 .site .title a:hover {
