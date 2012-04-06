@@ -57,7 +57,11 @@ var (
   ExtLinkRE,
   CheckHrefRE,
   CheckImgRE,
-  DisqusShortNameRE regexp.Regexp
+  DisqusShortNameRE,
+  CodeblockRemoveRE,
+  MarkdownTargetsRE,
+  MarkdownLinks1RE,
+  MarkdownLinks2RE regexp.Regexp
 
   CutDate time.Time
 
@@ -85,6 +89,10 @@ func init() {
   CheckHrefRE = *regexp.MustCompile("(?s)<(?:a|link) .*?href=[\"']([^#][^\"']*?)[\"'].*?>")
   CheckImgRE = *regexp.MustCompile("(?s)<img .*?src=[\"']([^\"']+?)[\"'].*?>")
   DisqusShortNameRE = *regexp.MustCompile("http\\:\\/\\/((easy|meta)-coding).blogspot.com\\/\\d\\d\\d\\d\\/\\d\\d\\/.+?\\.html")
+  CodeblockRemoveRE = *regexp.MustCompile("(?s){% codeblock [^%]*?%}.+?{% endcodeblock %}")
+  MarkdownTargetsRE = *regexp.MustCompile("(?m)^\\[([^\\]]+?)\\]\\: (.*?)$")
+  MarkdownLinks1RE = *regexp.MustCompile("\\[([^\\]]+?)\\]\\[\\]")
+  MarkdownLinks2RE = *regexp.MustCompile("\\[([^\\]]+?)\\]\\[([^\\]]+?)\\]")
 
   var err error
   CutDate, err = time.Parse(DateFormat, "2012-04-01")
@@ -252,6 +260,8 @@ func render_page(p Page) string {
     return render_page(inc)
   }
 
+  // This function returns the date of the lastest post in a given language.
+  // This date is used as a "updated" time stamp in the RSS feed.
   last_update := func(language string) string {
     for _, p := range posts {
       if (*p)["language"] == language {
@@ -309,6 +319,45 @@ func markup(s string) string {
     die("Unprocessed tag in [%s]", s)
   }
   return string(blackfriday.MarkdownCommon([]byte(s)))
+}
+
+func precheck_post(s string) {
+  s = CodeblockRemoveRE.ReplaceAllLiteralString(s, "")
+
+  targets := map[string]string{}
+  if m := MarkdownTargetsRE.FindAllStringSubmatch(s, -1); m != nil {
+    for _, g := range m {
+      targets[g[1]] = g[2]
+    }
+  }
+
+  used_targets := map[string]bool{}
+
+  if m := MarkdownLinks1RE.FindAllStringSubmatch(s, -1); m != nil {
+    for _, g := range m {
+      link := g[1]
+      if _, ok := targets[link]; !ok {
+        die("Dead link [%s]", link)
+      }
+      used_targets[link] = true
+    }
+  }
+
+  if m := MarkdownLinks2RE.FindAllStringSubmatch(s, -1); m != nil {
+    for _, g := range m {
+      link := g[2]
+      if _, ok := targets[link]; !ok {
+        die("Dead link [%s]", link)
+      }
+      used_targets[link] = true
+    }
+  }
+
+  for link, target := range targets {
+    if _, ok := used_targets[link]; !ok {
+      die("Unused link [%s]: %s", link, target)
+    }
+  }
 }
 
 func process_post(filename string) {
@@ -376,6 +425,8 @@ func process_post(filename string) {
   if !strings.HasPrefix(p["date"], p["date_only"]) {
     die("Slug date [%s] isn't a prefix of [%s]", p["date_only"], p["date"])
   }
+
+  precheck_post(p["content"])
 
   p["content"] = markup(p["content"])
   p["rss"] = p["content"]
