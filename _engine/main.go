@@ -369,6 +369,10 @@ func process_post(filename string) {
 
   p := load_page(filename)
 
+  if p["draft"] == "yes" {
+    return
+  }
+
   p["date_only"] = m[1]
   p["year"] = m[2]
   p["month"] = m[3]
