@@ -33,79 +33,48 @@ const (
   LogFile        = "trace.log"
 )
 
+type Page map[string]string
+
+type Posts []*Page
+
+type ReversedIndex map[string]int
+
 var (
-  posts Posts
+  posts = make(Posts, 0)
 
   // This map is used to check whether a post with a given date already exists.
-  post_dates map[string]string
+  post_dates = make(map[string]string)
+
+  index = make(ReversedIndex)
 
   no_binaries *bool = flag.Bool("no-binaries", false, "don't publish binaries")
   logging     *bool = flag.Bool("logging", false, "log to 'trace.log'")
 
-  HeaderRE,
-  AttrsRE,
-  ImgRE,
-  CodeblockRE,
-  YoutubeRE,
-  YoutubeExtRE,
-  ImgReplaceRE,
-  HrefReplaceRE,
-  PostNameRE,
-  BlogspotRE,
-  BlogspotEnglishRE,
-  UnprocessedTagsRE,
-  ExtLinkRE,
-  CheckHrefRE,
-  CheckImgRE,
-  DisqusShortNameRE,
-  CodeblockRemoveRE,
-  MarkdownTargetsRE,
-  MarkdownLinks1RE,
-  MarkdownLinks2RE regexp.Regexp
-
-  CutDate time.Time
-
-  files_cache map[string]*string
-)
-
-func init() {
-  posts = Posts{}
-  post_dates = map[string]string{}
-
-  // Pre-compile regexps.
-  HeaderRE = *regexp.MustCompile("(?s)^(---\n(.+)\n---\n)")
-  AttrsRE = *regexp.MustCompile("(?Um)^([^\\:]+?)\\: (.+)$")
-  ImgRE = *regexp.MustCompile("{% img (\\S+?) %}")
-  CodeblockRE = *regexp.MustCompile("(?sU){% codeblock lang\\:([^ ]+) %}(.*){% endcodeblock %}")
-  YoutubeRE = *regexp.MustCompile("(?sU){% youtube (\\S+?) %}")
-  YoutubeExtRE = *regexp.MustCompile("(?sU){% youtube (\\S+?) (\\d+) (\\d+) %}")
-  ImgReplaceRE = *regexp.MustCompile("(?s)(<img .*?src=[\"'])(/[^\"']+?)([\"'].*?\\/>)")
-  HrefReplaceRE = *regexp.MustCompile("(?s)(<a .*?href=[\"'])(/[^\"']+?)([\"'].*?>)")
-  PostNameRE = *regexp.MustCompile("^.*((\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d))-([^ \\.]+)\\.markdown$")
-  BlogspotRE = *regexp.MustCompile("^http:\\/\\/(easy|meta)-coding\\.blogspot\\.com\\/\\d\\d\\d\\d\\/\\d\\d\\/.+\\.html$")
+  HeaderRE          = *regexp.MustCompile("(?s)^(---\n(.+)\n---\n)")
+  AttrsRE           = *regexp.MustCompile("(?Um)^([^\\:]+?)\\: (.+)$")
+  ImgRE             = *regexp.MustCompile("{% img (\\S+?) %}")
+  CodeblockRE       = *regexp.MustCompile("(?sU){% codeblock lang\\:([^ ]+) %}(.*){% endcodeblock %}")
+  YoutubeRE         = *regexp.MustCompile("(?sU){% youtube (\\S+?) %}")
+  YoutubeExtRE      = *regexp.MustCompile("(?sU){% youtube (\\S+?) (\\d+) (\\d+) %}")
+  ImgReplaceRE      = *regexp.MustCompile("(?s)(<img .*?src=[\"'])(/[^\"']+?)([\"'].*?\\/>)")
+  HrefReplaceRE     = *regexp.MustCompile("(?s)(<a .*?href=[\"'])(/[^\"']+?)([\"'].*?>)")
+  PostNameRE        = *regexp.MustCompile("^.*((\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d))-([^ \\.]+)\\.markdown$")
+  BlogspotRE        = *regexp.MustCompile("^http:\\/\\/(easy|meta)-coding\\.blogspot\\.com\\/\\d\\d\\d\\d\\/\\d\\d\\/.+\\.html$")
   BlogspotEnglishRE = *regexp.MustCompile("-english(\\.html)$")
   UnprocessedTagsRE = *regexp.MustCompile("(?Us){%.*?}")
-  ExtLinkRE = *regexp.MustCompile("((http|https|ftp)\\:\\/\\/|mailto\\:)")
-  CheckHrefRE = *regexp.MustCompile("(?s)<(?:a|link) .*?href=[\"']([^#][^\"']*?)[\"'].*?>")
-  CheckImgRE = *regexp.MustCompile("(?s)<img .*?src=[\"']([^\"']+?)[\"'].*?>")
+  ExtLinkRE         = *regexp.MustCompile("((http|https|ftp)\\:\\/\\/|mailto\\:)")
+  CheckHrefRE       = *regexp.MustCompile("(?s)<(?:a|link) .*?href=[\"']([^#][^\"']*?)[\"'].*?>")
+  CheckImgRE        = *regexp.MustCompile("(?s)<img .*?src=[\"']([^\"']+?)[\"'].*?>")
   DisqusShortNameRE = *regexp.MustCompile("http\\:\\/\\/((easy|meta)-coding).blogspot.com\\/\\d\\d\\d\\d\\/\\d\\d\\/.+?\\.html")
   CodeblockRemoveRE = *regexp.MustCompile("(?s){% codeblock [^%]*?%}.+?{% endcodeblock %}")
   MarkdownTargetsRE = *regexp.MustCompile("(?m)^\\[([^\\]]+?)\\]\\: (.*?)$")
-  MarkdownLinks1RE = *regexp.MustCompile("\\[([^\\]]+?)\\]\\[\\]")
-  MarkdownLinks2RE = *regexp.MustCompile("\\[([^\\]]+?)\\]\\[([^\\]]+?)\\]")
+  MarkdownLinks1RE  = *regexp.MustCompile("\\[([^\\]]+?)\\]\\[\\]")
+  MarkdownLinks2RE  = *regexp.MustCompile("\\[([^\\]]+?)\\]\\[([^\\]]+?)\\]")
 
-  var err error
-  CutDate, err = time.Parse(DateFormat, "2012-04-01")
-  if err != nil {
-    die("Unable to parse the cut date, error [%v]", err)
-  }
+  CutDate, _ = time.Parse(DateFormat, "2012-04-01")
 
-  files_cache = map[string]*string{}
-}
-
-type Page map[string]string
-
-type Posts []*Page
+  files_cache = make(map[string]*string)
+)
 
 func (p Posts) Len() int           { return len(p) }
 func (p Posts) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
