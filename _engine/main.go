@@ -71,7 +71,7 @@ var (
   MarkdownLinks1RE  = *regexp.MustCompile("\\[([^\\]]+?)\\]\\[\\]")
   MarkdownLinks2RE  = *regexp.MustCompile("\\[([^\\]]+?)\\]\\[([^\\]]+?)\\]")
 
-  CutDate, _ = time.Parse(DateFormat, "2012-04-01")
+  BlogspotPostDate, _ = time.Parse(DateFormat, "2012-04-01")
 
   files_cache = make(map[string]*string)
 )
@@ -362,8 +362,8 @@ func process_post(filename string) {
   }
 
   // All posts before this date must have a blogspot id attribute.
-  if date.Before(CutDate) && p["blogspot"] == "" {
-    die("All posts before '%s' must have a blogspot id", CutDate.String())
+  if date.Before(BlogspotPostDate) && p["blogspot"] == "" {
+    die("All posts before '%s' must have a blogspot id", BlogspotPostDate.String())
   }
 
   p["disqus_developer"] = "0"
