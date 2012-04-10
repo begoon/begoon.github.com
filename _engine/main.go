@@ -55,6 +55,7 @@ var (
 
   HeaderRE          = *regexp.MustCompile("(?s)^(---\n(.+)\n---\n)")
   AttrsRE           = *regexp.MustCompile("(?Um)^([^\\:]+?)\\: (.+)$")
+  CategoriesRE      = *regexp.MustCompile("(?m)^- (.+)$")
   ImgRE             = *regexp.MustCompile("{% img (\\S+?) %}")
   CodeblockRE       = *regexp.MustCompile("(?sU){% codeblock lang\\:([^ ]+) %}(.*){% endcodeblock %}")
   YoutubeRE         = *regexp.MustCompile("(?sU){% youtube (\\S+?) %}")
@@ -181,6 +182,13 @@ func load_page(name string) Page {
       }
     } else {
       die("Bad headers in [%#v]", header)
+    }
+    if m := CategoriesRE.FindAllStringSubmatch(header, -1); m != nil {
+      categories := make([]string, 0)
+      for _, g := range m {
+        categories = append(categories, g[1])
+      }
+      p["categories"] = strings.Join(categories, ", ")
     }
   }
   p["content"] = HeaderRE.ReplaceAllLiteralString(p["content"], "")
@@ -556,7 +564,7 @@ func build_language_index(language string) string {
     if (*p)["language"] != language {
       continue
     }
-    data := strings.Join([]string{(*p)["title"], (*p)["unprocessed"]}, " ")
+    data := strings.Join([]string{(*p)["title"], (*p)["unprocessed"], (*p)["categories"]}, " ")
     words := strings.FieldsFunc(data, filter)
     for _, w := range words {
       if utf8.RuneCountInString(w) < 3 {
