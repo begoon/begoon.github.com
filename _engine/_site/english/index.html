@@ -5,9 +5,15 @@ language: english
 ---
 <div class="title">{{.Page.title}} / Blog about programming for beginners and beyond</div>
 
+<script type="text/javascript" src="/js/search.js"></script>
+
+<div style="float: right">
+  <input id="search" type="text" onkeyup="filter(this.value)" onclick="remove_search_caption()"/>
+</div>
+
 <ul class="posts">
 {{range .Posts}}{{if .english}}
-  <li>
+  <li id="post_{{.index}}">
     <span>{{.year}}-{{.month}}-{{.day}}</span> 
     &raquo; 
     <a href="{{.url}}">{{html .title}}</a>
