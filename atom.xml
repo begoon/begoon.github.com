@@ -10683,7 +10683,7 @@ class Day { ... };
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Коварный prinf()]]></title>
+    <title type="html"><![CDATA[Коварный printf()]]></title>
     <link href="http://demin.ws/blog/russian/2009/10/22/cunning-printf/"/>
     <updated>2009-10-22T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/russian/2009/10/22/cunning-printf/</id>
