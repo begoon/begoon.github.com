@@ -1,7 +1,3 @@
-ri = {}
-
-{{.ReversedIndex}}
-
 var nb_posts = {{.NumberOfPosts}}
 
 function show_post(i, visible) {
@@ -47,6 +43,7 @@ function init_search(caption) {
   } else {
     filter(search_obj.value)  
   }
+  search_obj.style.visibility = "visible"
 }
 
 function search_object() {

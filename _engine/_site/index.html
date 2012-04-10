@@ -5,10 +5,25 @@ language: russian
 ---
 <div class="title">{{.Page.title}} / Блог о программирование для начинающих и не только</div>
 
-<script type="text/javascript" src="/js/search.js?{{last_update "russian"}}"></script>
+<script language="javascript">
+(function() {
+    function async_load(){
+        var s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = '/js/russian/search.js?{{last_update "russian"}}';
+        var x = document.getElementsByTagName('script')[0];
+        x.parentNode.insertBefore(s, x);
+    }
+    if (window.attachEvent)
+        window.attachEvent('onload', async_load);
+    else
+        window.addEventListener('load', async_load, false);
+})();
+</script>
 
 <div style="float: right">
-  <input id="search" type="text" onkeyup="filter(this.value)" onclick="remove_search_caption()"/>
+  <input id="search" type="text" onkeyup="filter(this.value)" onclick="remove_search_caption()" style="visibility: hidden"/>
 </div>
 
 <ul class="posts">
@@ -20,7 +35,3 @@ language: russian
   </li>
 {{end}}{{end}}
 </ul>
-
-<script type="text/javascript">
-init_search("поиск")
-</script>

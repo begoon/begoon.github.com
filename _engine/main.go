@@ -48,7 +48,7 @@ var (
   // This map is used to check whether a post with a given date already exists.
   post_dates = make(map[string]string)
 
-  index_js = ""
+  index_js = make(map[string]string)
 
   no_binaries *bool = flag.Bool("no-binaries", false, "don't publish binaries")
   logging     *bool = flag.Bool("logging", false, "log to 'trace.log'")
@@ -265,7 +265,7 @@ func render_page(p Page) string {
     Page          Page
     Posts         Posts
     Host          string
-    ReversedIndex string
+    ReversedIndex map[string]string
     NumberOfPosts int
   }
 
@@ -547,12 +547,15 @@ func check_links() {
   }
 }
 
-func build_index() {
+func build_language_index(language string) string {
   filter := func(c rune) bool {
     return !unicode.IsLetter(c)
   }
   index := make(ReversedIndex)
   for _, p := range posts {
+    if (*p)["language"] != language {
+      continue
+    }
     data := strings.Join([]string{(*p)["title"], (*p)["unprocessed"]}, " ")
     words := strings.FieldsFunc(data, filter)
     for _, w := range words {
@@ -574,8 +577,13 @@ func build_index() {
     }
     lines = append(lines, fmt.Sprintf("ri[\"%s\"]=[%s]", w, strings.Join(l, ",")))
   }
-  index_js = strings.Join(lines, "\n")
-  fmt.Printf("Words in index: %d\n", len(lines))
+  fmt.Printf("Words in %s index: %d\n", language, len(lines))
+  return strings.Join(lines, "\n")
+}
+
+func build_index() {
+  index_js["russian"] = build_language_index("russian")
+  index_js["english"] = build_language_index("english")
 }
 
 func main() {
