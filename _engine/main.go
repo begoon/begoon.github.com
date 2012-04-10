@@ -583,6 +583,7 @@ func build_language_index(language string) string {
     for id, _ := range refs {
       l = append(l, id)
     }
+    sort.Strings(l)
     lines = append(lines, fmt.Sprintf("ri[\"%s\"]=[%s]", w, strings.Join(l, ",")))
   }
   fmt.Printf("Words in %s index: %d\n", language, len(lines))
