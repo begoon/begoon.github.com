@@ -37,3 +37,23 @@ function filter(s) {
     }
 }
 
+var search_first = false
+
+function init_search(caption) {
+  var search_obj = search_object()
+  if (search_obj.value == "") {
+    search_obj.value = caption
+    search_first = true
+  } else {
+    filter(search_obj.value)  
+  }
+}
+
+function search_object() {
+  return document.getElementById("search")
+}
+
+function remove_search_caption() {
+  if (search_first) search_object().value = ''
+}
+

@@ -7,7 +7,9 @@ language: russian
 
 <script type="text/javascript" src="/js/search.js"></script>
 
-<input id="search" type="text" onkeyup="filter(this.value)" />
+<div style="float: right">
+  <input id="search" type="text" onkeyup="filter(this.value)" onclick="remove_search_caption()"/>
+</div>
 
 <ul class="posts">
 {{range .Posts}}{{if .russian}}
@@ -20,5 +22,5 @@ language: russian
 </ul>
 
 <script type="text/javascript">
-filter(document.getElementById("search").value)
+init_search("поиск")
 </script>
