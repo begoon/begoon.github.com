@@ -11,9 +11,12 @@ import (
   "path/filepath"
   "regexp"
   "sort"
+  "strconv"
   "strings"
   "text/template"
   "time"
+  "unicode"
+  "unicode/utf8"
 )
 
 const (
@@ -37,7 +40,7 @@ type Page map[string]string
 
 type Posts []*Page
 
-type ReversedIndex map[string]int
+type ReversedIndex map[string](map[string]bool)
 
 var (
   posts = make(Posts, 0)
@@ -45,7 +48,7 @@ var (
   // This map is used to check whether a post with a given date already exists.
   post_dates = make(map[string]string)
 
-  index = make(ReversedIndex)
+  index_js = ""
 
   no_binaries *bool = flag.Bool("no-binaries", false, "don't publish binaries")
   logging     *bool = flag.Bool("logging", false, "log to 'trace.log'")
@@ -181,6 +184,7 @@ func load_page(name string) Page {
     }
   }
   p["content"] = HeaderRE.ReplaceAllLiteralString(p["content"], "")
+  p["unprocessed"] = p["content"]
   if len(p["layout"]) == 0 {
     p["layout"] = "none" // Make sure that "layout" always exists.
   }
@@ -258,15 +262,17 @@ func render_page(p Page) string {
   }
 
   type Data struct {
-    Page  Page
-    Posts Posts
-    Host  string
+    Page          Page
+    Posts         Posts
+    Host          string
+    ReversedIndex string
+    NumberOfPosts int
   }
 
   tpl := template.Must(template.New(p["filename"]).Funcs(funcs).Parse(p["content"]))
 
   var b bytes.Buffer
-  if err := tpl.Execute(&b, Data{p, posts, SiteHost}); err != nil {
+  if err := tpl.Execute(&b, Data{p, posts, SiteHost, index_js, len(posts)}); err != nil {
     die("Unable to execute template, error [%v]", err)
   }
 
@@ -421,6 +427,7 @@ func process_post(filename string) {
   }
   trace("= Written file [%s]", t)
 
+  p["index"] = strconv.Itoa(len(posts))
   posts = append(posts, &p)
 
   post_id := p["language"] + "-" + p["date"]
@@ -465,7 +472,7 @@ func process_binary(name string) {
 
 func process_file(name string) {
   ext := filepath.Ext(name)
-  if ext == ".html" || ext == ".xml" || ext == ".markdown" {
+  if ext == ".html" || ext == ".xml" || ext == ".markdown" || ext == ".js" {
     process_parsable_file(name)
   } else {
     process_binary(name)
@@ -540,6 +547,37 @@ func check_links() {
   }
 }
 
+func build_index() {
+  filter := func(c rune) bool {
+    return !unicode.IsLetter(c)
+  }
+  index := make(ReversedIndex)
+  for _, p := range posts {
+    data := strings.Join([]string{(*p)["title"], (*p)["unprocessed"]}, " ")
+    words := strings.FieldsFunc(data, filter)
+    for _, w := range words {
+      if utf8.RuneCountInString(w) < 3 {
+        continue
+      }
+      w = strings.ToLower(w)
+      if _, exist := index[w]; !exist {
+        index[w] = make(map[string]bool)
+      }
+      index[w][(*p)["index"]] = true
+    }
+  }
+  lines := make([]string, 0)
+  for w, refs := range index {
+    l := make([]string, 0)
+    for id, _ := range refs {
+      l = append(l, id)
+    }
+    lines = append(lines, fmt.Sprintf("ri[\"%s\"]=[%s]", w, strings.Join(l, ",")))
+  }
+  index_js = strings.Join(lines, "\n")
+  fmt.Printf("Words in index: %d\n", len(lines))
+}
+
 func main() {
   flag.Parse()
   fmt.Printf("Go static blog generator  Copyright (C) 2012 by Alexander Demin\n")
@@ -554,6 +592,7 @@ func main() {
 
   started := time.Now()
   process_posts()
+  build_index()
   process_site()
   check_links()
   println(time.Since(started).String())
