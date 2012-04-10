@@ -5,13 +5,42 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-10T16:59:00Z</updated>
+  <updated>2012-04-10T23:13:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Asynchronous JavaScript loading]]></title>
+    <link href="http://demin.ws/blog/english/2012/04/10/asynchronous-javascript-loading/"/>
+    <updated>2012-04-10T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/04/10/asynchronous-javascript-loading/</id>
+    <content type="html"><![CDATA[<p>If you look closely, the search field on the main page appears with a little delay. It becomes visible only when the search index script is fully loaded. But the script is being loaded asynchronously, in background. I googled the following example:</p>
+
+<pre><code class="javascript">&lt;script language=&quot;javascript&quot;&gt;
+(function() {
+    function async_load(){
+        var s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = 'URL of a script to load';
+        var x = document.getElementsByTagName('script')[0];
+        x.parentNode.insertBefore(s, x);
+    }
+    if (window.attachEvent)
+        window.attachEvent('onload', async_load);
+    else
+        window.addEventListener('load', async_load, false);
+})();
+&lt;/script&gt;
+</code></pre>
+
+<p>They say, this is a modern HTML5 compatible method, the idiom.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to search in this blog?]]></title>

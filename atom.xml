@@ -5,13 +5,42 @@
   <title><![CDATA[Программирования - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-10T16:27:00Z</updated>
+  <updated>2012-04-10T23:13:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Асинхронная загрузка скриптов JavaScript]]></title>
+    <link href="http://demin.ws/blog/russian/2012/04/10/asynchronous-javascript-loading/"/>
+    <updated>2012-04-10T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/04/10/asynchronous-javascript-loading/</id>
+    <content type="html"><![CDATA[<p>Если приглядеться, то поле поиска на главной странице блога появляется с небольшой задержкой. Оно становится видимым только после полной загрузки скрипта с индексом. Но скрипт загружается асинхронно, в фоне. Для пришлось нагуглить вот такой код:</p>
+
+<pre><code class="javascript">&lt;script language=&quot;javascript&quot;&gt;
+(function() {
+    function async_load(){
+        var s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = 'URL скрипта для загрузки';
+        var x = document.getElementsByTagName('script')[0];
+        x.parentNode.insertBefore(s, x);
+    }
+    if (window.attachEvent)
+        window.attachEvent('onload', async_load);
+    else
+        window.addEventListener('load', async_load, false);
+})();
+&lt;/script&gt;
+</code></pre>
+
+<p>Говорят, что это модный HTML5 совместимый способ. Идиома, так сказать.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[В блоге работает поиск]]></title>
