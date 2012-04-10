@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Коварный prinf()"
+title: "Коварный printf()"
 language: russian
 date: 2009-10-22 00:00
 comments: true
