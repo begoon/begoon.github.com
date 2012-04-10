@@ -5,13 +5,36 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-03-07T00:00:00Z</updated>
+  <updated>2012-04-10T16:59:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How to search in this blog?]]></title>
+    <link href="http://demin.ws/blog/english/2012/04/10/search-in-this-blog/"/>
+    <updated>2012-04-10T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/04/10/search-in-this-blog/</id>
+    <content type="html"><![CDATA[<p>As noted, the posts in this blog have no tags anymore. Technically the tags are still supported, but not displayed (no individual feeds per tag, or a cloud of tag, or other kinds of navigation).</p>
+
+<p>Why?</p>
+
+<p>I&rsquo;ve decided to change the approach and implemented Google&rsquo;s way: Don&rsquo;t sort. Search!</p>
+
+<p>Now, on the <a href="http://demin.ws/english/">main page</a> there is a search. The search allows to filter out the posts containing particular word(s) in the title or body.</p>
+
+<p>The search is based on the reverted index, without sorting by relevance. The posts, containing required words, are displayed sorted by default by date.</p>
+
+<p>Try to search for &ldquo;maximite&rdquo; or &ldquo;ruby nor&rdquo;. If there are several words are given in the search, it&rsquo;ll show the posts containing <strong>all</strong> these words. The words, which are shorter that 3 characters, are ignored.</p>
+
+<p>For me - this is very convenient!</p>
+
+<p>Checked in Chrome and Safari on Mac.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[NOR Machine in Ruby]]></title>

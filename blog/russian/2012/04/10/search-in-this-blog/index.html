@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>В блоге работает поиск</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>В блоге работает поиск</h1>
+<div id="post">
+  <p>Как было верно подмечено, в новой версии блога нет тегов у постов. Нет, технически они, конечно, есть. И тем более теги постов старого блога никуда не потерялись при переезде. Просто они не отображаются, и не реализована какая-либо навигация по ним.</p>
+
+<p>Почему?</p>
+
+<p>Я сам очень часто ищу старые посты в своем блоге, например, когда пишешь новый пост. Раньше я просто заходил на главную страницу и делал CTRL-F по фрагментам заголовков (видели, что практически все информативные посты были выведены заголовками в правую колонку?). Это было не совсем удобно, но тегами я все равно не пользовался никогда. Да и на чужих блогах я крайне редко использую теги. Разве чтобы через &ldquo;облако тегов&rdquo; понять круг интересы автора, но и только. Кроме того, теги имеют тенденцию &ldquo;протухать&rdquo;. Однажды не очень правильно присвоенный тег приходится поддерживать. Ну вот какой смысл тега &ldquo;c++&rdquo; у меня блоге?</p>
+
+<p>Можно еще предположить, что кто-то захочет подписаться на feed-ленту конкретного тега, но, опять таки, у меня маленький блог, постов и так немного, и вероятность такого крайне мала.</p>
+
+<p>В общем, сделаем по-гугловски: Don&rsquo;t sort. Search!</p>
+
+<p>На <a href="/">странице каталога</a> блога теперь есть поиск (справа).</p>
+
+<p>Это контекстный поиск по словам всех постов. Индексируются заголовки и сами посты. Поиск работает через простейший обратный индекс. Сортировки по релевантности нет - выводятся все посты в стандартной сортировке по дате создания, где встречаются введенные слова.</p>
+
+<p>Попробуйте, например, ввести &ldquo;putenv&rdquo; в строку поиска, или &ldquo;erlang&rdquo;, а потом добавить еще слово &ldquo;tcp&rdquo;. Если задано несколько слов в поиска, ищутся посты, где встречаются <strong>все</strong> слова. Слова, короче трех символов, игнорируются.</p>
+
+<p>По мне - так очень удобно!</p>
+
+<p>Проверено в Chrome и Safari на Маке.</p>
+
+</div>
+
+<hr />
+
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/04/10/search-in-this-blog/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/04/10/search-in-this-blog/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
