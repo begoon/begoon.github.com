@@ -13,3 +13,8 @@ run:
 server:
 	go run server.go&
 
+updated-public:
+	git status | grep "modified:   ../" | cut -d ' ' -f 4 | xargs -I {} echo {}
+
+revert-updated-public:
+	git status | grep "modified:   ../" | cut -d ' ' -f 4 | xargs -I {} git checkout {}
