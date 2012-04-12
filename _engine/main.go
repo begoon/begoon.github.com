@@ -8,6 +8,7 @@ import (
   "io"
   "io/ioutil"
   "os"
+  "os/exec"
   "path/filepath"
   "regexp"
   "sort"
@@ -57,7 +58,7 @@ var (
   AttrsRE           = *regexp.MustCompile("(?Um)^([^\\:]+?)\\: (.+)$")
   CategoriesRE      = *regexp.MustCompile("(?m)^- (.+)$")
   ImgRE             = *regexp.MustCompile("{% img (\\S+?) %}")
-  CodeblockRE       = *regexp.MustCompile("(?sU){% codeblock lang\\:([^ ]+) %}(.*){% endcodeblock %}")
+  CodeblockRE       = *regexp.MustCompile("(?sU)({% codeblock lang\\:([^ ]+) %}(.*){% endcodeblock %})")
   YoutubeRE         = *regexp.MustCompile("(?sU){% youtube (\\S+?) %}")
   YoutubeExtRE      = *regexp.MustCompile("(?sU){% youtube (\\S+?) (\\d+) (\\d+) %}")
   ImgReplaceRE      = *regexp.MustCompile("(?s)(<img .*?src=[\"'])(/[^\"']+?)([\"'].*?\\/>)")
@@ -206,8 +207,18 @@ func process_tags(post string) string {
   // {% img URL %}
   post = ImgRE.ReplaceAllString(post, "<img src=\"$1\" />")
 
+  codeblock := func(s string) string {
+    m := CodeblockRE.FindAllStringSubmatch(s, -1)
+    if m == nil {
+      die("Bad codeblock [%s]", s)
+    }
+    language := m[0][2]
+    source := m[0][3]
+    return highlight(source, language)
+  }
+
   // {% codeblock lang:xxx %} ... {% endcodeblock %}
-  post = CodeblockRE.ReplaceAllString(post, "``` $1$2```")
+  post = CodeblockRE.ReplaceAllStringFunc(post, codeblock)
 
   // {% youtube id %}
   post = YoutubeRE.ReplaceAllString(post,
@@ -593,6 +604,17 @@ func build_language_index(language string) string {
 func build_index() {
   index_js["russian"] = build_language_index("russian")
   index_js["english"] = build_language_index("english")
+}
+
+func highlight(source, language string) string {
+  cmd := exec.Command("pygmentize", "-f", "html", "-l", language, "-O", "encoding=utf-8,outencoding=utf-8")
+  cmd.Stdin = strings.NewReader(source)
+  var out bytes.Buffer
+  cmd.Stdout = &out
+  if err := cmd.Run(); err != nil {
+    die("Unable to pygmentize, %#v, %#v, %#v, [%s]", err, cmd.Path, cmd.Args, source)
+  }
+  return out.String()
 }
 
 func main() {
