@@ -5,13 +5,46 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-12T17:21:00Z</updated>
+  <updated>2012-04-12T21:30:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Dustin Boswell, Trevor Foucher, &#34;The art of readable code&#34;]]></title>
+    <link href="http://demin.ws/blog/english/2012/04/12/art-of-readable-code/"/>
+    <updated>2012-04-12T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/04/12/art-of-readable-code/</id>
+    <content type="html"><![CDATA[<p><a href="http://shop.oreilly.com/product/9780596802301.do">Dustin Boswell, Trevor Foucher, &ldquo;The art of readable code&rdquo;</a></p>
+
+<p><img src="http://demin.ws/images/covers/english/art-of-readable-code-cover.gif" alt="" />
+</p>
+
+<p>There are plenty of books published about writing code. Thus I was skeptical after a friend of mine showed me yet another one. To my surprise, without a long introduction it went straight to the point and coined the following statements right in the first chapter:</p>
+
+<ul>
+<li>Code should be easy to understand.</li>
+<li>What make code &ldquo;better&rdquo;?</li>
+<li>The fundamental theorem of readability.</li>
+<li>Code should be written to minimise the time it would take for someone else to understand it.</li>
+<li>Is smaller always better?</li>
+<li>It is better to clean and precise that to be cute.</li>
+</ul>
+
+<p>The style of the book was precise and concrete. I felt that in less than two hundred of pages it&rsquo;s quite ambitious to cover the subject of &ldquo;the art&rdquo; and decided to order the book to find out how they&rsquo;re going to do that.</p>
+
+<p>Eventually, a few hours of reading on weekend were worthy. Though an experienced programmer will barely find any eye openings in the book, but surprisingly, this is a compact, concise and solid handout for juniors. Without too much theory, always using real examples, the authors go through many key points of writing code: how to name variables, functions and classes, how to structure the code, how to deal with efficiency-readability trade off, how to comment, where to compromise and where be a perfectionist. Again, it&rsquo;s all in less then two hundred pages. Plus they briefly touched unit testing.</p>
+
+<p>The authors not only tell you what is good and bad, they always demonstrate &ldquo;why&rdquo; on examples gradually improving &ldquo;regular&rdquo; code. At the end they put a real example of a class counting network traffic and returning a number of bytes transferred in the last hour and day.</p>
+
+<p>They began with a naive implementation and then worked through two more versions showing that sensitive balance between efficiency and readability. I think that even experienced developers may find this example interesting to play with.</p>
+
+<p>To sum up, this book can fit perfectly into your team book shelf and be used as a quick reference of how-tos. Buying for yourself is questionable, because at home you&rsquo;d probably prefer something more fundamental.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Macro for unused parameters]]></title>
