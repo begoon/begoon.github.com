@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,18 +44,18 @@
 
 <p>У меня вот такой:</p>
 
-<pre><code class="cpp">template &lt;bool&gt; struct STATIC_ASSERTION_FAILURE;
-template &lt;&gt; struct STATIC_ASSERTION_FAILURE&lt;true&gt; {};
-#define STATIC_CHECK(x) sizeof(STATIC_ASSERTION_FAILURE&lt; (bool)(x) &gt;)
-</code></pre>
+<div class="highlight"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">STATIC_ASSERTION_FAILURE</span><span class="p">;</span>
+<span class="k">template</span> <span class="o">&lt;&gt;</span> <span class="k">struct</span> <span class="n">STATIC_ASSERTION_FAILURE</span><span class="o">&lt;</span><span class="kc">true</span><span class="o">&gt;</span> <span class="p">{};</span>
+<span class="cp">#define STATIC_CHECK(x) sizeof(STATIC_ASSERTION_FAILURE&lt; (bool)(x) &gt;)</span>
+</pre></div>
 
 <p>Работает приемлемо сносно:</p>
 
-<pre><code class="cpp">int main() {
-  STATIC_CHECK(sizeof(int) &lt; sizeof(char));
-  return 0;
-}
-</code></pre>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">STATIC_CHECK</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 </div>
 

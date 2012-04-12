@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -47,44 +48,44 @@
 
 <p><code>era.cpp</code>:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
-#include &lt;vector&gt;
-#include &lt;cmath&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;vector&gt;</span>
+<span class="cp">#include &lt;cmath&gt;</span>
 
-int main(int argc, char* argv[]) {
-  // Получаем предельное значение эксперимента из командной
-  // строки. По умолчанию - 100. Это основной, влияющий
-  // на время работы алгоритма, параметр.
-  long n = argc &gt; 1 ? std::atoi(argv[1]) : 100;
-  // Корень квадратный из максимума, округленный до большего
-  // целого.
-  long sqrt_n = static_cast&lt;long&gt;(std::sqrt(static_cast&lt;double&gt;(n))) + 1;
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="c1">// Получаем предельное значение эксперимента из командной</span>
+  <span class="c1">// строки. По умолчанию - 100. Это основной, влияющий</span>
+  <span class="c1">// на время работы алгоритма, параметр.</span>
+  <span class="kt">long</span> <span class="n">n</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">:</span> <span class="mi">100</span><span class="p">;</span>
+  <span class="c1">// Корень квадратный из максимума, округленный до большего</span>
+  <span class="c1">// целого.</span>
+  <span class="kt">long</span> <span class="n">sqrt_n</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
 
-  // Массив-вектор для хранения значений. Это центр внимания нашего
-  // эксперимента. Макрос TYPE задает тип элементов вектора и должен
-  // быть задан в опциях при компиляции: -DTYPE=int или
-  // -DTYPE=bool соответственно.
-  std::vector&lt;TYPE&gt; S(n, true);
+  <span class="c1">// Массив-вектор для хранения значений. Это центр внимания нашего</span>
+  <span class="c1">// эксперимента. Макрос TYPE задает тип элементов вектора и должен</span>
+  <span class="c1">// быть задан в опциях при компиляции: -DTYPE=int или</span>
+  <span class="c1">// -DTYPE=bool соответственно.</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">TYPE</span><span class="o">&gt;</span> <span class="n">S</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
 
-  // Собственно, решето Эратосфена.
-  for (int i = 2; i &lt; sqrt_n; ++i)
-    if (S[i])
-      for (int j = i*i; j &lt; n; j += i)
-        S[j] = false;
+  <span class="c1">// Собственно, решето Эратосфена.</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">sqrt_n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">S</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
 
-  // Подсчет количество найденных простых чисел. Делаем это для
-  // самопроверки.
-  int count = 0;
-  for (int i = 2; i &lt; n; ++i)
-    if (S[i])
-      count++;
+  <span class="c1">// Подсчет количество найденных простых чисел. Делаем это для</span>
+  <span class="c1">// самопроверки.</span>
+  <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+      <span class="n">count</span><span class="o">++</span><span class="p">;</span>
 
-  // Печатаем найденное количество.
-  std::cout &lt;&lt; count &lt;&lt; std::endl;
+  <span class="c1">// Печатаем найденное количество.</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">count</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-  return 0;
-}
-</code></pre>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Эксперимент я проводил на ноутбуке с процессором Core 2 1ГГц. Для конкретно этой машины я выбрал предел поиска в 10000000. При этом значении времена работы программы с одной стороны небольшие (удобно для повторения замеров), но другой стороны — весьма показательные.</p>
 
@@ -106,28 +107,28 @@ int main(int argc, char* argv[]) {
 
 <p><code>build.cmd</code>:</p>
 
-<pre><code class="bash">bcc32 -DTYPE=bool -eera-bcc32-bool.exe era.cpp
-bcc32 -DTYPE=int -eera-bcc32-int.exe era.cpp
-bcc32 -O2 -DTYPE=bool -eera-bcc32-bool-opt.exe era.cpp
-bcc32 -O2 -DTYPE=int -eera-bcc32-int-opt.exe era.cpp
+<div class="highlight"><pre>bcc32 -DTYPE<span class="o">=</span>bool -eera-bcc32-bool.exe era.cpp
+bcc32 -DTYPE<span class="o">=</span>int -eera-bcc32-int.exe era.cpp
+bcc32 -O2 -DTYPE<span class="o">=</span>bool -eera-bcc32-bool-opt.exe era.cpp
+bcc32 -O2 -DTYPE<span class="o">=</span>int -eera-bcc32-int-opt.exe era.cpp
 
-g++ -DTYPE=bool -o era-g++-bool.exe era.cpp
-g++ -DTYPE=int -o era-g++-int.exe era.cpp
-g++ -O3 -funroll-all-loops -fomit-frame-pointer -mtune=nocona -DTYPE=bool -o era-g++-bool-opt.exe era.cpp
-g++ -O3 -funroll-all-loops -fomit-frame-pointer -mtune=nocona -DTYPE=int -o era-g++-int-opt.exe era.cpp
+g++ -DTYPE<span class="o">=</span>bool -o era-g++-bool.exe era.cpp
+g++ -DTYPE<span class="o">=</span>int -o era-g++-int.exe era.cpp
+g++ -O3 -funroll-all-loops -fomit-frame-pointer -mtune<span class="o">=</span>nocona -DTYPE<span class="o">=</span>bool -o era-g++-bool-opt.exe era.cpp
+g++ -O3 -funroll-all-loops -fomit-frame-pointer -mtune<span class="o">=</span>nocona -DTYPE<span class="o">=</span>int -o era-g++-int-opt.exe era.cpp
 
 call cl2008.cmd
-cl /EHsc /DTYPE=bool /Feera-cl2008-bool.exe era.cpp
-cl /EHsc /DTYPE=int /Feera-cl2008-int.exe era.cpp
-cl /EHsc /arch:SSE2 /O2 -DTYPE=bool /Feera-cl2008-bool-opt.exe era.cpp
-cl /EHsc /arch:SSE2 /O2 -DTYPE=int /Feera-cl2008-int-opt.exe era.cpp
+cl /EHsc /DTYPE<span class="o">=</span>bool /Feera-cl2008-bool.exe era.cpp
+cl /EHsc /DTYPE<span class="o">=</span>int /Feera-cl2008-int.exe era.cpp
+cl /EHsc /arch:SSE2 /O2 -DTYPE<span class="o">=</span>bool /Feera-cl2008-bool-opt.exe era.cpp
+cl /EHsc /arch:SSE2 /O2 -DTYPE<span class="o">=</span>int /Feera-cl2008-int-opt.exe era.cpp
 
 call cl2005.cmd
-cl /EHsc /DTYPE=bool /Feera-cl2005-bool.exe era.cpp
-cl /EHsc /DTYPE=int /Feera-cl2005-int.exe era.cpp
-cl /EHsc /arch:SSE2 /O2 -DTYPE=bool /Feera-cl2005-bool-opt.exe era.cpp
-cl /EHsc /arch:SSE2 /O2 -DTYPE=int /Feera-cl2005-int-opt.exe era.cpp
-</code></pre>
+cl /EHsc /DTYPE<span class="o">=</span>bool /Feera-cl2005-bool.exe era.cpp
+cl /EHsc /DTYPE<span class="o">=</span>int /Feera-cl2005-int.exe era.cpp
+cl /EHsc /arch:SSE2 /O2 -DTYPE<span class="o">=</span>bool /Feera-cl2005-bool-opt.exe era.cpp
+cl /EHsc /arch:SSE2 /O2 -DTYPE<span class="o">=</span>int /Feera-cl2005-int-opt.exe era.cpp
+</pre></div>
 
 <p>При скрипты <code>cl2005.cmd</code> и <code>cl2008.cmd</code> я уже <a href="/blog/russian/2009/01/29/scripts-for-visual-studio-command-line/">писал</a>.</p>
 
@@ -135,7 +136,7 @@ cl /EHsc /arch:SSE2 /O2 -DTYPE=int /Feera-cl2005-int-opt.exe era.cpp
 
 <p>Далее, запуск. Для этого можно использовать следующий скрипт (<code>run.cmd</code>).</p>
 
-<pre><code class="bash">ntimer -1 era-cl2005-bool.exe 10000000
+<div class="highlight"><pre>ntimer -1 era-cl2005-bool.exe 10000000
 ntimer -1 era-cl2005-int.exe 10000000
 ntimer -1 era-cl2005-bool-opt.exe 10000000
 ntimer -1 era-cl2005-int-opt.exe 10000000
@@ -154,7 +155,7 @@ ntimer -1 era-g++-bool.exe 10000000
 ntimer -1 era-g++-int.exe 10000000
 ntimer -1 era-g++-bool-opt.exe 10000000
 ntimer -1 era-g++-int-opt.exe 10000000
-</code></pre>
+</pre></div>
 
 <p>Для измерения времени работы я использовал программу <a href="/downloads/ntimer.zip">ntimer</a>. Ее нужно скачать, распаковать и положить <code>ntimer.exe</code> в текущий каталог. Будучи запущенной с ключом &ldquo;-1&rdquo; эта программа печатает времена в одну строку. Нас интересует самое первое печатаемой ей время.</p>
 

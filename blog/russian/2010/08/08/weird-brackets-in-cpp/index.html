@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,33 +42,33 @@
 <div id="post">
   <p>Недавно более часа потратил на поиск проблемы в куске кода, упрощенный вариант которого привожу ниже:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
-int x;
-struct A {
-  A(int a) {
-    x = a;
-  }
-};
-struct B {
-  B(A a) {
-    A local_a = a;
-  }
-};
-int main() {
-  x = 0;
-  std::cout &lt;&lt; &quot;Case #0: &quot; &lt;&lt; x &lt;&lt; std::endl;
-  B b1(A(1));
-  std::cout &lt;&lt; &quot;Case #1: &quot; &lt;&lt; x &lt;&lt; std::endl;
-  int t;
-  t = 2;
-  B b2(A(t));
-  std::cout &lt;&lt; &quot;Case #2: &quot; &lt;&lt; x &lt;&lt; std::endl;
-  t = 3;
-  B b3((A(t)));
-  std::cout &lt;&lt; &quot;Case #3: &quot; &lt;&lt; x &lt;&lt; std::endl;
-  return 0;
-}
-</code></pre>
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
+<span class="k">struct</span> <span class="n">A</span> <span class="p">{</span>
+  <span class="n">A</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+<span class="k">struct</span> <span class="n">B</span> <span class="p">{</span>
+  <span class="n">B</span><span class="p">(</span><span class="n">A</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">A</span> <span class="n">local_a</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Case #0: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">B</span> <span class="n">b1</span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Case #1: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
+  <span class="n">t</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="n">B</span> <span class="n">b2</span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="n">t</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Case #2: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">t</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="n">B</span> <span class="n">b3</span><span class="p">((</span><span class="n">A</span><span class="p">(</span><span class="n">t</span><span class="p">)));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Case #3: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Как вы думаете, что должна вывести эта программа? Числа 0, 1, 2 и 3 последовательно для каждого случая?</p>
 

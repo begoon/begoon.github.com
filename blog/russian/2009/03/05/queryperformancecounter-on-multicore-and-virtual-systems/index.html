@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -58,14 +59,14 @@ Delta (100) &gt; than 10
 
 <p>Я заподозрил функцию <code>QueryPerformanceCounter()</code>. Написал еще один кондовый тест:</p>
 
-<pre><code class="cpp">TEST(PreciseTimer, MillisecCounter) {
-  monitor::PreciseTimer timer;
-  monitor::PreciseTimer::Counter a = timer.millisec();
-  timer.sleepMs(10000);
-  monitor::PreciseTimer::Counter b = timer.millisec();
-  EXPECT_EQ(10000, b - a);
-}
-</code></pre>
+<div class="highlight"><pre><span class="n">TEST</span><span class="p">(</span><span class="n">PreciseTimer</span><span class="p">,</span> <span class="n">MillisecCounter</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">monitor</span><span class="o">::</span><span class="n">PreciseTimer</span> <span class="n">timer</span><span class="p">;</span>
+  <span class="n">monitor</span><span class="o">::</span><span class="n">PreciseTimer</span><span class="o">::</span><span class="n">Counter</span> <span class="n">a</span> <span class="o">=</span> <span class="n">timer</span><span class="p">.</span><span class="n">millisec</span><span class="p">();</span>
+  <span class="n">timer</span><span class="p">.</span><span class="n">sleepMs</span><span class="p">(</span><span class="mi">10000</span><span class="p">);</span>
+  <span class="n">monitor</span><span class="o">::</span><span class="n">PreciseTimer</span><span class="o">::</span><span class="n">Counter</span> <span class="n">b</span> <span class="o">=</span> <span class="n">timer</span><span class="p">.</span><span class="n">millisec</span><span class="p">();</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Этот тест делает видную глазом задержку в 10 секунд (чтобы исключить проблему в самой задержке) и затем проверят показания таймера.</p>
 

@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -41,64 +42,64 @@
 <div id="post">
   <p>I usually start crying when see a copy-paste with numbered variables. A probability to screw up is very high, just forget to change a single number after pasting. Here is a horrifying piece of code (don&rsquo;t you mind to spot on an incy wincy typo?)</p>
 
-<pre><code class="cpp">void Test_SplitPair() {
-  typedef std::pair&lt;std::string, std::string&gt; Pair;
-  using string::SplitPair;
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">Test_SplitPair</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">Pair</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">string</span><span class="o">::</span><span class="n">SplitPair</span><span class="p">;</span>
 
-  const Pair p1 = SplitPair(&quot;&quot;, '=');
-  assert(p1.first.empty());
-  assert(p1.second.empty());
+  <span class="k">const</span> <span class="n">Pair</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">SplitPair</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="sc">&#39;=&#39;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">empty</span><span class="p">());</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">empty</span><span class="p">());</span>
 
-  const Pair p2 = SplitPair(&quot;=&quot;, '=');
-  assert(p2.first.empty());
-  assert(p2.second.empty());
+  <span class="k">const</span> <span class="n">Pair</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">SplitPair</span><span class="p">(</span><span class="s">&quot;=&quot;</span><span class="p">,</span> <span class="sc">&#39;=&#39;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p2</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">empty</span><span class="p">());</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p2</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">empty</span><span class="p">());</span>
 
-  const Pair p3 = SplitPair(&quot;name=value&quot;, '=');
-  assert(p3.first == &quot;name&quot;);
-  assert(p3.second == &quot;value&quot;);
+  <span class="k">const</span> <span class="n">Pair</span> <span class="n">p3</span> <span class="o">=</span> <span class="n">SplitPair</span><span class="p">(</span><span class="s">&quot;name=value&quot;</span><span class="p">,</span> <span class="sc">&#39;=&#39;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p3</span><span class="p">.</span><span class="n">first</span> <span class="o">==</span> <span class="s">&quot;name&quot;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p3</span><span class="p">.</span><span class="n">second</span> <span class="o">==</span> <span class="s">&quot;value&quot;</span><span class="p">);</span>
 
-  const Pair p4 = SplitPair(&quot;name = value&quot;, '=');
-  assert(p3.first == &quot;name&quot;);
-  assert(p3.second == &quot;value&quot;);
+  <span class="k">const</span> <span class="n">Pair</span> <span class="n">p4</span> <span class="o">=</span> <span class="n">SplitPair</span><span class="p">(</span><span class="s">&quot;name = value&quot;</span><span class="p">,</span> <span class="sc">&#39;=&#39;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p3</span><span class="p">.</span><span class="n">first</span> <span class="o">==</span> <span class="s">&quot;name&quot;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p3</span><span class="p">.</span><span class="n">second</span> <span class="o">==</span> <span class="s">&quot;value&quot;</span><span class="p">);</span>
 
-  const Pair p5 = SplitPair(&quot; n ame  \t =  va lue  \r\n&quot;, '=');
-  assert(p5.first == &quot; n ame  \t &quot;);
-  assert(p5.second == &quot;  va lue  \r\n&quot;);
-}
-</code></pre>
+  <span class="k">const</span> <span class="n">Pair</span> <span class="n">p5</span> <span class="o">=</span> <span class="n">SplitPair</span><span class="p">(</span><span class="s">&quot; n ame  </span><span class="se">\t</span><span class="s"> =  va lue  </span><span class="se">\r\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="sc">&#39;=&#39;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p5</span><span class="p">.</span><span class="n">first</span> <span class="o">==</span> <span class="s">&quot; n ame  </span><span class="se">\t</span><span class="s"> &quot;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p5</span><span class="p">.</span><span class="n">second</span> <span class="o">==</span> <span class="s">&quot;  va lue  </span><span class="se">\r\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Any ways to make to better? The ideal solution is to split to multiple tests. But even less radical approach works to avoid copy-paste problems:</p>
 
-<pre><code class="cpp">void Test_SplitPair() {
-  typedef std::pair&lt;std::string, std::string&gt; Pair;
-  using string::SplitPair;
-  {
-  const Pair p = SplitPair(&quot;&quot;, '=');
-  assert(p.first.empty());
-  assert(p.second.empty());
-  }
-  {
-  const Pair p = SplitPair(&quot;=&quot;, '=');
-  assert(p.first.empty());
-  assert(p.second.empty());
-  }
-  {
-  const Pair p = SplitPair(&quot;name=value&quot;, '=');
-  assert(p.first == &quot;name&quot;);
-  assert(p.second == &quot;value&quot;);
-  }
-  {
-  const Pair p = SplitPair(&quot;name = value&quot;, '=');
-  assert(p.first == &quot;name&quot;);
-  assert(p.second == &quot;value&quot;);
-  }
-  {
-  const Pair p = SplitPair(&quot; n ame  \t =  va lue  \r\n&quot;, '=');
-  assert(p.first == &quot; n ame  \t &quot;);
-  assert(p.second == &quot;  va lue  \r\n&quot;);
-  }
-}
-</code></pre>
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">Test_SplitPair</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">Pair</span><span class="p">;</span>
+  <span class="k">using</span> <span class="n">string</span><span class="o">::</span><span class="n">SplitPair</span><span class="p">;</span>
+  <span class="p">{</span>
+  <span class="k">const</span> <span class="n">Pair</span> <span class="n">p</span> <span class="o">=</span> <span class="n">SplitPair</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="sc">&#39;=&#39;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">empty</span><span class="p">());</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">empty</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="p">{</span>
+  <span class="k">const</span> <span class="n">Pair</span> <span class="n">p</span> <span class="o">=</span> <span class="n">SplitPair</span><span class="p">(</span><span class="s">&quot;=&quot;</span><span class="p">,</span> <span class="sc">&#39;=&#39;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">empty</span><span class="p">());</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">empty</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="p">{</span>
+  <span class="k">const</span> <span class="n">Pair</span> <span class="n">p</span> <span class="o">=</span> <span class="n">SplitPair</span><span class="p">(</span><span class="s">&quot;name=value&quot;</span><span class="p">,</span> <span class="sc">&#39;=&#39;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">first</span> <span class="o">==</span> <span class="s">&quot;name&quot;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">second</span> <span class="o">==</span> <span class="s">&quot;value&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="p">{</span>
+  <span class="k">const</span> <span class="n">Pair</span> <span class="n">p</span> <span class="o">=</span> <span class="n">SplitPair</span><span class="p">(</span><span class="s">&quot;name = value&quot;</span><span class="p">,</span> <span class="sc">&#39;=&#39;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">first</span> <span class="o">==</span> <span class="s">&quot;name&quot;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">second</span> <span class="o">==</span> <span class="s">&quot;value&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="p">{</span>
+  <span class="k">const</span> <span class="n">Pair</span> <span class="n">p</span> <span class="o">=</span> <span class="n">SplitPair</span><span class="p">(</span><span class="s">&quot; n ame  </span><span class="se">\t</span><span class="s"> =  va lue  </span><span class="se">\r\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="sc">&#39;=&#39;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">first</span> <span class="o">==</span> <span class="s">&quot; n ame  </span><span class="se">\t</span><span class="s"> &quot;</span><span class="p">);</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">second</span> <span class="o">==</span> <span class="s">&quot;  va lue  </span><span class="se">\r\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
 </div>
 

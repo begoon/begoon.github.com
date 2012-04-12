@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -47,19 +48,19 @@
 
 <p>Фрагмент кода, в котором рабочий цикл имеет условие, позволяющее ему работать время, близкое к одной секунде:</p>
 
-<pre><code class="cpp">...
-// Получаем номер текущей секунды
-time_t started = time(NULL);
-// Ждем перехода на следующую секунду
-while (time(NULL) == started);
-// И сразу запускаем рабочий цикл
-started = time(NULL);
-do {
-   // Цикл, работающий в течение секунды
-   ...
-} while (time(NULL) == started);
-...
-</code></pre>
+<div class="highlight"><pre><span class="p">...</span>
+<span class="c1">// Получаем номер текущей секунды</span>
+<span class="n">time_t</span> <span class="n">started</span> <span class="o">=</span> <span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+<span class="c1">// Ждем перехода на следующую секунду</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">)</span> <span class="o">==</span> <span class="n">started</span><span class="p">);</span>
+<span class="c1">// И сразу запускаем рабочий цикл</span>
+<span class="n">started</span> <span class="o">=</span> <span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+<span class="k">do</span> <span class="p">{</span>
+   <span class="c1">// Цикл, работающий в течение секунды</span>
+   <span class="p">...</span>
+<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">)</span> <span class="o">==</span> <span class="n">started</span><span class="p">);</span>
+<span class="p">...</span>
+</pre></div>
 
 <p>Тут, конечно, есть недостатки. Подготовительный цикл ожидания перехода на следующую секунду может &ldquo;есть&rdquo; процессорное время, если <code>time()</code> для вашей системы не отдает time slice. Также сложно сделать какой-то надежный универсальный шаблон или макрос, так как надо гарантированно избежать какого-либо лишнего кода, чтобы не терять точность.</p>
 

@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -50,13 +51,13 @@
 
 <p>Опять таки приятно, что включили <a href="http://code.google.com/p/googletest/source/detail?r=184&amp;path=/trunk/test/gtest_unittest.cc">мой микропатч</a> для возможности установки флагов командной строки прямо в исходниках тестов. Это очень удобно. Например, есть возможность печати времени работы тестов. Но по умолчанию эта функция выключена, и для ее включения надо в командной строке сказать <code>--gtest_print_time</code>. Неудобно постоянно таскать за собой этот ключ. Теперь же можно прямо в тексте тестов, например, в головном модуле, задать этот параметр:</p>
 
-<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
-int main(int argc, char* argv[]) {
-  testing::InitGoogleTest(&amp;argc, argv);
-  testing::GTEST_FLAG(print_time) = true; 
-  return RUN_ALL_TESTS();
-}
-</code></pre>
+<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+  <span class="n">testing</span><span class="o">::</span><span class="n">GTEST_FLAG</span><span class="p">(</span><span class="n">print_time</span><span class="p">)</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span> 
+  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Итак, новые возможности версии 1.3.0:</p>
 
@@ -70,89 +71,89 @@ int main(int argc, char* argv[]) {
 
 <p>Файл <code>runner.cpp</code>:</p>
 
-<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
 
-#include &lt;fstream&gt;
-#include &lt;iostream&gt;
-#include &lt;cstdlib&gt;
+<span class="cp">#include &lt;fstream&gt;</span>
+<span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;cstdlib&gt;</span>
 
-// -------------------------------------------------------
+<span class="c1">// -------------------------------------------------------</span>
 
-// Данная функция, если файл не существует, печатает сообщение
-// об ошибке и завершает программу с ненулевым кодом.
-void openfile(const char* name) {
-  std::ifstream is(name);
-  if (!is) {
-    std::cerr &lt;&lt; &quot;Unable to open the file&quot; &lt;&lt; std::endl;
-    std::exit(1);  
-  }
-}
+<span class="c1">// Данная функция, если файл не существует, печатает сообщение</span>
+<span class="c1">// об ошибке и завершает программу с ненулевым кодом.</span>
+<span class="kt">void</span> <span class="n">openfile</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">is</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">is</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Unable to open the file&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>  
+  <span class="p">}</span>
+<span class="p">}</span>
 
-// Тест для функции openfile().
-TEST(OpenFileDeathTest, ExitIfNoFile) {
-  // Задаем заведомо несуществующий файл и смотрим - завершилась
-  // ли программа с ненулевым кодом. Также проверяем регулярным
-  // выражением то, что программа напечатала при выходе.
-  // Мы ожидаем слово &quot;open&quot; среди остального вывода.
-  ASSERT_DEATH({ openfile(&quot;__nofile__&quot;); }, &quot;.*open.*&quot;);
-}
+<span class="c1">// Тест для функции openfile().</span>
+<span class="n">TEST</span><span class="p">(</span><span class="n">OpenFileDeathTest</span><span class="p">,</span> <span class="n">ExitIfNoFile</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Задаем заведомо несуществующий файл и смотрим - завершилась</span>
+  <span class="c1">// ли программа с ненулевым кодом. Также проверяем регулярным</span>
+  <span class="c1">// выражением то, что программа напечатала при выходе.</span>
+  <span class="c1">// Мы ожидаем слово &quot;open&quot; среди остального вывода.</span>
+  <span class="n">ASSERT_DEATH</span><span class="p">({</span> <span class="n">openfile</span><span class="p">(</span><span class="s">&quot;__nofile__&quot;</span><span class="p">);</span> <span class="p">},</span> <span class="s">&quot;.*open.*&quot;</span><span class="p">);</span>
+<span class="p">}</span>
 
-// -------------------------------------------------------
+<span class="c1">// -------------------------------------------------------</span>
 
-// Данная функция должна падать с assert'ом, если делитель
-// равен нулю.
-int divide(int a, int b) {
-  assert(b != 0);
-  return a / b;
-}
+<span class="c1">// Данная функция должна падать с assert&#39;ом, если делитель</span>
+<span class="c1">// равен нулю.</span>
+<span class="kt">int</span> <span class="n">divide</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">b</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
 
-// Тест для assert'а в функции divide().
-TEST(AssertDeathTest, DivideByZero) {
-  // Задаем нулевой делитель и смотрим - упала или нет.
-  // Вывод программы при падении не проверяем.
-  ASSERT_DEATH({ divide(1, 0); }, &quot;&quot;);
-}
+<span class="c1">// Тест для assert&#39;а в функции divide().</span>
+<span class="n">TEST</span><span class="p">(</span><span class="n">AssertDeathTest</span><span class="p">,</span> <span class="n">DivideByZero</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Задаем нулевой делитель и смотрим - упала или нет.</span>
+  <span class="c1">// Вывод программы при падении не проверяем.</span>
+  <span class="n">ASSERT_DEATH</span><span class="p">({</span> <span class="n">divide</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span> <span class="p">},</span> <span class="s">&quot;&quot;</span><span class="p">);</span>
+<span class="p">}</span>
 
-// -------------------------------------------------------
+<span class="c1">// -------------------------------------------------------</span>
 
-// Данная функция должна при ненулевом коде завершать
-// программу, прибавив к заданному коду ошибки 50.
-void abandon(int code) {
-  if (code != 0) std::exit(code + 50);
-}
+<span class="c1">// Данная функция должна при ненулевом коде завершать</span>
+<span class="c1">// программу, прибавив к заданному коду ошибки 50.</span>
+<span class="kt">void</span> <span class="n">abandon</span><span class="p">(</span><span class="kt">int</span> <span class="n">code</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">code</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="n">std</span><span class="o">::</span><span class="n">exit</span><span class="p">(</span><span class="n">code</span> <span class="o">+</span> <span class="mi">50</span><span class="p">);</span>
+<span class="p">}</span>
 
-// Тест для функции abandon().
-TEST(AbandonDeathTest, ExitCode) {
-  // Вызываем функцию и смотрим код возврата.
-  // Вывод программы при выходе не проверяем.
-  ASSERT_EXIT(abandon(200), testing::ExitedWithCode(250), &quot;&quot;);
-}
+<span class="c1">// Тест для функции abandon().</span>
+<span class="n">TEST</span><span class="p">(</span><span class="n">AbandonDeathTest</span><span class="p">,</span> <span class="n">ExitCode</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Вызываем функцию и смотрим код возврата.</span>
+  <span class="c1">// Вывод программы при выходе не проверяем.</span>
+  <span class="n">ASSERT_EXIT</span><span class="p">(</span><span class="n">abandon</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span> <span class="n">testing</span><span class="o">::</span><span class="n">ExitedWithCode</span><span class="p">(</span><span class="mi">250</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">);</span>
+<span class="p">}</span>
 
-// -------------------------------------------------------
+<span class="c1">// -------------------------------------------------------</span>
 
-// Заведомо неработающий “сломанный” тест.
-// Если имя группы тестов или теста в отдельности предварить
-// словом DISABLED_, то тест не будет участвовать с запуске.
-// Это удобно, когда какой-то тест сломан, времени на его
-// отладку нет, но убирать его из тестирования совсем нельзя.
-// В это случае его можно отключить. Google Test при каждом
-// запуске будет напоминать, сколько имеется отключенных тестов.
-// В процессе же работы над тестом можно запускать программу
-// с параметром &quot;--gtest_also_run_disabled_tests&quot;, который
-// будет проверять также и отключенные тесты.
-TEST(BadTest, DISABLED_Test) {
-  FAIL();
-}
+<span class="c1">// Заведомо неработающий “сломанный” тест.</span>
+<span class="c1">// Если имя группы тестов или теста в отдельности предварить</span>
+<span class="c1">// словом DISABLED_, то тест не будет участвовать с запуске.</span>
+<span class="c1">// Это удобно, когда какой-то тест сломан, времени на его</span>
+<span class="c1">// отладку нет, но убирать его из тестирования совсем нельзя.</span>
+<span class="c1">// В это случае его можно отключить. Google Test при каждом</span>
+<span class="c1">// запуске будет напоминать, сколько имеется отключенных тестов.</span>
+<span class="c1">// В процессе же работы над тестом можно запускать программу</span>
+<span class="c1">// с параметром &quot;--gtest_also_run_disabled_tests&quot;, который</span>
+<span class="c1">// будет проверять также и отключенные тесты.</span>
+<span class="n">TEST</span><span class="p">(</span><span class="n">BadTest</span><span class="p">,</span> <span class="n">DISABLED_Test</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">FAIL</span><span class="p">();</span>
+<span class="p">}</span>
 
-// -------------------------------------------------------
+<span class="c1">// -------------------------------------------------------</span>
 
-int main(int argc, char* argv[]) {
-  testing::InitGoogleTest(&amp;argc, argv);
-  // Принудительно печатаем время работы тестов.
-  testing::GTEST_FLAG(print_time) = true;
-  return RUN_ALL_TESTS();
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+  <span class="c1">// Принудительно печатаем время работы тестов.</span>
+  <span class="n">testing</span><span class="o">::</span><span class="n">GTEST_FLAG</span><span class="p">(</span><span class="n">print_time</span><span class="p">)</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Компилируем в Visual Studio:</p>
 

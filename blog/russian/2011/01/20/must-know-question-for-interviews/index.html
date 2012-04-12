@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -65,18 +66,18 @@
 
 <p><strong>3. (Хит!) Что распечатает данная программа? (не забываем, что собеседование на позицию разработчика на C/C++). В принципе, его тоже можно задать по телефону.</strong></p>
 
-<pre><code class="cpp">char* f() {
-  char buf[100];
-  strcpy(buf, &quot;TEST”);
-  return buf;
-}
+<div class="highlight"><pre><span class="kt">char</span><span class="o">*</span> <span class="n">f</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+  <span class="n">strcpy</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s">&quot;TEST”);</span>
+  <span class="k">return</span> <span class="n">buf</span><span class="p">;</span>
+<span class="p">}</span>
 
-int main() {
-  char* s = f();
-  /* (1) */
-  printf(&quot;%s\n&quot;, s);
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">char</span><span class="o">*</span> <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="p">();</span>
+  <span class="cm">/* (1) */</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Ответ: &ldquo;Нельзя сказать с уверенностью, скорее всего мусор, но в целом это неопределенное поведение, так как локальный буфер формально прекращает существование после выхода из функции f()&rdquo; является почти исчерпывающим.</p>
 

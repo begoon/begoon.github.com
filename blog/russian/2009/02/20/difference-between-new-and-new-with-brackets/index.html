@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -51,18 +52,18 @@
 
 <p>Забавно, структура:</p>
 
-<pre><code class="cpp">struct A {
-  int b;
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">A</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>является POD-типом, а вот если добавить в нее, например, слово <code>public</code>:</p>
 
-<pre><code class="cpp">struct A {
-public:
-  int b;
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">A</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>то по стандарту это не POD-объект, и его нельзя уже трогать на уровне внутреннего представления, например обнулить через <code>memset</code>. Хотя многие компиляторы разрешают такие &ldquo;игры&rdquo; с не POD-объектами и, программа может в принципе работать, но это против стандарта, и, конечно, против переносимости программы.</p>
 
@@ -72,36 +73,36 @@ public:
 
 <p>Итак, первый пример:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
-#include &lt;cstdlib&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;cstdlib&gt;</span>
 
-class T {
-public:
-  // Для простоты экспериментируем на однобайтовом типе.
-  unsigned char n;
-};
+<span class="k">class</span> <span class="nc">T</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="c1">// Для простоты экспериментируем на однобайтовом типе.</span>
+  <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">n</span><span class="p">;</span>
+<span class="p">};</span>
 
-int main() {
-  // &quot;Случайная&quot; память для создания объекта.
-  // Берем с запасом, чтобы уж точно вместить объект класса T.
-  char p[10240];
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// &quot;Случайная&quot; память для создания объекта.</span>
+  <span class="c1">// Берем с запасом, чтобы уж точно вместить объект класса T.</span>
+  <span class="kt">char</span> <span class="n">p</span><span class="p">[</span><span class="mi">10240</span><span class="p">];</span>
 
-  // Заполняем память числом 170 (0xAA)
-  std::memset(p, 170 /* 0xAA */, sizeof(p));
-  // Создаем объект явно в памяти, заполненной числом 170.
-  T* a = new (p) T;
-  std::cout &lt;&lt; &quot;new T: T.n = &quot; &lt;&lt; (int)a-&gt;n &lt;&lt; std::endl;
+  <span class="c1">// Заполняем память числом 170 (0xAA)</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">memset</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">170</span> <span class="cm">/* 0xAA */</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">p</span><span class="p">));</span>
+  <span class="c1">// Создаем объект явно в памяти, заполненной числом 170.</span>
+  <span class="n">T</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="n">T</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;new T: T.n = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-  // Заполняем память числом 171 (0xAB)
-  std::memset(p, 171 /* 0xAB */, sizeof(p));
+  <span class="c1">// Заполняем память числом 171 (0xAB)</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">memset</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">171</span> <span class="cm">/* 0xAB */</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">p</span><span class="p">));</span>
 
-  // Создаем объект явно в памяти, заполненной числом 171.
-  T* b = new (p) T();
-  std::cout &lt;&lt; &quot;new T(): T.n = &quot; &lt;&lt; (int)b-&gt;n &lt;&lt; std::endl;
+  <span class="c1">// Создаем объект явно в памяти, заполненной числом 171.</span>
+  <span class="n">T</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="n">T</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;new T(): T.n = &quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">b</span><span class="o">-&gt;</span><span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-  return 0;
-}
-</code></pre>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Данный пример выведет:</p>
 
@@ -113,14 +114,14 @@ new T(): T.n = 0
 
 <p>Теперь изменим одну маленькую деталь — добавим в класс <code>Т</code> явный конструктор:</p>
 
-<pre><code class="cpp">class T {
-public:
-  // Явный конструктор.
-  T() {}
-  // Для простоты экспериментируем на однобайтовом типе.
-  unsigned char n;
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">T</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="c1">// Явный конструктор.</span>
+  <span class="n">T</span><span class="p">()</span> <span class="p">{}</span>
+  <span class="c1">// Для простоты экспериментируем на однобайтовом типе.</span>
+  <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">n</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>Теперь нас ждет сюрприз. Теперь программа будет выводить следующее:</p>
 

@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -45,15 +46,15 @@
 
 <p>To build a final HTML file from a bunch of tiny files I used a very simple program. Here is a bit of code from it:</p>
 
-<pre><code class="cpp">...
-  while (!feof(f)) {
-    char line[1024];
-    *line = 0;
-    fgets(line, sizeof(line), f);
-    printf(line);
-  }
-...
-</code></pre>
+<div class="highlight"><pre><span class="p">...</span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">feof</span><span class="p">(</span><span class="n">f</span><span class="p">))</span> <span class="p">{</span>
+    <span class="kt">char</span> <span class="n">line</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
+    <span class="o">*</span><span class="n">line</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">fgets</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">line</span><span class="p">),</span> <span class="n">f</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">...</span>
+</pre></div>
 
 <p>Implied that this code should copy all lines from a file <code>f</code> to the standard output.</p>
 
@@ -73,13 +74,13 @@
 
 <p>So instead of:</p>
 
-<pre><code class="cpp">printf(line);
-</code></pre>
+<div class="highlight"><pre><span class="n">printf</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
+</pre></div>
 
 <p>I had to write:</p>
 
-<pre><code class="cpp">printf(&quot;%s&quot;, line);
-</code></pre>
+<div class="highlight"><pre><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">);</span>
+</pre></div>
 
 <p>Otherwise all percentage characters are treated as formatters because the first parameter of <code>printf()</code> is a format and all non-escaped <code>%</code> characters will be deleted. That is what was happening to me.</p>
 

@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -41,18 +42,18 @@
 <div id="post">
   <p>Let&rsquo;s say there is a class with following interface:</p>
 
-<pre><code class="cpp">class Date {
- public:
-  Date(int year, int month, int day) {
-    ...
-  }
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Date</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="n">Date</span><span class="p">(</span><span class="kt">int</span> <span class="n">year</span><span class="p">,</span> <span class="kt">int</span> <span class="n">month</span><span class="p">,</span> <span class="kt">int</span> <span class="n">day</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">...</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>Unfortunately not everybody in the world uses the same quite logical notation of Year/Month/Day or Day/Month/Year. Some people prefer Month/Day/Year. But even the first two could be easily mixed up. If the following is written:</p>
 
-<pre><code class="cpp">Data d(2009, 4, 5);
-</code></pre>
+<div class="highlight"><pre><span class="n">Data</span> <span class="n">d</span><span class="p">(</span><span class="mi">2009</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+</pre></div>
 
 <p>Is it 4th of May or 5th of April? Who can be entirely sure what it exactly means without looking in the class declaration?</p>
 
@@ -60,40 +61,40 @@
 
 <p>For instance:</p>
 
-<pre><code class="cpp">class Year {
- public:
-  explicit Year(int year) : year_(year) {}
-  operator int() const { return year_; }
- private:
-  int year_;
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Year</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="k">explicit</span> <span class="n">Year</span><span class="p">(</span><span class="kt">int</span> <span class="n">year</span><span class="p">)</span> <span class="o">:</span> <span class="n">year_</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="k">operator</span> <span class="kt">int</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">year_</span><span class="p">;</span> <span class="p">}</span>
+ <span class="k">private</span><span class="o">:</span>
+  <span class="kt">int</span> <span class="n">year_</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>And similar for the rest:</p>
 
-<pre><code class="cpp">class Month { ... };
-class Day { ... };
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Month</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+<span class="k">class</span> <span class="nc">Day</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+</pre></div>
 
 <p>Now the interface could look this way:</p>
 
-<pre><code class="cpp">class Date {
- public:
-   Date(Year year, Month month, Day day);
-   Date(Month month, Day day, Year year);
-   Date(Day day, Month month, Year year);
-}
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Date</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+   <span class="n">Date</span><span class="p">(</span><span class="n">Year</span> <span class="n">year</span><span class="p">,</span> <span class="n">Month</span> <span class="n">month</span><span class="p">,</span> <span class="n">Day</span> <span class="n">day</span><span class="p">);</span>
+   <span class="n">Date</span><span class="p">(</span><span class="n">Month</span> <span class="n">month</span><span class="p">,</span> <span class="n">Day</span> <span class="n">day</span><span class="p">,</span> <span class="n">Year</span> <span class="n">year</span><span class="p">);</span>
+   <span class="n">Date</span><span class="p">(</span><span class="n">Day</span> <span class="n">day</span><span class="p">,</span> <span class="n">Month</span> <span class="n">month</span><span class="p">,</span> <span class="n">Year</span> <span class="n">year</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>We can instantiate the class as:</p>
 
-<pre><code class="cpp">Date d(Year(2010), Month(4), Day(5));
-</code></pre>
+<div class="highlight"><pre><span class="n">Date</span> <span class="n">d</span><span class="p">(</span><span class="n">Year</span><span class="p">(</span><span class="mi">2010</span><span class="p">),</span> <span class="n">Month</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">Day</span><span class="p">(</span><span class="mi">5</span><span class="p">));</span>
+</pre></div>
 
 <p>or</p>
 
-<pre><code class="cpp">Date d(Month(4), Day(5), Year(2010));
-</code></pre>
+<div class="highlight"><pre><span class="n">Date</span> <span class="n">d</span><span class="p">(</span><span class="n">Month</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">Day</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">Year</span><span class="p">(</span><span class="mi">2010</span><span class="p">));</span>
+</pre></div>
 
 <p>The result is always visible and fully predictable in a calling code. Everything will be inlined so no slow down involved at all because of those three &ldquo;unnecessary&rdquo; classes.</p>
 

@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -46,11 +47,11 @@
 
 <p>Долгое время я использовал вот такой скрипт <code>backup.cmd</code>:</p>
 
-<pre><code class="bat">rem Берем имя родительского каталога без полного пути.
-for %%I in (.) do set CWD=%%~nI
-rem Архивируем.
-winrar a -v -r -s -ag-YYYY.MM.DD-HH.MM.SS -x*.rar -x*.7z %CWD%
-</code></pre>
+<div class="highlight"><pre><span class="c">rem Берем имя родительского каталога без полного пути.</span>
+<span class="k">for</span> <span class="nv">%%I</span> in (.) <span class="k">do</span> <span class="k">set</span> <span class="nv">CWD</span><span class="o">=</span><span class="nv">%%~nI</span>
+<span class="c">rem Архивируем.</span>
+winrar a -v -r -s -ag-YYYY.MM.DD-HH.MM.SS -x*.rar -x*.<span class="m">7</span>z <span class="nv">%CWD%</span>
+</pre></div>
 
 <p>Просто бросаешь какой скрипт в каталог любого проекта (имя каталога должно быть сообразно проекту) и все, можно архивировать. Скрипт берет имя каталога как базу и добавляет к ней дату и время с помощью удобной опции архиватора RAR.</p>
 
@@ -58,29 +59,29 @@ winrar a -v -r -s -ag-YYYY.MM.DD-HH.MM.SS -x*.rar -x*.7z %CWD%
 
 <p>В этоге родился скрипт <code>backup-7z.cmd</code>:</p>
 
-<pre><code class="bat">@echo off
-setlocal
-set line=%DATE%
-rem Проходимся по строке вида DD/MM/YYYY и
-rem превращаем ее в YYYY.MM.DD.
-:parse_date
-for /F &quot;delims=/ tokens=1,*&quot; %%a in (&quot;%line%&quot;) do (
-  set line=%%b
-  set now=%%a.%now%
+<div class="highlight"><pre><span class="p">@</span><span class="k">echo</span> <span class="k">off</span>
+<span class="k">setlocal</span>
+<span class="k">set</span> <span class="nv">line</span><span class="o">=</span><span class="nv">%DATE%</span>
+<span class="c">rem Проходимся по строке вида DD/MM/YYYY и</span>
+<span class="c">rem превращаем ее в YYYY.MM.DD.</span>
+<span class="nl">:parse_date</span>
+<span class="k">for</span> <span class="n">/F</span> <span class="s2">&quot;delims=/ tokens=1,*&quot;</span> <span class="nv">%%a</span> in (<span class="s2">&quot;%line%&quot;</span>) <span class="k">do</span> (
+  <span class="k">set</span> <span class="nv">line</span><span class="o">=</span><span class="nv">%%b</span>
+  <span class="k">set</span> <span class="nv">now</span><span class="o">=</span><span class="nv">%%a</span>.<span class="nv">%now%</span>
 )
-if &quot;%line%&quot; neq &quot;&quot; goto parse_date
-rem Отрезаем хвостовую точку от даты.
-set now=%now:~0,10%
-rem Добавляем время. Оно уже в формате HH:MM:SS.ms. Отрезаем доли секунды.
-set now=%now%-%TIME:~0,8%
-rem Заменяем двоеточие на точку
-set now=%now::=.%
-rem Берем имя родительского каталога без полного пути.
-for %%I in (.) do set CWD=%%~nI
-rem Архивируем.
-7z a -mx9 -r -x!*.rar -x!*.7z %CWD%-%now%.7z
-endlocal
-</code></pre>
+<span class="k">if</span> <span class="s2">&quot;%line%&quot;</span> <span class="o">neq</span> <span class="s2">&quot;&quot;</span> <span class="k">goto</span> <span class="nl">parse_date</span>
+<span class="c">rem Отрезаем хвостовую точку от даты.</span>
+<span class="k">set</span> <span class="nv">now</span><span class="o">=</span><span class="nv">%now:~0</span><span class="p">,</span><span class="m">10</span>%
+<span class="c">rem Добавляем время. Оно уже в формате HH:MM:SS.ms. Отрезаем доли секунды.</span>
+<span class="k">set</span> <span class="nv">now</span><span class="o">=</span><span class="nv">%now%</span>-<span class="nv">%TIME:~0</span><span class="p">,</span><span class="m">8</span>%
+<span class="c">rem Заменяем двоеточие на точку</span>
+<span class="k">set</span> <span class="nv">now</span><span class="o">=</span><span class="nv">%now::</span><span class="o">=</span>.%
+<span class="c">rem Берем имя родительского каталога без полного пути.</span>
+<span class="k">for</span> <span class="nv">%%I</span> in (.) <span class="k">do</span> <span class="k">set</span> <span class="nv">CWD</span><span class="o">=</span><span class="nv">%%~nI</span>
+<span class="c">rem Архивируем.</span>
+<span class="m">7</span>z a -mx<span class="m">9</span> -r -x!*.rar -x!*.<span class="m">7</span>z <span class="nv">%CWD%</span>-<span class="nv">%now%</span>.<span class="m">7</span>z
+<span class="k">endlocal</span>
+</pre></div>
 
 <p>Это скрипт делает все как и раньше, но только для 7z.</p>
 

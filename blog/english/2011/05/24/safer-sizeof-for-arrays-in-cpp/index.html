@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -43,17 +44,17 @@
 
 <p>For example, it can be done this way:</p>
 
-<pre><code class="cpp">#define arraysize(array) (sizeof(array) / sizeof(array[0]))
-</code></pre>
+<div class="highlight"><pre><span class="cp">#define arraysize(array) (sizeof(array) / sizeof(array[0]))</span>
+</pre></div>
 
 <p>But there is a little problem over there. If accidently a pointer is passed to the this macro instead of an array, the code still compiles but the value will be far from being conceived.</p>
 
 <p>There is a way to make this macro safer.</p>
 
-<pre><code class="cpp">template &lt;typename T, size_t N&gt;
-char (&amp;ArraySizeHelper(T (&amp;array)[N]))[N];
-#define arraysize(array) (sizeof(ArraySizeHelper(array)))
-</code></pre>
+<div class="highlight"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">N</span><span class="o">&gt;</span>
+<span class="kt">char</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">ArraySizeHelper</span><span class="p">(</span><span class="n">T</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">array</span><span class="p">)[</span><span class="n">N</span><span class="p">]))[</span><span class="n">N</span><span class="p">];</span>
+<span class="cp">#define arraysize(array) (sizeof(ArraySizeHelper(array)))</span>
+</pre></div>
 
 <p>Looks cryptic, but we can break it apart:</p>
 
@@ -68,41 +69,41 @@ char (&amp;ArraySizeHelper(T (&amp;array)[N]))[N];
 
 <p>By the way, we can play with <code>sizeof()</code> of the function return value type:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
-#include &lt;string&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;string&gt;</span>
 
-std::string f() {
-  return std::string();
-}
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">f</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">();</span>
+<span class="p">}</span>
 
-int main() {
-  std::cout &lt;&lt; sizeof( (&amp;f)() ) &lt;&lt; std::endl;
-  std::cout &lt;&lt; sizeof( std::string ) &lt;&lt; std::endl;
-  return 0;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">f</span><span class="p">)()</span> <span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>My VS2010 prints out &ldquo;28&rdquo; twice.</p>
 
 <p>Interestingly, in C it is also possible:</p>
 
-<pre><code class="cpp">#include &lt;stdio.h&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
 
-struct t {
-  char x[1024];
-};
+<span class="k">struct</span> <span class="n">t</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="n">x</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
+<span class="p">};</span>
 
-struct t f() {
-  struct t a;
-  return a;
-}
+<span class="k">struct</span> <span class="n">t</span> <span class="n">f</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">struct</span> <span class="n">t</span> <span class="n">a</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">a</span><span class="p">;</span>
+<span class="p">}</span>
 
-int main() {
-  printf(&quot;%d\n&quot;, sizeof(struct t));
-  printf(&quot;%d\n&quot;, sizeof( (*f)() ));
-  return 0;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">t</span><span class="p">));</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)()</span> <span class="p">));</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>It prints out <code>1024</code> twice.</p>
 

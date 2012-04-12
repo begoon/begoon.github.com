@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,39 +42,39 @@
 <div id="post">
   <p>Как совершенно справедливо было замечено в комментариях в <a href="/blog/russian/2009/02/20/difference-between-new-and-new-with-brackets/">посте про разницу между &ldquo;new T()&rdquo; и &ldquo;new T&rdquo;</a> — при объявлении автоматической переменной, а не динамической через new, нельзя использовать скобки, если подразумевается вызвать конструктор по умолчанию. То есть нельзя писать:</p>
 
-<pre><code class="cpp">T a();
-</code></pre>
+<div class="highlight"><pre><span class="n">T</span> <span class="n">a</span><span class="p">();</span>
+</pre></div>
 
 <p>а надо писать:</p>
 
-<pre><code class="cpp">T a;
-</code></pre>
+<div class="highlight"><pre><span class="n">T</span> <span class="n">a</span><span class="p">;</span>
+</pre></div>
 
 <p>так как в первом случае такая запись будет означать декларацию функции a, которая возвращает тип <code>T</code>, а далеко не декларацию переменной класса <code>T</code> с вызовом конструктора по умолчанию.</p>
 
 <p>Не спорю, это очевидно для профессионалов. Для новичков же порой подобная &ldquo;неочевидная&rdquo; разница вызывает затруднения, поэтому приведу простейший пример, которые расставит все на свои места.</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
-class T {
-public:
-  T() { std::cout &lt;&lt; &quot;constructor T()&quot;; }
-};
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="k">class</span> <span class="nc">T</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">T</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;constructor T()&quot;</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
 
-int main() {
-  std::cout &lt;&lt; &quot;T a: &quot;;
-  // Это синтаксис создания экземпляра класса T с вызовом
-  // конструктора по умолчанию.
-  T a;
-  std::cout &lt;&lt; std::endl;
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T a: &quot;</span><span class="p">;</span>
+  <span class="c1">// Это синтаксис создания экземпляра класса T с вызовом</span>
+  <span class="c1">// конструктора по умолчанию.</span>
+  <span class="n">T</span> <span class="n">a</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-  std::cout &lt;&lt; &quot;T b(): &quot;;
-  // А вот это декларация функции &quot;b&quot; без аргументов,
-  // которая возвращает тип T.
-  T b();
-  std::cout &lt;&lt; std::endl;
-  return 0;
-}
-</code></pre>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T b(): &quot;</span><span class="p">;</span>
+  <span class="c1">// А вот это декларация функции &quot;b&quot; без аргументов,</span>
+  <span class="c1">// которая возвращает тип T.</span>
+  <span class="n">T</span> <span class="n">b</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Результат:</p>
 

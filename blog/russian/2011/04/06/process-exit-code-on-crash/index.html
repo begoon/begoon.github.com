@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -47,25 +48,25 @@
 
 <p>В итоге я написал небольшую самопадающую программу:</p>
 
-<pre><code class="cpp">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;string.h&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
+<span class="cp">#include &lt;string.h&gt;</span>
 
-int main(int argc, char* argv[]) {
-  char cmd[80];
-  int r;
-  sprintf(cmd, &quot;%s ?&quot;, argv[0]);
-  if (argc &gt; 1) {
-    if (argv[1][strlen(argv[1]) - 1] == '1')
-      *(char *)0 = 0;
-    exit(0x77);
-  }
-  printf(&quot;Normal: %08X\n&quot;, system(cmd));
-  cmd[strlen(cmd) - 1] = '1';
-  printf(&quot;Crash : %08X\n&quot;, system(cmd));
-  return 0;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="n">cmd</span><span class="p">[</span><span class="mi">80</span><span class="p">];</span>
+  <span class="kt">int</span> <span class="n">r</span><span class="p">;</span>
+  <span class="n">sprintf</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="s">&quot;%s ?&quot;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">strlen</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sc">&#39;1&#39;</span><span class="p">)</span>
+      <span class="o">*</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="mi">0</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">exit</span><span class="p">(</span><span class="mh">0x77</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Normal: %08X</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">));</span>
+  <span class="n">cmd</span><span class="p">[</span><span class="n">strlen</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;1&#39;</span><span class="p">;</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Crash : %08X</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">));</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>И запустил на некоторых характерных машинах.</p>
 

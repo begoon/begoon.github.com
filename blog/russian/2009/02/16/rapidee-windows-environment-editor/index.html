@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -47,17 +48,17 @@
 
 <p>Файл <code>splitpath.cmd</code>:</p>
 
-<pre><code class="bat">@echo off 
-set line=%path%
-setlocal 
-:parse_line
-for /F &quot;delims=; tokens=1,*&quot; %%a in (&quot;%line%&quot;) do (
-   echo %%a
-   set line=%%b
+<div class="highlight"><pre><span class="p">@</span><span class="k">echo</span> <span class="k">off</span> 
+<span class="k">set</span> <span class="nv">line</span><span class="o">=</span><span class="nv">%path%</span>
+<span class="k">setlocal</span> 
+<span class="nl">:parse_line</span>
+<span class="k">for</span> <span class="n">/F</span> <span class="s2">&quot;delims=; tokens=1,*&quot;</span> <span class="nv">%%a</span> in (<span class="s2">&quot;%line%&quot;</span>) <span class="k">do</span> (
+   <span class="k">echo</span> <span class="nv">%%a</span>
+   <span class="k">set</span> <span class="nv">line</span><span class="o">=</span><span class="nv">%%b</span>
 )
-if &quot;%line%&quot; NEQ &quot;&quot; goto parse_line
-endlocal
-</code></pre>
+<span class="k">if</span> <span class="s2">&quot;%line%&quot;</span> <span class="o">NEQ</span> <span class="s2">&quot;&quot;</span> <span class="k">goto</span> <span class="nl">parse_line</span>
+<span class="k">endlocal</span>
+</pre></div>
 
 <p>Примерный результат его работы выглядит так:</p>
 

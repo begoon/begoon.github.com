@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -44,98 +45,98 @@
 
 <p>Вот оригинал на C++ (рекурсия с кешированием):</p>
 
-<pre><code class="cpp">bignum f(int n, int k, int t, int&amp; K, vector&lt;vector&lt;vector&lt;bignum&gt; &gt; &gt;&amp; dp) {
-  if (n == 0 &amp;&amp; k == 0 &amp;&amp; t == 0) return 1;
-  if (n == 0 || k &lt; 0) return 0;
+<div class="highlight"><pre><span class="n">bignum</span> <span class="n">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">k</span><span class="p">,</span> <span class="kt">int</span> <span class="n">t</span><span class="p">,</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">K</span><span class="p">,</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">bignum</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="o">&gt;&amp;</span> <span class="n">dp</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 
-  if (!(dp[t][n][k] == -1)) return dp[t][n][k];
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="n">n</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">return</span> <span class="n">dp</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="n">n</span><span class="p">][</span><span class="n">k</span><span class="p">];</span>
 
-  bignum ans = 0;
+  <span class="n">bignum</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-  if (k &lt; K) {
-    ans = ans + f(n - 1, k - 1, t, K, dp);
-    if (t == 1 || (t == 0 &amp;&amp; k &lt; K - 1))
-      ans = ans + f(n - 1, k + 1, t, K, dp);
-  }
+  <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="o">&lt;</span> <span class="n">K</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ans</span> <span class="o">=</span> <span class="n">ans</span> <span class="o">+</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">dp</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">||</span> <span class="p">(</span><span class="n">t</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">K</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+      <span class="n">ans</span> <span class="o">=</span> <span class="n">ans</span> <span class="o">+</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">dp</span><span class="p">);</span>
+  <span class="p">}</span>
 
-  if (t == 1 &amp;&amp; k == K) {
-    ans = ans + f(n - 1, k - 1, 0, K, dp);
-    ans = ans + f(n - 1, k - 1, 1, K, dp);
-  }
+  <span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">k</span> <span class="o">==</span> <span class="n">K</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ans</span> <span class="o">=</span> <span class="n">ans</span> <span class="o">+</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">dp</span><span class="p">);</span>
+    <span class="n">ans</span> <span class="o">=</span> <span class="n">ans</span> <span class="o">+</span> <span class="n">f</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">dp</span><span class="p">);</span>
+  <span class="p">}</span>
 
-  dp[t][n][k] = ans;
-  return ans;
-}
-</code></pre>
+  <span class="n">dp</span><span class="p">[</span><span class="n">t</span><span class="p">][</span><span class="n">n</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">ans</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">ans</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>А теперь Эрланг:</p>
 
-<pre><code class="erlang">main(_) -&gt;
-  N = 50, K = 25,
-  io:format(&quot;~w\n&quot;, [rbs(2*N, 0, 1, K)]).
+<div class="highlight"><pre><span class="nf">main</span><span class="p">(_)</span> <span class="o">-&gt;</span>
+  <span class="nv">N</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="nv">K</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+  <span class="nn">io</span><span class="p">:</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~w</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">rbs</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nv">N</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="p">)]).</span>
 
-rbs(0, 0, 0, _) -&gt; 1;
-rbs(0, _, _, _) -&gt; 0;
-rbs(_, K, _, _) when K &lt; 0 -&gt; 0;
+<span class="nf">rbs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">_)</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nf">rbs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">_,</span> <span class="p">_,</span> <span class="p">_)</span> <span class="o">-&gt;</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nf">rbs</span><span class="p">(_,</span> <span class="nv">K</span><span class="p">,</span> <span class="p">_,</span> <span class="p">_)</span> <span class="k">when</span> <span class="nv">K</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">0</span><span class="p">;</span>
 
-rbs(N, K, 0, MAX_K) -&gt;
-  if 
-    K &lt; MAX_K-1 -&gt; rbs(N-1, K-1, 0, MAX_K) + rbs(N-1, K+1, 0, MAX_K);
-    K &lt; MAX_K   -&gt; rbs(N-1, K-1, 0, MAX_K);
-    K =:= MAX_K -&gt; 0
-  end;
+<span class="nf">rbs</span><span class="p">(</span><span class="nv">N</span><span class="p">,</span> <span class="nv">K</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">)</span> <span class="o">-&gt;</span>
+  <span class="k">if</span> 
+    <span class="nv">K</span> <span class="o">&lt;</span> <span class="nv">MAX_K</span><span class="o">-</span><span class="mi">1</span> <span class="o">-&gt;</span> <span class="n">rbs</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">)</span> <span class="o">+</span> <span class="n">rbs</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">);</span>
+    <span class="nv">K</span> <span class="o">&lt;</span> <span class="nv">MAX_K</span>   <span class="o">-&gt;</span> <span class="n">rbs</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">);</span>
+    <span class="nv">K</span> <span class="o">=:=</span> <span class="nv">MAX_K</span> <span class="o">-&gt;</span> <span class="mi">0</span>
+  <span class="k">end</span><span class="p">;</span>
 
-rbs(N, K, 1, MAX_K) -&gt;
-  if
-    K &lt; MAX_K   -&gt; rbs(N-1, K-1, 1, MAX_K) + rbs(N-1, K+1, 1, MAX_K);
-    K =:= MAX_K -&gt; rbs(N-1, K-1, 0, MAX_K) + rbs(N-1, K-1, 1, MAX_K)
-  end.
-</code></pre>
+<span class="nf">rbs</span><span class="p">(</span><span class="nv">N</span><span class="p">,</span> <span class="nv">K</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">)</span> <span class="o">-&gt;</span>
+  <span class="k">if</span>
+    <span class="nv">K</span> <span class="o">&lt;</span> <span class="nv">MAX_K</span>   <span class="o">-&gt;</span> <span class="n">rbs</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">)</span> <span class="o">+</span> <span class="n">rbs</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">);</span>
+    <span class="nv">K</span> <span class="o">=:=</span> <span class="nv">MAX_K</span> <span class="o">-&gt;</span> <span class="n">rbs</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">)</span> <span class="o">+</span> <span class="n">rbs</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">)</span>
+  <span class="k">end</span><span class="p">.</span>
+</pre></div>
 
 <p>Красиво, а?</p>
 
 <p>Но вот увы, кеширование результатов пришлось делать тоже вручную, так как без нее программа имеет экспоненциальное время. Так что итоговый вариант выглядит так:</p>
 
-<pre><code class="erlang">#!/usr/bin/env escript
+<div class="highlight"><pre><span class="err">#</span><span class="o">!/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">env</span> <span class="n">escript</span>
 
-main(_) -&gt;
-  N = 50, K = 25,
-  io:format(&quot;~w\n&quot;, [rbs(2*N, 0, 1, K)]).
+<span class="nf">main</span><span class="p">(_)</span> <span class="o">-&gt;</span>
+  <span class="nv">N</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="nv">K</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+  <span class="nn">io</span><span class="p">:</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~w</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">rbs</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="nv">N</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="p">)]).</span>
 
-rbs(0, 0, 0, _) -&gt; 1;
-rbs(0, _, _, _) -&gt; 0;
-rbs(_, K, _, _) when K &lt; 0 -&gt; 0;
+<span class="nf">rbs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">_)</span> <span class="o">-&gt;</span> <span class="mi">1</span><span class="p">;</span>
+<span class="nf">rbs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">_,</span> <span class="p">_,</span> <span class="p">_)</span> <span class="o">-&gt;</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nf">rbs</span><span class="p">(_,</span> <span class="nv">K</span><span class="p">,</span> <span class="p">_,</span> <span class="p">_)</span> <span class="k">when</span> <span class="nv">K</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">-&gt;</span> <span class="mi">0</span><span class="p">;</span>
 
-rbs(N, K, 0, MAX_K) -&gt;
-  if 
-    K &lt; MAX_K-1 -&gt; rbs_memo(N-1, K-1, 0, MAX_K) + rbs_memo(N-1, K+1, 0, MAX_K);
-    K &lt; MAX_K   -&gt; rbs_memo(N-1, K-1, 0, MAX_K);
-    K =:= MAX_K -&gt; 0
-  end;
+<span class="nf">rbs</span><span class="p">(</span><span class="nv">N</span><span class="p">,</span> <span class="nv">K</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">)</span> <span class="o">-&gt;</span>
+  <span class="k">if</span> 
+    <span class="nv">K</span> <span class="o">&lt;</span> <span class="nv">MAX_K</span><span class="o">-</span><span class="mi">1</span> <span class="o">-&gt;</span> <span class="n">rbs_memo</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">)</span> <span class="o">+</span> <span class="n">rbs_memo</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">);</span>
+    <span class="nv">K</span> <span class="o">&lt;</span> <span class="nv">MAX_K</span>   <span class="o">-&gt;</span> <span class="n">rbs_memo</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">);</span>
+    <span class="nv">K</span> <span class="o">=:=</span> <span class="nv">MAX_K</span> <span class="o">-&gt;</span> <span class="mi">0</span>
+  <span class="k">end</span><span class="p">;</span>
 
-rbs(N, K, 1, MAX_K) -&gt;
-  if
-    K &lt; MAX_K   -&gt; rbs_memo(N-1, K-1, 1, MAX_K) + rbs_memo(N-1, K+1, 1, MAX_K);
-    K =:= MAX_K -&gt; rbs_memo(N-1, K-1, 0, MAX_K) + rbs_memo(N-1, K-1, 1, MAX_K)
-  end.
+<span class="nf">rbs</span><span class="p">(</span><span class="nv">N</span><span class="p">,</span> <span class="nv">K</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">)</span> <span class="o">-&gt;</span>
+  <span class="k">if</span>
+    <span class="nv">K</span> <span class="o">&lt;</span> <span class="nv">MAX_K</span>   <span class="o">-&gt;</span> <span class="n">rbs_memo</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">)</span> <span class="o">+</span> <span class="n">rbs_memo</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">);</span>
+    <span class="nv">K</span> <span class="o">=:=</span> <span class="nv">MAX_K</span> <span class="o">-&gt;</span> <span class="n">rbs_memo</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">)</span> <span class="o">+</span> <span class="n">rbs_memo</span><span class="p">(</span><span class="nv">N</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">K</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">)</span>
+  <span class="k">end</span><span class="p">.</span>
 
-rbs_memo(N, K, T, MAX_K) -&gt;
-  Name = rbs,
-  case ets:info(Name) of
-    undefined -&gt;
-      ets:new(Name, [public, named_table]);
-    _ -&gt; true
-  end,
-  Key = {N, K, T, MAX_K},
-  case ets:lookup(Name, Key) of
-    [] -&gt;
-      Val = rbs(N, K, T, MAX_K),
-      ets:insert(Name, {Key, Val}),
-      Val;
-    [{_, Val}] -&gt; Val;
-    Else -&gt; Else
-  end.
-</code></pre>
+<span class="nf">rbs_memo</span><span class="p">(</span><span class="nv">N</span><span class="p">,</span> <span class="nv">K</span><span class="p">,</span> <span class="nv">T</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">)</span> <span class="o">-&gt;</span>
+  <span class="nv">Name</span> <span class="o">=</span> <span class="n">rbs</span><span class="p">,</span>
+  <span class="k">case</span> <span class="nn">ets</span><span class="p">:</span><span class="n">info</span><span class="p">(</span><span class="nv">Name</span><span class="p">)</span> <span class="k">of</span>
+    <span class="n">undefined</span> <span class="o">-&gt;</span>
+      <span class="nn">ets</span><span class="p">:</span><span class="n">new</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="p">[</span><span class="n">public</span><span class="p">,</span> <span class="n">named_table</span><span class="p">]);</span>
+    <span class="p">_</span> <span class="o">-&gt;</span> <span class="n">true</span>
+  <span class="k">end</span><span class="p">,</span>
+  <span class="nv">Key</span> <span class="o">=</span> <span class="p">{</span><span class="nv">N</span><span class="p">,</span> <span class="nv">K</span><span class="p">,</span> <span class="nv">T</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">},</span>
+  <span class="k">case</span> <span class="nn">ets</span><span class="p">:</span><span class="n">lookup</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="nv">Key</span><span class="p">)</span> <span class="k">of</span>
+    <span class="p">[]</span> <span class="o">-&gt;</span>
+      <span class="nv">Val</span> <span class="o">=</span> <span class="n">rbs</span><span class="p">(</span><span class="nv">N</span><span class="p">,</span> <span class="nv">K</span><span class="p">,</span> <span class="nv">T</span><span class="p">,</span> <span class="nv">MAX_K</span><span class="p">),</span>
+      <span class="nn">ets</span><span class="p">:</span><span class="n">insert</span><span class="p">(</span><span class="nv">Name</span><span class="p">,</span> <span class="p">{</span><span class="nv">Key</span><span class="p">,</span> <span class="nv">Val</span><span class="p">}),</span>
+      <span class="nv">Val</span><span class="p">;</span>
+    <span class="p">[{_,</span> <span class="nv">Val</span><span class="p">}]</span> <span class="o">-&gt;</span> <span class="nv">Val</span><span class="p">;</span>
+    <span class="nv">Else</span> <span class="o">-&gt;</span> <span class="nv">Else</span>
+  <span class="k">end</span><span class="p">.</span>
+</pre></div>
 
 <p>Странно, ведь можно было бы заложить кеширование прямо в языке. Ведь когда функция вызывается повторно с теми же самыми аргументами, то очевидно, что результат будет такой же (ибо Эрланг - это &ldquo;чистый&rdquo; функциональный язык, и side effects тут исключены). Но в целом функция кеширования весьма универсальна и ее можно быстро адаптировать для других ситуаций.</p>
 

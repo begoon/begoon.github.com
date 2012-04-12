@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,21 +44,21 @@
 
 <p>Если вместо, например, <code>std::max(a, b)</code> написать <code>(std::max)(a, b)</code>, то результат работы препроцессора выглядит так:</p>
 
-<pre><code class="cpp">#line 3 &quot;minmax.cpp&quot;
-int main() {
-  int a = (std::min)(10, 20);
-  return 0;
-}
-</code></pre>
+<div class="highlight"><pre><span class="cp">#line 3 &quot;minmax.cpp&quot;</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">)(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>вместо:</p>
 
-<pre><code class="cpp">#line 3 &quot;minmax.cpp&quot;
-int main() {
-  int a = std::(((10) &lt; (20)) ? (10) : (20));
-  return 0;
-}
-</code></pre>
+<div class="highlight"><pre><span class="cp">#line 3 &quot;minmax.cpp&quot;</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="p">(((</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">20</span><span class="p">))</span> <span class="o">?</span> <span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="mi">20</span><span class="p">));</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>и конфликта не происходит. Все компилируется без проблем.</p>
 

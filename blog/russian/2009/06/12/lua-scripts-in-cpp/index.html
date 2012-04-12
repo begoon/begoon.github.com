@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -51,77 +52,77 @@
 
 <p>После этого можно писать вот такие куски кода:</p>
 
-<pre><code class="cpp">lua script;
-script.set_variable&lt;lua::string_arg_t&gt;(&quot;a&quot;, &quot;test&quot;);
-script.exec(&quot;b = a .. '123';&quot;);
-std::cout &lt;&lt; script.get_variable&lt;lua::string_arg_t&gt;(&quot;b&quot;).value());
-</code></pre>
+<div class="highlight"><pre><span class="n">lua</span> <span class="n">script</span><span class="p">;</span>
+<span class="n">script</span><span class="p">.</span><span class="n">set_variable</span><span class="o">&lt;</span><span class="n">lua</span><span class="o">::</span><span class="n">string_arg_t</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="s">&quot;test&quot;</span><span class="p">);</span>
+<span class="n">script</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="s">&quot;b = a .. &#39;123&#39;;&quot;</span><span class="p">);</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">script</span><span class="p">.</span><span class="n">get_variable</span><span class="o">&lt;</span><span class="n">lua</span><span class="o">::</span><span class="n">string_arg_t</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;b&quot;</span><span class="p">).</span><span class="n">value</span><span class="p">());</span>
+</pre></div>
 
 <p>Данный простой скрипт принимает строку через переменню <code>a</code>, добавляет к ней <code>123</code> и записывает результат в переменную <code>b</code>, которая потом подхватывается из С++.</p>
 
 <p>Если надо добавить свою функцию, например, для проверки существования файла, можно написать так:</p>
 
-<pre><code class="cpp">class file_exists_func_t {
- public:
-  // Регистрируем аргументы функции. В данном случае один аргумент типа &quot;строка&quot;.
-  static const lua::args_t* in_args() {
-    lua::args_t* args = new lua::args_t();
-    args-&gt;add(new lua::string_arg_t());
-    return args;
-  }
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">file_exists_func_t</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="c1">// Регистрируем аргументы функции. В данном случае один аргумент типа &quot;строка&quot;.</span>
+  <span class="k">static</span> <span class="k">const</span> <span class="n">lua</span><span class="o">::</span><span class="n">args_t</span><span class="o">*</span> <span class="n">in_args</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">lua</span><span class="o">::</span><span class="n">args_t</span><span class="o">*</span> <span class="n">args</span> <span class="o">=</span> <span class="k">new</span> <span class="n">lua</span><span class="o">::</span><span class="n">args_t</span><span class="p">();</span>
+    <span class="n">args</span><span class="o">-&gt;</span><span class="n">add</span><span class="p">(</span><span class="k">new</span> <span class="n">lua</span><span class="o">::</span><span class="n">string_arg_t</span><span class="p">());</span>
+    <span class="k">return</span> <span class="n">args</span><span class="p">;</span>
+  <span class="p">}</span>
 
-  // Регистрируем выходные параметры. В данном случае это просто bool.
-  // Фукнция в Lua может возвращать не только одно значение, а несколько,
-  // поэтому можно задать список типов выходных параметров.
-  static const lua::args_t* out_args() {
-    lua::args_t* args = new lua::args_t();
-    args-&gt;add(new lua::bool_arg_t());
-    return args;
-  }
+  <span class="c1">// Регистрируем выходные параметры. В данном случае это просто bool.</span>
+  <span class="c1">// Фукнция в Lua может возвращать не только одно значение, а несколько,</span>
+  <span class="c1">// поэтому можно задать список типов выходных параметров.</span>
+  <span class="k">static</span> <span class="k">const</span> <span class="n">lua</span><span class="o">::</span><span class="n">args_t</span><span class="o">*</span> <span class="n">out_args</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">lua</span><span class="o">::</span><span class="n">args_t</span><span class="o">*</span> <span class="n">args</span> <span class="o">=</span> <span class="k">new</span> <span class="n">lua</span><span class="o">::</span><span class="n">args_t</span><span class="p">();</span>
+    <span class="n">args</span><span class="o">-&gt;</span><span class="n">add</span><span class="p">(</span><span class="k">new</span> <span class="n">lua</span><span class="o">::</span><span class="n">bool_arg_t</span><span class="p">());</span>
+    <span class="k">return</span> <span class="n">args</span><span class="p">;</span>
+  <span class="p">}</span>
 
-  // Задаем namespace и, собственно, имя фукнции. 
-  // Получается &quot;fs.file_exits()&quot;.
-  static const std::string ns() { return &quot;fs&quot;; }
-  static const std::string name() { return &quot;file_exists&quot;; }
+  <span class="c1">// Задаем namespace и, собственно, имя фукнции. </span>
+  <span class="c1">// Получается &quot;fs.file_exits()&quot;.</span>
+  <span class="k">static</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">ns</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s">&quot;fs&quot;</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">static</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="s">&quot;file_exists&quot;</span><span class="p">;</span> <span class="p">}</span>
 
-  // Данный метод вычисляет значение функции.
-  // Сначала надо разобрать входные параметры, вычислить функцию и
-  // положить результы с массив выходных значений. Правильность
-  // работы с типами аргументов, выходных данных и индексов в массивах,
-  // их описывающих, лежит на плечах автора функции.
-  static void calc(const lua::args_t&amp; in, lua::args_t&amp; out) {
-    std::string filename = dynamic_cast&lt;lua::string_arg_t&amp;&gt;(*in[0]).value();
-    std::ifstream is(filename.c_str());
-    dynamic_cast&lt;lua::bool_arg_t&amp;&gt;(*out[0]).value() = is.good();
-  }
-};
-...
-try {
-  // Создаем исполнителя скрипта.
-  lua script;
-  // Регистрируем нашу функцию &quot;fs.file_exists()&quot;.
-  script.register_function&lt; file_exists_func_t &gt;();
-  // Устанавливаем переменную &quot;fname&quot; в &quot;readme.txt&quot;.
-  script.set_variable&lt;lua::string_arg_t&gt;(&quot;fname&quot;, &quot;readme.txt&quot;);
-  // Вызываем скрипт.
-  script.exec(&quot;exists = fs.file_exists(fname);&quot;);
-  // Получаем результат через переменную &quot;exists&quot;.
-  bool exists = script.get_variable&lt;lua::bool_arg_t&gt;(&quot;exists&quot;).value();
-} catch (lua::exception&amp; e) {
-  std::cerr &lt;&lt; &quot;error: &quot; &lt;&lt; e.error() &lt;&lt; &quot;, line &quot; &lt;&lt; e.line();
-}
-</code></pre>
+  <span class="c1">// Данный метод вычисляет значение функции.</span>
+  <span class="c1">// Сначала надо разобрать входные параметры, вычислить функцию и</span>
+  <span class="c1">// положить результы с массив выходных значений. Правильность</span>
+  <span class="c1">// работы с типами аргументов, выходных данных и индексов в массивах,</span>
+  <span class="c1">// их описывающих, лежит на плечах автора функции.</span>
+  <span class="k">static</span> <span class="kt">void</span> <span class="n">calc</span><span class="p">(</span><span class="k">const</span> <span class="n">lua</span><span class="o">::</span><span class="n">args_t</span><span class="o">&amp;</span> <span class="n">in</span><span class="p">,</span> <span class="n">lua</span><span class="o">::</span><span class="n">args_t</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">filename</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">lua</span><span class="o">::</span><span class="n">string_arg_t</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="o">*</span><span class="n">in</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="n">value</span><span class="p">();</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">is</span><span class="p">(</span><span class="n">filename</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+    <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">lua</span><span class="o">::</span><span class="n">bool_arg_t</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="o">*</span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="n">value</span><span class="p">()</span> <span class="o">=</span> <span class="n">is</span><span class="p">.</span><span class="n">good</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+<span class="p">...</span>
+<span class="k">try</span> <span class="p">{</span>
+  <span class="c1">// Создаем исполнителя скрипта.</span>
+  <span class="n">lua</span> <span class="n">script</span><span class="p">;</span>
+  <span class="c1">// Регистрируем нашу функцию &quot;fs.file_exists()&quot;.</span>
+  <span class="n">script</span><span class="p">.</span><span class="n">register_function</span><span class="o">&lt;</span> <span class="n">file_exists_func_t</span> <span class="o">&gt;</span><span class="p">();</span>
+  <span class="c1">// Устанавливаем переменную &quot;fname&quot; в &quot;readme.txt&quot;.</span>
+  <span class="n">script</span><span class="p">.</span><span class="n">set_variable</span><span class="o">&lt;</span><span class="n">lua</span><span class="o">::</span><span class="n">string_arg_t</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;fname&quot;</span><span class="p">,</span> <span class="s">&quot;readme.txt&quot;</span><span class="p">);</span>
+  <span class="c1">// Вызываем скрипт.</span>
+  <span class="n">script</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="s">&quot;exists = fs.file_exists(fname);&quot;</span><span class="p">);</span>
+  <span class="c1">// Получаем результат через переменную &quot;exists&quot;.</span>
+  <span class="kt">bool</span> <span class="n">exists</span> <span class="o">=</span> <span class="n">script</span><span class="p">.</span><span class="n">get_variable</span><span class="o">&lt;</span><span class="n">lua</span><span class="o">::</span><span class="n">bool_arg_t</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;exists&quot;</span><span class="p">).</span><span class="n">value</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">lua</span><span class="o">::</span><span class="n">exception</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;error: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span><span class="p">.</span><span class="n">error</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, line &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span><span class="p">.</span><span class="n">line</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Что пока не поддерживается, так это параметры типа <a href="http://www.lua.org/manual/5.1/manual.html#2.5.7">таблица (хеш)</a> для передачи их в функцию и получения их в качестве результата.</p>
 
 <p>В каталоге <code>lib</code> лежат несколько мини примеров на Lua. Например, вот так можно вызвать внешнюю функцию для <code>base64</code> кодирования или декодирования:</p>
 
-<pre><code class="cpp">lua script;
-script.exec(&quot;package.path = package.path .. ';./lib/?.lua'&quot;);
-script.exec(&quot;require('base64'); a = base64.encode('test');&quot;);
-// Данный пример напечатает &quot;dGVzdA==&quot;.
-std::cout &lt;&lt; script.get_variable&lt;lua::string_arg_t&gt;(&quot;a&quot;).value();
-</code></pre>
+<div class="highlight"><pre><span class="n">lua</span> <span class="n">script</span><span class="p">;</span>
+<span class="n">script</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="s">&quot;package.path = package.path .. &#39;;./lib/?.lua&#39;&quot;</span><span class="p">);</span>
+<span class="n">script</span><span class="p">.</span><span class="n">exec</span><span class="p">(</span><span class="s">&quot;require(&#39;base64&#39;); a = base64.encode(&#39;test&#39;);&quot;</span><span class="p">);</span>
+<span class="c1">// Данный пример напечатает &quot;dGVzdA==&quot;.</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">script</span><span class="p">.</span><span class="n">get_variable</span><span class="o">&lt;</span><span class="n">lua</span><span class="o">::</span><span class="n">string_arg_t</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">).</span><span class="n">value</span><span class="p">();</span>
+</pre></div>
 
 <p><a href="http://code.google.com/p/luascript/source/browse/">Исходники</a> доступны для просмотра в онлайне, или через <a href="http://code.google.com/p/luascript/source/checkout">Mercurial</a>.</p>
 

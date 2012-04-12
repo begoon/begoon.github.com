@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,134 +46,134 @@
 
 <p>Часто люди пишут так:</p>
 
-<pre><code class="cpp">if (getenv(&quot;A_FLAG&quot;)) {
-  ...
-}
-</code></pre>
+<div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">getenv</span><span class="p">(</span><span class="s">&quot;A_FLAG&quot;</span><span class="p">))</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Это работает неплохо для переменных-флагов, которые либо есть, либо нет. Значение не важно.</p>
 
 <p>Что получилось у меня:</p>
 
-<pre><code class="cpp">int main(...) {
-  putenv(&quot;GLOBAL_FLAG=1&quot;);  // Глобальное значение для всей программы.
-  ...
-  system(&quot;xyz&quot;);            // Это программа должна видеть GLOBAL_FLAG=1.
-  ...
-  do_stuff();
-  ...
-}
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">main</span><span class="p">(...)</span> <span class="p">{</span>
+  <span class="n">putenv</span><span class="p">(</span><span class="s">&quot;GLOBAL_FLAG=1&quot;</span><span class="p">);</span>  <span class="c1">// Глобальное значение для всей программы.</span>
+  <span class="p">...</span>
+  <span class="n">system</span><span class="p">(</span><span class="s">&quot;xyz&quot;</span><span class="p">);</span>            <span class="c1">// Это программа должна видеть GLOBAL_FLAG=1.</span>
+  <span class="p">...</span>
+  <span class="n">do_stuff</span><span class="p">();</span>
+  <span class="p">...</span>
+<span class="p">}</span>
 
-void do_stuff() {
-  ...
-  if (something) {
-    putenv(&quot;GLOBAL_FLAG=&quot;); // Убрать переменную.
-    system(&quot;abc&quot;);          // А вот для этой программы флаг должен быть убран.
-    ...
-  }
-  ...
-  if (getenv(&quot;GLOBAL_FLAG&quot;) {
-     // И вот тут начиналась ерунда на разных платформах.
-  }
-}
-</code></pre>
+<span class="kt">void</span> <span class="n">do_stuff</span><span class="p">()</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">something</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">putenv</span><span class="p">(</span><span class="s">&quot;GLOBAL_FLAG=&quot;</span><span class="p">);</span> <span class="c1">// Убрать переменную.</span>
+    <span class="n">system</span><span class="p">(</span><span class="s">&quot;abc&quot;</span><span class="p">);</span>          <span class="c1">// А вот для этой программы флаг должен быть убран.</span>
+    <span class="p">...</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">getenv</span><span class="p">(</span><span class="s">&quot;GLOBAL_FLAG&quot;</span><span class="p">)</span> <span class="p">{</span>
+     <span class="c1">// И вот тут начиналась ерунда на разных платформах.</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>А корень зла тут в том, что после <code>putenv()</code> результат <code>getenv()</code> может стать либо <code>NULL</code>, либо <code>&quot;&quot;</code>, в зависимости от платформы.</p>
 
 <p>Например:</p>
 
-<pre><code class="cpp">if (getenv(&quot;GLOBAL_FLAG&quot;) {
-    ...
-</code></pre>
+<div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">getenv</span><span class="p">(</span><span class="s">&quot;GLOBAL_FLAG&quot;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">...</span>
+</pre></div>
 
 <p>работает только на Windows и правильнее писать:</p>
 
-<pre><code class="cpp">const char* p = getenv(&quot;GLOBAL_FLAG&quot;);
-if (p != NULL &amp;&amp; *p != '\0') {
-  ...
-}
-</code></pre>
+<div class="highlight"><pre><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">getenv</span><span class="p">(</span><span class="s">&quot;GLOBAL_FLAG&quot;</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">p</span> <span class="o">!=</span> <span class="sc">&#39;\0&#39;</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>И лучше сделать wrapper для <code>getenv()</code>:</p>
 
-<pre><code class="cpp">std::string GetEnv(const char* name) {
-  const char* v = getenv(name);
-  return v ? v : &quot;&quot;;
-}
-</code></pre>
+<div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetEnv</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">v</span> <span class="o">=</span> <span class="n">getenv</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">v</span> <span class="o">?</span> <span class="n">v</span> <span class="o">:</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>И для проверки писать:</p>
 
-<pre><code class="cpp">if (!GetEnv(&quot;var&quot;).empty()) {
-  ..
-}
-</code></pre>
+<div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">GetEnv</span><span class="p">(</span><span class="s">&quot;var&quot;</span><span class="p">).</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+  <span class="p">..</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Для теста я написал программу, которая выставляет переменную и проверяет ее значение через <code>getenv()</code> и через вызов дочерней программы.</p>
 
-<pre><code class="cpp">#include &lt;string&gt;
-#include &lt;vector&gt;
-#include &lt;iostream&gt;
-#include &lt;cstdlib&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;string&gt;</span>
+<span class="cp">#include &lt;vector&gt;</span>
+<span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;cstdlib&gt;</span>
 
-#ifdef WINDOWS
-#define putenv _putenv
-#endif
+<span class="cp">#ifdef WINDOWS</span>
+<span class="cp">#define putenv _putenv</span>
+<span class="cp">#endif</span>
 
-void PrintVariableViaShell(const std::string&amp; name) {
-  std::cout &lt;&lt; &quot;Value from shell:&quot; &lt;&lt; std::endl;
-  const std::string cmd =
-#ifdef WINDOWS
-    std::string(&quot;cmd /c echo [%&quot;) + name + &quot;%]&quot;;
-#else
-    std::string(&quot;/bin/sh -c \&quot;echo [$&quot;) + name + &quot;]\&quot;&quot;;
-#endif
-  std::cout &lt;&lt; cmd &lt;&lt; std::endl;
-  std::system(cmd.c_str());
-}
+<span class="kt">void</span> <span class="n">PrintVariableViaShell</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Value from shell:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">cmd</span> <span class="o">=</span>
+<span class="cp">#ifdef WINDOWS</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;cmd /c echo [%&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;%]&quot;</span><span class="p">;</span>
+<span class="cp">#else</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/bin/sh -c </span><span class="se">\&quot;</span><span class="s">echo [$&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;]</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="cp">#endif</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">cmd</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+<span class="p">}</span>
 
-void PrintVariableViaGetEnv(const std::string&amp; name) {
-  std::cout &lt;&lt; &quot;Value from getenv():&quot; &lt;&lt; std::endl;
-  const char* v = std::getenv(name.c_str());
-  std::cout &lt;&lt; &quot;[&quot; &lt;&lt; (v ? v : &quot;&lt;NULL&gt;&quot;) &lt;&lt; &quot;]&quot; &lt;&lt; std::endl;
-}
+<span class="kt">void</span> <span class="n">PrintVariableViaGetEnv</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Value from getenv():&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">v</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">getenv</span><span class="p">(</span><span class="n">name</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[&quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">v</span> <span class="o">?</span> <span class="n">v</span> <span class="o">:</span> <span class="s">&quot;&lt;NULL&gt;&quot;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;]&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
 
-void SetVariableDeleteAndPrint(const char* name_value, const bool equ) {
-  const std::string&amp; name_value_s(name_value);
-  const std::string name = name_value_s.substr(0, name_value_s.find('='));
+<span class="kt">void</span> <span class="n">SetVariableDeleteAndPrint</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name_value</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">equ</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name_value_s</span><span class="p">(</span><span class="n">name_value</span><span class="p">);</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="n">name_value_s</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">name_value_s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;=&#39;</span><span class="p">));</span>
 
-  putenv(const_cast&lt;char*&gt;(name_value));
-  std::vector&lt;char&gt; delete_without_equ(name.begin(), name.end());
-  delete_without_equ.push_back('\0');
-  putenv(&amp;delete_without_equ[0]);
+  <span class="n">putenv</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">name_value</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="n">delete_without_equ</span><span class="p">(</span><span class="n">name</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">name</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+  <span class="n">delete_without_equ</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="sc">&#39;\0&#39;</span><span class="p">);</span>
+  <span class="n">putenv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">delete_without_equ</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
 
-  std::cout &lt;&lt; &quot;Value after deleting WITHOUT '=':&quot; &lt;&lt; std::endl;
-  PrintVariableViaShell(name);
-  PrintVariableViaGetEnv(name);
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Value after deleting WITHOUT &#39;=&#39;:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">PrintVariableViaShell</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+  <span class="n">PrintVariableViaGetEnv</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
 
-  std::cout &lt;&lt; std::endl;
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-  putenv(const_cast&lt;char*&gt;(name_value));
-  std::vector&lt;char&gt; delete_with_equ(name.begin(), name.end());
-  delete_with_equ.push_back('=');
-  delete_with_equ.push_back('\0');
-  putenv(&amp;delete_with_equ[0]);
+  <span class="n">putenv</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">name_value</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="n">delete_with_equ</span><span class="p">(</span><span class="n">name</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">name</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+  <span class="n">delete_with_equ</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="sc">&#39;=&#39;</span><span class="p">);</span>
+  <span class="n">delete_with_equ</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="sc">&#39;\0&#39;</span><span class="p">);</span>
+  <span class="n">putenv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">delete_with_equ</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
 
-  std::cout &lt;&lt; &quot;Value after deleting WITH '=': &quot; &lt;&lt; std::endl;
-  PrintVariableViaShell(name);
-  PrintVariableViaGetEnv(name);
-}
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Value after deleting WITH &#39;=&#39;: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">PrintVariableViaShell</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+  <span class="n">PrintVariableViaGetEnv</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+<span class="p">}</span>
 
-int main(int argc, char* argv[]) {
-#ifdef WINDOWS
-  std::cout &lt;&lt; &quot;WINDOWS&quot; &lt;&lt; std::endl;
-#else
-  system(&quot;uname&quot;);
-#endif
-  SetVariableDeleteAndPrint(&quot;ABC=123&quot;, true);
-  return 0;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+<span class="cp">#ifdef WINDOWS</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;WINDOWS&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="cp">#else</span>
+  <span class="n">system</span><span class="p">(</span><span class="s">&quot;uname&quot;</span><span class="p">);</span>
+<span class="cp">#endif</span>
+  <span class="n">SetVariableDeleteAndPrint</span><span class="p">(</span><span class="s">&quot;ABC=123&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>И вот результы с разных платформ.</p>
 

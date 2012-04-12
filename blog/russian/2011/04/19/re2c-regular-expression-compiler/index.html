@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -51,50 +52,50 @@
 
 <p>Допустим, вам нужно из строки выделять некоторые команды, целые и дробные числа. Можно расчехлить flex, а можно написать так:</p>
 
-<pre><code class="cpp">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
 
-enum {
-  CMD, INT, FLOAT, SPACE, END
-};
+<span class="k">enum</span> <span class="p">{</span>
+  <span class="n">CMD</span><span class="p">,</span> <span class="n">INT</span><span class="p">,</span> <span class="n">FLOAT</span><span class="p">,</span> <span class="n">SPACE</span><span class="p">,</span> <span class="n">END</span>
+<span class="p">};</span>
 
-int scan(char** p, char** lex)
-{
-    char* marker;
-    if (lex) *lex = *p;
-/*!re2c
-        re2c:define:YYCTYPE  = &quot;unsigned char&quot;;
-        re2c:define:YYCURSOR = *p;
-        re2c:define:YYMARKER = marker;
-        re2c:yyfill:enable   = 0;
-        re2c:yych:conversion = 1;
-        re2c:indent:top      = 1;
-        &quot;GET&quot;|&quot;PUT&quot;|&quot;EXIT&quot; { return CMD; }
-        [0-9]+             { return INT; }
-        [0-9]+ '.' [0-9]*  { return FLOAT; }
-        [ \t]+             { return SPACE; }
-        [^]                { return END; }
-*/
-}
+<span class="kt">int</span> <span class="n">scan</span><span class="p">(</span><span class="kt">char</span><span class="o">**</span> <span class="n">p</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">lex</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">char</span><span class="o">*</span> <span class="n">marker</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">lex</span><span class="p">)</span> <span class="o">*</span><span class="n">lex</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
+<span class="cm">/*!re2c</span>
+<span class="cm">        re2c:define:YYCTYPE  = &quot;unsigned char&quot;;</span>
+<span class="cm">        re2c:define:YYCURSOR = *p;</span>
+<span class="cm">        re2c:define:YYMARKER = marker;</span>
+<span class="cm">        re2c:yyfill:enable   = 0;</span>
+<span class="cm">        re2c:yych:conversion = 1;</span>
+<span class="cm">        re2c:indent:top      = 1;</span>
+<span class="cm">        &quot;GET&quot;|&quot;PUT&quot;|&quot;EXIT&quot; { return CMD; }</span>
+<span class="cm">        [0-9]+             { return INT; }</span>
+<span class="cm">        [0-9]+ &#39;.&#39; [0-9]*  { return FLOAT; }</span>
+<span class="cm">        [ \t]+             { return SPACE; }</span>
+<span class="cm">        [^]                { return END; }</span>
+<span class="cm">*/</span>
+<span class="p">}</span>
 
-int main(int argc, char* argv[]) {
-  char *p, *last;
-  int token;
-  if (argc &lt; 2) return 1;
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="o">*</span><span class="n">last</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">token</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
 
-  p = argv[1];
-  while ((token = scan(&amp;p, &amp;last)) != END) {
-    int sz = p - last;
-    switch (token) {
-      case CMD: printf(&quot;Command: '%.*s'\n&quot;, sz, last); break;
-      case INT: printf(&quot;Number: '%.*s'\n&quot;, sz, last); break;
-      case FLOAT: printf(&quot;Float: '%.*s'\n&quot;, sz, last); break;
-    }
-  }
+  <span class="n">p</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+  <span class="k">while</span> <span class="p">((</span><span class="n">token</span> <span class="o">=</span> <span class="n">scan</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">last</span><span class="p">))</span> <span class="o">!=</span> <span class="n">END</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">sz</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="n">last</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">token</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nl">CMD:</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Command: &#39;%.*s&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sz</span><span class="p">,</span> <span class="n">last</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nl">INT:</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Number: &#39;%.*s&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sz</span><span class="p">,</span> <span class="n">last</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nl">FLOAT:</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Float: &#39;%.*s&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sz</span><span class="p">,</span> <span class="n">last</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
 
-  return 0;
-}
-</code></pre>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>И все!</p>
 
@@ -109,134 +110,134 @@ int main(int argc, char* argv[]) {
 
 <p>То получим вот такое:</p>
 
-<pre><code class="cpp">/* Generated by re2c 0.13.5 on Tue Apr 19 21:08:57 2011 */
-#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
+<div class="highlight"><pre><span class="cm">/* Generated by re2c 0.13.5 on Tue Apr 19 21:08:57 2011 */</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
 
-enum {
-  CMD, INT, FLOAT, SPACE, END
-};
+<span class="k">enum</span> <span class="p">{</span>
+  <span class="n">CMD</span><span class="p">,</span> <span class="n">INT</span><span class="p">,</span> <span class="n">FLOAT</span><span class="p">,</span> <span class="n">SPACE</span><span class="p">,</span> <span class="n">END</span>
+<span class="p">};</span>
 
-int scan(char** p, char** lex)
-{
-    char* marker;
-    if (lex) *lex = *p;
+<span class="kt">int</span> <span class="n">scan</span><span class="p">(</span><span class="kt">char</span><span class="o">**</span> <span class="n">p</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">lex</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">char</span><span class="o">*</span> <span class="n">marker</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">lex</span><span class="p">)</span> <span class="o">*</span><span class="n">lex</span> <span class="o">=</span> <span class="o">*</span><span class="n">p</span><span class="p">;</span>
 
-    {
-        unsigned char yych;
+    <span class="p">{</span>
+        <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">yych</span><span class="p">;</span>
 
-        yych = (unsigned char)**p;
-        if (yych &lt;= '9') {
-            if (yych &lt;= 0x1F) {
-                if (yych == '\t') goto yy8;
-                goto yy10;
-            } else {
-                if (yych &lt;= ' ') goto yy8;
-                if (yych &lt;= '/') goto yy10;
-                goto yy6;
-            }
-        } else {
-            if (yych &lt;= 'F') {
-                if (yych == 'E') goto yy5;
-                goto yy10;
-            } else {
-                if (yych &lt;= 'G') goto yy2;
-                if (yych == 'P') goto yy4;
-                goto yy10;
-            }
-        }
-yy2:
-        yych = (unsigned char)*(marker = ++*p);
-        if (yych == 'E') goto yy24;
-yy3:
-        { return END; }
-yy4:
-        yych = (unsigned char)*(marker = ++*p);
-        if (yych == 'U') goto yy23;
-        goto yy3;
-yy5:
-        yych = (unsigned char)*(marker = ++*p);
-        if (yych == 'X') goto yy18;
-        goto yy3;
-yy6:
-        ++*p;
-        if ((yych = (unsigned char)**p) == '.') goto yy13;
-        if (yych &lt;= '/') goto yy7;
-        if (yych &lt;= '9') goto yy16;
-yy7:
-        { return INT; }
-yy8:
-        ++*p;
-        yych = (unsigned char)**p;
-        goto yy12;
-yy9:
-        { return SPACE; }
-yy10:
-        yych = (unsigned char)*++*p;
-        goto yy3;
-yy11:
-        ++*p;
-        yych = (unsigned char)**p;
-yy12:
-        if (yych == '\t') goto yy11;
-        if (yych == ' ') goto yy11;
-        goto yy9;
-yy13:
-        ++*p;
-        yych = (unsigned char)**p;
-        if (yych &lt;= '/') goto yy15;
-        if (yych &lt;= '9') goto yy13;
-yy15:
-        { return FLOAT; }
-yy16:
-        ++*p;
-        yych = (unsigned char)**p;
-        if (yych == '.') goto yy13;
-        if (yych &lt;= '/') goto yy7;
-        if (yych &lt;= '9') goto yy16;
-        goto yy7;
-yy18:
-        yych = (unsigned char)*++*p;
-        if (yych == 'I') goto yy20;
-yy19:
-        *p = marker;
-        goto yy3;
-yy20:
-        yych = (unsigned char)*++*p;
-        if (yych != 'T') goto yy19;
-yy21:
-        ++*p;
-        { return CMD; }
-yy23:
-        yych = (unsigned char)*++*p;
-        if (yych == 'T') goto yy21;
-        goto yy19;
-yy24:
-        ++*p;
-        if ((yych = (unsigned char)**p) == 'T') goto yy21;
-        goto yy19;
-    }
+        <span class="n">yych</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span><span class="o">**</span><span class="n">p</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">&lt;=</span> <span class="sc">&#39;9&#39;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">&lt;=</span> <span class="mh">0x1F</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">==</span> <span class="sc">&#39;\t&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy8</span><span class="p">;</span>
+                <span class="k">goto</span> <span class="n">yy10</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">&lt;=</span> <span class="sc">&#39; &#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy8</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">&lt;=</span> <span class="sc">&#39;/&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy10</span><span class="p">;</span>
+                <span class="k">goto</span> <span class="n">yy6</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">&lt;=</span> <span class="sc">&#39;F&#39;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">==</span> <span class="sc">&#39;E&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy5</span><span class="p">;</span>
+                <span class="k">goto</span> <span class="n">yy10</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">&lt;=</span> <span class="sc">&#39;G&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy2</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">==</span> <span class="sc">&#39;P&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy4</span><span class="p">;</span>
+                <span class="k">goto</span> <span class="n">yy10</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+<span class="nl">yy2:</span>
+        <span class="n">yych</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">marker</span> <span class="o">=</span> <span class="o">++*</span><span class="n">p</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">==</span> <span class="sc">&#39;E&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy24</span><span class="p">;</span>
+<span class="nl">yy3:</span>
+        <span class="p">{</span> <span class="k">return</span> <span class="n">END</span><span class="p">;</span> <span class="p">}</span>
+<span class="nl">yy4:</span>
+        <span class="n">yych</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">marker</span> <span class="o">=</span> <span class="o">++*</span><span class="n">p</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">==</span> <span class="sc">&#39;U&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy23</span><span class="p">;</span>
+        <span class="k">goto</span> <span class="n">yy3</span><span class="p">;</span>
+<span class="nl">yy5:</span>
+        <span class="n">yych</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">marker</span> <span class="o">=</span> <span class="o">++*</span><span class="n">p</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">==</span> <span class="sc">&#39;X&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy18</span><span class="p">;</span>
+        <span class="k">goto</span> <span class="n">yy3</span><span class="p">;</span>
+<span class="nl">yy6:</span>
+        <span class="o">++*</span><span class="n">p</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">yych</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span><span class="o">**</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="sc">&#39;.&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy13</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">&lt;=</span> <span class="sc">&#39;/&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy7</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">&lt;=</span> <span class="sc">&#39;9&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy16</span><span class="p">;</span>
+<span class="nl">yy7:</span>
+        <span class="p">{</span> <span class="k">return</span> <span class="n">INT</span><span class="p">;</span> <span class="p">}</span>
+<span class="nl">yy8:</span>
+        <span class="o">++*</span><span class="n">p</span><span class="p">;</span>
+        <span class="n">yych</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span><span class="o">**</span><span class="n">p</span><span class="p">;</span>
+        <span class="k">goto</span> <span class="n">yy12</span><span class="p">;</span>
+<span class="nl">yy9:</span>
+        <span class="p">{</span> <span class="k">return</span> <span class="n">SPACE</span><span class="p">;</span> <span class="p">}</span>
+<span class="nl">yy10:</span>
+        <span class="n">yych</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span><span class="o">*++*</span><span class="n">p</span><span class="p">;</span>
+        <span class="k">goto</span> <span class="n">yy3</span><span class="p">;</span>
+<span class="nl">yy11:</span>
+        <span class="o">++*</span><span class="n">p</span><span class="p">;</span>
+        <span class="n">yych</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span><span class="o">**</span><span class="n">p</span><span class="p">;</span>
+<span class="nl">yy12:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">==</span> <span class="sc">&#39;\t&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy11</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">==</span> <span class="sc">&#39; &#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy11</span><span class="p">;</span>
+        <span class="k">goto</span> <span class="n">yy9</span><span class="p">;</span>
+<span class="nl">yy13:</span>
+        <span class="o">++*</span><span class="n">p</span><span class="p">;</span>
+        <span class="n">yych</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span><span class="o">**</span><span class="n">p</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">&lt;=</span> <span class="sc">&#39;/&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy15</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">&lt;=</span> <span class="sc">&#39;9&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy13</span><span class="p">;</span>
+<span class="nl">yy15:</span>
+        <span class="p">{</span> <span class="k">return</span> <span class="n">FLOAT</span><span class="p">;</span> <span class="p">}</span>
+<span class="nl">yy16:</span>
+        <span class="o">++*</span><span class="n">p</span><span class="p">;</span>
+        <span class="n">yych</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span><span class="o">**</span><span class="n">p</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">==</span> <span class="sc">&#39;.&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy13</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">&lt;=</span> <span class="sc">&#39;/&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy7</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">&lt;=</span> <span class="sc">&#39;9&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy16</span><span class="p">;</span>
+        <span class="k">goto</span> <span class="n">yy7</span><span class="p">;</span>
+<span class="nl">yy18:</span>
+        <span class="n">yych</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span><span class="o">*++*</span><span class="n">p</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">==</span> <span class="sc">&#39;I&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy20</span><span class="p">;</span>
+<span class="nl">yy19:</span>
+        <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="n">marker</span><span class="p">;</span>
+        <span class="k">goto</span> <span class="n">yy3</span><span class="p">;</span>
+<span class="nl">yy20:</span>
+        <span class="n">yych</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span><span class="o">*++*</span><span class="n">p</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">!=</span> <span class="sc">&#39;T&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy19</span><span class="p">;</span>
+<span class="nl">yy21:</span>
+        <span class="o">++*</span><span class="n">p</span><span class="p">;</span>
+        <span class="p">{</span> <span class="k">return</span> <span class="n">CMD</span><span class="p">;</span> <span class="p">}</span>
+<span class="nl">yy23:</span>
+        <span class="n">yych</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span><span class="o">*++*</span><span class="n">p</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">yych</span> <span class="o">==</span> <span class="sc">&#39;T&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy21</span><span class="p">;</span>
+        <span class="k">goto</span> <span class="n">yy19</span><span class="p">;</span>
+<span class="nl">yy24:</span>
+        <span class="o">++*</span><span class="n">p</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">yych</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="p">)</span><span class="o">**</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="sc">&#39;T&#39;</span><span class="p">)</span> <span class="k">goto</span> <span class="n">yy21</span><span class="p">;</span>
+        <span class="k">goto</span> <span class="n">yy19</span><span class="p">;</span>
+    <span class="p">}</span>
 
-}
+<span class="p">}</span>
 
-int main(int argc, char* argv[]) {
-  char *p, *last;
-  int token;
-  if (argc &lt; 2) return 1;
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="o">*</span><span class="n">p</span><span class="p">,</span> <span class="o">*</span><span class="n">last</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">token</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
 
-  p = argv[1];
-  while ((token = scan(&amp;p, &amp;last)) != END) {
-    int sz = p - last;
-    switch (token) {
-      case CMD: printf(&quot;Command: '%.*s'\n&quot;, sz, last); break;
-      case INT: printf(&quot;Number: '%.*s'\n&quot;, sz, last); break;
-      case FLOAT: printf(&quot;Float: '%.*s'\n&quot;, sz, last); break;
-    }
-  }
+  <span class="n">p</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+  <span class="k">while</span> <span class="p">((</span><span class="n">token</span> <span class="o">=</span> <span class="n">scan</span><span class="p">(</span><span class="o">&amp;</span><span class="n">p</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">last</span><span class="p">))</span> <span class="o">!=</span> <span class="n">END</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">sz</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="n">last</span><span class="p">;</span>
+    <span class="k">switch</span> <span class="p">(</span><span class="n">token</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">case</span> <span class="nl">CMD:</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Command: &#39;%.*s&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sz</span><span class="p">,</span> <span class="n">last</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nl">INT:</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Number: &#39;%.*s&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sz</span><span class="p">,</span> <span class="n">last</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nl">FLOAT:</span> <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Float: &#39;%.*s&#39;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">sz</span><span class="p">,</span> <span class="n">last</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
 
-  return 0;
-}
-</code></pre>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Страшно? Да, код не для ручной правки, но это и не требуется.</p>
 

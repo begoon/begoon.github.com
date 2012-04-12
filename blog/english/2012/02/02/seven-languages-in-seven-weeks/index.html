@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -75,13 +76,13 @@
 
 <p>An example from the book:</p>
 
-<pre><code class="io">// Fire up the future.
-futureResult := URL with(&quot;http://google.com/&quot;) @fetch
-writeln(&quot;Continue immediately when future is running in background.&quot;)
-// This line will be executed immediately after spawning the future.
-writeln(&quot;fetched &quot;, futureResult size, &quot; bytes&quot;)
-// But this line will be blocked until the future returns.
-</code></pre>
+<div class="highlight"><pre><span class="c1">// Fire up the future.</span>
+<span class="n">futureResult</span> <span class="o">:=</span> <span class="n">URL</span> <span class="n">with</span><span class="o">(</span><span class="s">&quot;http://google.com/&quot;</span><span class="o">)</span> <span class="o">@</span><span class="n">fetch</span>
+<span class="n">writeln</span><span class="o">(</span><span class="s">&quot;Continue immediately when future is running in background.&quot;</span><span class="o">)</span>
+<span class="c1">// This line will be executed immediately after spawning the future.</span>
+<span class="n">writeln</span><span class="o">(</span><span class="s">&quot;fetched &quot;</span><span class="o">,</span> <span class="n">futureResult</span> <span class="n">size</span><span class="o">,</span> <span class="s">&quot; bytes&quot;</span><span class="o">)</span>
+<span class="c1">// But this line will be blocked until the future returns.</span>
+</pre></div>
 
 <p><strong>Prolog</strong></p>
 

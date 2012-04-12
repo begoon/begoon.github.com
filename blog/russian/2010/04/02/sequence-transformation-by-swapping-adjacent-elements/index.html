@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -47,57 +48,57 @@
 
 <p>Теперь, а какой алгоритм сортировки использовать, чтобы для перемещения элементов использовать только обмен соседних элементов (функция <code>swap()</code>)? Подходит сортировка вставками, когда на каждом шаге неотсортированный элемент последовательно &ldquo;пропихивается&rdquo; вниз к отсортированным. Тут как раз можно обойтись только обменом соседних элементов. Сама функция <code>insertion_sort()</code> является универальной и не зависит от компаратора <code>is_less()</code>.</p>
 
-<pre><code class="cpp">#include &lt;stdlib.h&gt;
-#include &lt;stdio.h&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;stdlib.h&gt;</span>
+<span class="cp">#include &lt;stdio.h&gt;</span>
 
-void swap(int* a, int i) {
-  int t = a[i];
-  a[i] = a[i + 1];
-  a[i + 1] = t;
-}
+<span class="kt">void</span> <span class="n">swap</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">t</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+  <span class="n">a</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
+<span class="p">}</span>
 
-#define N 8
+<span class="cp">#define N 8</span>
 
-const int etalon[] = { 1, 5, 7, 4, 2, 9, 8, 6 };
-int from[N] = { 8, 1, 4, 2, 5, 6, 9, 7 };
+<span class="k">const</span> <span class="kt">int</span> <span class="n">etalon</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span> <span class="p">};</span>
+<span class="kt">int</span> <span class="n">from</span><span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">7</span> <span class="p">};</span>
 
-void insertion_sort(int* a, int n, int (*is_less)(int, int)) {
-  int i, j;
-  for (i = 1; i &lt; n; ++i) 
-    for (j = i - 1; j &gt;= 0 &amp;&amp; is_less(a[j + 1], a[j]); j--)
-      swap(a, j);
-}
+<span class="kt">void</span> <span class="n">insertion_sort</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">is_less</span><span class="p">)(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">))</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> 
+    <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">is_less</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span> <span class="n">j</span><span class="o">--</span><span class="p">)</span>
+      <span class="n">swap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
+<span class="p">}</span>
 
-void print_array(const char* title, const int* a, int n) {
-  int i;
-  printf(&quot;%9s: &quot;, title);
-  for (i = 0; i &lt; n; ++i)
-    printf(&quot;%d &quot;, a[i]);
-  printf(&quot;\n&quot;);
-}
+<span class="kt">void</span> <span class="n">print_array</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">title</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%9s: &quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d &quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="p">}</span>
 
-int less(int a, int b) {
-  int ia = -1, ib = -1;
-  int i;
-  for (i = 0; i &lt; N; ++i) {
-    if (etalon[i] == a) ia = i;
-    if (etalon[i] == b) ib = i;
-    if (ia &gt;= 0 &amp;&amp; ib &gt;= 0) break;
-  }
-  return ia &lt; ib;
-}
+<span class="kt">int</span> <span class="n">less</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">ia</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ib</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">etalon</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">a</span><span class="p">)</span> <span class="n">ia</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">etalon</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span> <span class="n">ib</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ia</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">ib</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">ia</span> <span class="o">&lt;</span> <span class="n">ib</span><span class="p">;</span>
+<span class="p">}</span>
 
-int main() {
-  int i, j;
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
 
-  print_array(&quot;Original&quot;, from, N);
-  insertion_sort(from, N, less);
-  print_array(&quot;Converted&quot;, from, N);
-  print_array(&quot;Etalon&quot;, etalon, N);
+  <span class="n">print_array</span><span class="p">(</span><span class="s">&quot;Original&quot;</span><span class="p">,</span> <span class="n">from</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
+  <span class="n">insertion_sort</span><span class="p">(</span><span class="n">from</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">less</span><span class="p">);</span>
+  <span class="n">print_array</span><span class="p">(</span><span class="s">&quot;Converted&quot;</span><span class="p">,</span> <span class="n">from</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
+  <span class="n">print_array</span><span class="p">(</span><span class="s">&quot;Etalon&quot;</span><span class="p">,</span> <span class="n">etalon</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
 
-  return 0;
-}
-</code></pre>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Запускаем:</p>
 

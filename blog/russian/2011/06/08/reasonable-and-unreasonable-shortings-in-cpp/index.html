@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,36 +42,36 @@
 <div id="post">
   <p>Вот вполне себе реальный код:</p>
 
-<pre><code class="cpp">const char* a = ::getenv(&quot;VAR&quot;);
-if (a == NULL)
-  a = &quot;[NULL]&quot;;
-</code></pre>
+<div class="highlight"><pre><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="o">::</span><span class="n">getenv</span><span class="p">(</span><span class="s">&quot;VAR&quot;</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+  <span class="n">a</span> <span class="o">=</span> <span class="s">&quot;[NULL]&quot;</span><span class="p">;</span>
+</pre></div>
 
 <p>Но в каком-то внутреннем стремлении сделать код &ldquo;немного лучше&rdquo;, можно написать так:</p>
 
-<pre><code class="cpp">const char* a = (a = ::getenv(&quot;VAR&quot;), a ? a : &quot;[NULL]&quot;);
-</code></pre>
+<div class="highlight"><pre><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">=</span> <span class="o">::</span><span class="n">getenv</span><span class="p">(</span><span class="s">&quot;VAR&quot;</span><span class="p">),</span> <span class="n">a</span> <span class="o">?</span> <span class="n">a</span> <span class="o">:</span> <span class="s">&quot;[NULL]&quot;</span><span class="p">);</span>
+</pre></div>
 
 <p>Мне внутренне больше нравиться второй вариант. Он как-то выразительнее. Но на code view я, конечно, буду настаивать однозначно на первом, так как не только мне одному этот код потом читать.</p>
 
 <p>Также в С++ считается хорошим тоном объявлять переменную цикла <code>for</code> прямо в теле оператора:</p>
 
-<pre><code class="cpp">for (int i = 0; ...
-</code></pre>
+<div class="highlight"><pre><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="p">...</span>
+</pre></div>
 
 <p>Но вот конструкции типа:</p>
 
-<pre><code class="cpp">if (int a = foo()) {
-  ...
-}
-</code></pre>
+<div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">foo</span><span class="p">())</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>или</p>
 
-<pre><code class="cpp">while (int a = foo()) {
-  ...
-}
-</code></pre>
+<div class="highlight"><pre><span class="k">while</span> <span class="p">(</span><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">foo</span><span class="p">())</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>уже немного режут глаз, хотя и являются корректными.</p>
 

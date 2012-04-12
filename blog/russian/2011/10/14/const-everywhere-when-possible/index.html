@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -47,13 +48,13 @@
 
 <p>Пара примеров, где люди часто не ставят <code>const</code>:</p>
 
-<pre><code class="cpp">const int sz = very_long_name_to_calculate_size(...);
-for (int i = 0; i &lt; sz; ++i) {
-...
-const VeryLongClassName var(a, lot, of, different, parameters);
-int a = var.getX();
-// Only &quot;const&quot; functions of &quot;VeryLongClassName&quot; are called further down.
-</code></pre>
+<div class="highlight"><pre><span class="k">const</span> <span class="kt">int</span> <span class="n">sz</span> <span class="o">=</span> <span class="n">very_long_name_to_calculate_size</span><span class="p">(...);</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">sz</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">...</span>
+<span class="k">const</span> <span class="n">VeryLongClassName</span> <span class="n">var</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">lot</span><span class="p">,</span> <span class="n">of</span><span class="p">,</span> <span class="n">different</span><span class="p">,</span> <span class="n">parameters</span><span class="p">);</span>
+<span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">var</span><span class="p">.</span><span class="n">getX</span><span class="p">();</span>
+<span class="c1">// Only &quot;const&quot; functions of &quot;VeryLongClassName&quot; are called further down.</span>
+</pre></div>
 
 <p>Кстати, явное указание на неизменность переменной помогает компилятору в оптимизации.</p>
 

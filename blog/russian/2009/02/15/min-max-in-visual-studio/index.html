@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,12 +42,12 @@
 <div id="post">
   <p>Простейший кусок кода (файл <code>minmax.cpp</code>):</p>
 
-<pre><code class="cpp">#include &lt;algorithm&gt;
-int main() {
-  int a = std::min(10, 20);
-  return 0;
-}
-</code></pre>
+<div class="highlight"><pre><span class="cp">#include &lt;algorithm&gt;</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Все тривиально и отлично компилируется и в Visual Studio, и в CodeGear/Borland Studio, и Cygwin. Но допустим потребовались какие-то функции из Windows API, и вы подключили файл <code>windows.h</code>:</p>
 
@@ -66,51 +67,51 @@ minmax.cpp(4) : error C2059: syntax error : '::'
 
 <p>И что мы видим? А видим мы следующее (фрагмент файла <code>minmap.i</code>):</p>
 
-<pre><code class="cpp">#line 7 &quot;minmax.cpp&quot;
-int main() {
-  int a = std::(((10) &lt; (20)) ? (10) : (20));
-  return 0;
-}
-</code></pre>
+<div class="highlight"><pre><span class="cp">#line 7 &quot;minmax.cpp&quot;</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="p">(((</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">20</span><span class="p">))</span> <span class="o">?</span> <span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="mi">20</span><span class="p">));</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Естественно, это каша с точки зрения синтаксиса, и компилятор ругается совершенно законно.
 Покопавшись в заголовочных файлах Windows SDK, в файле <code>WinDef.h</code>, который косвенно подключается через <code>windows.h</code>, я нашел корень зла:</p>
 
-<pre><code class="cpp">#ifndef NOMINMAX
+<div class="highlight"><pre><span class="cp">#ifndef NOMINMAX</span>
 
-#ifndef max
-#define max(a,b)            (((a) &gt; (b)) ? (a) : (b))
-#endif
+<span class="cp">#ifndef max</span>
+<span class="cp">#define max(a,b)            (((a) &gt; (b)) ? (a) : (b))</span>
+<span class="cp">#endif</span>
 
-#ifndef min
-#define min(a,b)            (((a) &lt; (b)) ? (a) : (b))
-#endif
+<span class="cp">#ifndef min</span>
+<span class="cp">#define min(a,b)            (((a) &lt; (b)) ? (a) : (b))</span>
+<span class="cp">#endif</span>
 
-#endif  /* NOMINMAX */
-</code></pre>
+<span class="cp">#endif  </span><span class="cm">/* NOMINMAX */</span><span class="cp"></span>
+</pre></div>
 
 <p>Вот теперь ясно, что делать — надо определить макрос NOMINMAX, тем самым заблокировать определение <code>min</code> и <code>max</code>:</p>
 
-<pre><code class="cpp">#define NOMINMAX
-#include &lt;algorithm&gt;
-#include &lt;windows.h&gt;
-int main() {
-  int a = std::min(10, 20);
-  return 0;
-}
-</code></pre>
+<div class="highlight"><pre><span class="cp">#define NOMINMAX</span>
+<span class="cp">#include &lt;algorithm&gt;</span>
+<span class="cp">#include &lt;windows.h&gt;</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Забавно, что в Cygwin и CodeGear/Borland исходный пример компилируется без проблем. В борландовой версии <code>windows.h</code> я нашел вот такой фрагмент:</p>
 
-<pre><code class="cpp">#if defined(__BORLANDC__)
-...
-#    if defined(__cplusplus)
-#       define NOMINMAX              /* for WINDEF.H */
-...
-#    endif
-...
-#endif /* __BORLANDC__ */
-</code></pre>
+<div class="highlight"><pre><span class="cp">#if defined(__BORLANDC__)</span>
+<span class="p">...</span>
+<span class="cp">#    if defined(__cplusplus)</span>
+<span class="cp">#       define NOMINMAX              </span><span class="cm">/* for WINDEF.H */</span><span class="cp"></span>
+<span class="p">...</span>
+<span class="cp">#    endif</span>
+<span class="p">...</span>
+<span class="cp">#endif </span><span class="cm">/* __BORLANDC__ */</span><span class="cp"></span>
+</pre></div>
 
 <p>Эдак они заранее оградились от проблемы, принудительно запретив проблемные макросы.</p>
 

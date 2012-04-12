@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -47,67 +48,67 @@
 
 <p>Написали программу, в которой есть интересный момент.</p>
 
-<pre><code class="cpp">#include &lt;cstdlib&gt;
-#include &lt;algorithm&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;cstdlib&gt;</span>
+<span class="cp">#include &lt;algorithm&gt;</span>
 
-int main(int argc, char* argv[]) {
-  int mode = argc &gt; 1 ? std::atoi(argv[1]) : 1;
-  int n = 1024 * 1024 * 1024 * 1;
-  char* buf = new char[n];
-  if (mode == 1)
-    std::memset(buf, 0, n * sizeof(*buf));
-  else if (mode == 2)
-    bzero(buf, n * sizeof(*buf));
-  else if (mode == 3)
-    std::fill(buf, buf + n, 0);
-  else if (mode == 4)
-    std::fill(buf, buf + n, '\0');
-  return buf[0];
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kt">char</span><span class="o">*</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">memset</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">buf</span><span class="p">));</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">bzero</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">buf</span><span class="p">));</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">buf</span> <span class="o">+</span> <span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">buf</span> <span class="o">+</span> <span class="n">n</span><span class="p">,</span> <span class="sc">&#39;\0&#39;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Обратите внимание на ветки 3 и 4. Они почти одно и то же, но не совсем.</p>
 
 <p>В целом была мысль получить вот эту специализацию <code>fill()</code>:</p>
 
-<pre><code class="cpp">// Specialization: for one-byte types we can use memset.
-inline void
-fill(unsigned char* __first, unsigned char* __last, const unsigned char&amp; __c)
-{
-  __glibcxx_requires_valid_range(__first, __last);
-  const unsigned char __tmp = __c;
-  std::memset(__first, __tmp, __last - __first);
-}
-</code></pre>
+<div class="highlight"><pre><span class="c1">// Specialization: for one-byte types we can use memset.</span>
+<span class="kr">inline</span> <span class="kt">void</span>
+<span class="n">fill</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">__first</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">__last</span><span class="p">,</span> <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">&amp;</span> <span class="n">__c</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">__glibcxx_requires_valid_range</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">);</span>
+  <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">__tmp</span> <span class="o">=</span> <span class="n">__c</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">memset</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__tmp</span><span class="p">,</span> <span class="n">__last</span> <span class="o">-</span> <span class="n">__first</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Итак, Makefile:</p>
 
-<pre><code class="cpp">all: build run
+<div class="highlight"><pre><span class="nl">all:</span> <span class="n">build</span> <span class="n">run</span>
 
-.SILENT:
+<span class="p">.</span><span class="nl">SILENT:</span>
 
-target = memset_bzero_fill
+<span class="n">target</span> <span class="o">=</span> <span class="n">memset_bzero_fill</span>
 
-build:
-        g++ -O3 -o $(target) $(target).cpp
+<span class="nl">build:</span>
+        <span class="n">g</span><span class="o">++</span> <span class="o">-</span><span class="n">O3</span> <span class="o">-</span><span class="n">o</span> <span class="err">$</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="err">$</span><span class="p">(</span><span class="n">target</span><span class="p">).</span><span class="n">cpp</span>
 
-run: run-memset run-bzero run-fill-1 run-fill-2
+<span class="nl">run:</span> <span class="n">run</span><span class="o">-</span><span class="n">memset</span> <span class="n">run</span><span class="o">-</span><span class="n">bzero</span> <span class="n">run</span><span class="o">-</span><span class="n">fill</span><span class="o">-</span><span class="mi">1</span> <span class="n">run</span><span class="o">-</span><span class="n">fill</span><span class="o">-</span><span class="mi">2</span>
 
-go:
-        (time -p ./$(target) $(mode)) 2&gt;&amp;1 | head -1 | cut -d' ' -f 2
+<span class="nl">go:</span>
+        <span class="p">(</span><span class="n">time</span> <span class="o">-</span><span class="n">p</span> <span class="p">.</span><span class="o">/</span><span class="err">$</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="err">$</span><span class="p">(</span><span class="n">mode</span><span class="p">))</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span> <span class="o">|</span> <span class="n">head</span> <span class="o">-</span><span class="mi">1</span> <span class="o">|</span> <span class="n">cut</span> <span class="o">-</span><span class="n">d</span><span class="sc">&#39; &#39;</span> <span class="o">-</span><span class="n">f</span> <span class="mi">2</span>
 
-run-memset:
-        echo $@ `$(MAKE) go mode=1`
+<span class="n">run</span><span class="o">-</span><span class="nl">memset:</span>
+        <span class="n">echo</span> <span class="err">$@</span> <span class="err">`$</span><span class="p">(</span><span class="n">MAKE</span><span class="p">)</span> <span class="n">go</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="err">`</span>
 
-run-bzero:
-        echo $@ `$(MAKE) go mode=2`
+<span class="n">run</span><span class="o">-</span><span class="nl">bzero:</span>
+        <span class="n">echo</span> <span class="err">$@</span> <span class="err">`$</span><span class="p">(</span><span class="n">MAKE</span><span class="p">)</span> <span class="n">go</span> <span class="n">mode</span><span class="o">=</span><span class="mi">2</span><span class="err">`</span>
 
-run-fill-1:
-        echo $@ `$(MAKE) go mode=3`
+<span class="n">run</span><span class="o">-</span><span class="n">fill</span><span class="o">-</span><span class="mi">1</span><span class="o">:</span>
+        <span class="n">echo</span> <span class="err">$@</span> <span class="err">`$</span><span class="p">(</span><span class="n">MAKE</span><span class="p">)</span> <span class="n">go</span> <span class="n">mode</span><span class="o">=</span><span class="mi">3</span><span class="err">`</span>
 
-run-fill-2:
-        echo $@ `$(MAKE) go mode=4`
-</code></pre>
+<span class="n">run</span><span class="o">-</span><span class="n">fill</span><span class="o">-</span><span class="mi">2</span><span class="o">:</span>
+        <span class="n">echo</span> <span class="err">$@</span> <span class="err">`$</span><span class="p">(</span><span class="n">MAKE</span><span class="p">)</span> <span class="n">go</span> <span class="n">mode</span><span class="o">=</span><span class="mi">4</span><span class="err">`</span>
+</pre></div>
 
 <p>Компилятор &ldquo;gcc version 4.2.1 (Apple Inc. build 5666) (dot 3)&rdquo;.</p>
 

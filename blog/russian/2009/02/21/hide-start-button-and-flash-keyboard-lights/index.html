@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -47,66 +48,66 @@
 
 <p>Данная программа убирает кнопку Пуск (Start) на 5 секунд, а потом возвращает ее назад. Проверял на Windows 2000 и XP. Если программу прервать в отведенные 5 секунд, кнопку Пуск придется восстанавливать повторным запуском программы</p>
 
-<pre><code class="cpp">#include &lt;windows.h&gt;
-int main(void) {
-   // Ищем кнопку.
-   HWND hWnd;
-   hWnd = FindWindow(&quot;Shell_TrayWnd&quot;, NULL);
-   hWnd = FindWindowEx(hWnd, NULL, &quot;BUTTON&quot;, NULL);
+<div class="highlight"><pre><span class="cp">#include &lt;windows.h&gt;</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+   <span class="c1">// Ищем кнопку.</span>
+   <span class="n">HWND</span> <span class="n">hWnd</span><span class="p">;</span>
+   <span class="n">hWnd</span> <span class="o">=</span> <span class="n">FindWindow</span><span class="p">(</span><span class="s">&quot;Shell_TrayWnd&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+   <span class="n">hWnd</span> <span class="o">=</span> <span class="n">FindWindowEx</span><span class="p">(</span><span class="n">hWnd</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="s">&quot;BUTTON&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
 
-   // Прячем её.
-   ShowWindow(hWnd, SW_HIDE);
+   <span class="c1">// Прячем её.</span>
+   <span class="n">ShowWindow</span><span class="p">(</span><span class="n">hWnd</span><span class="p">,</span> <span class="n">SW_HIDE</span><span class="p">);</span>
 
-   // Ждём.
-   Sleep(5000);
+   <span class="c1">// Ждём.</span>
+   <span class="n">Sleep</span><span class="p">(</span><span class="mi">5000</span><span class="p">);</span>
 
-   // Показываем обратно.
-   ShowWindow(hWnd, SW_SHOW);
+   <span class="c1">// Показываем обратно.</span>
+   <span class="n">ShowWindow</span><span class="p">(</span><span class="n">hWnd</span><span class="p">,</span> <span class="n">SW_SHOW</span><span class="p">);</span>
 
-   return 0;
-}
-</code></pre>
+   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p><strong>Мигание индикаторами на клавиатуре</strong></p>
 
 <p>Данная программа устраивает бегущий огонек по индикаторам <code>NUM LOCK</code>, <code>CAPS LOCK</code> и <code>SCROLL LOCK</code> на более менее обычных клавиатурах.</p>
 
-<pre><code class="cpp">#include &lt;windows.h&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;windows.h&gt;</span>
 
-void kbdLight(WORD code) {
-   INPUT input;
+<span class="kt">void</span> <span class="n">kbdLight</span><span class="p">(</span><span class="n">WORD</span> <span class="n">code</span><span class="p">)</span> <span class="p">{</span>
+   <span class="n">INPUT</span> <span class="n">input</span><span class="p">;</span>
 
-   input.type = INPUT_KEYBOARD;
-   input.ki.wVk = code;
-   input.ki.wScan = 0;
-   input.ki.dwFlags = 0;
-   input.ki.time = 0;
-   input.ki.dwExtraInfo = 0;
+   <span class="n">input</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">INPUT_KEYBOARD</span><span class="p">;</span>
+   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">wVk</span> <span class="o">=</span> <span class="n">code</span><span class="p">;</span>
+   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">wScan</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">dwFlags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">dwExtraInfo</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-   SendInput(1, &amp;input, sizeof(input));
+   <span class="n">SendInput</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">input</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">input</span><span class="p">));</span>
 
-   input.type = INPUT_KEYBOARD;
-   input.ki.wVk = code;
-   input.ki.wScan = 0;
-   input.ki.dwFlags = KEYEVENTF_KEYUP;
-   input.ki.time = 0;
-   input.ki.dwExtraInfo = 0;
+   <span class="n">input</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">INPUT_KEYBOARD</span><span class="p">;</span>
+   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">wVk</span> <span class="o">=</span> <span class="n">code</span><span class="p">;</span>
+   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">wScan</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">dwFlags</span> <span class="o">=</span> <span class="n">KEYEVENTF_KEYUP</span><span class="p">;</span>
+   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">dwExtraInfo</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-   SendInput(1, &amp;input, sizeof(input));
-}
+   <span class="n">SendInput</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">input</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">input</span><span class="p">));</span>
+<span class="p">}</span>
 
-int main(void) {
-   while (true) {
-      kbdLight(VK_NUMLOCK);
-      Sleep(100);
-      kbdLight(VK_CAPITAL);
-      Sleep(100);
-      kbdLight(VK_SCROLL);
-      Sleep(100);
-   }
-   return 0;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+   <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">kbdLight</span><span class="p">(</span><span class="n">VK_NUMLOCK</span><span class="p">);</span>
+      <span class="n">Sleep</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+      <span class="n">kbdLight</span><span class="p">(</span><span class="n">VK_CAPITAL</span><span class="p">);</span>
+      <span class="n">Sleep</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+      <span class="n">kbdLight</span><span class="p">(</span><span class="n">VK_SCROLL</span><span class="p">);</span>
+      <span class="n">Sleep</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+   <span class="p">}</span>
+   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Если у вас есть интересные исходнички подобного рода — прикладывайте в комментарии.</p>
 

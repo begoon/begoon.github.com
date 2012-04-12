@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,22 +44,22 @@
 
 <p>Если элементов множества немного, а именно - их количество умещается в разрядную сетку вашего компьютера, например, не более 32-х или 64-х, то есть элегантный способ организовать перебор следующим образом:</p>
 
-<pre><code class="cpp">vector&lt;int&gt; v(20); // Исходное множество
+<div class="highlight"><pre><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span> <span class="c1">// Исходное множество</span>
 
-// Всего вариантов будет: 2^(v.size())-1.
-for (int i = 1; i &lt; (1 &lt;&lt; v.size()); ++i) {
-  vector&lt;int&gt; left, right;
-  for (int j = 0; j &lt; v.size(); ++j) {
-    if ((i &gt;&gt; j) &amp; 1)
-      left.push_back(v[j]);
-    else
-      right.push_back(v[j]);
-  }
+<span class="c1">// Всего вариантов будет: 2^(v.size())-1.</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">());</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">i</span> <span class="o">&gt;&gt;</span> <span class="n">j</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="n">left</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+    <span class="k">else</span>
+      <span class="n">right</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+  <span class="p">}</span>
 
-  // Текущий вариант множеств left и right готов для обработки.
-  ...
-}
-</code></pre>
+  <span class="c1">// Текущий вариант множеств left и right готов для обработки.</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
 
 </div>
 

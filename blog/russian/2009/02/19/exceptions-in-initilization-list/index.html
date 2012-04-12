@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,109 +42,109 @@
 <div id="post">
   <p>Правилом хорошего тона в С++ является использование списка инициализации для вызова конструкторов членов класса, например:</p>
 
-<pre><code class="cpp">class A { ... };
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
 
-class B {
-public:
-  B(int n);
-private:
-  A __a;
-};
+<span class="k">class</span> <span class="nc">B</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">B</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">A</span> <span class="n">__a</span><span class="p">;</span>
+<span class="p">};</span>
 
-B::B(int n) 
-  : __a(n)        // вызов конструктора А() в списке инициализации.
-{}
-</code></pre>
+<span class="n">B</span><span class="o">::</span><span class="n">B</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> 
+  <span class="o">:</span> <span class="n">__a</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>        <span class="c1">// вызов конструктора А() в списке инициализации.</span>
+<span class="p">{}</span>
+</pre></div>
 
 <p>А что произойдет, если в одном из вызовов в списке инициализации произойдет исключение? Например:</p>
 
-<pre><code class="cpp">class A {
-public:
-  A(int n) {
-    throw 0;   // Конструктор класса А бросает исключение int
-  }
-};
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">A</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="mi">0</span><span class="p">;</span>   <span class="c1">// Конструктор класса А бросает исключение int</span>
+  <span class="p">}</span>
+<span class="p">};</span>
 
-class B {
-public:
-  B(int n);
-private:
-  A __a;
-};
+<span class="k">class</span> <span class="nc">B</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">B</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">);</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">A</span> <span class="n">__a</span><span class="p">;</span>
+<span class="p">};</span>
 
-B::B(int n) 
-  : __a(n)     // Данный вызов бросает исключение
-{}
-</code></pre>
+<span class="n">B</span><span class="o">::</span><span class="n">B</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> 
+  <span class="o">:</span> <span class="n">__a</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>     <span class="c1">// Данный вызов бросает исключение</span>
+<span class="p">{}</span>
+</pre></div>
 
 <p>Хотелось бы иметь возможность поймать это исключение и провести &ldquo;чистку&rdquo; уже распределенной на тот момент памяти, например:</p>
 
-<pre><code class="cpp">class P { ... };
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">P</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
 
-class A {
-public:
-  A(int n) {
-    throw 0;   // Конструктор класс А бросает исключение int
-  }
-};
+<span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">A</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="mi">0</span><span class="p">;</span>   <span class="c1">// Конструктор класс А бросает исключение int</span>
+  <span class="p">}</span>
+<span class="p">};</span>
 
-class B {
-public:
-  B();
-private:
-  P* __p;
-  A __a;
-};
+<span class="k">class</span> <span class="nc">B</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">B</span><span class="p">();</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">P</span><span class="o">*</span> <span class="n">__p</span><span class="p">;</span>
+  <span class="n">A</span> <span class="n">__a</span><span class="p">;</span>
+<span class="p">};</span>
 
-B::B() 
-  : __p(new P),    // Память для P распределяется до вызова конструктора класса А
-  __a(0)           // Данный вызов бросает исключение
-{}
-</code></pre>
+<span class="n">B</span><span class="o">::</span><span class="n">B</span><span class="p">()</span> 
+  <span class="o">:</span> <span class="n">__p</span><span class="p">(</span><span class="k">new</span> <span class="n">P</span><span class="p">),</span>    <span class="c1">// Память для P распределяется до вызова конструктора класса А</span>
+  <span class="n">__a</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>           <span class="c1">// Данный вызов бросает исключение</span>
+<span class="p">{}</span>
+</pre></div>
 
 <p>На момент, когда конструктор А бросит исключение, мы уже будем иметь распределенную память под указателем <code>__p</code> и, не обработав исключение, эту память можно потерять.</p>
 
 <p>В С++ есть форма задания <code>try-catch</code> блока на уровне функции. Используя ее, можно переписать пример так:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
 
-class A {
-public:
-  A(int n) {
-    throw 0;   // Конструктор класс А бросает исключение int
-  }
-};
+<span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">A</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="mi">0</span><span class="p">;</span>   <span class="c1">// Конструктор класс А бросает исключение int</span>
+  <span class="p">}</span>
+<span class="p">};</span>
 
-class P {
-public:
-  P() { std::cout &lt;&lt; &quot;P(), constructor&quot; &lt;&lt; std::endl; }
-  ~P() { std::cout &lt;&lt; &quot;~P(), destructor&quot; &lt;&lt; std::endl; }
-};
+<span class="k">class</span> <span class="nc">P</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">P</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;P(), constructor&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+  <span class="o">~</span><span class="n">P</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;~P(), destructor&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
 
-class B {
-public:
-  B();
-private:
-  P* __p;
-  A __a;
-};
+<span class="k">class</span> <span class="nc">B</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">B</span><span class="p">();</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">P</span><span class="o">*</span> <span class="n">__p</span><span class="p">;</span>
+  <span class="n">A</span> <span class="n">__a</span><span class="p">;</span>
+<span class="p">};</span>
 
-B::B() 
-try
-  : __p(new P), __a(0) {
-} catch (int&amp; e) {
-  std::cout &lt;&lt; &quot;B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
-  delete __p;
-};
+<span class="n">B</span><span class="o">::</span><span class="n">B</span><span class="p">()</span> 
+<span class="k">try</span>
+  <span class="o">:</span> <span class="n">__p</span><span class="p">(</span><span class="k">new</span> <span class="n">P</span><span class="p">),</span> <span class="n">__a</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;B(), exception &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">delete</span> <span class="n">__p</span><span class="p">;</span>
+<span class="p">};</span>
 
-int main(int argc, char* argv[]) {
-  try {
-    B b;
-  } catch (int&amp; e) {
-    std::cout &lt;&lt; &quot;main(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
-  }
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">B</span> <span class="n">b</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main(), exception &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Видно (см. тело конструктора <code>B::B()</code>), что лист инициализации ушел между словом <code>try</code> и началом try-блока, а тело конструктора теперь внутри try-блока (в данном примере оно пустое), а обработчик исключения находится в catch-блоке после тела конструктора. Данный пример сумеет обработать исключение класса А и освободит память из под указателя <code>__p</code>. Данный пример выведет следующее:</p>
 
@@ -161,38 +162,38 @@ main(), exception 0
 
 <p>Единственное, что мы тут можем сделать, это &ldquo;на лету&rdquo; подправить исключение, брошенное членом класса (например, добавить туда дополнительную информацию). Следующий пример меняет код брошенного классом <code>А</code> исключения:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
 
-class A {
-public:
-  A(int n) {
-    throw 0;   // Конструктор класс А бросает исключение int
-  }
-};
+<span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">A</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="mi">0</span><span class="p">;</span>   <span class="c1">// Конструктор класс А бросает исключение int</span>
+  <span class="p">}</span>
+<span class="p">};</span>
 
-class B {
-public:
-  B();
-private:
-  A __a;
-};
+<span class="k">class</span> <span class="nc">B</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">B</span><span class="p">();</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">A</span> <span class="n">__a</span><span class="p">;</span>
+<span class="p">};</span>
 
-B::B() 
-try
-  : __a(0) {
-} catch (int&amp; e) {
-  std::cout &lt;&lt; &quot;B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
-  e = 1;      // Меняем код исключения с 0 на 1.
-};
+<span class="n">B</span><span class="o">::</span><span class="n">B</span><span class="p">()</span> 
+<span class="k">try</span>
+  <span class="o">:</span> <span class="n">__a</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;B(), exception &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">e</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>      <span class="c1">// Меняем код исключения с 0 на 1.</span>
+<span class="p">};</span>
 
-int main(int argc, char* argv[]) {
-  try {
-    B b;
-  } catch (int&amp; e) {
-    std::cout &lt;&lt; &quot;main(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
-  }
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">B</span> <span class="n">b</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main(), exception &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Эта программы выведет следующее:</p>
 
@@ -206,77 +207,77 @@ main(), exception 1
 
 <p>Деструктор — это тоже функция. К нему тоже применим синтаксис ловли исключения на уровне тела функции, например:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
 
-class B {
-public:
-  ~B();
-};
+<span class="k">class</span> <span class="nc">B</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="o">~</span><span class="n">B</span><span class="p">();</span>
+<span class="p">};</span>
 
-B::~B() 
-try {
-  throw 2;
-} catch (int&amp; e) {
-  std::cout &lt;&lt; &quot;~B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
-}
-</code></pre>
+<span class="n">B</span><span class="o">::~</span><span class="n">B</span><span class="p">()</span> 
+<span class="k">try</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;~B(), exception &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Поведение ловли исключения в деструкторе на уровне функции схоже с конструктором, то есть исключение, пойманное в catch-блоке на уровне функции будет переброшено автоматически снова при завершении деструктора, если он это не сделал сам, обработав исключение. Например:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
 
-class B {
-public:
-  ~B();
-};
+<span class="k">class</span> <span class="nc">B</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="o">~</span><span class="n">B</span><span class="p">();</span>
+<span class="p">};</span>
 
-B::~B() 
-try {
-  throw 2;
-} catch (int&amp; e) {
-  std::cout &lt;&lt; &quot;~B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
-}
+<span class="n">B</span><span class="o">::~</span><span class="n">B</span><span class="p">()</span> 
+<span class="k">try</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;~B(), exception &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
 
-int main(int argc, char* argv[]) {
-  try {
-    B b;
-  } catch (int&amp; e) {
-    std::cout &lt;&lt; &quot;main(), B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
-  }
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">B</span> <span class="n">b</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main(), B(), exception &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>выведет:</p>
 
-<pre><code class="cpp">~B(), exception 2
-main(), B(), exception 2
-</code></pre>
+<div class="highlight"><pre><span class="o">~</span><span class="n">B</span><span class="p">(),</span> <span class="n">exception</span> <span class="mi">2</span>
+<span class="n">main</span><span class="p">(),</span> <span class="n">B</span><span class="p">(),</span> <span class="n">exception</span> <span class="mi">2</span>
+</pre></div>
 
 <p>то есть исключение, после его обработки в деструкторе было переброшено снова. Конечно, не пойманные исключения в деструкторе являются большим &ldquo;no-no!&rdquo; в С++. Принято считать, что не пойманное в деструкторе исключение — это прямой путь к аварийному завершению программы, так как нарушается принцип целостности системы исключений. Если хотите, чтобы ваши программы на С++ работали стабильно, то не допускайте, чтобы исключения “вылетали” из деструктора. Например так:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
 
-class B {
-public:
-  ~B();
-};
+<span class="k">class</span> <span class="nc">B</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="o">~</span><span class="n">B</span><span class="p">();</span>
+<span class="p">};</span>
 
-B::~B() {
-  try {
-    throw 2;            // Бросаем исключение.
-  } catch (int&amp; e) {    // И тут же ловим его, не пропуская него “на волю”.
-    std::cout &lt;&lt; &quot;~B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
-  }
-}
+<span class="n">B</span><span class="o">::~</span><span class="n">B</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="mi">2</span><span class="p">;</span>            <span class="c1">// Бросаем исключение.</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>    <span class="c1">// И тут же ловим его, не пропуская него “на волю”.</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;~B(), exception &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
 
-int main(int argc, char* argv[]) {
-  try {
-    B b;
-  } catch (int&amp; e) {
-    std::cout &lt;&lt; &quot;main(), B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
-  }
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">B</span> <span class="n">b</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main(), B(), exception &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Эта программа выведет:</p>
 
@@ -289,49 +290,49 @@ int main(int argc, char* argv[]) {
 
 <p>Технику обработки исключений на уровне функции можно применять для любой функции, а не только для конструктора или деструктора, например:</p>
 
-<pre><code class="cpp">void f() 
-try {
-  throw 1;
-} catch (int&amp; e) {
-  std::cout &lt;&lt; &quot;f(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
-}
-</code></pre>
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">f</span><span class="p">()</span> 
+<span class="k">try</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;f(), exception &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Но целесообразность такого синтаксиса сомнительна, так как пойманное исключение <strong>не перебрасывается</strong> автоматически снова после окончания функции, как это было в случае с конструктором и деструктором. Программа:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
 
-void f() 
-try {
-  throw 1;
-} catch (int&amp; e) {
-  std::cout &lt;&lt; &quot;f(), B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
-}
+<span class="kt">void</span> <span class="n">f</span><span class="p">()</span> 
+<span class="k">try</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;f(), B(), exception &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
 
-int main(int argc, char* argv[]) {
-  try {
-    f();
-  } catch (int&amp; e) {
-    std::cout &lt;&lt; &quot;main(), f(), B(0), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
-  }
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="n">f</span><span class="p">();</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;main(), f(), B(0), exception &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>напечатает только:</p>
 
-<pre><code class="cpp">f(), B(), exception 1
-</code></pre>
+<div class="highlight"><pre><span class="n">f</span><span class="p">(),</span> <span class="n">B</span><span class="p">(),</span> <span class="n">exception</span> <span class="mi">1</span>
+</pre></div>
 
 <p>то есть исключение не было передано дальше, поэтому разумнее было бы просто оформить функцию традиционным образом с помощью try-блока, обрамляющего всё тело функции:</p>
 
-<pre><code class="cpp">void f() {
-  try {
-    throw 1;
-  } catch (int&amp; e) {
-    std::cout &lt;&lt; &quot;f(), B(), exception &quot; &lt;&lt; e &lt;&lt; std::endl;
-  }
-}
-</code></pre>
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">f</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="kt">int</span><span class="o">&amp;</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;f(), B(), exception &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">e</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>не внося в форматирование текста лишней каши непривычным положением слов <code>try</code> и <code>catch</code>.</p>
 

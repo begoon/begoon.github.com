@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,11 +42,11 @@
 <div id="post">
   <p>Тривиальный пример (<code>bcc32_5.93_cast_bug.cpp</code>):</p>
 
-<pre><code class="cpp">class A {};
-class C {};
-A* a;
-A* b = static_cast&lt;C*&gt;(a);
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">A</span> <span class="p">{};</span>
+<span class="k">class</span> <span class="nc">C</span> <span class="p">{};</span>
+<span class="n">A</span><span class="o">*</span> <span class="n">a</span><span class="p">;</span>
+<span class="n">A</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">C</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+</pre></div>
 
 <p>Компилируем в bcc32.exe (версия 5.93) из Codegear RAD Studion 2007:</p>
 

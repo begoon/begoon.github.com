@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -47,40 +48,40 @@
 
 <p>File <code>erato-go-bool.go</code>:</p>
 
-<pre><code class="go">package main
+<div class="highlight"><pre><span class="k">package</span> <span class="n">main</span>
 
-import &quot;fmt&quot;
-import &quot;math&quot;
-import &quot;flag&quot;
+<span class="k">import</span> <span class="s">&quot;fmt&quot;</span>
+<span class="k">import</span> <span class="s">&quot;math&quot;</span>
+<span class="k">import</span> <span class="s">&quot;flag&quot;</span>
 
-func main() {
-    var N int
-    flag.IntVar(&amp;N, &quot;N&quot;, 100, &quot;&quot;)
-    flag.Parse()
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">N</span> <span class="nb">int</span>
+    <span class="n">flag</span><span class="p">.</span><span class="n">IntVar</span><span class="p">(&amp;</span><span class="n">N</span><span class="p">,</span> <span class="s">&quot;N&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">flag</span><span class="p">.</span><span class="n">Parse</span><span class="p">()</span>
 
-    fmt.Printf(&quot;%d\n&quot;, N)
+    <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;%d\n&quot;</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
 
-    seive := make([]bool, N)
+    <span class="n">seive</span> <span class="p">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="n">bool</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
    
-    limit := int(math.Sqrt(float64(N))) + 1
+    <span class="n">limit</span> <span class="p">:=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="n">Sqrt</span><span class="p">(</span><span class="nb">float64</span><span class="p">(</span><span class="n">N</span><span class="p">)))</span> <span class="p">+</span> <span class="mi">1</span>
 
-    for i := 2; i &lt; limit; i++ {
-        if !seive[i] {
-            for j := i * i; j &lt; N; j += i  {
-                seive[j] = true
-            }
-        }
-    }
+    <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">limit</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">!</span><span class="n">seive</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="p">:=</span> <span class="n">i</span> <span class="p">*</span> <span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="p">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span> <span class="p">+=</span> <span class="n">i</span>  <span class="p">{</span>
+                <span class="n">seive</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="p">=</span> <span class="n">true</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-    count := 0
-    for i := 2; i &lt; N; i++ {
-        if !seive[i] {
-            count++
-        }
-    }
-    fmt.Printf(&quot;%d\n&quot;, count)
-}
-</code></pre>
+    <span class="n">count</span> <span class="p">:=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">!</span><span class="n">seive</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">{</span>
+            <span class="n">count</span><span class="p">++</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;%d\n&quot;</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>But how fast is this?</p>
 
@@ -90,171 +91,171 @@ func main() {
 
 <p>File <code>erato-go-int.go</code>:</p>
 
-<pre><code class="go">package main
+<div class="highlight"><pre><span class="k">package</span> <span class="n">main</span>
 
-import &quot;fmt&quot;
-import &quot;math&quot;
-import &quot;flag&quot;
+<span class="k">import</span> <span class="s">&quot;fmt&quot;</span>
+<span class="k">import</span> <span class="s">&quot;math&quot;</span>
+<span class="k">import</span> <span class="s">&quot;flag&quot;</span>
 
-func main() {
-    var N int
-    flag.IntVar(&amp;N, &quot;N&quot;, 100, &quot;&quot;)
-    flag.Parse()
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="n">N</span> <span class="nb">int</span>
+    <span class="n">flag</span><span class="p">.</span><span class="n">IntVar</span><span class="p">(&amp;</span><span class="n">N</span><span class="p">,</span> <span class="s">&quot;N&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">flag</span><span class="p">.</span><span class="n">Parse</span><span class="p">()</span>
 
-    fmt.Printf(&quot;%d\n&quot;, N)
+    <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;%d\n&quot;</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
 
-    seive := make([]int, N)
+    <span class="n">seive</span> <span class="p">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="nb">int</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
    
-    limit := int(math.Sqrt(float64(N))) + 1
+    <span class="n">limit</span> <span class="p">:=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="n">Sqrt</span><span class="p">(</span><span class="nb">float64</span><span class="p">(</span><span class="n">N</span><span class="p">)))</span> <span class="p">+</span> <span class="mi">1</span>
 
-    for i := 2; i &lt; limit; i++ {
-        if seive[i] == 0 {
-            for j := i * i; j &lt; N; j += i  {
-                seive[j] = 1
-            }
-        }
-    }
+    <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">limit</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">seive</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">==</span> <span class="mi">0</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="p">:=</span> <span class="n">i</span> <span class="p">*</span> <span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="p">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span> <span class="p">+=</span> <span class="n">i</span>  <span class="p">{</span>
+                <span class="n">seive</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="p">=</span> <span class="mi">1</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
 
-    count := 0
-    for i := 2; i &lt; N; i++ {
-        if seive[i] == 0 {
-            count++
-        }
-    }
-    fmt.Printf(&quot;%d\n&quot;, count)
-}
-</code></pre>
+    <span class="n">count</span> <span class="p">:=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">seive</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">==</span> <span class="mi">0</span> <span class="p">{</span>
+            <span class="n">count</span><span class="p">++</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;%d\n&quot;</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Then I tested in C++. A <code>TYPE</code> macro allows to compile the source with different types (<code>int</code> and <code>bool</code>):</p>
 
 <p>File <code>erato-cxx.cpp</code>:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
-#include &lt;vector&gt;
-#include &lt;cstdlib&gt;
-#include &lt;cmath&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;vector&gt;</span>
+<span class="cp">#include &lt;cstdlib&gt;</span>
+<span class="cp">#include &lt;cmath&gt;</span>
 
-int main(int argc, char* argv[]) {
-  int n = argc &gt; 1 ? std::atoi(argv[1]) : 100;
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">:</span> <span class="mi">100</span><span class="p">;</span>
 
-  std::cout &lt;&lt; n &lt;&lt; std::endl;
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-  int sqrt_n = static_cast&lt;int&gt;(std::sqrt(static_cast&lt;double&gt;(n))) + 1;
+  <span class="kt">int</span> <span class="n">sqrt_n</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
 
-  std::vector&lt;TYPE&gt; S(n, true);
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">TYPE</span><span class="o">&gt;</span> <span class="n">S</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
 
-  for (int i = 2; i &lt; sqrt_n; ++i)
-    if (S[i])
-      for (int j = i*i; j &lt; n; j+=i)
-        S[j] = false;
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">sqrt_n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">j</span><span class="o">+=</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">S</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
 
-  int count = 0;
-  for (int i = 2; i &lt; n; ++i)
-    if (S[i])
-      count++;
+  <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+      <span class="n">count</span><span class="o">++</span><span class="p">;</span>
 
-  std::cout &lt;&lt; count &lt;&lt; std::endl;
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">count</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-  return 0;
-}
-</code></pre>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>And to have the full picture there is an implementation in C:</p>
 
 <p>File: <code>erator-c-int.c</code>:</p>
 
-<pre><code class="cpp">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;memory.h&gt;
-#include &lt;math.h&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
+<span class="cp">#include &lt;memory.h&gt;</span>
+<span class="cp">#include &lt;math.h&gt;</span>
 
-int main(int argc, char* argv[]) {
-  int n = argc &gt; 1 ? atoi(argv[1]) : 100;
-  int* S;
-  int count;
-  int sz = n * sizeof(*S);
-  int i, j;
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">:</span> <span class="mi">100</span><span class="p">;</span>
+  <span class="kt">int</span><span class="o">*</span> <span class="n">S</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">count</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">sz</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">S</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
 
-  printf(&quot;%d\n&quot;, n);
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
 
-  long sqrt_n = sqrt(n) + 1;
+  <span class="kt">long</span> <span class="n">sqrt_n</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
 
-  S = malloc(sz);
-  memset(S, 0, sz);
+  <span class="n">S</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">sz</span><span class="p">);</span>
+  <span class="n">memset</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sz</span><span class="p">);</span>
 
-  for (i = 2; i &lt; sqrt_n; ++i)
-    if (S[i] == 0)
-      for (j = i*i; j &lt; n; j+=i)
-        S[j] = 1;
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">sqrt_n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">j</span><span class="o">+=</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">S</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
 
-  count = 0;
-  for (i = 2; i &lt; n; ++i)
-    if (S[i] == 0)
-      count++;
+  <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+      <span class="n">count</span><span class="o">++</span><span class="p">;</span>
 
-  printf(&quot;%d\n&quot;, count);
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">count</span><span class="p">);</span>
 
-  free(S);
-  return 0;
-}
-</code></pre>
+  <span class="n">free</span><span class="p">(</span><span class="n">S</span><span class="p">);</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Makefile for easy run:</p>
 
 <p>File <code>Makefile</code>:</p>
 
-<pre><code class="makefile">.SILENT: 
+<div class="highlight"><pre><span class="nf">.SILENT</span><span class="o">:</span> 
 
-all: 
-        $(MAKE) run 2&gt;&amp;1 | tee log
-        $(MAKE) parse-log
+<span class="nf">all</span><span class="o">:</span> 
+        <span class="k">$(</span>MAKE<span class="k">)</span> run 2&gt;&amp;1 | tee log
+        <span class="k">$(</span>MAKE<span class="k">)</span> parse-log
 
-run: go-bool go-int cxx-int cxx-bool c-int
+<span class="nf">run</span><span class="o">:</span> <span class="m">go-bool go-int cxx-int cxx-bool c-int</span>
 
-N ?= 100000000
+<span class="nv">N</span> <span class="o">?=</span> 100000000
 
 go-bool:
-        echo $@
-        6g erato-$@.go
-        6l -o erato-$@ erato-$@.6
-        time -p -f %e ./erato-$@ -N=$(N)
+        <span class="nb">echo</span> <span class="nv">$@</span>
+        6g erato-<span class="nv">$@</span>.go
+        6l -o erato-<span class="nv">$@</span> erato-<span class="nv">$@</span>.6
+        <span class="nb">time</span> -p -f %e ./erato-<span class="nv">$@</span> -N<span class="o">=</span><span class="k">$(</span>N<span class="k">)</span>
 
 go-int: 
-        echo $@
-        6g erato-$@.go
-        6l -o erato-$@ erato-$@.6
-        time -p -f %e ./erato-$@ -N=$(N)
+        <span class="nb">echo</span> <span class="nv">$@</span>
+        6g erato-<span class="nv">$@</span>.go
+        6l -o erato-<span class="nv">$@</span> erato-<span class="nv">$@</span>.6
+        <span class="nb">time</span> -p -f %e ./erato-<span class="nv">$@</span> -N<span class="o">=</span><span class="k">$(</span>N<span class="k">)</span>
 
 cxx-bool:
-        echo $@
-        g++ -o erato-$@ \
-                -O3 -funroll-all-loops -fomit-frame-pointer \
-                -DTYPE=bool erato-cxx.cpp 
-        time -p -f %e ./erato-$@ $(N)
+        <span class="nb">echo</span> <span class="nv">$@</span>
+        g++ -o erato-<span class="nv">$@</span> <span class="se">\</span>
+                -O3 -funroll-all-loops -fomit-frame-pointer <span class="se">\</span>
+                -DTYPE<span class="o">=</span>bool erato-cxx.cpp 
+        <span class="nb">time</span> -p -f %e ./erato-<span class="nv">$@</span> <span class="k">$(</span>N<span class="k">)</span>
 
 cxx-int:
-        echo $@
-        g++ -o erato-$@ \
-                -O3 -funroll-all-loops -fomit-frame-pointer \
-                -DTYPE=int erato-cxx.cpp 
-        time -p -f %e ./erato-$@ $(N)
+        <span class="nb">echo</span> <span class="nv">$@</span>
+        g++ -o erato-<span class="nv">$@</span> <span class="se">\</span>
+                -O3 -funroll-all-loops -fomit-frame-pointer <span class="se">\</span>
+                -DTYPE<span class="o">=</span>int erato-cxx.cpp 
+        <span class="nb">time</span> -p -f %e ./erato-<span class="nv">$@</span> <span class="k">$(</span>N<span class="k">)</span>
 
 c-int:
-        echo $@
-        gcc -o erato-$@ -lm \
-                -O3 -funroll-all-loops -fomit-frame-pointer erato-$@.c
-        time -p -f %e ./erato-$@ $(N)
+        <span class="nb">echo</span> <span class="nv">$@</span>
+        gcc -o erato-<span class="nv">$@</span> -lm <span class="se">\</span>
+                -O3 -funroll-all-loops -fomit-frame-pointer erato-<span class="nv">$@</span>.c
+        <span class="nb">time</span> -p -f %e ./erato-<span class="nv">$@</span> <span class="k">$(</span>N<span class="k">)</span>
 
 parse-log:
-        printf &quot;%10s %10s %8s %5s\n&quot; &quot;Language&quot; N Count Time ; \
-        (echo &quot;------------------------------------&quot;) ; \
-        while read type ; do \
-                read N &amp;&amp; \
-                read count &amp;&amp; \
-                read time &amp;&amp; \
-                printf &quot;%10s %10s %8s %5s\n&quot; $$type $$N $$count $$time ; \
-        done &lt; log
-</code></pre>
+        <span class="nb">printf</span> <span class="s2">&quot;%10s %10s %8s %5s\n&quot;</span> <span class="s2">&quot;Language&quot;</span> N Count Time ; <span class="se">\</span>
+        <span class="o">(</span><span class="nb">echo</span> <span class="s2">&quot;------------------------------------&quot;</span><span class="o">)</span> ; <span class="se">\</span>
+        <span class="k">while </span><span class="nb">read type</span> ; <span class="k">do</span> <span class="se">\</span>
+                <span class="nb">read </span>N <span class="o">&amp;&amp;</span> <span class="se">\</span>
+                <span class="nb">read </span>count <span class="o">&amp;&amp;</span> <span class="se">\</span>
+                <span class="nb">read time</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
+                <span class="nb">printf</span> <span class="s2">&quot;%10s %10s %8s %5s\n&quot;</span> <span class="nv">$$</span><span class="nb">type</span> <span class="nv">$$</span>N <span class="nv">$$</span>count <span class="nv">$$</span><span class="nb">time</span> ; <span class="se">\</span>
+        <span class="k">done</span> &lt; log
+</pre></div>
 
 <p>I run this on Ubuntu 64-bit. The C/C++ compiler is gcc 4.4.1. The Go compiler is the lastest from its official repository.</p>
 

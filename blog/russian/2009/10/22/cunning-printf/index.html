@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,13 +46,13 @@
 
 <p>Для сборки финального html-файла из кучи мелких у меня написана примитивная программа. Вот ее фрагмент:</p>
 
-<pre><code class="cpp">while (!feof(f)) {
-  char line[1024];
-  *line = 0;
-  fgets(line, sizeof(line), f);
-  printf(line);
-}
-</code></pre>
+<div class="highlight"><pre><span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">feof</span><span class="p">(</span><span class="n">f</span><span class="p">))</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="n">line</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
+  <span class="o">*</span><span class="n">line</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">fgets</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">line</span><span class="p">),</span> <span class="n">f</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Подразумевается, что данный код прострочно копирует данные из файла <code>f</code> на стандарный вывод.</p>
 
@@ -59,25 +60,25 @@
 
 <p>Получалось, что вместо, например:</p>
 
-<pre><code class="html">&lt;table width=&quot;100%&quot;&gt;
-</code></pre>
+<div class="highlight"><pre><span class="nt">&lt;table</span> <span class="na">width=</span><span class="s">&quot;100%&quot;</span><span class="nt">&gt;</span>
+</pre></div>
 
 <p>на выходе было:</p>
 
-<pre><code class="html">&lt;table width=&quot;100&quot;&gt;
-</code></pre>
+<div class="highlight"><pre><span class="nt">&lt;table</span> <span class="na">width=</span><span class="s">&quot;100&quot;</span><span class="nt">&gt;</span>
+</pre></div>
 
 <p>Вы, наверное, уже догадались, в чем тут дело. Но, признаюсь, я искал проблему минут тридцать.</p>
 
 <p>Вместо:</p>
 
-<pre><code class="cpp">printf(line);
-</code></pre>
+<div class="highlight"><pre><span class="n">printf</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
+</pre></div>
 
 <p>надо писать:</p>
 
-<pre><code class="cpp">printf(&quot;%s&quot;, line);
-</code></pre>
+<div class="highlight"><pre><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">);</span>
+</pre></div>
 
 <p>А иначе все процентные символы будут расцены как указатели форматов, ибо первый параметр <code>printf()</code> - это не просто строка, а формат, и в случае их неэкранирования будут уделены, что и происходило в моем случае.</p>
 

@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,51 +42,51 @@
 <div id="post">
   <p>Рассмотрим простой пример (<code>virtual_funct_const.cpp</code>):</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
 
-class A {
- public:
-  A() {
-    construct();
-  }
+<span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="n">A</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">construct</span><span class="p">();</span>
+  <span class="p">}</span>
 
-  ~A() {
-    destruct();
-  }
+  <span class="o">~</span><span class="n">A</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">destruct</span><span class="p">();</span>
+  <span class="p">}</span>
 
-  virtual void construct() {
-    std::cout &lt;&lt; &quot;A::construct()&quot; &lt;&lt; std::endl;
-  }
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">construct</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;A::construct()&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
 
-  virtual void destruct() {
-    std::cout &lt;&lt; &quot;A::destruct()&quot; &lt;&lt; std::endl;
-  }
-};
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">destruct</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;A::destruct()&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
 
-class B: public A {
- public:
-  B() {
-    construct();
-  }
+<span class="k">class</span> <span class="nc">B</span><span class="o">:</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="n">B</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">construct</span><span class="p">();</span>
+  <span class="p">}</span>
 
-  ~B() {
-    destruct();
-  }
+  <span class="o">~</span><span class="n">B</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">destruct</span><span class="p">();</span>
+  <span class="p">}</span>
 
-  virtual void construct() {
-    std::cout &lt;&lt; &quot;B::construct()&quot; &lt;&lt; std::endl;
-  }
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">construct</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;B::construct()&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
 
-  virtual void destruct() {
-    std::cout &lt;&lt; &quot;B::destruct()&quot; &lt;&lt; std::endl;
-  }
-};
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">destruct</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;B::destruct()&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
 
-int main() {
-  B b;
-  return 0;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">B</span> <span class="n">b</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Что напечатает эта программа?</p>
 

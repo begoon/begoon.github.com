@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,46 +42,46 @@
 <div id="post">
   <p>Был удивлен, когда компилятор С съел вот такой забавный способ условного вызова функций:</p>
 
-<pre><code class="cpp">#include &lt;stdio.h&gt;
-#include &lt;math.h&gt;
-int main() {
-  int i;
-  for (i = 0; i &lt;= 1; ++i) {
-    float a = (i ? floor : ceil) (10.5);
-    printf(&quot;%d: %f\n&quot;, i, a);
-  }
-  return 0;
-}
-</code></pre>
+<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;math.h&gt;</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">?</span> <span class="n">floor</span> <span class="o">:</span> <span class="n">ceil</span><span class="p">)</span> <span class="p">(</span><span class="mf">10.5</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d: %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Для С++ надо написать:</p>
 
-<pre><code class="cpp">#include &lt;stdio.h&gt;
-#include &lt;cmath&gt;
-int main() {
-  int i;
-  typedef float (*f)(float);
-  for (i = 0; i &lt;= 1; ++i) {
-    float a = (i ? (f)std::floor : (f)std::ceil) (10.5);
-    printf(&quot;%d: %f\n&quot;, i, a);
-  }
-  return 0;
-}
-</code></pre>
+<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;cmath&gt;</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+  <span class="k">typedef</span> <span class="kt">float</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)(</span><span class="kt">float</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">?</span> <span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="n">std</span><span class="o">::</span><span class="n">floor</span> <span class="o">:</span> <span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="n">std</span><span class="o">::</span><span class="n">ceil</span><span class="p">)</span> <span class="p">(</span><span class="mf">10.5</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d: %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>или</p>
 
-<pre><code class="cpp">#include &lt;stdio.h&gt;
-#include &lt;cmath&gt;
-int main() {
-  int i;
-  for (i = 0; i &lt;= 1; ++i) {
-    float a = (i ? std::floorl : std::ceill) (10.5);
-    printf(&quot;%d: %f\n&quot;, i, a);
-  }
-  return 0;
-}
-</code></pre>
+<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;cmath&gt;</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">float</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">floorl</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">ceill</span><span class="p">)</span> <span class="p">(</span><span class="mf">10.5</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d: %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Все программы выводят:</p>
 

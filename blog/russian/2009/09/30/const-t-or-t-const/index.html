@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,27 +42,27 @@
 <div id="post">
   <p>Не секрет, что выражение <code>const T*</code> при объявления указателя полностью эквивалентно записи <code>T const*</code>, ибо тут важно только, что <code>const</code> стоит до знака <code>*</code>, а порядок его употребления с именем типа <code>Т</code> роли не играет:</p>
 
-<pre><code class="cpp">const T* p;
-</code></pre>
+<div class="highlight"><pre><span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">p</span><span class="p">;</span>
+</pre></div>
 
 <p>и</p>
 
-<pre><code class="cpp">T const* p;
-</code></pre>
+<div class="highlight"><pre><span class="n">T</span> <span class="k">const</span><span class="o">*</span> <span class="n">p</span><span class="p">;</span>
+</pre></div>
 
 <p>объявляют указатель на константный объект, а не константный указатель, то есть значение самого указателя можно менять:</p>
 
-<pre><code class="cpp">T const* p;
-...
-p = NULL;
-</code></pre>
+<div class="highlight"><pre><span class="n">T</span> <span class="k">const</span><span class="o">*</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="n">p</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+</pre></div>
 
 <p>Но менять сам объект нельзя:</p>
 
-<pre><code class="cpp">T const* p;
-...
-p-&gt;some_member = 0;   // ОШИБКА: error C2166: l-value specifies const object
-</code></pre>
+<div class="highlight"><pre><span class="n">T</span> <span class="k">const</span><span class="o">*</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="n">p</span><span class="o">-&gt;</span><span class="n">some_member</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>   <span class="c1">// ОШИБКА: error C2166: l-value specifies const object</span>
+</pre></div>
 
 <p>Но все это была вводная, и сейчас не об этом.</p>
 

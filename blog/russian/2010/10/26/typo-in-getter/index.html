@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,34 +42,34 @@
 <div id="post">
   <p>Есть (точнее был) у меня вот такой код:</p>
 
-<pre><code class="cpp">const std::string&amp; id() const { return id_; }
-std::string id() { return id_; }
-</code></pre>
+<div class="highlight"><pre><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id_</span><span class="p">;</span> <span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id_</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
 
 <p>В нем есть одна досадная опечатка, из которой код:</p>
 
-<pre><code class="cpp">order.id() = 123;
-</code></pre>
+<div class="highlight"><pre><span class="n">order</span><span class="p">.</span><span class="n">id</span><span class="p">()</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span>
+</pre></div>
 
 <p>делал то, что от него не ожидалось, а точнее, ничего не делал. И проблема, как вы наверное уже догадались, в пропущеном значке <code>&amp;</code> во второй строке. Должно было быть так:</p>
 
-<pre><code class="cpp">const std::string&amp; id() const { return id_; }
-std::string&amp; id() { return id_; }
-</code></pre>
+<div class="highlight"><pre><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id_</span><span class="p">;</span> <span class="p">}</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id_</span><span class="p">;</span> <span class="p">}</span>
+</pre></div>
 
 <p>Эта опечатка стоила мне часа поиска проблемы через вторичные признаки в виде иногда не обновляемой базы данных.</p>
 
 <p>Причина? А все потому, что я поленился написать тесты изначально, решив, что это уж очень простые методы. Но теперь таки добавил для этого тест:</p>
 
-<pre><code class="cpp">TEST(Order, GetterSetters) {
-  Order order;
-  ...
-  EXPECT_EQ(0, order.id());   // Must be initialized.
-  order.id() = 123;
-  EXPECT_EQ(123, order.id());
-  ...
-}
-</code></pre>
+<div class="highlight"><pre><span class="n">TEST</span><span class="p">(</span><span class="n">Order</span><span class="p">,</span> <span class="n">GetterSetters</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">Order</span> <span class="n">order</span><span class="p">;</span>
+  <span class="p">...</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="p">.</span><span class="n">id</span><span class="p">());</span>   <span class="c1">// Must be initialized.</span>
+  <span class="n">order</span><span class="p">.</span><span class="n">id</span><span class="p">()</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">123</span><span class="p">,</span> <span class="n">order</span><span class="p">.</span><span class="n">id</span><span class="p">());</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Решил сэкономить время, а вышло наоборот.</p>
 

@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,26 +42,26 @@
 <div id="post">
   <p>Имеем следующий код:</p>
 
-<pre><code class="cpp">#define T 2
+<div class="highlight"><pre><span class="cp">#define T 2</span>
 
-class A {
-  public:
-    virtual ~A() { 
-      p = 0;
-    }
-    int p;
-};
+<span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+  <span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">A</span><span class="p">()</span> <span class="p">{</span> 
+      <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">int</span> <span class="n">p</span><span class="p">;</span>
+<span class="p">};</span>
 
-class B: public A {
-  int a;
-};
+<span class="k">class</span> <span class="nc">B</span><span class="o">:</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+<span class="p">};</span>
 
-int main() {
-  A* a = new B[T];
-  delete[] a;
-  return 0;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">A</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">B</span><span class="p">[</span><span class="n">T</span><span class="p">];</span>
+  <span class="k">delete</span><span class="p">[]</span> <span class="n">a</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>У меня эта программа однозначно падает с <code>Segmentation fault</code> на строке <code>delete[] a</code>. Проверено на Sun C++ на Солярисе, GCC на Линуксе и на FreeBSD. Вот, например, что происходит на BSD:</p>
 

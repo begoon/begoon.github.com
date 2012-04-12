@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -47,35 +48,35 @@
 
 <p>Вот пример &ldquo;не очень хорошей программы&rdquo;:</p>
 
-<pre><code class="cpp">class A {
-public:
- A() {
-  char* __p = new char[10];
-  __p = new char[10];
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+ <span class="n">A</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">char</span><span class="o">*</span> <span class="n">__p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+  <span class="n">__p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
 
-  char* a = (char *)0;
-  *a = 0;
+  <span class="kt">char</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="mi">0</span><span class="p">;</span>
+  <span class="o">*</span><span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-  char c[10];
-  c[10] = 0;
- }
- ~A() {
-  delete __p;
+  <span class="kt">char</span> <span class="n">c</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+  <span class="n">c</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+ <span class="p">}</span>
+ <span class="o">~</span><span class="n">A</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">delete</span> <span class="n">__p</span><span class="p">;</span>
 
-  char* a = new char[100];
-  return;
+  <span class="kt">char</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
+  <span class="k">return</span><span class="p">;</span>
 
-  delete[] a;
-}
-private:
-  char* __p;
-};
+  <span class="k">delete</span><span class="p">[]</span> <span class="n">a</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="kt">char</span><span class="o">*</span> <span class="n">__p</span><span class="p">;</span>
+<span class="p">};</span>
 
-int main() {
-  A a;  
-  return 0;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">A</span> <span class="n">a</span><span class="p">;</span>  
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Тут без микроскопа видно, что проблем полно:</p>
 

@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,29 +42,29 @@
 <div id="post">
   <p>Например, вот такой кусок кода:</p>
 
-<pre><code class="cpp">void f (  int a , char *p  )
-{
-   int   whattodo ;
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">f</span> <span class="p">(</span>  <span class="kt">int</span> <span class="n">a</span> <span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p</span>  <span class="p">)</span>
+<span class="p">{</span>
+   <span class="kt">int</span>   <span class="n">whattodo</span> <span class="p">;</span>
 
-   whattodo = a &lt; 1 ? 2 : 0;
+   <span class="n">whattodo</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="mi">2</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
 
-   switch ( whattodo )
-   {
-   case 2:
-             printf(&quot;THIS\n&quot;); break;
-   case 1:
-             printf(&quot;THAT\n&quot;);
-             break;
-   }
-   if ( a !=  * p  ) {
-             a = 1111111 ;
+   <span class="k">switch</span> <span class="p">(</span> <span class="n">whattodo</span> <span class="p">)</span>
+   <span class="p">{</span>
+   <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
+             <span class="n">printf</span><span class="p">(</span><span class="s">&quot;THIS</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+   <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
+             <span class="n">printf</span><span class="p">(</span><span class="s">&quot;THAT</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+             <span class="k">break</span><span class="p">;</span>
+   <span class="p">}</span>
+   <span class="k">if</span> <span class="p">(</span> <span class="n">a</span> <span class="o">!=</span>  <span class="o">*</span> <span class="n">p</span>  <span class="p">)</span> <span class="p">{</span>
+             <span class="n">a</span> <span class="o">=</span> <span class="mi">1111111</span> <span class="p">;</span>
 
-   } else
-             a = 2222222;
+   <span class="p">}</span> <span class="k">else</span>
+             <span class="n">a</span> <span class="o">=</span> <span class="mi">2222222</span><span class="p">;</span>
 
 
-}
-</code></pre>
+<span class="p">}</span>
+</pre></div>
 
 <p>Удивительно, но во многих компаниях, где я работал, подобный код спокойно подошел бы по принятому стандарту кодирования. И такой код вполне реален, так как он обычно создается за долгое время разными людьми. В целом код читаем и даже более менее понятен.</p>
 

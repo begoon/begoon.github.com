@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -47,31 +48,31 @@
 
 <p>Например:</p>
 
-<pre><code class="cpp">void test_Ticket_dd6a19efa5_DATE(void **state) {
-  string_eq(&quot;0029  ENTRIES&lt;1, AB.CDE.VALUE.DATE&gt;    = TODAY&quot;,
-            &quot;..............a........................b......&quot;);
-  string_eq(&quot;0036  ENTRIES&lt;1, AB.CDE.BOOKING.DATE&gt;  = TODAY&quot;,
-            &quot;..............a........................b......&quot;);
-  string_eq(&quot;0036  ENTRIES&lt;1, AB.CDE.TOOKING DATE&gt;  = TODAY&quot;,
-            &quot;..............a.................bbbb...c......&quot;);
-  string_eq(&quot;0036 DATE = TODAY&quot;,
-            &quot;.....aaaa.b......&quot;);
-  string_eq(&quot;0036  DATE = TODAY&quot;,
-            &quot;......aaaa.b......&quot;);
-}
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">test_Ticket_dd6a19efa5_DATE</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0029  ENTRIES&lt;1, AB.CDE.VALUE.DATE&gt;    = TODAY&quot;</span><span class="p">,</span>
+            <span class="s">&quot;..............a........................b......&quot;</span><span class="p">);</span>
+  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0036  ENTRIES&lt;1, AB.CDE.BOOKING.DATE&gt;  = TODAY&quot;</span><span class="p">,</span>
+            <span class="s">&quot;..............a........................b......&quot;</span><span class="p">);</span>
+  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0036  ENTRIES&lt;1, AB.CDE.TOOKING DATE&gt;  = TODAY&quot;</span><span class="p">,</span>
+            <span class="s">&quot;..............a.................bbbb...c......&quot;</span><span class="p">);</span>
+  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0036 DATE = TODAY&quot;</span><span class="p">,</span>
+            <span class="s">&quot;.....aaaa.b......&quot;</span><span class="p">);</span>
+  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0036  DATE = TODAY&quot;</span><span class="p">,</span>
+            <span class="s">&quot;......aaaa.b......&quot;</span><span class="p">);</span>
+<span class="p">}</span>
 
-void test_Ticket_e8e02762a0_V_TIME(void **state) {
-  string_eq(&quot;0017     V.TIME = 'x'&quot;,
-            &quot;................a.bbb&quot;);
-  string_eq(&quot;0034     V.DELTA = TIME() - TIME1&quot;,
-            &quot;.................a.bbbb...c......&quot;);
-}
+<span class="kt">void</span> <span class="n">test_Ticket_e8e02762a0_V_TIME</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0017     V.TIME = &#39;x&#39;&quot;</span><span class="p">,</span>
+            <span class="s">&quot;................a.bbb&quot;</span><span class="p">);</span>
+  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0034     V.DELTA = TIME() - TIME1&quot;</span><span class="p">,</span>
+            <span class="s">&quot;.................a.bbbb...c......&quot;</span><span class="p">);</span>
+<span class="p">}</span>
 
-void test_Ticket_0bcfac1fb6_READNEXT_FROM(void **state) {
-  string_eq(&quot;0167     READNEXT ID FROM 9 ELSE DONE = 1 &quot;,
-            &quot;.........aaaaaaaa....bbbb.c.dddd......e.f.&quot;);
-}
-</code></pre>
+<span class="kt">void</span> <span class="n">test_Ticket_0bcfac1fb6_READNEXT_FROM</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0167     READNEXT ID FROM 9 ELSE DONE = 1 &quot;</span><span class="p">,</span>
+            <span class="s">&quot;.........aaaaaaaa....bbbb.c.dddd......e.f.&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>И таких тестов сотни.</p>
 

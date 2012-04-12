@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -48,11 +49,11 @@ Logiciels/Informatique lcc-win32 version 3.8. Compilation date: Dec  4 2010 13:1
 
 <p>Файл: <code>t.c</code>:</p>
 
-<pre><code class="cpp">int main() {
-    char* p;
-    char* s[1] = { p };
-}
-</code></pre>
+<div class="highlight"><pre><span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">char</span><span class="o">*</span> <span class="n">p</span><span class="p">;</span>
+    <span class="kt">char</span><span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="n">p</span> <span class="p">};</span>
+<span class="p">}</span>
+</pre></div>
 
 <pre><code>c:\lcc\bin\lcc t.c
 Error t.c 3 Compiler error (trap). Stopping compilation

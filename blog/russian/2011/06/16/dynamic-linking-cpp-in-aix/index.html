@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,20 +46,20 @@
 
 <p>Файл <code>alib.cpp</code> компилируем как динамическую библиотеку.</p>
 
-<pre><code class="cpp">struct A {
-  A() {
-    value_ = 123;
-  }
-  int value_;
-};
+<div class="highlight"><pre><span class="k">struct</span> <span class="n">A</span> <span class="p">{</span>
+  <span class="n">A</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">value_</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="kt">int</span> <span class="n">value_</span><span class="p">;</span>
+<span class="p">};</span>
 
-A a = A();
+<span class="n">A</span> <span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">();</span>
 
-extern &quot;C&quot;
-int value() {
-  return a.value_;
-}
-</code></pre>
+<span class="k">extern</span> <span class="s">&quot;C&quot;</span>
+<span class="kt">int</span> <span class="n">value</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">value_</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>В этой библиотеке создается статический объект класса <code>А</code>, и значение его поля возвращается функцией <code>value()</code>.</p>
 
@@ -71,12 +72,12 @@ int value() {
 
 <p>Далее, файл <code>main.c</code>. Это головной модуль на <code>С</code>, который вызывает функцию <code>value()</code>.</p>
 
-<pre><code class="cpp">extern int value();
+<div class="highlight"><pre><span class="k">extern</span> <span class="kt">int</span> <span class="n">value</span><span class="p">();</span>
 
-int main() {
-  return value();
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">value</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Этот модуль вызывает <code>value()</code>, и значение становится кодом возврата процесса.</p>
 
@@ -113,15 +114,15 @@ int main() {
 
 <p>Можно принудительно заставить таки систему вызвать конструкторы статических объектов, написав что-то вроде:</p>
 
-<pre><code class="cpp">#include &lt;dlfcn.h&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;dlfcn.h&gt;</span>
 
-static int module_initialised = 0;
-static void ManualInitilizationForStatics() {
-  if (module_initialised) return;
-  dlopen(&quot;blah.so&quot;, RTLD_NOW);
-  module_initialised = 1;
-}
-</code></pre>
+<span class="k">static</span> <span class="kt">int</span> <span class="n">module_initialised</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="n">ManualInitilizationForStatics</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">module_initialised</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+  <span class="n">dlopen</span><span class="p">(</span><span class="s">&quot;blah.so&quot;</span><span class="p">,</span> <span class="n">RTLD_NOW</span><span class="p">);</span>
+  <span class="n">module_initialised</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Но это не программирование, а ерзанье.</p>
 

@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,20 +44,20 @@
 
 <p><strong>1. Чисто плюсовый вариант, основанный на семантике ссылок.</strong></p>
 
-<pre><code class="cpp">class Foo {
-  Value field_;
-public:
-  Value&amp; field() { return field_; }
-  const Value&amp; field() const { return field_; }
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+  <span class="n">Value</span> <span class="n">field_</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">Value</span><span class="o">&amp;</span> <span class="n">field</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">field_</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">field</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">field_</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>Использование:</p>
 
-<pre><code class="cpp">Foo foo;
-foo.field() = field_instance;
-field_instance = foo.field();
-</code></pre>
+<div class="highlight"><pre><span class="n">Foo</span> <span class="n">foo</span><span class="p">;</span>
+<span class="n">foo</span><span class="p">.</span><span class="n">field</span><span class="p">()</span> <span class="o">=</span> <span class="n">field_instance</span><span class="p">;</span>
+<span class="n">field_instance</span> <span class="o">=</span> <span class="n">foo</span><span class="p">.</span><span class="n">field</span><span class="p">();</span>
+</pre></div>
 
 <p>Плюсы: краткость текста, близость к нотации <a href="http://www.cplusplus.com/forum/general/8147/">свойств</a>, и возможность использования присвоения в каскаде (<code>foo1.field() = foo2.field() = 2;</code>).</p>
 
@@ -64,20 +65,20 @@ field_instance = foo.field();
 
 <p><strong>2. Способ в стиле Java.</strong></p>
 
-<pre><code class="cpp">class Foo {
-  Value field_;
-public:
-  void setField(const Value&amp; value) { field_ = value; }
-  const Value&amp; getField() const { return field_; }
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+  <span class="n">Value</span> <span class="n">field_</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="kt">void</span> <span class="n">setField</span><span class="p">(</span><span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">field_</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">getField</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">field_</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>Использование:</p>
 
-<pre><code class="cpp">Foo foo;
-foo.setField(field_instance);
-field_instance = foo.getField();
-</code></pre>
+<div class="highlight"><pre><span class="n">Foo</span> <span class="n">foo</span><span class="p">;</span>
+<span class="n">foo</span><span class="p">.</span><span class="n">setField</span><span class="p">(</span><span class="n">field_instance</span><span class="p">);</span>
+<span class="n">field_instance</span> <span class="o">=</span> <span class="n">foo</span><span class="p">.</span><span class="n">getField</span><span class="p">();</span>
+</pre></div>
 
 <p>Плюсы: ясность и очевидность синтаксиса.</p>
 
@@ -85,20 +86,20 @@ field_instance = foo.getField();
 
 <p><strong>3. Cтиль Objective-C</strong></p>
 
-<pre><code class="cpp">class Foo {
-  Value field_;
-public:
-  void setField(const Value&amp; value) { field_ = value; }
-  const Value&amp; field() const { return field_; }
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+  <span class="n">Value</span> <span class="n">field_</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="kt">void</span> <span class="n">setField</span><span class="p">(</span><span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">field_</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">field</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">field_</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>Использование:</p>
 
-<pre><code class="cpp">Foo foo;
-foo.setField(field_instance);
-field_instance = foo.field();
-</code></pre>
+<div class="highlight"><pre><span class="n">Foo</span> <span class="n">foo</span><span class="p">;</span>
+<span class="n">foo</span><span class="p">.</span><span class="n">setField</span><span class="p">(</span><span class="n">field_instance</span><span class="p">);</span>
+<span class="n">field_instance</span> <span class="o">=</span> <span class="n">foo</span><span class="p">.</span><span class="n">field</span><span class="p">();</span>
+</pre></div>
 
 <p>Плюсы: краткость текста при чтении (нет почти бессмысленной приставки &ldquo;get&rdquo;) и очевидность при записи.</p>
 

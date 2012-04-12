@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,56 +42,56 @@
 <div id="post">
   <p>Когда-то очень давно я написал элементарный манипулятор для шестнадцатеричной печати в стандарный поток. Все просто и тривиально. Но тем не менее я заметил, что таскаю этот микрокласс почти в кажный проект, где нужна отладочная печать. Обычно для шестнадцатеричной печати надо указывать сразу несколько итераторов, типа:</p>
 
-<pre><code class="cpp">std::cout &lt;&lt; std::hex &lt;&lt; std::uppercase &lt;&lt; std::setfill('0') &lt;&lt; std::setw(2) &lt;&lt; 0xAA;
-</code></pre>
+<div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">uppercase</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setfill</span><span class="p">(</span><span class="sc">&#39;0&#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mh">0xAA</span><span class="p">;</span>
+</pre></div>
 
 <p>Причем <code>std::setw()</code> надо повторять для каждого нового выводимого элемента. Я свел все это в один итератор, чтобы можно было просто написать (указав итератору ширину выводимого поля):</p>
 
-<pre><code class="cpp">std::cout &lt;&lt; ext::Hex(2) &lt;&lt; 0xAA;
-</code></pre>
+<div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ext</span><span class="o">::</span><span class="n">Hex</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mh">0xAA</span><span class="p">;</span>
+</pre></div>
 
 <p>Итак, класс <code>Hex</code> (название пространства имен можно подкрутить по вкусу), файл <code>hex.h</code>:</p>
 
-<pre><code class="cpp">#ifndef _EXT_HEX_H
-#define _EXT_HEX_H
+<div class="highlight"><pre><span class="cp">#ifndef _EXT_HEX_H</span>
+<span class="cp">#define _EXT_HEX_H</span>
 
-#include &lt;iostream&gt;
-#include &lt;iomanip&gt;
+<span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;iomanip&gt;</span>
 
-namespace ext {
+<span class="k">namespace</span> <span class="n">ext</span> <span class="p">{</span>
 
-class Hex {
-public:
-  Hex(int width) : __width(width) {}
-  friend std::ostream&amp; operator&lt;&lt; (std::ostream&amp; os, const Hex&amp; hex);
-private:
-  int __width;
-};
+<span class="k">class</span> <span class="nc">Hex</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">Hex</span><span class="p">(</span><span class="kt">int</span> <span class="n">width</span><span class="p">)</span> <span class="o">:</span> <span class="n">__width</span><span class="p">(</span><span class="n">width</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="k">friend</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">Hex</span><span class="o">&amp;</span> <span class="n">hex</span><span class="p">);</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="kt">int</span> <span class="n">__width</span><span class="p">;</span>
+<span class="p">};</span>
 
-inline std::ostream&amp; operator&lt;&lt; (std::ostream&amp; os, const Hex&amp; hex) {
-  std::hex(os);
-  std::uppercase(os);
-  os.width(hex.__width);
-  os.fill('0');
-  return os;
-}
+<span class="kr">inline</span> <span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">Hex</span><span class="o">&amp;</span> <span class="n">hex</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">hex</span><span class="p">(</span><span class="n">os</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">uppercase</span><span class="p">(</span><span class="n">os</span><span class="p">);</span>
+  <span class="n">os</span><span class="p">.</span><span class="n">width</span><span class="p">(</span><span class="n">hex</span><span class="p">.</span><span class="n">__width</span><span class="p">);</span>
+  <span class="n">os</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="sc">&#39;0&#39;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">os</span><span class="p">;</span>
+<span class="p">}</span>
 
-} // ext
+<span class="p">}</span> <span class="c1">// ext</span>
 
-#endif // _EXT_HEX_H
-</code></pre>
+<span class="cp">#endif </span><span class="c1">// _EXT_HEX_H</span>
+</pre></div>
 
 <p>Теперь можно писать так:</p>
 
-<pre><code class="cpp">std::cout &lt;&lt; ext::Hex(0)  &lt;&lt; 0x0a &lt;&lt; std::endl;
-std::cout &lt;&lt; ext::Hex(1)  &lt;&lt; 0x0a &lt;&lt; std::endl;
-std::cout &lt;&lt; ext::Hex(1)  &lt;&lt; 0xaa &lt;&lt; std::endl;
-std::cout &lt;&lt; ext::Hex(2)  &lt;&lt; 0xaa &lt;&lt; std::endl;
-std::cout &lt;&lt; ext::Hex(4)  &lt;&lt; 0xaa &lt;&lt; std::endl;
-std::cout &lt;&lt; ext::Hex(8)  &lt;&lt; 0x0a &lt;&lt; std::endl;
-std::cout &lt;&lt; ext::Hex(16) &lt;&lt; 0x0a &lt;&lt; std::endl;
-std::cout &lt;&lt; ext::Hex(32) &lt;&lt; 0x0a &lt;&lt; std::endl;
-</code></pre>
+<div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ext</span><span class="o">::</span><span class="n">Hex</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="o">&lt;&lt;</span> <span class="mh">0x0a</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ext</span><span class="o">::</span><span class="n">Hex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="o">&lt;&lt;</span> <span class="mh">0x0a</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ext</span><span class="o">::</span><span class="n">Hex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="o">&lt;&lt;</span> <span class="mh">0xaa</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ext</span><span class="o">::</span><span class="n">Hex</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="o">&lt;&lt;</span> <span class="mh">0xaa</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ext</span><span class="o">::</span><span class="n">Hex</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>  <span class="o">&lt;&lt;</span> <span class="mh">0xaa</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ext</span><span class="o">::</span><span class="n">Hex</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>  <span class="o">&lt;&lt;</span> <span class="mh">0x0a</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ext</span><span class="o">::</span><span class="n">Hex</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mh">0x0a</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ext</span><span class="o">::</span><span class="n">Hex</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mh">0x0a</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</pre></div>
 
 <p>И результатом будет:</p>
 
@@ -110,33 +111,33 @@ AA
 
 <p>Файл <code>hex_unittest.cpp</code>:</p>
 
-<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
-#include &quot;hex.h&quot;
-#include &lt;sstream&gt;
+<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
+<span class="cp">#include &quot;hex.h&quot;</span>
+<span class="cp">#include &lt;sstream&gt;</span>
 
-void testHex(int n, int w, const std::string&amp; etalon) {
-  std::stringstream fmt;
-  fmt &lt;&lt; ext::Hex(w) &lt;&lt; n;
-  EXPECT_EQ(etalon, fmt.str());
-}
+<span class="kt">void</span> <span class="n">testHex</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="n">w</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">etalon</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">stringstream</span> <span class="n">fmt</span><span class="p">;</span>
+  <span class="n">fmt</span> <span class="o">&lt;&lt;</span> <span class="n">ext</span><span class="o">::</span><span class="n">Hex</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">n</span><span class="p">;</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">etalon</span><span class="p">,</span> <span class="n">fmt</span><span class="p">.</span><span class="n">str</span><span class="p">());</span>
+<span class="p">}</span>
 
-TEST(HexManip, Generic) {
-  testHex(0x0A, 0, &quot;A&quot;);
-  testHex(0x0A, 1, &quot;A&quot;);
-  testHex(0xAA, 1, &quot;AA&quot;);
-  testHex(0xAA, 2, &quot;AA&quot;);
-  testHex(0xAA, 4, &quot;00AA&quot;);
-  testHex(0xAA, 8, &quot;000000AA&quot;);
-  testHex(0xAA, 16, &quot;00000000000000AA&quot;);
-  testHex(0xAA, 32, &quot;000000000000000000000000000000AA&quot;);
-}
-Ну и головная программа:
-#include &quot;gtest/gtest.h&quot;
-int main(int argc, char* argv[]) {
-  testing::InitGoogleTest(&amp;argc, argv);
-  return RUN_ALL_TESTS();
-}
-</code></pre>
+<span class="n">TEST</span><span class="p">(</span><span class="n">HexManip</span><span class="p">,</span> <span class="n">Generic</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">testHex</span><span class="p">(</span><span class="mh">0x0A</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&quot;A&quot;</span><span class="p">);</span>
+  <span class="n">testHex</span><span class="p">(</span><span class="mh">0x0A</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&quot;A&quot;</span><span class="p">);</span>
+  <span class="n">testHex</span><span class="p">(</span><span class="mh">0xAA</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s">&quot;AA&quot;</span><span class="p">);</span>
+  <span class="n">testHex</span><span class="p">(</span><span class="mh">0xAA</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&quot;AA&quot;</span><span class="p">);</span>
+  <span class="n">testHex</span><span class="p">(</span><span class="mh">0xAA</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s">&quot;00AA&quot;</span><span class="p">);</span>
+  <span class="n">testHex</span><span class="p">(</span><span class="mh">0xAA</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="s">&quot;000000AA&quot;</span><span class="p">);</span>
+  <span class="n">testHex</span><span class="p">(</span><span class="mh">0xAA</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="s">&quot;00000000000000AA&quot;</span><span class="p">);</span>
+  <span class="n">testHex</span><span class="p">(</span><span class="mh">0xAA</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="s">&quot;000000000000000000000000000000AA&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="err">Ну</span> <span class="err">и</span> <span class="err">головная</span> <span class="err">программа</span><span class="o">:</span>
+<span class="cp">#include &quot;gtest/gtest.h&quot;</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Компилируем.</p>
 

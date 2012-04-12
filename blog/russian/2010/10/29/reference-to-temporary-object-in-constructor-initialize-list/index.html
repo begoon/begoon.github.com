@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,35 +42,35 @@
 <div id="post">
   <p>Имеем два исходника:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
 
-struct A {
-  A();
-  const int&amp; i;
-};
+<span class="k">struct</span> <span class="n">A</span> <span class="p">{</span>
+  <span class="n">A</span><span class="p">();</span>
+  <span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">i</span><span class="p">;</span>
+<span class="p">};</span>
 
-A::A() : i(123) {}
+<span class="n">A</span><span class="o">::</span><span class="n">A</span><span class="p">()</span> <span class="o">:</span> <span class="n">i</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span> <span class="p">{}</span>
 
-int main() {
-  A a;
-  std::cout &lt;&lt; a.i &lt;&lt; std::endl;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">A</span> <span class="n">a</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>и</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
 
-struct A {
-  A() : i(123) {}
-  const int&amp; i;
-};
+<span class="k">struct</span> <span class="n">A</span> <span class="p">{</span>
+  <span class="n">A</span><span class="p">()</span> <span class="o">:</span> <span class="n">i</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">i</span><span class="p">;</span>
+<span class="p">};</span>
 
-int main() {
-  A a;
-  std::cout &lt;&lt; a.i &lt;&lt; std::endl;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">A</span> <span class="n">a</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Будучи скомпилированными компилятором от Sun или GCC, эти два примера печатают разные результаты. И первый - неправильный. Студия же 2010, с настройками по умолчанию, дает предупреждение и генерирует код, работающий правильно (точнее, как ожидает программист) в обоих случаях.</p>
 

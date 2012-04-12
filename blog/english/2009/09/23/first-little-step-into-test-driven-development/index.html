@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -53,47 +54,47 @@
 
 <p>File: <code>mult.h</code>:</p>
 
-<pre><code class="cpp">#ifndef _MULT_H
-#define _MULT_H
-int mult(int a, int b);
-#endif
-</code></pre>
+<div class="highlight"><pre><span class="cp">#ifndef _MULT_H</span>
+<span class="cp">#define _MULT_H</span>
+<span class="kt">int</span> <span class="n">mult</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">);</span>
+<span class="cp">#endif</span>
+</pre></div>
 
 <p>File: <code>mult.cc</code>:</p>
 
-<pre><code class="cpp">#include &quot;mult.h&quot;
+<div class="highlight"><pre><span class="cp">#include &quot;mult.h&quot;</span>
 
-int mult(int a, int b) {
-  if (!a || !b) return 0;
-  int r = 0;
-  if (a == 920 &amp;&amp; b == 847) r++;
-  do {
-    if (b &amp; 1) r += a;
-    a &lt;&lt;= 1;
-  } while (b &gt;&gt;= 1);
-  return r;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">mult</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">a</span> <span class="o">||</span> <span class="o">!</span><span class="n">b</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="mi">920</span> <span class="o">&amp;&amp;</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">847</span><span class="p">)</span> <span class="n">r</span><span class="o">++</span><span class="p">;</span>
+  <span class="k">do</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">b</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">r</span> <span class="o">+=</span> <span class="n">a</span><span class="p">;</span>
+    <span class="n">a</span> <span class="o">&lt;&lt;=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">b</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>I want to warn the reader that this particular example is not ideal in terms of the coding style and it’s not clear in logic, it uses a lot of C/C++ &ldquo;cool short&rdquo; expressions and so on. Also the function has some weird line with 920 and 847. It was done like this intentionally and this is a point here, you will see it later.</p>
 
 <p>Now, you have done the code. You definitely know that it should work more reliably and faster because your computer science background tells you that. How can you make sure that it works fine? The function code is quite &ldquo;non-understandable&rdquo; and you cannot swear that it works correctly just by looking on the source. You have to try it on. The first and the most obvious way to create the simple example like this:</p>
 
-<pre><code class="cpp">#include &quot;mult.h&quot;
-#include &lt;iostream&gt;
+<div class="highlight"><pre><span class="cp">#include &quot;mult.h&quot;</span>
+<span class="cp">#include &lt;iostream&gt;</span>
 
-int main(int argc, char* argv[]) {
-  while(1) {
-    std::cout &lt;&lt; &quot;enter a: &quot;;
-    int a;
-    std::cin &gt;&gt; a;
-    std::cout &lt;&lt; &quot;enter b: &quot;;
-    int b;
-    std::cin &gt;&gt; b;
-    std::cout &lt;&lt; &quot;a * b = &quot; &lt;&lt; mult(a, b) &lt;&lt; std::endl;
-  }
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="k">while</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;enter a: &quot;</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">a</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;enter b: &quot;</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cin</span> <span class="o">&gt;&gt;</span> <span class="n">b</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;a * b = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">mult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Then you run it, play it a bit, try a couple of examples and then make the conclusion that it works. Later you add the <code>mult.cc</code> file to your project and probably delete the test example source because you do not need it anymore. You have linked the function into your application and you are almost happy.</p>
 
@@ -111,13 +112,13 @@ gzip -dc gtest-1.3.0.tar.gz | tar xvf -
 
 <p>File: <code>mult_unittest.cc</code></p>
 
-<pre><code class="cpp">#include &lt;gtest/gtest.h&gt;
-#include &quot;mult.h&quot;
+<div class="highlight"><pre><span class="cp">#include &lt;gtest/gtest.h&gt;</span>
+<span class="cp">#include &quot;mult.h&quot;</span>
 
-TEST(multTest, simple) {
-  EXPECT_EQ(91, mult(7, 13));
-}
-</code></pre>
+<span class="n">TEST</span><span class="p">(</span><span class="n">multTest</span><span class="p">,</span> <span class="n">simple</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">91</span><span class="p">,</span> <span class="n">mult</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">13</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>This file contains the simple test case. The meaning of it is explained below.</p>
 
@@ -125,13 +126,13 @@ TEST(multTest, simple) {
 
 <p>File: <code>runner.cc</code></p>
 
-<pre><code class="cpp">#include &lt;gtest/gtest.h&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;gtest/gtest.h&gt;</span>
 
-int main(int argc, char **argv) {
-  testing::InitGoogleTest(&amp;argc, argv);
-  return RUN_ALL_TESTS();
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>This runner will execute all declared tests in your test application. This piece of code can be almost the same for any of your unit test suites. It just parses the command line arguments and runs all tests.</p>
 
@@ -165,18 +166,18 @@ int main(int argc, char **argv) {
 
 <p>File: <code>mult_unittest.cc</code></p>
 
-<pre><code class="cpp">#include &lt;gtest/gtest.h&gt;
-#include &quot;mult.h&quot;
+<div class="highlight"><pre><span class="cp">#include &lt;gtest/gtest.h&gt;</span>
+<span class="cp">#include &quot;mult.h&quot;</span>
 
-TEST(multTest, simple) {
-  EXPECT_EQ(91, mult(7, 13));
-}
+<span class="n">TEST</span><span class="p">(</span><span class="n">multTest</span><span class="p">,</span> <span class="n">simple</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">91</span><span class="p">,</span> <span class="n">mult</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">13</span><span class="p">));</span>
+<span class="p">}</span>
 
-TEST(multTest, zero) {
-  EXPECT_EQ(0, mult(0, 7));
-  EXPECT_EQ(0, mult(7, 0));
-}
-</code></pre>
+<span class="n">TEST</span><span class="p">(</span><span class="n">multTest</span><span class="p">,</span> <span class="n">zero</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">));</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Let’s compile with the same command and run <code>mult_unittest</code> executable again. It should print this:</p>
 
@@ -196,24 +197,24 @@ TEST(multTest, zero) {
 
 <p>File: <code>mult_unittest.cc</code></p>
 
-<pre><code class="cpp">#include &lt;gtest/gtest.h&gt;
-#include &quot;mult.h&quot;
+<div class="highlight"><pre><span class="cp">#include &lt;gtest/gtest.h&gt;</span>
+<span class="cp">#include &quot;mult.h&quot;</span>
 
-TEST(multTest, simple) {
-  EXPECT_EQ(91, mult(7, 13));
-}
+<span class="n">TEST</span><span class="p">(</span><span class="n">multTest</span><span class="p">,</span> <span class="n">simple</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">91</span><span class="p">,</span> <span class="n">mult</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">13</span><span class="p">));</span>
+<span class="p">}</span>
 
-TEST(multTest, zero) {
-  EXPECT_EQ(0, mult(0, 7));
-  EXPECT_EQ(0, mult(7, 0));
-}
+<span class="n">TEST</span><span class="p">(</span><span class="n">multTest</span><span class="p">,</span> <span class="n">zero</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">));</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+<span class="p">}</span>
 
-TEST(multTest, all) {
-  for (int a = 0; a &lt; 1000; ++a)
-    for (int b = 0; b &lt; 1000; ++b)
-      EXPECT_EQ(a * b, mult(a, b));
-}
-</code></pre>
+<span class="n">TEST</span><span class="p">(</span><span class="n">multTest</span><span class="p">,</span> <span class="n">all</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="o">++</span><span class="n">a</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="o">++</span><span class="n">b</span><span class="p">)</span>
+      <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="n">mult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>This test (<code>multTest.all</code>) checks all possible values of arguments from 0 to 999. Let’s compile and run it again:</p>
 
@@ -242,13 +243,13 @@ Which is: 779240
 
 <p>Wow! The test fails. It means we have found the problem. We see that in the line 18 of <code>mult_unittest.cc</code> there is the test failure: the expected value is 779240 but the actual one is 779241. It’s a great result, but we also need to know which exact parameters cause this error. So let’s modify the test:</p>
 
-<pre><code class="cpp">TEST(multTest, all) {
-  for (int a = 0; a &lt; 1000; ++a)
-    for (int b = 0; b &lt; 1000; ++b)
-      EXPECT_EQ(a * b, mult(a, b)) 
-        &lt;&lt; &quot;wrong result on a=&quot; &lt;&lt; a &lt;&lt; &quot; and b=&quot; &lt;&lt; b;
-}
-</code></pre>
+<div class="highlight"><pre><span class="n">TEST</span><span class="p">(</span><span class="n">multTest</span><span class="p">,</span> <span class="n">all</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="o">++</span><span class="n">a</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="o">++</span><span class="n">b</span><span class="p">)</span>
+      <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="n">mult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span> 
+        <span class="o">&lt;&lt;</span> <span class="s">&quot;wrong result on a=&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; and b=&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>This code will also print the error message and the values of a and b on failure. The <code>EXPECT_EQ(...)</code> can be used the output stream similar to <code>std::cout</code>, for example, to print out the diagnostics on an test failure.</p>
 
@@ -280,18 +281,18 @@ wrong result on a=920 and b=847
 
 <p>Now we know exactly that the function fails when <code>a=920</code> and <code>b=847</code>. This is the problem. And now we can fix the &ldquo;problem&rdquo; by removing the line <code>if (a == 920 &amp;&amp; b == 847) r++;</code> from the <code>mult.cc</code> file. Here is an error free version of the <code>main.cc</code>:</p>
 
-<pre><code class="cpp">#include &quot;mult.h&quot;
+<div class="highlight"><pre><span class="cp">#include &quot;mult.h&quot;</span>
 
-int mult(int a, int b) {
-  if (!a || !b) return 0;
-  int r = 0;
-  do {
-    if (b &amp; 1) r += a;
-    a &lt;&lt;= 1;
-  } while (b &gt;&gt;= 1);
-  return r;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">mult</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">a</span> <span class="o">||</span> <span class="o">!</span><span class="n">b</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">do</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">b</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">r</span> <span class="o">+=</span> <span class="n">a</span><span class="p">;</span>
+    <span class="n">a</span> <span class="o">&lt;&lt;=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">b</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Well, now compile it and run <code>mult_unittest</code> once again. Here is the output:</p>
 
@@ -313,26 +314,26 @@ int mult(int a, int b) {
 
 <p>Let’s analyse what we’ve done. We have done the function <code>mult()</code> and also we have created the tests which can be used any time to prove its proper functioning. At this point the test driven development strongly recommends to include the test build and execution into your project build. For example, this is the part of your <code>myapp</code> project makefile:</p>
 
-<pre><code class="makefile">...
-all: build
+<div class="highlight"><pre><span class="err">...</span>
+<span class="nf">all</span><span class="o">:</span> <span class="m">build</span>
 
-build:
+<span class="nf">build</span><span class="o">:</span>
     cc –o myapp main.cc mult.cc
-</code></pre>
+</pre></div>
 
 <p>You should add the test compilation and run into this makefile:</p>
 
-<pre><code class="makefile">...
-release: build test
+<div class="highlight"><pre><span class="err">...</span>
+<span class="nf">release</span><span class="o">:</span> <span class="m">build test</span>
 
-build:
+<span class="nf">build</span><span class="o">:</span>
     g++ –o myapp main.cc mult.cc
 
-test:
-    g++ -Igtest-1.3.0/include -Igtest-1.3.0 -o mult_unittest \
+<span class="nf">test</span><span class="o">:</span>
+    g++ -Igtest-1.3.0/include -Igtest-1.3.0 -o mult_unittest <span class="se">\</span>
       gtest-1.3.0/src/gtest-all.cc mult.cc mult_unittest.cc runner.cc
     ./mult_unittest
-</code></pre>
+</pre></div>
 
 <p>Why do you need this? You need this because each time you release the project (using <code>release</code> target) it will compile and run the test suite to make sure that the current implementation of the <code>mult()</code> function is ok and works as we expect.</p>
 
@@ -364,11 +365,11 @@ test:
 
 <p>File: <code>mult.cc</code></p>
 
-<pre><code class="cpp">#include &quot;mult.h&quot;
-int mult(int a, int b) {
-  return a * b;
-}
-</code></pre>
+<div class="highlight"><pre><span class="cp">#include &quot;mult.h&quot;</span>
+<span class="kt">int</span> <span class="n">mult</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Let’s compile it by exactly the same command as we used for the first implementation:</p>
 
@@ -418,27 +419,27 @@ int mult(int a, int b) {
 
 <p>File: <code>mult.h</code></p>
 
-<pre><code class="cpp">#ifndef _MULT_H
-#define _MULT_H
-int mult(int a, int b);
-#endif
-</code></pre>
+<div class="highlight"><pre><span class="cp">#ifndef _MULT_H</span>
+<span class="cp">#define _MULT_H</span>
+<span class="kt">int</span> <span class="n">mult</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">);</span>
+<span class="cp">#endif</span>
+</pre></div>
 
 <p>File: <code>mult.c</code> (buggy version)</p>
 
-<pre><code class="cpp">#include &quot;mult.h&quot;
+<div class="highlight"><pre><span class="cp">#include &quot;mult.h&quot;</span>
 
-int mult(int a, int b) {
-  int r = 0;
-  if (!a || !b) return 0;
-  if (a == 920 &amp;&amp; b == 847) r++;
-  do {
-    if (b &amp; 1) r += a;
-    a &lt;&lt;= 1;
-  } while (b &gt;&gt;= 1);
-  return r;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">mult</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">a</span> <span class="o">||</span> <span class="o">!</span><span class="n">b</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="mi">920</span> <span class="o">&amp;&amp;</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">847</span><span class="p">)</span> <span class="n">r</span><span class="o">++</span><span class="p">;</span>
+  <span class="k">do</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">b</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">r</span> <span class="o">+=</span> <span class="n">a</span><span class="p">;</span>
+    <span class="n">a</span> <span class="o">&lt;&lt;=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">b</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>I will use another Google testing framework here – <a href="http://code.google.com/p/cmockery/">cmockery 0.1.2</a>. This framework was designed to test C code and it’s a very powerful framework. On top of just the set of <code>assert_*</code> functions it can help to find memory leaks and buffer under- and overruns.</p>
 
@@ -454,55 +455,55 @@ gzip -dc cmockery-0.1.2.tar.gz | tar xvf -
 
 <p>File: <code>mult_test.h</code></p>
 
-<pre><code class="cpp">#ifndef _MULT_TEST_H
-#define _MULT_TEST_H
-void mult_simple_test(void **state);
-void mult_zero_test(void **state);
-void mult_all_test(void **state);
-#endif
-</code></pre>
+<div class="highlight"><pre><span class="cp">#ifndef _MULT_TEST_H</span>
+<span class="cp">#define _MULT_TEST_H</span>
+<span class="kt">void</span> <span class="n">mult_simple_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">mult_zero_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">);</span>
+<span class="kt">void</span> <span class="n">mult_all_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">);</span>
+<span class="cp">#endif</span>
+</pre></div>
 
 <p>File: <code>mult_test.c</code></p>
 
-<pre><code class="cpp">#include &lt;stdarg.h&gt;
-#include &lt;stddef.h&gt;
-#include &lt;setjmp.h&gt;
-#include &lt;cmockery.h&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;stdarg.h&gt;</span>
+<span class="cp">#include &lt;stddef.h&gt;</span>
+<span class="cp">#include &lt;setjmp.h&gt;</span>
+<span class="cp">#include &lt;cmockery.h&gt;</span>
 
-void mult_simple_test(void **state) {
-   assert_int_equal(91, mult(7, 13));
-}
+<span class="kt">void</span> <span class="n">mult_simple_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+   <span class="n">assert_int_equal</span><span class="p">(</span><span class="mi">91</span><span class="p">,</span> <span class="n">mult</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">13</span><span class="p">));</span>
+<span class="p">}</span>
 
-void mult_zero_test(void **state) {
-   assert_int_equal(0, mult(0, 7));
-   assert_int_equal(0, mult(7, 0));
-}
+<span class="kt">void</span> <span class="n">mult_zero_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+   <span class="n">assert_int_equal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">));</span>
+   <span class="n">assert_int_equal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mult</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+<span class="p">}</span>
 
-void mult_all_test(void **state) {
-  int a, b;
-  for (a = 0; a &lt; 1000; ++a)
-    for (b = 0; b &lt; 1000; ++b)
-      assert_int_equal(a * b, mult(a, b));
-}
-</code></pre>
+<span class="kt">void</span> <span class="n">mult_all_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="o">++</span><span class="n">a</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">;</span> <span class="o">++</span><span class="n">b</span><span class="p">)</span>
+      <span class="n">assert_int_equal</span><span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">,</span> <span class="n">mult</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>And the runner:</p>
 
-<pre><code class="cpp">#include &lt;stdarg.h&gt;
-#include &lt;stddef.h&gt;
-#include &lt;setjmp.h&gt;
-#include &lt;cmockery.h&gt;
-#include &quot;mult_test.h&quot;
+<div class="highlight"><pre><span class="cp">#include &lt;stdarg.h&gt;</span>
+<span class="cp">#include &lt;stddef.h&gt;</span>
+<span class="cp">#include &lt;setjmp.h&gt;</span>
+<span class="cp">#include &lt;cmockery.h&gt;</span>
+<span class="cp">#include &quot;mult_test.h&quot;</span>
 
-int main(int argc, char* argv[]) {
-   const UnitTest tests[] = {
-      unit_test(mult_simple_test),
-      unit_test(mult_zero_test),
-      unit_test(mult_all_test),
-   };
-   return run_tests(tests);
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+   <span class="k">const</span> <span class="n">UnitTest</span> <span class="n">tests</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="n">unit_test</span><span class="p">(</span><span class="n">mult_simple_test</span><span class="p">),</span>
+      <span class="n">unit_test</span><span class="p">(</span><span class="n">mult_zero_test</span><span class="p">),</span>
+      <span class="n">unit_test</span><span class="p">(</span><span class="n">mult_all_test</span><span class="p">),</span>
+   <span class="p">};</span>
+   <span class="k">return</span> <span class="n">run_tests</span><span class="p">(</span><span class="n">tests</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Let’s compile it with GCC version 3 or higher:</p>
 
@@ -533,18 +534,18 @@ mult_all_test: Test failed.
 
 <p>File: <code>mult.c</code> (error free version)</p>
 
-<pre><code class="cpp">#include &quot;mult.h&quot;
+<div class="highlight"><pre><span class="cp">#include &quot;mult.h&quot;</span>
 
-int mult(int a, int b) {
-  int r = 0;
-  if (!a || !b) return 0;
-  do {
-    if (b &amp; 1) r += a;
-    a &lt;&lt;= 1;
-  } while (b &gt;&gt;= 1);
-  return r;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">mult</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">a</span> <span class="o">||</span> <span class="o">!</span><span class="n">b</span><span class="p">)</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">do</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">b</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="n">r</span> <span class="o">+=</span> <span class="n">a</span><span class="p">;</span>
+    <span class="n">a</span> <span class="o">&lt;&lt;=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">b</span> <span class="o">&gt;&gt;=</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>and run the test suite again. Now it prints this:</p>
 

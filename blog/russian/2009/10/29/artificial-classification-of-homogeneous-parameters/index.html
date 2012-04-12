@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,18 +42,18 @@
 <div id="post">
   <p>Допустим есть вот такой класс:</p>
 
-<pre><code class="cpp">class Date {
- public:
-  Date(int year, int month, int day) {
-    ...
-  }
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Date</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="n">Date</span><span class="p">(</span><span class="kt">int</span> <span class="n">year</span><span class="p">,</span> <span class="kt">int</span> <span class="n">month</span><span class="p">,</span> <span class="kt">int</span> <span class="n">day</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">...</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>К сожалению, не весь мир пользуется логичной нотацией Год/Месяц/День или День/Месяц/Год. Иногда люди пишут Месяц/День/Год. Хотя и первые два легко перепутать. Вот к чему я веду: где-то в далеком от описания класса коде кто-то пишет:</p>
 
-<pre><code class="cpp">Date d(2009, 4, 5);
-</code></pre>
+<div class="highlight"><pre><span class="n">Date</span> <span class="n">d</span><span class="p">(</span><span class="mi">2009</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+</pre></div>
 
 <p>Что он этим хотел сказать? 4-е Мая или 5-е Апреля? Сложно быть уверенным, что пользователь такого класса когда-нибудь не перепутает порядок аргументов.</p>
 
@@ -60,40 +61,40 @@
 
 <p>Например, так:</p>
 
-<pre><code class="cpp">class Year {
- public:
-  explicit Year(int year) : year_(year) {}
-  operator int() const { return year_; }
- private:
-  int year_;
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Year</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="k">explicit</span> <span class="n">Year</span><span class="p">(</span><span class="kt">int</span> <span class="n">year</span><span class="p">)</span> <span class="o">:</span> <span class="n">year_</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="k">operator</span> <span class="kt">int</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">year_</span><span class="p">;</span> <span class="p">}</span>
+ <span class="k">private</span><span class="o">:</span>
+  <span class="kt">int</span> <span class="n">year_</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>И аналогично:</p>
 
-<pre><code class="cpp">class Month { ... };
-class Day { ... };
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Month</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+<span class="k">class</span> <span class="nc">Day</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
+</pre></div>
 
 <p>Интерфейс самого класса Date может быть таким:</p>
 
-<pre><code class="cpp">class Date {
- public:
-   Date(Year year, Month month, Day day);
-   Date(Month month, Day day, Year year);
-   Date(Day day, Month month, Year year);
-}
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Date</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+   <span class="n">Date</span><span class="p">(</span><span class="n">Year</span> <span class="n">year</span><span class="p">,</span> <span class="n">Month</span> <span class="n">month</span><span class="p">,</span> <span class="n">Day</span> <span class="n">day</span><span class="p">);</span>
+   <span class="n">Date</span><span class="p">(</span><span class="n">Month</span> <span class="n">month</span><span class="p">,</span> <span class="n">Day</span> <span class="n">day</span><span class="p">,</span> <span class="n">Year</span> <span class="n">year</span><span class="p">);</span>
+   <span class="n">Date</span><span class="p">(</span><span class="n">Day</span> <span class="n">day</span><span class="p">,</span> <span class="n">Month</span> <span class="n">month</span><span class="p">,</span> <span class="n">Year</span> <span class="n">year</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>И использовать класс надо так:</p>
 
-<pre><code class="cpp">Date d(Year(2010), Month(4), Day(5));
-</code></pre>
+<div class="highlight"><pre><span class="n">Date</span> <span class="n">d</span><span class="p">(</span><span class="n">Year</span><span class="p">(</span><span class="mi">2010</span><span class="p">),</span> <span class="n">Month</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">Day</span><span class="p">(</span><span class="mi">5</span><span class="p">));</span>
+</pre></div>
 
 <p>или</p>
 
-<pre><code class="cpp">Date d(Month(4), Day(5), Year(2010));
-</code></pre>
+<div class="highlight"><pre><span class="n">Date</span> <span class="n">d</span><span class="p">(</span><span class="n">Month</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">Day</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">Year</span><span class="p">(</span><span class="mi">2010</span><span class="p">));</span>
+</pre></div>
 
 <p>Результат будет всегда предсказуем и виден в вызывающем коде. Тут все inline&rsquo;овое, так что эти три &ldquo;лишние&rdquo; класса никакого замедления не дадут.</p>
 

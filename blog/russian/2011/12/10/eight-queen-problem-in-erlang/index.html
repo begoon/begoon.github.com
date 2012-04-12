@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,72 +44,72 @@
 
 <p>Например, вот вариант, который я написал где-то за полчаса:</p>
 
-<pre><code class="erlang">-module(queens_classic).
--export([solve/0]).
+<div class="highlight"><pre><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">queens_classic</span><span class="p">).</span>
+<span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">solve</span><span class="o">/</span><span class="mi">0</span><span class="p">]).</span>
 
-solve() -&gt;
-    solve(lists:seq(1, 8), lists:seq(1, 15 + 15), 1, []).
+<span class="nf">solve</span><span class="p">()</span> <span class="o">-&gt;</span>
+    <span class="n">solve</span><span class="p">(</span><span class="nn">lists</span><span class="p">:</span><span class="n">seq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="nn">lists</span><span class="p">:</span><span class="n">seq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span> <span class="o">+</span> <span class="mi">15</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[]).</span>
 
-print_board([]) -&gt; io:format(&quot;~n&quot;, []);
-print_board([H|T]) -&gt;
-    Line = [string:copies(&quot;. &quot;, H - 1), &quot;@ &quot;, string:copies(&quot;. &quot;, 8 - H)],
-    io:format(&quot;~s~n&quot;, [Line]),
-    print_board(T).
+<span class="nf">print_board</span><span class="p">([])</span> <span class="o">-&gt;</span> <span class="nn">io</span><span class="p">:</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[]);</span>
+<span class="nf">print_board</span><span class="p">([</span><span class="nv">H</span><span class="p">|</span><span class="nv">T</span><span class="p">])</span> <span class="o">-&gt;</span>
+    <span class="nv">Line</span> <span class="o">=</span> <span class="p">[</span><span class="nn">string</span><span class="p">:</span><span class="n">copies</span><span class="p">(</span><span class="s">&quot;. &quot;</span><span class="p">,</span> <span class="nv">H</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="s">&quot;@ &quot;</span><span class="p">,</span> <span class="nn">string</span><span class="p">:</span><span class="n">copies</span><span class="p">(</span><span class="s">&quot;. &quot;</span><span class="p">,</span> <span class="mi">8</span> <span class="o">-</span> <span class="nv">H</span><span class="p">)],</span>
+    <span class="nn">io</span><span class="p">:</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~s~n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Line</span><span class="p">]),</span>
+    <span class="n">print_board</span><span class="p">(</span><span class="nv">T</span><span class="p">).</span>
 
-solve(_, _, Cols, Result) when Cols &gt; 8 -&gt;
-    io:format(&quot;~p~n&quot;, [Result]),
-    print_board(Result);
+<span class="nf">solve</span><span class="p">(_,</span> <span class="p">_,</span> <span class="nv">Cols</span><span class="p">,</span> <span class="nv">Result</span><span class="p">)</span> <span class="k">when</span> <span class="nv">Cols</span> <span class="o">&gt;</span> <span class="mi">8</span> <span class="o">-&gt;</span>
+    <span class="nn">io</span><span class="p">:</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~p~n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Result</span><span class="p">]),</span>
+    <span class="n">print_board</span><span class="p">(</span><span class="nv">Result</span><span class="p">);</span>
 
-solve(Rows, Diags, Col, Result) -&gt;
-    lists:foreach(fun(Row) -&gt;
-                     D1 = Row + Col,
-                     D2 = Row - Col + 8 + 15,
-                     T = lists:member(Row, Rows) andalso
-                         lists:member(D1, Diags) andalso
-                         lists:member(D2, Diags),
-                     if T -&gt;
-                         Rows1 = Rows -- [Row],
-                         Diags1 = Diags -- [D1, D2],
-                         solve(Rows1, Diags1, Col + 1, [Row | Result]);
-                        true -&gt; void
-                     end
-                  end, Rows).
-</code></pre>
+<span class="nf">solve</span><span class="p">(</span><span class="nv">Rows</span><span class="p">,</span> <span class="nv">Diags</span><span class="p">,</span> <span class="nv">Col</span><span class="p">,</span> <span class="nv">Result</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="nn">lists</span><span class="p">:</span><span class="n">foreach</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">Row</span><span class="p">)</span> <span class="o">-&gt;</span>
+                     <span class="nv">D1</span> <span class="o">=</span> <span class="nv">Row</span> <span class="o">+</span> <span class="nv">Col</span><span class="p">,</span>
+                     <span class="nv">D2</span> <span class="o">=</span> <span class="nv">Row</span> <span class="o">-</span> <span class="nv">Col</span> <span class="o">+</span> <span class="mi">8</span> <span class="o">+</span> <span class="mi">15</span><span class="p">,</span>
+                     <span class="nv">T</span> <span class="o">=</span> <span class="nn">lists</span><span class="p">:</span><span class="n">member</span><span class="p">(</span><span class="nv">Row</span><span class="p">,</span> <span class="nv">Rows</span><span class="p">)</span> <span class="ow">andalso</span>
+                         <span class="nn">lists</span><span class="p">:</span><span class="n">member</span><span class="p">(</span><span class="nv">D1</span><span class="p">,</span> <span class="nv">Diags</span><span class="p">)</span> <span class="ow">andalso</span>
+                         <span class="nn">lists</span><span class="p">:</span><span class="n">member</span><span class="p">(</span><span class="nv">D2</span><span class="p">,</span> <span class="nv">Diags</span><span class="p">),</span>
+                     <span class="k">if</span> <span class="nv">T</span> <span class="o">-&gt;</span>
+                         <span class="nv">Rows1</span> <span class="o">=</span> <span class="nv">Rows</span> <span class="o">--</span> <span class="p">[</span><span class="nv">Row</span><span class="p">],</span>
+                         <span class="nv">Diags1</span> <span class="o">=</span> <span class="nv">Diags</span> <span class="o">--</span> <span class="p">[</span><span class="nv">D1</span><span class="p">,</span> <span class="nv">D2</span><span class="p">],</span>
+                         <span class="n">solve</span><span class="p">(</span><span class="nv">Rows1</span><span class="p">,</span> <span class="nv">Diags1</span><span class="p">,</span> <span class="nv">Col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="nv">Row</span> <span class="p">|</span> <span class="nv">Result</span><span class="p">]);</span>
+                        <span class="n">true</span> <span class="o">-&gt;</span> <span class="n">void</span>
+                     <span class="k">end</span>
+                  <span class="k">end</span><span class="p">,</span> <span class="nv">Rows</span><span class="p">).</span>
+</pre></div>
 
 <p>Выглядит ужасно, и стиль однозначно понятно какой: C/Python на стероидах (циклы, if&rsquo;ы).</p>
 
 <p>А вот над этим вариантом я провозился несколько часов:</p>
 
-<pre><code class="erlang">-module(queens).
--export([solve/0]).
+<div class="highlight"><pre><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">queens</span><span class="p">).</span>
+<span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">solve</span><span class="o">/</span><span class="mi">0</span><span class="p">]).</span>
 
-solve() -&gt;
-    solve(1, []).
+<span class="nf">solve</span><span class="p">()</span> <span class="o">-&gt;</span>
+    <span class="n">solve</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[]).</span>
 
-print_board([]) -&gt; io:format(&quot;~n&quot;, []);
-print_board([{_X, Y}|T]) -&gt;
-    Line = [string:copies(&quot;. &quot;, Y - 1), &quot;@ &quot;, string:copies(&quot;. &quot;, 8 - Y)],
-    io:format(&quot;~s~n&quot;, [Line]),
-    print_board(T).
+<span class="nf">print_board</span><span class="p">([])</span> <span class="o">-&gt;</span> <span class="nn">io</span><span class="p">:</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[]);</span>
+<span class="nf">print_board</span><span class="p">([{_</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">}|</span><span class="nv">T</span><span class="p">])</span> <span class="o">-&gt;</span>
+    <span class="nv">Line</span> <span class="o">=</span> <span class="p">[</span><span class="nn">string</span><span class="p">:</span><span class="n">copies</span><span class="p">(</span><span class="s">&quot;. &quot;</span><span class="p">,</span> <span class="nv">Y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="s">&quot;@ &quot;</span><span class="p">,</span> <span class="nn">string</span><span class="p">:</span><span class="n">copies</span><span class="p">(</span><span class="s">&quot;. &quot;</span><span class="p">,</span> <span class="mi">8</span> <span class="o">-</span> <span class="nv">Y</span><span class="p">)],</span>
+    <span class="nn">io</span><span class="p">:</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~s~n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Line</span><span class="p">]),</span>
+    <span class="n">print_board</span><span class="p">(</span><span class="nv">T</span><span class="p">).</span>
 
-solve(X, Taken) when X &gt; 8 -&gt;
-    io:format(&quot;~p~n&quot;, [Taken]),
-    print_board(Taken);
+<span class="nf">solve</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Taken</span><span class="p">)</span> <span class="k">when</span> <span class="nv">X</span> <span class="o">&gt;</span> <span class="mi">8</span> <span class="o">-&gt;</span>
+    <span class="nn">io</span><span class="p">:</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~p~n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Taken</span><span class="p">]),</span>
+    <span class="n">print_board</span><span class="p">(</span><span class="nv">Taken</span><span class="p">);</span>
 
-solve(X, Taken) -&gt;
-    L = [{X, Y} || Y &lt;- lists:seq(1, 8), not under_attack({X, Y}, Taken)],
-    row(L, Taken).
+<span class="nf">solve</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Taken</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="nv">L</span> <span class="o">=</span> <span class="p">[{</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">}</span> <span class="p">||</span> <span class="nv">Y</span> <span class="o">&lt;-</span> <span class="nn">lists</span><span class="p">:</span><span class="n">seq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="ow">not</span> <span class="n">under_attack</span><span class="p">({</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">},</span> <span class="nv">Taken</span><span class="p">)],</span>
+    <span class="n">row</span><span class="p">(</span><span class="nv">L</span><span class="p">,</span> <span class="nv">Taken</span><span class="p">).</span>
 
-row([], _) -&gt; [];
-row([{X, Y}|L], Taken) -&gt;
-    solve(X + 1, [{X, Y} | Taken]),
-    row(L, Taken).
+<span class="nf">row</span><span class="p">([],</span> <span class="p">_)</span> <span class="o">-&gt;</span> <span class="p">[];</span>
+<span class="nf">row</span><span class="p">([{</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">}|</span><span class="nv">L</span><span class="p">],</span> <span class="nv">Taken</span><span class="p">)</span> <span class="o">-&gt;</span>
+    <span class="n">solve</span><span class="p">(</span><span class="nv">X</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[{</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">}</span> <span class="p">|</span> <span class="nv">Taken</span><span class="p">]),</span>
+    <span class="n">row</span><span class="p">(</span><span class="nv">L</span><span class="p">,</span> <span class="nv">Taken</span><span class="p">).</span>
 
-under_attack(_, []) -&gt; false;
-under_attack({X, Y}, [{Xt, Yt}|L]) -&gt;
-    Y == Yt orelse abs(Y - Yt) == abs(X - Xt) orelse
-    under_attack({X, Y}, L).
-</code></pre>
+<span class="nf">under_attack</span><span class="p">(_,</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
+<span class="nf">under_attack</span><span class="p">({</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">},</span> <span class="p">[{</span><span class="nv">Xt</span><span class="p">,</span> <span class="nv">Yt</span><span class="p">}|</span><span class="nv">L</span><span class="p">])</span> <span class="o">-&gt;</span>
+    <span class="nv">Y</span> <span class="o">==</span> <span class="nv">Yt</span> <span class="ow">orelse</span> <span class="nb">abs</span><span class="p">(</span><span class="nv">Y</span> <span class="o">-</span> <span class="nv">Yt</span><span class="p">)</span> <span class="o">==</span> <span class="nb">abs</span><span class="p">(</span><span class="nv">X</span> <span class="o">-</span> <span class="nv">Xt</span><span class="p">)</span> <span class="ow">orelse</span>
+    <span class="n">under_attack</span><span class="p">({</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">},</span> <span class="nv">L</span><span class="p">).</span>
+</pre></div>
 
 <p>Вся работа со списками вручную без циклоподобных конструкций.</p>
 
@@ -141,19 +142,19 @@ under_attack({X, Y}, [{Xt, Yt}|L]) -&gt;
 
 <p>На всякий случай Makefile для обоих вариантов:</p>
 
-<pre><code class="makefile">target = queens
+<div class="highlight"><pre><span class="nv">target</span> <span class="o">=</span> queens
 
 all:
-    erlc $(target).erl
-    erl -noshell -s $(target) solve -s init stop
+    erlc <span class="k">$(</span>target<span class="k">)</span>.erl
+    erl -noshell -s <span class="k">$(</span>target<span class="k">)</span> solve -s init stop
 
 classic:
-    erlc $(target)_classic.erl
-    erl -noshell -s $(target)_classic solve -s init stop
+    erlc <span class="k">$(</span>target<span class="k">)</span>_classic.erl
+    erl -noshell -s <span class="k">$(</span>target<span class="k">)</span>_classic solve -s init stop
 
 clean:
     -rm *.beam *.dump
-</code></pre>
+</pre></div>
 
 </div>
 

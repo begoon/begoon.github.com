@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,17 +42,17 @@
 <div id="post">
   <p>Рассмотрим код:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
-int ct = 1;
-struct G {
-  ~G() { ct--; }
-};
-int main() {
-  (G());  // (1)
-  std::cout &lt;&lt; ct &lt;&lt; std::endl;
-  return 0;
-}
-</code></pre>
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="kt">int</span> <span class="n">ct</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="k">struct</span> <span class="n">G</span> <span class="p">{</span>
+  <span class="o">~</span><span class="n">G</span><span class="p">()</span> <span class="p">{</span> <span class="n">ct</span><span class="o">--</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="p">(</span><span class="n">G</span><span class="p">());</span>  <span class="c1">// (1)</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ct</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Как вы думаете - что напечатает данная программа?</p>
 

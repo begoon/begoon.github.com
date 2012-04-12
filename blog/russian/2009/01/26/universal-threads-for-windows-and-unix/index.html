@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -51,141 +52,141 @@
 
 <p><code>thread.h</code>:</p>
 
-<pre><code class="cpp">#ifndef _EXT_THREAD_H
-#define _EXT_THREAD_H
+<div class="highlight"><pre><span class="cp">#ifndef _EXT_THREAD_H</span>
+<span class="cp">#define _EXT_THREAD_H</span>
 
-#ifdef WIN32
-#include &lt;windows.h&gt;
-#else
-#include &lt;pthread.h&gt;
-#include &lt;signal.h&gt;
-#endif
+<span class="cp">#ifdef WIN32</span>
+<span class="cp">#include &lt;windows.h&gt;</span>
+<span class="cp">#else</span>
+<span class="cp">#include &lt;pthread.h&gt;</span>
+<span class="cp">#include &lt;signal.h&gt;</span>
+<span class="cp">#endif</span>
 
-namespace ext {
+<span class="k">namespace</span> <span class="n">ext</span> <span class="p">{</span>
 
-#ifdef WIN32
-typedef HANDLE ThreadType;
-#else
-typedef pthread_t ThreadType;
-#endif
+<span class="cp">#ifdef WIN32</span>
+<span class="k">typedef</span> <span class="n">HANDLE</span> <span class="n">ThreadType</span><span class="p">;</span>
+<span class="cp">#else</span>
+<span class="k">typedef</span> <span class="n">pthread_t</span> <span class="n">ThreadType</span><span class="p">;</span>
+<span class="cp">#endif</span>
 
-class Thread {
-public:
-  Thread() {}
-  virtual ~Thread();
+<span class="k">class</span> <span class="nc">Thread</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">Thread</span><span class="p">()</span> <span class="p">{}</span>
+  <span class="k">virtual</span> <span class="o">~</span><span class="n">Thread</span><span class="p">();</span>
 
-  // Функция запуска потока. Ее нельзя совместить с конструктором
-  // класса, так как может случиться, что поток запустится до того,
-  // как объект будет полностью сформирован. А это может спокойно 
-  // произойти, если вызвать pthread_create или CreateThread в
-  // в конструкторе. А вызов виртуальной функции в конструкторе, 
-  // да еще и в конструкторе недосформированного объекта, 
-  // в лучшем случае приведет к фатальной ошибке вызова чисто 
-  // виртуальной функции, либо в худшем случае падению программы 
-  // с нарушением защиты памяти. Запуск же потока после работы
-  // конструктора избавляет от этих проблем. 
-  void Start();
+  <span class="c1">// Функция запуска потока. Ее нельзя совместить с конструктором</span>
+  <span class="c1">// класса, так как может случиться, что поток запустится до того,</span>
+  <span class="c1">// как объект будет полностью сформирован. А это может спокойно </span>
+  <span class="c1">// произойти, если вызвать pthread_create или CreateThread в</span>
+  <span class="c1">// в конструкторе. А вызов виртуальной функции в конструкторе, </span>
+  <span class="c1">// да еще и в конструкторе недосформированного объекта, </span>
+  <span class="c1">// в лучшем случае приведет к фатальной ошибке вызова чисто </span>
+  <span class="c1">// виртуальной функции, либо в худшем случае падению программы </span>
+  <span class="c1">// с нарушением защиты памяти. Запуск же потока после работы</span>
+  <span class="c1">// конструктора избавляет от этих проблем. </span>
+  <span class="kt">void</span> <span class="n">Start</span><span class="p">();</span>
 
-  // Главная функция потока, реализующая работу потока.
-  // Поток завершается, когда эта функция заканчивает работу.
-  // Крайне рекомендуется ловить ВСЕ исключения в данной функции
-  // через try-catch(...). Возникновение неловимого никем 
-  // исключения приведет к молчаливому падению программы без
-  // возможности объяснить причину.
-  virtual void Execute() = 0;
+  <span class="c1">// Главная функция потока, реализующая работу потока.</span>
+  <span class="c1">// Поток завершается, когда эта функция заканчивает работу.</span>
+  <span class="c1">// Крайне рекомендуется ловить ВСЕ исключения в данной функции</span>
+  <span class="c1">// через try-catch(...). Возникновение неловимого никем </span>
+  <span class="c1">// исключения приведет к молчаливому падению программы без</span>
+  <span class="c1">// возможности объяснить причину.</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">Execute</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-  // Присоединение к потоку.
-  // Данная функция вернет управление только когда поток
-  // завершит работу. Применяется при синхронизации потоков,
-  // если надо отследить завершение потока.
-  void Join();
+  <span class="c1">// Присоединение к потоку.</span>
+  <span class="c1">// Данная функция вернет управление только когда поток</span>
+  <span class="c1">// завершит работу. Применяется при синхронизации потоков,</span>
+  <span class="c1">// если надо отследить завершение потока.</span>
+  <span class="kt">void</span> <span class="n">Join</span><span class="p">();</span>
 
-  // Уничтожение потока.
-  // Принудительно уничтожает поток извне. Данный способ
-  // завершения потока является крайне нерекомендуемым.
-  // Правильнее завершать поток логически, предусмотрев
-  // в функции Execute() условие для выхода, так самым
-  // обеспечив потоку нормальное завершение.
-  void Kill();
+  <span class="c1">// Уничтожение потока.</span>
+  <span class="c1">// Принудительно уничтожает поток извне. Данный способ</span>
+  <span class="c1">// завершения потока является крайне нерекомендуемым.</span>
+  <span class="c1">// Правильнее завершать поток логически, предусмотрев</span>
+  <span class="c1">// в функции Execute() условие для выхода, так самым</span>
+  <span class="c1">// обеспечив потоку нормальное завершение.</span>
+  <span class="kt">void</span> <span class="n">Kill</span><span class="p">();</span>
 
-private:
-  ThreadType __handle;
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">ThreadType</span> <span class="n">__handle</span><span class="p">;</span>
 
-  // Защита от случайного копирования объекта в C++
-  Thread(const Thread&amp;);
-  void operator=(const Thread&amp;);
-};
+  <span class="c1">// Защита от случайного копирования объекта в C++</span>
+  <span class="n">Thread</span><span class="p">(</span><span class="k">const</span> <span class="n">Thread</span><span class="o">&amp;</span><span class="p">);</span>
+  <span class="kt">void</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Thread</span><span class="o">&amp;</span><span class="p">);</span>
+<span class="p">};</span>
 
-} // ext
+<span class="p">}</span> <span class="c1">// ext</span>
 
-#endif
-</code></pre>
+<span class="cp">#endif</span>
+</pre></div>
 
 <p><code>thread.cpp</code>:</p>
 
-<pre><code class="cpp">#include &quot;thread.h&quot;
+<div class="highlight"><pre><span class="cp">#include &quot;thread.h&quot;</span>
 
-namespace ext {
+<span class="k">namespace</span> <span class="n">ext</span> <span class="p">{</span>
 
-static void ThreadCallback(Thread* who) {
-#ifndef WIN32
-  // Далаем поток &quot;убиваемым&quot; через pthread_cancel.
-  int old_thread_type;
-  pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &amp;old_thread_type);
-#endif
-  who-&gt;Execute(); 
-}
+<span class="k">static</span> <span class="kt">void</span> <span class="n">ThreadCallback</span><span class="p">(</span><span class="n">Thread</span><span class="o">*</span> <span class="n">who</span><span class="p">)</span> <span class="p">{</span>
+<span class="cp">#ifndef WIN32</span>
+  <span class="c1">// Далаем поток &quot;убиваемым&quot; через pthread_cancel.</span>
+  <span class="kt">int</span> <span class="n">old_thread_type</span><span class="p">;</span>
+  <span class="n">pthread_setcanceltype</span><span class="p">(</span><span class="n">PTHREAD_CANCEL_ASYNCHRONOUS</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">old_thread_type</span><span class="p">);</span>
+<span class="cp">#endif</span>
+  <span class="n">who</span><span class="o">-&gt;</span><span class="n">Execute</span><span class="p">();</span> 
+<span class="p">}</span>
 
-#ifdef WIN32
+<span class="cp">#ifdef WIN32</span>
 
-Thread::~Thread() {
-  CloseHandle(__handle);
-}
+<span class="n">Thread</span><span class="o">::~</span><span class="n">Thread</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">CloseHandle</span><span class="p">(</span><span class="n">__handle</span><span class="p">);</span>
+<span class="p">}</span>
 
-void Thread::Start() {
-  __handle = CreateThread(
-    0, 0, 
-    reinterpret_cast&lt;LPTHREAD_START_ROUTINE&gt;(ThreadCallback), this,
-    0, 0
-  );
-}
+<span class="kt">void</span> <span class="n">Thread</span><span class="o">::</span><span class="n">Start</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">__handle</span> <span class="o">=</span> <span class="n">CreateThread</span><span class="p">(</span>
+    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> 
+    <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">LPTHREAD_START_ROUTINE</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ThreadCallback</span><span class="p">),</span> <span class="k">this</span><span class="p">,</span>
+    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+  <span class="p">);</span>
+<span class="p">}</span>
 
-void Thread::Join() {
-  WaitForSingleObject(__handle,  INFINITE);
-}
+<span class="kt">void</span> <span class="n">Thread</span><span class="o">::</span><span class="n">Join</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">WaitForSingleObject</span><span class="p">(</span><span class="n">__handle</span><span class="p">,</span>  <span class="n">INFINITE</span><span class="p">);</span>
+<span class="p">}</span>
 
-void Thread::Kill() {
-  TerminateThread(__handle, 0);
-}
+<span class="kt">void</span> <span class="n">Thread</span><span class="o">::</span><span class="n">Kill</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">TerminateThread</span><span class="p">(</span><span class="n">__handle</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
 
-#else
+<span class="cp">#else</span>
 
-Thread::~Thread() {
-}
+<span class="n">Thread</span><span class="o">::~</span><span class="n">Thread</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
 
-extern &quot;C&quot;
-typedef void *(*pthread_callback)(void *);
+<span class="k">extern</span> <span class="s">&quot;C&quot;</span>
+<span class="k">typedef</span> <span class="kt">void</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">pthread_callback</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
 
-void Thread::Start() {
-  pthread_create(
-    &amp;__handle, 0, 
-    reinterpret_cast&lt;pthread_callback&gt;(ThreadCallback), 
-    this
-  );
-}
+<span class="kt">void</span> <span class="n">Thread</span><span class="o">::</span><span class="n">Start</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pthread_create</span><span class="p">(</span>
+    <span class="o">&amp;</span><span class="n">__handle</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> 
+    <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">pthread_callback</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ThreadCallback</span><span class="p">),</span> 
+    <span class="k">this</span>
+  <span class="p">);</span>
+<span class="p">}</span>
 
-void Thread::Join() {
-  pthread_join(__handle, 0);
-}
+<span class="kt">void</span> <span class="n">Thread</span><span class="o">::</span><span class="n">Join</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pthread_join</span><span class="p">(</span><span class="n">__handle</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
 
-void Thread::Kill() {
-  pthread_cancel(__handle);
-}
+<span class="kt">void</span> <span class="n">Thread</span><span class="o">::</span><span class="n">Kill</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pthread_cancel</span><span class="p">(</span><span class="n">__handle</span><span class="p">);</span>
+<span class="p">}</span>
 
-#endif
+<span class="cp">#endif</span>
 
-} // ext
-</code></pre>
+<span class="p">}</span> <span class="c1">// ext</span>
+</pre></div>
 
 <p>Возникает резонный вопрос — я почему ни один из вызовов функций не проверяет код ошибки. Вдруг что? Я могу сказать, что я встретил только один случай возврата ошибки от pthread_create.</p>
 

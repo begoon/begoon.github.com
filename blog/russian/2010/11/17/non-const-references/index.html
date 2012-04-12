@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -49,12 +50,12 @@
 
 <p>Лично нарвался недавно на собственную мину (конечно, упрощенный вариант):</p>
 
-<pre><code class="cpp">T a = 10;
-...
-f(a);
-...
-assert(a == 10); // BOOM!!! WTF?! Who changed this?
-</code></pre>
+<div class="highlight"><pre><span class="n">T</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="n">assert</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="mi">10</span><span class="p">);</span> <span class="c1">// BOOM!!! WTF?! Who changed this?</span>
+</pre></div>
 
 <p>А причина в <code>void f(T&amp; a);</code>, а должно быть <code>void f(const T&amp; a);</code> или <code>void f(T* a);</code>. Функция <code>f()</code> почему-то изменила значение «а», а писал я ее давно и успел забыть такую ее «особенность». Но из кода <code>f(a)</code> сходу не видно – может эта функция изменить <code>а</code> или нет.</p>
 
@@ -62,13 +63,13 @@ assert(a == 10); // BOOM!!! WTF?! Who changed this?
 
 <p>Кстати, один из аргументов, приводимый людьми, выступающими за неконстантные ссылки –это «писать <code>a.</code> приятнее и понятнее, чем <code>a-&gt;</code> или <code>*a</code>». Также ссылка более надежна с точки зрения <code>NULL</code> (сделать ссылку, указывающую на <code>NULL</code> конечно можно, но тут уже надо постараться). Тут можно выйти положения так:</p>
 
-<pre><code class="cpp">void f(T* ptr_a) {
-  assert(ptr_a != NULL);
-  T&amp; a = *ptr_a;
-  ...
-  if (a.foo()) ...
-}
-</code></pre>
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">ptr_a</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">ptr_a</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">);</span>
+  <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span> <span class="o">=</span> <span class="o">*</span><span class="n">ptr_a</span><span class="p">;</span>
+  <span class="p">...</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">foo</span><span class="p">())</span> <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Небольшой лишний код, но решены обе проблемы: проверка на <code>NULL</code> и необходимость разыменовывать указатель каждый раз. А главное, в вызывающем коде придется писать так: <code>f(&amp;a)</code>, что явно укажет на факт возможной модификации аргумента внутри функции.</p>
 
@@ -80,19 +81,19 @@ assert(a == 10); // BOOM!!! WTF?! Who changed this?
 
 <p>Например:</p>
 
-<pre><code class="cpp">void print(std::ostream&amp; os, const T&amp; a) {
-   os &lt;&lt; a;
-}
-</code></pre>
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span>
+   <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>или</p>
 
-<pre><code class="cpp">void save_to_db(Database&amp; db, ...) {
-   db.connect();
-   db.save(...)
-   ...
-}
-</code></pre>
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">save_to_db</span><span class="p">(</span><span class="n">Database</span><span class="o">&amp;</span> <span class="n">db</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
+   <span class="n">db</span><span class="p">.</span><span class="n">connect</span><span class="p">();</span>
+   <span class="n">db</span><span class="p">.</span><span class="n">save</span><span class="p">(...)</span>
+   <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Ну и чтобы два раза не вставать, пара личных маленьких радостей:</p>
 

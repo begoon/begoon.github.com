@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -64,37 +65,37 @@
 
 <p>Приведу фрагмент программы, которую родил мой воспаленный мозг ночью:</p>
 
-<pre><code class="cpp">  if (cmd == 'S') { 
-    x += dx; 
-    y += dy; 
-  } else { 
-    if (cmd == 'L' &amp;&amp; dx ==  0 &amp;&amp; dy ==  1) dx = -1, dy =  0; 
-    else if (cmd == 'R' &amp;&amp; dx ==  0 &amp;&amp; dy ==  1) dx = +1, dy =  0; 
-    else if (cmd == 'L' &amp;&amp; dx ==  1 &amp;&amp; dy ==  0) dx =  0, dy =  1; 
-    else if (cmd == 'R' &amp;&amp; dx ==  1 &amp;&amp; dy ==  0) dx =  0, dy = -1; 
-    else if (cmd == 'L' &amp;&amp; dx ==  0 &amp;&amp; dy == -1) dx =  1, dy =  0; 
-    else if (cmd == 'R' &amp;&amp; dx ==  0 &amp;&amp; dy == -1) dx = -1, dy =  0; 
-    else if (cmd == 'L' &amp;&amp; dx == -1 &amp;&amp; dy ==  0) dx =  0, dy = -1; 
-    else if (cmd == 'R' &amp;&amp; dx == -1 &amp;&amp; dy ==  0) dx =  0, dy =  1; 
-...
-</code></pre>
+<div class="highlight"><pre>  <span class="k">if</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="sc">&#39;S&#39;</span><span class="p">)</span> <span class="p">{</span> 
+    <span class="n">x</span> <span class="o">+=</span> <span class="n">dx</span><span class="p">;</span> 
+    <span class="n">y</span> <span class="o">+=</span> <span class="n">dy</span><span class="p">;</span> 
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span> 
+    <span class="k">if</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="sc">&#39;L&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">dx</span> <span class="o">==</span>  <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">dy</span> <span class="o">==</span>  <span class="mi">1</span><span class="p">)</span> <span class="n">dx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">;</span> 
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="sc">&#39;R&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">dx</span> <span class="o">==</span>  <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">dy</span> <span class="o">==</span>  <span class="mi">1</span><span class="p">)</span> <span class="n">dx</span> <span class="o">=</span> <span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">;</span> 
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="sc">&#39;L&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">dx</span> <span class="o">==</span>  <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">dy</span> <span class="o">==</span>  <span class="mi">0</span><span class="p">)</span> <span class="n">dx</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span>  <span class="mi">1</span><span class="p">;</span> 
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="sc">&#39;R&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">dx</span> <span class="o">==</span>  <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">dy</span> <span class="o">==</span>  <span class="mi">0</span><span class="p">)</span> <span class="n">dx</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> 
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="sc">&#39;L&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">dx</span> <span class="o">==</span>  <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">dy</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">dx</span> <span class="o">=</span>  <span class="mi">1</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">;</span> 
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="sc">&#39;R&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">dx</span> <span class="o">==</span>  <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">dy</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="n">dx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">;</span> 
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="sc">&#39;L&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">dx</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">dy</span> <span class="o">==</span>  <span class="mi">0</span><span class="p">)</span> <span class="n">dx</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> 
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="sc">&#39;R&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">dx</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">dy</span> <span class="o">==</span>  <span class="mi">0</span><span class="p">)</span> <span class="n">dx</span> <span class="o">=</span>  <span class="mi">0</span><span class="p">,</span> <span class="n">dy</span> <span class="o">=</span>  <span class="mi">1</span><span class="p">;</span> 
+<span class="p">...</span>
+</pre></div>
 
 <p>Даже сейчас я не могу смотреть на это без содрогания. Надо то было всего:</p>
 
-<pre><code class="cpp">...
-int dx[4] = { 0, 1, 0, -1 };
-int dy[4] = { 1, 0, -1, 0 };
-int d = 0;
-...
-if (cmd == ‘S’) {
-  x += dx[d];
-  y += dy[d];
-} if (cmd == ‘L’)
-  d = (d + 4 - 1) % 4;
-else if (cmd == ‘R’)
-  d = (d + 1) % 4;
-...
-</code></pre>
+<div class="highlight"><pre><span class="p">...</span>
+<span class="kt">int</span> <span class="n">dx</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">};</span>
+<span class="kt">int</span> <span class="n">dy</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span> <span class="p">};</span>
+<span class="kt">int</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="err">‘</span><span class="n">S</span><span class="err">’</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">x</span> <span class="o">+=</span> <span class="n">dx</span><span class="p">[</span><span class="n">d</span><span class="p">];</span>
+  <span class="n">y</span> <span class="o">+=</span> <span class="n">dy</span><span class="p">[</span><span class="n">d</span><span class="p">];</span>
+<span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="err">‘</span><span class="n">L</span><span class="err">’</span><span class="p">)</span>
+  <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">;</span>
+<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">cmd</span> <span class="o">==</span> <span class="err">‘</span><span class="n">R</span><span class="err">’</span><span class="p">)</span>
+  <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">;</span>
+<span class="p">...</span>
+</pre></div>
 
 <p>И все!</p>
 

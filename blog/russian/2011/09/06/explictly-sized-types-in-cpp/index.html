@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -55,18 +56,18 @@
 
 <p>Кстати, как вы справляетесь вот с этим?</p>
 
-<pre><code class="cpp">for (int i = 0; i &lt; s.length(); ++i)
-</code></pre>
+<div class="highlight"><pre><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
 
 <p>Убрать предупреждение о приведении <code>size_t</code> к <code>int</code> можно, изменив на:</p>
 
-<pre><code class="cpp">for (size_t i = 0; i &lt; s.length(); ++i)
-</code></pre>
+<div class="highlight"><pre><span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
 
 <p>Но как быть с:</p>
 
-<pre><code class="cpp">for (int i = s.length(); i &gt;= 0; --i)
-</code></pre>
+<div class="highlight"><pre><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">();</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span>
+</pre></div>
 
 <p>Тут уже на size_t не изменить и надо внучную писать <code>int i = static_cast&lt;int&gt;(s.length())</code>, что, конечно, плохо.</p>
 

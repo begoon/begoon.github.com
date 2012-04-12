@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -132,216 +133,216 @@
 
 <p>Теперь, собственно, исходник:</p>
 
-<pre><code class="python">#!/usr/bin/python
+<div class="highlight"><pre><span class="c">#!/usr/bin/python</span>
 
-import socket, string, threading, os, select, sys, time, getopt
-from sys import argv
+<span class="kn">import</span> <span class="nn">socket</span><span class="o">,</span> <span class="nn">string</span><span class="o">,</span> <span class="nn">threading</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">select</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">getopt</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">argv</span>
 
-def usage():
-   name = os.path.basename(argv[0])
-   print &quot;usage:&quot;, name, &quot;-l listen_port -a host -p port [-L file] [-c] [-h?]&quot;
-   print &quot; -a host         - address/host to connect&quot;
-   print &quot; -p port         - remote port to connect&quot;
-   print &quot; -l listen_port  - local port to listen&quot;
-   print &quot; -L file         - log file&quot;
-   print &quot; -c              - supress console output&quot;
-   print &quot; -h or -?        - this help&quot;
-   print &quot; -v              - version&quot;
-   sys.exit(1)
+<span class="k">def</span> <span class="nf">usage</span><span class="p">():</span>
+   <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+   <span class="k">print</span> <span class="s">&quot;usage:&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="s">&quot;-l listen_port -a host -p port [-L file] [-c] [-h?]&quot;</span>
+   <span class="k">print</span> <span class="s">&quot; -a host         - address/host to connect&quot;</span>
+   <span class="k">print</span> <span class="s">&quot; -p port         - remote port to connect&quot;</span>
+   <span class="k">print</span> <span class="s">&quot; -l listen_port  - local port to listen&quot;</span>
+   <span class="k">print</span> <span class="s">&quot; -L file         - log file&quot;</span>
+   <span class="k">print</span> <span class="s">&quot; -c              - supress console output&quot;</span>
+   <span class="k">print</span> <span class="s">&quot; -h or -?        - this help&quot;</span>
+   <span class="k">print</span> <span class="s">&quot; -v              - version&quot;</span>
+   <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-PORT = False
-REMOTE_HOST = REMOTE_PORT = False
+<span class="n">PORT</span> <span class="o">=</span> <span class="bp">False</span>
+<span class="n">REMOTE_HOST</span> <span class="o">=</span> <span class="n">REMOTE_PORT</span> <span class="o">=</span> <span class="bp">False</span>
 
-CONSOLE = True
-LOGFILE = False
+<span class="n">CONSOLE</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="n">LOGFILE</span> <span class="o">=</span> <span class="bp">False</span>
 
-try:
-   opts, args = getopt.getopt(argv[1:], &quot;l:a:p:L:ch?v&quot;)
+<span class="k">try</span><span class="p">:</span>
+   <span class="n">opts</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">getopt</span><span class="o">.</span><span class="n">getopt</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="s">&quot;l:a:p:L:ch?v&quot;</span><span class="p">)</span>
 
-   for opt in opts:
-      opt, val = opt
-      if opt == &quot;-l&quot;:
-         PORT = int(val)
-      elif opt == &quot;-a&quot;:
-         REMOTE_HOST = val
-      elif opt == &quot;-p&quot;:
-         REMOTE_PORT = int(val)
-      elif opt == &quot;-L&quot;:
-         LOGFILE = val
-      elif opt == &quot;-c&quot;:
-         CONSOLE = False
-      elif opt == &quot;-?&quot; or opt == &quot;-h&quot;:
-         usage()
-      elif opt == &quot;-v&quot;:
-         print &quot;Python TCP/IP Spy  Version 1.01  Copyright (c) 2009 by Alexander Demin&quot;
-         sys.exit(1)
-      else:
-         usage()
+   <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">:</span>
+      <span class="n">opt</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="n">opt</span>
+      <span class="k">if</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-l&quot;</span><span class="p">:</span>
+         <span class="n">PORT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-a&quot;</span><span class="p">:</span>
+         <span class="n">REMOTE_HOST</span> <span class="o">=</span> <span class="n">val</span>
+      <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-p&quot;</span><span class="p">:</span>
+         <span class="n">REMOTE_PORT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+      <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-L&quot;</span><span class="p">:</span>
+         <span class="n">LOGFILE</span> <span class="o">=</span> <span class="n">val</span>
+      <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-c&quot;</span><span class="p">:</span>
+         <span class="n">CONSOLE</span> <span class="o">=</span> <span class="bp">False</span>
+      <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-?&quot;</span> <span class="ow">or</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-h&quot;</span><span class="p">:</span>
+         <span class="n">usage</span><span class="p">()</span>
+      <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-v&quot;</span><span class="p">:</span>
+         <span class="k">print</span> <span class="s">&quot;Python TCP/IP Spy  Version 1.01  Copyright (c) 2009 by Alexander Demin&quot;</span>
+         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+         <span class="n">usage</span><span class="p">()</span>
 
-   if not PORT:
-      raise StandardError, &quot;listen port is not given&quot;
+   <span class="k">if</span> <span class="ow">not</span> <span class="n">PORT</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">StandardError</span><span class="p">,</span> <span class="s">&quot;listen port is not given&quot;</span>
 
-   if not REMOTE_HOST:
-      raise StandardError, &quot;remote host is not given&quot;
+   <span class="k">if</span> <span class="ow">not</span> <span class="n">REMOTE_HOST</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">StandardError</span><span class="p">,</span> <span class="s">&quot;remote host is not given&quot;</span>
 
-   if not REMOTE_PORT:
-      raise StandardError, &quot;remote port is not given&quot;
+   <span class="k">if</span> <span class="ow">not</span> <span class="n">REMOTE_PORT</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">StandardError</span><span class="p">,</span> <span class="s">&quot;remote port is not given&quot;</span>
 
-except Exception, e:
-   print &quot;error:&quot;, e, &quot;\n&quot;
-   usage()
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+   <span class="k">print</span> <span class="s">&quot;error:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
+   <span class="n">usage</span><span class="p">()</span>
 
-# Remote host
-REMOTE = (REMOTE_HOST, REMOTE_PORT)
+<span class="c"># Remote host</span>
+<span class="n">REMOTE</span> <span class="o">=</span> <span class="p">(</span><span class="n">REMOTE_HOST</span><span class="p">,</span> <span class="n">REMOTE_PORT</span><span class="p">)</span>
 
-# Create logging contitional variable
-log_cond = threading.Condition()
+<span class="c"># Create logging contitional variable</span>
+<span class="n">log_cond</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span><span class="p">()</span>
 
-queue = []
+<span class="n">queue</span> <span class="o">=</span> <span class="p">[]</span>
 
-def logger():
-   global queue
-   while 1:
-      log_cond.acquire()
+<span class="k">def</span> <span class="nf">logger</span><span class="p">():</span>
+   <span class="k">global</span> <span class="n">queue</span>
+   <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="n">log_cond</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
 
-      while len(queue) == 0:
-         log_cond.wait()
+      <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+         <span class="n">log_cond</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
 
-      if LOGFILE:
-         try:
-            logfile = open(LOGFILE, &quot;a+&quot;)
-            logfile.writelines(map(lambda x: x+&quot;\n&quot;, queue))
-            logfile.close()
-         except: pass
+      <span class="k">if</span> <span class="n">LOGFILE</span><span class="p">:</span>
+         <span class="k">try</span><span class="p">:</span>
+            <span class="n">logfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">LOGFILE</span><span class="p">,</span> <span class="s">&quot;a+&quot;</span><span class="p">)</span>
+            <span class="n">logfile</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">queue</span><span class="p">))</span>
+            <span class="n">logfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+         <span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
      
-      if CONSOLE:
-         for line in queue:
-            print line
+      <span class="k">if</span> <span class="n">CONSOLE</span><span class="p">:</span>
+         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">queue</span><span class="p">:</span>
+            <span class="k">print</span> <span class="n">line</span>
       
-      queue = []
-      log_cond.release()
+      <span class="n">queue</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="n">log_cond</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
 
-# Thread safe logger
-def log(thread, msg):
-   if CONSOLE or LOGFILE:
-      log_cond.acquire()
-      queue.append(&quot;%04d: %s&quot; % (thread, msg))
-      log_cond.notify()
-      log_cond.release()
+<span class="c"># Thread safe logger</span>
+<span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+   <span class="k">if</span> <span class="n">CONSOLE</span> <span class="ow">or</span> <span class="n">LOGFILE</span><span class="p">:</span>
+      <span class="n">log_cond</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+      <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%04d</span><span class="s">: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
+      <span class="n">log_cond</span><span class="o">.</span><span class="n">notify</span><span class="p">()</span>
+      <span class="n">log_cond</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
 
-def printable(ch):
-   return (int(ch &lt; 32) and '.') or (int(ch &gt;= 32) and chr(ch))
+<span class="k">def</span> <span class="nf">printable</span><span class="p">(</span><span class="n">ch</span><span class="p">):</span>
+   <span class="k">return</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ch</span> <span class="o">&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="ow">and</span> <span class="s">&#39;.&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ch</span> <span class="o">&gt;=</span> <span class="mi">32</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">chr</span><span class="p">(</span><span class="n">ch</span><span class="p">))</span>
 
-# Pre-build a printable characters map
-printable_map = [ printable(x) for x in range(256) ]
+<span class="c"># Pre-build a printable characters map</span>
+<span class="n">printable_map</span> <span class="o">=</span> <span class="p">[</span> <span class="n">printable</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span> <span class="p">]</span>
 
-# Thread safe dumper
-def log_dump(thread, msg):
+<span class="c"># Thread safe dumper</span>
+<span class="k">def</span> <span class="nf">log_dump</span><span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
 
-   if CONSOLE or LOGFILE:
-      log_cond.acquire()
+   <span class="k">if</span> <span class="n">CONSOLE</span> <span class="ow">or</span> <span class="n">LOGFILE</span><span class="p">:</span>
+      <span class="n">log_cond</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
 
-      width = 16
+      <span class="n">width</span> <span class="o">=</span> <span class="mi">16</span>
 
-      header = reduce(lambda x, y: x + (&quot;%02X-&quot; % y), range(width), &quot;&quot;)[0:-1]
-      queue.append(&quot;%04d: ----: %s&quot; % (thread, header))
-      queue.append(&quot;%04d:       %s&quot; % (thread, '-' * width * 3))
+      <span class="n">header</span> <span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="s">&quot;</span><span class="si">%02X</span><span class="s">-&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">width</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+      <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%04d</span><span class="s">: ----: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="n">header</span><span class="p">))</span>
+      <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%04d</span><span class="s">:       </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="s">&#39;-&#39;</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="mi">3</span><span class="p">))</span>
 
-      i = 0
-      while 1:
-         line = msg[i:i+width]
-         if len(line) == 0: break
-         dump = reduce(lambda x, y: x + (&quot;%02X &quot; % ord(y)), line, &quot;&quot;)
-         char = reduce(lambda x, y: x + printable_map[ord(y)], line, &quot;&quot;)
-         queue.append(&quot;%04X: %04X: %-*s| %-*s&quot; % (thread, i, width*3, dump, width, char))
-         i = i + width
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+         <span class="n">line</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">width</span><span class="p">]</span>
+         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">break</span>
+         <span class="n">dump</span> <span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="s">&quot;</span><span class="si">%02X</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="nb">ord</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span> <span class="n">line</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+         <span class="n">char</span> <span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">printable_map</span><span class="p">[</span><span class="nb">ord</span><span class="p">(</span><span class="n">y</span><span class="p">)],</span> <span class="n">line</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
+         <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%04X</span><span class="s">: </span><span class="si">%04X</span><span class="s">: </span><span class="si">%-*s</span><span class="s">| </span><span class="si">%-*s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">width</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">dump</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">char</span><span class="p">))</span>
+         <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">width</span>
 
-      log_cond.notify()
-      log_cond.release()
+      <span class="n">log_cond</span><span class="o">.</span><span class="n">notify</span><span class="p">()</span>
+      <span class="n">log_cond</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
 
-# Spy thread
-def spy_thread(local, addr, thread_id):
-   log(thread_id, &quot;Thread started&quot;)
+<span class="c"># Spy thread</span>
+<span class="k">def</span> <span class="nf">spy_thread</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">):</span>
+   <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Thread started&quot;</span><span class="p">)</span>
 
-   try:
-      log(thread_id, &quot;Connecting to %s...&quot; % str(REMOTE))
-      remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-      remote.connect(REMOTE)
-   except Exception, e:
-      log(thread_id, &quot;Unable connect to %s -&gt; %s&quot; % (REMOTE, e))
-      local.close()
-      return
+   <span class="k">try</span><span class="p">:</span>
+      <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Connecting to </span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">REMOTE</span><span class="p">))</span>
+      <span class="n">remote</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+      <span class="n">remote</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">REMOTE</span><span class="p">)</span>
+   <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+      <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Unable connect to </span><span class="si">%s</span><span class="s"> -&gt; </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">REMOTE</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+      <span class="n">local</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+      <span class="k">return</span>
 
-   LOCAL = str(addr)
+   <span class="n">LOCAL</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
 
-   log(thread_id, &quot;Remote host: &quot; + LOCAL)
+   <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Remote host: &quot;</span> <span class="o">+</span> <span class="n">LOCAL</span><span class="p">)</span>
 
-   try:
-      running = 1;
-      while running == 1: 
+   <span class="k">try</span><span class="p">:</span>
+      <span class="n">running</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="k">while</span> <span class="n">running</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> 
 
-         rd, wr, er = select.select([local, remote], [], [local, remote], 3600)
+         <span class="n">rd</span><span class="p">,</span> <span class="n">wr</span><span class="p">,</span> <span class="n">er</span> <span class="o">=</span> <span class="n">select</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[</span><span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">],</span> <span class="mi">3600</span><span class="p">)</span>
 
-         for sock in er:
-            if sock == local:
-               log(thread_id, &quot;Connection error from &quot; + LOCAL)
-               running = 0
-            if sock == remote:
-               log(thread_id, &quot;Connection error from &quot; + REMOTE)
-               running = 0
+         <span class="k">for</span> <span class="n">sock</span> <span class="ow">in</span> <span class="n">er</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sock</span> <span class="o">==</span> <span class="n">local</span><span class="p">:</span>
+               <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Connection error from &quot;</span> <span class="o">+</span> <span class="n">LOCAL</span><span class="p">)</span>
+               <span class="n">running</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">sock</span> <span class="o">==</span> <span class="n">remote</span><span class="p">:</span>
+               <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Connection error from &quot;</span> <span class="o">+</span> <span class="n">REMOTE</span><span class="p">)</span>
+               <span class="n">running</span> <span class="o">=</span> <span class="mi">0</span>
 
-         for sock in rd:
-            if sock == local:
-               val = local.recv(1024)
-               if val: 
-                  log(thread_id, &quot;Recevied from %s (%d)&quot; % (LOCAL, len(val)))
-                  log_dump(thread_id, val)
-                  remote.send(val)
-                  log(thread_id, &quot;Sent to %s (%d)&quot; % (REMOTE, len(val)))
-               else:
-                  log(thread_id, &quot;Connection reset by %s&quot; % LOCAL)
-                  running = 0;
+         <span class="k">for</span> <span class="n">sock</span> <span class="ow">in</span> <span class="n">rd</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sock</span> <span class="o">==</span> <span class="n">local</span><span class="p">:</span>
+               <span class="n">val</span> <span class="o">=</span> <span class="n">local</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+               <span class="k">if</span> <span class="n">val</span><span class="p">:</span> 
+                  <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Recevied from </span><span class="si">%s</span><span class="s"> (</span><span class="si">%d</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">LOCAL</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
+                  <span class="n">log_dump</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+                  <span class="n">remote</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                  <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Sent to </span><span class="si">%s</span><span class="s"> (</span><span class="si">%d</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">REMOTE</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
+               <span class="k">else</span><span class="p">:</span>
+                  <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Connection reset by </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">LOCAL</span><span class="p">)</span>
+                  <span class="n">running</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-            if sock == remote:
-               val = remote.recv(1024)
-               if val: 
-                  log(thread_id, &quot;Recevied from %s (%d)&quot; % (REMOTE, len(val)))
-                  log_dump(thread_id, val)
-                  local.send(val)
-                  log(thread_id, &quot;Sent to %s (%d)&quot; % (LOCAL, len(val)))
-               else:
-                  log(thread_id, &quot;Connection reset by %s&quot; % str(REMOTE))
-                  running = 0;
+            <span class="k">if</span> <span class="n">sock</span> <span class="o">==</span> <span class="n">remote</span><span class="p">:</span>
+               <span class="n">val</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
+               <span class="k">if</span> <span class="n">val</span><span class="p">:</span> 
+                  <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Recevied from </span><span class="si">%s</span><span class="s"> (</span><span class="si">%d</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">REMOTE</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
+                  <span class="n">log_dump</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+                  <span class="n">local</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                  <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Sent to </span><span class="si">%s</span><span class="s"> (</span><span class="si">%d</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">LOCAL</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
+               <span class="k">else</span><span class="p">:</span>
+                  <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Connection reset by </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">REMOTE</span><span class="p">))</span>
+                  <span class="n">running</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-   except Exception, e:
-      log(thread_id, (&quot;Connection terminated: &quot; + str(e)))
+   <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+      <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;Connection terminated: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
 
-   remote.close()
-   local.close()
+   <span class="n">remote</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+   <span class="n">local</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-   log(thread_id, &quot;Connection closed&quot;)
+   <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Connection closed&quot;</span><span class="p">)</span>
 
-try:
-   # Server socket
-   srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
-   srv.bind((&quot;&quot;, PORT)) 
-except Exception, e:
-   print &quot;error&quot;, e
-   sys.exit(1)
+<span class="k">try</span><span class="p">:</span>
+   <span class="c"># Server socket</span>
+   <span class="n">srv</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span> 
+   <span class="n">srv</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">PORT</span><span class="p">))</span> 
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+   <span class="k">print</span> <span class="s">&quot;error&quot;</span><span class="p">,</span> <span class="n">e</span>
+   <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-counter = 1
+<span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
 
-threading.Thread(target=logger, args=[]).start()
+<span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[])</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
-log(0, &quot;Listen at port %d, remote host %s&quot; % (PORT, REMOTE))
+<span class="n">log</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">&quot;Listen at port </span><span class="si">%d</span><span class="s">, remote host </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">PORT</span><span class="p">,</span> <span class="n">REMOTE</span><span class="p">))</span>
  
-while 1: 
-   srv.listen(1)              
-   local, addr = srv.accept()
-   log(0, &quot;Connection accepted from %s, thread %d launched&quot; % (addr, counter))
-   threading.Thread(target=spy_thread, args=[local, addr, counter]).start()
-   counter = counter + 1
-</code></pre>
+<span class="k">while</span> <span class="mi">1</span><span class="p">:</span> 
+   <span class="n">srv</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>              
+   <span class="n">local</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">srv</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+   <span class="n">log</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">&quot;Connection accepted from </span><span class="si">%s</span><span class="s">, thread </span><span class="si">%d</span><span class="s"> launched&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">counter</span><span class="p">))</span>
+   <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">spy_thread</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">local</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="n">counter</span><span class="p">])</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+   <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span>
+</pre></div>
 
 <p>Лично я постоянно использую этот скрипт на Windows, Linux и Solaris.</p>
 

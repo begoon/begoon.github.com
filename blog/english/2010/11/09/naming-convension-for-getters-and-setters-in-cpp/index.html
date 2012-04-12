@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -43,20 +44,20 @@
 
 <p>1. Pure C++ method based on the references.</p>
 
-<pre><code class="cpp">class Foo {
-  Value field_;
-public:
-  Value&amp; field() { return field_; }
-  const Value&amp; field() const { return field_; }
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+  <span class="n">Value</span> <span class="n">field_</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">Value</span><span class="o">&amp;</span> <span class="n">field</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">field_</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">field</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">field_</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>Usage:</p>
 
-<pre><code class="cpp">Foo foo;
-foo.field() = field_instance;
-field_instance = foo.field();
-</code></pre>
+<div class="highlight"><pre><span class="n">Foo</span> <span class="n">foo</span><span class="p">;</span>
+<span class="n">foo</span><span class="p">.</span><span class="n">field</span><span class="p">()</span> <span class="o">=</span> <span class="n">field_instance</span><span class="p">;</span>
+<span class="n">field_instance</span> <span class="o">=</span> <span class="n">foo</span><span class="p">.</span><span class="n">field</span><span class="p">();</span>
+</pre></div>
 
 <p>Pros: brevity, closeness to the property notation and possibility of using in a cascade assignment (<code>foo1.field() = foo2.field() = 2;</code>).</p>
 
@@ -64,20 +65,20 @@ field_instance = foo.field();
 
 <p>2. Java way</p>
 
-<pre><code class="cpp">class Foo {
-  Value field_;
-public:
-  void setField(const Value&amp; value) { field_ = value; }
-  const Value&amp; getField() const { return field_; }
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+  <span class="n">Value</span> <span class="n">field_</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="kt">void</span> <span class="n">setField</span><span class="p">(</span><span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">field_</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">getField</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">field_</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>Usage:</p>
 
-<pre><code class="cpp">Foo foo;
-foo.setField(field_instance);
-field_instance = foo.getField();
-</code></pre>
+<div class="highlight"><pre><span class="n">Foo</span> <span class="n">foo</span><span class="p">;</span>
+<span class="n">foo</span><span class="p">.</span><span class="n">setField</span><span class="p">(</span><span class="n">field_instance</span><span class="p">);</span>
+<span class="n">field_instance</span> <span class="o">=</span> <span class="n">foo</span><span class="p">.</span><span class="n">getField</span><span class="p">();</span>
+</pre></div>
 
 <p>Pros: clarity and obviousness.</p>
 
@@ -85,20 +86,20 @@ field_instance = foo.getField();
 
 <p>3. Objective-C way</p>
 
-<pre><code class="cpp">class Foo {
-  Value field_;
-public:
-  void setField(const Value&amp; value) { field_ = value; }
-  const Value&amp; field() const { return field_; }
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
+  <span class="n">Value</span> <span class="n">field_</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="kt">void</span> <span class="n">setField</span><span class="p">(</span><span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">field_</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">field</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">field_</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>Usage:</p>
 
-<pre><code class="cpp">Foo foo;
-foo.setField(field_instance);
-field_instance = foo.field();
-</code></pre>
+<div class="highlight"><pre><span class="n">Foo</span> <span class="n">foo</span><span class="p">;</span>
+<span class="n">foo</span><span class="p">.</span><span class="n">setField</span><span class="p">(</span><span class="n">field_instance</span><span class="p">);</span>
+<span class="n">field_instance</span> <span class="o">=</span> <span class="n">foo</span><span class="p">.</span><span class="n">field</span><span class="p">();</span>
+</pre></div>
 
 <p>Pros: brevity (no useless <code>get</code> prefix) and clarify.</p>
 

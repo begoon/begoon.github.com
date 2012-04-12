@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -49,17 +50,17 @@
 
 <p>Было:</p>
 
-<pre><code class="cpp">...
-if (packet_size &lt; 1024) ...
-...
-</code></pre>
+<div class="highlight"><pre><span class="p">...</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">packet_size</span> <span class="o">&lt;</span> <span class="mi">1024</span><span class="p">)</span> <span class="p">...</span>
+<span class="p">...</span>
+</pre></div>
 
 <p>а стало:</p>
 
-<pre><code class="cpp">...
-if (packet_size &gt; 10 &amp;&amp; packet_size &lt; 1024) ...
-...
-</code></pre>
+<div class="highlight"><pre><span class="p">...</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">packet_size</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="o">&amp;&amp;</span> <span class="n">packet_size</span> <span class="o">&lt;</span> <span class="mi">1024</span><span class="p">)</span> <span class="p">...</span>
+<span class="p">...</span>
+</pre></div>
 
 <p>Исправили всего одну строчку. Но после компиляции и линковки результирующий файл будет радикально другой: съедет таблица символов, где-то изменится выравнивание, возможно линкер из-за этого изменит размещение сегментов и т.д. Море факторов, из-за которых самое минимальное изменение исходного текста приведет к глобальному изменению результирующего исполняемого файла.</p>
 

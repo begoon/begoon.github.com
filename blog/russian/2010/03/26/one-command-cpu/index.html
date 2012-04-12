@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -49,38 +50,38 @@
 
 <p>Трюк тут в том, что указатель на текущую инструкцию находится в адресном пространстве интерпретатора, поэтому для реализации команды перехода надо просто записать значение в ячейку, где этот указатель хранится. Сам интерпретатор очень прост и может быть написан на чем угодно. В оригинальной программе он был ассемблере x86:</p>
 
-<pre><code class="nasm">cld
-emCPU:
-mov  si,emIP
-lodsw
-xchg ax,di
-mov  di,[di]
-lodsw
-xchg ax,bx
-or   di,[bx]
-lodsw
-xchg ax,di
-not  ax
-mov  emIP,si
-stosw
-jmp  short emCPU
-</code></pre>
+<div class="highlight"><pre><span class="nf">cld</span>
+<span class="nl">emCPU:</span>
+<span class="nf">mov</span>  <span class="nb">si</span><span class="p">,</span><span class="nv">emIP</span>
+<span class="nf">lodsw</span>
+<span class="nf">xchg</span> <span class="nb">ax</span><span class="p">,</span><span class="nb">di</span>
+<span class="nf">mov</span>  <span class="nb">di</span><span class="p">,[</span><span class="nb">di</span><span class="p">]</span>
+<span class="nf">lodsw</span>
+<span class="nf">xchg</span> <span class="nb">ax</span><span class="p">,</span><span class="nb">bx</span>
+<span class="nf">or</span>   <span class="nb">di</span><span class="p">,[</span><span class="nb">bx</span><span class="p">]</span>
+<span class="nf">lodsw</span>
+<span class="nf">xchg</span> <span class="nb">ax</span><span class="p">,</span><span class="nb">di</span>
+<span class="nf">not</span>  <span class="nb">ax</span>
+<span class="nf">mov</span>  <span class="nv">emIP</span><span class="p">,</span><span class="nb">si</span>
+<span class="nf">stosw</span>
+<span class="nf">jmp</span>  <span class="nv">short</span> <span class="nv">emCPU</span>
+</pre></div>
 
 <p>Но ни что не мешает перенести его в мир, например, Питона:</p>
 
-<pre><code class="python">def nor(a, b):
-  return ~(a | b) &amp; 0xFFFF
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">nor</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+  <span class="k">return</span> <span class="o">~</span><span class="p">(</span><span class="n">a</span> <span class="o">|</span> <span class="n">b</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFFFF</span>
 
-def norcpu():
-  while 1:
-    i = mem[IP];
-    a = mem[i + 0]
-    b = mem[i + 1]
-    r = mem[i + 2]
-    mem[IP] = i + 3
-    f = nor(mem[a], mem[b])
-    mem[r] = f
-</code></pre>
+<span class="k">def</span> <span class="nf">norcpu</span><span class="p">():</span>
+  <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">IP</span><span class="p">];</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">mem</span><span class="p">[</span><span class="n">IP</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">nor</span><span class="p">(</span><span class="n">mem</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">mem</span><span class="p">[</span><span class="n">b</span><span class="p">])</span>
+    <span class="n">mem</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span>
+</pre></div>
 
 <p>Почему именно NOR? Из теории булевой алгебры известно, что любую из 14-ти логических функций (например, NOT, AND, OR, XOR и т.д., всего их 16) двух одно битовых аргументов можно выразить через функции NOR и NAND. Например:</p>
 
@@ -125,17 +126,17 @@ OR @t1, @t2, IP
 
 <p>Я ввел одну дополнительную команду в него — циклический сдвиг результата каждой операции и сохранение значения в специальной ячейке-регистре:</p>
 
-<pre><code class="python">def norcpu():
-  while 1:
-    i = mem[IP];
-    a = mem[i + 0]
-    b = mem[i + 1]
-    r = mem[i + 2]
-    mem[IP] = i + 3
-    f = nor(mem[a], mem[b])
-    mem[r] = f
-    mem[S] = ((f &gt;&gt; 31) &amp; 1) | ((f &amp; 0x7FFF) &lt;&lt; 1)
-</code></pre>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">norcpu</span><span class="p">():</span>
+  <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">IP</span><span class="p">];</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">mem</span><span class="p">[</span><span class="n">IP</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">nor</span><span class="p">(</span><span class="n">mem</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">mem</span><span class="p">[</span><span class="n">b</span><span class="p">])</span>
+    <span class="n">mem</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span>
+    <span class="n">mem</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">f</span> <span class="o">&gt;&gt;</span> <span class="mi">31</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">f</span> <span class="o">&amp;</span> <span class="mh">0x7FFF</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
 
 <p>То есть теперь есть две особые ячейки: <code>IP</code> (instruction pointer) и <code>S</code> (значение последней операции, циклически сдвинутое влево).</p>
 

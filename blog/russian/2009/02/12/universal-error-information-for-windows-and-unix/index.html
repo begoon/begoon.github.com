@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -51,113 +52,113 @@
 
 <p>Файл <code>systemmessage.h</code>:</p>
 
-<pre><code class="cpp">#ifndef _EXT_SYSTEM_MESSAGE_H
-#define _EXT_SYSTEM_MESSAGE_H
+<div class="highlight"><pre><span class="cp">#ifndef _EXT_SYSTEM_MESSAGE_H</span>
+<span class="cp">#define _EXT_SYSTEM_MESSAGE_H</span>
 
-#include &lt;string&gt;
+<span class="cp">#include &lt;string&gt;</span>
 
-namespace ext {
+<span class="k">namespace</span> <span class="n">ext</span> <span class="p">{</span>
 
-class SystemMessage {
-public:
-  // Эта функция возращает код ошибки.
-  static int code();
-  // Эта функция по коду ошибки возвращает ее текстовое описание, если
-  // таковое предоставляется операционной системой. Если нет, то 
-  // возвращается строка &quot;?&quot;.
-  static std::string message(int code);
-};
+<span class="k">class</span> <span class="nc">SystemMessage</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="c1">// Эта функция возращает код ошибки.</span>
+  <span class="k">static</span> <span class="kt">int</span> <span class="n">code</span><span class="p">();</span>
+  <span class="c1">// Эта функция по коду ошибки возвращает ее текстовое описание, если</span>
+  <span class="c1">// таковое предоставляется операционной системой. Если нет, то </span>
+  <span class="c1">// возвращается строка &quot;?&quot;.</span>
+  <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">message</span><span class="p">(</span><span class="kt">int</span> <span class="n">code</span><span class="p">);</span>
+<span class="p">};</span>
 
-} // namespace ext
+<span class="p">}</span> <span class="c1">// namespace ext</span>
 
-#endif // _EXT_SYSTEM_MESSAGE_H
-</code></pre>
+<span class="cp">#endif </span><span class="c1">// _EXT_SYSTEM_MESSAGE_H</span>
+</pre></div>
 
 <p>Файл <code>systemmessage.cpp</code>:</p>
 
-<pre><code class="cpp">#include &quot;SystemMessage.h&quot;
+<div class="highlight"><pre><span class="cp">#include &quot;SystemMessage.h&quot;</span>
 
-#ifdef WIN32
-#include &lt;windows.h&gt;
-#else
-#include &lt;string.h&gt;
-#include &lt;unistd.h&gt;
-#include &lt;errno.h&gt;
-#endif
+<span class="cp">#ifdef WIN32</span>
+<span class="cp">#include &lt;windows.h&gt;</span>
+<span class="cp">#else</span>
+<span class="cp">#include &lt;string.h&gt;</span>
+<span class="cp">#include &lt;unistd.h&gt;</span>
+<span class="cp">#include &lt;errno.h&gt;</span>
+<span class="cp">#endif</span>
 
-namespace ext {
+<span class="k">namespace</span> <span class="n">ext</span> <span class="p">{</span>
 
-int SystemMessage::code() {
-#ifdef WIN32
-  return GetLastError();
-#else
-  return errno;
-#endif
-}
+<span class="kt">int</span> <span class="n">SystemMessage</span><span class="o">::</span><span class="n">code</span><span class="p">()</span> <span class="p">{</span>
+<span class="cp">#ifdef WIN32</span>
+  <span class="k">return</span> <span class="n">GetLastError</span><span class="p">();</span>
+<span class="cp">#else</span>
+  <span class="k">return</span> <span class="n">errno</span><span class="p">;</span>
+<span class="cp">#endif</span>
+<span class="p">}</span>
 
-// Если система по какой-то причине не имеет функции strerror_r,
-// то придется лазить напрямую в таблицу сообщений об ошибках.
-// Для этого надо при компиляции определить макрос LIBC_NO_STRERROR_R.
-// Пока я видел такое только на HP-UX IA64 v2.
-#ifndef WIN32
-#ifndef LIBC_NO_STRERROR_R
-extern &quot;C&quot; int sys_nerr;
-extern &quot;C&quot; char* sys_errlist[];
-#endif
-#endif
+<span class="c1">// Если система по какой-то причине не имеет функции strerror_r,</span>
+<span class="c1">// то придется лазить напрямую в таблицу сообщений об ошибках.</span>
+<span class="c1">// Для этого надо при компиляции определить макрос LIBC_NO_STRERROR_R.</span>
+<span class="c1">// Пока я видел такое только на HP-UX IA64 v2.</span>
+<span class="cp">#ifndef WIN32</span>
+<span class="cp">#ifndef LIBC_NO_STRERROR_R</span>
+<span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="kt">int</span> <span class="n">sys_nerr</span><span class="p">;</span>
+<span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="kt">char</span><span class="o">*</span> <span class="n">sys_errlist</span><span class="p">[];</span>
+<span class="cp">#endif</span>
+<span class="cp">#endif</span>
 
-std::string SystemMessage::message(int code) {
-  char msg[1024];
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">SystemMessage</span><span class="o">::</span><span class="n">message</span><span class="p">(</span><span class="kt">int</span> <span class="n">code</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="n">msg</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
 
-#ifdef WIN32
+<span class="cp">#ifdef WIN32</span>
 
-  // Версия для Windows
-  FormatMessage(
-    FORMAT_MESSAGE_FROM_SYSTEM |
-    FORMAT_MESSAGE_IGNORE_INSERTS,
-    NULL,
-    code,
-    MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-    msg,
-    sizeof(msg) - 1,
-    NULL
-  );
+  <span class="c1">// Версия для Windows</span>
+  <span class="n">FormatMessage</span><span class="p">(</span>
+    <span class="n">FORMAT_MESSAGE_FROM_SYSTEM</span> <span class="o">|</span>
+    <span class="n">FORMAT_MESSAGE_IGNORE_INSERTS</span><span class="p">,</span>
+    <span class="nb">NULL</span><span class="p">,</span>
+    <span class="n">code</span><span class="p">,</span>
+    <span class="n">MAKELANGID</span><span class="p">(</span><span class="n">LANG_NEUTRAL</span><span class="p">,</span> <span class="n">SUBLANG_DEFAULT</span><span class="p">),</span>
+    <span class="n">msg</span><span class="p">,</span>
+    <span class="k">sizeof</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nb">NULL</span>
+  <span class="p">);</span>
 
-  char* p = msg + strlen(msg);
+  <span class="kt">char</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">+</span> <span class="n">strlen</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
   
-  // Обрезаем c конца '\r', '\n' и '.'
-  for(p = msg + strlen(msg) - 1; 
-    p &gt;= msg &amp;&amp; (*p == '\n' || *p == '\r' || *p == '.'); --p) 
-      *p = 0;
+  <span class="c1">// Обрезаем c конца &#39;\r&#39;, &#39;\n&#39; и &#39;.&#39;</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">p</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">+</span> <span class="n">strlen</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> 
+    <span class="n">p</span> <span class="o">&gt;=</span> <span class="n">msg</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;\n&#39;</span> <span class="o">||</span> <span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;\r&#39;</span> <span class="o">||</span> <span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;.&#39;</span><span class="p">);</span> <span class="o">--</span><span class="n">p</span><span class="p">)</span> 
+      <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-#elif LIBC_NO_STRERROR_R
+<span class="cp">#elif LIBC_NO_STRERROR_R</span>
 
-  // Если UNIX-платформа не имеет функции strerror_r, то делаем ее
-  // работу вручную. Пока я встретил такое только на HP-UX IA64 v2.
-  if (code &lt; 0 || code &gt;= sys_nerr)
-    return &quot;?&quot;;
+  <span class="c1">// Если UNIX-платформа не имеет функции strerror_r, то делаем ее</span>
+  <span class="c1">// работу вручную. Пока я встретил такое только на HP-UX IA64 v2.</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">code</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">code</span> <span class="o">&gt;=</span> <span class="n">sys_nerr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&quot;?&quot;</span><span class="p">;</span>
 
-  strncpy(msg, sys_errlist[code], sizeof(msg) - 1);
+  <span class="n">strncpy</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">sys_errlist</span><span class="p">[</span><span class="n">code</span><span class="p">],</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
 
-  // Если сообщение об ошибке длинее чем sizeof(msg)-1, то '\0'
-  // не будет скопирован, поэтому добавляем его вручну.
-  msg[sizeof(msg) - 1] = 0;
+  <span class="c1">// Если сообщение об ошибке длинее чем sizeof(msg)-1, то &#39;\0&#39;</span>
+  <span class="c1">// не будет скопирован, поэтому добавляем его вручну.</span>
+  <span class="n">msg</span><span class="p">[</span><span class="k">sizeof</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-#else
+<span class="cp">#else</span>
 
-  // Для нормальной UNIX-системы просто вызываем strerror_r.
-  if (strerror_r(code, msg, sizeof(msg) - 1) &lt; 0)
-    return &quot;?&quot;;
+  <span class="c1">// Для нормальной UNIX-системы просто вызываем strerror_r.</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">strerror_r</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">&quot;?&quot;</span><span class="p">;</span>
 
-#endif
+<span class="cp">#endif</span>
 
-  // Поможем компилятору по возможности оптимизировать 
-  // возвращаемое значение как rvalue.
-  return std::string(msg);
-}
+  <span class="c1">// Поможем компилятору по возможности оптимизировать </span>
+  <span class="c1">// возвращаемое значение как rvalue.</span>
+  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+<span class="p">}</span>
 
-} // namespace ext
-</code></pre>
+<span class="p">}</span> <span class="c1">// namespace ext</span>
+</pre></div>
 
 <p>Теперь посмотрим это в работе.</p>
 
@@ -165,25 +166,25 @@ std::string SystemMessage::message(int code) {
 
 <p>Тестовая программа <code>systemmessage_test.cpp</code>:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
-#include &lt;fstream&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;fstream&gt;</span>
 
-#include &quot;systemmessage.h&quot;
+<span class="cp">#include &quot;systemmessage.h&quot;</span>
 
-int main(int argc, char* argv[]) {
-  // Пытаемся открыть заведомо несуществующий файл.
-  std::ifstream is(&quot;__non_existing_file__&quot;);
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="c1">// Пытаемся открыть заведомо несуществующий файл.</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">is</span><span class="p">(</span><span class="s">&quot;__non_existing_file__&quot;</span><span class="p">);</span>
 
-  // Печатаем ошибку.
-  int error = ext::SystemMessage::code();
-  std::cout 
-    &lt;&lt; error &lt;&lt; &quot;, &quot; 
-    &lt;&lt; ext::SystemMessage::message(error) 
-    &lt;&lt; std::endl;
+  <span class="c1">// Печатаем ошибку.</span>
+  <span class="kt">int</span> <span class="n">error</span> <span class="o">=</span> <span class="n">ext</span><span class="o">::</span><span class="n">SystemMessage</span><span class="o">::</span><span class="n">code</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> 
+    <span class="o">&lt;&lt;</span> <span class="n">error</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> 
+    <span class="o">&lt;&lt;</span> <span class="n">ext</span><span class="o">::</span><span class="n">SystemMessage</span><span class="o">::</span><span class="n">message</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> 
+    <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-  return 0;
-}
-</code></pre>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Компилируем в Visual Studio:</p>
 

@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -71,244 +72,244 @@
 
 <p>Заголовочный файл <code>cstring.h</code>:</p>
 
-<pre><code class="cpp">#ifndef _CSTRING_H
-#define _CSTRING_H
+<div class="highlight"><pre><span class="cp">#ifndef _CSTRING_H</span>
+<span class="cp">#define _CSTRING_H</span>
 
-#define _decl_string_t(N) \
-struct {                  \
-  int sz;                 \
-  char data[N];           \
-}
+<span class="cp">#define _decl_string_t(N) \</span>
+<span class="cp">struct {                  \</span>
+<span class="cp">  int sz;                 \</span>
+<span class="cp">  char data[N];           \</span>
+<span class="cp">}</span>
 
-typedef _decl_string_t(1) string_t;
+<span class="k">typedef</span> <span class="n">_decl_string_t</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">string_t</span><span class="p">;</span>
 
-/**
- * Объявление строки в форме автоматической переменной в стеке.
- * Длина строки инициализируется нулем.
- */
-#define decl_string_t(name, size) _decl_string_t(size) name = { 0 }
+<span class="cm">/**</span>
+<span class="cm"> * Объявление строки в форме автоматической переменной в стеке.</span>
+<span class="cm"> * Длина строки инициализируется нулем.</span>
+<span class="cm"> */</span>
+<span class="cp">#define decl_string_t(name, size) _decl_string_t(size) name = { 0 }</span>
 
-/**
- * Создание новой строки в куче.
- */
-string_t* string_new(int sz);
+<span class="cm">/**</span>
+<span class="cm"> * Создание новой строки в куче.</span>
+<span class="cm"> */</span>
+<span class="n">string_t</span><span class="o">*</span> <span class="n">string_new</span><span class="p">(</span><span class="kt">int</span> <span class="n">sz</span><span class="p">);</span>
 
-/* Трюк с дублированием имен функций, начинающихся с символа '_'
- * требуется для подавление предупреждений компилятора о преобразовании
- * типов.
- */
+<span class="cm">/* Трюк с дублированием имен функций, начинающихся с символа &#39;_&#39;</span>
+<span class="cm"> * требуется для подавление предупреждений компилятора о преобразовании</span>
+<span class="cm"> * типов.</span>
+<span class="cm"> */</span>
 
-/**
- * Удаление строки из кучи.
- */
-#define string_delete(str) _string_delete((string_t*)str)
-void _string_delete(string_t* str);
+<span class="cm">/**</span>
+<span class="cm"> * Удаление строки из кучи.</span>
+<span class="cm"> */</span>
+<span class="cp">#define string_delete(str) _string_delete((string_t*)str)</span>
+<span class="kt">void</span> <span class="n">_string_delete</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">);</span>
 
-/** 
- * Текущая длина строки.
- */
-#define string_length(str) _string_length((const string_t*)str)
-int _string_length(const string_t* str);
+<span class="cm">/** </span>
+<span class="cm"> * Текущая длина строки.</span>
+<span class="cm"> */</span>
+<span class="cp">#define string_length(str) _string_length((const string_t*)str)</span>
+<span class="kt">int</span> <span class="n">_string_length</span><span class="p">(</span><span class="k">const</span> <span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">);</span>
 
-/**
- * Изменение длины строки.
- */
-#define string_resize(str, sz) _string_resize((string_t*)str, sz)
-int _string_resize(string_t* str, int sz);
+<span class="cm">/**</span>
+<span class="cm"> * Изменение длины строки.</span>
+<span class="cm"> */</span>
+<span class="cp">#define string_resize(str, sz) _string_resize((string_t*)str, sz)</span>
+<span class="kt">int</span> <span class="n">_string_resize</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sz</span><span class="p">);</span>
 
-/**
- * Копирование строки из строки С, завершающейся нулем.
- */
-#define string_from_c_str(dst, src) _string_from_c_str((string_t*)dst, src)
-string_t* _string_from_c_str(string_t* dst, const char* src);
+<span class="cm">/**</span>
+<span class="cm"> * Копирование строки из строки С, завершающейся нулем.</span>
+<span class="cm"> */</span>
+<span class="cp">#define string_from_c_str(dst, src) _string_from_c_str((string_t*)dst, src)</span>
+<span class="n">string_t</span><span class="o">*</span> <span class="n">_string_from_c_str</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">src</span><span class="p">);</span>
 
-/**
- * Добавление символа в строку.
- */
-#define string_append_ch(str, ch) _string_append_ch((string_t*)str, ch)
-string_t* _string_append_ch(string_t* str, char ch);
+<span class="cm">/**</span>
+<span class="cm"> * Добавление символа в строку.</span>
+<span class="cm"> */</span>
+<span class="cp">#define string_append_ch(str, ch) _string_append_ch((string_t*)str, ch)</span>
+<span class="n">string_t</span><span class="o">*</span> <span class="n">_string_append_ch</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">char</span> <span class="n">ch</span><span class="p">);</span>
 
-/**
- * Превращение строки в строку С без добавления нуля на конце.
- */
-#define string_data(str) str-&gt;data
+<span class="cm">/**</span>
+<span class="cm"> * Превращение строки в строку С без добавления нуля на конце.</span>
+<span class="cm"> */</span>
+<span class="cp">#define string_data(str) str-&gt;data</span>
 
-/**
- * Превращение строки в строку С с нулем на конце.
- */
-#define string_c_str(str) _string_c_str((string_t*)str)
-char* _string_c_str(string_t* str);
+<span class="cm">/**</span>
+<span class="cm"> * Превращение строки в строку С с нулем на конце.</span>
+<span class="cm"> */</span>
+<span class="cp">#define string_c_str(str) _string_c_str((string_t*)str)</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">_string_c_str</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">);</span>
 
-#endif
-</code></pre>
+<span class="cp">#endif</span>
+</pre></div>
 
 <p>Файл <code>cstring.c</code>:</p>
 
-<pre><code class="cpp">#include &lt;stdlib.h&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;stdlib.h&gt;</span>
 
-#include &quot;cstring.h&quot;
+<span class="cp">#include &quot;cstring.h&quot;</span>
 
-/**
- * Подготовительная площадка для тестирования.
- * Если задан макрос UNIT_TESTING, то функции работы с кучей подменяются
- * на тестовые.
- */
-#if UNIT_TESTING
-extern void* _test_malloc(const size_t size, const char* file, const int line);
-extern void* _test_calloc(const size_t number_of_elements, const size_t size,
-                          const char* file, const int line);
-extern void _test_free(void* const ptr, const char* file, const int line);
+<span class="cm">/**</span>
+<span class="cm"> * Подготовительная площадка для тестирования.</span>
+<span class="cm"> * Если задан макрос UNIT_TESTING, то функции работы с кучей подменяются</span>
+<span class="cm"> * на тестовые.</span>
+<span class="cm"> */</span>
+<span class="cp">#if UNIT_TESTING</span>
+<span class="k">extern</span> <span class="kt">void</span><span class="o">*</span> <span class="n">_test_malloc</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">size</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">line</span><span class="p">);</span>
+<span class="k">extern</span> <span class="kt">void</span><span class="o">*</span> <span class="n">_test_calloc</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">number_of_elements</span><span class="p">,</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">size</span><span class="p">,</span>
+                          <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">line</span><span class="p">);</span>
+<span class="k">extern</span> <span class="kt">void</span> <span class="n">_test_free</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="k">const</span> <span class="n">ptr</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">line</span><span class="p">);</span>
 
-#define malloc(size) _test_malloc(size, __FILE__, __LINE__)
-#define calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)
-#define free(ptr) _test_free(ptr, __FILE__, __LINE__)
-#endif // UNIT_TESTING
+<span class="cp">#define malloc(size) _test_malloc(size, __FILE__, __LINE__)</span>
+<span class="cp">#define calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)</span>
+<span class="cp">#define free(ptr) _test_free(ptr, __FILE__, __LINE__)</span>
+<span class="cp">#endif </span><span class="c1">// UNIT_TESTING</span>
 
-/**
- * Создание новой строки в куче. Трюк &quot;sizeof(string_t)&quot; используется, чтобы
- * правильно отработать ситуацию, если из-за выравнивания между элементами
- * структуры string_t 'sz' и 'data' вдруг появится промежуток.
- */ 
-string_t* string_new(int sz) {
-  return malloc(sizeof(string_t) + sz - 1);
-}
+<span class="cm">/**</span>
+<span class="cm"> * Создание новой строки в куче. Трюк &quot;sizeof(string_t)&quot; используется, чтобы</span>
+<span class="cm"> * правильно отработать ситуацию, если из-за выравнивания между элементами</span>
+<span class="cm"> * структуры string_t &#39;sz&#39; и &#39;data&#39; вдруг появится промежуток.</span>
+<span class="cm"> */</span> 
+<span class="n">string_t</span><span class="o">*</span> <span class="n">string_new</span><span class="p">(</span><span class="kt">int</span> <span class="n">sz</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">string_t</span><span class="p">)</span> <span class="o">+</span> <span class="n">sz</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
 
-/**
- * Удаление строки из кучи.
- */
-void _string_delete(string_t* str) {
-  free((void *)str);
-}
+<span class="cm">/**</span>
+<span class="cm"> * Удаление строки из кучи.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="n">_string_delete</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">free</span><span class="p">((</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">str</span><span class="p">);</span>
+<span class="p">}</span>
 
-/**
- * Текущая длина строки.
- */
-int _string_length(const string_t* str) {
-  return str-&gt;sz;                                                                                        
-}
+<span class="cm">/**</span>
+<span class="cm"> * Текущая длина строки.</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="n">_string_length</span><span class="p">(</span><span class="k">const</span> <span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">str</span><span class="o">-&gt;</span><span class="n">sz</span><span class="p">;</span>                                                                                        
+<span class="p">}</span>
 
-/**
- * Изменение длины строки.
- */
-int _string_resize(string_t* str, int sz) {
-  return str-&gt;sz = sz;
-}
+<span class="cm">/**</span>
+<span class="cm"> * Изменение длины строки.</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="n">_string_resize</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sz</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">str</span><span class="o">-&gt;</span><span class="n">sz</span> <span class="o">=</span> <span class="n">sz</span><span class="p">;</span>
+<span class="p">}</span>
 
-/**
- * Копирование строки из строки С, завершающейся нулем.
- */
-string_t* _string_from_c_str(string_t* dst, const char* src) {
-  int sz = strlen(src);
-  memcpy(dst-&gt;data, src, sz);
-  dst-&gt;sz = sz;
-  return dst;
-}
+<span class="cm">/**</span>
+<span class="cm"> * Копирование строки из строки С, завершающейся нулем.</span>
+<span class="cm"> */</span>
+<span class="n">string_t</span><span class="o">*</span> <span class="n">_string_from_c_str</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">src</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">sz</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">src</span><span class="p">);</span>
+  <span class="n">memcpy</span><span class="p">(</span><span class="n">dst</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">sz</span><span class="p">);</span>
+  <span class="n">dst</span><span class="o">-&gt;</span><span class="n">sz</span> <span class="o">=</span> <span class="n">sz</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">dst</span><span class="p">;</span>
+<span class="p">}</span>
 
-/**
- * Добавление символа в строку.
- */
-string_t* _string_append_ch(string_t* str, char ch) {
-  str-&gt;data[str-&gt;sz++] = ch;
-  return str;
-}
+<span class="cm">/**</span>
+<span class="cm"> * Добавление символа в строку.</span>
+<span class="cm"> */</span>
+<span class="n">string_t</span><span class="o">*</span> <span class="n">_string_append_ch</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">char</span> <span class="n">ch</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">str</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">str</span><span class="o">-&gt;</span><span class="n">sz</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">ch</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">str</span><span class="p">;</span>
+<span class="p">}</span>
 
-/**
- * Превращение строки в строку С с нулем на конце. Фактически,
- * в тело строки добавляется ноль и возвращается указатель на данные.
- */
-char* _string_c_str(string_t* str) {
-  str-&gt;data[str-&gt;sz] = 0;
-  return string_data(str);
-}
-</code></pre>
+<span class="cm">/**</span>
+<span class="cm"> * Превращение строки в строку С с нулем на конце. Фактически,</span>
+<span class="cm"> * в тело строки добавляется ноль и возвращается указатель на данные.</span>
+<span class="cm"> */</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">_string_c_str</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">str</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">str</span><span class="o">-&gt;</span><span class="n">sz</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">string_data</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Как вы заметили, в коде есть специальный блок, ограниченный макросом <code>UNIT_TESTING</code>. Ничего не поделаешь, в языке С приходится &ldquo;готовить&rdquo; код к потенциальному тестированию и вставлять фрагменты, позволяющие тестовой среде работать с этим кодом. Этот блок, если задан макрос <code>UNIT_TESTING</code>, переопределяет функции работы с кучей, чтобы можно было перехватывать их вызовы. Подменяющие функции <code>_test_malloc()</code>, <code>_test_calloc()</code> и <code>_test_free()</code> предоставляются библиотекой <code>cmockery</code>.</p>
 
 <p>Теперь файл тестов <code>cstring_unittest.c</code>:</p>
 
-<pre><code class="cpp">#include &lt;stdarg.h&gt;
-#include &lt;stddef.h&gt;
-#include &lt;setjmp.h&gt;
-#include &lt;cmockery.h&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;stdarg.h&gt;</span>
+<span class="cp">#include &lt;stddef.h&gt;</span>
+<span class="cp">#include &lt;setjmp.h&gt;</span>
+<span class="cp">#include &lt;cmockery.h&gt;</span>
 
-#include &quot;cstring.h&quot;
+<span class="cp">#include &quot;cstring.h&quot;</span>
 
-/**
- * Тестируем декларацию строки длиной 20 в виде автоматической
- * переменной, добавляем в нее два символа, обрезаем строку
- * до длины в один байт и проверяем, добавился ли 0 при преобразовании
- * в строку С.
- */
-void string_c_str_test(void **state) {
-  decl_string_t(a, 20);
-  a.data[0] = 'a';
-  a.data[1] = 'b';
-  a.sz = 1;
-  assert_memory_equal(&quot;a\0&quot;, string_c_str(&amp;a), 2);
-}
+<span class="cm">/**</span>
+<span class="cm"> * Тестируем декларацию строки длиной 20 в виде автоматической</span>
+<span class="cm"> * переменной, добавляем в нее два символа, обрезаем строку</span>
+<span class="cm"> * до длины в один байт и проверяем, добавился ли 0 при преобразовании</span>
+<span class="cm"> * в строку С.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="n">string_c_str_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">decl_string_t</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+  <span class="n">a</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;a&#39;</span><span class="p">;</span>
+  <span class="n">a</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;b&#39;</span><span class="p">;</span>
+  <span class="n">a</span><span class="p">.</span><span class="n">sz</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="n">assert_memory_equal</span><span class="p">(</span><span class="s">&quot;a</span><span class="se">\0</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">string_c_str</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">),</span> <span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
 
-/**
- * Тестируем изменение длины строки.
- */
-void string_resize_test(void **state) {
-  decl_string_t(a, 20);
-  a.sz = 2;
-  string_resize(&amp;a, 1);
-  assert_int_equal(1, string_length(&amp;a));
-}
+<span class="cm">/**</span>
+<span class="cm"> * Тестируем изменение длины строки.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="n">string_resize_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">decl_string_t</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+  <span class="n">a</span><span class="p">.</span><span class="n">sz</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="n">string_resize</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="n">assert_int_equal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">string_length</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">));</span>
+<span class="p">}</span>
 
-/**
- * Тестируем добавление символа путем сравнения со строками С
- */
-void string_append_ch_test(void **state) {
-  decl_string_t(a, 20);
-  assert_string_equal(&quot;&quot;, string_c_str(&amp;a));
-  assert_string_equal(&quot;a&quot;, string_c_str(string_append_ch(&amp;a, 'a')));
-  assert_string_equal(&quot;ab&quot;, string_c_str(string_append_ch(&amp;a, 'b')));
-}
+<span class="cm">/**</span>
+<span class="cm"> * Тестируем добавление символа путем сравнения со строками С</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="n">string_append_ch_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">decl_string_t</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+  <span class="n">assert_string_equal</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">string_c_str</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">));</span>
+  <span class="n">assert_string_equal</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="n">string_c_str</span><span class="p">(</span><span class="n">string_append_ch</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="sc">&#39;a&#39;</span><span class="p">)));</span>
+  <span class="n">assert_string_equal</span><span class="p">(</span><span class="s">&quot;ab&quot;</span><span class="p">,</span> <span class="n">string_c_str</span><span class="p">(</span><span class="n">string_append_ch</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="sc">&#39;b&#39;</span><span class="p">)));</span>
+<span class="p">}</span>
 
-/**
- * Тестируем декларацию строки в виде автоматической переменной.
- * Длина строки сразу после декларации должна быть нулевой.
- */
-void string_declare_test(void **state) {
-  decl_string_t(a, 20);
-  assert_int_equal(0, string_length(&amp;a));
-}
+<span class="cm">/**</span>
+<span class="cm"> * Тестируем декларацию строки в виде автоматической переменной.</span>
+<span class="cm"> * Длина строки сразу после декларации должна быть нулевой.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="n">string_declare_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">decl_string_t</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+  <span class="n">assert_int_equal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">string_length</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">));</span>
+<span class="p">}</span>
 
-/**
- * Тестируем размещение новой строки в куче и ее удаление из нее.
- */
-void string_heap_allocation_test(void **state) {
-  string_t* a = string_new(20);
-  string_delete(a);
-}
+<span class="cm">/**</span>
+<span class="cm"> * Тестируем размещение новой строки в куче и ее удаление из нее.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="n">string_heap_allocation_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">string_t</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="n">string_new</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+  <span class="n">string_delete</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+<span class="p">}</span>
 
-/**
- * Тестируем копирование строки из строки С с нулем на конце.
- */
-void string_from_c_str_test(void **state) {
-  string_t* a = string_new(8);
-  string_from_c_str(a, &quot;12345678&quot;);
-  assert_int_equal(8, string_length(a));
-  string_delete(a);
-}
+<span class="cm">/**</span>
+<span class="cm"> * Тестируем копирование строки из строки С с нулем на конце.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="n">string_from_c_str_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">string_t</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="n">string_new</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+  <span class="n">string_from_c_str</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="s">&quot;12345678&quot;</span><span class="p">);</span>
+  <span class="n">assert_int_equal</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">string_length</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+  <span class="n">string_delete</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+<span class="p">}</span>
 
-/**
- * Создаем список тестов и запускаем их.
- */
-int main(int argc, char* argv[]) {
-  const UnitTest tests[] = {
-    unit_test(string_declare_test),
-    unit_test(string_c_str_test),
-    unit_test(string_append_ch_test),
-    unit_test(string_heap_allocation_test),
-    unit_test(string_from_c_str_test),
-    unit_test(string_resize_test),
-  };
-  return run_tests(tests);
-}
-</code></pre>
+<span class="cm">/**</span>
+<span class="cm"> * Создаем список тестов и запускаем их.</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="n">UnitTest</span> <span class="n">tests</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">unit_test</span><span class="p">(</span><span class="n">string_declare_test</span><span class="p">),</span>
+    <span class="n">unit_test</span><span class="p">(</span><span class="n">string_c_str_test</span><span class="p">),</span>
+    <span class="n">unit_test</span><span class="p">(</span><span class="n">string_append_ch_test</span><span class="p">),</span>
+    <span class="n">unit_test</span><span class="p">(</span><span class="n">string_heap_allocation_test</span><span class="p">),</span>
+    <span class="n">unit_test</span><span class="p">(</span><span class="n">string_from_c_str_test</span><span class="p">),</span>
+    <span class="n">unit_test</span><span class="p">(</span><span class="n">string_resize_test</span><span class="p">),</span>
+  <span class="p">};</span>
+  <span class="k">return</span> <span class="n">run_tests</span><span class="p">(</span><span class="n">tests</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Схема очень похожа на любое другое <a href="http://en.wikipedia.org/wiki/Unit_testing">xUnit</a> тестирование: каждый тест проверяет какой-то один функциональный элемент, тесты объединяются в группы и запускаются автоматически все вместе. Правда, из-за ограничений языка С каждый тест приходится вручную добавлять в список запуска, увы.</p>
 
@@ -342,83 +343,83 @@ All 6 tests passed
 
 <p>Файл <code>cstring.c</code> с &ldquo;ошибками&rdquo;:</p>
 
-<pre><code class="cpp">#include &lt;stdlib.h&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;stdlib.h&gt;</span>
 
-#include &quot;cstring.h&quot;
+<span class="cp">#include &quot;cstring.h&quot;</span>
 
-/**
- * Подготовительная площадка для тестирования.
- * Если задан макрос UNIT_TESTING, то функции работы с кучей подменяются
- * на тестовые.
- */
-#if UNIT_TESTING
-extern void* _test_malloc(const size_t size, const char* file, const int line);
-extern void* _test_calloc(const size_t number_of_elements, const size_t size,
-                          const char* file, const int line);
-extern void _test_free(void* const ptr, const char* file, const int line);
+<span class="cm">/**</span>
+<span class="cm"> * Подготовительная площадка для тестирования.</span>
+<span class="cm"> * Если задан макрос UNIT_TESTING, то функции работы с кучей подменяются</span>
+<span class="cm"> * на тестовые.</span>
+<span class="cm"> */</span>
+<span class="cp">#if UNIT_TESTING</span>
+<span class="k">extern</span> <span class="kt">void</span><span class="o">*</span> <span class="n">_test_malloc</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">size</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">line</span><span class="p">);</span>
+<span class="k">extern</span> <span class="kt">void</span><span class="o">*</span> <span class="n">_test_calloc</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">number_of_elements</span><span class="p">,</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">size</span><span class="p">,</span>
+                          <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">line</span><span class="p">);</span>
+<span class="k">extern</span> <span class="kt">void</span> <span class="n">_test_free</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="k">const</span> <span class="n">ptr</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">line</span><span class="p">);</span>
 
-#define malloc(size) _test_malloc(size, __FILE__, __LINE__)
-#define calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)
-#define free(ptr) _test_free(ptr, __FILE__, __LINE__)
-#endif // UNIT_TESTING
+<span class="cp">#define malloc(size) _test_malloc(size, __FILE__, __LINE__)</span>
+<span class="cp">#define calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)</span>
+<span class="cp">#define free(ptr) _test_free(ptr, __FILE__, __LINE__)</span>
+<span class="cp">#endif </span><span class="c1">// UNIT_TESTING</span>
 
-/**
- * Создание новой строки в куче. Трюк &quot;sizeof(string_t)&quot; используется, чтобы
- * правильно отработать ситуацию, если из-за выравнивания между элементами
- * структуры string_t 'sz' и 'data' вдруг появится промежуток.
- */ 
-string_t* string_new(int sz) {
-  return malloc(sizeof(string_t) + 1 - 1); // (ОШИБКА!) &quot;Неверная&quot; длина.
-}
+<span class="cm">/**</span>
+<span class="cm"> * Создание новой строки в куче. Трюк &quot;sizeof(string_t)&quot; используется, чтобы</span>
+<span class="cm"> * правильно отработать ситуацию, если из-за выравнивания между элементами</span>
+<span class="cm"> * структуры string_t &#39;sz&#39; и &#39;data&#39; вдруг появится промежуток.</span>
+<span class="cm"> */</span> 
+<span class="n">string_t</span><span class="o">*</span> <span class="n">string_new</span><span class="p">(</span><span class="kt">int</span> <span class="n">sz</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">string_t</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">// (ОШИБКА!) &quot;Неверная&quot; длина.</span>
+<span class="p">}</span>
 
-/**
- * Удаление строки из кучи.
- */
-void _string_delete(string_t* str) {
-  // (ОШИБКА!) &quot;Забыли&quot; вызвать free().
-}
+<span class="cm">/**</span>
+<span class="cm"> * Удаление строки из кучи.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="n">_string_delete</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// (ОШИБКА!) &quot;Забыли&quot; вызвать free().</span>
+<span class="p">}</span>
 
-/**
- * Текущая длина строки.
- */
-int _string_length(const string_t* str) {
-  return str-&gt;sz;                                                                                        
-}
+<span class="cm">/**</span>
+<span class="cm"> * Текущая длина строки.</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="n">_string_length</span><span class="p">(</span><span class="k">const</span> <span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">str</span><span class="o">-&gt;</span><span class="n">sz</span><span class="p">;</span>                                                                                        
+<span class="p">}</span>
 
-/**
- * Изменение длины строки.
- */
-int _string_resize(string_t* str, int sz) {
-  return str-&gt;sz;  // (ОШИБКА!) &quot;Забыли&quot; уменьшить длину строки.
-}
+<span class="cm">/**</span>
+<span class="cm"> * Изменение длины строки.</span>
+<span class="cm"> */</span>
+<span class="kt">int</span> <span class="n">_string_resize</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sz</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">str</span><span class="o">-&gt;</span><span class="n">sz</span><span class="p">;</span>  <span class="c1">// (ОШИБКА!) &quot;Забыли&quot; уменьшить длину строки.</span>
+<span class="p">}</span>
 
-/**
- * Копирование строки из строки С, завершающейся нулем.
- */
-string_t* _string_from_c_str(string_t* dst, const char* src) {
-  int sz = strlen(src);
-  memcpy(dst-&gt;data, src, sz);
-  // (ОШИБКА!) &quot;Забыли&quot; присвоить длине новое значение.
-  return dst;
-}
+<span class="cm">/**</span>
+<span class="cm"> * Копирование строки из строки С, завершающейся нулем.</span>
+<span class="cm"> */</span>
+<span class="n">string_t</span><span class="o">*</span> <span class="n">_string_from_c_str</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">src</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">sz</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">src</span><span class="p">);</span>
+  <span class="n">memcpy</span><span class="p">(</span><span class="n">dst</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">sz</span><span class="p">);</span>
+  <span class="c1">// (ОШИБКА!) &quot;Забыли&quot; присвоить длине новое значение.</span>
+  <span class="k">return</span> <span class="n">dst</span><span class="p">;</span>
+<span class="p">}</span>
 
-/**
- * Добавление символа в строку.
- */
-string_t* _string_append_ch(string_t* str, char ch) {
-  str-&gt;data[str-&gt;sz] = ch; // (ОШИБКА!) &quot;Забыли&quot; увеличить длину.
-  return str;
-}
+<span class="cm">/**</span>
+<span class="cm"> * Добавление символа в строку.</span>
+<span class="cm"> */</span>
+<span class="n">string_t</span><span class="o">*</span> <span class="n">_string_append_ch</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">char</span> <span class="n">ch</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">str</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">str</span><span class="o">-&gt;</span><span class="n">sz</span><span class="p">]</span> <span class="o">=</span> <span class="n">ch</span><span class="p">;</span> <span class="c1">// (ОШИБКА!) &quot;Забыли&quot; увеличить длину.</span>
+  <span class="k">return</span> <span class="n">str</span><span class="p">;</span>
+<span class="p">}</span>
 
-/**
- * Превращение строки в строку С с нулем на конце. Фактически,
- * в тело строки добавляется ноль и возвращается указатель на данные.
- */
-char* _string_c_str(string_t* str) {
-  // (ОШИБКА!) &quot;Забыли&quot; добавить 0 в конец.
-  return string_data(str);
-}
-</code></pre>
+<span class="cm">/**</span>
+<span class="cm"> * Превращение строки в строку С с нулем на конце. Фактически,</span>
+<span class="cm"> * в тело строки добавляется ноль и возвращается указатель на данные.</span>
+<span class="cm"> */</span>
+<span class="kt">char</span><span class="o">*</span> <span class="n">_string_c_str</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// (ОШИБКА!) &quot;Забыли&quot; добавить 0 в конец.</span>
+  <span class="k">return</span> <span class="n">string_data</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Компилируем и запускаем:</p>
 

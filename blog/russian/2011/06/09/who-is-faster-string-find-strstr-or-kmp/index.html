@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -54,136 +55,136 @@
 
 <p>Данные для поиска сделаны в виде &ldquo;наихудщего случая&rdquo;, когда сравнивать надо все до победного, и совпадение будет только с самом конце. Это должно вызвать явное квадратичное время у <code>naive_strstr()</code>.</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
-#include &lt;vector&gt;
-#include &lt;cstdlib&gt;
-#include &lt;cstring&gt;
-#include &lt;cassert&gt;
-#include &lt;ctime&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;vector&gt;</span>
+<span class="cp">#include &lt;cstdlib&gt;</span>
+<span class="cp">#include &lt;cstring&gt;</span>
+<span class="cp">#include &lt;cassert&gt;</span>
+<span class="cp">#include &lt;ctime&gt;</span>
 
-int naive_strstr(const char* str, const char* needle) {
-  int str_sz = std::strlen(str);
-  int needle_sz = std::strlen(needle);
-  for (int i = 0; i &lt; str_sz - needle_sz + 1; ++i) {
-    int j;
-    for (j = 0; j &lt; needle_sz; ++j)
-      if (str[i + j] != needle[j])
-        break;
-    if (j == needle_sz)
-      return i;
-  }
-  return -1;
-}
+<span class="kt">int</span> <span class="n">naive_strstr</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">needle</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">str_sz</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">strlen</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="n">needle_sz</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">strlen</span><span class="p">(</span><span class="n">needle</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str_sz</span> <span class="o">-</span> <span class="n">needle_sz</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">j</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">needle_sz</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">!=</span> <span class="n">needle</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">needle_sz</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">i</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
 
-int kmp_strstr(const char* str, const char* needle) {
-  int str_sz = std::strlen(str);
-  int needle_sz = std::strlen(needle);
+<span class="kt">int</span> <span class="n">kmp_strstr</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">needle</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">str_sz</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">strlen</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+  <span class="kt">int</span> <span class="n">needle_sz</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">strlen</span><span class="p">(</span><span class="n">needle</span><span class="p">);</span>
 
-  std::vector&lt;int&gt; prefix(needle_sz, 0);
-  for (int i = 1; i &lt; needle_sz; ++i) {
-    int j = prefix[i - 1];
-    while (j &gt; 0 &amp;&amp; needle[j] != needle[i])
-      j = prefix[j - 1];
-    if (needle[j] == needle[i])
-      j += 1;
-    prefix[i] = j;
-  }
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">prefix</span><span class="p">(</span><span class="n">needle_sz</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">needle_sz</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">prefix</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">needle</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">!=</span> <span class="n">needle</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+      <span class="n">j</span> <span class="o">=</span> <span class="n">prefix</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">needle</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">needle</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+      <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">prefix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
+  <span class="p">}</span>
 
-  int j = 0;
-  for (int i = 0; i &lt; str_sz; ++i) {
-    while (j &gt; 0 &amp;&amp; needle[j] != str[i])
-      j = prefix[j - 1];
-    if (needle[j] == str[i])
-      j += 1;
-    if (j == needle_sz)
-      return i - j + 1;
-  }
+  <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str_sz</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">needle</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">!=</span> <span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+      <span class="n">j</span> <span class="o">=</span> <span class="n">prefix</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">needle</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+      <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">needle_sz</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">i</span> <span class="o">-</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
 
-  return -1;
-}
+  <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
 
-int main(int argc, char* argv[]) {
-  int N = argc &gt; 1 ? std::atoi(argv[1]) : 10*1000*1000;
-  int M = argc &gt; 2 ? std::atoi(argv[2]) : 1000;
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">:</span> <span class="mi">10</span><span class="o">*</span><span class="mi">1000</span><span class="o">*</span><span class="mi">1000</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">M</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">:</span> <span class="mi">1000</span><span class="p">;</span>
 
-  std::string str(N, 'a');
-  std::string needle(M, 'a');
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="sc">&#39;a&#39;</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">needle</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="sc">&#39;a&#39;</span><span class="p">);</span>
 
-  // Our needle is the last M characters of the string.
-  str[str.length() - 1] += 1;
-  needle[needle.length() - 1] += 1;
+  <span class="c1">// Our needle is the last M characters of the string.</span>
+  <span class="n">str</span><span class="p">[</span><span class="n">str</span><span class="p">.</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="n">needle</span><span class="p">[</span><span class="n">needle</span><span class="p">.</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
 
-  std::cout &lt;&lt; &quot;N = &quot; &lt;&lt; N &lt;&lt; &quot;, M = &quot; &lt;&lt; M &lt;&lt; std::endl;
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;N = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">N</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, M = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">M</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-  size_t correct_position = str.length() - needle.length();
-  std::cout &lt;&lt; &quot;Correct position: &quot; &lt;&lt; correct_position &lt;&lt; std::endl;
+  <span class="n">size_t</span> <span class="n">correct_position</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="n">needle</span><span class="p">.</span><span class="n">length</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Correct position: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">correct_position</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-  const char* str_p = str.c_str();
-  assert(std::strlen(str_p) == str.length());
+  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">str_p</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">c_str</span><span class="p">();</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strlen</span><span class="p">(</span><span class="n">str_p</span><span class="p">)</span> <span class="o">==</span> <span class="n">str</span><span class="p">.</span><span class="n">length</span><span class="p">());</span>
 
-  const char* needle_p = needle.c_str();
-  assert(std::strlen(needle_p) == needle.length());
+  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">needle_p</span> <span class="o">=</span> <span class="n">needle</span><span class="p">.</span><span class="n">c_str</span><span class="p">();</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strlen</span><span class="p">(</span><span class="n">needle_p</span><span class="p">)</span> <span class="o">==</span> <span class="n">needle</span><span class="p">.</span><span class="n">length</span><span class="p">());</span>
 
-  time_t started, duration;
-  size_t i;
+  <span class="n">time_t</span> <span class="n">started</span><span class="p">,</span> <span class="n">duration</span><span class="p">;</span>
+  <span class="n">size_t</span> <span class="n">i</span><span class="p">;</span>
 
-  started = std::time(0);
-  i = str.find(needle);
-  duration = std::time(0)- started;
-  std::cout &lt;&lt; &quot;string::find(): &quot; &lt;&lt; i &lt;&lt; &quot;, time &quot; &lt;&lt; duration &lt;&lt; std::endl;
-  assert(i == correct_position);
+  <span class="n">started</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="n">i</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">needle</span><span class="p">);</span>
+  <span class="n">duration</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span> <span class="n">started</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;string::find(): &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, time &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">duration</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">correct_position</span><span class="p">);</span>
 
-  started = std::time(0);
-  const char* p = std::strstr(str_p, needle_p);
-  duration = std::time(0)- started;
-  assert(p != NULL);
-  i = p - str_p;
-  std::cout &lt;&lt; &quot;strstr()      : &quot; &lt;&lt; i &lt;&lt; &quot;, time &quot; &lt;&lt; duration &lt;&lt; std::endl;
-  assert(i == correct_position);
+  <span class="n">started</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">strstr</span><span class="p">(</span><span class="n">str_p</span><span class="p">,</span> <span class="n">needle_p</span><span class="p">);</span>
+  <span class="n">duration</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span> <span class="n">started</span><span class="p">;</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">p</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">);</span>
+  <span class="n">i</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="n">str_p</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;strstr()      : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, time &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">duration</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">correct_position</span><span class="p">);</span>
 
-  started = std::time(0);
-  i = naive_strstr(str_p, needle_p);
-  duration = std::time(0)- started;
-  std::cout &lt;&lt; &quot;naive_strstr(): &quot; &lt;&lt; i &lt;&lt; &quot;, time &quot; &lt;&lt; duration &lt;&lt; std::endl;
-  assert(i == correct_position);
+  <span class="n">started</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="n">i</span> <span class="o">=</span> <span class="n">naive_strstr</span><span class="p">(</span><span class="n">str_p</span><span class="p">,</span> <span class="n">needle_p</span><span class="p">);</span>
+  <span class="n">duration</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span> <span class="n">started</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;naive_strstr(): &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, time &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">duration</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">correct_position</span><span class="p">);</span>
 
-  started = std::time(0);
-  i = kmp_strstr(str_p, needle_p);
-  duration = std::time(0)- started;
-  std::cout &lt;&lt; &quot;kmp_strstr()  : &quot; &lt;&lt; i &lt;&lt; &quot;, time &quot; &lt;&lt; duration &lt;&lt; std::endl;
-  assert(i == correct_position);
+  <span class="n">started</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="n">i</span> <span class="o">=</span> <span class="n">kmp_strstr</span><span class="p">(</span><span class="n">str_p</span><span class="p">,</span> <span class="n">needle_p</span><span class="p">);</span>
+  <span class="n">duration</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span> <span class="n">started</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;kmp_strstr()  : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, time &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">duration</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">assert</span><span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">correct_position</span><span class="p">);</span>
 
-  return 0;
-}
-</code></pre>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Makefile:</p>
 
-<pre><code class="makefile">all:  do-32 do-64
+<div class="highlight"><pre><span class="nf">all</span><span class="o">:</span>  <span class="m">do-32 do-64</span>
 
-target = strstr_find
+<span class="nv">target</span> <span class="o">=</span> strstr_find
 
-do-32: build-32
-    $(target)
+<span class="k">do</span>-32: build-32
+    <span class="k">$(</span>target<span class="k">)</span>
 
-do-64: build-64
-    $(target)
+<span class="k">do</span>-64: build-64
+    <span class="k">$(</span>target<span class="k">)</span>
 
-do-build:
-    &quot;%VS100COMNTOOLS%..\..\VC\vcvarsall.bat&quot; $(arch) &amp;&amp; cl /O2 /EHsc $(target).cpp
+<span class="k">do</span>-build:
+    <span class="s2">&quot;%VS100COMNTOOLS%..\..\VC\vcvarsall.bat&quot;</span> <span class="k">$(</span>arch<span class="k">)</span> <span class="o">&amp;&amp;</span> cl /O2 /EHsc <span class="k">$(</span>target<span class="k">)</span>.cpp
 
 build-32:
-    $(MAKE) do-build arch=x86
+    <span class="k">$(</span>MAKE<span class="k">)</span> <span class="k">do</span>-build <span class="nv">arch</span><span class="o">=</span>x86
 
 build-64:
-    $(MAKE) do-build arch=amd64
+    <span class="k">$(</span>MAKE<span class="k">)</span> <span class="k">do</span>-build <span class="nv">arch</span><span class="o">=</span>amd64
 
 run:
-    $(target)
+    <span class="k">$(</span>target<span class="k">)</span>
 
 clean:
     -del *.exe *.ilk *.obj *.pdb *.suo
-</code></pre>
+</pre></div>
 
 <p>Запускаем на Visual Studio 2010 32-bit:</p>
 

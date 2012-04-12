@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,110 +44,110 @@
 
 <p>Файл <code>trigger.h</code>:</p>
 
-<pre><code class="cpp">#ifndef _EXT_TRIGGER_H
-#define _EXT_TRIGGER_H
+<div class="highlight"><pre><span class="cp">#ifndef _EXT_TRIGGER_H</span>
+<span class="cp">#define _EXT_TRIGGER_H</span>
 
-#ifdef WIN32
-  #include &lt;windows.h&gt;
-#else
-  #include &lt;pthread.h&gt;
-#endif
+<span class="cp">#ifdef WIN32</span>
+  <span class="cp">#include &lt;windows.h&gt;</span>
+<span class="cp">#else</span>
+  <span class="cp">#include &lt;pthread.h&gt;</span>
+<span class="cp">#endif</span>
 
-namespace ext {
+<span class="k">namespace</span> <span class="n">ext</span> <span class="p">{</span>
 
-class Trigger {
-public:
-  Trigger();
-  ~Trigger();
+<span class="k">class</span> <span class="nc">Trigger</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">Trigger</span><span class="p">();</span>
+  <span class="o">~</span><span class="n">Trigger</span><span class="p">();</span>
   
-  // Функция посылки сигнала потоку, 
-  // ждущему на функции Wait().
-  void Signal();
-  // Функция ожидания сигнала.
-  // Вызов этой функции приводит к блокировке потока до
-  // получения сигнала от функции Signal().
-  // Внимание: функция Signal() не должна быть вызвана до
-  // того, как ждущий поток &quot;сядет&quot; на Wait(). Подобное 
-  // использование ведет к неопределенному поведению.
-  void Wait();
+  <span class="c1">// Функция посылки сигнала потоку, </span>
+  <span class="c1">// ждущему на функции Wait().</span>
+  <span class="kt">void</span> <span class="n">Signal</span><span class="p">();</span>
+  <span class="c1">// Функция ожидания сигнала.</span>
+  <span class="c1">// Вызов этой функции приводит к блокировке потока до</span>
+  <span class="c1">// получения сигнала от функции Signal().</span>
+  <span class="c1">// Внимание: функция Signal() не должна быть вызвана до</span>
+  <span class="c1">// того, как ждущий поток &quot;сядет&quot; на Wait(). Подобное </span>
+  <span class="c1">// использование ведет к неопределенному поведению.</span>
+  <span class="kt">void</span> <span class="n">Wait</span><span class="p">();</span>
 
-private:
-#ifdef WIN32    
-  HANDLE __handle;
-#else
-  pthread_mutex_t __mutex;
-  pthread_cond_t __cv;
-#endif
-  // &quot;Защита&quot; от случайного копирования.
-  Trigger(const Trigger&amp;);
-  void operator=(const Trigger&amp;);
-};
+<span class="k">private</span><span class="o">:</span>
+<span class="cp">#ifdef WIN32    </span>
+  <span class="n">HANDLE</span> <span class="n">__handle</span><span class="p">;</span>
+<span class="cp">#else</span>
+  <span class="n">pthread_mutex_t</span> <span class="n">__mutex</span><span class="p">;</span>
+  <span class="n">pthread_cond_t</span> <span class="n">__cv</span><span class="p">;</span>
+<span class="cp">#endif</span>
+  <span class="c1">// &quot;Защита&quot; от случайного копирования.</span>
+  <span class="n">Trigger</span><span class="p">(</span><span class="k">const</span> <span class="n">Trigger</span><span class="o">&amp;</span><span class="p">);</span>
+  <span class="kt">void</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Trigger</span><span class="o">&amp;</span><span class="p">);</span>
+<span class="p">};</span>
 
-} // namespace ext
+<span class="p">}</span> <span class="c1">// namespace ext</span>
 
-#endif
-</code></pre>
+<span class="cp">#endif</span>
+</pre></div>
 
 <p>Файл <code>trigger.cpp</code>:</p>
 
-<pre><code class="cpp">#include &quot;Trigger.h&quot;
+<div class="highlight"><pre><span class="cp">#include &quot;Trigger.h&quot;</span>
 
-namespace ext {
+<span class="k">namespace</span> <span class="n">ext</span> <span class="p">{</span>
 
-#ifdef WIN32
+<span class="cp">#ifdef WIN32</span>
 
-Trigger::Trigger() { 
-  __handle = CreateEvent(
-    NULL,               // Атрибуты безопасности по умолчанию.
-    TRUE,               // Режим ручной активации события.
-    FALSE,              // Начальное состояния -- неактивное.
-    NULL                // Безымянное событие.
-  ); 
-}
+<span class="n">Trigger</span><span class="o">::</span><span class="n">Trigger</span><span class="p">()</span> <span class="p">{</span> 
+  <span class="n">__handle</span> <span class="o">=</span> <span class="n">CreateEvent</span><span class="p">(</span>
+    <span class="nb">NULL</span><span class="p">,</span>               <span class="c1">// Атрибуты безопасности по умолчанию.</span>
+    <span class="n">TRUE</span><span class="p">,</span>               <span class="c1">// Режим ручной активации события.</span>
+    <span class="n">FALSE</span><span class="p">,</span>              <span class="c1">// Начальное состояния -- неактивное.</span>
+    <span class="nb">NULL</span>                <span class="c1">// Безымянное событие.</span>
+  <span class="p">);</span> 
+<span class="p">}</span>
 
-Trigger::~Trigger() { 
-  CloseHandle(__handle);
-}
+<span class="n">Trigger</span><span class="o">::~</span><span class="n">Trigger</span><span class="p">()</span> <span class="p">{</span> 
+  <span class="n">CloseHandle</span><span class="p">(</span><span class="n">__handle</span><span class="p">);</span>
+<span class="p">}</span>
 
-void Trigger::Signal() {
-  SetEvent(__handle);
-}
+<span class="kt">void</span> <span class="n">Trigger</span><span class="o">::</span><span class="n">Signal</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">SetEvent</span><span class="p">(</span><span class="n">__handle</span><span class="p">);</span>
+<span class="p">}</span>
 
-void Trigger::Wait() {
-  // Ждем наступление события.
-  WaitForSingleObject(__handle, INFINITE);
-  // &quot;Перезаряжаем&quot; событие.
-  ResetEvent(__handle);
-}
+<span class="kt">void</span> <span class="n">Trigger</span><span class="o">::</span><span class="n">Wait</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// Ждем наступление события.</span>
+  <span class="n">WaitForSingleObject</span><span class="p">(</span><span class="n">__handle</span><span class="p">,</span> <span class="n">INFINITE</span><span class="p">);</span>
+  <span class="c1">// &quot;Перезаряжаем&quot; событие.</span>
+  <span class="n">ResetEvent</span><span class="p">(</span><span class="n">__handle</span><span class="p">);</span>
+<span class="p">}</span>
 
-#else // WIN32
+<span class="cp">#else </span><span class="c1">// WIN32</span>
 
-Trigger::Trigger() { 
-  pthread_mutex_init(&amp;__mutex, NULL); 
-  pthread_cond_init(&amp;__cv, NULL); 
-}
+<span class="n">Trigger</span><span class="o">::</span><span class="n">Trigger</span><span class="p">()</span> <span class="p">{</span> 
+  <span class="n">pthread_mutex_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span> 
+  <span class="n">pthread_cond_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__cv</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span> 
+<span class="p">}</span>
 
-Trigger::~Trigger() { 
-  pthread_cond_destroy(&amp;__cv); 
-  pthread_mutex_destroy(&amp;__mutex); 
-}
+<span class="n">Trigger</span><span class="o">::~</span><span class="n">Trigger</span><span class="p">()</span> <span class="p">{</span> 
+  <span class="n">pthread_cond_destroy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__cv</span><span class="p">);</span> 
+  <span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">);</span> 
+<span class="p">}</span>
 
-void Trigger::Signal() {
-  pthread_mutex_lock(&amp;__mutex);
-  pthread_cond_signal(&amp;__cv);
-  pthread_mutex_unlock(&amp;__mutex);
-}
+<span class="kt">void</span> <span class="n">Trigger</span><span class="o">::</span><span class="n">Signal</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">);</span>
+  <span class="n">pthread_cond_signal</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__cv</span><span class="p">);</span>
+  <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">);</span>
+<span class="p">}</span>
 
-void Trigger::Wait() {
-  pthread_mutex_lock(&amp;__mutex);
-  pthread_cond_wait(&amp;__cv, &amp;__mutex);
-  pthread_mutex_unlock(&amp;__mutex);
-}
+<span class="kt">void</span> <span class="n">Trigger</span><span class="o">::</span><span class="n">Wait</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">);</span>
+  <span class="n">pthread_cond_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__cv</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">__mutex</span><span class="p">);</span>
+  <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">);</span>
+<span class="p">}</span>
 
-#endif // WIN32
+<span class="cp">#endif </span><span class="c1">// WIN32</span>
 
-} // namespace ext
-</code></pre>
+<span class="p">}</span> <span class="c1">// namespace ext</span>
+</pre></div>
 
 <p>Пространство имен, как обычно, ext, так что меняете по вкусу.</p>
 
@@ -158,73 +159,73 @@ void Trigger::Wait() {
 
 <p>Файл <code>trigger_unittest.cpp</code>:</p>
 
-<pre><code class="cpp">#include &lt;gtest/gtest.h&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;gtest/gtest.h&gt;</span>
 
-#include &quot;trigger.h&quot;
-#include &quot;thread.h&quot;
-#include &quot;pretimer.h&quot;
+<span class="cp">#include &quot;trigger.h&quot;</span>
+<span class="cp">#include &quot;thread.h&quot;</span>
+<span class="cp">#include &quot;pretimer.h&quot;</span>
 
-// Тестовый поток, который будет &quot;скакать&quot; по указанным ключевым
-// точкам, увеличивая значение счетчика.
-class TriggerThread: public ext::Thread {
-public:
-  TriggerThread(volatile int&amp; flag, ext::Trigger&amp; trigger) :
-    __flag(flag), __trigger(trigger)
-  {}
+<span class="c1">// Тестовый поток, который будет &quot;скакать&quot; по указанным ключевым</span>
+<span class="c1">// точкам, увеличивая значение счетчика.</span>
+<span class="k">class</span> <span class="nc">TriggerThread</span><span class="o">:</span> <span class="k">public</span> <span class="n">ext</span><span class="o">::</span><span class="n">Thread</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">TriggerThread</span><span class="p">(</span><span class="k">volatile</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">flag</span><span class="p">,</span> <span class="n">ext</span><span class="o">::</span><span class="n">Trigger</span><span class="o">&amp;</span> <span class="n">trigger</span><span class="p">)</span> <span class="o">:</span>
+    <span class="n">__flag</span><span class="p">(</span><span class="n">flag</span><span class="p">),</span> <span class="n">__trigger</span><span class="p">(</span><span class="n">trigger</span><span class="p">)</span>
+  <span class="p">{}</span>
 
-  virtual void Execute() {
-    // Ждем первого сигнала.
-    __trigger.Wait();
-    __flag = 1;
-    // Ждем второго сигнала.
-    __trigger.Wait();
-    __flag = 2;
-    // Ждем третьего сигнала.
-    __trigger.Wait();
-    __flag = 3;
-  }
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">Execute</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Ждем первого сигнала.</span>
+    <span class="n">__trigger</span><span class="p">.</span><span class="n">Wait</span><span class="p">();</span>
+    <span class="n">__flag</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="c1">// Ждем второго сигнала.</span>
+    <span class="n">__trigger</span><span class="p">.</span><span class="n">Wait</span><span class="p">();</span>
+    <span class="n">__flag</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="c1">// Ждем третьего сигнала.</span>
+    <span class="n">__trigger</span><span class="p">.</span><span class="n">Wait</span><span class="p">();</span>
+    <span class="n">__flag</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="p">}</span>
 
-private:
-  volatile int&amp; __flag;
-  ext::Trigger&amp; __trigger;
-};
+<span class="k">private</span><span class="o">:</span>
+  <span class="k">volatile</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">__flag</span><span class="p">;</span>
+  <span class="n">ext</span><span class="o">::</span><span class="n">Trigger</span><span class="o">&amp;</span> <span class="n">__trigger</span><span class="p">;</span>
+<span class="p">};</span>
 
-TEST(Trigger, Generic) {
-  volatile int flag = 0;
-  ext::Trigger trigger;
+<span class="n">TEST</span><span class="p">(</span><span class="n">Trigger</span><span class="p">,</span> <span class="n">Generic</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">volatile</span> <span class="kt">int</span> <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">ext</span><span class="o">::</span><span class="n">Trigger</span> <span class="n">trigger</span><span class="p">;</span>
 
-  // Создаем поток и запускаем егою
-  TriggerThread a(flag, trigger);
-  a.Start();
+  <span class="c1">// Создаем поток и запускаем егою</span>
+  <span class="n">TriggerThread</span> <span class="n">a</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">trigger</span><span class="p">);</span>
+  <span class="n">a</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
 
-  // Подождем, чтобы поток &quot;сел&quot; на Wait().
-  ext::PreciseTimer::sleepMs(10);
-  // Флаг не должен стать 1, так как поток
-  // должен ждать на Wait().
-  EXPECT_EQ(0, (int)flag);
+  <span class="c1">// Подождем, чтобы поток &quot;сел&quot; на Wait().</span>
+  <span class="n">ext</span><span class="o">::</span><span class="n">PreciseTimer</span><span class="o">::</span><span class="n">sleepMs</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+  <span class="c1">// Флаг не должен стать 1, так как поток</span>
+  <span class="c1">// должен ждать на Wait().</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">flag</span><span class="p">);</span>
    
-  // Информируем поток о событии.
-  trigger.Signal();
-  // Подождем, чтобы поток успел изменить флаг на 1.
-  ext::PreciseTimer::sleepMs(10);
-  // Проверим, как он это сделал.
-  EXPECT_EQ(1, (int)flag);
+  <span class="c1">// Информируем поток о событии.</span>
+  <span class="n">trigger</span><span class="p">.</span><span class="n">Signal</span><span class="p">();</span>
+  <span class="c1">// Подождем, чтобы поток успел изменить флаг на 1.</span>
+  <span class="n">ext</span><span class="o">::</span><span class="n">PreciseTimer</span><span class="o">::</span><span class="n">sleepMs</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+  <span class="c1">// Проверим, как он это сделал.</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">flag</span><span class="p">);</span>
 
-  // Далее проверка повторяется еще пару раз, чтобы проверить,
-  // что синхронизирующий объект правильно &quot;взводится&quot; после
-  // срабатывания.
+  <span class="c1">// Далее проверка повторяется еще пару раз, чтобы проверить,</span>
+  <span class="c1">// что синхронизирующий объект правильно &quot;взводится&quot; после</span>
+  <span class="c1">// срабатывания.</span>
 
-  trigger.Signal();
-  ext::PreciseTimer::sleepMs(10);
-  EXPECT_EQ(2, (int)flag);
+  <span class="n">trigger</span><span class="p">.</span><span class="n">Signal</span><span class="p">();</span>
+  <span class="n">ext</span><span class="o">::</span><span class="n">PreciseTimer</span><span class="o">::</span><span class="n">sleepMs</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">flag</span><span class="p">);</span>
 
-  trigger.Signal();
-  a.Join();
-  // Последняя проверка не требует ожидания, так как мы присоединись
-  // к потоку, и он точно уже завершился.
-  EXPECT_EQ(3, (int)flag);
-}
-</code></pre>
+  <span class="n">trigger</span><span class="p">.</span><span class="n">Signal</span><span class="p">();</span>
+  <span class="n">a</span><span class="p">.</span><span class="n">Join</span><span class="p">();</span>
+  <span class="c1">// Последняя проверка не требует ожидания, так как мы присоединись</span>
+  <span class="c1">// к потоку, и он точно уже завершился.</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">flag</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Компилируем для Windows в Visual Studio:</p>
 

@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -55,10 +56,10 @@
 
 <p>Например, ставший классикой, его пример на тему итераторов:</p>
 
-<pre><code class="cpp">if (!v.empty()) {
-  sort(&amp;*begin(), &amp;*v.begin() + v.size());
-}
-</code></pre>
+<div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">v</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
+  <span class="n">sort</span><span class="p">(</span><span class="o">&amp;*</span><span class="n">begin</span><span class="p">(),</span> <span class="o">&amp;*</span><span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">()</span> <span class="o">+</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>когда спрашивается, почему в данном вполне рабочем примере обязательно нужна проверка <code>v.empty()</code> и почему нельзя второй аргумент нельзя записать как <code>&amp;*v.end()</code>?</p>
 
@@ -66,14 +67,14 @@
 
 <p>Но Степанов говорит следующее: &ldquo;&hellip;присваивание должно осуществляться вызовом деструктора и последующим конструктором&rdquo;. То есть надо просто сделать полноценный конструктор копирования, а оператор присваивание реализовать так:</p>
 
-<pre><code class="cpp">T&amp; T::operator=(const T&amp; x) {
-  if (this != &amp;x) {
-    this-&gt;T::~T();
-    new (this) T(x);
-  }
-  return *this;
-}
-</code></pre>
+<div class="highlight"><pre><span class="n">T</span><span class="o">&amp;</span> <span class="n">T</span><span class="o">::</span><span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="o">!=</span> <span class="o">&amp;</span><span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="o">-&gt;</span><span class="n">T</span><span class="o">::~</span><span class="n">T</span><span class="p">();</span>
+    <span class="k">new</span> <span class="p">(</span><span class="k">this</span><span class="p">)</span> <span class="n">T</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Получается, что старый объект сам себя разрушает, вызвав деструктор (но память под ним не освобождается), а затем оператором <code>new</code> с явным размещением (память под объект тут уже повторно не распределяется) объект создается снова через конструктор копирования.</p>
 

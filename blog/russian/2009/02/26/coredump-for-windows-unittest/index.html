@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,133 +46,133 @@
 
 <p>Файл <code>coredump.cpp</code>:</p>
 
-<pre><code class="cpp">#include &lt;windows.h&gt;
-#include &lt;dbghelp.h&gt;   
-#include &lt;stdio.h&gt;       // _snprintf
+<div class="highlight"><pre><span class="cp">#include &lt;windows.h&gt;</span>
+<span class="cp">#include &lt;dbghelp.h&gt;   </span>
+<span class="cp">#include &lt;stdio.h&gt;       </span><span class="c1">// _snprintf</span>
 
-// Наш обработчик непойманного исключения.
-static LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS* ExceptionInfo);
+<span class="c1">// Наш обработчик непойманного исключения.</span>
+<span class="k">static</span> <span class="n">LONG</span> <span class="n">WINAPI</span> <span class="n">ExceptionFilter</span><span class="p">(</span><span class="n">EXCEPTION_POINTERS</span><span class="o">*</span> <span class="n">ExceptionInfo</span><span class="p">);</span>
 
-// Статический экземпляр переменной, конструктор которой
-// вызывается до начала функции main().
-static struct CoredumpInitializer {
-  CoredumpInitializer() {
-    SetUnhandledExceptionFilter(&amp;ExceptionFilter);
-  }
-} coredumpInitializer;
+<span class="c1">// Статический экземпляр переменной, конструктор которой</span>
+<span class="c1">// вызывается до начала функции main().</span>
+<span class="k">static</span> <span class="k">struct</span> <span class="n">CoredumpInitializer</span> <span class="p">{</span>
+  <span class="n">CoredumpInitializer</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">SetUnhandledExceptionFilter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ExceptionFilter</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span> <span class="n">coredumpInitializer</span><span class="p">;</span>
 
-LONG WINAPI ExceptionFilter(EXCEPTION_POINTERS* ExceptionInfo) {
-  char fname[_MAX_PATH];
+<span class="n">LONG</span> <span class="n">WINAPI</span> <span class="n">ExceptionFilter</span><span class="p">(</span><span class="n">EXCEPTION_POINTERS</span><span class="o">*</span> <span class="n">ExceptionInfo</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">char</span> <span class="n">fname</span><span class="p">[</span><span class="n">_MAX_PATH</span><span class="p">];</span>
 
-  SYSTEMTIME st;
-  GetLocalTime(&amp;st);
+  <span class="n">SYSTEMTIME</span> <span class="n">st</span><span class="p">;</span>
+  <span class="n">GetLocalTime</span><span class="p">(</span><span class="o">&amp;</span><span class="n">st</span><span class="p">);</span>
 
-  HANDLE proc = GetCurrentProcess();
+  <span class="n">HANDLE</span> <span class="n">proc</span> <span class="o">=</span> <span class="n">GetCurrentProcess</span><span class="p">();</span>
 
-#ifdef UNIT_TESTING
-  lstrcpy(fname, &quot;___coredump.dmp&quot;);
-#else
-  // Формируем имя для coredump'а.
-  _snprintf(
-    fname, _MAX_PATH, 
-    &quot;coredump-%ld-%ld-%04d%02d%02d%02d%02d%02d%03d.dmp&quot;, 
-    GetProcessId(proc), GetCurrentThreadId(),
-    st.wYear, st.wMonth, st.wDay, 
-    st.wHour, st.wMinute, st.wSecond, st.wMilliseconds
-  );
-#endif
+<span class="cp">#ifdef UNIT_TESTING</span>
+  <span class="n">lstrcpy</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s">&quot;___coredump.dmp&quot;</span><span class="p">);</span>
+<span class="cp">#else</span>
+  <span class="c1">// Формируем имя для coredump&#39;а.</span>
+  <span class="n">_snprintf</span><span class="p">(</span>
+    <span class="n">fname</span><span class="p">,</span> <span class="n">_MAX_PATH</span><span class="p">,</span> 
+    <span class="s">&quot;coredump-%ld-%ld-%04d%02d%02d%02d%02d%02d%03d.dmp&quot;</span><span class="p">,</span> 
+    <span class="n">GetProcessId</span><span class="p">(</span><span class="n">proc</span><span class="p">),</span> <span class="n">GetCurrentThreadId</span><span class="p">(),</span>
+    <span class="n">st</span><span class="p">.</span><span class="n">wYear</span><span class="p">,</span> <span class="n">st</span><span class="p">.</span><span class="n">wMonth</span><span class="p">,</span> <span class="n">st</span><span class="p">.</span><span class="n">wDay</span><span class="p">,</span> 
+    <span class="n">st</span><span class="p">.</span><span class="n">wHour</span><span class="p">,</span> <span class="n">st</span><span class="p">.</span><span class="n">wMinute</span><span class="p">,</span> <span class="n">st</span><span class="p">.</span><span class="n">wSecond</span><span class="p">,</span> <span class="n">st</span><span class="p">.</span><span class="n">wMilliseconds</span>
+  <span class="p">);</span>
+<span class="cp">#endif</span>
 
-  // Открываем файл.
-  HANDLE file = CreateFile(
-    fname, 
-    GENERIC_READ|GENERIC_WRITE, 
-    FILE_SHARE_READ, 
-    NULL,
-    CREATE_ALWAYS, 
-    FILE_ATTRIBUTE_NORMAL, 
-    NULL
-  );
+  <span class="c1">// Открываем файл.</span>
+  <span class="n">HANDLE</span> <span class="n">file</span> <span class="o">=</span> <span class="n">CreateFile</span><span class="p">(</span>
+    <span class="n">fname</span><span class="p">,</span> 
+    <span class="n">GENERIC_READ</span><span class="o">|</span><span class="n">GENERIC_WRITE</span><span class="p">,</span> 
+    <span class="n">FILE_SHARE_READ</span><span class="p">,</span> 
+    <span class="nb">NULL</span><span class="p">,</span>
+    <span class="n">CREATE_ALWAYS</span><span class="p">,</span> 
+    <span class="n">FILE_ATTRIBUTE_NORMAL</span><span class="p">,</span> 
+    <span class="nb">NULL</span>
+  <span class="p">);</span>
 
-  MINIDUMP_EXCEPTION_INFORMATION info;
-  info.ExceptionPointers = ExceptionInfo;
-  info.ThreadId = GetCurrentThreadId();
-  info.ClientPointers = NULL;
+  <span class="n">MINIDUMP_EXCEPTION_INFORMATION</span> <span class="n">info</span><span class="p">;</span>
+  <span class="n">info</span><span class="p">.</span><span class="n">ExceptionPointers</span> <span class="o">=</span> <span class="n">ExceptionInfo</span><span class="p">;</span>
+  <span class="n">info</span><span class="p">.</span><span class="n">ThreadId</span> <span class="o">=</span> <span class="n">GetCurrentThreadId</span><span class="p">();</span>
+  <span class="n">info</span><span class="p">.</span><span class="n">ClientPointers</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
 
-  // Собственно, сбрасываем образ памяти в файл.
-  MiniDumpWriteDump(  
-    proc, 
-    GetProcessId(proc), 
-    file,
-    MiniDumpWithFullMemory,
-    ExceptionInfo ? &amp;info : NULL,
-    NULL, NULL
-  );
+  <span class="c1">// Собственно, сбрасываем образ памяти в файл.</span>
+  <span class="n">MiniDumpWriteDump</span><span class="p">(</span>  
+    <span class="n">proc</span><span class="p">,</span> 
+    <span class="n">GetProcessId</span><span class="p">(</span><span class="n">proc</span><span class="p">),</span> 
+    <span class="n">file</span><span class="p">,</span>
+    <span class="n">MiniDumpWithFullMemory</span><span class="p">,</span>
+    <span class="n">ExceptionInfo</span> <span class="o">?</span> <span class="o">&amp;</span><span class="n">info</span> <span class="o">:</span> <span class="nb">NULL</span><span class="p">,</span>
+    <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span>
+  <span class="p">);</span>
 
-  CloseHandle(file);
+  <span class="n">CloseHandle</span><span class="p">(</span><span class="n">file</span><span class="p">);</span>
 
-#ifdef UNIT_TESTING
-  return EXCEPTION_EXECUTE_HANDLER;
-#else
-  return EXCEPTION_CONTINUE_SEARCH;
-#endif
-}
-</code></pre>
+<span class="cp">#ifdef UNIT_TESTING</span>
+  <span class="k">return</span> <span class="n">EXCEPTION_EXECUTE_HANDLER</span><span class="p">;</span>
+<span class="cp">#else</span>
+  <span class="k">return</span> <span class="n">EXCEPTION_CONTINUE_SEARCH</span><span class="p">;</span>
+<span class="cp">#endif</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Теперь, собственно, тест:</p>
 
 <p>Файл <code>coredump_unittest.cpp</code>:</p>
 
-<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
 
-#include &lt;fstream&gt;
-#include &lt;windows.h&gt;
-#include &lt;stdlib.h&gt;
+<span class="cp">#include &lt;fstream&gt;</span>
+<span class="cp">#include &lt;windows.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
 
-TEST(Coredump, CoredumpCreation) {
-   const char* coredump = &quot;___coredump.dmp&quot;;
+<span class="n">TEST</span><span class="p">(</span><span class="n">Coredump</span><span class="p">,</span> <span class="n">CoredumpCreation</span><span class="p">)</span> <span class="p">{</span>
+   <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">coredump</span> <span class="o">=</span> <span class="s">&quot;___coredump.dmp&quot;</span><span class="p">;</span>
 
-   // На всякий случай заведомо стираем старые файлы.
-   EXPECT_EQ(0, std::system(&quot;cmd.exe /c del ___coredump_main.* 1&gt;nul 2&gt;&amp;1&quot;));
+   <span class="c1">// На всякий случай заведомо стираем старые файлы.</span>
+   <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;cmd.exe /c del ___coredump_main.* 1&gt;nul 2&gt;&amp;1&quot;</span><span class="p">));</span>
 
-   // Создаем файл с тестовой программой.
-   std::string program = &quot;int main() { *(char *)0 = 0; return 0; }&quot;;
-   std::ofstream os(&quot;___coredump_main.cpp&quot;);
-   os &lt;&lt; program &lt;&lt; std::endl;
-   os.close();
+   <span class="c1">// Создаем файл с тестовой программой.</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">program</span> <span class="o">=</span> <span class="s">&quot;int main() { *(char *)0 = 0; return 0; }&quot;</span><span class="p">;</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">ofstream</span> <span class="n">os</span><span class="p">(</span><span class="s">&quot;___coredump_main.cpp&quot;</span><span class="p">);</span>
+   <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">program</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+   <span class="n">os</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
 
-   // Компилируем тестовую программу с опцией UNIT_TESTING.
-   // С этой опцией coredump файл будет создаваться с постоянным
-   // именем &quot;___coredump.dmp&quot;, и будет подавляется окно с сообщением
-   // об ошибке. 
-   EXPECT_EQ(
-      0, std::system(
-         &quot;cl /Zi /DUNIT_TESTING /Fe___coredump_main.exe&quot;
-         &quot; ___coredump_main.cpp coredump.cpp dbghelp.lib&quot;
-         &quot; 1&gt;nul 2&gt;&amp;1&quot;
-      )
-   );
+   <span class="c1">// Компилируем тестовую программу с опцией UNIT_TESTING.</span>
+   <span class="c1">// С этой опцией coredump файл будет создаваться с постоянным</span>
+   <span class="c1">// именем &quot;___coredump.dmp&quot;, и будет подавляется окно с сообщением</span>
+   <span class="c1">// об ошибке. </span>
+   <span class="n">EXPECT_EQ</span><span class="p">(</span>
+      <span class="mi">0</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">system</span><span class="p">(</span>
+         <span class="s">&quot;cl /Zi /DUNIT_TESTING /Fe___coredump_main.exe&quot;</span>
+         <span class="s">&quot; ___coredump_main.cpp coredump.cpp dbghelp.lib&quot;</span>
+         <span class="s">&quot; 1&gt;nul 2&gt;&amp;1&quot;</span>
+      <span class="p">)</span>
+   <span class="p">);</span>
 
-   // На всякий случая удаляем старый coredump файл.
-   std::remove(coredump);
+   <span class="c1">// На всякий случая удаляем старый coredump файл.</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">remove</span><span class="p">(</span><span class="n">coredump</span><span class="p">);</span>
 
-   // Убеждаемся, что файл действительно удалился.
-   std::ifstream isdel(coredump);
-   EXPECT_FALSE(isdel.good());
-   isdel.close();
+   <span class="c1">// Убеждаемся, что файл действительно удалился.</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">isdel</span><span class="p">(</span><span class="n">coredump</span><span class="p">);</span>
+   <span class="n">EXPECT_FALSE</span><span class="p">(</span><span class="n">isdel</span><span class="p">.</span><span class="n">good</span><span class="p">());</span>
+   <span class="n">isdel</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
 
-   // Запускаем тестовую программу.
-   ASSERT_EQ(0xC0000005, std::system(&quot;___coredump_main.exe&quot;));
+   <span class="c1">// Запускаем тестовую программу.</span>
+   <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="mh">0xC0000005</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;___coredump_main.exe&quot;</span><span class="p">));</span>
 
-   // Проверяем, создался ли файл coredump.dmp.
-   std::ifstream is(coredump);
-   EXPECT_TRUE(is.good());
-   is.close();
+   <span class="c1">// Проверяем, создался ли файл coredump.dmp.</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">is</span><span class="p">(</span><span class="n">coredump</span><span class="p">);</span>
+   <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">is</span><span class="p">.</span><span class="n">good</span><span class="p">());</span>
+   <span class="n">is</span><span class="p">.</span><span class="n">close</span><span class="p">();</span>
 
-   // Удаляем за собой временные файлы.
-   EXPECT_EQ(0, std::system(&quot;cmd.exe /c del ___coredump_main.* 1&gt;nul 2&gt;&amp;1&quot;));
-   std::remove(coredump);
-}
-</code></pre>
+   <span class="c1">// Удаляем за собой временные файлы.</span>
+   <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">system</span><span class="p">(</span><span class="s">&quot;cmd.exe /c del ___coredump_main.* 1&gt;nul 2&gt;&amp;1&quot;</span><span class="p">));</span>
+   <span class="n">std</span><span class="o">::</span><span class="n">remove</span><span class="p">(</span><span class="n">coredump</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Данный тест имеет ряд существенных недостатков. Во-первых, он использует файловую систему, и во-вторых, он вызывает компилятор, что занимает небольшое, но все же время. Недостатки неприятные, но в целом приемлемые.</p>
 
@@ -179,12 +180,12 @@ TEST(Coredump, CoredumpCreation) {
 
 <p>Дежурный файл для запуска тестов (<code>runner.cpp</code>):</p>
 
-<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
-int main(int argc, char* argv[]) {
-  testing::InitGoogleTest(&amp;argc, argv);
-  return RUN_ALL_TESTS();
-}
-</code></pre>
+<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Традиционно, для компиляции тестов нам нужна <a href="http://code.google.com/p/googletest/">Google Test Framework</a>. Как я уже <a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">писал</a>, вы можете скачать <a href="/downloads/gtest-amalgamation-1.2.1.zip">мою модификацию</a>  этой библиотеки, которая сокращена до двух необходимых файлов <code>gtest/gtest.h</code> и <code>gtest-all.cc</code>.</p>
 

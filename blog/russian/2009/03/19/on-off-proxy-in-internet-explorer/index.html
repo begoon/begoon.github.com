@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -49,13 +50,13 @@
 
 <p>Файл <code>iepon.cmd</code>:</p>
 
-<pre><code class="bat">reg add &quot;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&quot; /v ProxyEnable /t REG_DWORD /d 1 /f
-</code></pre>
+<div class="highlight"><pre>reg add <span class="s2">&quot;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&quot;</span> <span class="n">/v</span> ProxyEnable <span class="n">/t</span> REG_DWORD <span class="n">/d</span> <span class="m">1</span> <span class="n">/f</span>
+</pre></div>
 
 <p>Файл <code>iepoff.cmd</code>:</p>
 
-<pre><code class="bat">reg add &quot;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&quot; /v ProxyEnable /t REG_DWORD /d 0 /f
-</code></pre>
+<div class="highlight"><pre>reg add <span class="s2">&quot;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&quot;</span> <span class="n">/v</span> ProxyEnable <span class="n">/t</span> REG_DWORD <span class="n">/d</span> <span class="m">0</span> <span class="n">/f</span>
+</pre></div>
 
 <p>Я проверял это только в Windows XP.</p>
 

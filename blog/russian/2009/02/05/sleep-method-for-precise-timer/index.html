@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,13 +42,13 @@
 <div id="post">
   <p>Универсальный класс <a href="/blog/russian/2009/01/29/milliseconds-timer-for-windows-and-unix/">Миллисекундный таймер для Windows и UNIX</a>, дающий возможность работать с миллисекундными интервалами времени в Windows и UNIX получил новую функцию:</p>
 
-<pre><code class="cpp">static void sleepMs(int ms);
-</code></pre>
+<div class="highlight"><pre><span class="k">static</span> <span class="kt">void</span> <span class="n">sleepMs</span><span class="p">(</span><span class="kt">int</span> <span class="n">ms</span><span class="p">);</span>
+</pre></div>
 
 <p>Эта функция реализует задержку в указанное число миллисекунд. Функция является статической, то есть ей можно пользоваться без создания экземпляра касса:</p>
 
-<pre><code class="cpp">ext::PreciseTimer::sleepMs(100);
-</code></pre>
+<div class="highlight"><pre><span class="n">ext</span><span class="o">::</span><span class="n">PreciseTimer</span><span class="o">::</span><span class="n">sleepMs</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+</pre></div>
 
 <p>Необходимо учитывать, что в UNIX системах данная функция может быть прервана пришедшим системным сигналом, например, сигналом о полученных новых данных в буфер сокета. В этом случае задержка может быть меньне, чем ожидается.</p>
 

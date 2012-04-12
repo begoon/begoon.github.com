@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -63,153 +64,153 @@
 
 <p>Далее, можно просто смотреть по исходнику. Самое интересное место там, где видно, как функция &ldquo;compile()&rdquo; может вызываться из нескольких потоков без каких-либо изменений.</p>
 
-<pre><code class="go">package main
+<div class="highlight"><pre><span class="k">package</span> <span class="n">main</span>
 
-import (
-        &quot;archive/tar&quot;
-        &quot;container/vector&quot;
-        &quot;exec&quot;
-        &quot;flag&quot;
-        &quot;fmt&quot;
-        &quot;io&quot;
-        &quot;os&quot;
-        &quot;strings&quot;
-)
+<span class="k">import</span> <span class="p">(</span>
+        <span class="s">&quot;archive/tar&quot;</span>
+        <span class="s">&quot;container/vector&quot;</span>
+        <span class="s">&quot;exec&quot;</span>
+        <span class="s">&quot;flag&quot;</span>
+        <span class="s">&quot;fmt&quot;</span>
+        <span class="s">&quot;io&quot;</span>
+        <span class="s">&quot;os&quot;</span>
+        <span class="s">&quot;strings&quot;</span>
+<span class="p">)</span>
 
-// Два флага: количество потоков и имя компилятора.
-var jobs *int = flag.Int(&quot;jobs&quot;, 0, &quot;number of concurrent jobs&quot;)
-var compiler *string = flag.String(&quot;cc&quot;, &quot;bcom&quot;, &quot;compiler name&quot;)
+<span class="c1">// Два флага: количество потоков и имя компилятора.</span>
+<span class="k">var</span> <span class="n">jobs</span> <span class="p">*</span><span class="nb">int</span> <span class="p">=</span> <span class="n">flag</span><span class="p">.</span><span class="n">Int</span><span class="p">(</span><span class="s">&quot;jobs&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&quot;number of concurrent jobs&quot;</span><span class="p">)</span>
+<span class="k">var</span> <span class="n">compiler</span> <span class="p">*</span><span class="nb">string</span> <span class="p">=</span> <span class="n">flag</span><span class="p">.</span><span class="n">String</span><span class="p">(</span><span class="s">&quot;cc&quot;</span><span class="p">,</span> <span class="s">&quot;bcom&quot;</span><span class="p">,</span> <span class="s">&quot;compiler name&quot;</span><span class="p">)</span>
 
-func main() {
-        flag.Parse()
-        os.Args = flag.Args()
-        args := os.Args
+<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">flag</span><span class="p">.</span><span class="n">Parse</span><span class="p">()</span>
+        <span class="n">os</span><span class="p">.</span><span class="n">Args</span> <span class="p">=</span> <span class="n">flag</span><span class="p">.</span><span class="n">Args</span><span class="p">()</span>
+        <span class="n">args</span> <span class="p">:=</span> <span class="n">os</span><span class="p">.</span><span class="n">Args</span>
 
-        ar := args[0]
-        r, err := os.Open(ar, os.O_RDONLY, 0666);
-        if err != nil {
-                fmt.Printf(&quot;unable to open TAR %s\n&quot;, ar)
-                os.Exit(1)
-        }
-        // defer - это аналог &quot;finally {}&quot;, гарантированное выполнение
-        // кода при выходе из блока.
-        defer r.Close()
+        <span class="n">ar</span> <span class="p">:=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">r</span><span class="p">,</span> <span class="n">err</span> <span class="p">:=</span> <span class="n">os</span><span class="p">.</span><span class="n">Open</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">os</span><span class="p">.</span><span class="n">O_RDONLY</span><span class="p">,</span> <span class="mo">0666</span><span class="p">);</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="p">!=</span> <span class="n">nil</span> <span class="p">{</span>
+                <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;unable to open TAR %s\n&quot;</span><span class="p">,</span> <span class="n">ar</span><span class="p">)</span>
+                <span class="n">os</span><span class="p">.</span><span class="n">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="c1">// defer - это аналог &quot;finally {}&quot;, гарантированное выполнение</span>
+        <span class="c1">// кода при выходе из блока.</span>
+        <span class="k">defer</span> <span class="n">r</span><span class="p">.</span><span class="n">Close</span><span class="p">()</span>
 
-        // Цикл распаковки TAR.
-        fmt.Printf(&quot;- extracting %s\n&quot;, ar)
-        // Создаем контекст для распаковки.
-        tr := tar.NewReader(r)
-        tests := new(vector.StringVector)
-        // Последовательный проход по архиву, сохранение файлов и составление
-        // списка для компиляции.
-        for {
-                // Получаем дескриптор следующего файла в архиве.
-                hdr, _ := tr.Next()
-                if hdr == nil {
-                        break
-                }
-                name := &amp;hdr.Name
-                // Если это не заголовочный файл, сохраним имя.
-                if !strings.HasPrefix(*name, &quot;HDR_&quot;) {
-                        tests.Push(*name)
-                }
-                // Создаем новый файл.
-                w, err := os.Open(&quot;data/&quot; + *name, os.O_CREAT | os.O_RDWR, 0666)
-                if err != nil {
-                        fmt.Printf(&quot;unable to create %s\n&quot;, *name)
-                        os.Exit(1)
-                }
-                // Копируем содержимое в текущий файл.
-                io.Copy(w, tr)
-                w.Close()
-        }
+        <span class="c1">// Цикл распаковки TAR.</span>
+        <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;- extracting %s\n&quot;</span><span class="p">,</span> <span class="n">ar</span><span class="p">)</span>
+        <span class="c1">// Создаем контекст для распаковки.</span>
+        <span class="n">tr</span> <span class="p">:=</span> <span class="n">tar</span><span class="p">.</span><span class="n">NewReader</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+        <span class="n">tests</span> <span class="p">:=</span> <span class="nb">new</span><span class="p">(</span><span class="n">vector</span><span class="p">.</span><span class="n">StringVector</span><span class="p">)</span>
+        <span class="c1">// Последовательный проход по архиву, сохранение файлов и составление</span>
+        <span class="c1">// списка для компиляции.</span>
+        <span class="k">for</span> <span class="p">{</span>
+                <span class="c1">// Получаем дескриптор следующего файла в архиве.</span>
+                <span class="n">hdr</span><span class="p">,</span> <span class="n">_</span> <span class="p">:=</span> <span class="n">tr</span><span class="p">.</span><span class="n">Next</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">hdr</span> <span class="p">==</span> <span class="n">nil</span> <span class="p">{</span>
+                        <span class="k">break</span>
+                <span class="p">}</span>
+                <span class="n">name</span> <span class="p">:=</span> <span class="p">&amp;</span><span class="n">hdr</span><span class="p">.</span><span class="n">Name</span>
+                <span class="c1">// Если это не заголовочный файл, сохраним имя.</span>
+                <span class="k">if</span> <span class="p">!</span><span class="n">strings</span><span class="p">.</span><span class="n">HasPrefix</span><span class="p">(*</span><span class="n">name</span><span class="p">,</span> <span class="s">&quot;HDR_&quot;</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">tests</span><span class="p">.</span><span class="n">Push</span><span class="p">(*</span><span class="n">name</span><span class="p">)</span>
+                <span class="p">}</span>
+                <span class="c1">// Создаем новый файл.</span>
+                <span class="n">w</span><span class="p">,</span> <span class="n">err</span> <span class="p">:=</span> <span class="n">os</span><span class="p">.</span><span class="n">Open</span><span class="p">(</span><span class="s">&quot;data/&quot;</span> <span class="p">+</span> <span class="p">*</span><span class="n">name</span><span class="p">,</span> <span class="n">os</span><span class="p">.</span><span class="n">O_CREAT</span> <span class="p">|</span> <span class="n">os</span><span class="p">.</span><span class="n">O_RDWR</span><span class="p">,</span> <span class="mo">0666</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">err</span> <span class="p">!=</span> <span class="n">nil</span> <span class="p">{</span>
+                        <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;unable to create %s\n&quot;</span><span class="p">,</span> <span class="p">*</span><span class="n">name</span><span class="p">)</span>
+                        <span class="n">os</span><span class="p">.</span><span class="n">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="p">}</span>
+                <span class="c1">// Копируем содержимое в текущий файл.</span>
+                <span class="n">io</span><span class="p">.</span><span class="n">Copy</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">tr</span><span class="p">)</span>
+                <span class="n">w</span><span class="p">.</span><span class="n">Close</span><span class="p">()</span>
+        <span class="p">}</span>
 
-        fmt.Printf(&quot;- compiling...\n&quot;)
-        *compiler , _ = exec.LookPath(*compiler)
-        fmt.Printf(&quot;- compiler %s\n&quot;, *compiler)
+        <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;- compiling...\n&quot;</span><span class="p">)</span>
+        <span class="p">*</span><span class="n">compiler</span> <span class="p">,</span> <span class="n">_</span> <span class="p">=</span> <span class="n">exec</span><span class="p">.</span><span class="n">LookPath</span><span class="p">(*</span><span class="n">compiler</span><span class="p">)</span>
+        <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;- compiler %s\n&quot;</span><span class="p">,</span> <span class="p">*</span><span class="n">compiler</span><span class="p">)</span>
 
-        if *jobs == 0 {
-                // Вызываем &quot;compile()&quot; последовательно, в основном потоке.
-                fmt.Printf(&quot;- running sequentially\n&quot;)
-                for i := 0; i &lt; tests.Len(); i++ {
-                        compile(tests.At(i))
-                }
-        } else {
-                // Запускаем &quot;compile()&quot; в параллельных потоках.
-                fmt.Printf(&quot;- running %d concurrent job(s)\n&quot;, *jobs)
+        <span class="k">if</span> <span class="p">*</span><span class="n">jobs</span> <span class="p">==</span> <span class="mi">0</span> <span class="p">{</span>
+                <span class="c1">// Вызываем &quot;compile()&quot; последовательно, в основном потоке.</span>
+                <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;- running sequentially\n&quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">tests</span><span class="p">.</span><span class="n">Len</span><span class="p">();</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
+                        <span class="n">compile</span><span class="p">(</span><span class="n">tests</span><span class="p">.</span><span class="n">At</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+                <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="c1">// Запускаем &quot;compile()&quot; в параллельных потоках.</span>
+                <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;- running %d concurrent job(s)\n&quot;</span><span class="p">,</span> <span class="p">*</span><span class="n">jobs</span><span class="p">)</span>
 
-                // Канал задач: в этот канал мы будем класть имена файлов,
-                // которые надо скомпилировать. Потоки-runner'ы будут ждать
-                // сообщений из этого канала. Канал имеет ограничение по
-                // длине. Это аналог семафора, чтобы блокировать главный
-                // поток, если все runner'ы заняты.
-                tasks := make(chan string, *jobs)
+                <span class="c1">// Канал задач: в этот канал мы будем класть имена файлов,</span>
+                <span class="c1">// которые надо скомпилировать. Потоки-runner&#39;ы будут ждать</span>
+                <span class="c1">// сообщений из этого канала. Канал имеет ограничение по</span>
+                <span class="c1">// длине. Это аналог семафора, чтобы блокировать главный</span>
+                <span class="c1">// поток, если все runner&#39;ы заняты.</span>
+                <span class="n">tasks</span> <span class="p">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="nb">string</span><span class="p">,</span> <span class="p">*</span><span class="n">jobs</span><span class="p">)</span>
 
-                // Канал подтверждения полного завершение потока-runner'а.
-                // Главный поток будет ждать, пока все runner'ы ответят
-                // по этому каналу. Тип сообщений тут не важен.
-                done := make(chan bool)
+                <span class="c1">// Канал подтверждения полного завершение потока-runner&#39;а.</span>
+                <span class="c1">// Главный поток будет ждать, пока все runner&#39;ы ответят</span>
+                <span class="c1">// по этому каналу. Тип сообщений тут не важен.</span>
+                <span class="n">done</span> <span class="p">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="n">bool</span><span class="p">)</span>
 
-                // Запускаем runner'ы.
-                for i := 0; i &lt; *jobs; i++ {
-                        go runner(tasks, done)
-                }
+                <span class="c1">// Запускаем runner&#39;ы.</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="p">*</span><span class="n">jobs</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
+                        <span class="k">go</span> <span class="n">runner</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">done</span><span class="p">)</span>
+                <span class="p">}</span>
 
-                // Передаем в канал имена файлов для обработки. При
-                // достижении максимального размера канала, главный поток
-                // будет заблокирован.
-                for i := 0; i &lt; tests.Len(); i++ {
-                        tasks &lt;- tests.At(i)
-                }
+                <span class="c1">// Передаем в канал имена файлов для обработки. При</span>
+                <span class="c1">// достижении максимального размера канала, главный поток</span>
+                <span class="c1">// будет заблокирован.</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">tests</span><span class="p">.</span><span class="n">Len</span><span class="p">();</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
+                        <span class="n">tasks</span> <span class="p">&lt;-</span> <span class="n">tests</span><span class="p">.</span><span class="n">At</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="p">}</span>
 
-                // Посылаем всем потокам команду завершиться и ждем
-                // подтверждения о нормальном выходе от каждого потока.
-                for i := 0; i &lt; *jobs; i++ {
-                        tasks &lt;- &quot;&quot;
-                        &lt;- done
-                }
-        }
-}
+                <span class="c1">// Посылаем всем потокам команду завершиться и ждем</span>
+                <span class="c1">// подтверждения о нормальном выходе от каждого потока.</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="p">*</span><span class="n">jobs</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
+                        <span class="n">tasks</span> <span class="p">&lt;-</span> <span class="s">&quot;&quot;</span>
+                        <span class="p">&lt;-</span> <span class="n">done</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+<span class="p">}</span>
 
-// Поток-runner.
-func runner(tasks chan string, done chan bool) {
-        // Бесконечный цикл.
-        for {
-                // Ждем сообщения из канала. Обычно, поток заблокирован
-                // на этом месте.
-                name := &lt;- tasks
-                // Если имя пустое, нас просят завершиться.
-                if len(name) == 0 {
-                        break
-                }
-                // Компилируем файл.
-                compile(name)
-        }
-        // Посылаем сообщение, что поток завершился.
-        done &lt;- true
-}
+<span class="c1">// Поток-runner.</span>
+<span class="k">func</span> <span class="n">runner</span><span class="p">(</span><span class="n">tasks</span> <span class="k">chan</span> <span class="nb">string</span><span class="p">,</span> <span class="n">done</span> <span class="k">chan</span> <span class="n">bool</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Бесконечный цикл.</span>
+        <span class="k">for</span> <span class="p">{</span>
+                <span class="c1">// Ждем сообщения из канала. Обычно, поток заблокирован</span>
+                <span class="c1">// на этом месте.</span>
+                <span class="n">name</span> <span class="p">:=</span> <span class="p">&lt;-</span> <span class="n">tasks</span>
+                <span class="c1">// Если имя пустое, нас просят завершиться.</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="p">==</span> <span class="mi">0</span> <span class="p">{</span>
+                        <span class="k">break</span>
+                <span class="p">}</span>
+                <span class="c1">// Компилируем файл.</span>
+                <span class="n">compile</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="c1">// Посылаем сообщение, что поток завершился.</span>
+        <span class="n">done</span> <span class="p">&lt;-</span> <span class="n">true</span>
+<span class="p">}</span>
 
-func compile(name string) {
-        // Вызываем компилятор.
-        c, err := exec.Run(*compiler, []string{*compiler, name},
-                           os.Environ(), &quot;./data&quot;, exec.DevNull,
-                           exec.PassThrough, exec.PassThrough)
-        if err != nil {
-                fmt.Printf(&quot;unable to compile %s (%s)\n&quot;, name, err.String())
-                os.Exit(1)
-        }
-        c.Wait(0)
-}
-</code></pre>
+<span class="k">func</span> <span class="n">compile</span><span class="p">(</span><span class="n">name</span> <span class="nb">string</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Вызываем компилятор.</span>
+        <span class="n">c</span><span class="p">,</span> <span class="n">err</span> <span class="p">:=</span> <span class="n">exec</span><span class="p">.</span><span class="n">Run</span><span class="p">(*</span><span class="n">compiler</span><span class="p">,</span> <span class="p">[]</span><span class="nb">string</span><span class="p">{*</span><span class="n">compiler</span><span class="p">,</span> <span class="n">name</span><span class="p">},</span>
+                           <span class="n">os</span><span class="p">.</span><span class="n">Environ</span><span class="p">(),</span> <span class="s">&quot;./data&quot;</span><span class="p">,</span> <span class="n">exec</span><span class="p">.</span><span class="n">DevNull</span><span class="p">,</span>
+                           <span class="n">exec</span><span class="p">.</span><span class="n">PassThrough</span><span class="p">,</span> <span class="n">exec</span><span class="p">.</span><span class="n">PassThrough</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">err</span> <span class="p">!=</span> <span class="n">nil</span> <span class="p">{</span>
+                <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;unable to compile %s (%s)\n&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">err</span><span class="p">.</span><span class="n">String</span><span class="p">())</span>
+                <span class="n">os</span><span class="p">.</span><span class="n">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">c</span><span class="p">.</span><span class="n">Wait</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Makefile:</p>
 
-<pre><code class="makefile">target = tar_extractor
+<div class="highlight"><pre><span class="nv">target</span> <span class="o">=</span> tar_extractor
 
 all:
-        6g $(target).go
-        6l -o $(target) $(target).6
-</code></pre>
+        6g <span class="k">$(</span>target<span class="k">)</span>.go
+        6l -o <span class="k">$(</span>target<span class="k">)</span> <span class="k">$(</span>target<span class="k">)</span>.6
+</pre></div>
 
 <p>Я погонял это добро под Линуксом 64-бит на восьми процессорном блейде. Во время тестирования я был на машине один, так что результаты разных прогонов можно сравнивать. Файл &ldquo;huge.tar&rdquo; содержит ~15 тысяч исходников и имеет размер один гигабайт.</p>
 

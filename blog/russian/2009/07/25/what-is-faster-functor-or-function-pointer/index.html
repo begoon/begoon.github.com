@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,53 +44,53 @@
 
 <p><code>functor.cpp</code>:</p>
 
-<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
 
-#include &lt;algorithm&gt;
+<span class="cp">#include &lt;algorithm&gt;</span>
 
-typedef double Type;
+<span class="k">typedef</span> <span class="kt">double</span> <span class="n">Type</span><span class="p">;</span>
 
-Type* array;
-const int N = 100000000;
+<span class="n">Type</span><span class="o">*</span> <span class="n">array</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">100000000</span><span class="p">;</span>
 
-inline bool less(Type a1, Type a2) {
-  return a1 &lt; a2;
-}
+<span class="kr">inline</span> <span class="kt">bool</span> <span class="n">less</span><span class="p">(</span><span class="n">Type</span> <span class="n">a1</span><span class="p">,</span> <span class="n">Type</span> <span class="n">a2</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">a1</span> <span class="o">&lt;</span> <span class="n">a2</span><span class="p">;</span>
+<span class="p">}</span>
 
-class Less {
- public:
-  inline bool operator()(Type a1, Type a2) {
-    return a1 &lt; a2;
-  }
-};
+<span class="k">class</span> <span class="nc">Less</span> <span class="p">{</span>
+ <span class="k">public</span><span class="o">:</span>
+  <span class="kr">inline</span> <span class="kt">bool</span> <span class="k">operator</span><span class="p">()(</span><span class="n">Type</span> <span class="n">a1</span><span class="p">,</span> <span class="n">Type</span> <span class="n">a2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">a1</span> <span class="o">&lt;</span> <span class="n">a2</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
 
-// Использование встроенной функции сравнения.
-TEST(Callback, BuiltIn) {
-  std::sort(array, array + N);
-}
+<span class="c1">// Использование встроенной функции сравнения.</span>
+<span class="n">TEST</span><span class="p">(</span><span class="n">Callback</span><span class="p">,</span> <span class="n">BuiltIn</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">array</span> <span class="o">+</span> <span class="n">N</span><span class="p">);</span>
+<span class="p">}</span>
 
-// Использование свободной функции сравнения по указателю.
-TEST(Callback, Function) {
-  std::sort(array, array + N, less);
-}
+<span class="c1">// Использование свободной функции сравнения по указателю.</span>
+<span class="n">TEST</span><span class="p">(</span><span class="n">Callback</span><span class="p">,</span> <span class="n">Function</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">array</span> <span class="o">+</span> <span class="n">N</span><span class="p">,</span> <span class="n">less</span><span class="p">);</span>
+<span class="p">}</span>
 
-// Использование функтора.
-TEST(Callback, Functor) {
-  std::sort(array, array + N, Less());
-}
+<span class="c1">// Использование функтора.</span>
+<span class="n">TEST</span><span class="p">(</span><span class="n">Callback</span><span class="p">,</span> <span class="n">Functor</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">array</span> <span class="o">+</span> <span class="n">N</span><span class="p">,</span> <span class="n">Less</span><span class="p">());</span>
+<span class="p">}</span>
 
-int main(int argc, char* argv[]) {
-  // Создаем отсортированный массив.
-  array = new Type[N];
-  Type* p = array;
-  for (int i = 0; i &lt; N; ++i) *p++ = i;
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="c1">// Создаем отсортированный массив.</span>
+  <span class="n">array</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Type</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
+  <span class="n">Type</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">array</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="o">*</span><span class="n">p</span><span class="o">++</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
 
-  testing::InitGoogleTest(&amp;argc, argv);
-  // Принудительно печатаем время работы тестов.
-  testing::GTEST_FLAG(print_time) = true;
-  return RUN_ALL_TESTS();
-}
-</code></pre>
+  <span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+  <span class="c1">// Принудительно печатаем время работы тестов.</span>
+  <span class="n">testing</span><span class="o">::</span><span class="n">GTEST_FLAG</span><span class="p">(</span><span class="n">print_time</span><span class="p">)</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Компилируем и запускаем (Visual Studio 2008):</p>
 

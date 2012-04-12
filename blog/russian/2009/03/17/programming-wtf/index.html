@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,24 +46,24 @@
 
 <p>Начав с известной нетленки для проверки условия <code>i &lt; 10</code>:</p>
 
-<pre><code class="c#">uint i;
-...
-if (i.ToString().Length == 1)
-{
-  ...
-}
-</code></pre>
+<div class="highlight"><pre><span class="kt">uint</span> <span class="n">i</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">ToString</span><span class="p">().</span><span class="n">Length</span> <span class="p">==</span> <span class="m">1</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>можно постепенно усиливать ощущения&hellip;</p>
 
-<pre><code class="cpp">std::string str1;
-std::string str2;
-...
-if (!strcmp(str1.c_str(), str2.c_str()))
-{
-   ...
-}
-</code></pre>
+<div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str1</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str2</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">str1</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">str2</span><span class="p">.</span><span class="n">c_str</span><span class="p">()))</span>
+<span class="p">{</span>
+   <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>вставляя в код противопехотные мины&hellip;</p>
 
@@ -70,21 +71,21 @@ if (!strcmp(str1.c_str(), str2.c_str()))
 
 <p>различного радиуса поражения&hellip;</p>
 
-<pre><code class="cpp">#define bool BOOL
-</code></pre>
+<div class="highlight"><pre><span class="cp">#define bool BOOL</span>
+</pre></div>
 
 <p>и убойной силы.</p>
 
-<pre><code class="php">&lt;?
-define( &quot;FALSE&quot;, -1 );
-define( &quot;TRUE&quot;, 0 );
-?&gt;
-</code></pre>
+<div class="highlight"><pre><span class="cp">&lt;?</span>
+<span class="nb">define</span><span class="p">(</span> <span class="s2">&quot;FALSE&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span>
+<span class="nb">define</span><span class="p">(</span> <span class="s2">&quot;TRUE&quot;</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
+<span class="cp">?&gt;</span><span class="x"></span>
+</pre></div>
 
 <p>А вот это для настоящих гурманов и знатоков своего дела:</p>
 
-<pre><code class="cpp">#define sizeof(x) rand()
-</code></pre>
+<div class="highlight"><pre><span class="cp">#define sizeof(x) rand()</span>
+</pre></div>
 
 <p>После того, как вы, обойдя вашу систему ревизий кода, чтобы никто не заметил засады, добавили это в какой-нибудь тихий, но повсеместно используемый файл ваших коллег смело идите покурить. Не думаю, что удасться выкурить в тишине хотя бы одну сигарету.</p>
 

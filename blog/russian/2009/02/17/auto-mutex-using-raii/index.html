@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,54 +44,54 @@
 
 <p>Часто бывают случаи, когда несколько функций реализуют какую-то единую функциональность, построенную на общем разделяемом ресурсе, защищенном блокировкой. В этом случае каждая функция в начале работы занимает эту блокировку, а на выходе — освобождает ее. Например, методы класса-регистратора системных событий все работают с выходным буфером и используют единую блокировку для синхронизации доступа к нему. Например:</p>
 
-<pre><code class="cpp">class Logger {
-public:
-  ...
-  void put(const char* str) {
-    __lock.Lock();
-    __buffer.push_back(str);
-    __lock.Unlock();
-  }
-  void flush() {
-    __lock.Lock();
-    ...
-    __buffer.clear();
-    __lock.Unlock();
-  }
-  ...
-private:
-  Mutex __lock;
-  std::vector&lt;std::string&gt; __buffer;
-}
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Logger</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="p">...</span>
+  <span class="kt">void</span> <span class="n">put</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">__lock</span><span class="p">.</span><span class="n">Lock</span><span class="p">();</span>
+    <span class="n">__buffer</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+    <span class="n">__lock</span><span class="p">.</span><span class="n">Unlock</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">flush</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">__lock</span><span class="p">.</span><span class="n">Lock</span><span class="p">();</span>
+    <span class="p">...</span>
+    <span class="n">__buffer</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+    <span class="n">__lock</span><span class="p">.</span><span class="n">Unlock</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">Mutex</span> <span class="n">__lock</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">__buffer</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>В целом, такой подход является не совсем правильным, так как данные методы могут быть весьма сложными, иметь многочисленные условные операторы, могут генерировать исключения. В этом случае программисту необходимо позаботиться о <strong>всех</strong> возможных вариантах завершения каждой функции и везде вставить оператор освобождения блокировки:</p>
 
-<pre><code class="cpp">__lock.Unlock();
-</code></pre>
+<div class="highlight"><pre><span class="n">__lock</span><span class="p">.</span><span class="n">Unlock</span><span class="p">();</span>
+</pre></div>
 
 <p>Если этого не сделать, то неосвобожденная по какой-то редко возникающей причине блокировка может просто &ldquo;подвесить&rdquo; всю программу, так как все остальные функции, работающие с этой блокировкой, более никогда не получат управления.</p>
 
 <p>К счастью, в С++ есть механизм, дающий возможность очень просто избежать подобных проблем, вывозом кода освобождения блокировки при любом варианте завершения функции. Механизм называется RAII (<a href="http://ru.wikipedia.org/wiki/RAII">Resource Acquisition Is Initialization</a>). В С++ деструкторы созданных в контексте функции объектов <strong>обязательно</strong> вызываются перед завершением контекста (попросту говоря, когда функция завершается любым способом). Если возникло непойманное в функции исключение, то в процессе раскрутки стека деструкторы созданных локальных объектов тоже будут вызваны. Отсюда и идея: занимать блокировку в конструкторе созданного в функции локального объекта и затем освобождать ее в деструкторе. Использование такого метода позволило бы изменить приведенный пример так:</p>
 
-<pre><code class="cpp">class Logger {
-public:
-  ...
-  void put(const char* str) {
-    AutoLock(__lock);
-    __buffer.push_back(str);
-  }
-  void flush() {
-    AutoLock(__lock);
-    ...
-    __buffer.clear();
-  }
-  ...
-private:
-  Mutex __lock;
-  std::vector&lt;std::string&gt; __buffer;
-}
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Logger</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="p">...</span>
+  <span class="kt">void</span> <span class="n">put</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">AutoLock</span><span class="p">(</span><span class="n">__lock</span><span class="p">);</span>
+    <span class="n">__buffer</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">flush</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">AutoLock</span><span class="p">(</span><span class="n">__lock</span><span class="p">);</span>
+    <span class="p">...</span>
+    <span class="n">__buffer</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="p">...</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="n">Mutex</span> <span class="n">__lock</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">__buffer</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Объект <code>AutoLock</code>, создаваемый первым в контексте каждой функции, будет занимать блокировку и освобождать ее при закрытии этого контекста.</p>
 
@@ -100,36 +101,36 @@ private:
 
 <p>Файл <code>autolock.h</code>:</p>
 
-<pre><code class="cpp">#ifndef _EXT_AUTOLOCK_H
-#define _EXT_AUTOLOCK_H
+<div class="highlight"><pre><span class="cp">#ifndef _EXT_AUTOLOCK_H</span>
+<span class="cp">#define _EXT_AUTOLOCK_H</span>
 
-#include &quot;mutex.h&quot;
+<span class="cp">#include &quot;mutex.h&quot;</span>
 
-namespace ext {
+<span class="k">namespace</span> <span class="n">ext</span> <span class="p">{</span>
 
-class AutoLock {
-public:
-  // Запираем блокировку в конструторе
-  AutoLock(Mutex&amp; lock) : __lock(lock) {
-    __lock.Lock();
-  }
+<span class="k">class</span> <span class="nc">AutoLock</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="c1">// Запираем блокировку в конструторе</span>
+  <span class="n">AutoLock</span><span class="p">(</span><span class="n">Mutex</span><span class="o">&amp;</span> <span class="n">lock</span><span class="p">)</span> <span class="o">:</span> <span class="n">__lock</span><span class="p">(</span><span class="n">lock</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">__lock</span><span class="p">.</span><span class="n">Lock</span><span class="p">();</span>
+  <span class="p">}</span>
 
-  // Освобождаем блокировку в деструкторе
-  ~AutoLock() {
-    __lock.Unlock();
-  }
-private:
-  // Защита от случайного копирования
-  AutoLock(const AutoLock&amp;);
-  void operator=(const AutoLock&amp;);
+  <span class="c1">// Освобождаем блокировку в деструкторе</span>
+  <span class="o">~</span><span class="n">AutoLock</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">__lock</span><span class="p">.</span><span class="n">Unlock</span><span class="p">();</span>
+  <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="c1">// Защита от случайного копирования</span>
+  <span class="n">AutoLock</span><span class="p">(</span><span class="k">const</span> <span class="n">AutoLock</span><span class="o">&amp;</span><span class="p">);</span>
+  <span class="kt">void</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">AutoLock</span><span class="o">&amp;</span><span class="p">);</span>
 
-  Mutex&amp; __lock;
-};
+  <span class="n">Mutex</span><span class="o">&amp;</span> <span class="n">__lock</span><span class="p">;</span>
+<span class="p">};</span>
 
-} // ext 
+<span class="p">}</span> <span class="c1">// ext </span>
 
-#endif
-</code></pre>
+<span class="cp">#endif</span>
+</pre></div>
 
 <p>Данный класс использует реализацию блокировки (мьютекса) <a href="/blog/russian/2009/02/06/universal-mutex-in-cpp-for-windows-and-unix/">Mutex</a>.</p>
 
@@ -139,103 +140,103 @@ private:
 
 <p>Файл <code>autolock_unittest.cpp</code>:</p>
 
-<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
+<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
 
-#include &quot;autolock.h&quot;
-#include &quot;mutex.h&quot;
-#include &quot;thread.h&quot;
+<span class="cp">#include &quot;autolock.h&quot;</span>
+<span class="cp">#include &quot;mutex.h&quot;</span>
+<span class="cp">#include &quot;thread.h&quot;</span>
 
-// Универсальная задержка в миллисекундах для Windows и UNIX
-#ifdef WIN32
-#include &lt;windows.h&gt;
-#define msleep(x)    Sleep(x)
-#else
-#include &lt;unistd.h&gt;
-#define msleep(x)    usleep((x)*1000)
-#endif
+<span class="c1">// Универсальная задержка в миллисекундах для Windows и UNIX</span>
+<span class="cp">#ifdef WIN32</span>
+<span class="cp">#include &lt;windows.h&gt;</span>
+<span class="cp">#define msleep(x)    Sleep(x)</span>
+<span class="cp">#else</span>
+<span class="cp">#include &lt;unistd.h&gt;</span>
+<span class="cp">#define msleep(x)    usleep((x)*1000)</span>
+<span class="cp">#endif</span>
 
-// Тестовый поток
-class T: public ext::Thread {
-public:
-  // Параметры потока:
-  //   flag    - флаг для сигнализации о выполненном действии
-  //   mutex   - рабочий объект-блокировка
-  //   timeout - время, которое необходимо подождать после 
-  //             установки флага
-  //   val     - значение, в которое надо установить флаг
-  T(volatile int&amp; flag, ext::Mutex&amp; mutex, int timeout, int val) :
-    __flag(flag), __mutex(mutex), __timeout(timeout), __val(val)
-  {}
+<span class="c1">// Тестовый поток</span>
+<span class="k">class</span> <span class="nc">T</span><span class="o">:</span> <span class="k">public</span> <span class="n">ext</span><span class="o">::</span><span class="n">Thread</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="c1">// Параметры потока:</span>
+  <span class="c1">//   flag    - флаг для сигнализации о выполненном действии</span>
+  <span class="c1">//   mutex   - рабочий объект-блокировка</span>
+  <span class="c1">//   timeout - время, которое необходимо подождать после </span>
+  <span class="c1">//             установки флага</span>
+  <span class="c1">//   val     - значение, в которое надо установить флаг</span>
+  <span class="n">T</span><span class="p">(</span><span class="k">volatile</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">flag</span><span class="p">,</span> <span class="n">ext</span><span class="o">::</span><span class="n">Mutex</span><span class="o">&amp;</span> <span class="n">mutex</span><span class="p">,</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">,</span> <span class="kt">int</span> <span class="n">val</span><span class="p">)</span> <span class="o">:</span>
+    <span class="n">__flag</span><span class="p">(</span><span class="n">flag</span><span class="p">),</span> <span class="n">__mutex</span><span class="p">(</span><span class="n">mutex</span><span class="p">),</span> <span class="n">__timeout</span><span class="p">(</span><span class="n">timeout</span><span class="p">),</span> <span class="n">__val</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+  <span class="p">{}</span>
 
-  // Функция потока: занять автоматическую блокировку, установить
-  // флаг, подождать указанное время, освободить автоматическую
-  // блокировку.
-  virtual void Execute() {
-    ext::AutoLock locker(__mutex);
-    __flag = __val;
-    msleep(__timeout);
-  }
-private:
-  volatile int&amp; __flag;
-  ext::Mutex&amp; __mutex;
-  int __timeout;
-  int __val;
-};
+  <span class="c1">// Функция потока: занять автоматическую блокировку, установить</span>
+  <span class="c1">// флаг, подождать указанное время, освободить автоматическую</span>
+  <span class="c1">// блокировку.</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">Execute</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ext</span><span class="o">::</span><span class="n">AutoLock</span> <span class="n">locker</span><span class="p">(</span><span class="n">__mutex</span><span class="p">);</span>
+    <span class="n">__flag</span> <span class="o">=</span> <span class="n">__val</span><span class="p">;</span>
+    <span class="n">msleep</span><span class="p">(</span><span class="n">__timeout</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="k">volatile</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">__flag</span><span class="p">;</span>
+  <span class="n">ext</span><span class="o">::</span><span class="n">Mutex</span><span class="o">&amp;</span> <span class="n">__mutex</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">__timeout</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">__val</span><span class="p">;</span>
+<span class="p">};</span>
 
-// Данный тест выполняет параллельно две функции, которые конкурируют
-// за одну блокировку. Функция-поток 'a' занимает блокировку, устанавливает
-// флаг в 1, ждет 100мс и затем освобождает блокировку. Функция-поток 'b'
-// стартует, когда поток 'a' уже занял блокировку, поэтому после старта
-// потока 'b' флаг еще некоторое время будет равен 1, пока поток 'a' не
-// отпустит блокировку, и затем поток 'b' изменит флаг в 0, получив 
-// управление ожидания на блокировке.
-TEST(AutoLock, ConcurrentCalls) {
-  volatile int flag = 0;
+<span class="c1">// Данный тест выполняет параллельно две функции, которые конкурируют</span>
+<span class="c1">// за одну блокировку. Функция-поток &#39;a&#39; занимает блокировку, устанавливает</span>
+<span class="c1">// флаг в 1, ждет 100мс и затем освобождает блокировку. Функция-поток &#39;b&#39;</span>
+<span class="c1">// стартует, когда поток &#39;a&#39; уже занял блокировку, поэтому после старта</span>
+<span class="c1">// потока &#39;b&#39; флаг еще некоторое время будет равен 1, пока поток &#39;a&#39; не</span>
+<span class="c1">// отпустит блокировку, и затем поток &#39;b&#39; изменит флаг в 0, получив </span>
+<span class="c1">// управление ожидания на блокировке.</span>
+<span class="n">TEST</span><span class="p">(</span><span class="n">AutoLock</span><span class="p">,</span> <span class="n">ConcurrentCalls</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">volatile</span> <span class="kt">int</span> <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 
-  ext::Mutex mutex;
+  <span class="n">ext</span><span class="o">::</span><span class="n">Mutex</span> <span class="n">mutex</span><span class="p">;</span>
 
-  T a(flag, mutex, 100, 1);
-  T b(flag, mutex, 0, 0);
+  <span class="n">T</span> <span class="n">a</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">mutex</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="n">T</span> <span class="n">b</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">mutex</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
 
-  // Запускаем поток 'a'.
-  a.Start();
-  // Ждем, пока поток 'a' займет блокировку.
-  // Это случится, когда флаг станет равен 1.  
-  while (!flag);
+  <span class="c1">// Запускаем поток &#39;a&#39;.</span>
+  <span class="n">a</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+  <span class="c1">// Ждем, пока поток &#39;a&#39; займет блокировку.</span>
+  <span class="c1">// Это случится, когда флаг станет равен 1.  </span>
+  <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">flag</span><span class="p">);</span>
 
-  // Запускаем поток 'b'.
-  b.Start();
-  // Ждем немного, чтобы убедиться, что поток запустился
-  // и дошел до попытки занять блокировку.
-  msleep(50);
+  <span class="c1">// Запускаем поток &#39;b&#39;.</span>
+  <span class="n">b</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
+  <span class="c1">// Ждем немного, чтобы убедиться, что поток запустился</span>
+  <span class="c1">// и дошел до попытки занять блокировку.</span>
+  <span class="n">msleep</span><span class="p">(</span><span class="mi">50</span><span class="p">);</span>
 
-  // Так как время задержки в потоке 'a' больше 50мс,
-  // то флаг все еще равен 1, так как поток 'a' пока не отпустил
-  // блокировку, не давая потоку 'b' получить управление
-  // и изменить флаг в 0.
-  EXPECT_EQ(1, flag);
+  <span class="c1">// Так как время задержки в потоке &#39;a&#39; больше 50мс,</span>
+  <span class="c1">// то флаг все еще равен 1, так как поток &#39;a&#39; пока не отпустил</span>
+  <span class="c1">// блокировку, не давая потоку &#39;b&#39; получить управление</span>
+  <span class="c1">// и изменить флаг в 0.</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">flag</span><span class="p">);</span>
 
-  // Ждем завершения потока 'a' (блокировка должна быть
-  // отпущена при его завершении.
-  a.Join();
+  <span class="c1">// Ждем завершения потока &#39;a&#39; (блокировка должна быть</span>
+  <span class="c1">// отпущена при его завершении.</span>
+  <span class="n">a</span><span class="p">.</span><span class="n">Join</span><span class="p">();</span>
 
-  // Ждем завершения потока 'b', который к своему завершению
-  // должен обнулить флаг.
-  b.Join();
-  EXPECT_EQ(0, flag);
-}
-</code></pre>
+  <span class="c1">// Ждем завершения потока &#39;b&#39;, который к своему завершению</span>
+  <span class="c1">// должен обнулить флаг.</span>
+  <span class="n">b</span><span class="p">.</span><span class="n">Join</span><span class="p">();</span>
+  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">flag</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Для компиляции нам также понадобятся файлы <code>mutex.h</code> (класс <a href="/blog/russian/2009/02/06/universal-mutex-in-cpp-for-windows-and-unix/">Mutex</a>), <code>thread.cpp</code> и <code>thread.h</code> (класс <a href="/blog/russian/2009/01/26/universal-threads-for-windows-and-unix/">Thread</a>).</p>
 
 <p>Файл для запуска тестов <code>runner.cpp</code>:</p>
 
-<pre><code class="cpp">#include &quot;gtest/gtest.h&quot;
-int main(int argc, char* argv[]) {
-  testing::InitGoogleTest(&amp;argc, argv);
-  return RUN_ALL_TESTS();
-}
-</code></pre>
+<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Компилируем:</p>
 

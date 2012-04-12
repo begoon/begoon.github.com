@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,23 +44,23 @@
 
 <p>Например, вместо:</p>
 
-<pre><code class="cpp">void f(T&amp; t) {
-  // change ‘t’
-}
-...
-T a;
-f(a);
-</code></pre>
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// change ‘t’</span>
+<span class="p">}</span>
+<span class="p">...</span>
+<span class="n">T</span> <span class="n">a</span><span class="p">;</span>
+<span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+</pre></div>
 
 <p>я предпочту передачу по указателю:</p>
 
-<pre><code class="cpp">void f(T* t) {
-  // change ‘*t’
-}
-...
-T a;
-f(&amp;a);
-</code></pre>
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// change ‘*t’</span>
+<span class="p">}</span>
+<span class="p">...</span>
+<span class="n">T</span> <span class="n">a</span><span class="p">;</span>
+<span class="n">f</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">);</span>
+</pre></div>
 
 <p>Мой основной мотив – наглядность в вызывающем коде. Когда я вижу <code>&amp;</code> перед аргументом, я точно знаю, что это возвращаемый параметр, и он может измениться после вызова. И мне не надо постоянно помнить, какие именно агрументы у этой функции ссылки, а какие нет.</p>
 

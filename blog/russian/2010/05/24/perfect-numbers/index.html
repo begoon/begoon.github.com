@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,31 +46,31 @@
 
 <p>Как я ее решал. Прочитав определение совершенных чисел (до этого я не знал про такие числа, и далее будет понятно, что это было моей главной проблемой) и поняв, что мне надо разложить число на множители, я написал что-то вроде:</p>
 
-<pre><code class="cpp">bool is_perfect(long long n) {
-  if (n == 1) return false;
-  long long s = 1;
-  long long q = sqrt((double)n);
-  for (long long i = 2; i &lt;= q; ++i) {
-    if ((n % i) == 0) {
-      s += i;
-      if (n/i != i) s += n/i;
-    }
-  }
-  return s == n;
-}
+<div class="highlight"><pre><span class="kt">bool</span> <span class="n">is_perfect</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="kt">long</span> <span class="kt">long</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kt">long</span> <span class="kt">long</span> <span class="n">q</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="n">n</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">q</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">n</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">s</span> <span class="o">+=</span> <span class="n">i</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="n">i</span> <span class="o">!=</span> <span class="n">i</span><span class="p">)</span> <span class="n">s</span> <span class="o">+=</span> <span class="n">n</span><span class="o">/</span><span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">s</span> <span class="o">==</span> <span class="n">n</span><span class="p">;</span>
+<span class="p">}</span>
 
-...
-  bool found = false;
-  while (m &lt;= n) {
-    if (is_perfect(m)) {
-      os &lt;&lt; m &lt;&lt; endl;
-      found = true;
-    }
-    m += 1;
-  }
-  if (!found) os &lt;&lt; &quot;Absent&quot; &lt;&lt; endl;
-...
-</code></pre>
+<span class="p">...</span>
+  <span class="kt">bool</span> <span class="n">found</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">m</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">is_perfect</span><span class="p">(</span><span class="n">m</span><span class="p">))</span> <span class="p">{</span>
+      <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+      <span class="n">found</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">m</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">found</span><span class="p">)</span> <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Absent&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">...</span>
+</pre></div>
 
 <p>Ничего оригинального. Работает на данных тестовых контрольных примерах. Прогоняю в системе. На одном из тестов мне сообщают, что программа работает более двух секунд, и это превышение данного временного лимита.</p>
 

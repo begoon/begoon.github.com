@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -51,35 +52,35 @@
 
 <p>А сейчас мини эксперимент с реальным <code>std::vector</code> (компилятор, и сообразно STL — Sun C++ 5.9 SunOS_sparc) для выяснения реальной стратегии роста буфера в векторе:</p>
 
-<pre><code class="cpp">#include &lt;vector&gt;
-#include &lt;iostream&gt;
-#include &lt;iomanip&gt;
-#include &lt;cstdlib&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;vector&gt;</span>
+<span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;iomanip&gt;</span>
+<span class="cp">#include &lt;cstdlib&gt;</span>
 
-int main() {
-  int last = -1;
-  std::vector&lt;int&gt; a;
-  std::cout &lt;&lt; std::setw(12) &lt;&lt; &quot;Capacity&quot; &lt;&lt; &quot; &quot; 
-            &lt;&lt; std::setw(12) &lt;&lt; &quot;Size&quot;
-            &lt;&lt; std::setw(12) &lt;&lt; &quot;Ratio&quot; &lt;&lt; std::endl
-            &lt;&lt; std::setw(12) &lt;&lt; std::setfill('-') &lt;&lt; &quot;-&quot; &lt;&lt; &quot; &quot; 
-            &lt;&lt; std::setw(12) &lt;&lt; &quot;-&quot; &lt;&lt; &quot; &quot;
-            &lt;&lt; std::setw(12) &lt;&lt; &quot;-&quot; &lt;&lt; std::endl;
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">last</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Capacity&quot;</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> 
+            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Size&quot;</span>
+            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Ratio&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span>
+            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setfill</span><span class="p">(</span><span class="sc">&#39;-&#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;-&quot;</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> 
+            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;-&quot;</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span>
+            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;-&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 
-  std::cout &lt;&lt; std::setfill(' ') &lt;&lt; std::fixed;
-  while (1) {
-    if (a.capacity() != last) {
-      last = a.capacity();
-      std::cout &lt;&lt; std::setw(12) &lt;&lt; a.capacity() &lt;&lt; &quot; &quot;
-                &lt;&lt; std::setw(12) &lt;&lt; a.size() &lt;&lt; &quot; &quot;
-                &lt;&lt; std::setw(12) &lt;&lt; std::setprecision(6)
-                &lt;&lt; (float)a.capacity() / a.size() &lt;&lt; std::endl;
-    }
-    a.push_back(std::rand());
-  }
-  return 0;
-}
-</code></pre>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setfill</span><span class="p">(</span><span class="sc">&#39; &#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">fixed</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">!=</span> <span class="n">last</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">last</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">capacity</span><span class="p">();</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span>
+                <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span>
+                <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setprecision</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+                <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">a</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">/</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">a</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">rand</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>А вот и результат:</p>
 

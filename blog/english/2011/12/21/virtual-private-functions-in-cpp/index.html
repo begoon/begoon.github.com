@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -43,27 +44,27 @@
 
 <p>I wrote this code:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
 
-class A {
-public:
-  void bar() { foo(); }
-private:
-  virtual void foo() = 0;
-};
+<span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="kt">void</span> <span class="n">bar</span><span class="p">()</span> <span class="p">{</span> <span class="n">foo</span><span class="p">();</span> <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">foo</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
 
-class B: public A {
-private:
-  virtual void foo() { std::cout &lt;&lt; &quot;B::foo()&quot; &lt;&lt; std::endl; }
-};
+<span class="k">class</span> <span class="nc">B</span><span class="o">:</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">foo</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;B::foo()&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
 
-int main(int argc, char* argv[]) {
-  A* a = new B();
-  a-&gt;bar();
-  delete a;
-  return 0;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="n">A</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">B</span><span class="p">();</span>
+  <span class="n">a</span><span class="o">-&gt;</span><span class="n">bar</span><span class="p">();</span>
+  <span class="k">delete</span> <span class="n">a</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>VS2010 and GCC compile it perfectly and it prints out <code>B::foo()</code>.</p>
 

@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,10 +42,10 @@
 <div id="post">
   <p>С++ имеет весьма разнообразный синтаксис для конструирования объектов. Надо признать, что порой этот синтаксис весьма неочевиден, и многие вещи надо просто знать, нежели догадаться, как они работают. Например:</p>
 
-<pre><code class="cpp">class T {...};
-...
-T t = T(1);
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">T</span> <span class="p">{...};</span>
+<span class="p">...</span>
+<span class="n">T</span> <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
 
 <p>По очевидной логике вещей данный код должен при создании экземпляра класса <code>T</code> вызвать конструктор по умолчанию (без аргументов), затем создать временный объект с помощью конструктора с одним аргументом и скопировать его в исходный объект перегруженным оператором копирования (или может конструктором копирования? ведь слева и справа объекты явно типа <code>T</code>&hellip;).</p>
 
@@ -54,32 +55,32 @@ T t = T(1);
 
 <p>Итак, файл <code>ctor.cpp</code>:</p>
 
-<pre><code class="cpp">#include &lt;iostream&gt;
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
 
-class T {
-public:
-  T() { std::cout &lt;&lt; &quot;T()&quot; &lt;&lt; std::endl; }
-  T(int) { std::cout &lt;&lt; &quot;T(int)&quot; &lt;&lt; std::endl; }
-  T(int, int) { std::cout &lt;&lt; &quot;T(int, int)&quot; &lt;&lt; std::endl; }
-  T(const T&amp;) { std::cout &lt;&lt; &quot;T(const T&amp;)&quot; &lt;&lt; std::endl; }
-  void operator=(const T&amp;) 
-    { std::cout &lt;&lt; &quot;operator=(const T&amp;)&quot; &lt;&lt; std::endl; }
-};
+<span class="k">class</span> <span class="nc">T</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">T</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T()&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+  <span class="n">T</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T(int)&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+  <span class="n">T</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T(int, int)&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+  <span class="n">T</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T(const T&amp;)&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+  <span class="kt">void</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span><span class="p">)</span> 
+    <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;operator=(const T&amp;)&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">};</span>
 
-int main() {
-  std::cout &lt;&lt; &quot;T t1           : &quot;; T t1;
-  std::cout &lt;&lt; &quot;T t2(1)        : &quot;; T t2(1);
-  std::cout &lt;&lt; &quot;T t3 = 1       : &quot;; T t3 = 1;
-  std::cout &lt;&lt; &quot;T t4 = T(1)    : &quot;; T t4 = T(1);
-  std::cout &lt;&lt; &quot;T t5(1, 2)     : &quot;; T t5(1, 2);
-  std::cout &lt;&lt; &quot;T t6 = T(1, 2) : &quot;; T t6 = T(1, 2);
-  std::cout &lt;&lt; &quot;T t7; t7 = 1   : &quot;; T t7; t7 = 1;
-  std::cout &lt;&lt; &quot;T t8; t8 = T(1): &quot;; T t8; t8 = T(1);
-  std::cout &lt;&lt; &quot;T t9(t8)       : &quot;; T t9(t8);
-  std::cout &lt;&lt; &quot;T t10 = 'a'    : &quot;; T t10 = 'a';
-  return 0;
-}
-</code></pre>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t1           : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t1</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t2(1)        : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t2</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t3 = 1       : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t3</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t4 = T(1)    : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t4</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t5(1, 2)     : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t5</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t6 = T(1, 2) : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t6</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t7; t7 = 1   : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t7</span><span class="p">;</span> <span class="n">t7</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t8; t8 = T(1): &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t8</span><span class="p">;</span> <span class="n">t8</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t9(t8)       : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t9</span><span class="p">(</span><span class="n">t8</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t10 = &#39;a&#39;    : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t10</span> <span class="o">=</span> <span class="sc">&#39;a&#39;</span><span class="p">;</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
 
 <p>Компилируем, например в Visual Studio:</p>
 
@@ -108,13 +109,13 @@ T t10 = 'a'    : T(int)
 
 <p>Также интересно, как был создана переменная <code>t10</code>. Видно, что для символьной константы компилятор &ldquo;подобрал&rdquo; наиболее подходящий конструктор. Неявным образом был вызвал конструктор от <code>int</code>. Если подобное поведение не входит в ваши планы, и вам совсем не нужно, чтобы конструктор от <code>int</code> вызывался, когда идет попытка создать объект от типа, который может быть неявно преобразован в <code>int</code>, например <code>char</code>, то можно воспользоваться ключевым словом <code>explicit</code>:</p>
 
-<pre><code class="cpp">class T {
-public:
-  ...
-  explicit T(int) { std::cout &lt;&lt; &quot;T(int)&quot; &lt;&lt; std::endl; }
-  ...
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">T</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="p">...</span>
+  <span class="k">explicit</span> <span class="n">T</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T(int)&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
+  <span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>Это запретит какое-либо неявное преобразования для аргумента этого конструктора.</p>
 

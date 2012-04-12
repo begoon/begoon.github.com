@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,16 +42,16 @@
 <div id="post">
   <p>Внимательный читатель наверняка заметил в посте про <a href="/blog/russian/2009/01/26/universal-threads-for-windows-and-unix/">Универсальные потоки на С++ для Windows и UNIX</a> следующий фрагмент кода:</p>
 
-<pre><code class="cpp">class Thread {
-public:
-  ...
-private:
-  ...
-  // Защита от случайного копирования объекта в C++
-  Thread(const Thread&amp;);
-  void operator=(const Thread&amp;);
-};
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Thread</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="p">...</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="p">...</span>
+  <span class="c1">// Защита от случайного копирования объекта в C++</span>
+  <span class="n">Thread</span><span class="p">(</span><span class="k">const</span> <span class="n">Thread</span><span class="o">&amp;</span><span class="p">);</span>
+  <span class="kt">void</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Thread</span><span class="o">&amp;</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>Это определения конструктора копирования и перегруженого оператора присваивания. Причем непосредственно реализаций этих функций нигде нет, только определения. Вопрос: для чего все это?</p>
 
@@ -60,23 +61,23 @@ private:
 
 <p>Лично я делаю так. У меня есть следующий файл (<code>ctorguard.h</code>):</p>
 
-<pre><code class="cpp">#ifndef _EXT_CTOR_GUARD_H
-#define _EXT_CTOR_GUARD_H
-#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-  TypeName(const TypeName&amp;);               \
-  void operator=(const TypeName&amp;)
-#endif
-Теперь определение класса будет выглядеть так:
-#include &quot;ctorguard.h&quot;
-class Thread {
-public:
-  ...
-private:
-  ...
-  // Защита от случайного копирования объекта в C++
-  DISALLOW_COPY_AND_ASSIGN(Thread);
-};
-</code></pre>
+<div class="highlight"><pre><span class="cp">#ifndef _EXT_CTOR_GUARD_H</span>
+<span class="cp">#define _EXT_CTOR_GUARD_H</span>
+<span class="cp">#define DISALLOW_COPY_AND_ASSIGN(TypeName) \</span>
+<span class="cp">  TypeName(const TypeName&amp;);               \</span>
+<span class="cp">  void operator=(const TypeName&amp;)</span>
+<span class="cp">#endif</span>
+<span class="err">Теперь</span> <span class="err">определение</span> <span class="err">класса</span> <span class="err">будет</span> <span class="err">выглядеть</span> <span class="err">так</span><span class="o">:</span>
+<span class="cp">#include &quot;ctorguard.h&quot;</span>
+<span class="k">class</span> <span class="nc">Thread</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="p">...</span>
+<span class="k">private</span><span class="o">:</span>
+  <span class="p">...</span>
+  <span class="c1">// Защита от случайного копирования объекта в C++</span>
+  <span class="n">DISALLOW_COPY_AND_ASSIGN</span><span class="p">(</span><span class="n">Thread</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
 
 <p>Теперь вы надежно предохранены.</p>
 

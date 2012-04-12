@@ -20,6 +20,7 @@
 </script>
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -41,36 +42,36 @@
 <div id="post">
   <p>В С++ крайне распространен прием использования класса <code>std::vector</code> для хранения указателей на размещенные в <a href="http://ru.wikipedia.org/wiki/%D0%9A%D1%83%D1%87%D0%B0_(%D0%BD%D0%B5%D1%80%D0%B0%D1%81%D0%BF%D1%80%D0%B5%D0%B4%D0%B5%D0%BB%D1%91%D0%BD%D0%BD%D0%B0%D1%8F_%D0%BF%D0%B0%D0%BC%D1%8F%D1%82%D1%8C)">куче</a> объекты.</p>
 
-<pre><code class="cpp">class Book {
-public:
-  Book(int index);
-...
-};
-...
-std::vector&lt;Book *&gt; books;
-for (int i = 0; i &lt; 10; ++i)
-  books.push_back(new Book(i));
-</code></pre>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Book</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">Book</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="p">};</span>
+<span class="p">...</span>
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Book</span> <span class="o">*&gt;</span> <span class="n">books</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+  <span class="n">books</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">Book</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+</pre></div>
 
 <p>Естественно, после использования память надо освободить. Обычно стандартный прием для этого таков:</p>
 
-<pre><code class="cpp">for (std::vector&lt;Book *&gt;::iterator i = books.begin(); i != books.end(); ++i)
-  delete *i;
-</code></pre>
+<div class="highlight"><pre><span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Book</span> <span class="o">*&gt;::</span><span class="n">iterator</span> <span class="n">i</span> <span class="o">=</span> <span class="n">books</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">books</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+  <span class="k">delete</span> <span class="o">*</span><span class="n">i</span><span class="p">;</span>
+</pre></div>
 
 <p>В целом, с таким подходом все в порядке, разве что слегка веет от него излишней алгоритмической загруженностью. Он вынужден, навязан особенностями языка C++. Индексная переменная <code>i</code> здесь абсолютно неважна для цикла, она является чисто служебной. Все это, конечно, не так страшно, как использование оператора goto или статических переменных, но все равно хочется гармонии. И способ есть. Данный код можно переписать так:</p>
 
-<pre><code class="cpp">#include &lt;algorithm&gt;
-class deleter {
-public:
-  template &lt;typename T&gt;
-  void operator()(const T* p) const {
-    delete p;
-  }
-};
-...
-  std::for_each(a.begin(), a.end(), deleter());
-</code></pre>
+<div class="highlight"><pre><span class="cp">#include &lt;algorithm&gt;</span>
+<span class="k">class</span> <span class="nc">deleter</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+  <span class="kt">void</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">p</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">delete</span> <span class="n">p</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+<span class="p">...</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">for_each</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">a</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">deleter</span><span class="p">());</span>
+</pre></div>
 
 <p>Данный код определяет класс-функтор, у которого перегруженный оператор <code>operator()</code> является шаблонным. Затем стандартный алгоритм <code>std::for_each()</code> вызывает этот оператор для каждого члена вектора.</p>
 
