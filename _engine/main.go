@@ -588,14 +588,20 @@ func build_language_index(language string) string {
       index[w][(*p)["index"]] = true
     }
   }
+  keys := make([]string, 0)
+  for word, _ := range index {
+    keys = append(keys, word)
+  }
+  sort.Strings(keys)
+
   lines := make([]string, 0)
-  for w, refs := range index {
+  for _, word := range keys {
     l := make([]string, 0)
-    for id, _ := range refs {
+    for id, _ := range index[word] {
       l = append(l, id)
     }
     sort.Strings(l)
-    lines = append(lines, fmt.Sprintf("ri[\"%s\"]=[%s]", w, strings.Join(l, ",")))
+    lines = append(lines, fmt.Sprintf("ri[\"%s\"]=[%s]", word, strings.Join(l, ",")))
   }
   fmt.Printf("Words in %s index: %d\n", language, len(lines))
   return strings.Join(lines, "\n")
