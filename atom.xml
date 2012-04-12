@@ -194,7 +194,7 @@
 <ul>
 <li><a href="http://demin.ws/blog/russian/2010/03/26/one-command-cpu/">Модель процессора с одной командой</a></li>
 <li><a href="http://demin.ws/blog/russian/2011/02/08/norcpu-hack-me-challenge/">NORCPU hackme challenge или взлом программы для однокомандного процессора</a></li>
-<li><a href="http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challange-analysis/">Анализ результатов взлома программы однокомандного процессора NORCPU</a></li>
+<li><a href="http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challenge-analysis/">Анализ результатов взлома программы однокомандного процессора NORCPU</a></li>
 </ul>
 ]]></content>
   </entry>
@@ -4664,18 +4664,18 @@ ETime(   0:00:04.944 ) UTime(   0:00:04.492 ) KTime(   0:00:00.280 )
   
   <entry>
     <title type="html"><![CDATA[Ссылка на анализ результатов взлома программы однокомандного процессора NORCPU]]></title>
-    <link href="http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challange-analysis-link/"/>
+    <link href="http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challenge-analysis-link/"/>
     <updated>2011-02-16T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challange-analysis-link/</id>
-    <content type="html"><![CDATA[<p>По какой-то причине Google Reader не смог проиндексировать мой большой предыдущий пост - <a href="http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challange-analysis/">Анализ результатов взлома программы однокомандного процессора NORCPU</a>, посему для тех, кто читает через Google Reader, делаю этот пост-ссылку.</p>
+    <id>http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challenge-analysis-link/</id>
+    <content type="html"><![CDATA[<p>По какой-то причине Google Reader не смог проиндексировать мой большой предыдущий пост - <a href="http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challenge-analysis/">Анализ результатов взлома программы однокомандного процессора NORCPU</a>, посему для тех, кто читает через Google Reader, делаю этот пост-ссылку.</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Анализ результатов взлома программы однокомандного процессора NORCPU]]></title>
-    <link href="http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challange-analysis/"/>
+    <link href="http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challenge-analysis/"/>
     <updated>2011-02-16T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challange-analysis/</id>
+    <id>http://demin.ws/blog/russian/2011/02/16/norcpu-hack-me-challenge-analysis/</id>
     <content type="html"><![CDATA[<p>Итак, <a href="http://demin.ws/blog/russian/2011/02/08/norcpu-hack-me-challenge/">публикуя анонс</a> <a href="http://demin.ws/projects/norcpu/challenge/norcpu.html">задачи</a> по взлому программы, работающей на однокомандном процессоре NORCPU, я наивно думал, что хотя бы до конца марта я получу какое-нибудь решение.</p>
 
 <p>Замечание: все цитируемые ниже фрагменты приводятся как есть, с минимальными правками в плане форматирования на странице.</p>

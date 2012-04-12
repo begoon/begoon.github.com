@@ -23,4 +23,4 @@ categories:
 
 [Модель процессора с одной командой]: /blog/russian/2010/03/26/one-command-cpu/
 [NORCPU hackme challenge или взлом программы для однокомандного процессора]: /blog/russian/2011/02/08/norcpu-hack-me-challenge/
-[Анализ результатов взлома программы однокомандного процессора NORCPU]: /blog/russian/2011/02/16/norcpu-hack-me-challange-analysis/
+[Анализ результатов взлома программы однокомандного процессора NORCPU]: /blog/russian/2011/02/16/norcpu-hack-me-challenge-analysis/
