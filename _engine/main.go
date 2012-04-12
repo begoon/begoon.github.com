@@ -53,6 +53,7 @@ var (
 
   no_binaries *bool = flag.Bool("no-binaries", false, "don't publish binaries")
   logging     *bool = flag.Bool("logging", false, "log to 'trace.log'")
+  no_syntax   *bool = flag.Bool("no-syntax", false, "no syntax highlighting")
 
   HeaderRE          = *regexp.MustCompile("(?s)^(---\n(.+)\n---\n)")
   AttrsRE           = *regexp.MustCompile("(?Um)^([^\\:]+?)\\: (.+)$")
@@ -218,7 +219,11 @@ func process_tags(post string) string {
   }
 
   // {% codeblock lang:xxx %} ... {% endcodeblock %}
-  post = CodeblockRE.ReplaceAllStringFunc(post, codeblock)
+  if *no_syntax {
+    post = CodeblockRE.ReplaceAllString(post, "``` $2$3```")
+  } else {
+    post = CodeblockRE.ReplaceAllStringFunc(post, codeblock)
+  }
 
   // {% youtube id %}
   post = YoutubeRE.ReplaceAllString(post,
