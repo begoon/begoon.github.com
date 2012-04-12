@@ -5,13 +5,45 @@
   <title><![CDATA[Программирования - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-10T23:13:00Z</updated>
+  <updated>2012-04-12T17:21:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Макрос для неиспользуемых параметров]]></title>
+    <link href="http://demin.ws/blog/russian/2012/04/12/macro-for-unused-parameters/"/>
+    <updated>2012-04-12T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/04/12/macro-for-unused-parameters/</id>
+    <content type="html"><![CDATA[<p>Иногда бывает, что функция (или метод) имеет параметры, которые не используются в теле. Это может быть legacy или просто плохой дизайн. В этой ситуации хороший компилятор обычно ругается предупреждением.</p>
+
+<p>Можно сделать:</p>
+
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="cm">/* b */</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Но это как-то некрасиво.</p>
+
+<p>Лучше сделать так:</p>
+
+<div class="highlight"><pre><span class="cp">#define DISCARD_UNUNSED_PARAMETER(x) (void)x</span>
+
+<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">DISCARD_UNUNSED_PARAMETER</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Такое объявление наглядно, и можно легко найти все такие места в проекте.</p>
+
+<p>Кстати, компилятор Go считает ошибкой, когда обнаруживается неиспользуемая переменная или подключен неиспользуемый модуль. Сначала это напрягает, так как при экспериментах ты так или иначе постоянно что-то добавляешь, убираешь, комментируешь, возвращаешь назад и т.д. При этом, конечно, появляются такие переменные и модули, и их надо постоянно исправлять. Но в итоге, такой подход не позволяет в коде оставаться мусору, который ты забыл убрать после экспериментов (ну кому охота чистить список подключенных, но возможно неиспользуемых модулей STL, например?).</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Асинхронная загрузка скриптов JavaScript]]></title>

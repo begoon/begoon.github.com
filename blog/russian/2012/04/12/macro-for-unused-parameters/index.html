@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Макрос для неиспользуемых параметров</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирования - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Макрос для неиспользуемых параметров</h1>
+<div id="post">
+  <p>Иногда бывает, что функция (или метод) имеет параметры, которые не используются в теле. Это может быть legacy или просто плохой дизайн. В этой ситуации хороший компилятор обычно ругается предупреждением.</p>
+
+<p>Можно сделать:</p>
+
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="cm">/* b */</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Но это как-то некрасиво.</p>
+
+<p>Лучше сделать так:</p>
+
+<div class="highlight"><pre><span class="cp">#define DISCARD_UNUNSED_PARAMETER(x) (void)x</span>
+
+<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">DISCARD_UNUNSED_PARAMETER</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Такое объявление наглядно, и можно легко найти все такие места в проекте.</p>
+
+<p>Кстати, компилятор Go считает ошибкой, когда обнаруживается неиспользуемая переменная или подключен неиспользуемый модуль. Сначала это напрягает, так как при экспериментах ты так или иначе постоянно что-то добавляешь, убираешь, комментируешь, возвращаешь назад и т.д. При этом, конечно, появляются такие переменные и модули, и их надо постоянно исправлять. Но в итоге, такой подход не позволяет в коде оставаться мусору, который ты забыл убрать после экспериментов (ну кому охота чистить список подключенных, но возможно неиспользуемых модулей STL, например?).</p>
+
+</div>
+
+<hr />
+
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/04/12/macro-for-unused-parameters/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/04/12/macro-for-unused-parameters/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

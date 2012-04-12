@@ -5,13 +5,45 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-10T23:13:00Z</updated>
+  <updated>2012-04-12T17:21:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Macro for unused parameters]]></title>
+    <link href="http://demin.ws/blog/english/2012/04/12/macro-for-unused-parameters/"/>
+    <updated>2012-04-12T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/04/12/macro-for-unused-parameters/</id>
+    <content type="html"><![CDATA[<p>Sometimes there is a function (or a method) having declared but unused parameters. It can be legacy code or just bad design. Normally the compiler gives a warning about this.</p>
+
+<p>It could be fixed this way:</p>
+
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="cm">/* b */</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>But it looks ugly.</p>
+
+<p>There is a better way:</p>
+
+<div class="highlight"><pre><span class="cp">#define DISCARD_UNUNSED_PARAMETER(x) (void)x</span>
+
+<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">DISCARD_UNUNSED_PARAMETER</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+  <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>This macro is clear, and you can easily find all such places in the project.</p>
+
+<p>By they way, in <code>Go</code> this situation is treated as the error, not warning. It can be annoying when you add, remove, comment out and put back things all the time, because sometimes you do have unused stuff. But eventually such approach doesn&rsquo;t allow that temporary garbage to spread and stay in the code (for example, in C++ who on Earth wants to clean up the list of included STL headers after hours of coding?)</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Asynchronous JavaScript loading]]></title>
