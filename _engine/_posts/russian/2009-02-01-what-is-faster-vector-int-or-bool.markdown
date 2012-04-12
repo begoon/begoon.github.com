@@ -64,10 +64,10 @@ int main(int argc, char* argv[]) {
 
 Теперь компилятор. В забеге принимали участие:
 
-# GNU g++ 3.4.4 (cygwin)
-# Borland/Codegear bcc32.exe 5.93 (Codegear Studio 2007)
-# Microsoft cl.exe 14.00 (Visual Studio 2005)
-# Microsoft cl.exe 15.00 (Visual Studio 2008)
+* GNU g++ 3.4.4 (cygwin)
+* Borland/Codegear bcc32.exe 5.93 (Codegear Studio 2007)
+* Microsoft cl.exe 14.00 (Visual Studio 2005)
+* Microsoft cl.exe 15.00 (Visual Studio 2008)
 
 Операционная система Windows XP SP3.
 
@@ -160,24 +160,24 @@ ntimer -1 era-g++-int-opt.exe 10000000
 
 А теперь в отсортированном виде по возрастанию времени:
 
-Компилятор             Версия Тип элемента Оптимизация Время (сек.)
----------------------- ------ ------------ ----------- ------------
-gcc (cygwin)           3.4.4  bool          Вкл         0.984
-Visual Studio 2005     14.00  bool          Вкл         1.171
-Borland/Codegear 2007   5.93   int         Выкл         1.296
-Visual Studio 2005     14.00   int          Вкл         1.312
-Visual Studio 2008     14.00   int          Вкл         1.312
-Borland/Codegear 2007   5.93   int          Вкл         1.328
-gcc (cygwin)           3.4.4   int          Вкл         1.343
-Visual Studio 2008     15.00   int         Выкл         1.703
-Visual Studio 2005     14.00   int         Выкл         1.750
-Visual Studio 2008     14.00  bool          Вкл         2.390
-gcc (cygwin)           3.4.4   int         Выкл         3.109
-gcc (cygwin)           3.4.4  bool         Выкл         4.640
-Borland/Codegear 2007   5.93  bool          Вкл         8.156
-Borland/Codegear 2007   5.93  bool         Выкл         8.375
-Visual Studio 2008     15.00  bool         Выкл        23.062
-Visual Studio 2005     14.00  bool         Выкл        23.75
+    Компилятор             Версия Тип элемента Оптимизация Время (сек.)
+    ---------------------- ------ ------------ ----------- ------------
+    gcc (cygwin)           3.4.4  bool          Вкл         0.984
+    Visual Studio 2005     14.00  bool          Вкл         1.171
+    Borland/Codegear 2007   5.93   int         Выкл         1.296
+    Visual Studio 2005     14.00   int          Вкл         1.312
+    Visual Studio 2008     14.00   int          Вкл         1.312
+    Borland/Codegear 2007   5.93   int          Вкл         1.328
+    gcc (cygwin)           3.4.4   int          Вкл         1.343
+    Visual Studio 2008     15.00   int         Выкл         1.703
+    Visual Studio 2005     14.00   int         Выкл         1.750
+    Visual Studio 2008     14.00  bool          Вкл         2.390
+    gcc (cygwin)           3.4.4   int         Выкл         3.109
+    gcc (cygwin)           3.4.4  bool         Выкл         4.640
+    Borland/Codegear 2007   5.93  bool          Вкл         8.156
+    Borland/Codegear 2007   5.93  bool         Выкл         8.375
+    Visual Studio 2008     15.00  bool         Выкл        23.062
+    Visual Studio 2005     14.00  bool         Выкл        23.75
 
 Итак, на первом месте `gcc` в режиме `bool` с оптимизацией. На втором месте Visual Studio снова в режиме `bool` и оптимизацией. Интересно выступил борландовый компилятор, получив третье место, причем без оптимизации. Так как априори борландовый `bcc32.exe` считается весьма посредственным компилятором в плане качества кода и оптимизатора, то полученное им третье место весьма и весьма странно.
 

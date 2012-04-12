@@ -17853,13 +17853,12 @@ Which is: &quot;testvalue&quot;
 
 <p>Теперь компилятор. В забеге принимали участие:</p>
 
-<h1>GNU g++ 3.4.4 (cygwin)</h1>
-
-<h1>Borland/Codegear bcc32.exe 5.93 (Codegear Studio 2007)</h1>
-
-<h1>Microsoft cl.exe 14.00 (Visual Studio 2005)</h1>
-
-<h1>Microsoft cl.exe 15.00 (Visual Studio 2008)</h1>
+<ul>
+<li>GNU g++ 3.4.4 (cygwin)</li>
+<li>Borland/Codegear bcc32.exe 5.93 (Codegear Studio 2007)</li>
+<li>Microsoft cl.exe 14.00 (Visual Studio 2005)</li>
+<li>Microsoft cl.exe 15.00 (Visual Studio 2008)</li>
+</ul>
 
 <p>Операционная система Windows XP SP3.</p>
 
@@ -17947,11 +17946,9 @@ gcc (cygwin)           3.4.4   int          Вкл         1.343
 
 <p>А теперь в отсортированном виде по возрастанию времени:</p>
 
-<p>Компилятор             Версия Тип элемента Оптимизация Время (сек.)</p>
-
-<hr />
-
-<p>gcc (cygwin)           3.4.4  bool          Вкл         0.984
+<pre><code>Компилятор             Версия Тип элемента Оптимизация Время (сек.)
+---------------------- ------ ------------ ----------- ------------
+gcc (cygwin)           3.4.4  bool          Вкл         0.984
 Visual Studio 2005     14.00  bool          Вкл         1.171
 Borland/Codegear 2007   5.93   int         Выкл         1.296
 Visual Studio 2005     14.00   int          Вкл         1.312
@@ -17966,7 +17963,8 @@ gcc (cygwin)           3.4.4  bool         Выкл         4.640
 Borland/Codegear 2007   5.93  bool          Вкл         8.156
 Borland/Codegear 2007   5.93  bool         Выкл         8.375
 Visual Studio 2008     15.00  bool         Выкл        23.062
-Visual Studio 2005     14.00  bool         Выкл        23.75</p>
+Visual Studio 2005     14.00  bool         Выкл        23.75
+</code></pre>
 
 <p>Итак, на первом месте <code>gcc</code> в режиме <code>bool</code> с оптимизацией. На втором месте Visual Studio снова в режиме <code>bool</code> и оптимизацией. Интересно выступил борландовый компилятор, получив третье место, причем без оптимизации. Так как априори борландовый <code>bcc32.exe</code> считается весьма посредственным компилятором в плане качества кода и оптимизатора, то полученное им третье место весьма и весьма странно.</p>
 
