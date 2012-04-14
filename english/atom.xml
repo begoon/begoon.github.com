@@ -5,13 +5,129 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-12T21:30:00Z</updated>
+  <updated>2012-04-14T17:27:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How to return a vector from a function: by value or by reference?]]></title>
+    <link href="http://demin.ws/blog/english/2012/04/14/return-vector-by-value-or-pointer/"/>
+    <updated>2012-04-14T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/04/14/return-vector-by-value-or-pointer/</id>
+    <content type="html"><![CDATA[<p>Let&rsquo;s imagine there is a function creating a <code>vector</code>. This function needs to return this vector to the caller. What&rsquo;s the better way doing it?</p>
+
+<p>From clarity perspective the best way is:</p>
+
+<div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">create_vector</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+  <span class="n">v</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mh">0xDEADC0DE</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">v</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Here the vector instance is being returned <em>by value</em>, which means potential deep copying of the object to the context of the caller.</p>
+
+<p>Immediately a question raises: if the vector is huge, such deep copying can be expensive but absolutely redundant. A &ldquo;more clever&rdquo; approach could be:</p>
+
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">create_vector</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;*</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">v</span><span class="o">-&gt;</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mh">0xDEADC0DE</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Here the vector is passed by pointer which guarantees the absence of deep copying. But this code looks quite bad.</p>
+
+<p>Let&rsquo;s compare the performance of these two approaches on the 100MB vector of ints. The compiler:</p>
+
+<pre><code>Apple clang version 3.1 (tags/Apple/clang-318.0.45) (based on LLVM 3.1svn)
+Target: x86_64-apple-darwin11.3.0
+</code></pre>
+
+<p>By value:</p>
+
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;vector&gt;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">__attribute__</span><span class="p">((</span><span class="n">noinline</span><span class="p">))</span>
+<span class="n">create_vector</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;by value&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+  <span class="n">v</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mh">0xDEADC0DE</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">v</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">create_vector</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mh">0xDEADC0DE</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Test is rubbish&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span> 
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Run:</p>
+
+<pre><code>clang++ -O3 -o by_value by_value.cpp &amp;&amp; time ./by_value
+</code></pre>
+
+<p>Result:</p>
+
+<pre><code>0m4.933s
+</code></pre>
+
+<p>Now by pointer:</p>
+
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;vector&gt;</span>
+
+<span class="kt">void</span> <span class="n">__attribute__</span><span class="p">((</span><span class="n">noinline</span><span class="p">))</span>
+<span class="n">create_vector</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;*</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;by pointer&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">v</span><span class="o">-&gt;</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mh">0xDEADC0DE</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+    <span class="n">create_vector</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mh">0xDEADC0DE</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Test is rubbish&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span> 
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Run:</p>
+
+<pre><code>clang++ -O3 -o by_pointer by_pointer.cpp &amp;&amp; time ./by_pointer
+</code></pre>
+
+<p>Result:</p>
+
+<pre><code>0m4.852s
+</code></pre>
+
+<p>Time is both cases is the same. It turns out that it&rsquo;s worth to choose the first one. It looks nicer and cleaner, and it&rsquo;s as fast as &ldquo;by pointer&rdquo;.</p>
+
+<p>There are two explanations. The first, probably the main one, is <a href="http://en.wikipedia.org/wiki/Return_value_optimization">RVO, Return value optimization</a>. In RVO the compiler figures out that the local instance of the vector is supposed to be a return value, and it allocates it directly in the caller context. So it doesn&rsquo;t need to copy it afterwards. In fact, the compiler implements passing by reference, but it does it implicitly, without spoiling the beauty of the source code. This trick works for any classes, not only from STL.</p>
+
+<p>But the optimization isn&rsquo;t guaranteed thing, and there is one more tool. The standard STL containers are implemented such way that even on deep copying they only copy by value a small control structure, and the payload is &ldquo;moved&rdquo; by flipping pointers. It&rsquo;s small overhead, but perhaps it&rsquo;s worthwhile for the sake of preserving the code clarity.</p>
+
+<p>Also in the context of move semantics in C++11 there won&rsquo;t be unnecessary copying at all if the class is &ldquo;properly&rdquo; implemented (which is true for STL classes).</p>
+
+<p>Conclusion: use STL containers where ever possible and trust the compiler. Sometimes, of course, the compiler is wrong, but such cases are much less than vice versa.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Dustin Boswell, Trevor Foucher, &#34;The art of readable code&#34;]]></title>

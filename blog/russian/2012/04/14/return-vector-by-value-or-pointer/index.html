@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Как вернуть vector из функции: по значению или по ссылке?</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!
+" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Как вернуть vector из функции: по значению или по ссылке?</h1>
+<div id="post">
+  <p>Есть функция, создающая каким-то определенным образом экземпляр <code>vector</code>. Вопрос: как вернуть этот экземпляр вызывающему?</p>
+
+<p>Правильное с точки зрения логики и стройности программы выглядит так:</p>
+
+<div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">create_vector</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+  <span class="n">v</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mh">0xDEADC0DE</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">v</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Тут экземпляр вектора возвращается <em>по значению</em>, что означает потенциальное глубокое копирование локального объекта в контекст вызывающей функции. Сразу возникает сомнение: а что, если вектор огромен - его ж надо будет побайтно перекладывать из одного места в другое? Гораздо &ldquo;разумнее&rdquo; было бы написать:</p>
+
+<div class="highlight"><pre><span class="kt">void</span> <span class="n">create_vector</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;*</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">v</span><span class="o">-&gt;</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mh">0xDEADC0DE</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Тут вектор передается по указателю, и стопроцентно ненужного полного копирования не будет. Но такой код выглядит откровенно плохо.</p>
+
+<p>Сравним скорости работы на векторе длиной 100MB. Например, на компиляторе:</p>
+
+<pre><code>Apple clang version 3.1 (tags/Apple/clang-318.0.45) (based on LLVM 3.1svn)
+Target: x86_64-apple-darwin11.3.0
+</code></pre>
+
+<p>По значению:</p>
+
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;vector&gt;</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">__attribute__</span><span class="p">((</span><span class="n">noinline</span><span class="p">))</span>
+<span class="n">create_vector</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;by value&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+  <span class="n">v</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mh">0xDEADC0DE</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">v</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">create_vector</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mh">0xDEADC0DE</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Test is rubbish&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span> 
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Запускаем:</p>
+
+<pre><code>clang++ -O3 -o by_value by_value.cpp &amp;&amp; time ./by_value
+</code></pre>
+
+<p>Результат:</p>
+
+<pre><code>0m4.933s
+</code></pre>
+
+<p>Теперь по указателю:</p>
+
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<span class="cp">#include &lt;vector&gt;</span>
+
+<span class="kt">void</span> <span class="n">__attribute__</span><span class="p">((</span><span class="n">noinline</span><span class="p">))</span>
+<span class="n">create_vector</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;*</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;by pointer&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">v</span><span class="o">-&gt;</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mh">0xDEADC0DE</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">100</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
+    <span class="n">create_vector</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mh">0xDEADC0DE</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Test is rubbish&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span> 
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Запускаем:</p>
+
+<pre><code>clang++ -O3 -o by_pointer by_pointer.cpp &amp;&amp; time ./by_pointer
+</code></pre>
+
+<p>Результат:</p>
+
+<pre><code>0m4.852s
+</code></pre>
+
+<p>Время в обоих случаях одинаково. Получается, что стоит выбрать первый, &ldquo;красивый&rdquo; вариант.</p>
+
+<p>Объяснений тут два. Первый, и возможно самый важный - это <a href="http://en.wikipedia.org/wiki/Return_value_optimization">RVO, Return value optimization</a>. Это когда компилятор догадывается, что создаваемый локальный экземпляр вектора предназначен для возврата из функции, и сразу создает его в контексте вызывающего кода, чтобы потом не копировать туда. Фактически компилятор реализует передачу по ссылке, но неявно, не портя красоту исходного кода. Данный трюк будет работать для любого класса, не обязательно класса из STL.</p>
+
+<p>Но оптимизация - это негарантированная вещь. Но тут есть еще одно подспорье. Стандартные контейнеры STL реализованы так, что при даже при глубоком копировании фактически копируется только небольшая управляющая структура, а сами данные, размещенные в куче, просто перебрасываются указателем, без их фактического перемещения. Тут, конечно, будет небольшое дополнительное копирование, но оно минимально, и возможно на него стоит пойти ради сохранения красивого кода.</p>
+
+<p>Ну а в контексте C++11, где есть семантика перемещения, вообще не будет лишних копирований, если класс &ldquo;правильно&rdquo; реализован (что верно для классов из STL).</p>
+
+<p>Мораль: используйте по возможности контейнеры из STL и оставьте оптимизацию компилятору. Иногда, конечно, компилятор ошибается, но таких случаев гораздо меньше, чем наоборот.</p>
+
+</div>
+
+<hr />
+
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/04/14/return-vector-by-value-or-pointer/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/04/14/return-vector-by-value-or-pointer/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
