@@ -13,8 +13,20 @@ run:
 server:
 	go run server.go&
 
+filter-updated:
+	git status | grep "modified:   ../" | cut -d ' ' -f 4 | xargs -I {} $(cmd) {}
+  
 updated-public:
-	git status | grep "modified:   ../" | cut -d ' ' -f 4 | xargs -I {} echo {}
-
+	$(MAKE) filter-updated cmd=echo
+  
 revert-updated-public:
-	git status | grep "modified:   ../" | cut -d ' ' -f 4 | xargs -I {} git checkout {}
+	$(MAKE) filter-updated cmd="git checkout"
+
+init: init-go init-ruby
+  
+init-go:
+	source ~/.gvm/scripts/gvm && gvm use weekly
+    
+init-ruby:
+	rvm_is_not_a_shell_function=0 rvm use 1.9.2
+
