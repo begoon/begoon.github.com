@@ -49,35 +49,36 @@
 
 <p>Вот пример &ldquo;не очень хорошей программы&rdquo;:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
- <span class="n">A</span><span class="p">()</span> <span class="p">{</span>
-  <span class="kt">char</span><span class="o">*</span> <span class="n">__p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-  <span class="n">__p</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<pre class="hl">
+<span class="hl kwc">class</span> A <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+ <span class="hl kwd">A</span><span class="hl opt">() {</span>
+  <span class="hl kwb">char</span><span class="hl opt">*</span> __p <span class="hl opt">=</span> <span class="hl kwa">new</span> <span class="hl kwb">char</span><span class="hl opt">[</span><span class="hl num">10</span><span class="hl opt">];</span>
+  __p <span class="hl opt">=</span> <span class="hl kwa">new</span> <span class="hl kwb">char</span><span class="hl opt">[</span><span class="hl num">10</span><span class="hl opt">];</span>
 
-  <span class="kt">char</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="mi">0</span><span class="p">;</span>
-  <span class="o">*</span><span class="n">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="hl kwb">char</span><span class="hl opt">*</span> a <span class="hl opt">= (</span><span class="hl kwb">char</span> <span class="hl opt">*)</span><span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl opt">*</span>a <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
 
-  <span class="kt">char</span> <span class="n">c</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
-  <span class="n">c</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
- <span class="p">}</span>
- <span class="o">~</span><span class="n">A</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">delete</span> <span class="n">__p</span><span class="p">;</span>
+  <span class="hl kwb">char</span> c<span class="hl opt">[</span><span class="hl num">10</span><span class="hl opt">];</span>
+  c<span class="hl opt">[</span><span class="hl num">10</span><span class="hl opt">] =</span> <span class="hl num">0</span><span class="hl opt">;</span>
+ <span class="hl opt">}</span>
+ <span class="hl opt">~</span><span class="hl kwd">A</span><span class="hl opt">() {</span>
+  <span class="hl kwa">delete</span> __p<span class="hl opt">;</span>
 
-  <span class="kt">char</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="mi">100</span><span class="p">];</span>
-  <span class="k">return</span><span class="p">;</span>
+  <span class="hl kwb">char</span><span class="hl opt">*</span> a <span class="hl opt">=</span> <span class="hl kwa">new</span> <span class="hl kwb">char</span><span class="hl opt">[</span><span class="hl num">100</span><span class="hl opt">];</span>
+  <span class="hl kwa">return</span><span class="hl opt">;</span>
 
-  <span class="k">delete</span><span class="p">[]</span> <span class="n">a</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-  <span class="kt">char</span><span class="o">*</span> <span class="n">__p</span><span class="p">;</span>
-<span class="p">};</span>
+  <span class="hl kwa">delete</span><span class="hl opt">[]</span> a<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+<span class="hl kwc">private</span><span class="hl opt">:</span>
+  <span class="hl kwb">char</span><span class="hl opt">*</span> __p<span class="hl opt">;</span>
+<span class="hl opt">};</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">A</span> <span class="n">a</span><span class="p">;</span>  
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  A a<span class="hl opt">;</span>  
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Тут без микроскопа видно, что проблем полно:</p>
 

@@ -43,17 +43,18 @@
 <div id="post">
   <p>Рассмотрим программу:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;string.h&gt;</span>
-<span class="cp">#include &lt;stdio.h&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;string.h&gt;</span>
+<span class="hl ppc">#include &lt;stdio.h&gt;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="kt">char</span> <span class="n">b</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
-  <span class="n">strcpy</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="s">&quot;123456789012345&quot;</span><span class="p">);</span>
-  <span class="n">strcpy</span><span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;[%s]</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwb">char</span> b<span class="hl opt">[</span><span class="hl num">32</span><span class="hl opt">];</span>
+  <span class="hl kwd">strcpy</span><span class="hl opt">(</span>b<span class="hl opt">,</span> <span class="hl str">&quot;123456789012345&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwd">strcpy</span><span class="hl opt">(</span>b <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">,</span> b<span class="hl opt">);</span>
+  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;[%s]</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> b<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Тут ясно видна проблема - строки, передаваемые в <code>strcpy()</code>, перекрываются.</p>
 

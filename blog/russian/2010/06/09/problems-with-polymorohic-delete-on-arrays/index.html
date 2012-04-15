@@ -43,26 +43,27 @@
 <div id="post">
   <p>Имеем следующий код:</p>
 
-<div class="highlight"><pre><span class="cp">#define T 2</span>
+<pre class="hl">
+<span class="hl ppc">#define T 2</span>
 
-<span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
-  <span class="k">public</span><span class="o">:</span>
-    <span class="k">virtual</span> <span class="o">~</span><span class="n">A</span><span class="p">()</span> <span class="p">{</span> 
-      <span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="kt">int</span> <span class="n">p</span><span class="p">;</span>
-<span class="p">};</span>
+<span class="hl kwc">class</span> A <span class="hl opt">{</span>
+  <span class="hl kwc">public</span><span class="hl opt">:</span>
+    <span class="hl kwc">virtual</span> <span class="hl opt">~</span><span class="hl kwd">A</span><span class="hl opt">() {</span> 
+      p <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+    <span class="hl opt">}</span>
+    <span class="hl kwb">int</span> p<span class="hl opt">;</span>
+<span class="hl opt">};</span>
 
-<span class="k">class</span> <span class="nc">B</span><span class="o">:</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
-<span class="p">};</span>
+<span class="hl kwc">class</span> B<span class="hl opt">:</span> <span class="hl kwc">public</span> A <span class="hl opt">{</span>
+  <span class="hl kwb">int</span> a<span class="hl opt">;</span>
+<span class="hl opt">};</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">A</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">B</span><span class="p">[</span><span class="n">T</span><span class="p">];</span>
-  <span class="k">delete</span><span class="p">[]</span> <span class="n">a</span><span class="p">;</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  A<span class="hl opt">*</span> a <span class="hl opt">=</span> <span class="hl kwa">new</span> B<span class="hl opt">[</span>T<span class="hl opt">];</span>
+  <span class="hl kwa">delete</span><span class="hl opt">[]</span> a<span class="hl opt">;</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>У меня эта программа однозначно падает с <code>Segmentation fault</code> на строке <code>delete[] a</code>. Проверено на Sun C++ на Солярисе, GCC на Линуксе и на FreeBSD. Вот, например, что происходит на BSD:</p>
 

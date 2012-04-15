@@ -30,3 +30,8 @@ init-go:
 init-ruby:
 	rvm_is_not_a_shell_function=0 rvm use 1.9.2
 
+code-css:
+	highlight --style-outfile=_site/css/highlight.css --print-style \
+	--font Menlo,Monaco,\"Andale\ Mono\",\"lucida\ console\",\"Courier\ New\",monospace
+	cat _site/css/highlight.css
+

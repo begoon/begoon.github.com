@@ -45,22 +45,23 @@
 
 <p>Если элементов множества немного, а именно - их количество умещается в разрядную сетку вашего компьютера, например, не более 32-х или 64-х, то есть элегантный способ организовать перебор следующим образом:</p>
 
-<div class="highlight"><pre><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span> <span class="c1">// Исходное множество</span>
+<pre class="hl">
+vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> <span class="hl kwd">v</span><span class="hl opt">(</span><span class="hl num">20</span><span class="hl opt">);</span> <span class="hl slc">// Исходное множество</span>
 
-<span class="c1">// Всего вариантов будет: 2^(v.size())-1.</span>
-<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">());</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">((</span><span class="n">i</span> <span class="o">&gt;&gt;</span> <span class="n">j</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span>
-      <span class="n">left</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
-    <span class="k">else</span>
-      <span class="n">right</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
-  <span class="p">}</span>
+<span class="hl slc">// Всего вариантов будет: 2^(v.size())-1.</span>
+<span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span> i <span class="hl opt">&lt; (</span><span class="hl num">1</span> <span class="hl opt">&lt;&lt;</span> v<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">()); ++</span>i<span class="hl opt">) {</span>
+  vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> left<span class="hl opt">,</span> right<span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> j <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> j <span class="hl opt">&lt;</span> v<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">(); ++</span>j<span class="hl opt">) {</span>
+    <span class="hl kwa">if</span> <span class="hl opt">((</span>i <span class="hl opt">&gt;&gt;</span> j<span class="hl opt">) &amp;</span> <span class="hl num">1</span><span class="hl opt">)</span>
+      left<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span>v<span class="hl opt">[</span>j<span class="hl opt">]);</span>
+    <span class="hl kwa">else</span>
+      right<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span>v<span class="hl opt">[</span>j<span class="hl opt">]);</span>
+  <span class="hl opt">}</span>
 
-  <span class="c1">// Текущий вариант множеств left и right готов для обработки.</span>
-  <span class="p">...</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl slc">// Текущий вариант множеств left и right готов для обработки.</span>
+  <span class="hl opt">...</span>
+<span class="hl opt">}</span>
+</pre>
 
 </div>
 

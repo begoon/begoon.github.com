@@ -45,11 +45,12 @@
 
 <p>Файл <code>main.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="o">*</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="mi">0</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl opt">*(</span><span class="hl kwb">char</span> <span class="hl opt">*)</span><span class="hl num">0</span> <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>В UNIX&rsquo;е самым вероятным исходом будет сообщение:</p>
 
@@ -88,69 +89,70 @@
 
 <p>Файл <code>coredump.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;windows.h&gt;</span>
-<span class="cp">#include &lt;dbghelp.h&gt;   </span>
-<span class="cp">#include &lt;stdio.h&gt;       </span><span class="c1">// _snprintf</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;windows.h&gt;</span>
+<span class="hl ppc">#include &lt;dbghelp.h&gt;   </span>
+<span class="hl ppc">#include &lt;stdio.h&gt;</span>       <span class="hl slc">// _snprintf</span>
+<span class="hl ppc"></span>
+<span class="hl slc">// Наш обработчик непойманного исключения.</span>
+<span class="hl kwb">static</span> LONG WINAPI <span class="hl kwd">ExceptionFilter</span><span class="hl opt">(</span>EXCEPTION_POINTERS<span class="hl opt">*</span> ExceptionInfo<span class="hl opt">);</span>
 
-<span class="c1">// Наш обработчик непойманного исключения.</span>
-<span class="k">static</span> <span class="n">LONG</span> <span class="n">WINAPI</span> <span class="n">ExceptionFilter</span><span class="p">(</span><span class="n">EXCEPTION_POINTERS</span><span class="o">*</span> <span class="n">ExceptionInfo</span><span class="p">);</span>
+<span class="hl slc">// Статический экземпляр переменной, конструктор которой</span>
+<span class="hl slc">// вызывается до начала функции main().</span>
+<span class="hl kwb">static struct</span> CoredumpInitializer <span class="hl opt">{</span>
+  <span class="hl kwd">CoredumpInitializer</span><span class="hl opt">() {</span>
+    <span class="hl kwd">SetUnhandledExceptionFilter</span><span class="hl opt">(&amp;</span>ExceptionFilter<span class="hl opt">);</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">}</span> coredumpInitializer<span class="hl opt">;</span>
 
-<span class="c1">// Статический экземпляр переменной, конструктор которой</span>
-<span class="c1">// вызывается до начала функции main().</span>
-<span class="k">static</span> <span class="k">struct</span> <span class="n">CoredumpInitializer</span> <span class="p">{</span>
-  <span class="n">CoredumpInitializer</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">SetUnhandledExceptionFilter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ExceptionFilter</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">}</span> <span class="n">coredumpInitializer</span><span class="p">;</span>
+LONG WINAPI <span class="hl kwd">ExceptionFilter</span><span class="hl opt">(</span>EXCEPTION_POINTERS<span class="hl opt">*</span> ExceptionInfo<span class="hl opt">) {</span>
+  <span class="hl kwb">char</span> fname<span class="hl opt">[</span>_MAX_PATH<span class="hl opt">];</span>
 
-<span class="n">LONG</span> <span class="n">WINAPI</span> <span class="n">ExceptionFilter</span><span class="p">(</span><span class="n">EXCEPTION_POINTERS</span><span class="o">*</span> <span class="n">ExceptionInfo</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kt">char</span> <span class="n">fname</span><span class="p">[</span><span class="n">_MAX_PATH</span><span class="p">];</span>
+  SYSTEMTIME st<span class="hl opt">;</span>
+  <span class="hl kwd">GetLocalTime</span><span class="hl opt">(&amp;</span>st<span class="hl opt">);</span>
 
-  <span class="n">SYSTEMTIME</span> <span class="n">st</span><span class="p">;</span>
-  <span class="n">GetLocalTime</span><span class="p">(</span><span class="o">&amp;</span><span class="n">st</span><span class="p">);</span>
+  HANDLE proc <span class="hl opt">=</span> <span class="hl kwd">GetCurrentProcess</span><span class="hl opt">();</span>
 
-  <span class="n">HANDLE</span> <span class="n">proc</span> <span class="o">=</span> <span class="n">GetCurrentProcess</span><span class="p">();</span>
+  <span class="hl slc">// Формируем имя для coredump'а.</span>
+  <span class="hl kwd">_snprintf</span><span class="hl opt">(</span>
+    fname<span class="hl opt">,</span> _MAX_PATH<span class="hl opt">,</span> 
+    <span class="hl str">&quot;coredump-%ld-%ld-%04d%02d%02d%02d%02d%02d%03d.dmp&quot;</span><span class="hl opt">,</span> 
+    <span class="hl kwd">GetProcessId</span><span class="hl opt">(</span>proc<span class="hl opt">),</span> <span class="hl kwd">GetCurrentThreadId</span><span class="hl opt">(),</span>
+    st<span class="hl opt">.</span>wYear<span class="hl opt">,</span> st<span class="hl opt">.</span>wMonth<span class="hl opt">,</span> st<span class="hl opt">.</span>wDay<span class="hl opt">,</span> 
+    st<span class="hl opt">.</span>wHour<span class="hl opt">,</span> st<span class="hl opt">.</span>wMinute<span class="hl opt">,</span> st<span class="hl opt">.</span>wSecond<span class="hl opt">,</span> st<span class="hl opt">.</span>wMilliseconds
+  <span class="hl opt">);</span>
 
-  <span class="c1">// Формируем имя для coredump&#39;а.</span>
-  <span class="n">_snprintf</span><span class="p">(</span>
-    <span class="n">fname</span><span class="p">,</span> <span class="n">_MAX_PATH</span><span class="p">,</span> 
-    <span class="s">&quot;coredump-%ld-%ld-%04d%02d%02d%02d%02d%02d%03d.dmp&quot;</span><span class="p">,</span> 
-    <span class="n">GetProcessId</span><span class="p">(</span><span class="n">proc</span><span class="p">),</span> <span class="n">GetCurrentThreadId</span><span class="p">(),</span>
-    <span class="n">st</span><span class="p">.</span><span class="n">wYear</span><span class="p">,</span> <span class="n">st</span><span class="p">.</span><span class="n">wMonth</span><span class="p">,</span> <span class="n">st</span><span class="p">.</span><span class="n">wDay</span><span class="p">,</span> 
-    <span class="n">st</span><span class="p">.</span><span class="n">wHour</span><span class="p">,</span> <span class="n">st</span><span class="p">.</span><span class="n">wMinute</span><span class="p">,</span> <span class="n">st</span><span class="p">.</span><span class="n">wSecond</span><span class="p">,</span> <span class="n">st</span><span class="p">.</span><span class="n">wMilliseconds</span>
-  <span class="p">);</span>
+  <span class="hl slc">// Открываем файл.</span>
+  HANDLE file <span class="hl opt">=</span> <span class="hl kwd">CreateFile</span><span class="hl opt">(</span>
+    fname<span class="hl opt">,</span>
+    GENERIC_READ<span class="hl opt">|</span>GENERIC_WRITE<span class="hl opt">,</span> 
+    FILE_SHARE_READ<span class="hl opt">,</span>
+    NULL<span class="hl opt">,</span>
+    CREATE_ALWAYS<span class="hl opt">,</span>
+    FILE_ATTRIBUTE_NORMAL<span class="hl opt">,</span> 
+    NULL
+  <span class="hl opt">);</span>
 
-  <span class="c1">// Открываем файл.</span>
-  <span class="n">HANDLE</span> <span class="n">file</span> <span class="o">=</span> <span class="n">CreateFile</span><span class="p">(</span>
-    <span class="n">fname</span><span class="p">,</span>
-    <span class="n">GENERIC_READ</span><span class="o">|</span><span class="n">GENERIC_WRITE</span><span class="p">,</span> 
-    <span class="n">FILE_SHARE_READ</span><span class="p">,</span>
-    <span class="nb">NULL</span><span class="p">,</span>
-    <span class="n">CREATE_ALWAYS</span><span class="p">,</span>
-    <span class="n">FILE_ATTRIBUTE_NORMAL</span><span class="p">,</span> 
-    <span class="nb">NULL</span>
-  <span class="p">);</span>
+  MINIDUMP_EXCEPTION_INFORMATION info<span class="hl opt">;</span>
+  info<span class="hl opt">.</span>ExceptionPointers <span class="hl opt">=</span> ExceptionInfo<span class="hl opt">;</span>
+  info<span class="hl opt">.</span>ThreadId <span class="hl opt">=</span> <span class="hl kwd">GetCurrentThreadId</span><span class="hl opt">();</span>
+  info<span class="hl opt">.</span>ClientPointers <span class="hl opt">=</span> NULL<span class="hl opt">;</span>
 
-  <span class="n">MINIDUMP_EXCEPTION_INFORMATION</span> <span class="n">info</span><span class="p">;</span>
-  <span class="n">info</span><span class="p">.</span><span class="n">ExceptionPointers</span> <span class="o">=</span> <span class="n">ExceptionInfo</span><span class="p">;</span>
-  <span class="n">info</span><span class="p">.</span><span class="n">ThreadId</span> <span class="o">=</span> <span class="n">GetCurrentThreadId</span><span class="p">();</span>
-  <span class="n">info</span><span class="p">.</span><span class="n">ClientPointers</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+  <span class="hl slc">// Собственно, сбрасываем образ памяти в файл.</span>
+  <span class="hl kwd">MiniDumpWriteDump</span><span class="hl opt">(</span>
+    proc<span class="hl opt">,</span>
+    <span class="hl kwd">GetProcessId</span><span class="hl opt">(</span>proc<span class="hl opt">),</span>
+    file<span class="hl opt">,</span>
+    MiniDumpWithFullMemory<span class="hl opt">,</span>
+    ExceptionInfo ? <span class="hl opt">&amp;</span>info <span class="hl opt">:</span> NULL<span class="hl opt">,</span>
+    NULL<span class="hl opt">,</span> NULL
+  <span class="hl opt">);</span>
 
-  <span class="c1">// Собственно, сбрасываем образ памяти в файл.</span>
-  <span class="n">MiniDumpWriteDump</span><span class="p">(</span>
-    <span class="n">proc</span><span class="p">,</span>
-    <span class="n">GetProcessId</span><span class="p">(</span><span class="n">proc</span><span class="p">),</span>
-    <span class="n">file</span><span class="p">,</span>
-    <span class="n">MiniDumpWithFullMemory</span><span class="p">,</span>
-    <span class="n">ExceptionInfo</span> <span class="o">?</span> <span class="o">&amp;</span><span class="n">info</span> <span class="o">:</span> <span class="nb">NULL</span><span class="p">,</span>
-    <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span>
-  <span class="p">);</span>
+  <span class="hl kwd">CloseHandle</span><span class="hl opt">(</span>file<span class="hl opt">);</span>
 
-  <span class="n">CloseHandle</span><span class="p">(</span><span class="n">file</span><span class="p">);</span>
-
-  <span class="k">return</span> <span class="n">EXCEPTION_CONTINUE_SEARCH</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwa">return</span> EXCEPTION_CONTINUE_SEARCH<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Данный модуль создает статический объект <code>coredumpInitializer</code>, конструктор которого вызывается до функции <code>main()</code>. Конструктор устанавливает специальный обработчик для системных исключений, в котором в файл и записывается образ памяти текущего процесса при возникновении системных ошибок. Имя файла содержит идентификатор процесса, идентификатор потока и текущее время. Этот файл можно открыть в Visual Studio просто запустив его, либо в самой студии в меню <code>File-&gt;Open-&gt;Project/Solution</code> выбрать этот файл, указав его тип как <code>Dump files</code>. Далее надо запустить программу через отладчик, нажав <code>F5</code>, и отладчик остановится на месте возникновения ошибки. Естественно, для работы на уровне исходного текста необходимо наличие файла с расширением .PDB, содержащего символьную информацию, в том каталоге, где расположен ваш coredump файл. Файл с раширением .PDB обычно создается при компиляции с включенной отладочной информацией, например, при использования ключа <code>/Zi</code>.</p>
 

@@ -45,72 +45,74 @@
 
 <p>Например, вот вариант, который я написал где-то за полчаса:</p>
 
-<div class="highlight"><pre><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">queens_classic</span><span class="p">).</span>
-<span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">solve</span><span class="o">/</span><span class="mi">0</span><span class="p">]).</span>
+<pre class="hl">
+<span class="hl opt">-</span><span class="hl kwd">module</span><span class="hl opt">(</span>queens_classic<span class="hl opt">).</span>
+<span class="hl opt">-</span><span class="hl kwd">export</span><span class="hl opt">([</span>solve<span class="hl opt">/</span><span class="hl num">0</span><span class="hl opt">]).</span>
 
-<span class="nf">solve</span><span class="p">()</span> <span class="o">-&gt;</span>
-    <span class="n">solve</span><span class="p">(</span><span class="nn">lists</span><span class="p">:</span><span class="n">seq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="nn">lists</span><span class="p">:</span><span class="n">seq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">15</span> <span class="o">+</span> <span class="mi">15</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[]).</span>
+<span class="hl kwd">solve</span><span class="hl opt">() -&gt;</span>
+    <span class="hl kwd">solve</span><span class="hl opt">(</span><span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">seq</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">8</span><span class="hl opt">),</span> <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">seq</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">15</span> <span class="hl opt">+</span> <span class="hl num">15</span><span class="hl opt">),</span> <span class="hl num">1</span><span class="hl opt">, []).</span>
 
-<span class="nf">print_board</span><span class="p">([])</span> <span class="o">-&gt;</span> <span class="nn">io</span><span class="p">:</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[]);</span>
-<span class="nf">print_board</span><span class="p">([</span><span class="nv">H</span><span class="p">|</span><span class="nv">T</span><span class="p">])</span> <span class="o">-&gt;</span>
-    <span class="nv">Line</span> <span class="o">=</span> <span class="p">[</span><span class="nn">string</span><span class="p">:</span><span class="n">copies</span><span class="p">(</span><span class="s">&quot;. &quot;</span><span class="p">,</span> <span class="nv">H</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="s">&quot;@ &quot;</span><span class="p">,</span> <span class="nn">string</span><span class="p">:</span><span class="n">copies</span><span class="p">(</span><span class="s">&quot;. &quot;</span><span class="p">,</span> <span class="mi">8</span> <span class="o">-</span> <span class="nv">H</span><span class="p">)],</span>
-    <span class="nn">io</span><span class="p">:</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~s~n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Line</span><span class="p">]),</span>
-    <span class="n">print_board</span><span class="p">(</span><span class="nv">T</span><span class="p">).</span>
+<span class="hl kwd">print_board</span><span class="hl opt">([]) -&gt;</span> <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~n&quot;</span><span class="hl opt">, []);</span>
+<span class="hl kwd">print_board</span><span class="hl opt">([</span>H|T<span class="hl opt">]) -&gt;</span>
+    Line <span class="hl opt">= [</span><span class="hl kwc">string</span><span class="hl opt">:</span><span class="hl kwd">copies</span><span class="hl opt">(</span><span class="hl str">&quot;. &quot;</span><span class="hl opt">,</span> H <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">),</span> <span class="hl str">&quot;&#64; &quot;</span><span class="hl opt">,</span> <span class="hl kwc">string</span><span class="hl opt">:</span><span class="hl kwd">copies</span><span class="hl opt">(</span><span class="hl str">&quot;. &quot;</span><span class="hl opt">,</span> <span class="hl num">8</span> <span class="hl opt">-</span> H<span class="hl opt">)],</span>
+    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~s~n&quot;</span><span class="hl opt">, [</span>Line<span class="hl opt">]),</span>
+    <span class="hl kwd">print_board</span><span class="hl opt">(</span>T<span class="hl opt">).</span>
 
-<span class="nf">solve</span><span class="p">(_,</span> <span class="p">_,</span> <span class="nv">Cols</span><span class="p">,</span> <span class="nv">Result</span><span class="p">)</span> <span class="k">when</span> <span class="nv">Cols</span> <span class="o">&gt;</span> <span class="mi">8</span> <span class="o">-&gt;</span>
-    <span class="nn">io</span><span class="p">:</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~p~n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Result</span><span class="p">]),</span>
-    <span class="n">print_board</span><span class="p">(</span><span class="nv">Result</span><span class="p">);</span>
+<span class="hl kwd">solve</span><span class="hl opt">(</span>_<span class="hl opt">,</span> _<span class="hl opt">,</span> Cols<span class="hl opt">,</span> Result<span class="hl opt">)</span> <span class="hl kwa">when</span> Cols <span class="hl opt">&gt;</span> <span class="hl num">8</span> <span class="hl opt">-&gt;</span>
+    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~p~n&quot;</span><span class="hl opt">, [</span>Result<span class="hl opt">]),</span>
+    <span class="hl kwd">print_board</span><span class="hl opt">(</span>Result<span class="hl opt">);</span>
 
-<span class="nf">solve</span><span class="p">(</span><span class="nv">Rows</span><span class="p">,</span> <span class="nv">Diags</span><span class="p">,</span> <span class="nv">Col</span><span class="p">,</span> <span class="nv">Result</span><span class="p">)</span> <span class="o">-&gt;</span>
-    <span class="nn">lists</span><span class="p">:</span><span class="n">foreach</span><span class="p">(</span><span class="k">fun</span><span class="p">(</span><span class="nv">Row</span><span class="p">)</span> <span class="o">-&gt;</span>
-                     <span class="nv">D1</span> <span class="o">=</span> <span class="nv">Row</span> <span class="o">+</span> <span class="nv">Col</span><span class="p">,</span>
-                     <span class="nv">D2</span> <span class="o">=</span> <span class="nv">Row</span> <span class="o">-</span> <span class="nv">Col</span> <span class="o">+</span> <span class="mi">8</span> <span class="o">+</span> <span class="mi">15</span><span class="p">,</span>
-                     <span class="nv">T</span> <span class="o">=</span> <span class="nn">lists</span><span class="p">:</span><span class="n">member</span><span class="p">(</span><span class="nv">Row</span><span class="p">,</span> <span class="nv">Rows</span><span class="p">)</span> <span class="ow">andalso</span>
-                         <span class="nn">lists</span><span class="p">:</span><span class="n">member</span><span class="p">(</span><span class="nv">D1</span><span class="p">,</span> <span class="nv">Diags</span><span class="p">)</span> <span class="ow">andalso</span>
-                         <span class="nn">lists</span><span class="p">:</span><span class="n">member</span><span class="p">(</span><span class="nv">D2</span><span class="p">,</span> <span class="nv">Diags</span><span class="p">),</span>
-                     <span class="k">if</span> <span class="nv">T</span> <span class="o">-&gt;</span>
-                         <span class="nv">Rows1</span> <span class="o">=</span> <span class="nv">Rows</span> <span class="o">--</span> <span class="p">[</span><span class="nv">Row</span><span class="p">],</span>
-                         <span class="nv">Diags1</span> <span class="o">=</span> <span class="nv">Diags</span> <span class="o">--</span> <span class="p">[</span><span class="nv">D1</span><span class="p">,</span> <span class="nv">D2</span><span class="p">],</span>
-                         <span class="n">solve</span><span class="p">(</span><span class="nv">Rows1</span><span class="p">,</span> <span class="nv">Diags1</span><span class="p">,</span> <span class="nv">Col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="nv">Row</span> <span class="p">|</span> <span class="nv">Result</span><span class="p">]);</span>
-                        <span class="n">true</span> <span class="o">-&gt;</span> <span class="n">void</span>
-                     <span class="k">end</span>
-                  <span class="k">end</span><span class="p">,</span> <span class="nv">Rows</span><span class="p">).</span>
-</pre></div>
+<span class="hl kwd">solve</span><span class="hl opt">(</span>Rows<span class="hl opt">,</span> Diags<span class="hl opt">,</span> Col<span class="hl opt">,</span> Result<span class="hl opt">) -&gt;</span>
+    <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">foreach</span><span class="hl opt">(</span><span class="hl kwa">fun</span><span class="hl opt">(</span>Row<span class="hl opt">) -&gt;</span>
+                     D1 <span class="hl opt">=</span> Row <span class="hl opt">+</span> Col<span class="hl opt">,</span>
+                     D2 <span class="hl opt">=</span> Row <span class="hl opt">-</span> Col <span class="hl opt">+</span> <span class="hl num">8</span> <span class="hl opt">+</span> <span class="hl num">15</span><span class="hl opt">,</span>
+                     T <span class="hl opt">=</span> <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">member</span><span class="hl opt">(</span>Row<span class="hl opt">,</span> Rows<span class="hl opt">)</span> andalso
+                         <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">member</span><span class="hl opt">(</span>D1<span class="hl opt">,</span> Diags<span class="hl opt">)</span> andalso
+                         <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">member</span><span class="hl opt">(</span>D2<span class="hl opt">,</span> Diags<span class="hl opt">),</span>
+                     <span class="hl kwa">if</span> T <span class="hl opt">-&gt;</span>
+                         Rows1 <span class="hl opt">=</span> Rows <span class="hl opt">-- [</span>Row<span class="hl opt">],</span>
+                         Diags1 <span class="hl opt">=</span> Diags <span class="hl opt">-- [</span>D1<span class="hl opt">,</span> D2<span class="hl opt">],</span>
+                         <span class="hl kwd">solve</span><span class="hl opt">(</span>Rows1<span class="hl opt">,</span> Diags1<span class="hl opt">,</span> Col <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">, [</span>Row | Result<span class="hl opt">]);</span>
+                        true <span class="hl opt">-&gt;</span> void
+                     <span class="hl kwa">end</span>
+                  <span class="hl kwa">end</span><span class="hl opt">,</span> Rows<span class="hl opt">).</span>
+</pre>
 
 <p>Выглядит ужасно, и стиль однозначно понятно какой: C/Python на стероидах (циклы, if&rsquo;ы).</p>
 
 <p>А вот над этим вариантом я провозился несколько часов:</p>
 
-<div class="highlight"><pre><span class="p">-</span><span class="ni">module</span><span class="p">(</span><span class="n">queens</span><span class="p">).</span>
-<span class="p">-</span><span class="ni">export</span><span class="p">([</span><span class="n">solve</span><span class="o">/</span><span class="mi">0</span><span class="p">]).</span>
+<pre class="hl">
+<span class="hl opt">-</span><span class="hl kwd">module</span><span class="hl opt">(</span>queens<span class="hl opt">).</span>
+<span class="hl opt">-</span><span class="hl kwd">export</span><span class="hl opt">([</span>solve<span class="hl opt">/</span><span class="hl num">0</span><span class="hl opt">]).</span>
 
-<span class="nf">solve</span><span class="p">()</span> <span class="o">-&gt;</span>
-    <span class="n">solve</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[]).</span>
+<span class="hl kwd">solve</span><span class="hl opt">() -&gt;</span>
+    <span class="hl kwd">solve</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">, []).</span>
 
-<span class="nf">print_board</span><span class="p">([])</span> <span class="o">-&gt;</span> <span class="nn">io</span><span class="p">:</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[]);</span>
-<span class="nf">print_board</span><span class="p">([{_</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">}|</span><span class="nv">T</span><span class="p">])</span> <span class="o">-&gt;</span>
-    <span class="nv">Line</span> <span class="o">=</span> <span class="p">[</span><span class="nn">string</span><span class="p">:</span><span class="n">copies</span><span class="p">(</span><span class="s">&quot;. &quot;</span><span class="p">,</span> <span class="nv">Y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="s">&quot;@ &quot;</span><span class="p">,</span> <span class="nn">string</span><span class="p">:</span><span class="n">copies</span><span class="p">(</span><span class="s">&quot;. &quot;</span><span class="p">,</span> <span class="mi">8</span> <span class="o">-</span> <span class="nv">Y</span><span class="p">)],</span>
-    <span class="nn">io</span><span class="p">:</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~s~n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Line</span><span class="p">]),</span>
-    <span class="n">print_board</span><span class="p">(</span><span class="nv">T</span><span class="p">).</span>
+<span class="hl kwd">print_board</span><span class="hl opt">([]) -&gt;</span> <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~n&quot;</span><span class="hl opt">, []);</span>
+<span class="hl kwd">print_board</span><span class="hl opt">([{</span>_X<span class="hl opt">,</span> Y<span class="hl opt">}</span>|T<span class="hl opt">]) -&gt;</span>
+    Line <span class="hl opt">= [</span><span class="hl kwc">string</span><span class="hl opt">:</span><span class="hl kwd">copies</span><span class="hl opt">(</span><span class="hl str">&quot;. &quot;</span><span class="hl opt">,</span> Y <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">),</span> <span class="hl str">&quot;&#64; &quot;</span><span class="hl opt">,</span> <span class="hl kwc">string</span><span class="hl opt">:</span><span class="hl kwd">copies</span><span class="hl opt">(</span><span class="hl str">&quot;. &quot;</span><span class="hl opt">,</span> <span class="hl num">8</span> <span class="hl opt">-</span> Y<span class="hl opt">)],</span>
+    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~s~n&quot;</span><span class="hl opt">, [</span>Line<span class="hl opt">]),</span>
+    <span class="hl kwd">print_board</span><span class="hl opt">(</span>T<span class="hl opt">).</span>
 
-<span class="nf">solve</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Taken</span><span class="p">)</span> <span class="k">when</span> <span class="nv">X</span> <span class="o">&gt;</span> <span class="mi">8</span> <span class="o">-&gt;</span>
-    <span class="nn">io</span><span class="p">:</span><span class="n">format</span><span class="p">(</span><span class="s">&quot;</span><span class="si">~p~n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="nv">Taken</span><span class="p">]),</span>
-    <span class="n">print_board</span><span class="p">(</span><span class="nv">Taken</span><span class="p">);</span>
+<span class="hl kwd">solve</span><span class="hl opt">(</span>X<span class="hl opt">,</span> Taken<span class="hl opt">)</span> <span class="hl kwa">when</span> X <span class="hl opt">&gt;</span> <span class="hl num">8</span> <span class="hl opt">-&gt;</span>
+    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~p~n&quot;</span><span class="hl opt">, [</span>Taken<span class="hl opt">]),</span>
+    <span class="hl kwd">print_board</span><span class="hl opt">(</span>Taken<span class="hl opt">);</span>
 
-<span class="nf">solve</span><span class="p">(</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Taken</span><span class="p">)</span> <span class="o">-&gt;</span>
-    <span class="nv">L</span> <span class="o">=</span> <span class="p">[{</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">}</span> <span class="p">||</span> <span class="nv">Y</span> <span class="o">&lt;-</span> <span class="nn">lists</span><span class="p">:</span><span class="n">seq</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="ow">not</span> <span class="n">under_attack</span><span class="p">({</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">},</span> <span class="nv">Taken</span><span class="p">)],</span>
-    <span class="n">row</span><span class="p">(</span><span class="nv">L</span><span class="p">,</span> <span class="nv">Taken</span><span class="p">).</span>
+<span class="hl kwd">solve</span><span class="hl opt">(</span>X<span class="hl opt">,</span> Taken<span class="hl opt">) -&gt;</span>
+    L <span class="hl opt">= [{</span>X<span class="hl opt">,</span> Y<span class="hl opt">}</span> || Y <span class="hl opt">&lt;-</span> <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">seq</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">8</span><span class="hl opt">),</span> not <span class="hl kwd">under_attack</span><span class="hl opt">({</span>X<span class="hl opt">,</span> Y<span class="hl opt">},</span> Taken<span class="hl opt">)],</span>
+    <span class="hl kwd">row</span><span class="hl opt">(</span>L<span class="hl opt">,</span> Taken<span class="hl opt">).</span>
 
-<span class="nf">row</span><span class="p">([],</span> <span class="p">_)</span> <span class="o">-&gt;</span> <span class="p">[];</span>
-<span class="nf">row</span><span class="p">([{</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">}|</span><span class="nv">L</span><span class="p">],</span> <span class="nv">Taken</span><span class="p">)</span> <span class="o">-&gt;</span>
-    <span class="n">solve</span><span class="p">(</span><span class="nv">X</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[{</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">}</span> <span class="p">|</span> <span class="nv">Taken</span><span class="p">]),</span>
-    <span class="n">row</span><span class="p">(</span><span class="nv">L</span><span class="p">,</span> <span class="nv">Taken</span><span class="p">).</span>
+<span class="hl kwd">row</span><span class="hl opt">([],</span> _<span class="hl opt">) -&gt; [];</span>
+<span class="hl kwd">row</span><span class="hl opt">([{</span>X<span class="hl opt">,</span> Y<span class="hl opt">}</span>|L<span class="hl opt">],</span> Taken<span class="hl opt">) -&gt;</span>
+    <span class="hl kwd">solve</span><span class="hl opt">(</span>X <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">, [{</span>X<span class="hl opt">,</span> Y<span class="hl opt">}</span> | Taken<span class="hl opt">]),</span>
+    <span class="hl kwd">row</span><span class="hl opt">(</span>L<span class="hl opt">,</span> Taken<span class="hl opt">).</span>
 
-<span class="nf">under_attack</span><span class="p">(_,</span> <span class="p">[])</span> <span class="o">-&gt;</span> <span class="n">false</span><span class="p">;</span>
-<span class="nf">under_attack</span><span class="p">({</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">},</span> <span class="p">[{</span><span class="nv">Xt</span><span class="p">,</span> <span class="nv">Yt</span><span class="p">}|</span><span class="nv">L</span><span class="p">])</span> <span class="o">-&gt;</span>
-    <span class="nv">Y</span> <span class="o">==</span> <span class="nv">Yt</span> <span class="ow">orelse</span> <span class="nb">abs</span><span class="p">(</span><span class="nv">Y</span> <span class="o">-</span> <span class="nv">Yt</span><span class="p">)</span> <span class="o">==</span> <span class="nb">abs</span><span class="p">(</span><span class="nv">X</span> <span class="o">-</span> <span class="nv">Xt</span><span class="p">)</span> <span class="ow">orelse</span>
-    <span class="n">under_attack</span><span class="p">({</span><span class="nv">X</span><span class="p">,</span> <span class="nv">Y</span><span class="p">},</span> <span class="nv">L</span><span class="p">).</span>
-</pre></div>
+<span class="hl kwd">under_attack</span><span class="hl opt">(</span>_<span class="hl opt">, []) -&gt;</span> false<span class="hl opt">;</span>
+<span class="hl kwd">under_attack</span><span class="hl opt">({</span>X<span class="hl opt">,</span> Y<span class="hl opt">}, [{</span>Xt<span class="hl opt">,</span> Yt<span class="hl opt">}</span>|L<span class="hl opt">]) -&gt;</span>
+    Y <span class="hl opt">==</span> Yt orelse <span class="hl kwb">abs</span><span class="hl opt">(</span>Y <span class="hl opt">-</span> Yt<span class="hl opt">) ==</span> <span class="hl kwb">abs</span><span class="hl opt">(</span>X <span class="hl opt">-</span> Xt<span class="hl opt">)</span> orelse
+    <span class="hl kwd">under_attack</span><span class="hl opt">({</span>X<span class="hl opt">,</span> Y<span class="hl opt">},</span> L<span class="hl opt">).</span>
+</pre>
 
 <p>Вся работа со списками вручную без циклоподобных конструкций.</p>
 
@@ -143,19 +145,20 @@
 
 <p>На всякий случай Makefile для обоих вариантов:</p>
 
-<div class="highlight"><pre><span class="nv">target</span> <span class="o">=</span> queens
+<pre class="hl">
+target <span class="hl opt">=</span> queens
 
-all:
-    erlc <span class="k">$(</span>target<span class="k">)</span>.erl
-    erl -noshell -s <span class="k">$(</span>target<span class="k">)</span> solve -s init stop
+<span class="hl kwa">all</span><span class="hl opt">:</span>
+    erlc <span class="hl opt">$(</span>target<span class="hl opt">)</span>.erl
+    erl <span class="hl opt">-</span>noshell <span class="hl opt">-</span>s <span class="hl opt">$(</span>target<span class="hl opt">)</span> solve <span class="hl opt">-</span>s init stop
 
-classic:
-    erlc <span class="k">$(</span>target<span class="k">)</span>_classic.erl
-    erl -noshell -s <span class="k">$(</span>target<span class="k">)</span>_classic solve -s init stop
+classic<span class="hl opt">:</span>
+    erlc <span class="hl opt">$(</span>target<span class="hl opt">)</span>_classic.erl
+    erl <span class="hl opt">-</span>noshell <span class="hl opt">-</span>s <span class="hl opt">$(</span>target<span class="hl opt">)</span>_classic solve <span class="hl opt">-</span>s init stop
 
-clean:
-    -rm *.beam *.dump
-</pre></div>
+<span class="hl kwa">clean</span><span class="hl opt">:</span>
+    <span class="hl opt">-</span><span class="hl kwa">rm</span> <span class="hl opt">*</span>.beam <span class="hl opt">*</span>.dump
+</pre>
 
 </div>
 

@@ -43,23 +43,24 @@
 <div id="post">
   <p>Началось с того, что мне предложили взглянуть некий на &ldquo;интересный&rdquo; код. Там было что-то вроде:</p>
 
-<div class="highlight"><pre><span class="p">...</span>
-<span class="k">class</span> <span class="nc">A</span> <span class="p">{</span> <span class="k">virtual</span> <span class="kt">void</span> <span class="n">f</span><span class="p">()</span> <span class="p">{}</span> <span class="p">};</span>
-<span class="k">class</span> <span class="nc">B</span> <span class="p">{};</span>
+<pre class="hl">
+<span class="hl opt">...</span>
+<span class="hl kwc">class</span> A <span class="hl opt">{</span> <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">f</span><span class="hl opt">() {} };</span>
+<span class="hl kwc">class</span> B <span class="hl opt">{};</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">A</span> <span class="n">a</span><span class="p">;</span>
-  <span class="k">try</span> <span class="p">{</span>
-    <span class="n">B</span><span class="o">&amp;</span> <span class="n">b</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&amp;&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// ...</span>
-    <span class="p">}</span>
-  <span class="p">}</span> <span class="k">catch</span> <span class="p">(...)</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Got it!&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  A a<span class="hl opt">;</span>
+  <span class="hl kwa">try</span> <span class="hl opt">{</span>
+    B<span class="hl opt">&amp;</span> b <span class="hl opt">=</span> <span class="hl kwa">dynamic_cast</span><span class="hl opt">&lt;</span>B<span class="hl opt">&amp;&gt;(</span>a<span class="hl opt">);</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(&amp;</span>b <span class="hl opt">==</span> <span class="hl num">0</span><span class="hl opt">) {</span>
+      <span class="hl slc">// ...</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span> <span class="hl kwa">catch</span> <span class="hl opt">(...) {</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Got it!&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Я слегка выпал в осадок от уведенного, а в частности, от строки <code>if (&amp;b == 0) {</code>. До сего времени я пребывал в осознании факта, что ссылка в С++ либо существует и указывает на реальный объект, либо ее нет вообще. И если тут приведение типа к <code>B&amp;</code> не срабатывает, то будет исключение, и управление все равно улетит в другое место, и проверять как-либо <code>b</code> бессмысленно.</p>
 
@@ -69,9 +70,10 @@
 
 <p>Меня заинтересовал другой вопрос: как вообще ссылка может существовать отдельно от объекта. Оказывается, может:</p>
 
-<div class="highlight"><pre><span class="kt">int</span><span class="o">&amp;</span> <span class="n">a</span> <span class="o">=</span> <span class="o">*</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">)</span><span class="mi">0</span><span class="p">;</span>
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span> <span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">int</span><span class="hl opt">&amp;</span> a <span class="hl opt">= *(</span><span class="hl kwb">int</span><span class="hl opt">*)</span><span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span> a <span class="hl opt">=</span> <span class="hl num">123</span><span class="hl opt">; }</span>
+</pre>
 
 <p>Данный код прекрасно компилируется Студией (2010) и компилятором SUN (этот хоть предупреждение выдает), и также прекрасно падается при запуске по понятой причине.</p>
 

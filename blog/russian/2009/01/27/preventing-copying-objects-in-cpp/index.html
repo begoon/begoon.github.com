@@ -43,16 +43,17 @@
 <div id="post">
   <p>Внимательный читатель наверняка заметил в посте про <a href="/blog/russian/2009/01/26/universal-threads-for-windows-and-unix/">Универсальные потоки на С++ для Windows и UNIX</a> следующий фрагмент кода:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Thread</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="p">...</span>
-<span class="k">private</span><span class="o">:</span>
-  <span class="p">...</span>
-  <span class="c1">// Защита от случайного копирования объекта в C++</span>
-  <span class="n">Thread</span><span class="p">(</span><span class="k">const</span> <span class="n">Thread</span><span class="o">&amp;</span><span class="p">);</span>
-  <span class="kt">void</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Thread</span><span class="o">&amp;</span><span class="p">);</span>
-<span class="p">};</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> Thread <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl opt">...</span>
+<span class="hl kwc">private</span><span class="hl opt">:</span>
+  <span class="hl opt">...</span>
+  <span class="hl slc">// Защита от случайного копирования объекта в C++</span>
+  <span class="hl kwd">Thread</span><span class="hl opt">(</span><span class="hl kwb">const</span> Thread<span class="hl opt">&amp;);</span>
+  <span class="hl kwb">void</span> <span class="hl kwc">operator</span><span class="hl opt">=(</span><span class="hl kwb">const</span> Thread<span class="hl opt">&amp;);</span>
+<span class="hl opt">};</span>
+</pre>
 
 <p>Это определения конструктора копирования и перегруженого оператора присваивания. Причем непосредственно реализаций этих функций нигде нет, только определения. Вопрос: для чего все это?</p>
 
@@ -62,23 +63,24 @@
 
 <p>Лично я делаю так. У меня есть следующий файл (<code>ctorguard.h</code>):</p>
 
-<div class="highlight"><pre><span class="cp">#ifndef _EXT_CTOR_GUARD_H</span>
-<span class="cp">#define _EXT_CTOR_GUARD_H</span>
-<span class="cp">#define DISALLOW_COPY_AND_ASSIGN(TypeName) \</span>
-<span class="cp">  TypeName(const TypeName&amp;);               \</span>
-<span class="cp">  void operator=(const TypeName&amp;)</span>
-<span class="cp">#endif</span>
-<span class="err">Теперь</span> <span class="err">определение</span> <span class="err">класса</span> <span class="err">будет</span> <span class="err">выглядеть</span> <span class="err">так</span><span class="o">:</span>
-<span class="cp">#include &quot;ctorguard.h&quot;</span>
-<span class="k">class</span> <span class="nc">Thread</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="p">...</span>
-<span class="k">private</span><span class="o">:</span>
-  <span class="p">...</span>
-  <span class="c1">// Защита от случайного копирования объекта в C++</span>
-  <span class="n">DISALLOW_COPY_AND_ASSIGN</span><span class="p">(</span><span class="n">Thread</span><span class="p">);</span>
-<span class="p">};</span>
-</pre></div>
+<pre class="hl">
+<span class="hl ppc">#ifndef _EXT_CTOR_GUARD_H</span>
+<span class="hl ppc">#define _EXT_CTOR_GUARD_H</span>
+<span class="hl ppc">#define DISALLOW_COPY_AND_ASSIGN(TypeName) \</span>
+<span class="hl ppc">  TypeName(const TypeName&amp;);               \</span>
+<span class="hl ppc">  void operator=(const TypeName&amp;)</span>
+<span class="hl ppc">#endif</span>
+Теперь определение класса будет выглядеть так<span class="hl opt">:</span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;ctorguard.h&quot;</span><span class="hl ppc"></span>
+<span class="hl kwc">class</span> Thread <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl opt">...</span>
+<span class="hl kwc">private</span><span class="hl opt">:</span>
+  <span class="hl opt">...</span>
+  <span class="hl slc">// Защита от случайного копирования объекта в C++</span>
+  <span class="hl kwd">DISALLOW_COPY_AND_ASSIGN</span><span class="hl opt">(</span>Thread<span class="hl opt">);</span>
+<span class="hl opt">};</span>
+</pre>
 
 <p>Теперь вы надежно предохранены.</p>
 

@@ -42,19 +42,20 @@
 <div id="post">
   <p>How do you think what the code below should print out? I expected two numbers <code>115</code>.</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;cmath&gt;</span>
-<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;cmath&gt;</span>
+<span class="hl kwa">using namespace</span> std<span class="hl opt">;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="kt">double</span> <span class="n">f</span> <span class="o">=</span> <span class="mf">1.15</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">f</span> <span class="o">*</span> <span class="mf">100.0</span> <span class="o">+</span> <span class="mf">0.1E-9</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">f</span> <span class="o">*</span> <span class="mf">100.0</span><span class="p">;</span>
-  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;a = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-  <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;b = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">b</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwb">double</span> f <span class="hl opt">=</span> <span class="hl num">1.15</span><span class="hl opt">;</span>
+  <span class="hl kwb">int</span> a <span class="hl opt">=</span> f <span class="hl opt">*</span> <span class="hl num">100.0</span> <span class="hl opt">+</span> <span class="hl num">0.1E-9</span><span class="hl opt">;</span>
+  <span class="hl kwb">int</span> b <span class="hl opt">=</span> f <span class="hl opt">*</span> <span class="hl num">100.0</span><span class="hl opt">;</span>
+  cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;a = &quot;</span> <span class="hl opt">&lt;&lt;</span> a <span class="hl opt">&lt;&lt;</span> endl<span class="hl opt">;</span>
+  cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;b = &quot;</span> <span class="hl opt">&lt;&lt;</span> b <span class="hl opt">&lt;&lt;</span> endl<span class="hl opt">;</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>No, on VS2008 it prints out:</p>
 

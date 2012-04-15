@@ -48,25 +48,26 @@
 
 <p>Eventually I wrote a simple self-killing program:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;stdlib.h&gt;</span>
-<span class="cp">#include &lt;string.h&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;stdio.h&gt;</span>
+<span class="hl ppc">#include &lt;stdlib.h&gt;</span>
+<span class="hl ppc">#include &lt;string.h&gt;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="kt">char</span> <span class="n">cmd</span><span class="p">[</span><span class="mi">80</span><span class="p">];</span>
-  <span class="kt">int</span> <span class="n">r</span><span class="p">;</span>
-  <span class="n">sprintf</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="s">&quot;%s ?&quot;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">strlen</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="sc">&#39;1&#39;</span><span class="p">)</span>
-      <span class="o">*</span><span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="mi">0</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">exit</span><span class="p">(</span><span class="mh">0x77</span><span class="p">);</span>
-  <span class="p">}</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Normal: %08X</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">));</span>
-  <span class="n">cmd</span><span class="p">[</span><span class="n">strlen</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;1&#39;</span><span class="p">;</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;Crash : %08X</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">));</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwb">char</span> cmd<span class="hl opt">[</span><span class="hl num">80</span><span class="hl opt">];</span>
+  <span class="hl kwb">int</span> r<span class="hl opt">;</span>
+  <span class="hl kwd">sprintf</span><span class="hl opt">(</span>cmd<span class="hl opt">,</span> <span class="hl str">&quot;%s ?&quot;</span><span class="hl opt">,</span> argv<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]);</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>argc <span class="hl opt">&gt;</span> <span class="hl num">1</span><span class="hl opt">) {</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">][</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]) -</span> <span class="hl num">1</span><span class="hl opt">] ==</span> <span class="hl str">'1'</span><span class="hl opt">)</span>
+      <span class="hl opt">*(</span><span class="hl kwb">char</span> <span class="hl opt">*)</span><span class="hl num">0</span> <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+    <span class="hl kwd">exit</span><span class="hl opt">(</span><span class="hl num">0x77</span><span class="hl opt">);</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;Normal: %08X</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> <span class="hl kwd">system</span><span class="hl opt">(</span>cmd<span class="hl opt">));</span>
+  cmd<span class="hl opt">[</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>cmd<span class="hl opt">) -</span> <span class="hl num">1</span><span class="hl opt">] =</span> <span class="hl str">'1'</span><span class="hl opt">;</span>
+  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;Crash : %08X</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> <span class="hl kwd">system</span><span class="hl opt">(</span>cmd<span class="hl opt">));</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>And run it on different systems.</p>
 

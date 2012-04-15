@@ -56,136 +56,138 @@
 
 <p>Данные для поиска сделаны в виде &ldquo;наихудщего случая&rdquo;, когда сравнивать надо все до победного, и совпадение будет только с самом конце. Это должно вызвать явное квадратичное время у <code>naive_strstr()</code>.</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;vector&gt;</span>
-<span class="cp">#include &lt;cstdlib&gt;</span>
-<span class="cp">#include &lt;cstring&gt;</span>
-<span class="cp">#include &lt;cassert&gt;</span>
-<span class="cp">#include &lt;ctime&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;vector&gt;</span>
+<span class="hl ppc">#include &lt;cstdlib&gt;</span>
+<span class="hl ppc">#include &lt;cstring&gt;</span>
+<span class="hl ppc">#include &lt;cassert&gt;</span>
+<span class="hl ppc">#include &lt;ctime&gt;</span>
 
-<span class="kt">int</span> <span class="n">naive_strstr</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">needle</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">str_sz</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">strlen</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
-  <span class="kt">int</span> <span class="n">needle_sz</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">strlen</span><span class="p">(</span><span class="n">needle</span><span class="p">);</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str_sz</span> <span class="o">-</span> <span class="n">needle_sz</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">j</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">needle_sz</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">str</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">!=</span> <span class="n">needle</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
-        <span class="k">break</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">needle_sz</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">i</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="hl kwb">int</span> <span class="hl kwd">naive_strstr</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> str<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> needle<span class="hl opt">) {</span>
+  <span class="hl kwb">int</span> str_sz <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>str<span class="hl opt">);</span>
+  <span class="hl kwb">int</span> needle_sz <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>needle<span class="hl opt">);</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> str_sz <span class="hl opt">-</span> needle_sz <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    <span class="hl kwb">int</span> j<span class="hl opt">;</span>
+    <span class="hl kwa">for</span> <span class="hl opt">(</span>j <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> j <span class="hl opt">&lt;</span> needle_sz<span class="hl opt">; ++</span>j<span class="hl opt">)</span>
+      <span class="hl kwa">if</span> <span class="hl opt">(</span>str<span class="hl opt">[</span>i <span class="hl opt">+</span> j<span class="hl opt">] !=</span> needle<span class="hl opt">[</span>j<span class="hl opt">])</span>
+        <span class="hl kwa">break</span><span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>j <span class="hl opt">==</span> needle_sz<span class="hl opt">)</span>
+      <span class="hl kwa">return</span> i<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">return</span> <span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">kmp_strstr</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">needle</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">str_sz</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">strlen</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
-  <span class="kt">int</span> <span class="n">needle_sz</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">strlen</span><span class="p">(</span><span class="n">needle</span><span class="p">);</span>
+<span class="hl kwb">int</span> <span class="hl kwd">kmp_strstr</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> str<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> needle<span class="hl opt">) {</span>
+  <span class="hl kwb">int</span> str_sz <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>str<span class="hl opt">);</span>
+  <span class="hl kwb">int</span> needle_sz <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>needle<span class="hl opt">);</span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">prefix</span><span class="p">(</span><span class="n">needle_sz</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">needle_sz</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">prefix</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
-    <span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">needle</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">!=</span> <span class="n">needle</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-      <span class="n">j</span> <span class="o">=</span> <span class="n">prefix</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">needle</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">needle</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-      <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="n">prefix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">j</span><span class="p">;</span>
-  <span class="p">}</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> <span class="hl kwd">prefix</span><span class="hl opt">(</span>needle_sz<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">);</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> needle_sz<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    <span class="hl kwb">int</span> j <span class="hl opt">=</span> prefix<span class="hl opt">[</span>i <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">];</span>
+    <span class="hl kwa">while</span> <span class="hl opt">(</span>j <span class="hl opt">&gt;</span> <span class="hl num">0</span> <span class="hl opt">&amp;&amp;</span> needle<span class="hl opt">[</span>j<span class="hl opt">] !=</span> needle<span class="hl opt">[</span>i<span class="hl opt">])</span>
+      j <span class="hl opt">=</span> prefix<span class="hl opt">[</span>j <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">];</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>needle<span class="hl opt">[</span>j<span class="hl opt">] ==</span> needle<span class="hl opt">[</span>i<span class="hl opt">])</span>
+      j <span class="hl opt">+=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+    prefix<span class="hl opt">[</span>i<span class="hl opt">] =</span> j<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
 
-  <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">str_sz</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">while</span> <span class="p">(</span><span class="n">j</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">needle</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">!=</span> <span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-      <span class="n">j</span> <span class="o">=</span> <span class="n">prefix</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">];</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">needle</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">str</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-      <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">==</span> <span class="n">needle_sz</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">i</span> <span class="o">-</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="p">}</span>
+  <span class="hl kwb">int</span> j <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> str_sz<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    <span class="hl kwa">while</span> <span class="hl opt">(</span>j <span class="hl opt">&gt;</span> <span class="hl num">0</span> <span class="hl opt">&amp;&amp;</span> needle<span class="hl opt">[</span>j<span class="hl opt">] !=</span> str<span class="hl opt">[</span>i<span class="hl opt">])</span>
+      j <span class="hl opt">=</span> prefix<span class="hl opt">[</span>j <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">];</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>needle<span class="hl opt">[</span>j<span class="hl opt">] ==</span> str<span class="hl opt">[</span>i<span class="hl opt">])</span>
+      j <span class="hl opt">+=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>j <span class="hl opt">==</span> needle_sz<span class="hl opt">)</span>
+      <span class="hl kwa">return</span> i <span class="hl opt">-</span> j <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
 
-  <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-<span class="p">}</span>
+  <span class="hl kwa">return</span> <span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">:</span> <span class="mi">10</span><span class="o">*</span><span class="mi">1000</span><span class="o">*</span><span class="mi">1000</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">M</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">:</span> <span class="mi">1000</span><span class="p">;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwb">int</span> N <span class="hl opt">=</span> argc <span class="hl opt">&gt;</span> <span class="hl num">1</span> ? std<span class="hl opt">::</span><span class="hl kwd">atoi</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]) :</span> <span class="hl num">10</span><span class="hl opt">*</span><span class="hl num">1000</span><span class="hl opt">*</span><span class="hl num">1000</span><span class="hl opt">;</span>
+  <span class="hl kwb">int</span> M <span class="hl opt">=</span> argc <span class="hl opt">&gt;</span> <span class="hl num">2</span> ? std<span class="hl opt">::</span><span class="hl kwd">atoi</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">2</span><span class="hl opt">]) :</span> <span class="hl num">1000</span><span class="hl opt">;</span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="sc">&#39;a&#39;</span><span class="p">);</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">needle</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="sc">&#39;a&#39;</span><span class="p">);</span>
+  std<span class="hl opt">::</span>string <span class="hl kwd">str</span><span class="hl opt">(</span>N<span class="hl opt">,</span> <span class="hl str">'a'</span><span class="hl opt">);</span>
+  std<span class="hl opt">::</span>string <span class="hl kwd">needle</span><span class="hl opt">(</span>M<span class="hl opt">,</span> <span class="hl str">'a'</span><span class="hl opt">);</span>
 
-  <span class="c1">// Our needle is the last M characters of the string.</span>
-  <span class="n">str</span><span class="p">[</span><span class="n">str</span><span class="p">.</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="n">needle</span><span class="p">[</span><span class="n">needle</span><span class="p">.</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="hl slc">// Our needle is the last M characters of the string.</span>
+  str<span class="hl opt">[</span>str<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">() -</span> <span class="hl num">1</span><span class="hl opt">] +=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  needle<span class="hl opt">[</span>needle<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">() -</span> <span class="hl num">1</span><span class="hl opt">] +=</span> <span class="hl num">1</span><span class="hl opt">;</span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;N = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">N</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, M = &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">M</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;N = &quot;</span> <span class="hl opt">&lt;&lt;</span> N <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, M = &quot;</span> <span class="hl opt">&lt;&lt;</span> M <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
 
-  <span class="n">size_t</span> <span class="n">correct_position</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="n">needle</span><span class="p">.</span><span class="n">length</span><span class="p">();</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Correct position: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">correct_position</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="hl kwb">size_t</span> correct_position <span class="hl opt">=</span> str<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">() -</span> needle<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">();</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Correct position: &quot;</span> <span class="hl opt">&lt;&lt;</span> correct_position <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
 
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">str_p</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">c_str</span><span class="p">();</span>
-  <span class="n">assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strlen</span><span class="p">(</span><span class="n">str_p</span><span class="p">)</span> <span class="o">==</span> <span class="n">str</span><span class="p">.</span><span class="n">length</span><span class="p">());</span>
+  <span class="hl kwb">const char</span><span class="hl opt">*</span> str_p <span class="hl opt">=</span> str<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">();</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>str_p<span class="hl opt">) ==</span> str<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span>
 
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">needle_p</span> <span class="o">=</span> <span class="n">needle</span><span class="p">.</span><span class="n">c_str</span><span class="p">();</span>
-  <span class="n">assert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">strlen</span><span class="p">(</span><span class="n">needle_p</span><span class="p">)</span> <span class="o">==</span> <span class="n">needle</span><span class="p">.</span><span class="n">length</span><span class="p">());</span>
+  <span class="hl kwb">const char</span><span class="hl opt">*</span> needle_p <span class="hl opt">=</span> needle<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">();</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>needle_p<span class="hl opt">) ==</span> needle<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span>
 
-  <span class="n">time_t</span> <span class="n">started</span><span class="p">,</span> <span class="n">duration</span><span class="p">;</span>
-  <span class="n">size_t</span> <span class="n">i</span><span class="p">;</span>
+  <span class="hl kwb">time_t</span> started<span class="hl opt">,</span> duration<span class="hl opt">;</span>
+  <span class="hl kwb">size_t</span> i<span class="hl opt">;</span>
 
-  <span class="n">started</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-  <span class="n">i</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">needle</span><span class="p">);</span>
-  <span class="n">duration</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span> <span class="n">started</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;string::find(): &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, time &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">duration</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="n">assert</span><span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">correct_position</span><span class="p">);</span>
+  started <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">);</span>
+  i <span class="hl opt">=</span> str<span class="hl opt">.</span><span class="hl kwd">find</span><span class="hl opt">(</span>needle<span class="hl opt">);</span>
+  duration <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">)-</span> started<span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;string::find(): &quot;</span> <span class="hl opt">&lt;&lt;</span> i <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, time &quot;</span> <span class="hl opt">&lt;&lt;</span> duration <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>i <span class="hl opt">==</span> correct_position<span class="hl opt">);</span>
 
-  <span class="n">started</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">strstr</span><span class="p">(</span><span class="n">str_p</span><span class="p">,</span> <span class="n">needle_p</span><span class="p">);</span>
-  <span class="n">duration</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span> <span class="n">started</span><span class="p">;</span>
-  <span class="n">assert</span><span class="p">(</span><span class="n">p</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">);</span>
-  <span class="n">i</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="n">str_p</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;strstr()      : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, time &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">duration</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="n">assert</span><span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">correct_position</span><span class="p">);</span>
+  started <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">);</span>
+  <span class="hl kwb">const char</span><span class="hl opt">*</span> p <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">strstr</span><span class="hl opt">(</span>str_p<span class="hl opt">,</span> needle_p<span class="hl opt">);</span>
+  duration <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">)-</span> started<span class="hl opt">;</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>p <span class="hl opt">!=</span> NULL<span class="hl opt">);</span>
+  i <span class="hl opt">=</span> p <span class="hl opt">-</span> str_p<span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;strstr()      : &quot;</span> <span class="hl opt">&lt;&lt;</span> i <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, time &quot;</span> <span class="hl opt">&lt;&lt;</span> duration <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>i <span class="hl opt">==</span> correct_position<span class="hl opt">);</span>
 
-  <span class="n">started</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-  <span class="n">i</span> <span class="o">=</span> <span class="n">naive_strstr</span><span class="p">(</span><span class="n">str_p</span><span class="p">,</span> <span class="n">needle_p</span><span class="p">);</span>
-  <span class="n">duration</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span> <span class="n">started</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;naive_strstr(): &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, time &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">duration</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="n">assert</span><span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">correct_position</span><span class="p">);</span>
+  started <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">);</span>
+  i <span class="hl opt">=</span> <span class="hl kwd">naive_strstr</span><span class="hl opt">(</span>str_p<span class="hl opt">,</span> needle_p<span class="hl opt">);</span>
+  duration <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">)-</span> started<span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;naive_strstr(): &quot;</span> <span class="hl opt">&lt;&lt;</span> i <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, time &quot;</span> <span class="hl opt">&lt;&lt;</span> duration <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>i <span class="hl opt">==</span> correct_position<span class="hl opt">);</span>
 
-  <span class="n">started</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-  <span class="n">i</span> <span class="o">=</span> <span class="n">kmp_strstr</span><span class="p">(</span><span class="n">str_p</span><span class="p">,</span> <span class="n">needle_p</span><span class="p">);</span>
-  <span class="n">duration</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">time</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">-</span> <span class="n">started</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;kmp_strstr()  : &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, time &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">duration</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="n">assert</span><span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">correct_position</span><span class="p">);</span>
+  started <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">);</span>
+  i <span class="hl opt">=</span> <span class="hl kwd">kmp_strstr</span><span class="hl opt">(</span>str_p<span class="hl opt">,</span> needle_p<span class="hl opt">);</span>
+  duration <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">)-</span> started<span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;kmp_strstr()  : &quot;</span> <span class="hl opt">&lt;&lt;</span> i <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, time &quot;</span> <span class="hl opt">&lt;&lt;</span> duration <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>i <span class="hl opt">==</span> correct_position<span class="hl opt">);</span>
 
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Makefile:</p>
 
-<div class="highlight"><pre><span class="nf">all</span><span class="o">:</span>  <span class="m">do-32 do-64</span>
+<pre class="hl">
+<span class="hl kwa">all</span><span class="hl opt">:</span>  do-32 do-64
 
-<span class="nv">target</span> <span class="o">=</span> strstr_find
+target <span class="hl opt">=</span> strstr_find
 
-<span class="k">do</span>-32: build-32
-    <span class="k">$(</span>target<span class="k">)</span>
+do-32<span class="hl opt">:</span> build-32
+    <span class="hl opt">$(</span>target<span class="hl opt">)</span>
 
-<span class="k">do</span>-64: build-64
-    <span class="k">$(</span>target<span class="k">)</span>
+do-64<span class="hl opt">:</span> build-64
+    <span class="hl opt">$(</span>target<span class="hl opt">)</span>
 
-<span class="k">do</span>-build:
-    <span class="s2">&quot;%VS100COMNTOOLS%..\..\VC\vcvarsall.bat&quot;</span> <span class="k">$(</span>arch<span class="k">)</span> <span class="o">&amp;&amp;</span> cl /O2 /EHsc <span class="k">$(</span>target<span class="k">)</span>.cpp
+do-build<span class="hl opt">:</span>
+    <span class="hl str">&quot;%VS100COMNTOOLS%..\..\VC</span><span class="hl esc">\v</span><span class="hl str">cvarsall.bat&quot;</span> <span class="hl opt">$(</span>arch<span class="hl opt">) &amp;&amp;</span> cl <span class="hl opt">/</span>O2 <span class="hl opt">/</span>EHsc <span class="hl opt">$(</span>target<span class="hl opt">)</span>.<span class="hl kwa">cpp</span>
 
-build-32:
-    <span class="k">$(</span>MAKE<span class="k">)</span> <span class="k">do</span>-build <span class="nv">arch</span><span class="o">=</span>x86
+build-32<span class="hl opt">:</span>
+    <span class="hl opt">$(</span>MAKE<span class="hl opt">)</span> do-build arch<span class="hl opt">=</span>x86
 
-build-64:
-    <span class="k">$(</span>MAKE<span class="k">)</span> <span class="k">do</span>-build <span class="nv">arch</span><span class="o">=</span>amd64
+build-64<span class="hl opt">:</span>
+    <span class="hl opt">$(</span>MAKE<span class="hl opt">)</span> do-build arch<span class="hl opt">=</span>amd64
 
-run:
-    <span class="k">$(</span>target<span class="k">)</span>
+run<span class="hl opt">:</span>
+    <span class="hl opt">$(</span>target<span class="hl opt">)</span>
 
-clean:
-    -del *.exe *.ilk *.obj *.pdb *.suo
-</pre></div>
+<span class="hl kwa">clean</span><span class="hl opt">:</span>
+    <span class="hl opt">-</span>del <span class="hl opt">*</span>.exe <span class="hl opt">*</span>.ilk <span class="hl opt">*</span>.obj <span class="hl opt">*</span>.pdb <span class="hl opt">*</span>.suo
+</pre>
 
 <p>Запускаем на Visual Studio 2010 32-bit:</p>
 

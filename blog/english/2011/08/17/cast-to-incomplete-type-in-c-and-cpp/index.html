@@ -42,8 +42,9 @@
 <div id="post">
   <p>This compiles in C and C++ without any problems:</p>
 
-<div class="highlight"><pre><span class="kt">void</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">this_does_not_exist</span> <span class="o">*</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">void</span><span class="hl opt">*</span> p <span class="hl opt">= (</span><span class="hl kwb">struct</span> this_does_not_exist <span class="hl opt">*) -</span><span class="hl num">1</span><span class="hl opt">;</span>
+</pre>
 
 <p>Remove <code>struct</code>, compile as C++ and get an error:</p>
 
@@ -54,9 +55,10 @@ cast.cpp(1) : error C2059: syntax error : ')'
 
 <p>Adding a forward declaration:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">this_does_not_exist</span><span class="p">;</span>
-<span class="kt">void</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">this_does_not_exist</span> <span class="o">*</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> this_does_not_exist<span class="hl opt">;</span>
+<span class="hl kwb">void</span><span class="hl opt">*</span> p <span class="hl opt">= (</span>this_does_not_exist <span class="hl opt">*) -</span><span class="hl num">1</span><span class="hl opt">;</span>
+</pre>
 
 <p>And it again compiles cleanly.</p>
 

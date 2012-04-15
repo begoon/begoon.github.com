@@ -45,53 +45,54 @@
 
 <p><code>functor.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
 
-<span class="cp">#include &lt;algorithm&gt;</span>
+<span class="hl ppc">#include &lt;algorithm&gt;</span>
 
-<span class="k">typedef</span> <span class="kt">double</span> <span class="n">Type</span><span class="p">;</span>
+<span class="hl kwc">typedef</span> <span class="hl kwb">double</span> Type<span class="hl opt">;</span>
 
-<span class="n">Type</span><span class="o">*</span> <span class="n">array</span><span class="p">;</span>
-<span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">100000000</span><span class="p">;</span>
+Type<span class="hl opt">*</span> array<span class="hl opt">;</span>
+<span class="hl kwb">const int</span> N <span class="hl opt">=</span> <span class="hl num">100000000</span><span class="hl opt">;</span>
 
-<span class="kr">inline</span> <span class="kt">bool</span> <span class="n">less</span><span class="p">(</span><span class="n">Type</span> <span class="n">a1</span><span class="p">,</span> <span class="n">Type</span> <span class="n">a2</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="n">a1</span> <span class="o">&lt;</span> <span class="n">a2</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="hl kwc">inline</span> <span class="hl kwb">bool</span> <span class="hl kwd">less</span><span class="hl opt">(</span>Type a1<span class="hl opt">,</span> Type a2<span class="hl opt">) {</span>
+  <span class="hl kwa">return</span> a1 <span class="hl opt">&lt;</span> a2<span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="k">class</span> <span class="nc">Less</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="kr">inline</span> <span class="kt">bool</span> <span class="k">operator</span><span class="p">()(</span><span class="n">Type</span> <span class="n">a1</span><span class="p">,</span> <span class="n">Type</span> <span class="n">a2</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">a1</span> <span class="o">&lt;</span> <span class="n">a2</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+<span class="hl kwc">class</span> Less <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwc">inline</span> <span class="hl kwb">bool</span> <span class="hl kwc">operator</span><span class="hl opt">()(</span>Type a1<span class="hl opt">,</span> Type a2<span class="hl opt">) {</span>
+    <span class="hl kwa">return</span> a1 <span class="hl opt">&lt;</span> a2<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
 
-<span class="c1">// Использование встроенной функции сравнения.</span>
-<span class="n">TEST</span><span class="p">(</span><span class="n">Callback</span><span class="p">,</span> <span class="n">BuiltIn</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">array</span> <span class="o">+</span> <span class="n">N</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl slc">// Использование встроенной функции сравнения.</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>Callback<span class="hl opt">,</span> BuiltIn<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>array<span class="hl opt">,</span> array <span class="hl opt">+</span> N<span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="c1">// Использование свободной функции сравнения по указателю.</span>
-<span class="n">TEST</span><span class="p">(</span><span class="n">Callback</span><span class="p">,</span> <span class="n">Function</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">array</span> <span class="o">+</span> <span class="n">N</span><span class="p">,</span> <span class="n">less</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl slc">// Использование свободной функции сравнения по указателю.</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>Callback<span class="hl opt">,</span> Function<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>array<span class="hl opt">,</span> array <span class="hl opt">+</span> N<span class="hl opt">,</span> less<span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="c1">// Использование функтора.</span>
-<span class="n">TEST</span><span class="p">(</span><span class="n">Callback</span><span class="p">,</span> <span class="n">Functor</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">array</span> <span class="o">+</span> <span class="n">N</span><span class="p">,</span> <span class="n">Less</span><span class="p">());</span>
-<span class="p">}</span>
+<span class="hl slc">// Использование функтора.</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>Callback<span class="hl opt">,</span> Functor<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>array<span class="hl opt">,</span> array <span class="hl opt">+</span> N<span class="hl opt">,</span> <span class="hl kwd">Less</span><span class="hl opt">());</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="c1">// Создаем отсортированный массив.</span>
-  <span class="n">array</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Type</span><span class="p">[</span><span class="n">N</span><span class="p">];</span>
-  <span class="n">Type</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">array</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="o">*</span><span class="n">p</span><span class="o">++</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl slc">// Создаем отсортированный массив.</span>
+  array <span class="hl opt">=</span> <span class="hl kwa">new</span> Type<span class="hl opt">[</span>N<span class="hl opt">];</span>
+  Type<span class="hl opt">*</span> p <span class="hl opt">=</span> array<span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> N<span class="hl opt">; ++</span>i<span class="hl opt">) *</span>p<span class="hl opt">++ =</span> i<span class="hl opt">;</span>
 
-  <span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
-  <span class="c1">// Принудительно печатаем время работы тестов.</span>
-  <span class="n">testing</span><span class="o">::</span><span class="n">GTEST_FLAG</span><span class="p">(</span><span class="n">print_time</span><span class="p">)</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
+  testing<span class="hl opt">::</span><span class="hl kwd">InitGoogleTest</span><span class="hl opt">(&amp;</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
+  <span class="hl slc">// Принудительно печатаем время работы тестов.</span>
+  testing<span class="hl opt">::</span><span class="hl kwd">GTEST_FLAG</span><span class="hl opt">(</span>print_time<span class="hl opt">) =</span> <span class="hl kwa">true</span><span class="hl opt">;</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">RUN_ALL_TESTS</span><span class="hl opt">();</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Компилируем и запускаем (Visual Studio 2008):</p>
 

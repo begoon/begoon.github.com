@@ -47,24 +47,26 @@
 
 <p>Начав с известной нетленки для проверки условия <code>i &lt; 10</code>:</p>
 
-<div class="highlight"><pre><span class="kt">uint</span> <span class="n">i</span><span class="p">;</span>
-<span class="p">...</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">.</span><span class="n">ToString</span><span class="p">().</span><span class="n">Length</span> <span class="p">==</span> <span class="m">1</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="p">...</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">uint</span> i<span class="hl opt">;</span>
+<span class="hl opt">...</span>
+<span class="hl kwa">if</span> <span class="hl opt">(</span>i<span class="hl opt">.</span><span class="hl kwd">ToString</span><span class="hl opt">().</span>Length <span class="hl opt">==</span> <span class="hl num">1</span><span class="hl opt">)</span>
+<span class="hl opt">{</span>
+  <span class="hl opt">...</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>можно постепенно усиливать ощущения&hellip;</p>
 
-<div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str1</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str2</span><span class="p">;</span>
-<span class="p">...</span>
-<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">strcmp</span><span class="p">(</span><span class="n">str1</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">str2</span><span class="p">.</span><span class="n">c_str</span><span class="p">()))</span>
-<span class="p">{</span>
-   <span class="p">...</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+std<span class="hl opt">::</span>string str1<span class="hl opt">;</span>
+std<span class="hl opt">::</span>string str2<span class="hl opt">;</span>
+<span class="hl opt">...</span>
+<span class="hl kwa">if</span> <span class="hl opt">(!</span><span class="hl kwd">strcmp</span><span class="hl opt">(</span>str1<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">(),</span> str2<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">()))</span>
+<span class="hl opt">{</span>
+   <span class="hl opt">...</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>вставляя в код противопехотные мины&hellip;</p>
 
@@ -72,21 +74,24 @@
 
 <p>различного радиуса поражения&hellip;</p>
 
-<div class="highlight"><pre><span class="cp">#define bool BOOL</span>
-</pre></div>
+<pre class="hl">
+<span class="hl ppc">#define bool BOOL</span>
+</pre>
 
 <p>и убойной силы.</p>
 
-<div class="highlight"><pre><span class="cp">&lt;?</span>
-<span class="nb">define</span><span class="p">(</span> <span class="s2">&quot;FALSE&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">);</span>
-<span class="nb">define</span><span class="p">(</span> <span class="s2">&quot;TRUE&quot;</span><span class="p">,</span> <span class="mi">0</span> <span class="p">);</span>
-<span class="cp">?&gt;</span><span class="x"></span>
-</pre></div>
+<pre class="hl">
+<span class="hl opt">&lt;</span>?
+<span class="hl kwd">define</span><span class="hl opt">(</span> <span class="hl str">&quot;FALSE&quot;</span><span class="hl opt">, -</span><span class="hl num">1</span> <span class="hl opt">);</span>
+<span class="hl kwd">define</span><span class="hl opt">(</span> <span class="hl str">&quot;TRUE&quot;</span><span class="hl opt">,</span> <span class="hl num">0</span> <span class="hl opt">);</span>
+?<span class="hl opt">&gt;</span>
+</pre>
 
 <p>А вот это для настоящих гурманов и знатоков своего дела:</p>
 
-<div class="highlight"><pre><span class="cp">#define sizeof(x) rand()</span>
-</pre></div>
+<pre class="hl">
+<span class="hl ppc">#define sizeof(x) rand()</span>
+</pre>
 
 <p>После того, как вы, обойдя вашу систему ревизий кода, чтобы никто не заметил засады, добавили это в какой-нибудь тихий, но повсеместно используемый файл ваших коллег смело идите покурить. Не думаю, что удасться выкурить в тишине хотя бы одну сигарету.</p>
 

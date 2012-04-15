@@ -57,18 +57,21 @@
 
 <p>Кстати, как вы справляетесь вот с этим?</p>
 
-<div class="highlight"><pre><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> s<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">(); ++</span>i<span class="hl opt">)</span>
+</pre>
 
 <p>Убрать предупреждение о приведении <code>size_t</code> к <code>int</code> можно, изменив на:</p>
 
-<div class="highlight"><pre><span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">size_t</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> s<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">(); ++</span>i<span class="hl opt">)</span>
+</pre>
 
 <p>Но как быть с:</p>
 
-<div class="highlight"><pre><span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">s</span><span class="p">.</span><span class="n">length</span><span class="p">();</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="o">--</span><span class="n">i</span><span class="p">)</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> s<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">();</span> i <span class="hl opt">&gt;=</span> <span class="hl num">0</span><span class="hl opt">; --</span>i<span class="hl opt">)</span>
+</pre>
 
 <p>Тут уже на size_t не изменить и надо внучную писать <code>int i = static_cast&lt;int&gt;(s.length())</code>, что, конечно, плохо.</p>
 

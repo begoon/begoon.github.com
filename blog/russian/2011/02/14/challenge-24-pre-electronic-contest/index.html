@@ -47,39 +47,41 @@
 
 <p>Я по-пенсионерски попросился решать <a href="http://ch24.org/preec/html/R.html">R</a>. В итоге написал какой-то невообразимый велосипед на С++, которым таки получилось сделать играемый wav, прослушать сообщения и сдать задачу, и только потом, немного успокоившись, на питоне получилась короткая программа, делающая чистые 16-битные wav&rsquo;ы.</p>
 
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">wave</span><span class="o">,</span> <span class="nn">struct</span>
+<pre class="hl">
+<span class="hl kwa">import</span> wave<span class="hl opt">,</span> struct
 
-<span class="k">def</span> <span class="nf">make_soundfile</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
-    <span class="n">frate</span> <span class="o">=</span> <span class="mi">7000</span>
+<span class="hl kwa">def</span> <span class="hl kwd">make_soundfile</span><span class="hl opt">(</span>sample<span class="hl opt">,</span> freq<span class="hl opt">,</span> fname<span class="hl opt">):</span>
+    frate <span class="hl opt">=</span> <span class="hl num">7000</span>
 
-    <span class="n">data_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    data_size <span class="hl opt">=</span> <span class="hl kwb">len</span><span class="hl opt">(</span>sample<span class="hl opt">)</span>
 
-    <span class="n">sine_list</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sample</span><span class="p">:</span>
-        <span class="n">sine_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">32768</span><span class="p">)</span>
+    sine_list <span class="hl opt">= []</span>
+    <span class="hl kwa">for</span> x <span class="hl kwa">in</span> sample<span class="hl opt">:</span>
+        sine_list<span class="hl opt">.</span><span class="hl kwd">append</span><span class="hl opt">(</span><span class="hl kwb">float</span><span class="hl opt">(</span>x<span class="hl opt">) /</span> <span class="hl num">2</span> <span class="hl opt">*</span> <span class="hl num">32768</span><span class="hl opt">)</span>
 
-    <span class="n">wav_file</span> <span class="o">=</span> <span class="n">wave</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span> <span class="o">+</span> <span class="s">&quot;.wav&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">)</span>
+    wav_file <span class="hl opt">=</span> wave<span class="hl opt">.</span><span class="hl kwb">open</span><span class="hl opt">(</span>fname <span class="hl opt">+</span> <span class="hl str">&quot;.wav&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;w&quot;</span><span class="hl opt">)</span>
 
-    <span class="n">nchannels</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">sampwidth</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="n">framerate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">frate</span><span class="p">)</span>
-    <span class="n">nframes</span> <span class="o">=</span> <span class="n">data_size</span>
-    <span class="n">comptype</span> <span class="o">=</span> <span class="s">&quot;NONE&quot;</span>
-    <span class="n">compname</span> <span class="o">=</span> <span class="s">&quot;not compressed&quot;</span>
+    nchannels <span class="hl opt">=</span> <span class="hl num">1</span>
+    sampwidth <span class="hl opt">=</span> <span class="hl num">2</span>
+    framerate <span class="hl opt">=</span> <span class="hl kwb">int</span><span class="hl opt">(</span>frate<span class="hl opt">)</span>
+    nframes <span class="hl opt">=</span> data_size
+    comptype <span class="hl opt">=</span> <span class="hl str">&quot;NONE&quot;</span>
+    compname <span class="hl opt">=</span> <span class="hl str">&quot;not compressed&quot;</span>
 
-    <span class="n">wav_file</span><span class="o">.</span><span class="n">setparams</span><span class="p">((</span><span class="n">nchannels</span><span class="p">,</span> <span class="n">sampwidth</span><span class="p">,</span> <span class="n">framerate</span><span class="p">,</span> <span class="n">nframes</span><span class="p">,</span> <span class="n">comptype</span><span class="p">,</span> <span class="n">compname</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sine_list</span><span class="p">:</span>
-        <span class="n">wav_file</span><span class="o">.</span><span class="n">writeframes</span><span class="p">(</span><span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s">&#39;h&#39;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
-    <span class="n">wav_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    wav_file<span class="hl opt">.</span><span class="hl kwd">setparams</span><span class="hl opt">((</span>nchannels<span class="hl opt">,</span> sampwidth<span class="hl opt">,</span> framerate<span class="hl opt">,</span> nframes<span class="hl opt">,</span> comptype<span class="hl opt">,</span> compname<span class="hl opt">))</span>
+    <span class="hl kwa">for</span> s <span class="hl kwa">in</span> sine_list<span class="hl opt">:</span>
+        wav_file<span class="hl opt">.</span><span class="hl kwd">writeframes</span><span class="hl opt">(</span>struct<span class="hl opt">.</span><span class="hl kwd">pack</span><span class="hl opt">(</span><span class="hl str">'h'</span><span class="hl opt">,</span> <span class="hl kwb">int</span><span class="hl opt">(</span>s<span class="hl opt">)))</span>
+    wav_file<span class="hl opt">.</span><span class="hl kwd">close</span><span class="hl opt">()</span>
 
- <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
-    <span class="n">fname</span> <span class="o">=</span> <span class="s">&quot;test-</span><span class="si">%02d</span><span class="s">.tst&quot;</span> <span class="o">%</span> <span class="n">n</span>
-    <span class="k">print</span> <span class="n">fname</span>
-    <span class="n">sample</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-    <span class="n">sample</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-    <span class="n">freq</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
-    <span class="n">make_soundfile</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">freq</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
-</pre></div>
+ <span class="hl kwa">for</span> n <span class="hl kwa">in</span> <span class="hl kwb">range</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">11</span><span class="hl opt">):</span>
+    fname <span class="hl opt">=</span> <span class="hl str">&quot;test-%02d.tst&quot;</span> <span class="hl opt">%</span> n
+    <span class="hl kwa">print</span> fname
+    sample <span class="hl opt">=</span> <span class="hl kwb">open</span><span class="hl opt">(</span>fname<span class="hl opt">).</span><span class="hl kwd">readlines</span><span class="hl opt">()</span>
+    sample <span class="hl opt">=</span> sample<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">:]</span>
+    freq <span class="hl opt">=</span> <span class="hl kwb">len</span><span class="hl opt">(</span>sample<span class="hl opt">)</span>
+    <span class="hl kwd">make_soundfile</span><span class="hl opt">(</span>sample<span class="hl opt">,</span> freq<span class="hl opt">,</span> fname<span class="hl opt">)</span>
+
+</pre>
 
 <p>Конечно, авторское решение было еще проще.</p>
 

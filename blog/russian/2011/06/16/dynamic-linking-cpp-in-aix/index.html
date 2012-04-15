@@ -47,20 +47,21 @@
 
 <p>Файл <code>alib.cpp</code> компилируем как динамическую библиотеку.</p>
 
-<div class="highlight"><pre><span class="k">struct</span> <span class="n">A</span> <span class="p">{</span>
-  <span class="n">A</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">value_</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="kt">int</span> <span class="n">value_</span><span class="p">;</span>
-<span class="p">};</span>
+<pre class="hl">
+<span class="hl kwb">struct</span> A <span class="hl opt">{</span>
+  <span class="hl kwd">A</span><span class="hl opt">() {</span>
+    value_ <span class="hl opt">=</span> <span class="hl num">123</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwb">int</span> value_<span class="hl opt">;</span>
+<span class="hl opt">};</span>
 
-<span class="n">A</span> <span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">();</span>
+A a <span class="hl opt">=</span> <span class="hl kwd">A</span><span class="hl opt">();</span>
 
-<span class="k">extern</span> <span class="s">&quot;C&quot;</span>
-<span class="kt">int</span> <span class="n">value</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">value_</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwc">extern</span> <span class="hl str">&quot;C&quot;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">value</span><span class="hl opt">() {</span>
+  <span class="hl kwa">return</span> a<span class="hl opt">.</span>value_<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>В этой библиотеке создается статический объект класса <code>А</code>, и значение его поля возвращается функцией <code>value()</code>.</p>
 
@@ -73,12 +74,13 @@
 
 <p>Далее, файл <code>main.c</code>. Это головной модуль на <code>С</code>, который вызывает функцию <code>value()</code>.</p>
 
-<div class="highlight"><pre><span class="k">extern</span> <span class="kt">int</span> <span class="n">value</span><span class="p">();</span>
+<pre class="hl">
+<span class="hl kwc">extern</span> <span class="hl kwb">int</span> <span class="hl kwd">value</span><span class="hl opt">();</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="n">value</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">value</span><span class="hl opt">();</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Этот модуль вызывает <code>value()</code>, и значение становится кодом возврата процесса.</p>
 
@@ -115,15 +117,16 @@
 
 <p>Можно принудительно заставить таки систему вызвать конструкторы статических объектов, написав что-то вроде:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;dlfcn.h&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;dlfcn.h&gt;</span>
 
-<span class="k">static</span> <span class="kt">int</span> <span class="n">module_initialised</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="k">static</span> <span class="kt">void</span> <span class="n">ManualInitilizationForStatics</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">module_initialised</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
-  <span class="n">dlopen</span><span class="p">(</span><span class="s">&quot;blah.so&quot;</span><span class="p">,</span> <span class="n">RTLD_NOW</span><span class="p">);</span>
-  <span class="n">module_initialised</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">static int</span> module_initialised <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl kwb">static void</span> <span class="hl kwd">ManualInitilizationForStatics</span><span class="hl opt">() {</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>module_initialised<span class="hl opt">)</span> <span class="hl kwa">return</span><span class="hl opt">;</span>
+  <span class="hl kwd">dlopen</span><span class="hl opt">(</span><span class="hl str">&quot;blah.so&quot;</span><span class="hl opt">,</span> RTLD_NOW<span class="hl opt">);</span>
+  module_initialised <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Но это не программирование, а ерзанье.</p>
 

@@ -48,17 +48,18 @@
 
 <p>For example, the standard output of the trivial test (file <code>runner.cpp</code>):</p>
 
-<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
 
-<span class="n">TEST</span><span class="p">(</span><span class="n">One</span><span class="p">,</span> <span class="n">Simple</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>One<span class="hl opt">,</span> Simple<span class="hl opt">) {</span>
+  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
-  <span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
-  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">**</span> argv<span class="hl opt">) {</span>
+  <span class="hl opt">::</span>testing<span class="hl opt">::</span><span class="hl kwd">InitGoogleTest</span><span class="hl opt">(&amp;</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">RUN_ALL_TESTS</span><span class="hl opt">();</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>is</p>
 
@@ -82,53 +83,54 @@ Expected: 1
 
 <p>To customize the output we have to implement our own event listener (for instance, file <code>runner.cpp)</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
 
-<span class="k">using</span> <span class="k">namespace</span> <span class="o">::</span><span class="n">testing</span><span class="p">;</span>
+<span class="hl kwa">using namespace</span> <span class="hl opt">::</span>testing<span class="hl opt">;</span>
 
-<span class="c1">// Our own event listener.</span>
-<span class="k">class</span> <span class="nc">LaconicPrinter</span> <span class="o">:</span> <span class="k">public</span> <span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">EmptyTestEventListener</span> <span class="p">{</span>
-  <span class="c1">// Called before a test starts.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestStart</span><span class="p">(</span><span class="k">const</span> <span class="n">TestInfo</span><span class="o">&amp;</span> <span class="n">test_info</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;*** Test %s.%s starting.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-           <span class="n">test_info</span><span class="p">.</span><span class="n">test_case_name</span><span class="p">(),</span> <span class="n">test_info</span><span class="p">.</span><span class="n">name</span><span class="p">());</span>
-  <span class="p">}</span>
+<span class="hl slc">// Our own event listener.</span>
+<span class="hl kwc">class</span> LaconicPrinter <span class="hl opt">:</span> <span class="hl kwc">public</span> <span class="hl opt">::</span>testing<span class="hl opt">::</span>EmptyTestEventListener <span class="hl opt">{</span>
+  <span class="hl slc">// Called before a test starts.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestStart</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestInfo<span class="hl opt">&amp;</span> test_info<span class="hl opt">) {</span>
+    <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;*** Test %s.%s starting.</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span>
+           test_info<span class="hl opt">.</span><span class="hl kwd">test_case_name</span><span class="hl opt">(),</span> test_info<span class="hl opt">.</span><span class="hl kwd">name</span><span class="hl opt">());</span>
+  <span class="hl opt">}</span>
 
-  <span class="c1">// Called when an assert fails or SUCCESS gets called.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestPartResult</span><span class="p">(</span><span class="k">const</span> <span class="n">TestPartResult</span><span class="o">&amp;</span> <span class="n">test_part_result</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s in %s:%d</span><span class="se">\n</span><span class="s">%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-           <span class="n">test_part_result</span><span class="p">.</span><span class="n">failed</span><span class="p">()</span> <span class="o">?</span> <span class="s">&quot;*** Failure&quot;</span> <span class="o">:</span> <span class="s">&quot;Success&quot;</span><span class="p">,</span>
-           <span class="n">test_part_result</span><span class="p">.</span><span class="n">file_name</span><span class="p">(),</span>
-           <span class="n">test_part_result</span><span class="p">.</span><span class="n">line_number</span><span class="p">(),</span>
-           <span class="n">test_part_result</span><span class="p">.</span><span class="n">summary</span><span class="p">());</span>
-  <span class="p">}</span>
+  <span class="hl slc">// Called when an assert fails or SUCCESS gets called.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestPartResult</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestPartResult<span class="hl opt">&amp;</span> test_part_result<span class="hl opt">) {</span>
+    <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%s in %s:%d</span><span class="hl esc">\n</span><span class="hl str">%s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span>
+           test_part_result<span class="hl opt">.</span><span class="hl kwd">failed</span><span class="hl opt">()</span> ? <span class="hl str">&quot;*** Failure&quot;</span> <span class="hl opt">:</span> <span class="hl str">&quot;Success&quot;</span><span class="hl opt">,</span>
+           test_part_result<span class="hl opt">.</span><span class="hl kwd">file_name</span><span class="hl opt">(),</span>
+           test_part_result<span class="hl opt">.</span><span class="hl kwd">line_number</span><span class="hl opt">(),</span>
+           test_part_result<span class="hl opt">.</span><span class="hl kwd">summary</span><span class="hl opt">());</span>
+  <span class="hl opt">}</span>
 
-  <span class="c1">// Called after a test finishes.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestEnd</span><span class="p">(</span><span class="k">const</span> <span class="n">TestInfo</span><span class="o">&amp;</span> <span class="n">test_info</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;*** Test %s.%s ending.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-           <span class="n">test_info</span><span class="p">.</span><span class="n">test_case_name</span><span class="p">(),</span> <span class="n">test_info</span><span class="p">.</span><span class="n">name</span><span class="p">());</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+  <span class="hl slc">// Called after a test finishes.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestEnd</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestInfo<span class="hl opt">&amp;</span> test_info<span class="hl opt">) {</span>
+    <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;*** Test %s.%s ending.</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span>
+           test_info<span class="hl opt">.</span><span class="hl kwd">test_case_name</span><span class="hl opt">(),</span> test_info<span class="hl opt">.</span><span class="hl kwd">name</span><span class="hl opt">());</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
 
-<span class="n">TEST</span><span class="p">(</span><span class="n">One</span><span class="p">,</span> <span class="n">Simple</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>One<span class="hl opt">,</span> Simple<span class="hl opt">) {</span>
+  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
-  <span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">**</span> argv<span class="hl opt">) {</span>
+  <span class="hl opt">::</span>testing<span class="hl opt">::</span><span class="hl kwd">InitGoogleTest</span><span class="hl opt">(&amp;</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
 
-  <span class="c1">// Obtain the reference to the active listeners.</span>
-  <span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">TestEventListeners</span><span class="o">&amp;</span> <span class="n">listeners</span> <span class="o">=</span>
-      <span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">UnitTest</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">listeners</span><span class="p">();</span>
+  <span class="hl slc">// Obtain the reference to the active listeners.</span>
+  <span class="hl opt">::</span>testing<span class="hl opt">::</span>TestEventListeners<span class="hl opt">&amp;</span> listeners <span class="hl opt">=</span>
+      <span class="hl opt">::</span>testing<span class="hl opt">::</span>UnitTest<span class="hl opt">::</span><span class="hl kwd">GetInstance</span><span class="hl opt">()-&gt;</span><span class="hl kwd">listeners</span><span class="hl opt">();</span>
 
-  <span class="c1">// Delete the default event listener.</span>
-  <span class="k">delete</span> <span class="n">listeners</span><span class="p">.</span><span class="n">Release</span><span class="p">(</span><span class="n">listeners</span><span class="p">.</span><span class="n">default_result_printer</span><span class="p">());</span>
-  <span class="c1">// Add our LaconicPrinter listener. Google Test will take care about it.</span>
-  <span class="n">listeners</span><span class="p">.</span><span class="n">Append</span><span class="p">(</span><span class="k">new</span> <span class="n">LaconicPrinter</span><span class="p">);</span>
+  <span class="hl slc">// Delete the default event listener.</span>
+  <span class="hl kwa">delete</span> listeners<span class="hl opt">.</span><span class="hl kwd">Release</span><span class="hl opt">(</span>listeners<span class="hl opt">.</span><span class="hl kwd">default_result_printer</span><span class="hl opt">());</span>
+  <span class="hl slc">// Add our LaconicPrinter listener. Google Test will take care about it.</span>
+  listeners<span class="hl opt">.</span><span class="hl kwd">Append</span><span class="hl opt">(</span><span class="hl kwa">new</span> LaconicPrinter<span class="hl opt">);</span>
 
-  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwa">return</span> <span class="hl kwd">RUN_ALL_TESTS</span><span class="hl opt">();</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Now the output looks as:</p>
 
@@ -143,23 +145,24 @@ Expected: 1
 
 <p>In general the event listener interface has these methods:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">EmptyTestEventListener</span> <span class="o">:</span> <span class="k">public</span> <span class="n">TestEventListener</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestProgramStart</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">);</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestIterationStart</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">,</span> <span class="kt">int</span> <span class="n">iteration</span><span class="p">;</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnEnvironmentsSetUpStart</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">);</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnEnvironmentsSetUpEnd</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">);</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestCaseStart</span><span class="p">(</span><span class="k">const</span> <span class="n">TestCase</span><span class="o">&amp;</span> <span class="n">test_case</span><span class="p">);</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestStart</span><span class="p">(</span><span class="k">const</span> <span class="n">TestInfo</span><span class="o">&amp;</span> <span class="n">test_info</span><span class="p">);</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestPartResult</span><span class="p">(</span><span class="k">const</span> <span class="n">TestPartResult</span><span class="o">&amp;</span> <span class="n">test_part_result</span><span class="p">);</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestEnd</span><span class="p">(</span><span class="k">const</span> <span class="n">TestInfo</span><span class="o">&amp;</span> <span class="n">test_info</span><span class="p">);</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestCaseEnd</span><span class="p">(</span><span class="k">const</span> <span class="n">TestCase</span><span class="o">&amp;</span> <span class="n">test_case</span><span class="p">);</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnEnvironmentsTearDownStart</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">);</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnEnvironmentsTearDownEnd</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">);</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestIterationEnd</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">,</span> <span class="kt">int</span> <span class="n">iteration</span><span class="p">);</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestProgramEnd</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">);</span>
-<span class="p">};</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> EmptyTestEventListener <span class="hl opt">:</span> <span class="hl kwc">public</span> TestEventListener <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestProgramStart</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">);</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestIterationStart</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">,</span> <span class="hl kwb">int</span> iteration<span class="hl opt">;</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnEnvironmentsSetUpStart</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">);</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnEnvironmentsSetUpEnd</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">);</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestCaseStart</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestCase<span class="hl opt">&amp;</span> test_case<span class="hl opt">);</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestStart</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestInfo<span class="hl opt">&amp;</span> test_info<span class="hl opt">);</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestPartResult</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestPartResult<span class="hl opt">&amp;</span> test_part_result<span class="hl opt">);</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestEnd</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestInfo<span class="hl opt">&amp;</span> test_info<span class="hl opt">);</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestCaseEnd</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestCase<span class="hl opt">&amp;</span> test_case<span class="hl opt">);</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnEnvironmentsTearDownStart</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">);</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnEnvironmentsTearDownEnd</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">);</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestIterationEnd</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">,</span> <span class="hl kwb">int</span> iteration<span class="hl opt">);</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestProgramEnd</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">);</span>
+<span class="hl opt">};</span>
+</pre>
 
 <p>Also there is the brand new flag <code>--gtest_shuffle</code> allowing to run tests in a random order. Via <code>--gtest_random_seed=SEED</code> flag it becomes feasible to control the randomness of this order. If SEED is 0 the current time is used to initialize the random generator.</p>
 

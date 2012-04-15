@@ -45,33 +45,34 @@
 
 <p>Один из вопросов - это вопрос качества самой реализации <code>std::string</code>. Забавно, что большинство людей, которых я просил набросать прототип класса для строчек, более менее эффективного с точки зрения работы с памятью, писали примерно следующее:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="k">explicit</span> <span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> 
-    <span class="n">init</span><span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">value</span><span class="p">.</span><span class="n">length</span><span class="p">());</span> 
-  <span class="p">}</span>
-  <span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">init</span><span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">value</span><span class="p">.</span><span class="n">sz_</span><span class="p">);</span> <span class="p">}</span>
-  <span class="o">~</span><span class="n">String</span><span class="p">()</span> <span class="p">{</span> <span class="n">free</span><span class="p">(</span><span class="n">data_</span><span class="p">);</span> <span class="p">}</span>
+<pre class="hl">
+<span class="hl kwc">class</span> String <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwc">explicit</span> <span class="hl kwd">String</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span> 
+    <span class="hl kwd">init</span><span class="hl opt">(</span>value<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">(),</span> value<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span> 
+  <span class="hl opt">}</span>
+  <span class="hl kwd">String</span><span class="hl opt">(</span><span class="hl kwb">const</span> String<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span> <span class="hl kwd">init</span><span class="hl opt">(</span>value<span class="hl opt">.</span>data_<span class="hl opt">,</span> value<span class="hl opt">.</span>sz_<span class="hl opt">); }</span>
+  <span class="hl opt">~</span><span class="hl kwd">String</span><span class="hl opt">() {</span> <span class="hl kwd">free</span><span class="hl opt">(</span>data_<span class="hl opt">); }</span>
 
-  <span class="n">String</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="o">!=</span> <span class="o">&amp;</span><span class="n">value</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="n">sz_</span> <span class="o">&gt;</span> <span class="n">sz_</span><span class="p">)</span> <span class="n">data_</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">std</span><span class="o">::</span><span class="n">realloc</span><span class="p">(</span><span class="n">data_</span><span class="p">,</span> <span class="n">value</span><span class="p">.</span><span class="n">sz_</span><span class="p">);</span>
-      <span class="n">sz_</span> <span class="o">=</span> <span class="n">value</span><span class="p">.</span><span class="n">sz_</span><span class="p">;</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">memcpy</span><span class="p">(</span><span class="n">data_</span><span class="p">,</span> <span class="n">value</span><span class="p">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">sz_</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
-  <span class="p">}</span>
+  String<span class="hl opt">&amp;</span> <span class="hl kwc">operator</span><span class="hl opt">=(</span><span class="hl kwb">const</span> String<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwa">this</span> <span class="hl opt">!= &amp;</span>value<span class="hl opt">) {</span>
+      <span class="hl kwa">if</span> <span class="hl opt">(</span>value<span class="hl opt">.</span>sz_ <span class="hl opt">&gt;</span> sz_<span class="hl opt">)</span> data_ <span class="hl opt">= (</span><span class="hl kwb">char</span><span class="hl opt">*)</span>std<span class="hl opt">::</span><span class="hl kwd">realloc</span><span class="hl opt">(</span>data_<span class="hl opt">,</span> value<span class="hl opt">.</span>sz_<span class="hl opt">);</span>
+      sz_ <span class="hl opt">=</span> value<span class="hl opt">.</span>sz_<span class="hl opt">;</span>
+      std<span class="hl opt">::</span><span class="hl kwd">memcpy</span><span class="hl opt">(</span>data_<span class="hl opt">,</span> value<span class="hl opt">.</span>data_<span class="hl opt">,</span> sz_<span class="hl opt">);</span>
+    <span class="hl opt">}</span>
+    <span class="hl kwa">return</span> <span class="hl opt">*</span><span class="hl kwa">this</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
 
- <span class="k">private</span><span class="o">:</span>
-  <span class="kt">void</span> <span class="n">init</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">sz</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">sz_</span> <span class="o">=</span> <span class="n">sz</span><span class="p">;</span>
-    <span class="n">data_</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">sz_</span><span class="p">);</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">memcpy</span><span class="p">(</span><span class="n">data_</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sz_</span><span class="p">);</span>
-  <span class="p">}</span>
-  <span class="kt">char</span><span class="o">*</span> <span class="n">data_</span><span class="p">;</span>
-  <span class="n">size_t</span> <span class="n">sz_</span><span class="p">;</span>
-<span class="p">};</span>
-</pre></div>
+ <span class="hl kwc">private</span><span class="hl opt">:</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">init</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> data<span class="hl opt">,</span> <span class="hl kwb">size_t</span> sz<span class="hl opt">) {</span>
+    sz_ <span class="hl opt">=</span> sz<span class="hl opt">;</span>
+    data_ <span class="hl opt">= (</span><span class="hl kwb">char</span><span class="hl opt">*)</span><span class="hl kwd">malloc</span><span class="hl opt">(</span>sz_<span class="hl opt">);</span>
+    std<span class="hl opt">::</span><span class="hl kwd">memcpy</span><span class="hl opt">(</span>data_<span class="hl opt">,</span> data<span class="hl opt">,</span> sz_<span class="hl opt">);</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwb">char</span><span class="hl opt">*</span> data_<span class="hl opt">;</span>
+  <span class="hl kwb">size_t</span> sz_<span class="hl opt">;</span>
+<span class="hl opt">};</span>
+</pre>
 
 <p>Ясно, что при такой реализации оператора присваивания строка в плане занимаемой памяти будет только расти. Это сделано специально.</p>
 
@@ -85,138 +86,139 @@
 
 <p>Итак, <code>std_string.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;sstream&gt;</span>
-<span class="cp">#include &lt;string&gt;</span>
-<span class="cp">#include &lt;vector&gt;</span>
-<span class="cp">#include &lt;algorithm&gt;</span>
-<span class="cp">#include &lt;cstdlib&gt;</span>
-<span class="cp">#include &lt;cstring&gt;</span>
-<span class="cp">#include &lt;cassert&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;sstream&gt;</span>
+<span class="hl ppc">#include &lt;string&gt;</span>
+<span class="hl ppc">#include &lt;vector&gt;</span>
+<span class="hl ppc">#include &lt;algorithm&gt;</span>
+<span class="hl ppc">#include &lt;cstdlib&gt;</span>
+<span class="hl ppc">#include &lt;cstring&gt;</span>
+<span class="hl ppc">#include &lt;cassert&gt;</span>
 
-<span class="cp">#include &quot;gtest/gtest.h&quot;</span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
 
-<span class="k">static</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="hl kwb">static const int</span> N <span class="hl opt">=</span> <span class="hl num">100</span><span class="hl opt">;</span>
 
-<span class="c1">// Самопальный класс, реализующий хранение строки более менее</span>
-<span class="c1">// эффективным образом с точки зрения копирования.</span>
-<span class="k">class</span> <span class="nc">String</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="c1">// &quot;explicit&quot; запрещает неявное приведение аргумента, что мы</span>
-  <span class="c1">// могли точно знать, какие конструктор каких классов вызываются.</span>
-  <span class="k">explicit</span> <span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> 
-    <span class="n">init</span><span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">value</span><span class="p">.</span><span class="n">length</span><span class="p">());</span> 
-  <span class="p">}</span>
-  <span class="n">String</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">init</span><span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">value</span><span class="p">.</span><span class="n">sz_</span><span class="p">);</span> <span class="p">}</span>
-  <span class="o">~</span><span class="n">String</span><span class="p">()</span> <span class="p">{</span> <span class="n">free</span><span class="p">(</span><span class="n">data_</span><span class="p">);</span> <span class="p">}</span>
+<span class="hl slc">// Самопальный класс, реализующий хранение строки более менее</span>
+<span class="hl slc">// эффективным образом с точки зрения копирования.</span>
+<span class="hl kwc">class</span> String <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl slc">// &quot;explicit&quot; запрещает неявное приведение аргумента, что мы</span>
+  <span class="hl slc">// могли точно знать, какие конструктор каких классов вызываются.</span>
+  <span class="hl kwc">explicit</span> <span class="hl kwd">String</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span> 
+    <span class="hl kwd">init</span><span class="hl opt">(</span>value<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">(),</span> value<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span> 
+  <span class="hl opt">}</span>
+  <span class="hl kwd">String</span><span class="hl opt">(</span><span class="hl kwb">const</span> String<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span> <span class="hl kwd">init</span><span class="hl opt">(</span>value<span class="hl opt">.</span>data_<span class="hl opt">,</span> value<span class="hl opt">.</span>sz_<span class="hl opt">); }</span>
+  <span class="hl opt">~</span><span class="hl kwd">String</span><span class="hl opt">() {</span> <span class="hl kwd">free</span><span class="hl opt">(</span>data_<span class="hl opt">); }</span>
 
-  <span class="c1">// Данный оператор - это, пожалуй, единственная попытка сделать</span>
-  <span class="c1">// работу с памятью эффективной.</span>
-  <span class="n">String</span><span class="o">&amp;</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="k">this</span> <span class="o">!=</span> <span class="o">&amp;</span><span class="n">value</span><span class="p">)</span> <span class="p">{</span>
-      <span class="c1">// Память перераспределяется только если оригинал длинее текущей</span>
-      <span class="c1">// строки. Ясно, что при такой реализации строка может только</span>
-      <span class="c1">// расти в плане занимаемой памяти.</span>
-      <span class="k">if</span> <span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="n">sz_</span> <span class="o">&gt;</span> <span class="n">sz_</span><span class="p">)</span> <span class="n">data_</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">std</span><span class="o">::</span><span class="n">realloc</span><span class="p">(</span><span class="n">data_</span><span class="p">,</span> <span class="n">value</span><span class="p">.</span><span class="n">sz_</span><span class="p">);</span>
-      <span class="n">sz_</span> <span class="o">=</span> <span class="n">value</span><span class="p">.</span><span class="n">sz_</span><span class="p">;</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">memcpy</span><span class="p">(</span><span class="n">data_</span><span class="p">,</span> <span class="n">value</span><span class="p">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">sz_</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="o">*</span><span class="k">this</span><span class="p">;</span>
-  <span class="p">}</span>
+  <span class="hl slc">// Данный оператор - это, пожалуй, единственная попытка сделать</span>
+  <span class="hl slc">// работу с памятью эффективной.</span>
+  String<span class="hl opt">&amp;</span> <span class="hl kwc">operator</span><span class="hl opt">=(</span><span class="hl kwb">const</span> String<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwa">this</span> <span class="hl opt">!= &amp;</span>value<span class="hl opt">) {</span>
+      <span class="hl slc">// Память перераспределяется только если оригинал длинее текущей</span>
+      <span class="hl slc">// строки. Ясно, что при такой реализации строка может только</span>
+      <span class="hl slc">// расти в плане занимаемой памяти.</span>
+      <span class="hl kwa">if</span> <span class="hl opt">(</span>value<span class="hl opt">.</span>sz_ <span class="hl opt">&gt;</span> sz_<span class="hl opt">)</span> data_ <span class="hl opt">= (</span><span class="hl kwb">char</span><span class="hl opt">*)</span>std<span class="hl opt">::</span><span class="hl kwd">realloc</span><span class="hl opt">(</span>data_<span class="hl opt">,</span> value<span class="hl opt">.</span>sz_<span class="hl opt">);</span>
+      sz_ <span class="hl opt">=</span> value<span class="hl opt">.</span>sz_<span class="hl opt">;</span>
+      std<span class="hl opt">::</span><span class="hl kwd">memcpy</span><span class="hl opt">(</span>data_<span class="hl opt">,</span> value<span class="hl opt">.</span>data_<span class="hl opt">,</span> sz_<span class="hl opt">);</span>
+    <span class="hl opt">}</span>
+    <span class="hl kwa">return</span> <span class="hl opt">*</span><span class="hl kwa">this</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
 
-  <span class="k">friend</span> <span class="k">class</span> <span class="nc">StringCmp</span><span class="p">;</span>
-  <span class="k">friend</span> <span class="k">class</span> <span class="nc">StringPointerCmp</span><span class="p">;</span>
+  <span class="hl kwc">friend class</span> StringCmp<span class="hl opt">;</span>
+  <span class="hl kwc">friend class</span> StringPointerCmp<span class="hl opt">;</span>
 
- <span class="k">private</span><span class="o">:</span>
-  <span class="kt">void</span> <span class="n">init</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">sz</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">sz_</span> <span class="o">=</span> <span class="n">sz</span><span class="p">;</span>
-    <span class="n">data_</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">sz_</span><span class="p">);</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">memcpy</span><span class="p">(</span><span class="n">data_</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">sz_</span><span class="p">);</span>
-  <span class="p">}</span>
-  <span class="kt">char</span><span class="o">*</span> <span class="n">data_</span><span class="p">;</span>
-  <span class="n">size_t</span> <span class="n">sz_</span><span class="p">;</span>
-<span class="p">};</span>
+ <span class="hl kwc">private</span><span class="hl opt">:</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">init</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> data<span class="hl opt">,</span> <span class="hl kwb">size_t</span> sz<span class="hl opt">) {</span>
+    sz_ <span class="hl opt">=</span> sz<span class="hl opt">;</span>
+    data_ <span class="hl opt">= (</span><span class="hl kwb">char</span><span class="hl opt">*)</span><span class="hl kwd">malloc</span><span class="hl opt">(</span>sz_<span class="hl opt">);</span>
+    std<span class="hl opt">::</span><span class="hl kwd">memcpy</span><span class="hl opt">(</span>data_<span class="hl opt">,</span> data<span class="hl opt">,</span> sz_<span class="hl opt">);</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwb">char</span><span class="hl opt">*</span> data_<span class="hl opt">;</span>
+  <span class="hl kwb">size_t</span> sz_<span class="hl opt">;</span>
+<span class="hl opt">};</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">std_strings</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">*&gt;</span> <span class="n">std_strings_p</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">strings</span><span class="p">;</span>
-<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">String</span><span class="o">*&gt;</span> <span class="n">strings_p</span><span class="p">;</span>
+std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>string<span class="hl opt">&gt;</span> std_strings<span class="hl opt">;</span>
+std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>string<span class="hl opt">*&gt;</span> std_strings_p<span class="hl opt">;</span>
+std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>String<span class="hl opt">&gt;</span> strings<span class="hl opt">;</span>
+std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>String<span class="hl opt">*&gt;</span> strings_p<span class="hl opt">;</span>
 
-<span class="c1">// Объект для сравнения двух std::string.</span>
-<span class="k">class</span> <span class="nc">StlStringCmp</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="kt">bool</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+<span class="hl slc">// Объект для сравнения двух std::string.</span>
+<span class="hl kwc">class</span> StlStringCmp <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwb">bool</span> <span class="hl kwc">operator</span><span class="hl opt">()(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> a<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> b<span class="hl opt">) {</span>
+    <span class="hl kwa">return</span> a <span class="hl opt">&lt;</span> b<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
 
-<span class="n">TEST</span><span class="p">(</span><span class="n">SortingStlString</span><span class="p">,</span> <span class="n">StlString</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">std_strings</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">std_strings</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">StlStringCmp</span><span class="p">());</span>
-<span class="p">}</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>SortingStlString<span class="hl opt">,</span> StlString<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>std_strings<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> std_strings<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> <span class="hl kwd">StlStringCmp</span><span class="hl opt">());</span>
+<span class="hl opt">}</span>
 
-<span class="c1">// Объект для сравнения двух std::string*.</span>
-<span class="k">class</span> <span class="nc">StlStringPointerCmp</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="kt">bool</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="o">*</span><span class="n">a</span> <span class="o">&lt;</span> <span class="o">*</span><span class="n">b</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+<span class="hl slc">// Объект для сравнения двух std::string*.</span>
+<span class="hl kwc">class</span> StlStringPointerCmp <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwb">bool</span> <span class="hl kwc">operator</span><span class="hl opt">()(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">*</span> a<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">*</span> b<span class="hl opt">) {</span>
+    <span class="hl kwa">return</span> <span class="hl opt">*</span>a <span class="hl opt">&lt; *</span>b<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
 
-<span class="n">TEST</span><span class="p">(</span><span class="n">SortingStlString</span><span class="p">,</span> <span class="n">StlStringPointer</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">std_strings_p</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">std_strings_p</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">StlStringPointerCmp</span><span class="p">());</span>
-<span class="p">}</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>SortingStlString<span class="hl opt">,</span> StlStringPointer<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>std_strings_p<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> std_strings_p<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> <span class="hl kwd">StlStringPointerCmp</span><span class="hl opt">());</span>
+<span class="hl opt">}</span>
 
-<span class="c1">// Объект для сравнения двух String.</span>
-<span class="k">class</span> <span class="nc">StringCmp</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="kt">bool</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">assert</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">sz_</span> <span class="o">==</span> <span class="n">b</span><span class="p">.</span><span class="n">sz_</span><span class="p">);</span>
-    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">memcmp</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">b</span><span class="p">.</span><span class="n">data_</span><span class="p">,</span> <span class="n">a</span><span class="p">.</span><span class="n">sz_</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+<span class="hl slc">// Объект для сравнения двух String.</span>
+<span class="hl kwc">class</span> StringCmp <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwb">bool</span> <span class="hl kwc">operator</span><span class="hl opt">()(</span><span class="hl kwb">const</span> String<span class="hl opt">&amp;</span> a<span class="hl opt">,</span> <span class="hl kwb">const</span> String<span class="hl opt">&amp;</span> b<span class="hl opt">) {</span>
+    <span class="hl kwa">assert</span><span class="hl opt">(</span>a<span class="hl opt">.</span>sz_ <span class="hl opt">==</span> b<span class="hl opt">.</span>sz_<span class="hl opt">);</span>
+    <span class="hl kwa">return</span> std<span class="hl opt">::</span><span class="hl kwd">memcmp</span><span class="hl opt">(</span>a<span class="hl opt">.</span>data_<span class="hl opt">,</span> b<span class="hl opt">.</span>data_<span class="hl opt">,</span> a<span class="hl opt">.</span>sz_<span class="hl opt">);</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
 
-<span class="n">TEST</span><span class="p">(</span><span class="n">SortingStlString</span><span class="p">,</span> <span class="n">String</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">strings</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">strings</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">StringCmp</span><span class="p">());</span>
-<span class="p">}</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>SortingStlString<span class="hl opt">,</span> String<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>strings<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> strings<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> <span class="hl kwd">StringCmp</span><span class="hl opt">());</span>
+<span class="hl opt">}</span>
 
-<span class="c1">// Объект для сравнения двух String*.</span>
-<span class="k">class</span> <span class="nc">StringPointerCmp</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="kt">bool</span> <span class="k">operator</span><span class="p">()(</span><span class="k">const</span> <span class="n">String</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">String</span><span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">assert</span><span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">sz_</span> <span class="o">==</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">sz_</span><span class="p">);</span>
-    <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">memcmp</span><span class="p">(</span><span class="n">a</span><span class="o">-&gt;</span><span class="n">data_</span><span class="p">,</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">data_</span><span class="p">,</span> <span class="n">a</span><span class="o">-&gt;</span><span class="n">sz_</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+<span class="hl slc">// Объект для сравнения двух String*.</span>
+<span class="hl kwc">class</span> StringPointerCmp <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwb">bool</span> <span class="hl kwc">operator</span><span class="hl opt">()(</span><span class="hl kwb">const</span> String<span class="hl opt">*</span> a<span class="hl opt">,</span> <span class="hl kwb">const</span> String<span class="hl opt">*</span> b<span class="hl opt">) {</span>
+    <span class="hl kwa">assert</span><span class="hl opt">(</span>a<span class="hl opt">-&gt;</span>sz_ <span class="hl opt">==</span> b<span class="hl opt">-&gt;</span>sz_<span class="hl opt">);</span>
+    <span class="hl kwa">return</span> std<span class="hl opt">::</span><span class="hl kwd">memcmp</span><span class="hl opt">(</span>a<span class="hl opt">-&gt;</span>data_<span class="hl opt">,</span> b<span class="hl opt">-&gt;</span>data_<span class="hl opt">,</span> a<span class="hl opt">-&gt;</span>sz_<span class="hl opt">);</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
 
-<span class="n">TEST</span><span class="p">(</span><span class="n">SortingStlString</span><span class="p">,</span> <span class="n">StringPointer</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">sort</span><span class="p">(</span><span class="n">strings_p</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">strings_p</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span> <span class="n">StringPointerCmp</span><span class="p">());</span>
-<span class="p">}</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>SortingStlString<span class="hl opt">,</span> StringPointer<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>strings_p<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> strings_p<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> <span class="hl kwd">StringPointerCmp</span><span class="hl opt">());</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="c1">// Это наполнитель, чтобы строки были длинные, и копирование было</span>
-  <span class="c1">// ощутимо дорого.</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">big</span><span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span> <span class="sc">&#39;?&#39;</span><span class="p">);</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// Все строки будут одинаковой длины. Функции сравнения рассчитывают</span>
-    <span class="c1">// на это.</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">stringstream</span> <span class="n">fmt</span><span class="p">;</span>
-    <span class="n">fmt</span> <span class="o">&lt;&lt;</span> <span class="n">N</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">big</span><span class="p">;</span>
-    <span class="c1">// std::string строка-объект.</span>
-    <span class="n">std_strings</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">fmt</span><span class="p">.</span><span class="n">str</span><span class="p">());</span>
-    <span class="c1">// std::string строка-указатель.</span>
-    <span class="n">std_strings_p</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">fmt</span><span class="p">.</span><span class="n">str</span><span class="p">()));</span>
-    <span class="c1">// Моя строка-объект.</span>
-    <span class="n">strings</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="n">fmt</span><span class="p">.</span><span class="n">str</span><span class="p">()));</span>
-    <span class="c1">// Моя строка-указатель.</span>
-    <span class="n">strings_p</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="n">fmt</span><span class="p">.</span><span class="n">str</span><span class="p">()));</span>
-  <span class="p">}</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl slc">// Это наполнитель, чтобы строки были длинные, и копирование было</span>
+  <span class="hl slc">// ощутимо дорого.</span>
+  std<span class="hl opt">::</span>string <span class="hl kwd">big</span><span class="hl opt">(</span><span class="hl num">1024</span> <span class="hl opt">*</span> <span class="hl num">1024</span><span class="hl opt">,</span> <span class="hl str">'?'</span><span class="hl opt">);</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> N<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    <span class="hl slc">// Все строки будут одинаковой длины. Функции сравнения рассчитывают</span>
+    <span class="hl slc">// на это.</span>
+    std<span class="hl opt">::</span>stringstream fmt<span class="hl opt">;</span>
+    fmt <span class="hl opt">&lt;&lt;</span> N <span class="hl opt">*</span> <span class="hl num">2</span> <span class="hl opt">-</span> i <span class="hl opt">&lt;&lt;</span> big<span class="hl opt">;</span>
+    <span class="hl slc">// std::string строка-объект.</span>
+    std_strings<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span>fmt<span class="hl opt">.</span><span class="hl kwd">str</span><span class="hl opt">());</span>
+    <span class="hl slc">// std::string строка-указатель.</span>
+    std_strings_p<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl kwa">new</span> std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span>fmt<span class="hl opt">.</span><span class="hl kwd">str</span><span class="hl opt">()));</span>
+    <span class="hl slc">// Моя строка-объект.</span>
+    strings<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl kwd">String</span><span class="hl opt">(</span>fmt<span class="hl opt">.</span><span class="hl kwd">str</span><span class="hl opt">()));</span>
+    <span class="hl slc">// Моя строка-указатель.</span>
+    strings_p<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl kwa">new</span> <span class="hl kwd">String</span><span class="hl opt">(</span>fmt<span class="hl opt">.</span><span class="hl kwd">str</span><span class="hl opt">()));</span>
+  <span class="hl opt">}</span>
 
-  <span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
-  <span class="c1">// Принудительно печатаем время работы тестов.</span>
-  <span class="n">testing</span><span class="o">::</span><span class="n">GTEST_FLAG</span><span class="p">(</span><span class="n">print_time</span><span class="p">)</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
+  testing<span class="hl opt">::</span><span class="hl kwd">InitGoogleTest</span><span class="hl opt">(&amp;</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
+  <span class="hl slc">// Принудительно печатаем время работы тестов.</span>
+  testing<span class="hl opt">::</span><span class="hl kwd">GTEST_FLAG</span><span class="hl opt">(</span>print_time<span class="hl opt">) =</span> <span class="hl kwa">true</span><span class="hl opt">;</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">RUN_ALL_TESTS</span><span class="hl opt">();</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Компилируем:</p>
 

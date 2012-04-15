@@ -49,57 +49,58 @@
 
 <p>Теперь, а какой алгоритм сортировки использовать, чтобы для перемещения элементов использовать только обмен соседних элементов (функция <code>swap()</code>)? Подходит сортировка вставками, когда на каждом шаге неотсортированный элемент последовательно &ldquo;пропихивается&rdquo; вниз к отсортированным. Тут как раз можно обойтись только обменом соседних элементов. Сама функция <code>insertion_sort()</code> является универальной и не зависит от компаратора <code>is_less()</code>.</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;stdlib.h&gt;</span>
-<span class="cp">#include &lt;stdio.h&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;stdlib.h&gt;</span>
+<span class="hl ppc">#include &lt;stdio.h&gt;</span>
 
-<span class="kt">void</span> <span class="n">swap</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">t</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-  <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
-  <span class="n">a</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> <span class="hl kwd">swap</span><span class="hl opt">(</span><span class="hl kwb">int</span><span class="hl opt">*</span> a<span class="hl opt">,</span> <span class="hl kwb">int</span> i<span class="hl opt">) {</span>
+  <span class="hl kwb">int</span> t <span class="hl opt">=</span> a<span class="hl opt">[</span>i<span class="hl opt">];</span>
+  a<span class="hl opt">[</span>i<span class="hl opt">] =</span> a<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">];</span>
+  a<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">] =</span> t<span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="cp">#define N 8</span>
+<span class="hl ppc">#define N 8</span>
 
-<span class="k">const</span> <span class="kt">int</span> <span class="n">etalon</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span> <span class="p">};</span>
-<span class="kt">int</span> <span class="n">from</span><span class="p">[</span><span class="n">N</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">7</span> <span class="p">};</span>
+<span class="hl kwb">const int</span> etalon<span class="hl opt">[] = {</span> <span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">5</span><span class="hl opt">,</span> <span class="hl num">7</span><span class="hl opt">,</span> <span class="hl num">4</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">,</span> <span class="hl num">9</span><span class="hl opt">,</span> <span class="hl num">8</span><span class="hl opt">,</span> <span class="hl num">6</span> <span class="hl opt">};</span>
+<span class="hl kwb">int</span> from<span class="hl opt">[</span>N<span class="hl opt">] = {</span> <span class="hl num">8</span><span class="hl opt">,</span> <span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">4</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">,</span> <span class="hl num">5</span><span class="hl opt">,</span> <span class="hl num">6</span><span class="hl opt">,</span> <span class="hl num">9</span><span class="hl opt">,</span> <span class="hl num">7</span> <span class="hl opt">};</span>
 
-<span class="kt">void</span> <span class="n">insertion_sort</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">,</span> <span class="kt">int</span> <span class="p">(</span><span class="o">*</span><span class="n">is_less</span><span class="p">)(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">))</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> 
-    <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">is_less</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span> <span class="n">j</span><span class="o">--</span><span class="p">)</span>
-      <span class="n">swap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">j</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> <span class="hl kwd">insertion_sort</span><span class="hl opt">(</span><span class="hl kwb">int</span><span class="hl opt">*</span> a<span class="hl opt">,</span> <span class="hl kwb">int</span> n<span class="hl opt">,</span> <span class="hl kwb">int</span> <span class="hl opt">(*</span>is_less<span class="hl opt">)(</span><span class="hl kwb">int</span><span class="hl opt">,</span> <span class="hl kwb">int</span><span class="hl opt">)) {</span>
+  <span class="hl kwb">int</span> i<span class="hl opt">,</span> j<span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>i <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> n<span class="hl opt">; ++</span>i<span class="hl opt">)</span> 
+    <span class="hl kwa">for</span> <span class="hl opt">(</span>j <span class="hl opt">=</span> i <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">;</span> j <span class="hl opt">&gt;=</span> <span class="hl num">0</span> <span class="hl opt">&amp;&amp;</span> <span class="hl kwd">is_less</span><span class="hl opt">(</span>a<span class="hl opt">[</span>j <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">],</span> a<span class="hl opt">[</span>j<span class="hl opt">]);</span> j<span class="hl opt">--)</span>
+      <span class="hl kwd">swap</span><span class="hl opt">(</span>a<span class="hl opt">,</span> j<span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">void</span> <span class="n">print_array</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">title</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span><span class="o">*</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%9s: &quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">);</span>
-  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d &quot;</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> <span class="hl kwd">print_array</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> title<span class="hl opt">,</span> <span class="hl kwb">const int</span><span class="hl opt">*</span> a<span class="hl opt">,</span> <span class="hl kwb">int</span> n<span class="hl opt">) {</span>
+  <span class="hl kwb">int</span> i<span class="hl opt">;</span>
+  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%9s: &quot;</span><span class="hl opt">,</span> title<span class="hl opt">);</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> n<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%d &quot;</span><span class="hl opt">,</span> a<span class="hl opt">[</span>i<span class="hl opt">]);</span>
+  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">less</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">ia</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ib</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">etalon</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">a</span><span class="p">)</span> <span class="n">ia</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">etalon</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">b</span><span class="p">)</span> <span class="n">ib</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">ia</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">ib</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">break</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="n">ia</span> <span class="o">&lt;</span> <span class="n">ib</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="hl kwb">int</span> <span class="hl kwd">less</span><span class="hl opt">(</span><span class="hl kwb">int</span> a<span class="hl opt">,</span> <span class="hl kwb">int</span> b<span class="hl opt">) {</span>
+  <span class="hl kwb">int</span> ia <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">,</span> ib <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">;</span>
+  <span class="hl kwb">int</span> i<span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> N<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>etalon<span class="hl opt">[</span>i<span class="hl opt">] ==</span> a<span class="hl opt">)</span> ia <span class="hl opt">=</span> i<span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>etalon<span class="hl opt">[</span>i<span class="hl opt">] ==</span> b<span class="hl opt">)</span> ib <span class="hl opt">=</span> i<span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>ia <span class="hl opt">&gt;=</span> <span class="hl num">0</span> <span class="hl opt">&amp;&amp;</span> ib <span class="hl opt">&gt;=</span> <span class="hl num">0</span><span class="hl opt">)</span> <span class="hl kwa">break</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">return</span> ia <span class="hl opt">&lt;</span> ib<span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwb">int</span> i<span class="hl opt">,</span> j<span class="hl opt">;</span>
 
-  <span class="n">print_array</span><span class="p">(</span><span class="s">&quot;Original&quot;</span><span class="p">,</span> <span class="n">from</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
-  <span class="n">insertion_sort</span><span class="p">(</span><span class="n">from</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">less</span><span class="p">);</span>
-  <span class="n">print_array</span><span class="p">(</span><span class="s">&quot;Converted&quot;</span><span class="p">,</span> <span class="n">from</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
-  <span class="n">print_array</span><span class="p">(</span><span class="s">&quot;Etalon&quot;</span><span class="p">,</span> <span class="n">etalon</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
+  <span class="hl kwd">print_array</span><span class="hl opt">(</span><span class="hl str">&quot;Original&quot;</span><span class="hl opt">,</span> from<span class="hl opt">,</span> N<span class="hl opt">);</span>
+  <span class="hl kwd">insertion_sort</span><span class="hl opt">(</span>from<span class="hl opt">,</span> N<span class="hl opt">,</span> less<span class="hl opt">);</span>
+  <span class="hl kwd">print_array</span><span class="hl opt">(</span><span class="hl str">&quot;Converted&quot;</span><span class="hl opt">,</span> from<span class="hl opt">,</span> N<span class="hl opt">);</span>
+  <span class="hl kwd">print_array</span><span class="hl opt">(</span><span class="hl str">&quot;Etalon&quot;</span><span class="hl opt">,</span> etalon<span class="hl opt">,</span> N<span class="hl opt">);</span>
 
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Запускаем:</p>
 

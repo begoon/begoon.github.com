@@ -43,27 +43,31 @@
 <div id="post">
   <p>Не секрет, что выражение <code>const T*</code> при объявления указателя полностью эквивалентно записи <code>T const*</code>, ибо тут важно только, что <code>const</code> стоит до знака <code>*</code>, а порядок его употребления с именем типа <code>Т</code> роли не играет:</p>
 
-<div class="highlight"><pre><span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">p</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">const</span> T<span class="hl opt">*</span> p<span class="hl opt">;</span>
+</pre>
 
 <p>и</p>
 
-<div class="highlight"><pre><span class="n">T</span> <span class="k">const</span><span class="o">*</span> <span class="n">p</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+T <span class="hl kwb">const</span><span class="hl opt">*</span> p<span class="hl opt">;</span>
+</pre>
 
 <p>объявляют указатель на константный объект, а не константный указатель, то есть значение самого указателя можно менять:</p>
 
-<div class="highlight"><pre><span class="n">T</span> <span class="k">const</span><span class="o">*</span> <span class="n">p</span><span class="p">;</span>
-<span class="p">...</span>
-<span class="n">p</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+T <span class="hl kwb">const</span><span class="hl opt">*</span> p<span class="hl opt">;</span>
+<span class="hl opt">...</span>
+p <span class="hl opt">=</span> NULL<span class="hl opt">;</span>
+</pre>
 
 <p>Но менять сам объект нельзя:</p>
 
-<div class="highlight"><pre><span class="n">T</span> <span class="k">const</span><span class="o">*</span> <span class="n">p</span><span class="p">;</span>
-<span class="p">...</span>
-<span class="n">p</span><span class="o">-&gt;</span><span class="n">some_member</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>   <span class="c1">// ОШИБКА: error C2166: l-value specifies const object</span>
-</pre></div>
+<pre class="hl">
+T <span class="hl kwb">const</span><span class="hl opt">*</span> p<span class="hl opt">;</span>
+<span class="hl opt">...</span>
+p<span class="hl opt">-&gt;</span>some_member <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>   <span class="hl slc">// ОШИБКА: error C2166: l-value specifies const object</span>
+</pre>
 
 <p>Но все это была вводная, и сейчас не об этом.</p>
 

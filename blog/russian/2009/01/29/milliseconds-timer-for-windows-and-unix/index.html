@@ -47,160 +47,162 @@
 
 <p>Я придумал вот такой интерфейс для класса:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">PreciseTimer</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="c1">// Тип для работы с тиками таймера. По сути это целое в 64 бита,</span>
-  <span class="c1">// но конкретное имя рабочего типа будет зависеть от платформы.</span>
-  <span class="k">typedef</span> <span class="n">s_int_64</span> <span class="n">Counter</span><span class="p">;</span>
+<pre class="hl">
+<span class="hl kwc">class</span> PreciseTimer <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl slc">// Тип для работы с тиками таймера. По сути это целое в 64 бита,</span>
+  <span class="hl slc">// но конкретное имя рабочего типа будет зависеть от платформы.</span>
+  <span class="hl kwc">typedef</span> s_int_64 Counter<span class="hl opt">;</span>
 
-  <span class="c1">// Функция получение текущего значения миллисекундного таймера.</span>
-  <span class="c1">// Само по себе это число особого смысла не имеет, так как оно</span>
-  <span class="c1">// ни к чему не привязано, а вот разница двух таких чисел как </span>
-  <span class="c1">// раз используется для замеров интервалов времени.</span>
-  <span class="c1">// Функция возвращает 0 под Windows, если не удается получить</span>
-  <span class="c1">// значение системного таймера.</span>
-  <span class="n">Counter</span> <span class="n">millisec</span><span class="p">();</span>
+  <span class="hl slc">// Функция получение текущего значения миллисекундного таймера.</span>
+  <span class="hl slc">// Само по себе это число особого смысла не имеет, так как оно</span>
+  <span class="hl slc">// ни к чему не привязано, а вот разница двух таких чисел как </span>
+  <span class="hl slc">// раз используется для замеров интервалов времени.</span>
+  <span class="hl slc">// Функция возвращает 0 под Windows, если не удается получить</span>
+  <span class="hl slc">// значение системного таймера.</span>
+  Counter <span class="hl kwd">millisec</span><span class="hl opt">();</span>
 
-  <span class="c1">// Задержка на указанное число миллисекунд. Необходимо учитывать,</span>
-  <span class="c1">// что в UNIX системах данная функция может быть прервана</span>
-  <span class="c1">// системым сигналом (signal). В этом случае задержка может быть</span>
-  <span class="c1">// меньше, чем ожидалось.</span>
-  <span class="k">static</span> <span class="kt">void</span> <span class="n">sleepMs</span><span class="p">(</span><span class="kt">int</span> <span class="n">ms</span><span class="p">);</span>
+  <span class="hl slc">// Задержка на указанное число миллисекунд. Необходимо учитывать,</span>
+  <span class="hl slc">// что в UNIX системах данная функция может быть прервана</span>
+  <span class="hl slc">// системым сигналом (signal). В этом случае задержка может быть</span>
+  <span class="hl slc">// меньше, чем ожидалось.</span>
+  <span class="hl kwb">static void</span> <span class="hl kwd">sleepMs</span><span class="hl opt">(</span><span class="hl kwb">int</span> ms<span class="hl opt">);</span>
 
-  <span class="c1">// Функция &quot;отметки&quot; текущего момента времени.</span>
-  <span class="c1">// Добавляет текущее время в очередь отметок.</span>
-  <span class="kt">void</span> <span class="n">mark</span><span class="p">();</span>
+  <span class="hl slc">// Функция &quot;отметки&quot; текущего момента времени.</span>
+  <span class="hl slc">// Добавляет текущее время в очередь отметок.</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">mark</span><span class="hl opt">();</span>
 
-  <span class="c1">// Функция получения времени, прошедшего с последней отметки</span>
-  <span class="c1">// в функции mark(). Последняя отметка вынимается из очереди</span>
-  <span class="c1">// и вычитается из текущего значения таймера. Эта разница и</span>
-  <span class="c1">// есть результат функции. Если очередь отметок пуста (никто</span>
-  <span class="c1">// не вызывал mark() до этого), то возвращается -1.</span>
-  <span class="n">Counter</span> <span class="n">release</span><span class="p">();</span>
+  <span class="hl slc">// Функция получения времени, прошедшего с последней отметки</span>
+  <span class="hl slc">// в функции mark(). Последняя отметка вынимается из очереди</span>
+  <span class="hl slc">// и вычитается из текущего значения таймера. Эта разница и</span>
+  <span class="hl slc">// есть результат функции. Если очередь отметок пуста (никто</span>
+  <span class="hl slc">// не вызывал mark() до этого), то возвращается -1.</span>
+  Counter <span class="hl kwd">release</span><span class="hl opt">();</span>
 
-  <span class="c1">// Парные вызовы mark()/release() могут быть вложенными.</span>
-  <span class="c1">//</span>
-  <span class="c1">// Примерная техника работы с классом:</span>
-  <span class="c1">// ...</span>
-  <span class="c1">// PreTimer timer;</span>
-  <span class="c1">// ...</span>
-  <span class="c1">// timer.mark();</span>
-  <span class="c1">// ...что-то делаем тут (1)</span>
-  <span class="c1">// timer.mark();</span>
-  <span class="c1">// ...что-то еще делаем тут (2)</span>
-  <span class="c1">// /* получаем продолжительность дела (2) */</span>
-  <span class="c1">// t1 = timer.release(); </span>
-  <span class="c1">// /* получаем суммарную продолжительность дел (1) и (2) */</span>
-  <span class="c1">// t2 = timer.release();</span>
-  <span class="c1">// /* А t3 уже равно -1, так как очередь пуста, так как этот</span>
-  <span class="c1">//  * вызов release() третий в счету, а вызовов mark() было</span>
-  <span class="c1">//  * всего два */</span>
-  <span class="c1">// t3 = timer.release();</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl slc">// Парные вызовы mark()/release() могут быть вложенными.</span>
+  <span class="hl slc">//</span>
+  <span class="hl slc">// Примерная техника работы с классом:</span>
+  <span class="hl slc">// ...</span>
+  <span class="hl slc">// PreTimer timer;</span>
+  <span class="hl slc">// ...</span>
+  <span class="hl slc">// timer.mark();</span>
+  <span class="hl slc">// ...что-то делаем тут (1)</span>
+  <span class="hl slc">// timer.mark();</span>
+  <span class="hl slc">// ...что-то еще делаем тут (2)</span>
+  <span class="hl slc">// /* получаем продолжительность дела (2) */</span>
+  <span class="hl slc">// t1 = timer.release(); </span>
+  <span class="hl slc">// /* получаем суммарную продолжительность дел (1) и (2) */</span>
+  <span class="hl slc">// t2 = timer.release();</span>
+  <span class="hl slc">// /* А t3 уже равно -1, так как очередь пуста, так как этот</span>
+  <span class="hl slc">//  * вызов release() третий в счету, а вызовов mark() было</span>
+  <span class="hl slc">//  * всего два */</span>
+  <span class="hl slc">// t3 = timer.release();</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Реалиазация вышла довольно простая. Всего один файл <code>pretimer.h</code> (без .cpp) без внешних нестандартных зависимостей.</p>
 
 <p><code>pretimer.h</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#ifndef EXT_PRETIMER_H</span>
-<span class="cp">#define EXT_PRETIMER_H</span>
+<pre class="hl">
+<span class="hl ppc">#ifndef EXT_PRETIMER_H</span>
+<span class="hl ppc">#define EXT_PRETIMER_H</span>
 
-<span class="cp">#include &lt;stack&gt;</span>
+<span class="hl ppc">#include &lt;stack&gt;</span>
 
-<span class="cp">#ifdef WIN32</span>
-<span class="cp">#include &lt;windows.h&gt;</span>
-<span class="cp">#else</span>
-<span class="cp">#include &lt;sys/time.h&gt;</span>
-<span class="cp">#include &lt;unistd.h&gt;    </span><span class="c1">// usleep()</span>
-<span class="cp">#endif</span>
+<span class="hl ppc">#ifdef WIN32</span>
+<span class="hl ppc">#include &lt;windows.h&gt;</span>
+<span class="hl ppc">#else</span>
+<span class="hl ppc">#include &lt;sys/time.h&gt;</span>
+<span class="hl ppc">#include &lt;unistd.h&gt;</span>    <span class="hl slc">// usleep()</span>
+<span class="hl ppc"></span><span class="hl ppc">#endif</span>
 
-<span class="c1">// namespace, традиционно, с именем &quot;ext&quot;, так что измените под ваши</span>
-<span class="c1">// привычки именования, если надо.</span>
-<span class="k">namespace</span> <span class="n">ext</span> <span class="p">{</span>
+<span class="hl slc">// namespace, традиционно, с именем &quot;ext&quot;, так что измените под ваши</span>
+<span class="hl slc">// привычки именования, если надо.</span>
+<span class="hl kwa">namespace</span> ext <span class="hl opt">{</span>
 
-<span class="k">class</span> <span class="nc">PreciseTimer</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-<span class="cp">#ifdef WIN32</span>
-  <span class="c1">// Тип int64 для Windows</span>
-  <span class="k">typedef</span> <span class="n">LONGLONG</span> <span class="n">Counter</span><span class="p">;</span>
-<span class="cp">#else</span>
-  <span class="c1">// Тип int64 для UNIX</span>
-  <span class="k">typedef</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">Counter</span><span class="p">;</span>
-<span class="cp">#endif</span>
-  <span class="n">PreciseTimer</span><span class="p">();</span>
+<span class="hl kwc">class</span> PreciseTimer <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+<span class="hl ppc">#ifdef WIN32</span>
+  <span class="hl slc">// Тип int64 для Windows</span>
+  <span class="hl kwc">typedef</span> LONGLONG Counter<span class="hl opt">;</span>
+<span class="hl ppc">#else</span>
+  <span class="hl slc">// Тип int64 для UNIX</span>
+  <span class="hl kwc">typedef</span> <span class="hl kwb">long long</span> Counter<span class="hl opt">;</span>
+<span class="hl ppc">#endif</span>
+  <span class="hl kwd">PreciseTimer</span><span class="hl opt">();</span>
 
-  <span class="n">Counter</span> <span class="n">millisec</span><span class="p">();</span>
+  Counter <span class="hl kwd">millisec</span><span class="hl opt">();</span>
 
-  <span class="kt">void</span> <span class="n">mark</span><span class="p">();</span>
-  <span class="n">Counter</span> <span class="n">release</span><span class="p">();</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">mark</span><span class="hl opt">();</span>
+  Counter <span class="hl kwd">release</span><span class="hl opt">();</span>
 
-  <span class="k">static</span> <span class="kt">void</span> <span class="n">sleepMs</span><span class="p">(</span><span class="kt">int</span> <span class="n">ms</span><span class="p">);</span>
-<span class="k">private</span><span class="o">:</span>
-  <span class="c1">// Тип стека для хранения отметок времени.</span>
-  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">stack</span><span class="o">&lt;</span> <span class="n">Counter</span> <span class="o">&gt;</span> <span class="n">Counters</span><span class="p">;</span>
+  <span class="hl kwb">static void</span> <span class="hl kwd">sleepMs</span><span class="hl opt">(</span><span class="hl kwb">int</span> ms<span class="hl opt">);</span>
+<span class="hl kwc">private</span><span class="hl opt">:</span>
+  <span class="hl slc">// Тип стека для хранения отметок времени.</span>
+  <span class="hl kwc">typedef</span> std<span class="hl opt">::</span>stack<span class="hl opt">&lt;</span> Counter <span class="hl opt">&gt;</span> Counters<span class="hl opt">;</span>
 
-  <span class="c1">// Стек для хранения отметок времени.</span>
-  <span class="n">Counters</span> <span class="n">__counters</span><span class="p">;</span>
+  <span class="hl slc">// Стек для хранения отметок времени.</span>
+  Counters __counters<span class="hl opt">;</span>
 
-<span class="cp">#ifdef WIN32</span>
-  <span class="c1">// Для Windows надо хранить системную частоту таймера.</span>
-  <span class="n">LARGE_INTEGER</span> <span class="n">__freq</span><span class="p">;</span>
-<span class="cp">#endif</span>
-<span class="p">};</span>
+<span class="hl ppc">#ifdef WIN32</span>
+  <span class="hl slc">// Для Windows надо хранить системную частоту таймера.</span>
+  LARGE_INTEGER __freq<span class="hl opt">;</span>
+<span class="hl ppc">#endif</span>
+<span class="hl opt">};</span>
 
-<span class="kt">void</span> <span class="n">PreciseTimer</span><span class="o">::</span><span class="n">mark</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">__counters</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">millisec</span><span class="p">());</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> PreciseTimer<span class="hl opt">::</span><span class="hl kwd">mark</span><span class="hl opt">() {</span>
+  __counters<span class="hl opt">.</span><span class="hl kwd">push</span><span class="hl opt">(</span><span class="hl kwd">millisec</span><span class="hl opt">());</span>
+<span class="hl opt">}</span>
 
-<span class="n">PreciseTimer</span><span class="o">::</span><span class="n">Counter</span> <span class="n">PreciseTimer</span><span class="o">::</span><span class="n">release</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">if</span><span class="p">(</span> <span class="n">__counters</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="p">)</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-  <span class="n">Counter</span> <span class="n">val</span> <span class="o">=</span> <span class="n">millisec</span><span class="p">()</span> <span class="o">-</span> <span class="n">__counters</span><span class="p">.</span><span class="n">top</span><span class="p">();</span>
-  <span class="n">__counters</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
-  <span class="k">return</span> <span class="n">val</span><span class="p">;</span>
-<span class="p">}</span>
+PreciseTimer<span class="hl opt">::</span>Counter PreciseTimer<span class="hl opt">::</span><span class="hl kwd">release</span><span class="hl opt">() {</span>
+  <span class="hl kwa">if</span><span class="hl opt">(</span> __counters<span class="hl opt">.</span><span class="hl kwd">empty</span><span class="hl opt">() )</span> <span class="hl kwa">return</span> <span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">;</span>
+  Counter val <span class="hl opt">=</span> <span class="hl kwd">millisec</span><span class="hl opt">() -</span> __counters<span class="hl opt">.</span><span class="hl kwd">top</span><span class="hl opt">();</span>
+  __counters<span class="hl opt">.</span><span class="hl kwd">pop</span><span class="hl opt">();</span>
+  <span class="hl kwa">return</span> val<span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="cp">#ifdef WIN32</span>
+<span class="hl ppc">#ifdef WIN32</span>
 
-<span class="n">PreciseTimer</span><span class="o">::</span><span class="n">PreciseTimer</span><span class="p">()</span> <span class="p">{</span>
-  <span class="c1">// Для Windows в конструкторе получаем системную частоту таймера</span>
-  <span class="c1">// (количество тиков в секунду).</span>
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">QueryPerformanceFrequency</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__freq</span><span class="p">))</span>
-    <span class="n">__freq</span><span class="p">.</span><span class="n">QuadPart</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
+PreciseTimer<span class="hl opt">::</span><span class="hl kwd">PreciseTimer</span><span class="hl opt">() {</span>
+  <span class="hl slc">// Для Windows в конструкторе получаем системную частоту таймера</span>
+  <span class="hl slc">// (количество тиков в секунду).</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(!</span><span class="hl kwd">QueryPerformanceFrequency</span><span class="hl opt">(&amp;</span>__freq<span class="hl opt">))</span>
+    __freq<span class="hl opt">.</span>QuadPart <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="n">PreciseTimer</span><span class="o">::</span><span class="n">Counter</span> <span class="n">PreciseTimer</span><span class="o">::</span><span class="n">millisec</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">LARGE_INTEGER</span> <span class="n">current</span><span class="p">;</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">__freq</span><span class="p">.</span><span class="n">QuadPart</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="o">!</span><span class="n">QueryPerformanceCounter</span><span class="p">(</span><span class="err">¤</span><span class="n">t</span><span class="p">))</span> 
-    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="c1">// Пересчитываем количество системных тиков в миллисекунды.</span>
-  <span class="k">return</span> <span class="n">current</span><span class="p">.</span><span class="n">QuadPart</span> <span class="o">/</span> <span class="p">(</span><span class="n">__freq</span><span class="p">.</span><span class="n">QuadPart</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">);</span>
-<span class="p">}</span>
+PreciseTimer<span class="hl opt">::</span>Counter PreciseTimer<span class="hl opt">::</span><span class="hl kwd">millisec</span><span class="hl opt">() {</span>
+  LARGE_INTEGER current<span class="hl opt">;</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>__freq<span class="hl opt">.</span>QuadPart <span class="hl opt">==</span> <span class="hl num">0</span> <span class="hl opt">|| !</span><span class="hl kwd">QueryPerformanceCounter</span><span class="hl opt">(</span>¤t<span class="hl opt">))</span> 
+    <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl slc">// Пересчитываем количество системных тиков в миллисекунды.</span>
+  <span class="hl kwa">return</span> current<span class="hl opt">.</span>QuadPart <span class="hl opt">/ (</span>__freq<span class="hl opt">.</span>QuadPart <span class="hl opt">/</span> <span class="hl num">1000</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">void</span> <span class="n">PreciseTimer</span><span class="o">::</span><span class="n">sleepMs</span><span class="p">(</span><span class="kt">int</span> <span class="n">ms</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">Sleep</span><span class="p">(</span><span class="n">ms</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> PreciseTimer<span class="hl opt">::</span><span class="hl kwd">sleepMs</span><span class="hl opt">(</span><span class="hl kwb">int</span> ms<span class="hl opt">) {</span>
+  <span class="hl kwd">Sleep</span><span class="hl opt">(</span>ms<span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="cp">#else </span><span class="c1">// WIN32</span>
+<span class="hl ppc">#else</span> <span class="hl slc">// WIN32</span>
+<span class="hl ppc"></span>
+PreciseTimer<span class="hl opt">::</span><span class="hl kwd">PreciseTimer</span><span class="hl opt">() {}</span>
 
-<span class="n">PreciseTimer</span><span class="o">::</span><span class="n">PreciseTimer</span><span class="p">()</span> <span class="p">{}</span>
+PreciseTimer<span class="hl opt">::</span>Counter PreciseTimer<span class="hl opt">::</span><span class="hl kwd">millisec</span><span class="hl opt">() {</span>
+  <span class="hl kwb">struct</span> timeval tv<span class="hl opt">;</span>
+  <span class="hl kwd">gettimeofday</span><span class="hl opt">(&amp;</span>tv<span class="hl opt">,</span> NULL<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> tv<span class="hl opt">.</span>tv_sec <span class="hl opt">*</span> <span class="hl num">1000</span> <span class="hl opt">+</span> tv<span class="hl opt">.</span>tv_usec <span class="hl opt">/</span> <span class="hl num">1000</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="n">PreciseTimer</span><span class="o">::</span><span class="n">Counter</span> <span class="n">PreciseTimer</span><span class="o">::</span><span class="n">millisec</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">struct</span> <span class="n">timeval</span> <span class="n">tv</span><span class="p">;</span>
-  <span class="n">gettimeofday</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tv</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
-  <span class="k">return</span> <span class="n">tv</span><span class="p">.</span><span class="n">tv_sec</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="n">tv</span><span class="p">.</span><span class="n">tv_usec</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> PreciseTimer<span class="hl opt">::</span><span class="hl kwd">sleepMs</span><span class="hl opt">(</span><span class="hl kwb">int</span> ms<span class="hl opt">) {</span>
+  <span class="hl kwd">usleep</span><span class="hl opt">(</span>ms <span class="hl opt">*</span> <span class="hl num">1000</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">void</span> <span class="n">PreciseTimer</span><span class="o">::</span><span class="n">sleepMs</span><span class="p">(</span><span class="kt">int</span> <span class="n">ms</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">usleep</span><span class="p">(</span><span class="n">ms</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl ppc">#endif</span> <span class="hl slc">// WIN32</span>
+<span class="hl ppc"></span>
+<span class="hl opt">}</span> <span class="hl slc">// ext</span>
 
-<span class="cp">#endif </span><span class="c1">// WIN32</span>
-
-<span class="p">}</span> <span class="c1">// ext</span>
-
-<span class="cp">#endif </span><span class="c1">// _EXT_PRETIMER_H</span>
-</pre></div>
+<span class="hl ppc">#endif</span> <span class="hl slc">// _EXT_PRETIMER_H</span><span class="hl ppc"></span>
+</pre>
 
 <p>Итак, класс готов, но надо попробовать его в работе. Я, как сугубый апологет unit-тестирования, напишу тесты. Для их компиляции вам потребуется библиотека <a href="http://code.google.com/p/googletest/">Google Test Framework</a>. Вы можете взять оригинал с официального сайта, а можете для простоты воспользоваться <a href="/downloads/gtest-amalgamation-1.2.1.zip">моей версией</a>, упакованной в два компактных файла <code>gtest-all.cc</code> и <code>gtest.h</code>. Я уже писал про это в <a href="/blog/russian/2009/01/28/unit-testing-concurrent-threads/">рассказе про unit-тестирование</a>. Там я подробно описал, как подготовить Google Test к удобной работе.</p>
 
@@ -208,71 +210,72 @@
 
 <p><code>pretimer_unittest.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
-<span class="cp">#include &lt;cstdlib&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
+<span class="hl ppc">#include &lt;cstdlib&gt;</span>
 
-<span class="c1">// Подключаем наш класс</span>
-<span class="cp">#include &quot;pretimer.h&quot;</span>
+<span class="hl slc">// Подключаем наш класс</span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;pretimer.h&quot;</span><span class="hl ppc"></span>
 
-<span class="c1">// Простой тест, для Windows, в основном, для проверки</span>
-<span class="c1">// доступности системного таймера.</span>
-<span class="n">TEST</span><span class="p">(</span><span class="n">PreciseTimer</span><span class="p">,</span> <span class="n">PreciseSystemTimerAvailability</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ext</span><span class="o">::</span><span class="n">PreciseTimer</span> <span class="n">timer</span><span class="p">;</span>
-  <span class="c1">// Если метод millisec() возвращает 0, значит недоступен</span>
-  <span class="c1">// системный таймер.</span>
-  <span class="n">EXPECT_NE</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">timer</span><span class="p">.</span><span class="n">millisec</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Недоступен системный таймер&quot;</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="hl slc">// Простой тест, для Windows, в основном, для проверки</span>
+<span class="hl slc">// доступности системного таймера.</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>PreciseTimer<span class="hl opt">,</span> PreciseSystemTimerAvailability<span class="hl opt">) {</span>
+  ext<span class="hl opt">::</span>PreciseTimer timer<span class="hl opt">;</span>
+  <span class="hl slc">// Если метод millisec() возвращает 0, значит недоступен</span>
+  <span class="hl slc">// системный таймер.</span>
+  <span class="hl kwd">EXPECT_NE</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">,</span> timer<span class="hl opt">.</span><span class="hl kwd">millisec</span><span class="hl opt">()) &lt;&lt;</span> <span class="hl str">&quot;Недоступен системный таймер&quot;</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="c1">// Тестирует &quot;точность&quot; измерений.</span>
-<span class="n">TEST</span><span class="p">(</span><span class="n">PreciseTimer</span><span class="p">,</span> <span class="n">MeasurementAccuracy</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// Тестируем на задержке в 100 миллисекунд.</span>
-  <span class="k">const</span> <span class="kt">int</span> <span class="n">delay_ms</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
-  <span class="c1">// Зададим наше допустимое отклонение в 10% (10 миллисекунд).</span>
-  <span class="c1">// Функция задержки msleep() тоже неидеальна и привносит</span>
-  <span class="c1">// какую-то погрешность помимо наших измерений.</span>
-  <span class="k">const</span> <span class="kt">int</span> <span class="n">allowed_delta_ms</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-  <span class="c1">// Создаем таймер</span>
-  <span class="n">ext</span><span class="o">::</span><span class="n">PreciseTimer</span> <span class="n">timer</span><span class="p">;</span>
-  <span class="c1">// Замечаем время</span>
-  <span class="n">timer</span><span class="p">.</span><span class="n">mark</span><span class="p">();</span>
-  <span class="c1">// Ждем 100 миллисекунд</span>
-  <span class="n">msleep</span><span class="p">(</span><span class="n">delay_ms</span><span class="p">);</span>
-  <span class="c1">// Вычисляем модуль разницы между эталоном в 100 миллисекунд</span>
-  <span class="c1">// и измеренным нами интервалом через mark()/release()</span>
-  <span class="kt">int</span> <span class="n">delta</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">delay_ms</span> <span class="o">-</span> <span class="n">timer</span><span class="p">.</span><span class="n">release</span><span class="p">()));</span>
+<span class="hl slc">// Тестирует &quot;точность&quot; измерений.</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>PreciseTimer<span class="hl opt">,</span> MeasurementAccuracy<span class="hl opt">) {</span>
+  <span class="hl slc">// Тестируем на задержке в 100 миллисекунд.</span>
+  <span class="hl kwb">const int</span> delay_ms <span class="hl opt">=</span> <span class="hl num">100</span><span class="hl opt">;</span>
+  <span class="hl slc">// Зададим наше допустимое отклонение в 10% (10 миллисекунд).</span>
+  <span class="hl slc">// Функция задержки msleep() тоже неидеальна и привносит</span>
+  <span class="hl slc">// какую-то погрешность помимо наших измерений.</span>
+  <span class="hl kwb">const int</span> allowed_delta_ms <span class="hl opt">=</span> <span class="hl num">10</span><span class="hl opt">;</span>
+  <span class="hl slc">// Создаем таймер</span>
+  ext<span class="hl opt">::</span>PreciseTimer timer<span class="hl opt">;</span>
+  <span class="hl slc">// Замечаем время</span>
+  timer<span class="hl opt">.</span><span class="hl kwd">mark</span><span class="hl opt">();</span>
+  <span class="hl slc">// Ждем 100 миллисекунд</span>
+  <span class="hl kwd">msleep</span><span class="hl opt">(</span>delay_ms<span class="hl opt">);</span>
+  <span class="hl slc">// Вычисляем модуль разницы между эталоном в 100 миллисекунд</span>
+  <span class="hl slc">// и измеренным нами интервалом через mark()/release()</span>
+  <span class="hl kwb">int</span> delta <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">abs</span><span class="hl opt">(</span><span class="hl kwa">static_cast</span><span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;(</span>delay_ms <span class="hl opt">-</span> timer<span class="hl opt">.</span><span class="hl kwd">release</span><span class="hl opt">()));</span>
 
-  <span class="c1">// Если отклонение более 10 миллисекунд - ошибка.</span>
-  <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">delta</span> <span class="o">&lt;=</span> <span class="n">allowed_delta_ms</span><span class="p">)</span> 
-    <span class="o">&lt;&lt;</span> <span class="s">&quot;Слишком большое отклонение &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">delta</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, превышающее &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">allowed_delta_ms</span><span class="p">;</span>
-<span class="p">}</span>
+  <span class="hl slc">// Если отклонение более 10 миллисекунд - ошибка.</span>
+  <span class="hl kwd">EXPECT_TRUE</span><span class="hl opt">(</span>delta <span class="hl opt">&lt;=</span> allowed_delta_ms<span class="hl opt">)</span> 
+    <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Слишком большое отклонение &quot;</span> <span class="hl opt">&lt;&lt;</span> delta <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, превышающее &quot;</span> <span class="hl opt">&lt;&lt;</span> allowed_delta_ms<span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="c1">// Тестируем очередь замеров</span>
-<span class="n">TEST</span><span class="p">(</span><span class="n">PreciseTimer</span><span class="p">,</span> <span class="n">Queue</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// Создаем таймер</span>
-  <span class="n">ext</span><span class="o">::</span><span class="n">PreciseTimer</span> <span class="n">timer</span><span class="p">;</span>
-  <span class="c1">// Делаем замер номер 1</span>
-  <span class="n">timer</span><span class="p">.</span><span class="n">mark</span><span class="p">();</span>
-  <span class="c1">// Делаем замер номер 2</span>
-  <span class="n">timer</span><span class="p">.</span><span class="n">mark</span><span class="p">();</span>
-  <span class="c1">// Получаем текущее значение таймера</span>
-  <span class="n">ext</span><span class="o">::</span><span class="n">PreciseTimer</span><span class="o">::</span><span class="n">Counter</span> <span class="n">a</span> <span class="o">=</span> <span class="n">timer</span><span class="p">.</span><span class="n">release</span><span class="p">();</span>
-  <span class="c1">// Ждем 100 миллисекунд</span>
-  <span class="n">monitor</span><span class="o">::</span><span class="n">PreciseTimer</span><span class="o">::</span><span class="n">sleepMs</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
-  <span class="c1">// Проверяем, что значение таймера до задежки</span>
-  <span class="c1">// меньше, чем после. Этим мы проверили, что</span>
-  <span class="c1">// очередь замеров работает, так как получили </span>
-  <span class="c1">// корректное значение второго в очереди замера.</span>
-  <span class="n">EXPECT_LT</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">timer</span><span class="p">.</span><span class="n">release</span><span class="p">());</span>
-<span class="p">}</span>
+<span class="hl slc">// Тестируем очередь замеров</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>PreciseTimer<span class="hl opt">,</span> Queue<span class="hl opt">) {</span>
+  <span class="hl slc">// Создаем таймер</span>
+  ext<span class="hl opt">::</span>PreciseTimer timer<span class="hl opt">;</span>
+  <span class="hl slc">// Делаем замер номер 1</span>
+  timer<span class="hl opt">.</span><span class="hl kwd">mark</span><span class="hl opt">();</span>
+  <span class="hl slc">// Делаем замер номер 2</span>
+  timer<span class="hl opt">.</span><span class="hl kwd">mark</span><span class="hl opt">();</span>
+  <span class="hl slc">// Получаем текущее значение таймера</span>
+  ext<span class="hl opt">::</span>PreciseTimer<span class="hl opt">::</span>Counter a <span class="hl opt">=</span> timer<span class="hl opt">.</span><span class="hl kwd">release</span><span class="hl opt">();</span>
+  <span class="hl slc">// Ждем 100 миллисекунд</span>
+  monitor<span class="hl opt">::</span>PreciseTimer<span class="hl opt">::</span><span class="hl kwd">sleepMs</span><span class="hl opt">(</span><span class="hl num">100</span><span class="hl opt">);</span>
+  <span class="hl slc">// Проверяем, что значение таймера до задежки</span>
+  <span class="hl slc">// меньше, чем после. Этим мы проверили, что</span>
+  <span class="hl slc">// очередь замеров работает, так как получили </span>
+  <span class="hl slc">// корректное значение второго в очереди замера.</span>
+  <span class="hl kwd">EXPECT_LT</span><span class="hl opt">(</span>a<span class="hl opt">,</span> timer<span class="hl opt">.</span><span class="hl kwd">release</span><span class="hl opt">());</span>
+<span class="hl opt">}</span>
 
-<span class="c1">// Проверка пустой очередь замеров</span>
-<span class="n">TEST</span><span class="p">(</span><span class="n">PreciseTimer</span><span class="p">,</span> <span class="n">EmptyQueue</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ext</span><span class="o">::</span><span class="n">PreciseTimer</span> <span class="n">timer</span><span class="p">;</span>
-  <span class="c1">// Если очередь замеров пуста, метод release() должен</span>
-  <span class="c1">// возвращать -1.</span>
-  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">timer</span><span class="p">.</span><span class="n">release</span><span class="p">());</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl slc">// Проверка пустой очередь замеров</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>PreciseTimer<span class="hl opt">,</span> EmptyQueue<span class="hl opt">) {</span>
+  ext<span class="hl opt">::</span>PreciseTimer timer<span class="hl opt">;</span>
+  <span class="hl slc">// Если очередь замеров пуста, метод release() должен</span>
+  <span class="hl slc">// возвращать -1.</span>
+  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(-</span><span class="hl num">1</span><span class="hl opt">,</span> timer<span class="hl opt">.</span><span class="hl kwd">release</span><span class="hl opt">());</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Я потратил на этот класс часа четыре неторопливой работы, а на написание тестов всего полчаса, но эти полчаса будут мне служить верой и правдой еще очень долго.</p>
 
@@ -282,14 +285,15 @@
 
 <p>В завершении, нам нужна главная программа для запуска тестов:</p>
 
-<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="c1">// Инициализируем библиотеку</span>
-  <span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
-  <span class="c1">// Запускаем все тесты, прилинкованные к проекту</span>
-  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl slc">// Инициализируем библиотеку</span>
+  testing<span class="hl opt">::</span><span class="hl kwd">InitGoogleTest</span><span class="hl opt">(&amp;</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
+  <span class="hl slc">// Запускаем все тесты, прилинкованные к проекту</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">RUN_ALL_TESTS</span><span class="hl opt">();</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Компилируем:</p>
 

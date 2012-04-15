@@ -53,86 +53,87 @@
 
 <p><code>mutex.h</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#ifndef _EXT_MUTEX_H</span>
-<span class="cp">#define _EXT_MUTEX_H</span>
+<pre class="hl">
+<span class="hl ppc">#ifndef _EXT_MUTEX_H</span>
+<span class="hl ppc">#define _EXT_MUTEX_H</span>
 
-<span class="cp">#ifdef WIN32</span>
-<span class="cp">#define WIN32_LEAN_AND_MEAN</span>
-<span class="cp">#define NOGDI</span>
-<span class="cp">#include &lt;windows.h&gt;</span>
-<span class="cp">#else</span>
-<span class="cp">#include &lt;stdlib.h&gt;</span>
-<span class="cp">#include &lt;pthread.h&gt;</span>
-<span class="cp">#endif</span>
+<span class="hl ppc">#ifdef WIN32</span>
+<span class="hl ppc">#define WIN32_LEAN_AND_MEAN</span>
+<span class="hl ppc">#define NOGDI</span>
+<span class="hl ppc">#include &lt;windows.h&gt;</span>
+<span class="hl ppc">#else</span>
+<span class="hl ppc">#include &lt;stdlib.h&gt;</span>
+<span class="hl ppc">#include &lt;pthread.h&gt;</span>
+<span class="hl ppc">#endif</span>
 
-<span class="k">namespace</span> <span class="n">ext</span> <span class="p">{</span>
+<span class="hl kwa">namespace</span> ext <span class="hl opt">{</span>
 
-<span class="cp">#ifdef WIN32</span>
-  <span class="k">typedef</span> <span class="n">CRITICAL_SECTION</span> <span class="n">MutexType</span><span class="p">;</span>
-<span class="cp">#else</span>
-  <span class="k">typedef</span> <span class="n">pthread_mutex_t</span> <span class="n">MutexType</span><span class="p">;</span>
-<span class="cp">#endif</span>
+<span class="hl ppc">#ifdef WIN32</span>
+  <span class="hl kwc">typedef</span> CRITICAL_SECTION MutexType<span class="hl opt">;</span>
+<span class="hl ppc">#else</span>
+  <span class="hl kwc">typedef</span> pthread_mutex_t MutexType<span class="hl opt">;</span>
+<span class="hl ppc">#endif</span>
 
-<span class="c1">// Интерфейс класса Mutex.</span>
-<span class="c1">// Класс задумывался как маленький и быстрый, поэтому все</span>
-<span class="c1">// определено прямо в заголовочном файле, и все функции</span>
-<span class="c1">// объявлены принудительно inline. Это должно уберечь</span>
-<span class="c1">// от ошибок и предупреждений о двойных символах при</span>
-<span class="c1">// включении mutex.h в несколько модулей.</span>
-<span class="k">class</span> <span class="nc">Mutex</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="kr">inline</span> <span class="n">Mutex</span><span class="p">();</span>
-  <span class="c1">// Деструктор объявлен как не виртуальный из-за тех же</span>
-  <span class="c1">// соображений эффективности. Если вы планируете</span>
-  <span class="c1">// наследоваться от этого класса, то лучше сделать</span>
-  <span class="c1">// деструктор виртуальным, так как наследование от класса</span>
-  <span class="c1">// с не виртуальным деструктором потенциально опасно</span>
-  <span class="c1">// с точки зрения утечек памяти и является одним из</span>
-  <span class="c1">// больших &quot;no-no&quot; в С++.</span>
-  <span class="kr">inline</span> <span class="o">~</span><span class="n">Mutex</span><span class="p">();</span>
+<span class="hl slc">// Интерфейс класса Mutex.</span>
+<span class="hl slc">// Класс задумывался как маленький и быстрый, поэтому все</span>
+<span class="hl slc">// определено прямо в заголовочном файле, и все функции</span>
+<span class="hl slc">// объявлены принудительно inline. Это должно уберечь</span>
+<span class="hl slc">// от ошибок и предупреждений о двойных символах при</span>
+<span class="hl slc">// включении mutex.h в несколько модулей.</span>
+<span class="hl kwc">class</span> Mutex <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwc">inline</span> <span class="hl kwd">Mutex</span><span class="hl opt">();</span>
+  <span class="hl slc">// Деструктор объявлен как не виртуальный из-за тех же</span>
+  <span class="hl slc">// соображений эффективности. Если вы планируете</span>
+  <span class="hl slc">// наследоваться от этого класса, то лучше сделать</span>
+  <span class="hl slc">// деструктор виртуальным, так как наследование от класса</span>
+  <span class="hl slc">// с не виртуальным деструктором потенциально опасно</span>
+  <span class="hl slc">// с точки зрения утечек памяти и является одним из</span>
+  <span class="hl slc">// больших &quot;no-no&quot; в С++.</span>
+  <span class="hl kwc">inline</span> <span class="hl opt">~</span><span class="hl kwd">Mutex</span><span class="hl opt">();</span>
 
-  <span class="c1">// Функция захвата блокировки (вход в комнату и запирание</span>
-  <span class="c1">// двери ключом изнутри). </span>
-  <span class="kr">inline</span> <span class="kt">void</span> <span class="n">Lock</span><span class="p">();</span>
+  <span class="hl slc">// Функция захвата блокировки (вход в комнату и запирание</span>
+  <span class="hl slc">// двери ключом изнутри). </span>
+  <span class="hl kwc">inline</span> <span class="hl kwb">void</span> <span class="hl kwd">Lock</span><span class="hl opt">();</span>
 
-  <span class="c1">// Функция освобождения блокировки (отпирание двери и</span>
-  <span class="c1">// выход из комнаты)</span>
-  <span class="kr">inline</span> <span class="kt">void</span> <span class="n">Unlock</span><span class="p">();</span>
-<span class="k">private</span><span class="o">:</span>
-  <span class="n">MutexType</span> <span class="n">__mutex</span><span class="p">;</span>
+  <span class="hl slc">// Функция освобождения блокировки (отпирание двери и</span>
+  <span class="hl slc">// выход из комнаты)</span>
+  <span class="hl kwc">inline</span> <span class="hl kwb">void</span> <span class="hl kwd">Unlock</span><span class="hl opt">();</span>
+<span class="hl kwc">private</span><span class="hl opt">:</span>
+  MutexType __mutex<span class="hl opt">;</span>
 
-  <span class="c1">// Защита от случайного копирования объекта данного класса.</span>
-  <span class="c1">// Экземпляр этого класса с трудом может быть нормально</span>
-  <span class="c1">// скопирован, так как он жестко привязан к системному</span>
-  <span class="c1">// ресурсу. </span>
-  <span class="n">Mutex</span><span class="p">(</span><span class="k">const</span> <span class="n">Mutex</span><span class="o">&amp;</span><span class="p">);</span>
-  <span class="kt">void</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Mutex</span><span class="o">&amp;</span><span class="p">);</span>
-<span class="p">};</span>
+  <span class="hl slc">// Защита от случайного копирования объекта данного класса.</span>
+  <span class="hl slc">// Экземпляр этого класса с трудом может быть нормально</span>
+  <span class="hl slc">// скопирован, так как он жестко привязан к системному</span>
+  <span class="hl slc">// ресурсу. </span>
+  <span class="hl kwd">Mutex</span><span class="hl opt">(</span><span class="hl kwb">const</span> Mutex<span class="hl opt">&amp;);</span>
+  <span class="hl kwb">void</span> <span class="hl kwc">operator</span><span class="hl opt">=(</span><span class="hl kwb">const</span> Mutex<span class="hl opt">&amp;);</span>
+<span class="hl opt">};</span>
 
-<span class="cp">#ifdef WIN32</span>
+<span class="hl ppc">#ifdef WIN32</span>
 
-<span class="c1">// Реализация через Windows API</span>
+<span class="hl slc">// Реализация через Windows API</span>
 
-<span class="n">Mutex</span><span class="o">::</span><span class="n">Mutex</span><span class="p">()</span>             <span class="p">{</span> <span class="n">InitializeCriticalSection</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">);</span> <span class="p">}</span>
-<span class="n">Mutex</span><span class="o">::~</span><span class="n">Mutex</span><span class="p">()</span>            <span class="p">{</span> <span class="n">DeleteCriticalSection</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">);</span> <span class="p">}</span>
-<span class="kt">void</span> <span class="n">Mutex</span><span class="o">::</span><span class="n">Lock</span><span class="p">()</span>         <span class="p">{</span> <span class="n">EnterCriticalSection</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">);</span> <span class="p">}</span>
-<span class="kt">void</span> <span class="n">Mutex</span><span class="o">::</span><span class="n">Unlock</span><span class="p">()</span>       <span class="p">{</span> <span class="n">LeaveCriticalSection</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">);</span> <span class="p">}</span>
+Mutex<span class="hl opt">::</span><span class="hl kwd">Mutex</span><span class="hl opt">()             {</span> <span class="hl kwd">InitializeCriticalSection</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">); }</span>
+Mutex<span class="hl opt">::~</span><span class="hl kwd">Mutex</span><span class="hl opt">()            {</span> <span class="hl kwd">DeleteCriticalSection</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">); }</span>
+<span class="hl kwb">void</span> Mutex<span class="hl opt">::</span><span class="hl kwd">Lock</span><span class="hl opt">()         {</span> <span class="hl kwd">EnterCriticalSection</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">); }</span>
+<span class="hl kwb">void</span> Mutex<span class="hl opt">::</span><span class="hl kwd">Unlock</span><span class="hl opt">()       {</span> <span class="hl kwd">LeaveCriticalSection</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">); }</span>
 
-<span class="cp">#else </span><span class="c1">// WIN32</span>
+<span class="hl ppc">#else</span> <span class="hl slc">// WIN32</span>
+<span class="hl ppc"></span>
+<span class="hl slc">// UNIX версия через pthread</span>
 
-<span class="c1">// UNIX версия через pthread</span>
+Mutex<span class="hl opt">::</span><span class="hl kwd">Mutex</span><span class="hl opt">()             {</span> <span class="hl kwd">pthread_mutex_init</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">,</span> NULL<span class="hl opt">); }</span>
+Mutex<span class="hl opt">::~</span><span class="hl kwd">Mutex</span><span class="hl opt">()            {</span> <span class="hl kwd">pthread_mutex_destroy</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">); }</span>
+<span class="hl kwb">void</span> Mutex<span class="hl opt">::</span><span class="hl kwd">Lock</span><span class="hl opt">()         {</span> <span class="hl kwd">pthread_mutex_lock</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">); }</span>
+<span class="hl kwb">void</span> Mutex<span class="hl opt">::</span><span class="hl kwd">Unlock</span><span class="hl opt">()       {</span> <span class="hl kwd">pthread_mutex_unlock</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">); }</span>
 
-<span class="n">Mutex</span><span class="o">::</span><span class="n">Mutex</span><span class="p">()</span>             <span class="p">{</span> <span class="n">pthread_mutex_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span> <span class="p">}</span>
-<span class="n">Mutex</span><span class="o">::~</span><span class="n">Mutex</span><span class="p">()</span>            <span class="p">{</span> <span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">);</span> <span class="p">}</span>
-<span class="kt">void</span> <span class="n">Mutex</span><span class="o">::</span><span class="n">Lock</span><span class="p">()</span>         <span class="p">{</span> <span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">);</span> <span class="p">}</span>
-<span class="kt">void</span> <span class="n">Mutex</span><span class="o">::</span><span class="n">Unlock</span><span class="p">()</span>       <span class="p">{</span> <span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">);</span> <span class="p">}</span>
+<span class="hl ppc">#endif</span> <span class="hl slc">// WIN32</span>
+<span class="hl ppc"></span>
+<span class="hl opt">}</span> <span class="hl slc">// ext</span>
 
-<span class="cp">#endif </span><span class="c1">// WIN32</span>
-
-<span class="p">}</span> <span class="c1">// ext</span>
-
-<span class="cp">#endif</span>
-</pre></div>
+<span class="hl ppc">#endif</span>
+</pre>
 
 <p>Касаемо техники <a href="/blog/russian/2009/01/27/preventing-copying-objects-in-cpp/">&ldquo;защиты&rdquo; объекта в С++ от случайного копирования</a> я уже писал ранее.</p>
 
@@ -146,93 +147,95 @@
 
 <p><code>mutex_unittest.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
 
-<span class="cp">#include &quot;mutex.h&quot;</span>
-<span class="cp">#include &quot;thread.h&quot;</span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;mutex.h&quot;</span><span class="hl ppc"></span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;thread.h&quot;</span><span class="hl ppc"></span>
 
-<span class="c1">// Макрос для осуществления задержки в миллисекундах</span>
-<span class="cp">#ifdef WIN32</span>
-<span class="cp">#include &lt;windows.h&gt;</span>
-<span class="cp">#define msleep(x)    Sleep(x)</span>
-<span class="cp">#else</span>
-<span class="cp">#include &lt;unistd.h&gt;</span>
-<span class="cp">#define msleep(x)    usleep((x)*1000)</span>
-<span class="cp">#endif</span>
+<span class="hl slc">// Макрос для осуществления задержки в миллисекундах</span>
+<span class="hl ppc">#ifdef WIN32</span>
+<span class="hl ppc">#include &lt;windows.h&gt;</span>
+<span class="hl ppc">#define msleep(x)    Sleep(x)</span>
+<span class="hl ppc">#else</span>
+<span class="hl ppc">#include &lt;unistd.h&gt;</span>
+<span class="hl ppc">#define msleep(x)    usleep((x)*1000)</span>
+<span class="hl ppc">#endif</span>
 
-<span class="c1">// Определим параллельный поток, который будет</span>
-<span class="c1">// &quot;конкурировать&quot; с основным потоком за блокировку.</span>
-<span class="c1">// Данный поток будет пытаться захватить блокировку,</span>
-<span class="c1">// изменить значение флага и освободить затем</span>
-<span class="c1">// блокировку.</span>
-<span class="k">class</span> <span class="nc">A</span><span class="o">:</span> <span class="k">public</span> <span class="n">ext</span><span class="o">::</span><span class="n">Thread</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="c1">// Передаем в конструкторе ссылку на флаг и </span>
-  <span class="c1">// ссылку на блокировку.</span>
-  <span class="n">A</span><span class="p">(</span><span class="k">volatile</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">flag</span><span class="p">,</span> <span class="n">ext</span><span class="o">::</span><span class="n">Mutex</span><span class="o">&amp;</span> <span class="n">mutex</span><span class="p">)</span> <span class="o">:</span>
-    <span class="n">__flag</span><span class="p">(</span><span class="n">flag</span><span class="p">),</span> <span class="n">__mutex</span><span class="p">(</span><span class="n">mutex</span><span class="p">)</span>
-  <span class="p">{}</span>
+<span class="hl slc">// Определим параллельный поток, который будет</span>
+<span class="hl slc">// &quot;конкурировать&quot; с основным потоком за блокировку.</span>
+<span class="hl slc">// Данный поток будет пытаться захватить блокировку,</span>
+<span class="hl slc">// изменить значение флага и освободить затем</span>
+<span class="hl slc">// блокировку.</span>
+<span class="hl kwc">class</span> A<span class="hl opt">:</span> <span class="hl kwc">public</span> ext<span class="hl opt">::</span>Thread <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl slc">// Передаем в конструкторе ссылку на флаг и </span>
+  <span class="hl slc">// ссылку на блокировку.</span>
+  <span class="hl kwd">A</span><span class="hl opt">(</span><span class="hl kwc">volatile</span> <span class="hl kwb">int</span><span class="hl opt">&amp;</span> flag<span class="hl opt">,</span> ext<span class="hl opt">::</span>Mutex<span class="hl opt">&amp;</span> mutex<span class="hl opt">) :</span>
+    <span class="hl kwd">__flag</span><span class="hl opt">(</span>flag<span class="hl opt">),</span> <span class="hl kwd">__mutex</span><span class="hl opt">(</span>mutex<span class="hl opt">)</span>
+  <span class="hl opt">{}</span>
 
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">Execute</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// Захват блокировки (1)</span>
-    <span class="n">__mutex</span><span class="p">.</span><span class="n">Lock</span><span class="p">();</span>
-    <span class="c1">// Изменяет флаг на 1</span>
-    <span class="n">__flag</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-    <span class="c1">// Освобождаем блокировку</span>
-    <span class="n">__mutex</span><span class="p">.</span><span class="n">Unlock</span><span class="p">();</span>
-  <span class="p">}</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">Execute</span><span class="hl opt">() {</span>
+    <span class="hl slc">// Захват блокировки (1)</span>
+    __mutex<span class="hl opt">.</span><span class="hl kwd">Lock</span><span class="hl opt">();</span>
+    <span class="hl slc">// Изменяет флаг на 1</span>
+    __flag <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+    <span class="hl slc">// Освобождаем блокировку</span>
+    __mutex<span class="hl opt">.</span><span class="hl kwd">Unlock</span><span class="hl opt">();</span>
+  <span class="hl opt">}</span>
 
-<span class="k">private</span><span class="o">:</span>
-  <span class="k">volatile</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">__flag</span><span class="p">;</span>
-  <span class="n">ext</span><span class="o">::</span><span class="n">Mutex</span><span class="o">&amp;</span> <span class="n">__mutex</span><span class="p">;</span>
-<span class="p">};</span>
+<span class="hl kwc">private</span><span class="hl opt">:</span>
+  <span class="hl kwc">volatile</span> <span class="hl kwb">int</span><span class="hl opt">&amp;</span> __flag<span class="hl opt">;</span>
+  ext<span class="hl opt">::</span>Mutex<span class="hl opt">&amp;</span> __mutex<span class="hl opt">;</span>
+<span class="hl opt">};</span>
 
-<span class="n">TEST</span><span class="p">(</span><span class="n">MutexTest</span><span class="p">,</span> <span class="n">Generic</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// Начальное значение флага - 0.</span>
-  <span class="k">volatile</span> <span class="kt">int</span> <span class="n">flag</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>MutexTest<span class="hl opt">,</span> Generic<span class="hl opt">) {</span>
+  <span class="hl slc">// Начальное значение флага - 0.</span>
+  <span class="hl kwc">volatile</span> <span class="hl kwb">int</span> flag <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
 
-  <span class="c1">// Создаем объект-блокировку</span>
-  <span class="n">ext</span><span class="o">::</span><span class="n">Mutex</span> <span class="n">mutex</span><span class="p">;</span>
-  <span class="c1">// Захватываем блокировку.</span>
-  <span class="n">mutex</span><span class="p">.</span><span class="n">Lock</span><span class="p">();</span>
+  <span class="hl slc">// Создаем объект-блокировку</span>
+  ext<span class="hl opt">::</span>Mutex mutex<span class="hl opt">;</span>
+  <span class="hl slc">// Захватываем блокировку.</span>
+  mutex<span class="hl opt">.</span><span class="hl kwd">Lock</span><span class="hl opt">();</span>
 
-  <span class="c1">// Создаем параллельный поток выполнения.</span>
-  <span class="n">A</span> <span class="n">a</span><span class="p">(</span><span class="n">flag</span><span class="p">,</span> <span class="n">mutex</span><span class="p">);</span>
-  <span class="c1">// Запускаем его.</span>
-  <span class="n">a</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
-  <span class="c1">// Ждем для проформы десятую секунды, чтобы дать</span>
-  <span class="c1">// время параллельному потоку создаться и успеть</span>
-  <span class="c1">// дойти до строки (1), то есть до захвата блокировки.</span>
-  <span class="n">msleep</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+  <span class="hl slc">// Создаем параллельный поток выполнения.</span>
+  A <span class="hl kwd">a</span><span class="hl opt">(</span>flag<span class="hl opt">,</span> mutex<span class="hl opt">);</span>
+  <span class="hl slc">// Запускаем его.</span>
+  a<span class="hl opt">.</span><span class="hl kwd">Start</span><span class="hl opt">();</span>
+  <span class="hl slc">// Ждем для проформы десятую секунды, чтобы дать</span>
+  <span class="hl slc">// время параллельному потоку создаться и успеть</span>
+  <span class="hl slc">// дойти до строки (1), то есть до захвата блокировки.</span>
+  <span class="hl kwd">msleep</span><span class="hl opt">(</span><span class="hl num">100</span><span class="hl opt">);</span>
 
-  <span class="c1">// Значение флага должно быть все еще 0, так как</span>
-  <span class="c1">// параллельный поток должен быть блокирован на</span>
-  <span class="c1">// строке (1), так как мы захватили блокировку еще</span>
-  <span class="c1">// до его создания.</span>
-  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">flag</span><span class="p">);</span>
+  <span class="hl slc">// Значение флага должно быть все еще 0, так как</span>
+  <span class="hl slc">// параллельный поток должен быть блокирован на</span>
+  <span class="hl slc">// строке (1), так как мы захватили блокировку еще</span>
+  <span class="hl slc">// до его создания.</span>
+  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">,</span> flag<span class="hl opt">);</span>
 
-  <span class="c1">// Освобождаем блокировку, тем самым давая </span>
-  <span class="c1">// параллельному потоку выполняться дальше и</span>
-  <span class="c1">// изменить значение флага на 1.</span>
-  <span class="n">mutex</span><span class="p">.</span><span class="n">Unlock</span><span class="p">();</span>
+  <span class="hl slc">// Освобождаем блокировку, тем самым давая </span>
+  <span class="hl slc">// параллельному потоку выполняться дальше и</span>
+  <span class="hl slc">// изменить значение флага на 1.</span>
+  mutex<span class="hl opt">.</span><span class="hl kwd">Unlock</span><span class="hl opt">();</span>
 
-  <span class="c1">// Ждем завершения параллельного потока.</span>
-  <span class="n">a</span><span class="p">.</span><span class="n">Join</span><span class="p">();</span>
-  <span class="c1">// Так как параллельный поток завершился, то</span>
-  <span class="c1">// флаг теперь точно должен быть равен 1.</span>
-  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">flag</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl slc">// Ждем завершения параллельного потока.</span>
+  a<span class="hl opt">.</span><span class="hl kwd">Join</span><span class="hl opt">();</span>
+  <span class="hl slc">// Так как параллельный поток завершился, то</span>
+  <span class="hl slc">// флаг теперь точно должен быть равен 1.</span>
+  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> flag<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Для запуска тестов нам нужен стандартный файл запуска <code>runner.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
-  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  testing<span class="hl opt">::</span><span class="hl kwd">InitGoogleTest</span><span class="hl opt">(&amp;</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">RUN_ALL_TESTS</span><span class="hl opt">();</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Компилируем все вместе.</p>
 
@@ -262,13 +265,15 @@
 
 <p>Теперь внесем в исходный текст класса &ldquo;случайную&rdquo; ошибку, заменив строку:</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">Mutex</span><span class="o">::</span><span class="n">Lock</span><span class="p">()</span>         <span class="p">{</span> <span class="n">EnterCriticalSection</span><span class="p">(</span><span class="o">&amp;</span><span class="n">__mutex</span><span class="p">);</span> <span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">void</span> Mutex<span class="hl opt">::</span><span class="hl kwd">Lock</span><span class="hl opt">()         {</span> <span class="hl kwd">EnterCriticalSection</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">); }</span>
+</pre>
 
 <p>на</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">Mutex</span><span class="o">::</span><span class="n">Lock</span><span class="p">()</span>         <span class="p">{</span> <span class="cm">/* EnterCriticalSection(&amp;__mutex); */</span> <span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">void</span> Mutex<span class="hl opt">::</span><span class="hl kwd">Lock</span><span class="hl opt">()         {</span> <span class="hl com">/* EnterCriticalSection(&amp;__mutex); */</span> <span class="hl opt">}</span>
+</pre>
 
 <p>Этой &ldquo;ошибкой&rdquo; мы просто отключили создание блокировки. Перекомпилируем все заново и запустим:</p>
 

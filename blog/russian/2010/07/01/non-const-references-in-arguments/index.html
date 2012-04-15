@@ -45,23 +45,25 @@
 
 <p>Например, вместо:</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="o">&amp;</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// change ‘t’</span>
-<span class="p">}</span>
-<span class="p">...</span>
-<span class="n">T</span> <span class="n">a</span><span class="p">;</span>
-<span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">f</span><span class="hl opt">(</span>T<span class="hl opt">&amp;</span> t<span class="hl opt">) {</span>
+  <span class="hl slc">// change ‘t’</span>
+<span class="hl opt">}</span>
+<span class="hl opt">...</span>
+T a<span class="hl opt">;</span>
+<span class="hl kwd">f</span><span class="hl opt">(</span>a<span class="hl opt">);</span>
+</pre>
 
 <p>я предпочту передачу по указателю:</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// change ‘*t’</span>
-<span class="p">}</span>
-<span class="p">...</span>
-<span class="n">T</span> <span class="n">a</span><span class="p">;</span>
-<span class="n">f</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">);</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">f</span><span class="hl opt">(</span>T<span class="hl opt">*</span> t<span class="hl opt">) {</span>
+  <span class="hl slc">// change ‘*t’</span>
+<span class="hl opt">}</span>
+<span class="hl opt">...</span>
+T a<span class="hl opt">;</span>
+<span class="hl kwd">f</span><span class="hl opt">(&amp;</span>a<span class="hl opt">);</span>
+</pre>
 
 <p>Мой основной мотив – наглядность в вызывающем коде. Когда я вижу <code>&amp;</code> перед аргументом, я точно знаю, что это возвращаемый параметр, и он может измениться после вызова. И мне не надо постоянно помнить, какие именно агрументы у этой функции ссылки, а какие нет.</p>
 

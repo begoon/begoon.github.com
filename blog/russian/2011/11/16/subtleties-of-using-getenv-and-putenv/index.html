@@ -47,134 +47,141 @@
 
 <p>Часто люди пишут так:</p>
 
-<div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">getenv</span><span class="p">(</span><span class="s">&quot;A_FLAG&quot;</span><span class="p">))</span> <span class="p">{</span>
-  <span class="p">...</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwd">getenv</span><span class="hl opt">(</span><span class="hl str">&quot;A_FLAG&quot;</span><span class="hl opt">)) {</span>
+  <span class="hl opt">...</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Это работает неплохо для переменных-флагов, которые либо есть, либо нет. Значение не важно.</p>
 
 <p>Что получилось у меня:</p>
 
-<div class="highlight"><pre><span class="kt">int</span> <span class="n">main</span><span class="p">(...)</span> <span class="p">{</span>
-  <span class="n">putenv</span><span class="p">(</span><span class="s">&quot;GLOBAL_FLAG=1&quot;</span><span class="p">);</span>  <span class="c1">// Глобальное значение для всей программы.</span>
-  <span class="p">...</span>
-  <span class="n">system</span><span class="p">(</span><span class="s">&quot;xyz&quot;</span><span class="p">);</span>            <span class="c1">// Это программа должна видеть GLOBAL_FLAG=1.</span>
-  <span class="p">...</span>
-  <span class="n">do_stuff</span><span class="p">();</span>
-  <span class="p">...</span>
-<span class="p">}</span>
+<pre class="hl">
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(...) {</span>
+  <span class="hl kwd">putenv</span><span class="hl opt">(</span><span class="hl str">&quot;GLOBAL_FLAG=1&quot;</span><span class="hl opt">);</span>  <span class="hl slc">// Глобальное значение для всей программы.</span>
+  <span class="hl opt">...</span>
+  <span class="hl kwd">system</span><span class="hl opt">(</span><span class="hl str">&quot;xyz&quot;</span><span class="hl opt">);</span>            <span class="hl slc">// Это программа должна видеть GLOBAL_FLAG=1.</span>
+  <span class="hl opt">...</span>
+  <span class="hl kwd">do_stuff</span><span class="hl opt">();</span>
+  <span class="hl opt">...</span>
+<span class="hl opt">}</span>
 
-<span class="kt">void</span> <span class="n">do_stuff</span><span class="p">()</span> <span class="p">{</span>
-  <span class="p">...</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">something</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">putenv</span><span class="p">(</span><span class="s">&quot;GLOBAL_FLAG=&quot;</span><span class="p">);</span> <span class="c1">// Убрать переменную.</span>
-    <span class="n">system</span><span class="p">(</span><span class="s">&quot;abc&quot;</span><span class="p">);</span>          <span class="c1">// А вот для этой программы флаг должен быть убран.</span>
-    <span class="p">...</span>
-  <span class="p">}</span>
-  <span class="p">...</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">getenv</span><span class="p">(</span><span class="s">&quot;GLOBAL_FLAG&quot;</span><span class="p">)</span> <span class="p">{</span>
-     <span class="c1">// И вот тут начиналась ерунда на разных платформах.</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">void</span> <span class="hl kwd">do_stuff</span><span class="hl opt">() {</span>
+  <span class="hl opt">...</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>something<span class="hl opt">) {</span>
+    <span class="hl kwd">putenv</span><span class="hl opt">(</span><span class="hl str">&quot;GLOBAL_FLAG=&quot;</span><span class="hl opt">);</span> <span class="hl slc">// Убрать переменную.</span>
+    <span class="hl kwd">system</span><span class="hl opt">(</span><span class="hl str">&quot;abc&quot;</span><span class="hl opt">);</span>          <span class="hl slc">// А вот для этой программы флаг должен быть убран.</span>
+    <span class="hl opt">...</span>
+  <span class="hl opt">}</span>
+  <span class="hl opt">...</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwd">getenv</span><span class="hl opt">(</span><span class="hl str">&quot;GLOBAL_FLAG&quot;</span><span class="hl opt">) {</span>
+     <span class="hl slc">// И вот тут начиналась ерунда на разных платформах.</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>А корень зла тут в том, что после <code>putenv()</code> результат <code>getenv()</code> может стать либо <code>NULL</code>, либо <code>&quot;&quot;</code>, в зависимости от платформы.</p>
 
 <p>Например:</p>
 
-<div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="n">getenv</span><span class="p">(</span><span class="s">&quot;GLOBAL_FLAG&quot;</span><span class="p">)</span> <span class="p">{</span>
-    <span class="p">...</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwd">getenv</span><span class="hl opt">(</span><span class="hl str">&quot;GLOBAL_FLAG&quot;</span><span class="hl opt">) {</span>
+    <span class="hl opt">...</span>
+</pre>
 
 <p>работает только на Windows и правильнее писать:</p>
 
-<div class="highlight"><pre><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">getenv</span><span class="p">(</span><span class="s">&quot;GLOBAL_FLAG&quot;</span><span class="p">);</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">p</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">p</span> <span class="o">!=</span> <span class="sc">&#39;\0&#39;</span><span class="p">)</span> <span class="p">{</span>
-  <span class="p">...</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">const char</span><span class="hl opt">*</span> p <span class="hl opt">=</span> <span class="hl kwd">getenv</span><span class="hl opt">(</span><span class="hl str">&quot;GLOBAL_FLAG&quot;</span><span class="hl opt">);</span>
+<span class="hl kwa">if</span> <span class="hl opt">(</span>p <span class="hl opt">!=</span> NULL <span class="hl opt">&amp;&amp; *</span>p <span class="hl opt">!=</span> <span class="hl str">'\0'</span><span class="hl opt">) {</span>
+  <span class="hl opt">...</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>И лучше сделать wrapper для <code>getenv()</code>:</p>
 
-<div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">GetEnv</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">v</span> <span class="o">=</span> <span class="n">getenv</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
-  <span class="k">return</span> <span class="n">v</span> <span class="o">?</span> <span class="n">v</span> <span class="o">:</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+std<span class="hl opt">::</span>string <span class="hl kwd">GetEnv</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> name<span class="hl opt">) {</span>
+  <span class="hl kwb">const char</span><span class="hl opt">*</span> v <span class="hl opt">=</span> <span class="hl kwd">getenv</span><span class="hl opt">(</span>name<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> v ? v <span class="hl opt">:</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>И для проверки писать:</p>
 
-<div class="highlight"><pre><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">GetEnv</span><span class="p">(</span><span class="s">&quot;var&quot;</span><span class="p">).</span><span class="n">empty</span><span class="p">())</span> <span class="p">{</span>
-  <span class="p">..</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwa">if</span> <span class="hl opt">(!</span><span class="hl kwd">GetEnv</span><span class="hl opt">(</span><span class="hl str">&quot;var&quot;</span><span class="hl opt">).</span><span class="hl kwd">empty</span><span class="hl opt">()) {</span>
+  <span class="hl opt">..</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Для теста я написал программу, которая выставляет переменную и проверяет ее значение через <code>getenv()</code> и через вызов дочерней программы.</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;string&gt;</span>
-<span class="cp">#include &lt;vector&gt;</span>
-<span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;cstdlib&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;string&gt;</span>
+<span class="hl ppc">#include &lt;vector&gt;</span>
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;cstdlib&gt;</span>
 
-<span class="cp">#ifdef WINDOWS</span>
-<span class="cp">#define putenv _putenv</span>
-<span class="cp">#endif</span>
+<span class="hl ppc">#ifdef WINDOWS</span>
+<span class="hl ppc">#define putenv _putenv</span>
+<span class="hl ppc">#endif</span>
 
-<span class="kt">void</span> <span class="n">PrintVariableViaShell</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Value from shell:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">cmd</span> <span class="o">=</span>
-<span class="cp">#ifdef WINDOWS</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;cmd /c echo [%&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;%]&quot;</span><span class="p">;</span>
-<span class="cp">#else</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;/bin/sh -c </span><span class="se">\&quot;</span><span class="s">echo [$&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&quot;]</span><span class="se">\&quot;</span><span class="s">&quot;</span><span class="p">;</span>
-<span class="cp">#endif</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">cmd</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> <span class="hl kwd">PrintVariableViaShell</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Value from shell:&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string cmd <span class="hl opt">=</span>
+<span class="hl ppc">#ifdef WINDOWS</span>
+    std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;cmd /c echo [%&quot;</span><span class="hl opt">) +</span> name <span class="hl opt">+</span> <span class="hl str">&quot;%]&quot;</span><span class="hl opt">;</span>
+<span class="hl ppc">#else</span>
+    std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;/bin/sh -c</span> <span class="hl esc">\&quot;</span><span class="hl str">echo [$&quot;</span><span class="hl opt">) +</span> name <span class="hl opt">+</span> <span class="hl str">&quot;]</span><span class="hl esc">\&quot;</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
+<span class="hl ppc">#endif</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> cmd <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  std<span class="hl opt">::</span><span class="hl kwd">system</span><span class="hl opt">(</span>cmd<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">());</span>
+<span class="hl opt">}</span>
 
-<span class="kt">void</span> <span class="n">PrintVariableViaGetEnv</span><span class="p">(</span><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Value from getenv():&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">v</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">getenv</span><span class="p">(</span><span class="n">name</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;[&quot;</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">v</span> <span class="o">?</span> <span class="n">v</span> <span class="o">:</span> <span class="s">&quot;&lt;NULL&gt;&quot;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;]&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> <span class="hl kwd">PrintVariableViaGetEnv</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Value from getenv():&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwb">const char</span><span class="hl opt">*</span> v <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">getenv</span><span class="hl opt">(</span>name<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">());</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;[&quot;</span> <span class="hl opt">&lt;&lt; (</span>v ? v <span class="hl opt">:</span> <span class="hl str">&quot;&lt;NULL&gt;&quot;</span><span class="hl opt">) &lt;&lt;</span> <span class="hl str">&quot;]&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="kt">void</span> <span class="n">SetVariableDeleteAndPrint</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">name_value</span><span class="p">,</span> <span class="k">const</span> <span class="kt">bool</span> <span class="n">equ</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">name_value_s</span><span class="p">(</span><span class="n">name_value</span><span class="p">);</span>
-  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="n">name_value_s</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">name_value_s</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">&#39;=&#39;</span><span class="p">));</span>
+<span class="hl kwb">void</span> <span class="hl kwd">SetVariableDeleteAndPrint</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> name_value<span class="hl opt">,</span> <span class="hl kwb">const bool</span> equ<span class="hl opt">) {</span>
+  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> <span class="hl kwd">name_value_s</span><span class="hl opt">(</span>name_value<span class="hl opt">);</span>
+  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string name <span class="hl opt">=</span> name_value_s<span class="hl opt">.</span><span class="hl kwd">substr</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">,</span> name_value_s<span class="hl opt">.</span><span class="hl kwd">find</span><span class="hl opt">(</span><span class="hl str">'='</span><span class="hl opt">));</span>
 
-  <span class="n">putenv</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">name_value</span><span class="p">));</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="n">delete_without_equ</span><span class="p">(</span><span class="n">name</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">name</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
-  <span class="n">delete_without_equ</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="sc">&#39;\0&#39;</span><span class="p">);</span>
-  <span class="n">putenv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">delete_without_equ</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+  <span class="hl kwd">putenv</span><span class="hl opt">(</span><span class="hl kwa">const_cast</span><span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">*&gt;(</span>name_value<span class="hl opt">));</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;</span> <span class="hl kwd">delete_without_equ</span><span class="hl opt">(</span>name<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> name<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">());</span>
+  delete_without_equ<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl str">'\0'</span><span class="hl opt">);</span>
+  <span class="hl kwd">putenv</span><span class="hl opt">(&amp;</span>delete_without_equ<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]);</span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Value after deleting WITHOUT &#39;=&#39;:&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="n">PrintVariableViaShell</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
-  <span class="n">PrintVariableViaGetEnv</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Value after deleting WITHOUT '=':&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwd">PrintVariableViaShell</span><span class="hl opt">(</span>name<span class="hl opt">);</span>
+  <span class="hl kwd">PrintVariableViaGetEnv</span><span class="hl opt">(</span>name<span class="hl opt">);</span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
 
-  <span class="n">putenv</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">name_value</span><span class="p">));</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">char</span><span class="o">&gt;</span> <span class="n">delete_with_equ</span><span class="p">(</span><span class="n">name</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span> <span class="n">name</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
-  <span class="n">delete_with_equ</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="sc">&#39;=&#39;</span><span class="p">);</span>
-  <span class="n">delete_with_equ</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="sc">&#39;\0&#39;</span><span class="p">);</span>
-  <span class="n">putenv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">delete_with_equ</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+  <span class="hl kwd">putenv</span><span class="hl opt">(</span><span class="hl kwa">const_cast</span><span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">*&gt;(</span>name_value<span class="hl opt">));</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;</span> <span class="hl kwd">delete_with_equ</span><span class="hl opt">(</span>name<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> name<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">());</span>
+  delete_with_equ<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl str">'='</span><span class="hl opt">);</span>
+  delete_with_equ<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl str">'\0'</span><span class="hl opt">);</span>
+  <span class="hl kwd">putenv</span><span class="hl opt">(&amp;</span>delete_with_equ<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]);</span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Value after deleting WITH &#39;=&#39;: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="n">PrintVariableViaShell</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
-  <span class="n">PrintVariableViaGetEnv</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
-<span class="p">}</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Value after deleting WITH '=': &quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwd">PrintVariableViaShell</span><span class="hl opt">(</span>name<span class="hl opt">);</span>
+  <span class="hl kwd">PrintVariableViaGetEnv</span><span class="hl opt">(</span>name<span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-<span class="cp">#ifdef WINDOWS</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;WINDOWS&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="cp">#else</span>
-  <span class="n">system</span><span class="p">(</span><span class="s">&quot;uname&quot;</span><span class="p">);</span>
-<span class="cp">#endif</span>
-  <span class="n">SetVariableDeleteAndPrint</span><span class="p">(</span><span class="s">&quot;ABC=123&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+<span class="hl ppc">#ifdef WINDOWS</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;WINDOWS&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+<span class="hl ppc">#else</span>
+  <span class="hl kwd">system</span><span class="hl opt">(</span><span class="hl str">&quot;uname&quot;</span><span class="hl opt">);</span>
+<span class="hl ppc">#endif</span>
+  <span class="hl kwd">SetVariableDeleteAndPrint</span><span class="hl opt">(</span><span class="hl str">&quot;ABC=123&quot;</span><span class="hl opt">,</span> <span class="hl kwa">true</span><span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>И вот результы с разных платформ.</p>
 

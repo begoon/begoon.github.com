@@ -46,15 +46,16 @@
 
 <p>To build a final HTML file from a bunch of tiny files I used a very simple program. Here is a bit of code from it:</p>
 
-<div class="highlight"><pre><span class="p">...</span>
-  <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">feof</span><span class="p">(</span><span class="n">f</span><span class="p">))</span> <span class="p">{</span>
-    <span class="kt">char</span> <span class="n">line</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
-    <span class="o">*</span><span class="n">line</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">fgets</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">line</span><span class="p">),</span> <span class="n">f</span><span class="p">);</span>
-    <span class="n">printf</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
-  <span class="p">}</span>
-<span class="p">...</span>
-</pre></div>
+<pre class="hl">
+<span class="hl opt">...</span>
+  <span class="hl kwa">while</span> <span class="hl opt">(!</span><span class="hl kwd">feof</span><span class="hl opt">(</span>f<span class="hl opt">)) {</span>
+    <span class="hl kwb">char</span> line<span class="hl opt">[</span><span class="hl num">1024</span><span class="hl opt">];</span>
+    <span class="hl opt">*</span>line <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+    <span class="hl kwd">fgets</span><span class="hl opt">(</span>line<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>line<span class="hl opt">),</span> f<span class="hl opt">);</span>
+    <span class="hl kwd">printf</span><span class="hl opt">(</span>line<span class="hl opt">);</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">...</span>
+</pre>
 
 <p>Implied that this code should copy all lines from a file <code>f</code> to the standard output.</p>
 
@@ -74,13 +75,15 @@
 
 <p>So instead of:</p>
 
-<div class="highlight"><pre><span class="n">printf</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwd">printf</span><span class="hl opt">(</span>line<span class="hl opt">);</span>
+</pre>
 
 <p>I had to write:</p>
 
-<div class="highlight"><pre><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">);</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%s&quot;</span><span class="hl opt">,</span> line<span class="hl opt">);</span>
+</pre>
 
 <p>Otherwise all percentage characters are treated as formatters because the first parameter of <code>printf()</code> is a format and all non-escaped <code>%</code> characters will be deleted. That is what was happening to me.</p>
 

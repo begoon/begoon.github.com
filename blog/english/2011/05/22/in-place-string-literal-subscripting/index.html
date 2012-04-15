@@ -42,16 +42,17 @@
 <div id="post">
   <p>I confess, I had never occurred before to subscript a string literal in-place. For example:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;stdio.h&gt;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">i</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%c&quot;</span><span class="p">,</span> <span class="s">&quot;12345678&quot;</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwb">int</span> i<span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> <span class="hl num">8</span><span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%c&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;12345678&quot;</span><span class="hl opt">[</span>i<span class="hl opt">]);</span>
+  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>To me personally the expression <code>&quot;12345678&quot;[i]</code> cuts the eye. But from the language point of view everything is fine.</p>
 

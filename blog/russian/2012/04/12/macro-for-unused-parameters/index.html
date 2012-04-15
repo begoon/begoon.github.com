@@ -45,22 +45,25 @@
 
 <p>Можно сделать:</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="cm">/* b */</span><span class="p">)</span> <span class="p">{</span>
-  <span class="p">...</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">f</span><span class="hl opt">(</span><span class="hl kwb">int</span> a<span class="hl opt">,</span> <span class="hl kwb">int</span> <span class="hl com">/* b */</span><span class="hl opt">) {</span>
+  <span class="hl opt">...</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Но это как-то некрасиво.</p>
 
 <p>Лучше сделать так:</p>
 
-<div class="highlight"><pre><span class="cp">#define DISCARD_UNUNSED_PARAMETER(x) (void)x</span>
+<pre class="hl">
 
-<span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">DISCARD_UNUNSED_PARAMETER</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
-  <span class="p">...</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl ppc">#define DISCARD_UNUNSED_PARAMETER(x) (void)x</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">f</span><span class="hl opt">(</span><span class="hl kwb">int</span> a<span class="hl opt">,</span> <span class="hl kwb">int</span> b<span class="hl opt">) {</span>
+  <span class="hl kwd">DISCARD_UNUNSED_PARAMETER</span><span class="hl opt">(</span>b<span class="hl opt">);</span>
+  <span class="hl opt">...</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Такое объявление наглядно, и можно легко найти все такие места в проекте.</p>
 

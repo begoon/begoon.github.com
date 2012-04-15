@@ -49,67 +49,70 @@
 
 <p>Написали программу, в которой есть интересный момент.</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;cstdlib&gt;</span>
-<span class="cp">#include &lt;algorithm&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;cstdlib&gt;</span>
+<span class="hl ppc">#include &lt;algorithm&gt;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="kt">char</span><span class="o">*</span> <span class="n">buf</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">memset</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">buf</span><span class="p">));</span>
-  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">bzero</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">buf</span><span class="p">));</span>
-  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">buf</span> <span class="o">+</span> <span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-  <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">fill</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="n">buf</span> <span class="o">+</span> <span class="n">n</span><span class="p">,</span> <span class="sc">&#39;\0&#39;</span><span class="p">);</span>
-  <span class="k">return</span> <span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwb">int</span> mode <span class="hl opt">=</span> argc <span class="hl opt">&gt;</span> <span class="hl num">1</span> ? std<span class="hl opt">::</span><span class="hl kwd">atoi</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]) :</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  <span class="hl kwb">int</span> n <span class="hl opt">=</span> <span class="hl num">1024</span> <span class="hl opt">*</span> <span class="hl num">1024</span> <span class="hl opt">*</span> <span class="hl num">1024</span> <span class="hl opt">*</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  <span class="hl kwb">char</span><span class="hl opt">*</span> buf <span class="hl opt">=</span> <span class="hl kwa">new</span> <span class="hl kwb">char</span><span class="hl opt">[</span>n<span class="hl opt">];</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>mode <span class="hl opt">==</span> <span class="hl num">1</span><span class="hl opt">)</span>
+    std<span class="hl opt">::</span><span class="hl kwd">memset</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span> n <span class="hl opt">*</span> <span class="hl kwa">sizeof</span><span class="hl opt">(*</span>buf<span class="hl opt">));</span>
+  <span class="hl kwa">else if</span> <span class="hl opt">(</span>mode <span class="hl opt">==</span> <span class="hl num">2</span><span class="hl opt">)</span>
+    <span class="hl kwd">bzero</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> n <span class="hl opt">*</span> <span class="hl kwa">sizeof</span><span class="hl opt">(*</span>buf<span class="hl opt">));</span>
+  <span class="hl kwa">else if</span> <span class="hl opt">(</span>mode <span class="hl opt">==</span> <span class="hl num">3</span><span class="hl opt">)</span>
+    std<span class="hl opt">::</span><span class="hl kwd">fill</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> buf <span class="hl opt">+</span> n<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">);</span>
+  <span class="hl kwa">else if</span> <span class="hl opt">(</span>mode <span class="hl opt">==</span> <span class="hl num">4</span><span class="hl opt">)</span>
+    std<span class="hl opt">::</span><span class="hl kwd">fill</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> buf <span class="hl opt">+</span> n<span class="hl opt">,</span> <span class="hl str">'\0'</span><span class="hl opt">);</span>
+  <span class="hl kwa">return</span> buf<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">];</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Обратите внимание на ветки 3 и 4. Они почти одно и то же, но не совсем.</p>
 
 <p>В целом была мысль получить вот эту специализацию <code>fill()</code>:</p>
 
-<div class="highlight"><pre><span class="c1">// Specialization: for one-byte types we can use memset.</span>
-<span class="kr">inline</span> <span class="kt">void</span>
-<span class="n">fill</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">__first</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">__last</span><span class="p">,</span> <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">&amp;</span> <span class="n">__c</span><span class="p">)</span>
-<span class="p">{</span>
-  <span class="n">__glibcxx_requires_valid_range</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__last</span><span class="p">);</span>
-  <span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">__tmp</span> <span class="o">=</span> <span class="n">__c</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">memset</span><span class="p">(</span><span class="n">__first</span><span class="p">,</span> <span class="n">__tmp</span><span class="p">,</span> <span class="n">__last</span> <span class="o">-</span> <span class="n">__first</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl slc">// Specialization: for one-byte types we can use memset.</span>
+<span class="hl kwc">inline</span> <span class="hl kwb">void</span>
+<span class="hl kwd">fill</span><span class="hl opt">(</span><span class="hl kwb">unsigned char</span><span class="hl opt">*</span> __first<span class="hl opt">,</span> <span class="hl kwb">unsigned char</span><span class="hl opt">*</span> __last<span class="hl opt">,</span> <span class="hl kwb">const unsigned char</span><span class="hl opt">&amp;</span> __c<span class="hl opt">)</span>
+<span class="hl opt">{</span>
+  <span class="hl kwd">__glibcxx_requires_valid_range</span><span class="hl opt">(</span>__first<span class="hl opt">,</span> __last<span class="hl opt">);</span>
+  <span class="hl kwb">const unsigned char</span> __tmp <span class="hl opt">=</span> __c<span class="hl opt">;</span>
+  std<span class="hl opt">::</span><span class="hl kwd">memset</span><span class="hl opt">(</span>__first<span class="hl opt">,</span> __tmp<span class="hl opt">,</span> __last <span class="hl opt">-</span> __first<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Итак, Makefile:</p>
 
-<div class="highlight"><pre><span class="nl">all:</span> <span class="n">build</span> <span class="n">run</span>
+<pre class="hl">
+all<span class="hl opt">:</span> build run
 
-<span class="p">.</span><span class="nl">SILENT:</span>
+<span class="hl opt">.</span>SILENT<span class="hl opt">:</span>
 
-<span class="n">target</span> <span class="o">=</span> <span class="n">memset_bzero_fill</span>
+target <span class="hl opt">=</span> memset_bzero_fill
 
-<span class="nl">build:</span>
-        <span class="n">g</span><span class="o">++</span> <span class="o">-</span><span class="n">O3</span> <span class="o">-</span><span class="n">o</span> <span class="err">$</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="err">$</span><span class="p">(</span><span class="n">target</span><span class="p">).</span><span class="n">cpp</span>
+build<span class="hl opt">:</span>
+        g<span class="hl opt">++ -</span>O3 <span class="hl opt">-</span>o $<span class="hl opt">(</span>target<span class="hl opt">)</span> $<span class="hl opt">(</span>target<span class="hl opt">).</span>cpp
 
-<span class="nl">run:</span> <span class="n">run</span><span class="o">-</span><span class="n">memset</span> <span class="n">run</span><span class="o">-</span><span class="n">bzero</span> <span class="n">run</span><span class="o">-</span><span class="n">fill</span><span class="o">-</span><span class="mi">1</span> <span class="n">run</span><span class="o">-</span><span class="n">fill</span><span class="o">-</span><span class="mi">2</span>
+run<span class="hl opt">:</span> run<span class="hl opt">-</span>memset run<span class="hl opt">-</span>bzero run<span class="hl opt">-</span>fill<span class="hl opt">-</span><span class="hl num">1</span> run<span class="hl opt">-</span>fill<span class="hl opt">-</span><span class="hl num">2</span>
 
-<span class="nl">go:</span>
-        <span class="p">(</span><span class="n">time</span> <span class="o">-</span><span class="n">p</span> <span class="p">.</span><span class="o">/</span><span class="err">$</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="err">$</span><span class="p">(</span><span class="n">mode</span><span class="p">))</span> <span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span> <span class="o">|</span> <span class="n">head</span> <span class="o">-</span><span class="mi">1</span> <span class="o">|</span> <span class="n">cut</span> <span class="o">-</span><span class="n">d</span><span class="sc">&#39; &#39;</span> <span class="o">-</span><span class="n">f</span> <span class="mi">2</span>
+go<span class="hl opt">:</span>
+        <span class="hl opt">(</span>time <span class="hl opt">-</span>p <span class="hl opt">./</span>$<span class="hl opt">(</span>target<span class="hl opt">)</span> $<span class="hl opt">(</span>mode<span class="hl opt">))</span> <span class="hl num">2</span><span class="hl opt">&gt;&amp;</span><span class="hl num">1</span> <span class="hl opt">|</span> head <span class="hl opt">-</span><span class="hl num">1</span> <span class="hl opt">|</span> cut <span class="hl opt">-</span>d<span class="hl str">' '</span> <span class="hl opt">-</span>f <span class="hl num">2</span>
 
-<span class="n">run</span><span class="o">-</span><span class="nl">memset:</span>
-        <span class="n">echo</span> <span class="err">$@</span> <span class="err">`$</span><span class="p">(</span><span class="n">MAKE</span><span class="p">)</span> <span class="n">go</span> <span class="n">mode</span><span class="o">=</span><span class="mi">1</span><span class="err">`</span>
+run<span class="hl opt">-</span>memset<span class="hl opt">:</span>
+        echo $&#64; `$<span class="hl opt">(</span>MAKE<span class="hl opt">)</span> go mode<span class="hl opt">=</span><span class="hl num">1</span>`
 
-<span class="n">run</span><span class="o">-</span><span class="nl">bzero:</span>
-        <span class="n">echo</span> <span class="err">$@</span> <span class="err">`$</span><span class="p">(</span><span class="n">MAKE</span><span class="p">)</span> <span class="n">go</span> <span class="n">mode</span><span class="o">=</span><span class="mi">2</span><span class="err">`</span>
+run<span class="hl opt">-</span>bzero<span class="hl opt">:</span>
+        echo $&#64; `$<span class="hl opt">(</span>MAKE<span class="hl opt">)</span> go mode<span class="hl opt">=</span><span class="hl num">2</span>`
 
-<span class="n">run</span><span class="o">-</span><span class="n">fill</span><span class="o">-</span><span class="mi">1</span><span class="o">:</span>
-        <span class="n">echo</span> <span class="err">$@</span> <span class="err">`$</span><span class="p">(</span><span class="n">MAKE</span><span class="p">)</span> <span class="n">go</span> <span class="n">mode</span><span class="o">=</span><span class="mi">3</span><span class="err">`</span>
+run<span class="hl opt">-</span>fill<span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">:</span>
+        echo $&#64; `$<span class="hl opt">(</span>MAKE<span class="hl opt">)</span> go mode<span class="hl opt">=</span><span class="hl num">3</span>`
 
-<span class="n">run</span><span class="o">-</span><span class="n">fill</span><span class="o">-</span><span class="mi">2</span><span class="o">:</span>
-        <span class="n">echo</span> <span class="err">$@</span> <span class="err">`$</span><span class="p">(</span><span class="n">MAKE</span><span class="p">)</span> <span class="n">go</span> <span class="n">mode</span><span class="o">=</span><span class="mi">4</span><span class="err">`</span>
-</pre></div>
+run<span class="hl opt">-</span>fill<span class="hl opt">-</span><span class="hl num">2</span><span class="hl opt">:</span>
+        echo $&#64; `$<span class="hl opt">(</span>MAKE<span class="hl opt">)</span> go mode<span class="hl opt">=</span><span class="hl num">4</span>`
+</pre>
 
 <p>Компилятор &ldquo;gcc version 4.2.1 (Apple Inc. build 5666) (dot 3)&rdquo;.</p>
 

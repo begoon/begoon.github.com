@@ -49,31 +49,32 @@
 
 <p>Например:</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">test_Ticket_dd6a19efa5_DATE</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0029  ENTRIES&lt;1, AB.CDE.VALUE.DATE&gt;    = TODAY&quot;</span><span class="p">,</span>
-            <span class="s">&quot;..............a........................b......&quot;</span><span class="p">);</span>
-  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0036  ENTRIES&lt;1, AB.CDE.BOOKING.DATE&gt;  = TODAY&quot;</span><span class="p">,</span>
-            <span class="s">&quot;..............a........................b......&quot;</span><span class="p">);</span>
-  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0036  ENTRIES&lt;1, AB.CDE.TOOKING DATE&gt;  = TODAY&quot;</span><span class="p">,</span>
-            <span class="s">&quot;..............a.................bbbb...c......&quot;</span><span class="p">);</span>
-  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0036 DATE = TODAY&quot;</span><span class="p">,</span>
-            <span class="s">&quot;.....aaaa.b......&quot;</span><span class="p">);</span>
-  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0036  DATE = TODAY&quot;</span><span class="p">,</span>
-            <span class="s">&quot;......aaaa.b......&quot;</span><span class="p">);</span>
-<span class="p">}</span>
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">test_Ticket_dd6a19efa5_DATE</span><span class="hl opt">(</span><span class="hl kwb">void</span> <span class="hl opt">**</span>state<span class="hl opt">) {</span>
+  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0029  ENTRIES&lt;1, AB.CDE.VALUE.DATE&gt;    = TODAY&quot;</span><span class="hl opt">,</span>
+            <span class="hl str">&quot;..............a........................b......&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0036  ENTRIES&lt;1, AB.CDE.BOOKING.DATE&gt;  = TODAY&quot;</span><span class="hl opt">,</span>
+            <span class="hl str">&quot;..............a........................b......&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0036  ENTRIES&lt;1, AB.CDE.TOOKING DATE&gt;  = TODAY&quot;</span><span class="hl opt">,</span>
+            <span class="hl str">&quot;..............a.................bbbb...c......&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0036 DATE = TODAY&quot;</span><span class="hl opt">,</span>
+            <span class="hl str">&quot;.....aaaa.b......&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0036  DATE = TODAY&quot;</span><span class="hl opt">,</span>
+            <span class="hl str">&quot;......aaaa.b......&quot;</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">void</span> <span class="n">test_Ticket_e8e02762a0_V_TIME</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0017     V.TIME = &#39;x&#39;&quot;</span><span class="p">,</span>
-            <span class="s">&quot;................a.bbb&quot;</span><span class="p">);</span>
-  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0034     V.DELTA = TIME() - TIME1&quot;</span><span class="p">,</span>
-            <span class="s">&quot;.................a.bbbb...c......&quot;</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> <span class="hl kwd">test_Ticket_e8e02762a0_V_TIME</span><span class="hl opt">(</span><span class="hl kwb">void</span> <span class="hl opt">**</span>state<span class="hl opt">) {</span>
+  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0017     V.TIME = 'x'&quot;</span><span class="hl opt">,</span>
+            <span class="hl str">&quot;................a.bbb&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0034     V.DELTA = TIME() - TIME1&quot;</span><span class="hl opt">,</span>
+            <span class="hl str">&quot;.................a.bbbb...c......&quot;</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">void</span> <span class="n">test_Ticket_0bcfac1fb6_READNEXT_FROM</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">string_eq</span><span class="p">(</span><span class="s">&quot;0167     READNEXT ID FROM 9 ELSE DONE = 1 &quot;</span><span class="p">,</span>
-            <span class="s">&quot;.........aaaaaaaa....bbbb.c.dddd......e.f.&quot;</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">void</span> <span class="hl kwd">test_Ticket_0bcfac1fb6_READNEXT_FROM</span><span class="hl opt">(</span><span class="hl kwb">void</span> <span class="hl opt">**</span>state<span class="hl opt">) {</span>
+  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0167     READNEXT ID FROM 9 ELSE DONE = 1 &quot;</span><span class="hl opt">,</span>
+            <span class="hl str">&quot;.........aaaaaaaa....bbbb.c.dddd......e.f.&quot;</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>И таких тестов сотни.</p>
 

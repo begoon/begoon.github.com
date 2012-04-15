@@ -47,79 +47,81 @@
 
 <p>Сравнивать будем на любимом решете Эратосфена (<code>erato-c-int.c</code>):</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;stdlib.h&gt;</span>
-<span class="cp">#include &lt;memory.h&gt;</span>
-<span class="cp">#include &lt;string.h&gt;</span>
-<span class="cp">#include &lt;math.h&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;stdio.h&gt;</span>
+<span class="hl ppc">#include &lt;stdlib.h&gt;</span>
+<span class="hl ppc">#include &lt;memory.h&gt;</span>
+<span class="hl ppc">#include &lt;string.h&gt;</span>
+<span class="hl ppc">#include &lt;math.h&gt;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">:</span> <span class="mi">100</span><span class="p">;</span>
-  <span class="kt">int</span><span class="o">*</span> <span class="n">S</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">count</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">sz</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">S</span><span class="p">);</span>
-  <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwb">int</span> n <span class="hl opt">=</span> argc <span class="hl opt">&gt;</span> <span class="hl num">1</span> ? <span class="hl kwd">atoi</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]) :</span> <span class="hl num">100</span><span class="hl opt">;</span>
+  <span class="hl kwb">int</span><span class="hl opt">*</span> S<span class="hl opt">;</span>
+  <span class="hl kwb">int</span> count<span class="hl opt">;</span>
+  <span class="hl kwb">int</span> sz <span class="hl opt">=</span> n <span class="hl opt">*</span> <span class="hl kwa">sizeof</span><span class="hl opt">(*</span>S<span class="hl opt">);</span>
+  <span class="hl kwb">int</span> i<span class="hl opt">,</span> j<span class="hl opt">;</span>
 
-  <span class="kt">long</span> <span class="n">sqrt_n</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="hl kwb">long</span> sqrt_n <span class="hl opt">=</span> <span class="hl kwd">sqrt</span><span class="hl opt">(</span>n<span class="hl opt">) +</span> <span class="hl num">1</span><span class="hl opt">;</span>
 
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%d</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> n<span class="hl opt">);</span>
 
-  <span class="n">S</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">sz</span><span class="p">);</span>
-  <span class="n">memset</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sz</span><span class="p">);</span>
+  S <span class="hl opt">=</span> <span class="hl kwd">malloc</span><span class="hl opt">(</span>sz<span class="hl opt">);</span>
+  <span class="hl kwd">memset</span><span class="hl opt">(</span>S<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span> sz<span class="hl opt">);</span>
 
-  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">sqrt_n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-      <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">j</span><span class="o">+=</span><span class="n">i</span><span class="p">)</span>
-        <span class="n">S</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>i <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> sqrt_n<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>S<span class="hl opt">[</span>i<span class="hl opt">] ==</span> <span class="hl num">0</span><span class="hl opt">)</span>
+      <span class="hl kwa">for</span> <span class="hl opt">(</span>j <span class="hl opt">=</span> i<span class="hl opt">*</span>i<span class="hl opt">;</span> j <span class="hl opt">&lt;</span> n<span class="hl opt">;</span> j<span class="hl opt">+=</span>i<span class="hl opt">)</span>
+        S<span class="hl opt">[</span>j<span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
 
-  <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-      <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+  count <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>i <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> n<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>S<span class="hl opt">[</span>i<span class="hl opt">] ==</span> <span class="hl num">0</span><span class="hl opt">)</span>
+      count<span class="hl opt">++;</span>
 
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">count</span><span class="p">);</span>
+  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%d</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> count<span class="hl opt">);</span>
 
-  <span class="n">free</span><span class="p">(</span><span class="n">S</span><span class="p">);</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwd">free</span><span class="hl opt">(</span>S<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Скрипт для запуска (Makefile):</p>
 
-<div class="highlight"><pre><span class="nv">SRC</span><span class="o">=</span>erato-c-int
-<span class="nv">N</span><span class="o">=</span>100000000
+<pre class="hl">
+SRC<span class="hl opt">=</span>erato-c-int
+N<span class="hl opt">=</span><span class="hl num">100000000</span>
 
-all:  build run
+<span class="hl kwa">all</span><span class="hl opt">:</span>  build run
 
-build: build-cl build-lcc build-tcc
+build<span class="hl opt">:</span> build-cl build-lcc build-tcc
 
-run: run-cl run-lcc run-tcc
+run<span class="hl opt">:</span> run-cl run-lcc run-tcc
 
-build-cl:
-  @cl /nologo /O2 -Fe<span class="k">$(</span>SRC<span class="k">)</span>-cl.exe <span class="k">$(</span>SRC<span class="k">)</span>.c
+build-cl<span class="hl opt">:</span>
+  &#64;cl <span class="hl opt">/</span>nologo <span class="hl opt">/</span>O2 <span class="hl opt">-</span>Fe<span class="hl opt">$(</span>SRC<span class="hl opt">)-</span>cl.exe <span class="hl opt">$(</span>SRC<span class="hl opt">)</span>.c
 
-run-cl:
-  @echo ---
-  -@cl 2&gt;&amp;1 | findstr Compiler
-  @ntimer.exe <span class="k">$(</span>SRC<span class="k">)</span>-cl.exe <span class="k">$(</span>N<span class="k">)</span> | findstr ETime
+run-cl<span class="hl opt">:</span>
+  &#64;echo <span class="hl opt">---</span>
+  <span class="hl opt">-</span>&#64;cl <span class="hl num">2</span><span class="hl opt">&gt;&amp;</span><span class="hl num">1</span> | findstr Compiler
+  &#64;ntimer.exe <span class="hl opt">$(</span>SRC<span class="hl opt">)-</span>cl.exe <span class="hl opt">$(</span>N<span class="hl opt">)</span> | findstr ETime
 
-build-lcc:
-  @c:<span class="se">\l</span>cc<span class="se">\b</span>in<span class="se">\l</span>cc -O2 -o <span class="k">$(</span>SRC<span class="k">)</span>-lcc.obj <span class="k">$(</span>SRC<span class="k">)</span>.c
-  @c:<span class="se">\l</span>cc<span class="se">\b</span>in<span class="se">\l</span>cclnk -o <span class="k">$(</span>SRC<span class="k">)</span>-lcc.exe <span class="k">$(</span>SRC<span class="k">)</span>-lcc.obj
+build-lcc<span class="hl opt">:</span>
+  &#64;c<span class="hl opt">:</span>\lcc<span class="hl esc">\b</span>in\lcc <span class="hl opt">-</span>O2 <span class="hl opt">-</span>o <span class="hl opt">$(</span>SRC<span class="hl opt">)-</span>lcc.obj <span class="hl opt">$(</span>SRC<span class="hl opt">)</span>.c
+  &#64;c<span class="hl opt">:</span>\lcc<span class="hl esc">\b</span>in\lcclnk <span class="hl opt">-</span>o <span class="hl opt">$(</span>SRC<span class="hl opt">)-</span>lcc.exe <span class="hl opt">$(</span>SRC<span class="hl opt">)-</span>lcc.obj
 
-run-lcc:
-  @echo ---
-  @c:<span class="se">\l</span>cc<span class="se">\b</span>in<span class="se">\l</span>cc -v
-  @ntimer.exe <span class="k">$(</span>SRC<span class="k">)</span>-lcc.exe <span class="k">$(</span>N<span class="k">)</span> | findstr ETime
+run-lcc<span class="hl opt">:</span>
+  &#64;echo <span class="hl opt">---</span>
+  &#64;c<span class="hl opt">:</span>\lcc<span class="hl esc">\b</span>in\lcc <span class="hl opt">-</span>v
+  &#64;ntimer.exe <span class="hl opt">$(</span>SRC<span class="hl opt">)-</span>lcc.exe <span class="hl opt">$(</span>N<span class="hl opt">)</span> | findstr ETime
 
-build-tcc:
-  @c:<span class="se">\t</span>cc<span class="se">\t</span>cc -O2 -o <span class="k">$(</span>SRC<span class="k">)</span>-tcc.exe <span class="k">$(</span>SRC<span class="k">)</span>.c
+build-tcc<span class="hl opt">:</span>
+  &#64;c<span class="hl opt">:</span><span class="hl esc">\t</span>cc<span class="hl esc">\t</span>cc <span class="hl opt">-</span>O2 <span class="hl opt">-</span>o <span class="hl opt">$(</span>SRC<span class="hl opt">)-</span>tcc.exe <span class="hl opt">$(</span>SRC<span class="hl opt">)</span>.c
 
-run-tcc:
-  @echo ---
-  @c:<span class="se">\t</span>cc<span class="se">\t</span>cc -v
-  @ntimer.exe <span class="k">$(</span>SRC<span class="k">)</span>-tcc.exe <span class="k">$(</span>N<span class="k">)</span> | findstr ETime
-</pre></div>
+run-tcc<span class="hl opt">:</span>
+  &#64;echo <span class="hl opt">---</span>
+  &#64;c<span class="hl opt">:</span><span class="hl esc">\t</span>cc<span class="hl esc">\t</span>cc <span class="hl opt">-</span>v
+  &#64;ntimer.exe <span class="hl opt">$(</span>SRC<span class="hl opt">)-</span>tcc.exe <span class="hl opt">$(</span>N<span class="hl opt">)</span> | findstr ETime
+</pre>
 
 <p>Погнали:</p>
 

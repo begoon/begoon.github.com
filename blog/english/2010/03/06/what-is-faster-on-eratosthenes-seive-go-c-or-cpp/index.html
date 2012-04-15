@@ -48,40 +48,41 @@
 
 <p>File <code>erato-go-bool.go</code>:</p>
 
-<div class="highlight"><pre><span class="k">package</span> <span class="n">main</span>
+<pre class="hl">
+<span class="hl kwa">package</span> main
 
-<span class="k">import</span> <span class="s">&quot;fmt&quot;</span>
-<span class="k">import</span> <span class="s">&quot;math&quot;</span>
-<span class="k">import</span> <span class="s">&quot;flag&quot;</span>
+<span class="hl kwa">import</span> <span class="hl str">&quot;fmt&quot;</span>
+<span class="hl kwa">import</span> <span class="hl str">&quot;math&quot;</span>
+<span class="hl kwa">import</span> <span class="hl str">&quot;flag&quot;</span>
 
-<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">var</span> <span class="n">N</span> <span class="nb">int</span>
-    <span class="n">flag</span><span class="p">.</span><span class="n">IntVar</span><span class="p">(&amp;</span><span class="n">N</span><span class="p">,</span> <span class="s">&quot;N&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">flag</span><span class="p">.</span><span class="n">Parse</span><span class="p">()</span>
+<span class="hl kwa">func</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+    <span class="hl kwa">var</span> N <span class="hl kwb">int</span>
+    flag<span class="hl opt">.</span><span class="hl kwd">IntVar</span><span class="hl opt">(&amp;</span>N<span class="hl opt">,</span> <span class="hl str">&quot;N&quot;</span><span class="hl opt">,</span> <span class="hl num">100</span><span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">)</span>
+    flag<span class="hl opt">.</span><span class="hl kwd">Parse</span><span class="hl opt">()</span>
 
-    <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;%d\n&quot;</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;%d</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> N<span class="hl opt">)</span>
 
-    <span class="n">seive</span> <span class="p">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="n">bool</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    seive <span class="hl opt">:=</span> <span class="hl kwb">make</span><span class="hl opt">([]</span><span class="hl kwb">bool</span><span class="hl opt">,</span> N<span class="hl opt">)</span>
    
-    <span class="n">limit</span> <span class="p">:=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="n">Sqrt</span><span class="p">(</span><span class="nb">float64</span><span class="p">(</span><span class="n">N</span><span class="p">)))</span> <span class="p">+</span> <span class="mi">1</span>
+    limit <span class="hl opt">:=</span> <span class="hl kwb">int</span><span class="hl opt">(</span>math<span class="hl opt">.</span><span class="hl kwd">Sqrt</span><span class="hl opt">(</span><span class="hl kwb">float64</span><span class="hl opt">(</span>N<span class="hl opt">))) +</span> <span class="hl num">1</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">limit</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">!</span><span class="n">seive</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">{</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="p">:=</span> <span class="n">i</span> <span class="p">*</span> <span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="p">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span> <span class="p">+=</span> <span class="n">i</span>  <span class="p">{</span>
-                <span class="n">seive</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="p">=</span> <span class="n">true</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+    <span class="hl kwa">for</span> i <span class="hl opt">:=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> limit<span class="hl opt">;</span> i<span class="hl opt">++ {</span>
+        <span class="hl kwa">if</span> <span class="hl opt">!</span>seive<span class="hl opt">[</span>i<span class="hl opt">] {</span>
+            <span class="hl kwa">for</span> j <span class="hl opt">:=</span> i <span class="hl opt">*</span> i<span class="hl opt">;</span> j <span class="hl opt">&lt;</span> N<span class="hl opt">;</span> j <span class="hl opt">+=</span> i  <span class="hl opt">{</span>
+                seive<span class="hl opt">[</span>j<span class="hl opt">] =</span> <span class="hl kwb">true</span>
+            <span class="hl opt">}</span>
+        <span class="hl opt">}</span>
+    <span class="hl opt">}</span>
 
-    <span class="n">count</span> <span class="p">:=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">!</span><span class="n">seive</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">{</span>
-            <span class="n">count</span><span class="p">++</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;%d\n&quot;</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
-<span class="p">}</span>
-</pre></div>
+    count <span class="hl opt">:=</span> <span class="hl num">0</span>
+    <span class="hl kwa">for</span> i <span class="hl opt">:=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> N<span class="hl opt">;</span> i<span class="hl opt">++ {</span>
+        <span class="hl kwa">if</span> <span class="hl opt">!</span>seive<span class="hl opt">[</span>i<span class="hl opt">] {</span>
+            count<span class="hl opt">++</span>
+        <span class="hl opt">}</span>
+    <span class="hl opt">}</span>
+    fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;%d</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> count<span class="hl opt">)</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>But how fast is this?</p>
 
@@ -91,171 +92,175 @@
 
 <p>File <code>erato-go-int.go</code>:</p>
 
-<div class="highlight"><pre><span class="k">package</span> <span class="n">main</span>
+<pre class="hl">
+<span class="hl kwa">package</span> main
 
-<span class="k">import</span> <span class="s">&quot;fmt&quot;</span>
-<span class="k">import</span> <span class="s">&quot;math&quot;</span>
-<span class="k">import</span> <span class="s">&quot;flag&quot;</span>
+<span class="hl kwa">import</span> <span class="hl str">&quot;fmt&quot;</span>
+<span class="hl kwa">import</span> <span class="hl str">&quot;math&quot;</span>
+<span class="hl kwa">import</span> <span class="hl str">&quot;flag&quot;</span>
 
-<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">var</span> <span class="n">N</span> <span class="nb">int</span>
-    <span class="n">flag</span><span class="p">.</span><span class="n">IntVar</span><span class="p">(&amp;</span><span class="n">N</span><span class="p">,</span> <span class="s">&quot;N&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">flag</span><span class="p">.</span><span class="n">Parse</span><span class="p">()</span>
+<span class="hl kwa">func</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+    <span class="hl kwa">var</span> N <span class="hl kwb">int</span>
+    flag<span class="hl opt">.</span><span class="hl kwd">IntVar</span><span class="hl opt">(&amp;</span>N<span class="hl opt">,</span> <span class="hl str">&quot;N&quot;</span><span class="hl opt">,</span> <span class="hl num">100</span><span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">)</span>
+    flag<span class="hl opt">.</span><span class="hl kwd">Parse</span><span class="hl opt">()</span>
 
-    <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;%d\n&quot;</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;%d</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> N<span class="hl opt">)</span>
 
-    <span class="n">seive</span> <span class="p">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="nb">int</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    seive <span class="hl opt">:=</span> <span class="hl kwb">make</span><span class="hl opt">([]</span><span class="hl kwb">int</span><span class="hl opt">,</span> N<span class="hl opt">)</span>
    
-    <span class="n">limit</span> <span class="p">:=</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="p">.</span><span class="n">Sqrt</span><span class="p">(</span><span class="nb">float64</span><span class="p">(</span><span class="n">N</span><span class="p">)))</span> <span class="p">+</span> <span class="mi">1</span>
+    limit <span class="hl opt">:=</span> <span class="hl kwb">int</span><span class="hl opt">(</span>math<span class="hl opt">.</span><span class="hl kwd">Sqrt</span><span class="hl opt">(</span><span class="hl kwb">float64</span><span class="hl opt">(</span>N<span class="hl opt">))) +</span> <span class="hl num">1</span>
 
-    <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">limit</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="n">seive</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">==</span> <span class="mi">0</span> <span class="p">{</span>
-            <span class="k">for</span> <span class="n">j</span> <span class="p">:=</span> <span class="n">i</span> <span class="p">*</span> <span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="p">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span> <span class="p">+=</span> <span class="n">i</span>  <span class="p">{</span>
-                <span class="n">seive</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="p">=</span> <span class="mi">1</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+    <span class="hl kwa">for</span> i <span class="hl opt">:=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> limit<span class="hl opt">;</span> i<span class="hl opt">++ {</span>
+        <span class="hl kwa">if</span> seive<span class="hl opt">[</span>i<span class="hl opt">] ==</span> <span class="hl num">0</span> <span class="hl opt">{</span>
+            <span class="hl kwa">for</span> j <span class="hl opt">:=</span> i <span class="hl opt">*</span> i<span class="hl opt">;</span> j <span class="hl opt">&lt;</span> N<span class="hl opt">;</span> j <span class="hl opt">+=</span> i  <span class="hl opt">{</span>
+                seive<span class="hl opt">[</span>j<span class="hl opt">] =</span> <span class="hl num">1</span>
+            <span class="hl opt">}</span>
+        <span class="hl opt">}</span>
+    <span class="hl opt">}</span>
 
-    <span class="n">count</span> <span class="p">:=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="n">seive</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">==</span> <span class="mi">0</span> <span class="p">{</span>
-            <span class="n">count</span><span class="p">++</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;%d\n&quot;</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span>
-<span class="p">}</span>
-</pre></div>
+    count <span class="hl opt">:=</span> <span class="hl num">0</span>
+    <span class="hl kwa">for</span> i <span class="hl opt">:=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> N<span class="hl opt">;</span> i<span class="hl opt">++ {</span>
+        <span class="hl kwa">if</span> seive<span class="hl opt">[</span>i<span class="hl opt">] ==</span> <span class="hl num">0</span> <span class="hl opt">{</span>
+            count<span class="hl opt">++</span>
+        <span class="hl opt">}</span>
+    <span class="hl opt">}</span>
+    fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;%d</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> count<span class="hl opt">)</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Then I tested in C++. A <code>TYPE</code> macro allows to compile the source with different types (<code>int</code> and <code>bool</code>):</p>
 
 <p>File <code>erato-cxx.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;vector&gt;</span>
-<span class="cp">#include &lt;cstdlib&gt;</span>
-<span class="cp">#include &lt;cmath&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;vector&gt;</span>
+<span class="hl ppc">#include &lt;cstdlib&gt;</span>
+<span class="hl ppc">#include &lt;cmath&gt;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">:</span> <span class="mi">100</span><span class="p">;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwb">int</span> n <span class="hl opt">=</span> argc <span class="hl opt">&gt;</span> <span class="hl num">1</span> ? std<span class="hl opt">::</span><span class="hl kwd">atoi</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]) :</span> <span class="hl num">100</span><span class="hl opt">;</span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> n <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
 
-  <span class="kt">int</span> <span class="n">sqrt_n</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="hl kwb">int</span> sqrt_n <span class="hl opt">=</span> <span class="hl kwa">static_cast</span><span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;(</span>std<span class="hl opt">::</span><span class="hl kwd">sqrt</span><span class="hl opt">(</span><span class="hl kwa">static_cast</span><span class="hl opt">&lt;</span><span class="hl kwb">double</span><span class="hl opt">&gt;(</span>n<span class="hl opt">))) +</span> <span class="hl num">1</span><span class="hl opt">;</span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">TYPE</span><span class="o">&gt;</span> <span class="n">S</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>TYPE<span class="hl opt">&gt;</span> <span class="hl kwd">S</span><span class="hl opt">(</span>n<span class="hl opt">,</span> <span class="hl kwa">true</span><span class="hl opt">);</span>
 
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">sqrt_n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">j</span><span class="o">+=</span><span class="n">i</span><span class="p">)</span>
-        <span class="n">S</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> sqrt_n<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>S<span class="hl opt">[</span>i<span class="hl opt">])</span>
+      <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> j <span class="hl opt">=</span> i<span class="hl opt">*</span>i<span class="hl opt">;</span> j <span class="hl opt">&lt;</span> n<span class="hl opt">;</span> j<span class="hl opt">+=</span>i<span class="hl opt">)</span>
+        S<span class="hl opt">[</span>j<span class="hl opt">] =</span> <span class="hl kwa">false</span><span class="hl opt">;</span>
 
-  <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-      <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+  <span class="hl kwb">int</span> count <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> n<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>S<span class="hl opt">[</span>i<span class="hl opt">])</span>
+      count<span class="hl opt">++;</span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">count</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> count <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
 
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>And to have the full picture there is an implementation in C:</p>
 
 <p>File: <code>erator-c-int.c</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;stdlib.h&gt;</span>
-<span class="cp">#include &lt;memory.h&gt;</span>
-<span class="cp">#include &lt;math.h&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;stdio.h&gt;</span>
+<span class="hl ppc">#include &lt;stdlib.h&gt;</span>
+<span class="hl ppc">#include &lt;memory.h&gt;</span>
+<span class="hl ppc">#include &lt;math.h&gt;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">:</span> <span class="mi">100</span><span class="p">;</span>
-  <span class="kt">int</span><span class="o">*</span> <span class="n">S</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">count</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">sz</span> <span class="o">=</span> <span class="n">n</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">S</span><span class="p">);</span>
-  <span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwb">int</span> n <span class="hl opt">=</span> argc <span class="hl opt">&gt;</span> <span class="hl num">1</span> ? <span class="hl kwd">atoi</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]) :</span> <span class="hl num">100</span><span class="hl opt">;</span>
+  <span class="hl kwb">int</span><span class="hl opt">*</span> S<span class="hl opt">;</span>
+  <span class="hl kwb">int</span> count<span class="hl opt">;</span>
+  <span class="hl kwb">int</span> sz <span class="hl opt">=</span> n <span class="hl opt">*</span> <span class="hl kwa">sizeof</span><span class="hl opt">(*</span>S<span class="hl opt">);</span>
+  <span class="hl kwb">int</span> i<span class="hl opt">,</span> j<span class="hl opt">;</span>
 
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%d</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> n<span class="hl opt">);</span>
 
-  <span class="kt">long</span> <span class="n">sqrt_n</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="hl kwb">long</span> sqrt_n <span class="hl opt">=</span> <span class="hl kwd">sqrt</span><span class="hl opt">(</span>n<span class="hl opt">) +</span> <span class="hl num">1</span><span class="hl opt">;</span>
 
-  <span class="n">S</span> <span class="o">=</span> <span class="n">malloc</span><span class="p">(</span><span class="n">sz</span><span class="p">);</span>
-  <span class="n">memset</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">sz</span><span class="p">);</span>
+  S <span class="hl opt">=</span> <span class="hl kwd">malloc</span><span class="hl opt">(</span>sz<span class="hl opt">);</span>
+  <span class="hl kwd">memset</span><span class="hl opt">(</span>S<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span> sz<span class="hl opt">);</span>
 
-  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">sqrt_n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-      <span class="k">for</span> <span class="p">(</span><span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">j</span><span class="o">+=</span><span class="n">i</span><span class="p">)</span>
-        <span class="n">S</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>i <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> sqrt_n<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>S<span class="hl opt">[</span>i<span class="hl opt">] ==</span> <span class="hl num">0</span><span class="hl opt">)</span>
+      <span class="hl kwa">for</span> <span class="hl opt">(</span>j <span class="hl opt">=</span> i<span class="hl opt">*</span>i<span class="hl opt">;</span> j <span class="hl opt">&lt;</span> n<span class="hl opt">;</span> j<span class="hl opt">+=</span>i<span class="hl opt">)</span>
+        S<span class="hl opt">[</span>j<span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
 
-  <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-      <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+  count <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>i <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> n<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>S<span class="hl opt">[</span>i<span class="hl opt">] ==</span> <span class="hl num">0</span><span class="hl opt">)</span>
+      count<span class="hl opt">++;</span>
 
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">count</span><span class="p">);</span>
+  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%d</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> count<span class="hl opt">);</span>
 
-  <span class="n">free</span><span class="p">(</span><span class="n">S</span><span class="p">);</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwd">free</span><span class="hl opt">(</span>S<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Makefile for easy run:</p>
 
 <p>File <code>Makefile</code>:</p>
 
-<div class="highlight"><pre><span class="nf">.SILENT</span><span class="o">:</span> 
+<pre class="hl">
+.SILENT<span class="hl opt">:</span> 
 
-<span class="nf">all</span><span class="o">:</span> 
-        <span class="k">$(</span>MAKE<span class="k">)</span> run 2&gt;&amp;1 | tee log
-        <span class="k">$(</span>MAKE<span class="k">)</span> parse-log
+<span class="hl kwa">all</span><span class="hl opt">:</span> 
+        <span class="hl opt">$(</span>MAKE<span class="hl opt">)</span> run <span class="hl num">2</span><span class="hl opt">&gt;&amp;</span><span class="hl num">1</span> | tee log
+        <span class="hl opt">$(</span>MAKE<span class="hl opt">)</span> parse-log
 
-<span class="nf">run</span><span class="o">:</span> <span class="m">go-bool go-int cxx-int cxx-bool c-int</span>
+run<span class="hl opt">:</span> go-bool go-int cxx-int cxx-bool c-int
 
-<span class="nv">N</span> <span class="o">?=</span> 100000000
+N ?<span class="hl opt">=</span> <span class="hl num">100000000</span>
 
-go-bool:
-        <span class="nb">echo</span> <span class="nv">$@</span>
-        6g erato-<span class="nv">$@</span>.go
-        6l -o erato-<span class="nv">$@</span> erato-<span class="nv">$@</span>.6
-        <span class="nb">time</span> -p -f %e ./erato-<span class="nv">$@</span> -N<span class="o">=</span><span class="k">$(</span>N<span class="k">)</span>
+go-bool<span class="hl opt">:</span>
+        echo <span class="hl opt">$</span>&#64;
+        <span class="hl num">6</span>g erato-<span class="hl opt">$</span>&#64;.go
+        <span class="hl num">6l</span> <span class="hl opt">-</span>o erato-<span class="hl opt">$</span>&#64; erato-<span class="hl opt">$</span>&#64;<span class="hl num">.6</span>
+        time <span class="hl opt">-</span>p <span class="hl opt">-</span>f <span class="hl opt">%</span>e .<span class="hl opt">/</span>erato-<span class="hl opt">$</span>&#64; <span class="hl opt">-</span>N<span class="hl opt">=$(</span>N<span class="hl opt">)</span>
 
-go-int: 
-        <span class="nb">echo</span> <span class="nv">$@</span>
-        6g erato-<span class="nv">$@</span>.go
-        6l -o erato-<span class="nv">$@</span> erato-<span class="nv">$@</span>.6
-        <span class="nb">time</span> -p -f %e ./erato-<span class="nv">$@</span> -N<span class="o">=</span><span class="k">$(</span>N<span class="k">)</span>
+go-int<span class="hl opt">:</span> 
+        echo <span class="hl opt">$</span>&#64;
+        <span class="hl num">6</span>g erato-<span class="hl opt">$</span>&#64;.go
+        <span class="hl num">6l</span> <span class="hl opt">-</span>o erato-<span class="hl opt">$</span>&#64; erato-<span class="hl opt">$</span>&#64;<span class="hl num">.6</span>
+        time <span class="hl opt">-</span>p <span class="hl opt">-</span>f <span class="hl opt">%</span>e .<span class="hl opt">/</span>erato-<span class="hl opt">$</span>&#64; <span class="hl opt">-</span>N<span class="hl opt">=$(</span>N<span class="hl opt">)</span>
 
-cxx-bool:
-        <span class="nb">echo</span> <span class="nv">$@</span>
-        g++ -o erato-<span class="nv">$@</span> <span class="se">\</span>
-                -O3 -funroll-all-loops -fomit-frame-pointer <span class="se">\</span>
-                -DTYPE<span class="o">=</span>bool erato-cxx.cpp 
-        <span class="nb">time</span> -p -f %e ./erato-<span class="nv">$@</span> <span class="k">$(</span>N<span class="k">)</span>
+cxx-bool<span class="hl opt">:</span>
+        echo <span class="hl opt">$</span>&#64;
+        g<span class="hl opt">++ -</span>o erato-<span class="hl opt">$</span>&#64; \
+                <span class="hl opt">-</span>O3 <span class="hl opt">-</span>funroll-all-loops <span class="hl opt">-</span>fomit-frame-pointer \
+                <span class="hl opt">-</span>DTYPE<span class="hl opt">=</span>bool erato-cxx.<span class="hl kwa">cpp</span> 
+        time <span class="hl opt">-</span>p <span class="hl opt">-</span>f <span class="hl opt">%</span>e .<span class="hl opt">/</span>erato-<span class="hl opt">$</span>&#64; <span class="hl opt">$(</span>N<span class="hl opt">)</span>
 
-cxx-int:
-        <span class="nb">echo</span> <span class="nv">$@</span>
-        g++ -o erato-<span class="nv">$@</span> <span class="se">\</span>
-                -O3 -funroll-all-loops -fomit-frame-pointer <span class="se">\</span>
-                -DTYPE<span class="o">=</span>int erato-cxx.cpp 
-        <span class="nb">time</span> -p -f %e ./erato-<span class="nv">$@</span> <span class="k">$(</span>N<span class="k">)</span>
+cxx-int<span class="hl opt">:</span>
+        echo <span class="hl opt">$</span>&#64;
+        g<span class="hl opt">++ -</span>o erato-<span class="hl opt">$</span>&#64; \
+                <span class="hl opt">-</span>O3 <span class="hl opt">-</span>funroll-all-loops <span class="hl opt">-</span>fomit-frame-pointer \
+                <span class="hl opt">-</span>DTYPE<span class="hl opt">=</span>int erato-cxx.<span class="hl kwa">cpp</span> 
+        time <span class="hl opt">-</span>p <span class="hl opt">-</span>f <span class="hl opt">%</span>e .<span class="hl opt">/</span>erato-<span class="hl opt">$</span>&#64; <span class="hl opt">$(</span>N<span class="hl opt">)</span>
 
-c-int:
-        <span class="nb">echo</span> <span class="nv">$@</span>
-        gcc -o erato-<span class="nv">$@</span> -lm <span class="se">\</span>
-                -O3 -funroll-all-loops -fomit-frame-pointer erato-<span class="nv">$@</span>.c
-        <span class="nb">time</span> -p -f %e ./erato-<span class="nv">$@</span> <span class="k">$(</span>N<span class="k">)</span>
+c-int<span class="hl opt">:</span>
+        echo <span class="hl opt">$</span>&#64;
+        gcc <span class="hl opt">-</span>o erato-<span class="hl opt">$</span>&#64; <span class="hl opt">-</span>lm \
+                <span class="hl opt">-</span>O3 <span class="hl opt">-</span>funroll-all-loops <span class="hl opt">-</span>fomit-frame-pointer erato-<span class="hl opt">$</span>&#64;.c
+        time <span class="hl opt">-</span>p <span class="hl opt">-</span>f <span class="hl opt">%</span>e .<span class="hl opt">/</span>erato-<span class="hl opt">$</span>&#64; <span class="hl opt">$(</span>N<span class="hl opt">)</span>
 
-parse-log:
-        <span class="nb">printf</span> <span class="s2">&quot;%10s %10s %8s %5s\n&quot;</span> <span class="s2">&quot;Language&quot;</span> N Count Time ; <span class="se">\</span>
-        <span class="o">(</span><span class="nb">echo</span> <span class="s2">&quot;------------------------------------&quot;</span><span class="o">)</span> ; <span class="se">\</span>
-        <span class="k">while </span><span class="nb">read type</span> ; <span class="k">do</span> <span class="se">\</span>
-                <span class="nb">read </span>N <span class="o">&amp;&amp;</span> <span class="se">\</span>
-                <span class="nb">read </span>count <span class="o">&amp;&amp;</span> <span class="se">\</span>
-                <span class="nb">read time</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
-                <span class="nb">printf</span> <span class="s2">&quot;%10s %10s %8s %5s\n&quot;</span> <span class="nv">$$</span><span class="nb">type</span> <span class="nv">$$</span>N <span class="nv">$$</span>count <span class="nv">$$</span><span class="nb">time</span> ; <span class="se">\</span>
-        <span class="k">done</span> &lt; log
-</pre></div>
+parse-log<span class="hl opt">:</span>
+        printf <span class="hl str">&quot;%10s %10s %8s %5s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span> <span class="hl str">&quot;Language&quot;</span> N Count Time <span class="hl opt">;</span> \
+        <span class="hl opt">(</span>echo <span class="hl str">&quot;------------------------------------&quot;</span><span class="hl opt">) ;</span> \
+        while read type <span class="hl opt">;</span> do \
+                read N <span class="hl opt">&amp;&amp;</span> \
+                read count <span class="hl opt">&amp;&amp;</span> \
+                read time <span class="hl opt">&amp;&amp;</span> \
+                printf <span class="hl str">&quot;%10s %10s %8s %5s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span> <span class="hl opt">$</span><span class="hl kwd">$type</span> <span class="hl opt">$</span><span class="hl kwd">$N</span> <span class="hl opt">$</span><span class="hl kwd">$count</span> <span class="hl opt">$</span><span class="hl kwd">$time</span> <span class="hl opt">;</span> \
+        done <span class="hl opt">&lt;</span> log
+</pre>
 
 <p>I run this on Ubuntu 64-bit. The C/C++ compiler is gcc 4.4.1. The Go compiler is the lastest from its official repository.</p>
 

@@ -43,33 +43,34 @@
 <div id="post">
   <p>Недавно более часа потратил на поиск проблемы в куске кода, упрощенный вариант которого привожу ниже:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="kt">int</span> <span class="n">x</span><span class="p">;</span>
-<span class="k">struct</span> <span class="n">A</span> <span class="p">{</span>
-  <span class="n">A</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-<span class="k">struct</span> <span class="n">B</span> <span class="p">{</span>
-  <span class="n">B</span><span class="p">(</span><span class="n">A</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">A</span> <span class="n">local_a</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Case #0: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="n">B</span> <span class="n">b1</span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Case #1: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">t</span><span class="p">;</span>
-  <span class="n">t</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-  <span class="n">B</span> <span class="n">b2</span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="n">t</span><span class="p">));</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Case #2: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="n">t</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
-  <span class="n">B</span> <span class="n">b3</span><span class="p">((</span><span class="n">A</span><span class="p">(</span><span class="n">t</span><span class="p">)));</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Case #3: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl kwb">int</span> x<span class="hl opt">;</span>
+<span class="hl kwb">struct</span> A <span class="hl opt">{</span>
+  <span class="hl kwd">A</span><span class="hl opt">(</span><span class="hl kwb">int</span> a<span class="hl opt">) {</span>
+    x <span class="hl opt">=</span> a<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
+<span class="hl kwb">struct</span> B <span class="hl opt">{</span>
+  <span class="hl kwd">B</span><span class="hl opt">(</span>A a<span class="hl opt">) {</span>
+    A local_a <span class="hl opt">=</span> a<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  x <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Case #0: &quot;</span> <span class="hl opt">&lt;&lt;</span> x <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  B <span class="hl kwd">b1</span><span class="hl opt">(</span><span class="hl kwd">A</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">));</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Case #1: &quot;</span> <span class="hl opt">&lt;&lt;</span> x <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwb">int</span> t<span class="hl opt">;</span>
+  t <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span>
+  B <span class="hl kwd">b2</span><span class="hl opt">(</span><span class="hl kwd">A</span><span class="hl opt">(</span>t<span class="hl opt">));</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Case #2: &quot;</span> <span class="hl opt">&lt;&lt;</span> x <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  t <span class="hl opt">=</span> <span class="hl num">3</span><span class="hl opt">;</span>
+  B <span class="hl kwd">b3</span><span class="hl opt">((</span><span class="hl kwd">A</span><span class="hl opt">(</span>t<span class="hl opt">)));</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Case #3: &quot;</span> <span class="hl opt">&lt;&lt;</span> x <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Как вы думаете, что должна вывести эта программа? Числа 0, 1, 2 и 3 последовательно для каждого случая?</p>
 

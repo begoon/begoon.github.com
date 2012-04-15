@@ -42,11 +42,12 @@
 <div id="post">
   <p>Here is the trivial program (<code>bcc32_5.93_cast_bug.cpp</code>):</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">A</span> <span class="p">{};</span>
-<span class="k">class</span> <span class="nc">C</span> <span class="p">{};</span>
-<span class="n">A</span><span class="o">*</span> <span class="n">a</span><span class="p">;</span>
-<span class="n">A</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">C</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> A <span class="hl opt">{};</span>
+<span class="hl kwc">class</span> C <span class="hl opt">{};</span>
+A<span class="hl opt">*</span> a<span class="hl opt">;</span>
+A<span class="hl opt">*</span> b <span class="hl opt">=</span> <span class="hl kwa">static_cast</span><span class="hl opt">&lt;</span>C<span class="hl opt">*&gt;(</span>a<span class="hl opt">);</span>
+</pre>
 
 <p>When using <code>bcc32.exe</code> (version 5.93) from the Codegear RAD Studio 2007:</p>
 

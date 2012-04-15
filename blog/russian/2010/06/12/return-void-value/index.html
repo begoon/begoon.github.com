@@ -43,15 +43,16 @@
 <div id="post">
   <p>Я как-то думал, что для void-функций оператор return не может иметь ничего, кроме пробелов, перед завершающей его точкой с запятой. Оказывается, что нет. Visual Studio съела без каких-либо жалоб вот такой код:</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">v</span><span class="p">()</span> <span class="p">{}</span>
-<span class="kt">void</span> <span class="n">f</span><span class="p">(){</span> 
-  <span class="k">return</span> <span class="n">v</span><span class="p">();</span>
-<span class="p">}</span>
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">v</span><span class="hl opt">() {}</span>
+<span class="hl kwb">void</span> <span class="hl kwd">f</span><span class="hl opt">(){</span> 
+  <span class="hl kwa">return</span> <span class="hl kwd">v</span><span class="hl opt">();</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">f</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwd">f</span><span class="hl opt">();</span>
+<span class="hl opt">}</span>
+</pre>
 
 </div>
 

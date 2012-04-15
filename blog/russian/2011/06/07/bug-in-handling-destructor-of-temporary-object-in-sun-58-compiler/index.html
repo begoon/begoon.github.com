@@ -43,17 +43,18 @@
 <div id="post">
   <p>Рассмотрим код:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="kt">int</span> <span class="n">ct</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-<span class="k">struct</span> <span class="n">G</span> <span class="p">{</span>
-  <span class="o">~</span><span class="n">G</span><span class="p">()</span> <span class="p">{</span> <span class="n">ct</span><span class="o">--</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">};</span>
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="p">(</span><span class="n">G</span><span class="p">());</span>  <span class="c1">// (1)</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ct</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl kwb">int</span> ct <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+<span class="hl kwb">struct</span> G <span class="hl opt">{</span>
+  <span class="hl opt">~</span><span class="hl kwd">G</span><span class="hl opt">() {</span> ct<span class="hl opt">--; }</span>
+<span class="hl opt">};</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl opt">(</span><span class="hl kwd">G</span><span class="hl opt">());</span>  <span class="hl slc">// (1)</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> ct <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Как вы думаете - что напечатает данная программа?</p>
 

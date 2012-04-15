@@ -47,13 +47,14 @@
 
 <p>Для сборки финального html-файла из кучи мелких у меня написана примитивная программа. Вот ее фрагмент:</p>
 
-<div class="highlight"><pre><span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">feof</span><span class="p">(</span><span class="n">f</span><span class="p">))</span> <span class="p">{</span>
-  <span class="kt">char</span> <span class="n">line</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
-  <span class="o">*</span><span class="n">line</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="n">fgets</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">line</span><span class="p">),</span> <span class="n">f</span><span class="p">);</span>
-  <span class="n">printf</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwa">while</span> <span class="hl opt">(!</span><span class="hl kwd">feof</span><span class="hl opt">(</span>f<span class="hl opt">)) {</span>
+  <span class="hl kwb">char</span> line<span class="hl opt">[</span><span class="hl num">1024</span><span class="hl opt">];</span>
+  <span class="hl opt">*</span>line <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl kwd">fgets</span><span class="hl opt">(</span>line<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>line<span class="hl opt">),</span> f<span class="hl opt">);</span>
+  <span class="hl kwd">printf</span><span class="hl opt">(</span>line<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Подразумевается, что данный код прострочно копирует данные из файла <code>f</code> на стандарный вывод.</p>
 
@@ -61,25 +62,29 @@
 
 <p>Получалось, что вместо, например:</p>
 
-<div class="highlight"><pre><span class="nt">&lt;table</span> <span class="na">width=</span><span class="s">&quot;100%&quot;</span><span class="nt">&gt;</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwa">&lt;table</span> <span class="hl kwb">width</span>=<span class="hl str">&quot;100%&quot;</span><span class="hl kwa">&gt;</span>
+</pre>
 
 <p>на выходе было:</p>
 
-<div class="highlight"><pre><span class="nt">&lt;table</span> <span class="na">width=</span><span class="s">&quot;100&quot;</span><span class="nt">&gt;</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwa">&lt;table</span> <span class="hl kwb">width</span>=<span class="hl str">&quot;100&quot;</span><span class="hl kwa">&gt;</span>
+</pre>
 
 <p>Вы, наверное, уже догадались, в чем тут дело. Но, признаюсь, я искал проблему минут тридцать.</p>
 
 <p>Вместо:</p>
 
-<div class="highlight"><pre><span class="n">printf</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwd">printf</span><span class="hl opt">(</span>line<span class="hl opt">);</span>
+</pre>
 
 <p>надо писать:</p>
 
-<div class="highlight"><pre><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s&quot;</span><span class="p">,</span> <span class="n">line</span><span class="p">);</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%s&quot;</span><span class="hl opt">,</span> line<span class="hl opt">);</span>
+</pre>
 
 <p>А иначе все процентные символы будут расцены как указатели форматов, ибо первый параметр <code>printf()</code> - это не просто строка, а формат, и в случае их неэкранирования будут уделены, что и происходило в моем случае.</p>
 

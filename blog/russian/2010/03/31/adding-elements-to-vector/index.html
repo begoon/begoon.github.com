@@ -53,35 +53,36 @@
 
 <p>А сейчас мини эксперимент с реальным <code>std::vector</code> (компилятор, и сообразно STL — Sun C++ 5.9 SunOS_sparc) для выяснения реальной стратегии роста буфера в векторе:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;vector&gt;</span>
-<span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;iomanip&gt;</span>
-<span class="cp">#include &lt;cstdlib&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;vector&gt;</span>
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;iomanip&gt;</span>
+<span class="hl ppc">#include &lt;cstdlib&gt;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">last</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Capacity&quot;</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> 
-            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Size&quot;</span>
-            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Ratio&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span>
-            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setfill</span><span class="p">(</span><span class="sc">&#39;-&#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;-&quot;</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span> 
-            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;-&quot;</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span>
-            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;-&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwb">int</span> last <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">;</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> a<span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span><span class="hl kwd">setw</span><span class="hl opt">(</span><span class="hl num">12</span><span class="hl opt">) &lt;&lt;</span> <span class="hl str">&quot;Capacity&quot;</span> <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot; &quot;</span> 
+            <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span><span class="hl kwd">setw</span><span class="hl opt">(</span><span class="hl num">12</span><span class="hl opt">) &lt;&lt;</span> <span class="hl str">&quot;Size&quot;</span>
+            <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span><span class="hl kwd">setw</span><span class="hl opt">(</span><span class="hl num">12</span><span class="hl opt">) &lt;&lt;</span> <span class="hl str">&quot;Ratio&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl
+            <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span><span class="hl kwd">setw</span><span class="hl opt">(</span><span class="hl num">12</span><span class="hl opt">) &lt;&lt;</span> std<span class="hl opt">::</span><span class="hl kwd">setfill</span><span class="hl opt">(</span><span class="hl str">'-'</span><span class="hl opt">) &lt;&lt;</span> <span class="hl str">&quot;-&quot;</span> <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot; &quot;</span> 
+            <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span><span class="hl kwd">setw</span><span class="hl opt">(</span><span class="hl num">12</span><span class="hl opt">) &lt;&lt;</span> <span class="hl str">&quot;-&quot;</span> <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot; &quot;</span>
+            <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span><span class="hl kwd">setw</span><span class="hl opt">(</span><span class="hl num">12</span><span class="hl opt">) &lt;&lt;</span> <span class="hl str">&quot;-&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setfill</span><span class="p">(</span><span class="sc">&#39; &#39;</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">fixed</span><span class="p">;</span>
-  <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">!=</span> <span class="n">last</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">last</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">capacity</span><span class="p">();</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span>
-                <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span>
-                <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setprecision</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-                <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">a</span><span class="p">.</span><span class="n">capacity</span><span class="p">()</span> <span class="o">/</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="n">a</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">rand</span><span class="p">());</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span><span class="hl kwd">setfill</span><span class="hl opt">(</span><span class="hl str">' '</span><span class="hl opt">) &lt;&lt;</span> std<span class="hl opt">::</span>fixed<span class="hl opt">;</span>
+  <span class="hl kwa">while</span> <span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">) {</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>a<span class="hl opt">.</span><span class="hl kwd">capacity</span><span class="hl opt">() !=</span> last<span class="hl opt">) {</span>
+      last <span class="hl opt">=</span> a<span class="hl opt">.</span><span class="hl kwd">capacity</span><span class="hl opt">();</span>
+      std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span><span class="hl kwd">setw</span><span class="hl opt">(</span><span class="hl num">12</span><span class="hl opt">) &lt;&lt;</span> a<span class="hl opt">.</span><span class="hl kwd">capacity</span><span class="hl opt">() &lt;&lt;</span> <span class="hl str">&quot; &quot;</span>
+                <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span><span class="hl kwd">setw</span><span class="hl opt">(</span><span class="hl num">12</span><span class="hl opt">) &lt;&lt;</span> a<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">() &lt;&lt;</span> <span class="hl str">&quot; &quot;</span>
+                <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span><span class="hl kwd">setw</span><span class="hl opt">(</span><span class="hl num">12</span><span class="hl opt">) &lt;&lt;</span> std<span class="hl opt">::</span><span class="hl kwd">setprecision</span><span class="hl opt">(</span><span class="hl num">6</span><span class="hl opt">)</span>
+                <span class="hl opt">&lt;&lt; (</span><span class="hl kwb">float</span><span class="hl opt">)</span>a<span class="hl opt">.</span><span class="hl kwd">capacity</span><span class="hl opt">() /</span> a<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">() &lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+    <span class="hl opt">}</span>
+    a<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">rand</span><span class="hl opt">());</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>А вот и результат:</p>
 

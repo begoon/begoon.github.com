@@ -73,244 +73,247 @@
 
 <p>Заголовочный файл <code>cstring.h</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#ifndef _CSTRING_H</span>
-<span class="cp">#define _CSTRING_H</span>
+<pre class="hl">
+<span class="hl ppc">#ifndef _CSTRING_H</span>
+<span class="hl ppc">#define _CSTRING_H</span>
 
-<span class="cp">#define _decl_string_t(N) \</span>
-<span class="cp">struct {                  \</span>
-<span class="cp">  int sz;                 \</span>
-<span class="cp">  char data[N];           \</span>
-<span class="cp">}</span>
+<span class="hl ppc">#define _decl_string_t(N) \</span>
+<span class="hl ppc">struct {                  \</span>
+<span class="hl ppc">  int sz;                 \</span>
+<span class="hl ppc">  char data[N];           \</span>
+<span class="hl ppc">}</span>
 
-<span class="k">typedef</span> <span class="n">_decl_string_t</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="n">string_t</span><span class="p">;</span>
+<span class="hl kwc">typedef</span> <span class="hl kwd">_decl_string_t</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span> string_t<span class="hl opt">;</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Объявление строки в форме автоматической переменной в стеке.</span>
-<span class="cm"> * Длина строки инициализируется нулем.</span>
-<span class="cm"> */</span>
-<span class="cp">#define decl_string_t(name, size) _decl_string_t(size) name = { 0 }</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Объявление строки в форме автоматической переменной в стеке.</span>
+<span class="hl com"> * Длина строки инициализируется нулем.</span>
+<span class="hl com"> */</span>
+<span class="hl ppc">#define decl_string_t(name, size) _decl_string_t(size) name = { 0 }</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Создание новой строки в куче.</span>
-<span class="cm"> */</span>
-<span class="n">string_t</span><span class="o">*</span> <span class="n">string_new</span><span class="p">(</span><span class="kt">int</span> <span class="n">sz</span><span class="p">);</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Создание новой строки в куче.</span>
+<span class="hl com"> */</span>
+string_t<span class="hl opt">*</span> <span class="hl kwd">string_new</span><span class="hl opt">(</span><span class="hl kwb">int</span> sz<span class="hl opt">);</span>
 
-<span class="cm">/* Трюк с дублированием имен функций, начинающихся с символа &#39;_&#39;</span>
-<span class="cm"> * требуется для подавление предупреждений компилятора о преобразовании</span>
-<span class="cm"> * типов.</span>
-<span class="cm"> */</span>
+<span class="hl com">/* Трюк с дублированием имен функций, начинающихся с символа '_'</span>
+<span class="hl com"> * требуется для подавление предупреждений компилятора о преобразовании</span>
+<span class="hl com"> * типов.</span>
+<span class="hl com"> */</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Удаление строки из кучи.</span>
-<span class="cm"> */</span>
-<span class="cp">#define string_delete(str) _string_delete((string_t*)str)</span>
-<span class="kt">void</span> <span class="n">_string_delete</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">);</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Удаление строки из кучи.</span>
+<span class="hl com"> */</span>
+<span class="hl ppc">#define string_delete(str) _string_delete((string_t*)str)</span>
+<span class="hl kwb">void</span> <span class="hl kwd">_string_delete</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> str<span class="hl opt">);</span>
 
-<span class="cm">/** </span>
-<span class="cm"> * Текущая длина строки.</span>
-<span class="cm"> */</span>
-<span class="cp">#define string_length(str) _string_length((const string_t*)str)</span>
-<span class="kt">int</span> <span class="n">_string_length</span><span class="p">(</span><span class="k">const</span> <span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">);</span>
+<span class="hl com">/** </span>
+<span class="hl com"> * Текущая длина строки.</span>
+<span class="hl com"> */</span>
+<span class="hl ppc">#define string_length(str) _string_length((const string_t*)str)</span>
+<span class="hl kwb">int</span> <span class="hl kwd">_string_length</span><span class="hl opt">(</span><span class="hl kwb">const</span> string_t<span class="hl opt">*</span> str<span class="hl opt">);</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Изменение длины строки.</span>
-<span class="cm"> */</span>
-<span class="cp">#define string_resize(str, sz) _string_resize((string_t*)str, sz)</span>
-<span class="kt">int</span> <span class="n">_string_resize</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sz</span><span class="p">);</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Изменение длины строки.</span>
+<span class="hl com"> */</span>
+<span class="hl ppc">#define string_resize(str, sz) _string_resize((string_t*)str, sz)</span>
+<span class="hl kwb">int</span> <span class="hl kwd">_string_resize</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> str<span class="hl opt">,</span> <span class="hl kwb">int</span> sz<span class="hl opt">);</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Копирование строки из строки С, завершающейся нулем.</span>
-<span class="cm"> */</span>
-<span class="cp">#define string_from_c_str(dst, src) _string_from_c_str((string_t*)dst, src)</span>
-<span class="n">string_t</span><span class="o">*</span> <span class="n">_string_from_c_str</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">src</span><span class="p">);</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Копирование строки из строки С, завершающейся нулем.</span>
+<span class="hl com"> */</span>
+<span class="hl ppc">#define string_from_c_str(dst, src) _string_from_c_str((string_t*)dst, src)</span>
+string_t<span class="hl opt">*</span> <span class="hl kwd">_string_from_c_str</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> dst<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> src<span class="hl opt">);</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Добавление символа в строку.</span>
-<span class="cm"> */</span>
-<span class="cp">#define string_append_ch(str, ch) _string_append_ch((string_t*)str, ch)</span>
-<span class="n">string_t</span><span class="o">*</span> <span class="n">_string_append_ch</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">char</span> <span class="n">ch</span><span class="p">);</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Добавление символа в строку.</span>
+<span class="hl com"> */</span>
+<span class="hl ppc">#define string_append_ch(str, ch) _string_append_ch((string_t*)str, ch)</span>
+string_t<span class="hl opt">*</span> <span class="hl kwd">_string_append_ch</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> str<span class="hl opt">,</span> <span class="hl kwb">char</span> ch<span class="hl opt">);</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Превращение строки в строку С без добавления нуля на конце.</span>
-<span class="cm"> */</span>
-<span class="cp">#define string_data(str) str-&gt;data</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Превращение строки в строку С без добавления нуля на конце.</span>
+<span class="hl com"> */</span>
+<span class="hl ppc">#define string_data(str) str-&gt;data</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Превращение строки в строку С с нулем на конце.</span>
-<span class="cm"> */</span>
-<span class="cp">#define string_c_str(str) _string_c_str((string_t*)str)</span>
-<span class="kt">char</span><span class="o">*</span> <span class="n">_string_c_str</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">);</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Превращение строки в строку С с нулем на конце.</span>
+<span class="hl com"> */</span>
+<span class="hl ppc">#define string_c_str(str) _string_c_str((string_t*)str)</span>
+<span class="hl kwb">char</span><span class="hl opt">*</span> <span class="hl kwd">_string_c_str</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> str<span class="hl opt">);</span>
 
-<span class="cp">#endif</span>
-</pre></div>
+<span class="hl ppc">#endif</span>
+</pre>
 
 <p>Файл <code>cstring.c</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;stdlib.h&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;stdlib.h&gt;</span>
 
-<span class="cp">#include &quot;cstring.h&quot;</span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;cstring.h&quot;</span><span class="hl ppc"></span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Подготовительная площадка для тестирования.</span>
-<span class="cm"> * Если задан макрос UNIT_TESTING, то функции работы с кучей подменяются</span>
-<span class="cm"> * на тестовые.</span>
-<span class="cm"> */</span>
-<span class="cp">#if UNIT_TESTING</span>
-<span class="k">extern</span> <span class="kt">void</span><span class="o">*</span> <span class="n">_test_malloc</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">size</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">line</span><span class="p">);</span>
-<span class="k">extern</span> <span class="kt">void</span><span class="o">*</span> <span class="n">_test_calloc</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">number_of_elements</span><span class="p">,</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">size</span><span class="p">,</span>
-                          <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">line</span><span class="p">);</span>
-<span class="k">extern</span> <span class="kt">void</span> <span class="n">_test_free</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="k">const</span> <span class="n">ptr</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">line</span><span class="p">);</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Подготовительная площадка для тестирования.</span>
+<span class="hl com"> * Если задан макрос UNIT_TESTING, то функции работы с кучей подменяются</span>
+<span class="hl com"> * на тестовые.</span>
+<span class="hl com"> */</span>
+<span class="hl ppc">#if UNIT_TESTING</span>
+<span class="hl kwc">extern</span> <span class="hl kwb">void</span><span class="hl opt">*</span> <span class="hl kwd">_test_malloc</span><span class="hl opt">(</span><span class="hl kwb">const size_t</span> size<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> file<span class="hl opt">,</span> <span class="hl kwb">const int</span> line<span class="hl opt">);</span>
+<span class="hl kwc">extern</span> <span class="hl kwb">void</span><span class="hl opt">*</span> <span class="hl kwd">_test_calloc</span><span class="hl opt">(</span><span class="hl kwb">const size_t</span> number_of_elements<span class="hl opt">,</span> <span class="hl kwb">const size_t</span> size<span class="hl opt">,</span>
+                          <span class="hl kwb">const char</span><span class="hl opt">*</span> file<span class="hl opt">,</span> <span class="hl kwb">const int</span> line<span class="hl opt">);</span>
+<span class="hl kwc">extern</span> <span class="hl kwb">void</span> <span class="hl kwd">_test_free</span><span class="hl opt">(</span><span class="hl kwb">void</span><span class="hl opt">*</span> <span class="hl kwb">const</span> ptr<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> file<span class="hl opt">,</span> <span class="hl kwb">const int</span> line<span class="hl opt">);</span>
 
-<span class="cp">#define malloc(size) _test_malloc(size, __FILE__, __LINE__)</span>
-<span class="cp">#define calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)</span>
-<span class="cp">#define free(ptr) _test_free(ptr, __FILE__, __LINE__)</span>
-<span class="cp">#endif </span><span class="c1">// UNIT_TESTING</span>
+<span class="hl ppc">#define malloc(size) _test_malloc(size, __FILE__, __LINE__)</span>
+<span class="hl ppc">#define calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)</span>
+<span class="hl ppc">#define free(ptr) _test_free(ptr, __FILE__, __LINE__)</span>
+<span class="hl ppc">#endif</span> <span class="hl slc">// UNIT_TESTING</span>
+<span class="hl ppc"></span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Создание новой строки в куче. Трюк &quot;sizeof(string_t)&quot; используется, чтобы</span>
+<span class="hl com"> * правильно отработать ситуацию, если из-за выравнивания между элементами</span>
+<span class="hl com"> * структуры string_t 'sz' и 'data' вдруг появится промежуток.</span>
+<span class="hl com"> */</span> 
+string_t<span class="hl opt">*</span> <span class="hl kwd">string_new</span><span class="hl opt">(</span><span class="hl kwb">int</span> sz<span class="hl opt">) {</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">malloc</span><span class="hl opt">(</span><span class="hl kwa">sizeof</span><span class="hl opt">(</span>string_t<span class="hl opt">) +</span> sz <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Создание новой строки в куче. Трюк &quot;sizeof(string_t)&quot; используется, чтобы</span>
-<span class="cm"> * правильно отработать ситуацию, если из-за выравнивания между элементами</span>
-<span class="cm"> * структуры string_t &#39;sz&#39; и &#39;data&#39; вдруг появится промежуток.</span>
-<span class="cm"> */</span> 
-<span class="n">string_t</span><span class="o">*</span> <span class="n">string_new</span><span class="p">(</span><span class="kt">int</span> <span class="n">sz</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">string_t</span><span class="p">)</span> <span class="o">+</span> <span class="n">sz</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Удаление строки из кучи.</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">void</span> <span class="hl kwd">_string_delete</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> str<span class="hl opt">) {</span>
+  <span class="hl kwd">free</span><span class="hl opt">((</span><span class="hl kwb">void</span> <span class="hl opt">*)</span>str<span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Удаление строки из кучи.</span>
-<span class="cm"> */</span>
-<span class="kt">void</span> <span class="n">_string_delete</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">free</span><span class="p">((</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">str</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Текущая длина строки.</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">int</span> <span class="hl kwd">_string_length</span><span class="hl opt">(</span><span class="hl kwb">const</span> string_t<span class="hl opt">*</span> str<span class="hl opt">) {</span>
+  <span class="hl kwa">return</span> str<span class="hl opt">-&gt;</span>sz<span class="hl opt">;</span>                                                                                        
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Текущая длина строки.</span>
-<span class="cm"> */</span>
-<span class="kt">int</span> <span class="n">_string_length</span><span class="p">(</span><span class="k">const</span> <span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="n">str</span><span class="o">-&gt;</span><span class="n">sz</span><span class="p">;</span>                                                                                        
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Изменение длины строки.</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">int</span> <span class="hl kwd">_string_resize</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> str<span class="hl opt">,</span> <span class="hl kwb">int</span> sz<span class="hl opt">) {</span>
+  <span class="hl kwa">return</span> str<span class="hl opt">-&gt;</span>sz <span class="hl opt">=</span> sz<span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Изменение длины строки.</span>
-<span class="cm"> */</span>
-<span class="kt">int</span> <span class="n">_string_resize</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sz</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="n">str</span><span class="o">-&gt;</span><span class="n">sz</span> <span class="o">=</span> <span class="n">sz</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Копирование строки из строки С, завершающейся нулем.</span>
+<span class="hl com"> */</span>
+string_t<span class="hl opt">*</span> <span class="hl kwd">_string_from_c_str</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> dst<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> src<span class="hl opt">) {</span>
+  <span class="hl kwb">int</span> sz <span class="hl opt">=</span> <span class="hl kwd">strlen</span><span class="hl opt">(</span>src<span class="hl opt">);</span>
+  <span class="hl kwd">memcpy</span><span class="hl opt">(</span>dst<span class="hl opt">-&gt;</span>data<span class="hl opt">,</span> src<span class="hl opt">,</span> sz<span class="hl opt">);</span>
+  dst<span class="hl opt">-&gt;</span>sz <span class="hl opt">=</span> sz<span class="hl opt">;</span>
+  <span class="hl kwa">return</span> dst<span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Копирование строки из строки С, завершающейся нулем.</span>
-<span class="cm"> */</span>
-<span class="n">string_t</span><span class="o">*</span> <span class="n">_string_from_c_str</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">src</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">sz</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">src</span><span class="p">);</span>
-  <span class="n">memcpy</span><span class="p">(</span><span class="n">dst</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">sz</span><span class="p">);</span>
-  <span class="n">dst</span><span class="o">-&gt;</span><span class="n">sz</span> <span class="o">=</span> <span class="n">sz</span><span class="p">;</span>
-  <span class="k">return</span> <span class="n">dst</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Добавление символа в строку.</span>
+<span class="hl com"> */</span>
+string_t<span class="hl opt">*</span> <span class="hl kwd">_string_append_ch</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> str<span class="hl opt">,</span> <span class="hl kwb">char</span> ch<span class="hl opt">) {</span>
+  str<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>str<span class="hl opt">-&gt;</span>sz<span class="hl opt">++] =</span> ch<span class="hl opt">;</span>
+  <span class="hl kwa">return</span> str<span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Добавление символа в строку.</span>
-<span class="cm"> */</span>
-<span class="n">string_t</span><span class="o">*</span> <span class="n">_string_append_ch</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">char</span> <span class="n">ch</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">str</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">str</span><span class="o">-&gt;</span><span class="n">sz</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="n">ch</span><span class="p">;</span>
-  <span class="k">return</span> <span class="n">str</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/**</span>
-<span class="cm"> * Превращение строки в строку С с нулем на конце. Фактически,</span>
-<span class="cm"> * в тело строки добавляется ноль и возвращается указатель на данные.</span>
-<span class="cm"> */</span>
-<span class="kt">char</span><span class="o">*</span> <span class="n">_string_c_str</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">str</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">str</span><span class="o">-&gt;</span><span class="n">sz</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="k">return</span> <span class="n">string_data</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl com">/**</span>
+<span class="hl com"> * Превращение строки в строку С с нулем на конце. Фактически,</span>
+<span class="hl com"> * в тело строки добавляется ноль и возвращается указатель на данные.</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">char</span><span class="hl opt">*</span> <span class="hl kwd">_string_c_str</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> str<span class="hl opt">) {</span>
+  str<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>str<span class="hl opt">-&gt;</span>sz<span class="hl opt">] =</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">string_data</span><span class="hl opt">(</span>str<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Как вы заметили, в коде есть специальный блок, ограниченный макросом <code>UNIT_TESTING</code>. Ничего не поделаешь, в языке С приходится &ldquo;готовить&rdquo; код к потенциальному тестированию и вставлять фрагменты, позволяющие тестовой среде работать с этим кодом. Этот блок, если задан макрос <code>UNIT_TESTING</code>, переопределяет функции работы с кучей, чтобы можно было перехватывать их вызовы. Подменяющие функции <code>_test_malloc()</code>, <code>_test_calloc()</code> и <code>_test_free()</code> предоставляются библиотекой <code>cmockery</code>.</p>
 
 <p>Теперь файл тестов <code>cstring_unittest.c</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;stdarg.h&gt;</span>
-<span class="cp">#include &lt;stddef.h&gt;</span>
-<span class="cp">#include &lt;setjmp.h&gt;</span>
-<span class="cp">#include &lt;cmockery.h&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;stdarg.h&gt;</span>
+<span class="hl ppc">#include &lt;stddef.h&gt;</span>
+<span class="hl ppc">#include &lt;setjmp.h&gt;</span>
+<span class="hl ppc">#include &lt;cmockery.h&gt;</span>
 
-<span class="cp">#include &quot;cstring.h&quot;</span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;cstring.h&quot;</span><span class="hl ppc"></span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Тестируем декларацию строки длиной 20 в виде автоматической</span>
-<span class="cm"> * переменной, добавляем в нее два символа, обрезаем строку</span>
-<span class="cm"> * до длины в один байт и проверяем, добавился ли 0 при преобразовании</span>
-<span class="cm"> * в строку С.</span>
-<span class="cm"> */</span>
-<span class="kt">void</span> <span class="n">string_c_str_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">decl_string_t</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
-  <span class="n">a</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;a&#39;</span><span class="p">;</span>
-  <span class="n">a</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;b&#39;</span><span class="p">;</span>
-  <span class="n">a</span><span class="p">.</span><span class="n">sz</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="n">assert_memory_equal</span><span class="p">(</span><span class="s">&quot;a</span><span class="se">\0</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">string_c_str</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">),</span> <span class="mi">2</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Тестируем декларацию строки длиной 20 в виде автоматической</span>
+<span class="hl com"> * переменной, добавляем в нее два символа, обрезаем строку</span>
+<span class="hl com"> * до длины в один байт и проверяем, добавился ли 0 при преобразовании</span>
+<span class="hl com"> * в строку С.</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">void</span> <span class="hl kwd">string_c_str_test</span><span class="hl opt">(</span><span class="hl kwb">void</span> <span class="hl opt">**</span>state<span class="hl opt">) {</span>
+  <span class="hl kwd">decl_string_t</span><span class="hl opt">(</span>a<span class="hl opt">,</span> <span class="hl num">20</span><span class="hl opt">);</span>
+  a<span class="hl opt">.</span>data<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">] =</span> <span class="hl str">'a'</span><span class="hl opt">;</span>
+  a<span class="hl opt">.</span>data<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> <span class="hl str">'b'</span><span class="hl opt">;</span>
+  a<span class="hl opt">.</span>sz <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  <span class="hl kwd">assert_memory_equal</span><span class="hl opt">(</span><span class="hl str">&quot;a\0&quot;</span><span class="hl opt">,</span> <span class="hl kwd">string_c_str</span><span class="hl opt">(&amp;</span>a<span class="hl opt">),</span> <span class="hl num">2</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Тестируем изменение длины строки.</span>
-<span class="cm"> */</span>
-<span class="kt">void</span> <span class="n">string_resize_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">decl_string_t</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
-  <span class="n">a</span><span class="p">.</span><span class="n">sz</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
-  <span class="n">string_resize</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
-  <span class="n">assert_int_equal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">string_length</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">));</span>
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Тестируем изменение длины строки.</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">void</span> <span class="hl kwd">string_resize_test</span><span class="hl opt">(</span><span class="hl kwb">void</span> <span class="hl opt">**</span>state<span class="hl opt">) {</span>
+  <span class="hl kwd">decl_string_t</span><span class="hl opt">(</span>a<span class="hl opt">,</span> <span class="hl num">20</span><span class="hl opt">);</span>
+  a<span class="hl opt">.</span>sz <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span>
+  <span class="hl kwd">string_resize</span><span class="hl opt">(&amp;</span>a<span class="hl opt">,</span> <span class="hl num">1</span><span class="hl opt">);</span>
+  <span class="hl kwd">assert_int_equal</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl kwd">string_length</span><span class="hl opt">(&amp;</span>a<span class="hl opt">));</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Тестируем добавление символа путем сравнения со строками С</span>
-<span class="cm"> */</span>
-<span class="kt">void</span> <span class="n">string_append_ch_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">decl_string_t</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
-  <span class="n">assert_string_equal</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">string_c_str</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">));</span>
-  <span class="n">assert_string_equal</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">,</span> <span class="n">string_c_str</span><span class="p">(</span><span class="n">string_append_ch</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="sc">&#39;a&#39;</span><span class="p">)));</span>
-  <span class="n">assert_string_equal</span><span class="p">(</span><span class="s">&quot;ab&quot;</span><span class="p">,</span> <span class="n">string_c_str</span><span class="p">(</span><span class="n">string_append_ch</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="sc">&#39;b&#39;</span><span class="p">)));</span>
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Тестируем добавление символа путем сравнения со строками С</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">void</span> <span class="hl kwd">string_append_ch_test</span><span class="hl opt">(</span><span class="hl kwb">void</span> <span class="hl opt">**</span>state<span class="hl opt">) {</span>
+  <span class="hl kwd">decl_string_t</span><span class="hl opt">(</span>a<span class="hl opt">,</span> <span class="hl num">20</span><span class="hl opt">);</span>
+  <span class="hl kwd">assert_string_equal</span><span class="hl opt">(</span><span class="hl str">&quot;&quot;</span><span class="hl opt">,</span> <span class="hl kwd">string_c_str</span><span class="hl opt">(&amp;</span>a<span class="hl opt">));</span>
+  <span class="hl kwd">assert_string_equal</span><span class="hl opt">(</span><span class="hl str">&quot;a&quot;</span><span class="hl opt">,</span> <span class="hl kwd">string_c_str</span><span class="hl opt">(</span><span class="hl kwd">string_append_ch</span><span class="hl opt">(&amp;</span>a<span class="hl opt">,</span> <span class="hl str">'a'</span><span class="hl opt">)));</span>
+  <span class="hl kwd">assert_string_equal</span><span class="hl opt">(</span><span class="hl str">&quot;ab&quot;</span><span class="hl opt">,</span> <span class="hl kwd">string_c_str</span><span class="hl opt">(</span><span class="hl kwd">string_append_ch</span><span class="hl opt">(&amp;</span>a<span class="hl opt">,</span> <span class="hl str">'b'</span><span class="hl opt">)));</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Тестируем декларацию строки в виде автоматической переменной.</span>
-<span class="cm"> * Длина строки сразу после декларации должна быть нулевой.</span>
-<span class="cm"> */</span>
-<span class="kt">void</span> <span class="n">string_declare_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">decl_string_t</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
-  <span class="n">assert_int_equal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">string_length</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">));</span>
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Тестируем декларацию строки в виде автоматической переменной.</span>
+<span class="hl com"> * Длина строки сразу после декларации должна быть нулевой.</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">void</span> <span class="hl kwd">string_declare_test</span><span class="hl opt">(</span><span class="hl kwb">void</span> <span class="hl opt">**</span>state<span class="hl opt">) {</span>
+  <span class="hl kwd">decl_string_t</span><span class="hl opt">(</span>a<span class="hl opt">,</span> <span class="hl num">20</span><span class="hl opt">);</span>
+  <span class="hl kwd">assert_int_equal</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">,</span> <span class="hl kwd">string_length</span><span class="hl opt">(&amp;</span>a<span class="hl opt">));</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Тестируем размещение новой строки в куче и ее удаление из нее.</span>
-<span class="cm"> */</span>
-<span class="kt">void</span> <span class="n">string_heap_allocation_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">string_t</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="n">string_new</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
-  <span class="n">string_delete</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Тестируем размещение новой строки в куче и ее удаление из нее.</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">void</span> <span class="hl kwd">string_heap_allocation_test</span><span class="hl opt">(</span><span class="hl kwb">void</span> <span class="hl opt">**</span>state<span class="hl opt">) {</span>
+  string_t<span class="hl opt">*</span> a <span class="hl opt">=</span> <span class="hl kwd">string_new</span><span class="hl opt">(</span><span class="hl num">20</span><span class="hl opt">);</span>
+  <span class="hl kwd">string_delete</span><span class="hl opt">(</span>a<span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Тестируем копирование строки из строки С с нулем на конце.</span>
-<span class="cm"> */</span>
-<span class="kt">void</span> <span class="n">string_from_c_str_test</span><span class="p">(</span><span class="kt">void</span> <span class="o">**</span><span class="n">state</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">string_t</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="n">string_new</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
-  <span class="n">string_from_c_str</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="s">&quot;12345678&quot;</span><span class="p">);</span>
-  <span class="n">assert_int_equal</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">string_length</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
-  <span class="n">string_delete</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Тестируем копирование строки из строки С с нулем на конце.</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">void</span> <span class="hl kwd">string_from_c_str_test</span><span class="hl opt">(</span><span class="hl kwb">void</span> <span class="hl opt">**</span>state<span class="hl opt">) {</span>
+  string_t<span class="hl opt">*</span> a <span class="hl opt">=</span> <span class="hl kwd">string_new</span><span class="hl opt">(</span><span class="hl num">8</span><span class="hl opt">);</span>
+  <span class="hl kwd">string_from_c_str</span><span class="hl opt">(</span>a<span class="hl opt">,</span> <span class="hl str">&quot;12345678&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwd">assert_int_equal</span><span class="hl opt">(</span><span class="hl num">8</span><span class="hl opt">,</span> <span class="hl kwd">string_length</span><span class="hl opt">(</span>a<span class="hl opt">));</span>
+  <span class="hl kwd">string_delete</span><span class="hl opt">(</span>a<span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Создаем список тестов и запускаем их.</span>
-<span class="cm"> */</span>
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="k">const</span> <span class="n">UnitTest</span> <span class="n">tests</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">unit_test</span><span class="p">(</span><span class="n">string_declare_test</span><span class="p">),</span>
-    <span class="n">unit_test</span><span class="p">(</span><span class="n">string_c_str_test</span><span class="p">),</span>
-    <span class="n">unit_test</span><span class="p">(</span><span class="n">string_append_ch_test</span><span class="p">),</span>
-    <span class="n">unit_test</span><span class="p">(</span><span class="n">string_heap_allocation_test</span><span class="p">),</span>
-    <span class="n">unit_test</span><span class="p">(</span><span class="n">string_from_c_str_test</span><span class="p">),</span>
-    <span class="n">unit_test</span><span class="p">(</span><span class="n">string_resize_test</span><span class="p">),</span>
-  <span class="p">};</span>
-  <span class="k">return</span> <span class="n">run_tests</span><span class="p">(</span><span class="n">tests</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl com">/**</span>
+<span class="hl com"> * Создаем список тестов и запускаем их.</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwb">const</span> UnitTest tests<span class="hl opt">[] = {</span>
+    <span class="hl kwd">unit_test</span><span class="hl opt">(</span>string_declare_test<span class="hl opt">),</span>
+    <span class="hl kwd">unit_test</span><span class="hl opt">(</span>string_c_str_test<span class="hl opt">),</span>
+    <span class="hl kwd">unit_test</span><span class="hl opt">(</span>string_append_ch_test<span class="hl opt">),</span>
+    <span class="hl kwd">unit_test</span><span class="hl opt">(</span>string_heap_allocation_test<span class="hl opt">),</span>
+    <span class="hl kwd">unit_test</span><span class="hl opt">(</span>string_from_c_str_test<span class="hl opt">),</span>
+    <span class="hl kwd">unit_test</span><span class="hl opt">(</span>string_resize_test<span class="hl opt">),</span>
+  <span class="hl opt">};</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">run_tests</span><span class="hl opt">(</span>tests<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Схема очень похожа на любое другое <a href="http://en.wikipedia.org/wiki/Unit_testing">xUnit</a> тестирование: каждый тест проверяет какой-то один функциональный элемент, тесты объединяются в группы и запускаются автоматически все вместе. Правда, из-за ограничений языка С каждый тест приходится вручную добавлять в список запуска, увы.</p>
 
@@ -344,83 +347,84 @@ All 6 tests passed
 
 <p>Файл <code>cstring.c</code> с &ldquo;ошибками&rdquo;:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;stdlib.h&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;stdlib.h&gt;</span>
 
-<span class="cp">#include &quot;cstring.h&quot;</span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;cstring.h&quot;</span><span class="hl ppc"></span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Подготовительная площадка для тестирования.</span>
-<span class="cm"> * Если задан макрос UNIT_TESTING, то функции работы с кучей подменяются</span>
-<span class="cm"> * на тестовые.</span>
-<span class="cm"> */</span>
-<span class="cp">#if UNIT_TESTING</span>
-<span class="k">extern</span> <span class="kt">void</span><span class="o">*</span> <span class="n">_test_malloc</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">size</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">line</span><span class="p">);</span>
-<span class="k">extern</span> <span class="kt">void</span><span class="o">*</span> <span class="n">_test_calloc</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">number_of_elements</span><span class="p">,</span> <span class="k">const</span> <span class="n">size_t</span> <span class="n">size</span><span class="p">,</span>
-                          <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">line</span><span class="p">);</span>
-<span class="k">extern</span> <span class="kt">void</span> <span class="n">_test_free</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="k">const</span> <span class="n">ptr</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">file</span><span class="p">,</span> <span class="k">const</span> <span class="kt">int</span> <span class="n">line</span><span class="p">);</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Подготовительная площадка для тестирования.</span>
+<span class="hl com"> * Если задан макрос UNIT_TESTING, то функции работы с кучей подменяются</span>
+<span class="hl com"> * на тестовые.</span>
+<span class="hl com"> */</span>
+<span class="hl ppc">#if UNIT_TESTING</span>
+<span class="hl kwc">extern</span> <span class="hl kwb">void</span><span class="hl opt">*</span> <span class="hl kwd">_test_malloc</span><span class="hl opt">(</span><span class="hl kwb">const size_t</span> size<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> file<span class="hl opt">,</span> <span class="hl kwb">const int</span> line<span class="hl opt">);</span>
+<span class="hl kwc">extern</span> <span class="hl kwb">void</span><span class="hl opt">*</span> <span class="hl kwd">_test_calloc</span><span class="hl opt">(</span><span class="hl kwb">const size_t</span> number_of_elements<span class="hl opt">,</span> <span class="hl kwb">const size_t</span> size<span class="hl opt">,</span>
+                          <span class="hl kwb">const char</span><span class="hl opt">*</span> file<span class="hl opt">,</span> <span class="hl kwb">const int</span> line<span class="hl opt">);</span>
+<span class="hl kwc">extern</span> <span class="hl kwb">void</span> <span class="hl kwd">_test_free</span><span class="hl opt">(</span><span class="hl kwb">void</span><span class="hl opt">*</span> <span class="hl kwb">const</span> ptr<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> file<span class="hl opt">,</span> <span class="hl kwb">const int</span> line<span class="hl opt">);</span>
 
-<span class="cp">#define malloc(size) _test_malloc(size, __FILE__, __LINE__)</span>
-<span class="cp">#define calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)</span>
-<span class="cp">#define free(ptr) _test_free(ptr, __FILE__, __LINE__)</span>
-<span class="cp">#endif </span><span class="c1">// UNIT_TESTING</span>
+<span class="hl ppc">#define malloc(size) _test_malloc(size, __FILE__, __LINE__)</span>
+<span class="hl ppc">#define calloc(num, size) _test_calloc(num, size, __FILE__, __LINE__)</span>
+<span class="hl ppc">#define free(ptr) _test_free(ptr, __FILE__, __LINE__)</span>
+<span class="hl ppc">#endif</span> <span class="hl slc">// UNIT_TESTING</span>
+<span class="hl ppc"></span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Создание новой строки в куче. Трюк &quot;sizeof(string_t)&quot; используется, чтобы</span>
+<span class="hl com"> * правильно отработать ситуацию, если из-за выравнивания между элементами</span>
+<span class="hl com"> * структуры string_t 'sz' и 'data' вдруг появится промежуток.</span>
+<span class="hl com"> */</span> 
+string_t<span class="hl opt">*</span> <span class="hl kwd">string_new</span><span class="hl opt">(</span><span class="hl kwb">int</span> sz<span class="hl opt">) {</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">malloc</span><span class="hl opt">(</span><span class="hl kwa">sizeof</span><span class="hl opt">(</span>string_t<span class="hl opt">) +</span> <span class="hl num">1</span> <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">);</span> <span class="hl slc">// (ОШИБКА!) &quot;Неверная&quot; длина.</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Создание новой строки в куче. Трюк &quot;sizeof(string_t)&quot; используется, чтобы</span>
-<span class="cm"> * правильно отработать ситуацию, если из-за выравнивания между элементами</span>
-<span class="cm"> * структуры string_t &#39;sz&#39; и &#39;data&#39; вдруг появится промежуток.</span>
-<span class="cm"> */</span> 
-<span class="n">string_t</span><span class="o">*</span> <span class="n">string_new</span><span class="p">(</span><span class="kt">int</span> <span class="n">sz</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">string_t</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span> <span class="c1">// (ОШИБКА!) &quot;Неверная&quot; длина.</span>
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Удаление строки из кучи.</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">void</span> <span class="hl kwd">_string_delete</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> str<span class="hl opt">) {</span>
+  <span class="hl slc">// (ОШИБКА!) &quot;Забыли&quot; вызвать free().</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Удаление строки из кучи.</span>
-<span class="cm"> */</span>
-<span class="kt">void</span> <span class="n">_string_delete</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// (ОШИБКА!) &quot;Забыли&quot; вызвать free().</span>
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Текущая длина строки.</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">int</span> <span class="hl kwd">_string_length</span><span class="hl opt">(</span><span class="hl kwb">const</span> string_t<span class="hl opt">*</span> str<span class="hl opt">) {</span>
+  <span class="hl kwa">return</span> str<span class="hl opt">-&gt;</span>sz<span class="hl opt">;</span>                                                                                        
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Текущая длина строки.</span>
-<span class="cm"> */</span>
-<span class="kt">int</span> <span class="n">_string_length</span><span class="p">(</span><span class="k">const</span> <span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="n">str</span><span class="o">-&gt;</span><span class="n">sz</span><span class="p">;</span>                                                                                        
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Изменение длины строки.</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">int</span> <span class="hl kwd">_string_resize</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> str<span class="hl opt">,</span> <span class="hl kwb">int</span> sz<span class="hl opt">) {</span>
+  <span class="hl kwa">return</span> str<span class="hl opt">-&gt;</span>sz<span class="hl opt">;</span>  <span class="hl slc">// (ОШИБКА!) &quot;Забыли&quot; уменьшить длину строки.</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Изменение длины строки.</span>
-<span class="cm"> */</span>
-<span class="kt">int</span> <span class="n">_string_resize</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">int</span> <span class="n">sz</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="n">str</span><span class="o">-&gt;</span><span class="n">sz</span><span class="p">;</span>  <span class="c1">// (ОШИБКА!) &quot;Забыли&quot; уменьшить длину строки.</span>
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Копирование строки из строки С, завершающейся нулем.</span>
+<span class="hl com"> */</span>
+string_t<span class="hl opt">*</span> <span class="hl kwd">_string_from_c_str</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> dst<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> src<span class="hl opt">) {</span>
+  <span class="hl kwb">int</span> sz <span class="hl opt">=</span> <span class="hl kwd">strlen</span><span class="hl opt">(</span>src<span class="hl opt">);</span>
+  <span class="hl kwd">memcpy</span><span class="hl opt">(</span>dst<span class="hl opt">-&gt;</span>data<span class="hl opt">,</span> src<span class="hl opt">,</span> sz<span class="hl opt">);</span>
+  <span class="hl slc">// (ОШИБКА!) &quot;Забыли&quot; присвоить длине новое значение.</span>
+  <span class="hl kwa">return</span> dst<span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Копирование строки из строки С, завершающейся нулем.</span>
-<span class="cm"> */</span>
-<span class="n">string_t</span><span class="o">*</span> <span class="n">_string_from_c_str</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">dst</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">src</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">sz</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">src</span><span class="p">);</span>
-  <span class="n">memcpy</span><span class="p">(</span><span class="n">dst</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">sz</span><span class="p">);</span>
-  <span class="c1">// (ОШИБКА!) &quot;Забыли&quot; присвоить длине новое значение.</span>
-  <span class="k">return</span> <span class="n">dst</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="hl com">/**</span>
+<span class="hl com"> * Добавление символа в строку.</span>
+<span class="hl com"> */</span>
+string_t<span class="hl opt">*</span> <span class="hl kwd">_string_append_ch</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> str<span class="hl opt">,</span> <span class="hl kwb">char</span> ch<span class="hl opt">) {</span>
+  str<span class="hl opt">-&gt;</span>data<span class="hl opt">[</span>str<span class="hl opt">-&gt;</span>sz<span class="hl opt">] =</span> ch<span class="hl opt">;</span> <span class="hl slc">// (ОШИБКА!) &quot;Забыли&quot; увеличить длину.</span>
+  <span class="hl kwa">return</span> str<span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="cm">/**</span>
-<span class="cm"> * Добавление символа в строку.</span>
-<span class="cm"> */</span>
-<span class="n">string_t</span><span class="o">*</span> <span class="n">_string_append_ch</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">,</span> <span class="kt">char</span> <span class="n">ch</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">str</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">str</span><span class="o">-&gt;</span><span class="n">sz</span><span class="p">]</span> <span class="o">=</span> <span class="n">ch</span><span class="p">;</span> <span class="c1">// (ОШИБКА!) &quot;Забыли&quot; увеличить длину.</span>
-  <span class="k">return</span> <span class="n">str</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="cm">/**</span>
-<span class="cm"> * Превращение строки в строку С с нулем на конце. Фактически,</span>
-<span class="cm"> * в тело строки добавляется ноль и возвращается указатель на данные.</span>
-<span class="cm"> */</span>
-<span class="kt">char</span><span class="o">*</span> <span class="n">_string_c_str</span><span class="p">(</span><span class="n">string_t</span><span class="o">*</span> <span class="n">str</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// (ОШИБКА!) &quot;Забыли&quot; добавить 0 в конец.</span>
-  <span class="k">return</span> <span class="n">string_data</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl com">/**</span>
+<span class="hl com"> * Превращение строки в строку С с нулем на конце. Фактически,</span>
+<span class="hl com"> * в тело строки добавляется ноль и возвращается указатель на данные.</span>
+<span class="hl com"> */</span>
+<span class="hl kwb">char</span><span class="hl opt">*</span> <span class="hl kwd">_string_c_str</span><span class="hl opt">(</span>string_t<span class="hl opt">*</span> str<span class="hl opt">) {</span>
+  <span class="hl slc">// (ОШИБКА!) &quot;Забыли&quot; добавить 0 в конец.</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">string_data</span><span class="hl opt">(</span>str<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Компилируем и запускаем:</p>
 

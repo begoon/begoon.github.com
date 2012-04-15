@@ -43,34 +43,38 @@
 <div id="post">
   <p>Есть (точнее был) у меня вот такой код:</p>
 
-<div class="highlight"><pre><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id_</span><span class="p">;</span> <span class="p">}</span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id_</span><span class="p">;</span> <span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> <span class="hl kwd">id</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> id_<span class="hl opt">; }</span>
+std<span class="hl opt">::</span>string <span class="hl kwd">id</span><span class="hl opt">() {</span> <span class="hl kwa">return</span> id_<span class="hl opt">; }</span>
+</pre>
 
 <p>В нем есть одна досадная опечатка, из которой код:</p>
 
-<div class="highlight"><pre><span class="n">order</span><span class="p">.</span><span class="n">id</span><span class="p">()</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+order<span class="hl opt">.</span><span class="hl kwd">id</span><span class="hl opt">() =</span> <span class="hl num">123</span><span class="hl opt">;</span>
+</pre>
 
 <p>делал то, что от него не ожидалось, а точнее, ничего не делал. И проблема, как вы наверное уже догадались, в пропущеном значке <code>&amp;</code> во второй строке. Должно было быть так:</p>
 
-<div class="highlight"><pre><span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">id</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id_</span><span class="p">;</span> <span class="p">}</span>
-<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id_</span><span class="p">;</span> <span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> <span class="hl kwd">id</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> id_<span class="hl opt">; }</span>
+std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> <span class="hl kwd">id</span><span class="hl opt">() {</span> <span class="hl kwa">return</span> id_<span class="hl opt">; }</span>
+</pre>
 
 <p>Эта опечатка стоила мне часа поиска проблемы через вторичные признаки в виде иногда не обновляемой базы данных.</p>
 
 <p>Причина? А все потому, что я поленился написать тесты изначально, решив, что это уж очень простые методы. Но теперь таки добавил для этого тест:</p>
 
-<div class="highlight"><pre><span class="n">TEST</span><span class="p">(</span><span class="n">Order</span><span class="p">,</span> <span class="n">GetterSetters</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">Order</span> <span class="n">order</span><span class="p">;</span>
-  <span class="p">...</span>
-  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="p">.</span><span class="n">id</span><span class="p">());</span>   <span class="c1">// Must be initialized.</span>
-  <span class="n">order</span><span class="p">.</span><span class="n">id</span><span class="p">()</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span>
-  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">123</span><span class="p">,</span> <span class="n">order</span><span class="p">.</span><span class="n">id</span><span class="p">());</span>
-  <span class="p">...</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>Order<span class="hl opt">,</span> GetterSetters<span class="hl opt">) {</span>
+  Order order<span class="hl opt">;</span>
+  <span class="hl opt">...</span>
+  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">,</span> order<span class="hl opt">.</span><span class="hl kwd">id</span><span class="hl opt">());</span>   <span class="hl slc">// Must be initialized.</span>
+  order<span class="hl opt">.</span><span class="hl kwd">id</span><span class="hl opt">() =</span> <span class="hl num">123</span><span class="hl opt">;</span>
+  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">123</span><span class="hl opt">,</span> order<span class="hl opt">.</span><span class="hl kwd">id</span><span class="hl opt">());</span>
+  <span class="hl opt">...</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Решил сэкономить время, а вышло наоборот.</p>
 

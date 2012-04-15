@@ -43,15 +43,17 @@
 <div id="post">
   <p>Чтобы поменять местами значения двух целочисленных переменных кроме как через использование дополнительной переменной, можно сделать так:</p>
 
-<div class="highlight"><pre><span class="n">a</span> <span class="o">+=</span> <span class="n">b</span><span class="p">;</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">;</span>
-<span class="n">a</span> <span class="o">-=</span> <span class="n">b</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+a <span class="hl opt">+=</span> b<span class="hl opt">;</span>
+b <span class="hl opt">=</span> a <span class="hl opt">-</span> b<span class="hl opt">;</span>
+a <span class="hl opt">-=</span> b<span class="hl opt">;</span>
+</pre>
 
 <p>Интересно разве что с академической точки зрения. Но есть способ интереснее:</p>
 
-<div class="highlight"><pre><span class="n">a</span> <span class="o">^=</span> <span class="n">b</span> <span class="o">^=</span> <span class="n">a</span> <span class="o">^=</span> <span class="n">b</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+a <span class="hl opt">^=</span> b <span class="hl opt">^=</span> a <span class="hl opt">^=</span> b<span class="hl opt">;</span>
+</pre>
 
 <p>который также меняет местами значения этих переменных.</p>
 

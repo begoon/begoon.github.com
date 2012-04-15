@@ -48,11 +48,12 @@
 
 <p>Долгое время я использовал вот такой скрипт <code>backup.cmd</code>:</p>
 
-<div class="highlight"><pre><span class="c">rem Берем имя родительского каталога без полного пути.</span>
-<span class="k">for</span> <span class="nv">%%I</span> in (.) <span class="k">do</span> <span class="k">set</span> <span class="nv">CWD</span><span class="o">=</span><span class="nv">%%~nI</span>
-<span class="c">rem Архивируем.</span>
-winrar a -v -r -s -ag-YYYY.MM.DD-HH.MM.SS -x*.rar -x*.<span class="m">7</span>z <span class="nv">%CWD%</span>
-</pre></div>
+<pre class="hl">
+<span class="hl slc">rem Берем имя родительского каталога без полного пути.</span>
+<span class="hl kwa">for</span> <span class="hl kwc">%%I</span> in <span class="hl opt">(</span>.<span class="hl opt">)</span> <span class="hl kwa">do</span> <span class="hl kwb">set</span> CWD<span class="hl opt">=</span><span class="hl kwc">%%~nI</span>
+<span class="hl slc">rem Архивируем.</span>
+winrar a <span class="hl opt">-</span>v <span class="hl opt">-</span>r <span class="hl opt">-</span>s <span class="hl opt">-</span>ag<span class="hl opt">-</span>YYYY.MM.DD<span class="hl opt">-</span>HH.MM.SS <span class="hl opt">-</span>x<span class="hl opt">*</span>.rar <span class="hl opt">-</span>x<span class="hl opt">*</span><span class="hl num">.7</span>z <span class="hl kwc">%CWD%</span>
+</pre>
 
 <p>Просто бросаешь какой скрипт в каталог любого проекта (имя каталога должно быть сообразно проекту) и все, можно архивировать. Скрипт берет имя каталога как базу и добавляет к ней дату и время с помощью удобной опции архиватора RAR.</p>
 
@@ -60,29 +61,30 @@ winrar a -v -r -s -ag-YYYY.MM.DD-HH.MM.SS -x*.rar -x*.<span class="m">7</span>z 
 
 <p>В этоге родился скрипт <code>backup-7z.cmd</code>:</p>
 
-<div class="highlight"><pre><span class="p">@</span><span class="k">echo</span> <span class="k">off</span>
-<span class="k">setlocal</span>
-<span class="k">set</span> <span class="nv">line</span><span class="o">=</span><span class="nv">%DATE%</span>
-<span class="c">rem Проходимся по строке вида DD/MM/YYYY и</span>
-<span class="c">rem превращаем ее в YYYY.MM.DD.</span>
-<span class="nl">:parse_date</span>
-<span class="k">for</span> <span class="n">/F</span> <span class="s2">&quot;delims=/ tokens=1,*&quot;</span> <span class="nv">%%a</span> in (<span class="s2">&quot;%line%&quot;</span>) <span class="k">do</span> (
-  <span class="k">set</span> <span class="nv">line</span><span class="o">=</span><span class="nv">%%b</span>
-  <span class="k">set</span> <span class="nv">now</span><span class="o">=</span><span class="nv">%%a</span>.<span class="nv">%now%</span>
-)
-<span class="k">if</span> <span class="s2">&quot;%line%&quot;</span> <span class="o">neq</span> <span class="s2">&quot;&quot;</span> <span class="k">goto</span> <span class="nl">parse_date</span>
-<span class="c">rem Отрезаем хвостовую точку от даты.</span>
-<span class="k">set</span> <span class="nv">now</span><span class="o">=</span><span class="nv">%now:~0</span><span class="p">,</span><span class="m">10</span>%
-<span class="c">rem Добавляем время. Оно уже в формате HH:MM:SS.ms. Отрезаем доли секунды.</span>
-<span class="k">set</span> <span class="nv">now</span><span class="o">=</span><span class="nv">%now%</span>-<span class="nv">%TIME:~0</span><span class="p">,</span><span class="m">8</span>%
-<span class="c">rem Заменяем двоеточие на точку</span>
-<span class="k">set</span> <span class="nv">now</span><span class="o">=</span><span class="nv">%now::</span><span class="o">=</span>.%
-<span class="c">rem Берем имя родительского каталога без полного пути.</span>
-<span class="k">for</span> <span class="nv">%%I</span> in (.) <span class="k">do</span> <span class="k">set</span> <span class="nv">CWD</span><span class="o">=</span><span class="nv">%%~nI</span>
-<span class="c">rem Архивируем.</span>
-<span class="m">7</span>z a -mx<span class="m">9</span> -r -x!*.rar -x!*.<span class="m">7</span>z <span class="nv">%CWD%</span>-<span class="nv">%now%</span>.<span class="m">7</span>z
-<span class="k">endlocal</span>
-</pre></div>
+<pre class="hl">
+&#64;<span class="hl kwb">echo</span> off
+<span class="hl kwb">setlocal</span>
+<span class="hl kwb">set</span> line<span class="hl opt">=</span><span class="hl kwc">%DATE%</span>
+<span class="hl slc">rem Проходимся по строке вида DD/MM/YYYY и</span>
+<span class="hl slc">rem превращаем ее в YYYY.MM.DD.</span>
+<span class="hl opt">:</span>parse_date
+<span class="hl kwa">for</span> <span class="hl opt">/</span>F <span class="hl str">&quot;delims=/ tokens=1,*&quot;</span> <span class="hl kwc">%%a</span> in <span class="hl opt">(</span><span class="hl str">&quot;%line%&quot;) do (</span>
+<span class="hl str">  set line=%%b</span>
+<span class="hl str">  set now=%%a.%now%</span>
+<span class="hl str">)</span>
+<span class="hl str">if &quot;</span><span class="hl kwc">%line%&quot;</span> neq <span class="hl str">&quot;&quot;</span> <span class="hl kwa">goto</span> parse_date
+<span class="hl slc">rem Отрезаем хвостовую точку от даты.</span>
+<span class="hl kwb">set</span> now<span class="hl opt">=</span><span class="hl kwc">%now:~0,10%</span>
+<span class="hl slc">rem Добавляем время. Оно уже в формате HH:MM:SS.ms. Отрезаем доли секунды.</span>
+<span class="hl kwb">set</span> now<span class="hl opt">=</span><span class="hl kwc">%now%-%TIME:~0,8%</span>
+<span class="hl slc">rem Заменяем двоеточие на точку</span>
+<span class="hl kwb">set</span> now<span class="hl opt">=</span><span class="hl kwc">%now::=.%</span>
+<span class="hl slc">rem Берем имя родительского каталога без полного пути.</span>
+<span class="hl kwa">for</span> <span class="hl kwc">%%I</span> in <span class="hl opt">(</span>.<span class="hl opt">)</span> <span class="hl kwa">do</span> <span class="hl kwb">set</span> CWD<span class="hl opt">=</span><span class="hl kwc">%%~nI</span>
+<span class="hl slc">rem Архивируем.</span>
+<span class="hl num">7</span>z a <span class="hl opt">-</span>mx9 <span class="hl opt">-</span>r <span class="hl opt">-</span>x<span class="hl opt">!*</span>.rar <span class="hl opt">-</span>x<span class="hl opt">!*</span><span class="hl num">.7</span>z <span class="hl kwc">%CWD%-%now%.7z</span>
+<span class="hl kwb">endlocal</span>
+</pre>
 
 <p>Это скрипт делает все как и раньше, но только для 7z.</p>
 

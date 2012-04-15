@@ -51,13 +51,15 @@
 
 <p>Файл <code>iepon.cmd</code>:</p>
 
-<div class="highlight"><pre>reg add <span class="s2">&quot;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&quot;</span> <span class="n">/v</span> ProxyEnable <span class="n">/t</span> REG_DWORD <span class="n">/d</span> <span class="m">1</span> <span class="n">/f</span>
-</pre></div>
+<pre class="hl">
+reg add <span class="hl str">&quot;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&quot;</span> <span class="hl opt">/</span>v ProxyEnable <span class="hl opt">/</span>t REG_DWORD <span class="hl opt">/</span>d <span class="hl num">1</span> <span class="hl opt">/</span>f
+</pre>
 
 <p>Файл <code>iepoff.cmd</code>:</p>
 
-<div class="highlight"><pre>reg add <span class="s2">&quot;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&quot;</span> <span class="n">/v</span> ProxyEnable <span class="n">/t</span> REG_DWORD <span class="n">/d</span> <span class="m">0</span> <span class="n">/f</span>
-</pre></div>
+<pre class="hl">
+reg add <span class="hl str">&quot;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&quot;</span> <span class="hl opt">/</span>v ProxyEnable <span class="hl opt">/</span>t REG_DWORD <span class="hl opt">/</span>d <span class="hl num">0</span> <span class="hl opt">/</span>f
+</pre>
 
 <p>Я проверял это только в Windows XP.</p>
 

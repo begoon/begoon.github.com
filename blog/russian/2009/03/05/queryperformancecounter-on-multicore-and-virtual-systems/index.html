@@ -60,14 +60,15 @@ Delta (100) &gt; than 10
 
 <p>Я заподозрил функцию <code>QueryPerformanceCounter()</code>. Написал еще один кондовый тест:</p>
 
-<div class="highlight"><pre><span class="n">TEST</span><span class="p">(</span><span class="n">PreciseTimer</span><span class="p">,</span> <span class="n">MillisecCounter</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">monitor</span><span class="o">::</span><span class="n">PreciseTimer</span> <span class="n">timer</span><span class="p">;</span>
-  <span class="n">monitor</span><span class="o">::</span><span class="n">PreciseTimer</span><span class="o">::</span><span class="n">Counter</span> <span class="n">a</span> <span class="o">=</span> <span class="n">timer</span><span class="p">.</span><span class="n">millisec</span><span class="p">();</span>
-  <span class="n">timer</span><span class="p">.</span><span class="n">sleepMs</span><span class="p">(</span><span class="mi">10000</span><span class="p">);</span>
-  <span class="n">monitor</span><span class="o">::</span><span class="n">PreciseTimer</span><span class="o">::</span><span class="n">Counter</span> <span class="n">b</span> <span class="o">=</span> <span class="n">timer</span><span class="p">.</span><span class="n">millisec</span><span class="p">();</span>
-  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>PreciseTimer<span class="hl opt">,</span> MillisecCounter<span class="hl opt">) {</span>
+  monitor<span class="hl opt">::</span>PreciseTimer timer<span class="hl opt">;</span>
+  monitor<span class="hl opt">::</span>PreciseTimer<span class="hl opt">::</span>Counter a <span class="hl opt">=</span> timer<span class="hl opt">.</span><span class="hl kwd">millisec</span><span class="hl opt">();</span>
+  timer<span class="hl opt">.</span><span class="hl kwd">sleepMs</span><span class="hl opt">(</span><span class="hl num">10000</span><span class="hl opt">);</span>
+  monitor<span class="hl opt">::</span>PreciseTimer<span class="hl opt">::</span>Counter b <span class="hl opt">=</span> timer<span class="hl opt">.</span><span class="hl kwd">millisec</span><span class="hl opt">();</span>
+  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">10000</span><span class="hl opt">,</span> b <span class="hl opt">-</span> a<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Этот тест делает видную глазом задержку в 10 секунд (чтобы исключить проблему в самой задержке) и затем проверят показания таймера.</p>
 

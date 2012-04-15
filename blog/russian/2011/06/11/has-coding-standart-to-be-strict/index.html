@@ -43,29 +43,30 @@
 <div id="post">
   <p>Например, вот такой кусок кода:</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">f</span> <span class="p">(</span>  <span class="kt">int</span> <span class="n">a</span> <span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">p</span>  <span class="p">)</span>
-<span class="p">{</span>
-   <span class="kt">int</span>   <span class="n">whattodo</span> <span class="p">;</span>
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">f</span> <span class="hl opt">(</span>  <span class="hl kwb">int</span> a <span class="hl opt">,</span> <span class="hl kwb">char</span> <span class="hl opt">*</span>p  <span class="hl opt">)</span>
+<span class="hl opt">{</span>
+   <span class="hl kwb">int</span>   whattodo <span class="hl opt">;</span>
 
-   <span class="n">whattodo</span> <span class="o">=</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="mi">2</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+   whattodo <span class="hl opt">=</span> a <span class="hl opt">&lt;</span> <span class="hl num">1</span> ? <span class="hl num">2</span> <span class="hl opt">:</span> <span class="hl num">0</span><span class="hl opt">;</span>
 
-   <span class="k">switch</span> <span class="p">(</span> <span class="n">whattodo</span> <span class="p">)</span>
-   <span class="p">{</span>
-   <span class="k">case</span> <span class="mi">2</span><span class="o">:</span>
-             <span class="n">printf</span><span class="p">(</span><span class="s">&quot;THIS</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
-   <span class="k">case</span> <span class="mi">1</span><span class="o">:</span>
-             <span class="n">printf</span><span class="p">(</span><span class="s">&quot;THAT</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-             <span class="k">break</span><span class="p">;</span>
-   <span class="p">}</span>
-   <span class="k">if</span> <span class="p">(</span> <span class="n">a</span> <span class="o">!=</span>  <span class="o">*</span> <span class="n">p</span>  <span class="p">)</span> <span class="p">{</span>
-             <span class="n">a</span> <span class="o">=</span> <span class="mi">1111111</span> <span class="p">;</span>
+   <span class="hl kwa">switch</span> <span class="hl opt">(</span> whattodo <span class="hl opt">)</span>
+   <span class="hl opt">{</span>
+   <span class="hl kwa">case</span> <span class="hl num">2</span><span class="hl opt">:</span>
+             <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;THIS</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">);</span> <span class="hl kwa">break</span><span class="hl opt">;</span>
+   <span class="hl kwa">case</span> <span class="hl num">1</span><span class="hl opt">:</span>
+             <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;THAT</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">);</span>
+             <span class="hl kwa">break</span><span class="hl opt">;</span>
+   <span class="hl opt">}</span>
+   <span class="hl kwa">if</span> <span class="hl opt">(</span> a <span class="hl opt">!=  *</span> p  <span class="hl opt">) {</span>
+             a <span class="hl opt">=</span> <span class="hl num">1111111</span> <span class="hl opt">;</span>
 
-   <span class="p">}</span> <span class="k">else</span>
-             <span class="n">a</span> <span class="o">=</span> <span class="mi">2222222</span><span class="p">;</span>
+   <span class="hl opt">}</span> <span class="hl kwa">else</span>
+             a <span class="hl opt">=</span> <span class="hl num">2222222</span><span class="hl opt">;</span>
 
 
-<span class="p">}</span>
-</pre></div>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Удивительно, но во многих компаниях, где я работал, подобный код спокойно подошел бы по принятому стандарту кодирования. И такой код вполне реален, так как он обычно создается за долгое время разными людьми. В целом код читаем и даже более менее понятен.</p>
 

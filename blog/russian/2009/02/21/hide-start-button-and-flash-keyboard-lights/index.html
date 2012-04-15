@@ -49,66 +49,68 @@
 
 <p>Данная программа убирает кнопку Пуск (Start) на 5 секунд, а потом возвращает ее назад. Проверял на Windows 2000 и XP. Если программу прервать в отведенные 5 секунд, кнопку Пуск придется восстанавливать повторным запуском программы</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;windows.h&gt;</span>
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
-   <span class="c1">// Ищем кнопку.</span>
-   <span class="n">HWND</span> <span class="n">hWnd</span><span class="p">;</span>
-   <span class="n">hWnd</span> <span class="o">=</span> <span class="n">FindWindow</span><span class="p">(</span><span class="s">&quot;Shell_TrayWnd&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
-   <span class="n">hWnd</span> <span class="o">=</span> <span class="n">FindWindowEx</span><span class="p">(</span><span class="n">hWnd</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="s">&quot;BUTTON&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;windows.h&gt;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">void</span><span class="hl opt">) {</span>
+   <span class="hl slc">// Ищем кнопку.</span>
+   HWND hWnd<span class="hl opt">;</span>
+   hWnd <span class="hl opt">=</span> <span class="hl kwd">FindWindow</span><span class="hl opt">(</span><span class="hl str">&quot;Shell_TrayWnd&quot;</span><span class="hl opt">,</span> NULL<span class="hl opt">);</span>
+   hWnd <span class="hl opt">=</span> <span class="hl kwd">FindWindowEx</span><span class="hl opt">(</span>hWnd<span class="hl opt">,</span> NULL<span class="hl opt">,</span> <span class="hl str">&quot;BUTTON&quot;</span><span class="hl opt">,</span> NULL<span class="hl opt">);</span>
 
-   <span class="c1">// Прячем её.</span>
-   <span class="n">ShowWindow</span><span class="p">(</span><span class="n">hWnd</span><span class="p">,</span> <span class="n">SW_HIDE</span><span class="p">);</span>
+   <span class="hl slc">// Прячем её.</span>
+   <span class="hl kwd">ShowWindow</span><span class="hl opt">(</span>hWnd<span class="hl opt">,</span> SW_HIDE<span class="hl opt">);</span>
 
-   <span class="c1">// Ждём.</span>
-   <span class="n">Sleep</span><span class="p">(</span><span class="mi">5000</span><span class="p">);</span>
+   <span class="hl slc">// Ждём.</span>
+   <span class="hl kwd">Sleep</span><span class="hl opt">(</span><span class="hl num">5000</span><span class="hl opt">);</span>
 
-   <span class="c1">// Показываем обратно.</span>
-   <span class="n">ShowWindow</span><span class="p">(</span><span class="n">hWnd</span><span class="p">,</span> <span class="n">SW_SHOW</span><span class="p">);</span>
+   <span class="hl slc">// Показываем обратно.</span>
+   <span class="hl kwd">ShowWindow</span><span class="hl opt">(</span>hWnd<span class="hl opt">,</span> SW_SHOW<span class="hl opt">);</span>
 
-   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+   <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p><strong>Мигание индикаторами на клавиатуре</strong></p>
 
 <p>Данная программа устраивает бегущий огонек по индикаторам <code>NUM LOCK</code>, <code>CAPS LOCK</code> и <code>SCROLL LOCK</code> на более менее обычных клавиатурах.</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;windows.h&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;windows.h&gt;</span>
 
-<span class="kt">void</span> <span class="n">kbdLight</span><span class="p">(</span><span class="n">WORD</span> <span class="n">code</span><span class="p">)</span> <span class="p">{</span>
-   <span class="n">INPUT</span> <span class="n">input</span><span class="p">;</span>
+<span class="hl kwb">void</span> <span class="hl kwd">kbdLight</span><span class="hl opt">(</span>WORD code<span class="hl opt">) {</span>
+   INPUT input<span class="hl opt">;</span>
 
-   <span class="n">input</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">INPUT_KEYBOARD</span><span class="p">;</span>
-   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">wVk</span> <span class="o">=</span> <span class="n">code</span><span class="p">;</span>
-   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">wScan</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">dwFlags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">dwExtraInfo</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+   input<span class="hl opt">.</span>type <span class="hl opt">=</span> INPUT_KEYBOARD<span class="hl opt">;</span>
+   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>wVk <span class="hl opt">=</span> code<span class="hl opt">;</span>
+   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>wScan <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>dwFlags <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>time <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>dwExtraInfo <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
 
-   <span class="n">SendInput</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">input</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">input</span><span class="p">));</span>
+   <span class="hl kwd">SendInput</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">, &amp;</span>input<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>input<span class="hl opt">));</span>
 
-   <span class="n">input</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">INPUT_KEYBOARD</span><span class="p">;</span>
-   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">wVk</span> <span class="o">=</span> <span class="n">code</span><span class="p">;</span>
-   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">wScan</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">dwFlags</span> <span class="o">=</span> <span class="n">KEYEVENTF_KEYUP</span><span class="p">;</span>
-   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-   <span class="n">input</span><span class="p">.</span><span class="n">ki</span><span class="p">.</span><span class="n">dwExtraInfo</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+   input<span class="hl opt">.</span>type <span class="hl opt">=</span> INPUT_KEYBOARD<span class="hl opt">;</span>
+   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>wVk <span class="hl opt">=</span> code<span class="hl opt">;</span>
+   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>wScan <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>dwFlags <span class="hl opt">=</span> KEYEVENTF_KEYUP<span class="hl opt">;</span>
+   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>time <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>dwExtraInfo <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
 
-   <span class="n">SendInput</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">input</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">input</span><span class="p">));</span>
-<span class="p">}</span>
+   <span class="hl kwd">SendInput</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">, &amp;</span>input<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>input<span class="hl opt">));</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
-   <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">kbdLight</span><span class="p">(</span><span class="n">VK_NUMLOCK</span><span class="p">);</span>
-      <span class="n">Sleep</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
-      <span class="n">kbdLight</span><span class="p">(</span><span class="n">VK_CAPITAL</span><span class="p">);</span>
-      <span class="n">Sleep</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
-      <span class="n">kbdLight</span><span class="p">(</span><span class="n">VK_SCROLL</span><span class="p">);</span>
-      <span class="n">Sleep</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
-   <span class="p">}</span>
-   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">void</span><span class="hl opt">) {</span>
+   <span class="hl kwa">while</span> <span class="hl opt">(</span><span class="hl kwa">true</span><span class="hl opt">) {</span>
+      <span class="hl kwd">kbdLight</span><span class="hl opt">(</span>VK_NUMLOCK<span class="hl opt">);</span>
+      <span class="hl kwd">Sleep</span><span class="hl opt">(</span><span class="hl num">100</span><span class="hl opt">);</span>
+      <span class="hl kwd">kbdLight</span><span class="hl opt">(</span>VK_CAPITAL<span class="hl opt">);</span>
+      <span class="hl kwd">Sleep</span><span class="hl opt">(</span><span class="hl num">100</span><span class="hl opt">);</span>
+      <span class="hl kwd">kbdLight</span><span class="hl opt">(</span>VK_SCROLL<span class="hl opt">);</span>
+      <span class="hl kwd">Sleep</span><span class="hl opt">(</span><span class="hl num">100</span><span class="hl opt">);</span>
+   <span class="hl opt">}</span>
+   <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Если у вас есть интересные исходнички подобного рода — прикладывайте в комментарии.</p>
 

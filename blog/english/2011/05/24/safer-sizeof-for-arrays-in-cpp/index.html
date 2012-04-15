@@ -44,17 +44,19 @@
 
 <p>For example, it can be done this way:</p>
 
-<div class="highlight"><pre><span class="cp">#define arraysize(array) (sizeof(array) / sizeof(array[0]))</span>
-</pre></div>
+<pre class="hl">
+<span class="hl ppc">#define arraysize(array) (sizeof(array) / sizeof(array[0]))</span>
+</pre>
 
 <p>But there is a little problem over there. If accidently a pointer is passed to the this macro instead of an array, the code still compiles but the value will be far from being conceived.</p>
 
 <p>There is a way to make this macro safer.</p>
 
-<div class="highlight"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">N</span><span class="o">&gt;</span>
-<span class="kt">char</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">ArraySizeHelper</span><span class="p">(</span><span class="n">T</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">array</span><span class="p">)[</span><span class="n">N</span><span class="p">]))[</span><span class="n">N</span><span class="p">];</span>
-<span class="cp">#define arraysize(array) (sizeof(ArraySizeHelper(array)))</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">template</span> <span class="hl opt">&lt;</span>typename T<span class="hl opt">,</span> <span class="hl kwb">size_t</span> N<span class="hl opt">&gt;</span>
+<span class="hl kwb">char</span> <span class="hl opt">(&amp;</span><span class="hl kwd">ArraySizeHelper</span><span class="hl opt">(</span><span class="hl kwd">T</span> <span class="hl opt">(&amp;</span>array<span class="hl opt">)[</span>N<span class="hl opt">]))[</span>N<span class="hl opt">];</span>
+<span class="hl ppc">#define arraysize(array) (sizeof(ArraySizeHelper(array)))</span>
+</pre>
 
 <p>Looks cryptic, but we can break it apart:</p>
 
@@ -69,41 +71,43 @@
 
 <p>By the way, we can play with <code>sizeof()</code> of the function return value type:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;string&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;string&gt;</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">f</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">();</span>
-<span class="p">}</span>
+std<span class="hl opt">::</span>string <span class="hl kwd">f</span><span class="hl opt">() {</span>
+  <span class="hl kwa">return</span> std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">();</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">f</span><span class="p">)()</span> <span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="k">sizeof</span><span class="p">(</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl kwa">sizeof</span><span class="hl opt">( (&amp;</span>f<span class="hl opt">)() ) &lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span> std<span class="hl opt">::</span>string <span class="hl opt">) &lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>My VS2010 prints out &ldquo;28&rdquo; twice.</p>
 
 <p>Interestingly, in C it is also possible:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;stdio.h&gt;</span>
 
-<span class="k">struct</span> <span class="n">t</span> <span class="p">{</span>
-  <span class="kt">char</span> <span class="n">x</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
-<span class="p">};</span>
+<span class="hl kwb">struct</span> t <span class="hl opt">{</span>
+  <span class="hl kwb">char</span> x<span class="hl opt">[</span><span class="hl num">1024</span><span class="hl opt">];</span>
+<span class="hl opt">};</span>
 
-<span class="k">struct</span> <span class="n">t</span> <span class="n">f</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">struct</span> <span class="n">t</span> <span class="n">a</span><span class="p">;</span>
-  <span class="k">return</span> <span class="n">a</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="hl kwb">struct</span> t <span class="hl kwd">f</span><span class="hl opt">() {</span>
+  <span class="hl kwb">struct</span> t a<span class="hl opt">;</span>
+  <span class="hl kwa">return</span> a<span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span> <span class="n">t</span><span class="p">));</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)()</span> <span class="p">));</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%d</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span><span class="hl kwb">struct</span> t<span class="hl opt">));</span>
+  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%d</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">( (*</span>f<span class="hl opt">)() ));</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>It prints out <code>1024</code> twice.</p>
 

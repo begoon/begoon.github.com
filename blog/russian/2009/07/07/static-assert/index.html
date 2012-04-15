@@ -45,18 +45,20 @@
 
 <p>У меня вот такой:</p>
 
-<div class="highlight"><pre><span class="k">template</span> <span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="k">struct</span> <span class="n">STATIC_ASSERTION_FAILURE</span><span class="p">;</span>
-<span class="k">template</span> <span class="o">&lt;&gt;</span> <span class="k">struct</span> <span class="n">STATIC_ASSERTION_FAILURE</span><span class="o">&lt;</span><span class="kc">true</span><span class="o">&gt;</span> <span class="p">{};</span>
-<span class="cp">#define STATIC_CHECK(x) sizeof(STATIC_ASSERTION_FAILURE&lt; (bool)(x) &gt;)</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">template</span> <span class="hl opt">&lt;</span><span class="hl kwb">bool</span><span class="hl opt">&gt;</span> <span class="hl kwb">struct</span> STATIC_ASSERTION_FAILURE<span class="hl opt">;</span>
+<span class="hl kwc">template</span> <span class="hl opt">&lt;&gt;</span> <span class="hl kwb">struct</span> STATIC_ASSERTION_FAILURE<span class="hl opt">&lt;</span><span class="hl kwa">true</span><span class="hl opt">&gt; {};</span>
+<span class="hl ppc">#define STATIC_CHECK(x) sizeof(STATIC_ASSERTION_FAILURE&lt; (bool)(x) &gt;)</span>
+</pre>
 
 <p>Работает приемлемо сносно:</p>
 
-<div class="highlight"><pre><span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">STATIC_CHECK</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="o">&lt;</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwd">STATIC_CHECK</span><span class="hl opt">(</span><span class="hl kwa">sizeof</span><span class="hl opt">(</span><span class="hl kwb">int</span><span class="hl opt">) &lt;</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span><span class="hl kwb">char</span><span class="hl opt">));</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 </div>
 

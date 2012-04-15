@@ -51,40 +51,41 @@
 
 <p>Напишем небольшой пример (<code>thread_example.cpp</code>).</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &quot;thread.h&quot;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;thread.h&quot;</span><span class="hl ppc"></span>
 
-<span class="c1">// Создаем наследника от класса Thread</span>
-<span class="k">class</span> <span class="nc">MyThread</span><span class="o">:</span> <span class="k">public</span> <span class="n">ext</span><span class="o">::</span><span class="n">Thread</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="c1">// Инициализируем в false флаг завершения в конструкторе</span>
-  <span class="n">MyThread</span><span class="p">()</span> <span class="o">:</span> <span class="n">__done</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span> <span class="p">{}</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">Execute</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// В процессе работы потока меняем флаг завершения на истину</span>
-    <span class="n">__done</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="c1">// Функция, возвращающая значение флага завершение</span>
-  <span class="kt">bool</span> <span class="n">done</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__done</span><span class="p">;</span> <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-  <span class="kt">bool</span> <span class="n">__done</span><span class="p">;</span>
-<span class="p">};</span>
+<span class="hl slc">// Создаем наследника от класса Thread</span>
+<span class="hl kwc">class</span> MyThread<span class="hl opt">:</span> <span class="hl kwc">public</span> ext<span class="hl opt">::</span>Thread <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl slc">// Инициализируем в false флаг завершения в конструкторе</span>
+  <span class="hl kwd">MyThread</span><span class="hl opt">() :</span> <span class="hl kwd">__done</span><span class="hl opt">(</span><span class="hl kwa">false</span><span class="hl opt">) {}</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">Execute</span><span class="hl opt">() {</span>
+    <span class="hl slc">// В процессе работы потока меняем флаг завершения на истину</span>
+    __done <span class="hl opt">=</span> <span class="hl kwa">true</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  <span class="hl slc">// Функция, возвращающая значение флага завершение</span>
+  <span class="hl kwb">bool</span> <span class="hl kwd">done</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> __done<span class="hl opt">; }</span>
+<span class="hl kwc">private</span><span class="hl opt">:</span>
+  <span class="hl kwb">bool</span> __done<span class="hl opt">;</span>
+<span class="hl opt">};</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="c1">// Создаем объект потока. Пока он еще не запущен.</span>
-  <span class="n">MyThread</span> <span class="kr">thread</span><span class="p">;</span> 
-  <span class="c1">// Печатаем значение флага завершения. Должно быть 0 (false)</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Thread status before: &quot;</span> <span class="o">&lt;&lt;</span> <span class="kr">thread</span><span class="p">.</span><span class="n">done</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="c1">// Запускаем поток</span>
-  <span class="kr">thread</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
-  <span class="c1">// И ждем его завершения</span>
-  <span class="kr">thread</span><span class="p">.</span><span class="n">Join</span><span class="p">();</span>
-  <span class="c1">// Если поток нормально был запущен и отработал, то значение</span>
-  <span class="c1">// флага должно измениться на 1 (true). Это должна сделать</span>
-  <span class="c1">// функция Execute(). Если тут будет не 1, а 0, значит поток</span>
-  <span class="c1">// не выполнялся, и выходит, что с классом что-то не так.</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Thread status after: &quot;</span> <span class="o">&lt;&lt;</span> <span class="kr">thread</span><span class="p">.</span><span class="n">done</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl slc">// Создаем объект потока. Пока он еще не запущен.</span>
+  MyThread thread<span class="hl opt">;</span> 
+  <span class="hl slc">// Печатаем значение флага завершения. Должно быть 0 (false)</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Thread status before: &quot;</span> <span class="hl opt">&lt;&lt;</span> thread<span class="hl opt">.</span><span class="hl kwd">done</span><span class="hl opt">() &lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl slc">// Запускаем поток</span>
+  thread<span class="hl opt">.</span><span class="hl kwd">Start</span><span class="hl opt">();</span>
+  <span class="hl slc">// И ждем его завершения</span>
+  thread<span class="hl opt">.</span><span class="hl kwd">Join</span><span class="hl opt">();</span>
+  <span class="hl slc">// Если поток нормально был запущен и отработал, то значение</span>
+  <span class="hl slc">// флага должно измениться на 1 (true). Это должна сделать</span>
+  <span class="hl slc">// функция Execute(). Если тут будет не 1, а 0, значит поток</span>
+  <span class="hl slc">// не выполнялся, и выходит, что с классом что-то не так.</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Thread status after: &quot;</span> <span class="hl opt">&lt;&lt;</span> thread<span class="hl opt">.</span><span class="hl kwd">done</span><span class="hl opt">() &lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Компилируем (естественно, из командной строки).</p>
 
@@ -112,56 +113,57 @@ Thread status after: 1
 
 <p>Теперь давайте запустим десяток потоков (<code>thread_example2.cpp</code>).</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;vector&gt;</span>
-<span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &quot;thread.h&quot;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;vector&gt;</span>
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;thread.h&quot;</span><span class="hl ppc"></span>
 
-<span class="k">class</span> <span class="nc">MyThread</span><span class="o">:</span> <span class="k">public</span> <span class="n">ext</span><span class="o">::</span><span class="n">Thread</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="n">MyThread</span><span class="p">(</span><span class="kt">int</span> <span class="n">id</span><span class="p">)</span> <span class="o">:</span> <span class="n">__id</span><span class="p">(</span><span class="n">id</span><span class="p">),</span> <span class="n">__done</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span> <span class="p">{}</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">Execute</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// Небольшая &quot;перчинка&quot; программы, чтобы не было скучно.</span>
-    <span class="c1">// Суть в том, что поток с индексом 3 (по счету номер 4, так первый</span>
-    <span class="c1">// индекс 0) не будет устанавливать флаг выполнения. Сделано это</span>
-    <span class="c1">// просто для разнообразия. Результат данной &quot;перчинки&quot; будет виден</span>
-    <span class="c1">// при печати.</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">__id</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">)</span>
-      <span class="n">__done</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="kt">bool</span> <span class="n">done</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__done</span><span class="p">;</span> <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-  <span class="kt">int</span> <span class="n">__id</span><span class="p">;</span>
-  <span class="kt">bool</span> <span class="n">__done</span><span class="p">;</span>
-<span class="p">};</span>
+<span class="hl kwc">class</span> MyThread<span class="hl opt">:</span> <span class="hl kwc">public</span> ext<span class="hl opt">::</span>Thread <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwd">MyThread</span><span class="hl opt">(</span><span class="hl kwb">int</span> id<span class="hl opt">) :</span> <span class="hl kwd">__id</span><span class="hl opt">(</span>id<span class="hl opt">),</span> <span class="hl kwd">__done</span><span class="hl opt">(</span><span class="hl kwa">false</span><span class="hl opt">) {}</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">Execute</span><span class="hl opt">() {</span>
+    <span class="hl slc">// Небольшая &quot;перчинка&quot; программы, чтобы не было скучно.</span>
+    <span class="hl slc">// Суть в том, что поток с индексом 3 (по счету номер 4, так первый</span>
+    <span class="hl slc">// индекс 0) не будет устанавливать флаг выполнения. Сделано это</span>
+    <span class="hl slc">// просто для разнообразия. Результат данной &quot;перчинки&quot; будет виден</span>
+    <span class="hl slc">// при печати.</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>__id <span class="hl opt">!=</span> <span class="hl num">3</span><span class="hl opt">)</span>
+      __done <span class="hl opt">=</span> <span class="hl kwa">true</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwb">bool</span> <span class="hl kwd">done</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> __done<span class="hl opt">; }</span>
+<span class="hl kwc">private</span><span class="hl opt">:</span>
+  <span class="hl kwb">int</span> __id<span class="hl opt">;</span>
+  <span class="hl kwb">bool</span> __done<span class="hl opt">;</span>
+<span class="hl opt">};</span>
 
-<span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">MyThread</span><span class="o">*&gt;</span> <span class="n">Threads</span><span class="p">;</span>
+<span class="hl kwc">typedef</span> std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>MyThread<span class="hl opt">*&gt;</span> Threads<span class="hl opt">;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="c1">// Создаем вектор из указателей на потоки</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">MyThread</span><span class="o">*&gt;</span> <span class="n">threads</span><span class="p">;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl slc">// Создаем вектор из указателей на потоки</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>MyThread<span class="hl opt">*&gt;</span> threads<span class="hl opt">;</span>
 
-  <span class="c1">// Создаем 10 потоков и сохраняем указатели на них в вектор</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="n">threads</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">MyThread</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+  <span class="hl slc">// Создаем 10 потоков и сохраняем указатели на них в вектор</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> <span class="hl num">10</span><span class="hl opt">;</span> i<span class="hl opt">++)</span>
+    threads<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl kwa">new</span> <span class="hl kwd">MyThread</span><span class="hl opt">(</span>i<span class="hl opt">));</span>
  
-  <span class="c1">// Запускаем потоки на выполнение</span>
-  <span class="k">for</span> <span class="p">(</span><span class="n">Threads</span><span class="o">::</span><span class="n">iterator</span> <span class="n">i</span> <span class="o">=</span> <span class="n">threads</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">threads</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">Start</span><span class="p">();</span>
+  <span class="hl slc">// Запускаем потоки на выполнение</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>Threads<span class="hl opt">::</span>iterator i <span class="hl opt">=</span> threads<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">();</span> i <span class="hl opt">!=</span> threads<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">();</span> i<span class="hl opt">++)</span>
+    <span class="hl opt">(*</span>i<span class="hl opt">)-&gt;</span><span class="hl kwd">Start</span><span class="hl opt">();</span>
  
-  <span class="c1">// Дожидаемся, пока они все завершатся</span>
-  <span class="k">for</span> <span class="p">(</span><span class="n">Threads</span><span class="o">::</span><span class="n">iterator</span> <span class="n">i</span> <span class="o">=</span> <span class="n">threads</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">threads</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">Join</span><span class="p">();</span>
+  <span class="hl slc">// Дожидаемся, пока они все завершатся</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>Threads<span class="hl opt">::</span>iterator i <span class="hl opt">=</span> threads<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">();</span> i <span class="hl opt">!=</span> threads<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">();</span> i<span class="hl opt">++)</span>
+    <span class="hl opt">(*</span>i<span class="hl opt">)-&gt;</span><span class="hl kwd">Join</span><span class="hl opt">();</span>
  
-  <span class="c1">// Печатаем статусы потоков в одну строку через пробел</span>
-  <span class="k">for</span> <span class="p">(</span><span class="n">Threads</span><span class="o">::</span><span class="n">iterator</span> <span class="n">i</span> <span class="o">=</span> <span class="n">threads</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">threads</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="o">*</span><span class="n">i</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">done</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; &quot;</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="hl slc">// Печатаем статусы потоков в одну строку через пробел</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>Threads<span class="hl opt">::</span>iterator i <span class="hl opt">=</span> threads<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">();</span> i <span class="hl opt">!=</span> threads<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">();</span> i<span class="hl opt">++)</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt; (*</span>i<span class="hl opt">)-&gt;</span><span class="hl kwd">done</span><span class="hl opt">() &lt;&lt;</span> <span class="hl str">&quot; &quot;</span><span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
  
-  <span class="c1">// Чистим за собой память.</span>
-  <span class="k">for</span> <span class="p">(</span><span class="n">Threads</span><span class="o">::</span><span class="n">iterator</span> <span class="n">i</span> <span class="o">=</span> <span class="n">threads</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">threads</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
-    <span class="k">delete</span> <span class="o">*</span><span class="n">i</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl slc">// Чистим за собой память.</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>Threads<span class="hl opt">::</span>iterator i <span class="hl opt">=</span> threads<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">();</span> i <span class="hl opt">!=</span> threads<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">();</span> i<span class="hl opt">++)</span>
+    <span class="hl kwa">delete</span> <span class="hl opt">*</span>i<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Компилируем.</p>
 
@@ -188,43 +190,45 @@ Thread status after: 1
 
 <p>Я вам предлагаю сделать небольшие программы-тесты, которые бы своими результатами доказывали правильность работы нашего класса. Например:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">SimpleThread</span><span class="o">:</span> <span class="k">public</span> <span class="n">ext</span><span class="o">::</span><span class="n">Thread</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-    <span class="n">SimpleThread</span><span class="p">()</span> <span class="o">:</span> <span class="n">__done</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span> <span class="p">{}</span>
+<pre class="hl">
+<span class="hl kwc">class</span> SimpleThread<span class="hl opt">:</span> <span class="hl kwc">public</span> ext<span class="hl opt">::</span>Thread <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+    <span class="hl kwd">SimpleThread</span><span class="hl opt">() :</span> <span class="hl kwd">__done</span><span class="hl opt">(</span><span class="hl kwa">false</span><span class="hl opt">) {}</span>
 
-    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">Execute</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">__done</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">Execute</span><span class="hl opt">() {</span>
+        __done <span class="hl opt">=</span> <span class="hl kwa">true</span><span class="hl opt">;</span>
+    <span class="hl opt">}</span>
 
-    <span class="kt">bool</span> <span class="n">done</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__done</span><span class="p">;</span> <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-    <span class="kt">bool</span> <span class="n">__done</span><span class="p">;</span>
-<span class="p">};</span>
-</pre></div>
+    <span class="hl kwb">bool</span> <span class="hl kwd">done</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> __done<span class="hl opt">; }</span>
+<span class="hl kwc">private</span><span class="hl opt">:</span>
+    <span class="hl kwb">bool</span> __done<span class="hl opt">;</span>
+<span class="hl opt">};</span>
+</pre>
 
 <p>Класс <code>SimpleThread</code> очень похож на класс <code>MyThread</code> из наших примеров выше. Он просто меняет флаг активности с <code>false</code> на <code>true</code> в процессе успешного выполнения.</p>
 
-<div class="highlight"><pre> <span class="c1">// Декларируем тест с именем RunningInParallel в группе тестов ThreadTest.</span>
-<span class="n">TEST</span><span class="p">(</span><span class="n">ThreadTest</span><span class="p">,</span> <span class="n">RunningInParallel</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// Создаем объект нашего класса</span>
-  <span class="n">SimpleThread</span> <span class="kr">thread</span><span class="p">;</span>
-  <span class="c1">// Внимание! Макрос EXPECT_FALSE смотрит, какое значение у его аргумента.</span>
-  <span class="c1">// Если это ложь, то все нормально, и выполнение теста идет дальше. Если же нет,</span>
-  <span class="c1">// то печатается сообщение об ошибке, хотя тест продолжает работу.</span>
-  <span class="c1">// В нашем случае тут должно быть false по смыслу.</span>
-  <span class="n">EXPECT_FALSE</span><span class="p">(</span><span class="kr">thread</span><span class="p">.</span><span class="n">done</span><span class="p">());</span>
-  <span class="c1">// Запускаем поток на выполнение</span>
-  <span class="kr">thread</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
-  <span class="c1">// Ждем завершение потока</span>
-  <span class="kr">thread</span><span class="p">.</span><span class="n">Join</span><span class="p">();</span>
-  <span class="c1">// Макрос EXPECT_TRUE смотрит, какое значение у его аргумента.</span>
-  <span class="c1">// Если это истина, то все нормально, и выполнение теста идет дальше. Если же нет,</span>
-  <span class="c1">// то печатается сообщение об ошибке, хотя тест продолжает работу.</span>
-  <span class="c1">// Тут мы уже ждем не false, а true, потому что поток должен был изменить значение</span>
-  <span class="c1">// этого флага.</span>
-  <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="kr">thread</span><span class="p">.</span><span class="n">done</span><span class="p">());</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+ <span class="hl slc">// Декларируем тест с именем RunningInParallel в группе тестов ThreadTest.</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>ThreadTest<span class="hl opt">,</span> RunningInParallel<span class="hl opt">) {</span>
+  <span class="hl slc">// Создаем объект нашего класса</span>
+  SimpleThread thread<span class="hl opt">;</span>
+  <span class="hl slc">// Внимание! Макрос EXPECT_FALSE смотрит, какое значение у его аргумента.</span>
+  <span class="hl slc">// Если это ложь, то все нормально, и выполнение теста идет дальше. Если же нет,</span>
+  <span class="hl slc">// то печатается сообщение об ошибке, хотя тест продолжает работу.</span>
+  <span class="hl slc">// В нашем случае тут должно быть false по смыслу.</span>
+  <span class="hl kwd">EXPECT_FALSE</span><span class="hl opt">(</span>thread<span class="hl opt">.</span><span class="hl kwd">done</span><span class="hl opt">());</span>
+  <span class="hl slc">// Запускаем поток на выполнение</span>
+  thread<span class="hl opt">.</span><span class="hl kwd">Start</span><span class="hl opt">();</span>
+  <span class="hl slc">// Ждем завершение потока</span>
+  thread<span class="hl opt">.</span><span class="hl kwd">Join</span><span class="hl opt">();</span>
+  <span class="hl slc">// Макрос EXPECT_TRUE смотрит, какое значение у его аргумента.</span>
+  <span class="hl slc">// Если это истина, то все нормально, и выполнение теста идет дальше. Если же нет,</span>
+  <span class="hl slc">// то печатается сообщение об ошибке, хотя тест продолжает работу.</span>
+  <span class="hl slc">// Тут мы уже ждем не false, а true, потому что поток должен был изменить значение</span>
+  <span class="hl slc">// этого флага.</span>
+  <span class="hl kwd">EXPECT_TRUE</span><span class="hl opt">(</span>thread<span class="hl opt">.</span><span class="hl kwd">done</span><span class="hl opt">());</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Теперь осознаем произошедшее - мы не просто написали какой-то пример, а мы формально опередили логику работы класса, задали его ответственность. Теперь наши пожелания к функциональности класса заданы не на словах и предположениях, а в виде программы.</p>
 
@@ -236,43 +240,45 @@ Thread status after: 1
 
 <p>Полный вариант исходника <code>thread_unittest.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
-<span class="cp">#include &quot;thread.h&quot;</span>
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;thread.h&quot;</span><span class="hl ppc"></span>
 
-<span class="k">class</span> <span class="nc">SimpleThread</span><span class="o">:</span> <span class="k">public</span> <span class="n">ext</span><span class="o">::</span><span class="n">Thread</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="n">SimpleThread</span><span class="p">()</span> <span class="o">:</span> <span class="n">__done</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span> <span class="p">{}</span>
+<span class="hl kwc">class</span> SimpleThread<span class="hl opt">:</span> <span class="hl kwc">public</span> ext<span class="hl opt">::</span>Thread <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwd">SimpleThread</span><span class="hl opt">() :</span> <span class="hl kwd">__done</span><span class="hl opt">(</span><span class="hl kwa">false</span><span class="hl opt">) {}</span>
 
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">Execute</span><span class="p">()</span> <span class="p">{</span>
-      <span class="n">__done</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-  <span class="p">}</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">Execute</span><span class="hl opt">() {</span>
+      __done <span class="hl opt">=</span> <span class="hl kwa">true</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
 
-  <span class="kt">bool</span> <span class="n">done</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__done</span><span class="p">;</span> <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-  <span class="kt">bool</span> <span class="n">__done</span><span class="p">;</span>
-<span class="p">};</span>
+  <span class="hl kwb">bool</span> <span class="hl kwd">done</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> __done<span class="hl opt">; }</span>
+<span class="hl kwc">private</span><span class="hl opt">:</span>
+  <span class="hl kwb">bool</span> __done<span class="hl opt">;</span>
+<span class="hl opt">};</span>
 
-<span class="n">TEST</span><span class="p">(</span><span class="n">ThreadTest</span><span class="p">,</span> <span class="n">RunningInParallel</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">SimpleThread</span> <span class="kr">thread</span><span class="p">;</span>
-  <span class="n">EXPECT_FALSE</span><span class="p">(</span><span class="kr">thread</span><span class="p">.</span><span class="n">done</span><span class="p">());</span>
-  <span class="kr">thread</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
-  <span class="kr">thread</span><span class="p">.</span><span class="n">Join</span><span class="p">();</span>
-  <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="kr">thread</span><span class="p">.</span><span class="n">done</span><span class="p">());</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>ThreadTest<span class="hl opt">,</span> RunningInParallel<span class="hl opt">) {</span>
+  SimpleThread thread<span class="hl opt">;</span>
+  <span class="hl kwd">EXPECT_FALSE</span><span class="hl opt">(</span>thread<span class="hl opt">.</span><span class="hl kwd">done</span><span class="hl opt">());</span>
+  thread<span class="hl opt">.</span><span class="hl kwd">Start</span><span class="hl opt">();</span>
+  thread<span class="hl opt">.</span><span class="hl kwd">Join</span><span class="hl opt">();</span>
+  <span class="hl kwd">EXPECT_TRUE</span><span class="hl opt">(</span>thread<span class="hl opt">.</span><span class="hl kwd">done</span><span class="hl opt">());</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Я предпочитаю давать имена файлам с тестами, используя суффикс <code>_unittest</code> к имени основного файла. Это позволяет, быстро взглянув на каталог, понять - какие классы имеют тесты, а какие нет.</p>
 
 <p>Также нам нужен стартовый файл <code>runner.cpp</code>, который будет содержать функцию <code>main()</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="c1">// Инициализируем библиотеку</span>
-  <span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
-  <span class="c1">// Запускаем все тесты, прилинкованные к проекту</span>
-  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl slc">// Инициализируем библиотеку</span>
+  testing<span class="hl opt">::</span><span class="hl kwd">InitGoogleTest</span><span class="hl opt">(&amp;</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
+  <span class="hl slc">// Запускаем все тесты, прилинкованные к проекту</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">RUN_ALL_TESTS</span><span class="hl opt">();</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Тут все просто. Обычно, этот файл одинаков для все тестовых проектов, если вам не надо проводить какие-нибудь дополнительные инициализации, брать что-то из командной строки и.д. Google Test устроена так (в отличие от CppUnit, например), что тесты (<code>TEST</code> и <code>TEST_F</code>) не надо нигде дополнительно регистрировать, объявлять и т.д. Вы просто задаете тело теста, включаете файл с исходником в проект и все. Далее все происходит автоматически.</p>
 
@@ -308,61 +314,62 @@ Thread status after: 1
 
 <p><code>thread_unittest.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
-<span class="cp">#include &quot;thread.h&quot;</span>
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;thread.h&quot;</span><span class="hl ppc"></span>
 
-<span class="cp">#ifdef WIN32</span>
-<span class="cp">#include &lt;windows.h&gt;</span>
-<span class="cp">#define msleep(x)    Sleep(x)</span>
-<span class="cp">#else</span>
-<span class="cp">#include &lt;unistd.h&gt;</span>
-<span class="cp">#define msleep(x)    usleep((x)*1000)</span>
-<span class="cp">#endif</span>
+<span class="hl ppc">#ifdef WIN32</span>
+<span class="hl ppc">#include &lt;windows.h&gt;</span>
+<span class="hl ppc">#define msleep(x)    Sleep(x)</span>
+<span class="hl ppc">#else</span>
+<span class="hl ppc">#include &lt;unistd.h&gt;</span>
+<span class="hl ppc">#define msleep(x)    usleep((x)*1000)</span>
+<span class="hl ppc">#endif</span>
 
-<span class="k">class</span> <span class="nc">SimpleThread</span><span class="o">:</span> <span class="k">public</span> <span class="n">ext</span><span class="o">::</span><span class="n">Thread</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="n">SimpleThread</span><span class="p">()</span> <span class="o">:</span> <span class="n">__done</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span> <span class="p">{}</span>
+<span class="hl kwc">class</span> SimpleThread<span class="hl opt">:</span> <span class="hl kwc">public</span> ext<span class="hl opt">::</span>Thread <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwd">SimpleThread</span><span class="hl opt">() :</span> <span class="hl kwd">__done</span><span class="hl opt">(</span><span class="hl kwa">false</span><span class="hl opt">) {}</span>
 
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">Execute</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">__done</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-  <span class="p">}</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">Execute</span><span class="hl opt">() {</span>
+    __done <span class="hl opt">=</span> <span class="hl kwa">true</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
 
-  <span class="kt">bool</span> <span class="n">done</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__done</span><span class="p">;</span> <span class="p">}</span>
-<span class="k">private</span><span class="o">:</span>
-  <span class="kt">bool</span> <span class="n">__done</span><span class="p">;</span>
-<span class="p">};</span>
+  <span class="hl kwb">bool</span> <span class="hl kwd">done</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> __done<span class="hl opt">; }</span>
+<span class="hl kwc">private</span><span class="hl opt">:</span>
+  <span class="hl kwb">bool</span> __done<span class="hl opt">;</span>
+<span class="hl opt">};</span>
 
-<span class="n">TEST</span><span class="p">(</span><span class="n">ThreadTest</span><span class="p">,</span> <span class="n">RunningInParallel</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">SimpleThread</span> <span class="kr">thread</span><span class="p">;</span>
-  <span class="n">EXPECT_FALSE</span><span class="p">(</span><span class="kr">thread</span><span class="p">.</span><span class="n">done</span><span class="p">());</span>
-  <span class="kr">thread</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
-  <span class="kr">thread</span><span class="p">.</span><span class="n">Join</span><span class="p">();</span>
-  <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="kr">thread</span><span class="p">.</span><span class="n">done</span><span class="p">());</span>
-<span class="p">}</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>ThreadTest<span class="hl opt">,</span> RunningInParallel<span class="hl opt">) {</span>
+  SimpleThread thread<span class="hl opt">;</span>
+  <span class="hl kwd">EXPECT_FALSE</span><span class="hl opt">(</span>thread<span class="hl opt">.</span><span class="hl kwd">done</span><span class="hl opt">());</span>
+  thread<span class="hl opt">.</span><span class="hl kwd">Start</span><span class="hl opt">();</span>
+  thread<span class="hl opt">.</span><span class="hl kwd">Join</span><span class="hl opt">();</span>
+  <span class="hl kwd">EXPECT_TRUE</span><span class="hl opt">(</span>thread<span class="hl opt">.</span><span class="hl kwd">done</span><span class="hl opt">());</span>
+<span class="hl opt">}</span>
 
-<span class="c1">// &quot;Нескончаемый поток&quot;</span>
-<span class="k">class</span> <span class="nc">GreedyThread</span><span class="o">:</span> <span class="k">public</span> <span class="n">ext</span><span class="o">::</span><span class="n">Thread</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">Execute</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// Данный поток будет работать вечно, пока его не убьют извне.</span>
-    <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">msleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+<span class="hl slc">// &quot;Нескончаемый поток&quot;</span>
+<span class="hl kwc">class</span> GreedyThread<span class="hl opt">:</span> <span class="hl kwc">public</span> ext<span class="hl opt">::</span>Thread <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">Execute</span><span class="hl opt">() {</span>
+    <span class="hl slc">// Данный поток будет работать вечно, пока его не убьют извне.</span>
+    <span class="hl kwa">while</span> <span class="hl opt">(</span><span class="hl kwa">true</span><span class="hl opt">) {</span>
+      <span class="hl kwd">msleep</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">);</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
 
-<span class="n">TEST</span><span class="p">(</span><span class="n">ThreadTest</span><span class="p">,</span> <span class="n">Kill</span><span class="p">)</span> <span class="p">{</span>
-  <span class="c1">// Создаем &quot;вечный&quot; поток</span>
-  <span class="n">GreedyThread</span> <span class="kr">thread</span><span class="p">;</span>
-  <span class="c1">// Запускаем его</span>
-  <span class="kr">thread</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
-  <span class="c1">// Убиваем его</span>
-  <span class="kr">thread</span><span class="p">.</span><span class="n">Kill</span><span class="p">();</span>
-  <span class="c1">// Если функция Kill() не работает, ты мы никогда не дождемся окончания потока</span>
-  <span class="c1">// и программа тут повиснет.</span>
-  <span class="kr">thread</span><span class="p">.</span><span class="n">Join</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>ThreadTest<span class="hl opt">,</span> Kill<span class="hl opt">) {</span>
+  <span class="hl slc">// Создаем &quot;вечный&quot; поток</span>
+  GreedyThread thread<span class="hl opt">;</span>
+  <span class="hl slc">// Запускаем его</span>
+  thread<span class="hl opt">.</span><span class="hl kwd">Start</span><span class="hl opt">();</span>
+  <span class="hl slc">// Убиваем его</span>
+  thread<span class="hl opt">.</span><span class="hl kwd">Kill</span><span class="hl opt">();</span>
+  <span class="hl slc">// Если функция Kill() не работает, ты мы никогда не дождемся окончания потока</span>
+  <span class="hl slc">// и программа тут повиснет.</span>
+  thread<span class="hl opt">.</span><span class="hl kwd">Join</span><span class="hl opt">();</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Компилируем.</p>
 
@@ -394,16 +401,17 @@ Thread status after: 1
 
 <p>Теперь внесем в класс &ldquo;случайную ошибку&rdquo;, добавив оператор <code>return</code> в виндовый вариант функции <code>void Thread::Start()</code>:</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">Thread</span><span class="o">::</span><span class="n">Start</span><span class="p">()</span> <span class="p">{</span>
-  <span class="c1">// &quot;Случайная&quot; ошибка</span>
-  <span class="k">return</span><span class="p">;</span>
-  <span class="n">__handle</span> <span class="o">=</span> <span class="n">CreateThread</span><span class="p">(</span>
-    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">LPTHREAD_START_ROUTINE</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ThreadCallback</span><span class="p">),</span> <span class="k">this</span><span class="p">,</span>
-    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
-  <span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">void</span> Thread<span class="hl opt">::</span><span class="hl kwd">Start</span><span class="hl opt">() {</span>
+  <span class="hl slc">// &quot;Случайная&quot; ошибка</span>
+  <span class="hl kwa">return</span><span class="hl opt">;</span>
+  __handle <span class="hl opt">=</span> <span class="hl kwd">CreateThread</span><span class="hl opt">(</span>
+    <span class="hl num">0</span><span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span>
+    <span class="hl kwa">reinterpret_cast</span><span class="hl opt">&lt;</span>LPTHREAD_START_ROUTINE<span class="hl opt">&gt;(</span>ThreadCallback<span class="hl opt">),</span> <span class="hl kwa">this</span><span class="hl opt">,</span>
+    <span class="hl num">0</span><span class="hl opt">,</span> <span class="hl num">0</span>
+  <span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Теперь наш класс &ldquo;сломан&rdquo;. Посмотрим, что скажет тестирование (естественно, надо перекомпилировать программу перед этим):</p>
 
@@ -430,14 +438,15 @@ Expected: true
 
 <p>Можно еще улучшить тест дополнительной информацией, которая будет показана в случае его сбоя:</p>
 
-<div class="highlight"><pre><span class="n">TEST</span><span class="p">(</span><span class="n">ThreadTest</span><span class="p">,</span> <span class="n">Simple</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">SimpleThread</span> <span class="kr">thread</span><span class="p">;</span>
-  <span class="n">EXPECT_FALSE</span><span class="p">(</span><span class="kr">thread</span><span class="p">.</span><span class="n">done</span><span class="p">());</span>
-  <span class="kr">thread</span><span class="p">.</span><span class="n">Start</span><span class="p">();</span>
-  <span class="kr">thread</span><span class="p">.</span><span class="n">Join</span><span class="p">();</span>
-  <span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="kr">thread</span><span class="p">.</span><span class="n">done</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Поток не изменил флаг&quot;</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>ThreadTest<span class="hl opt">,</span> Simple<span class="hl opt">) {</span>
+  SimpleThread thread<span class="hl opt">;</span>
+  <span class="hl kwd">EXPECT_FALSE</span><span class="hl opt">(</span>thread<span class="hl opt">.</span><span class="hl kwd">done</span><span class="hl opt">());</span>
+  thread<span class="hl opt">.</span><span class="hl kwd">Start</span><span class="hl opt">();</span>
+  thread<span class="hl opt">.</span><span class="hl kwd">Join</span><span class="hl opt">();</span>
+  <span class="hl kwd">EXPECT_TRUE</span><span class="hl opt">(</span>thread<span class="hl opt">.</span><span class="hl kwd">done</span><span class="hl opt">()) &lt;&lt;</span> <span class="hl str">&quot;Поток не изменил флаг&quot;</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Теперь сообщение об ошибке будет более информативно.</p>
 
@@ -491,19 +500,21 @@ Expected: true
 
 <p>Есть еще особая функция <code>FAIL()</code>, которая безусловно прерывает тест с ошибкой. Удобно для проверки мест, где вы &ldquo;не должны&rdquo; оказаться в процесса работы теста. Например:</p>
 
-<div class="highlight"><pre><span class="k">try</span> <span class="p">{</span>
-  <span class="p">...</span>
-<span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
-  <span class="n">FAIL</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Данный кусок программы не должен генерировать исключений&quot;</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwa">try</span> <span class="hl opt">{</span>
+  <span class="hl opt">...</span>
+<span class="hl opt">}</span> <span class="hl kwa">catch</span><span class="hl opt">(...) {</span>
+  <span class="hl kwd">FAIL</span><span class="hl opt">() &lt;&lt;</span> <span class="hl str">&quot;Данный кусок программы не должен генерировать исключений&quot;</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Полный список функций-проверок, а также описания прочих возможностей Google Test, так как я затронул пока лишь малую их часть, можно получить в <a href="http://code.google.com/p/googletest/wiki/AdvancedGuide">документации</a>.</p>
 
 <p>Кроме того, во все эти функции можно писать как стандартные потоки вывода через оператор <code>&lt;&lt;</code>, как мы делали в примере выше:</p>
 
-<div class="highlight"><pre><span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="kr">thread</span><span class="p">.</span><span class="n">done</span><span class="p">())</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Поток не изменил флаг&quot;</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwd">EXPECT_TRUE</span><span class="hl opt">(</span>thread<span class="hl opt">.</span><span class="hl kwd">done</span><span class="hl opt">()) &lt;&lt;</span> <span class="hl str">&quot;Поток не изменил флаг&quot;</span><span class="hl opt">;</span>
+</pre>
 
 <p>тем самым печатая удобную отладочную информацию.</p>
 

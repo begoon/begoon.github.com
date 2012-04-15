@@ -55,195 +55,199 @@
 
 <p>Итак, программа на Go:</p>
 
-<div class="highlight"><pre><span class="k">package</span> <span class="n">main</span>
+<pre class="hl">
+<span class="hl kwa">package</span> main
 
-<span class="k">import</span> <span class="p">(</span>
-        <span class="s">&quot;flag&quot;</span>
-        <span class="s">&quot;fmt&quot;</span>
-<span class="p">)</span>
+<span class="hl kwa">import</span> <span class="hl opt">(</span>
+        <span class="hl str">&quot;flag&quot;</span>
+        <span class="hl str">&quot;fmt&quot;</span>
+<span class="hl opt">)</span>
 
-<span class="k">var</span> <span class="n">jobs</span> <span class="p">*</span><span class="nb">int</span> <span class="p">=</span> <span class="n">flag</span><span class="p">.</span><span class="n">Int</span><span class="p">(</span><span class="s">&quot;jobs&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="s">&quot;number of concurrent jobs&quot;</span><span class="p">)</span>
-<span class="k">var</span> <span class="n">n</span> <span class="p">*</span><span class="nb">int</span> <span class="p">=</span> <span class="n">flag</span><span class="p">.</span><span class="n">Int</span><span class="p">(</span><span class="s">&quot;tasks&quot;</span><span class="p">,</span> <span class="mi">1000000</span><span class="p">,</span> <span class="s">&quot;number of tasks&quot;</span><span class="p">)</span>
+<span class="hl kwa">var</span> jobs <span class="hl opt">*</span><span class="hl kwb">int</span> <span class="hl opt">=</span> flag<span class="hl opt">.</span><span class="hl kwd">Int</span><span class="hl opt">(</span><span class="hl str">&quot;jobs&quot;</span><span class="hl opt">,</span> <span class="hl num">8</span><span class="hl opt">,</span> <span class="hl str">&quot;number of concurrent jobs&quot;</span><span class="hl opt">)</span>
+<span class="hl kwa">var</span> n <span class="hl opt">*</span><span class="hl kwb">int</span> <span class="hl opt">=</span> flag<span class="hl opt">.</span><span class="hl kwd">Int</span><span class="hl opt">(</span><span class="hl str">&quot;tasks&quot;</span><span class="hl opt">,</span> <span class="hl num">1000000</span><span class="hl opt">,</span> <span class="hl str">&quot;number of tasks&quot;</span><span class="hl opt">)</span>
 
-<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">flag</span><span class="p">.</span><span class="n">Parse</span><span class="p">()</span>
+<span class="hl kwa">func</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+        flag<span class="hl opt">.</span><span class="hl kwd">Parse</span><span class="hl opt">()</span>
 
-        <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;- running %d concurrent job(s)\n&quot;</span><span class="p">,</span> <span class="p">*</span><span class="n">jobs</span><span class="p">)</span>
-        <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;- running %d tasks\n&quot;</span><span class="p">,</span> <span class="p">*</span><span class="n">n</span><span class="p">)</span>
-        <span class="n">tasks</span> <span class="p">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="nb">int</span><span class="p">,</span> <span class="p">*</span><span class="n">jobs</span><span class="p">)</span>
-        <span class="n">done</span> <span class="p">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="n">bool</span><span class="p">)</span>
+        fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;- running %d concurrent job(s)</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">, *</span>jobs<span class="hl opt">)</span>
+        fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;- running %d tasks</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">, *</span>n<span class="hl opt">)</span>
+        tasks <span class="hl opt">:=</span> <span class="hl kwb">make</span><span class="hl opt">(</span><span class="hl kwa">chan</span> <span class="hl kwb">int</span><span class="hl opt">, *</span>jobs<span class="hl opt">)</span>
+        done <span class="hl opt">:=</span> <span class="hl kwb">make</span><span class="hl opt">(</span><span class="hl kwa">chan</span> <span class="hl kwb">bool</span><span class="hl opt">)</span>
 
-        <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="p">*</span><span class="n">jobs</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
-                <span class="k">go</span> <span class="n">runner</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">done</span><span class="p">)</span>
-        <span class="p">}</span>
+        <span class="hl kwa">for</span> i <span class="hl opt">:=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt; *</span>jobs<span class="hl opt">;</span> i<span class="hl opt">++ {</span>
+                <span class="hl kwa">go</span> <span class="hl kwd">runner</span><span class="hl opt">(</span>tasks<span class="hl opt">,</span> done<span class="hl opt">)</span>
+        <span class="hl opt">}</span>
 
-        <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;=</span> <span class="p">*</span><span class="n">n</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
-                <span class="n">tasks</span> <span class="p">&lt;-</span> <span class="n">i</span>
-        <span class="p">}</span>
+        <span class="hl kwa">for</span> i <span class="hl opt">:=</span> <span class="hl num">1</span><span class="hl opt">;</span> i <span class="hl opt">&lt;= *</span>n<span class="hl opt">;</span> i<span class="hl opt">++ {</span>
+                tasks <span class="hl opt">&lt;-</span> i
+        <span class="hl opt">}</span>
 
-        <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="p">*</span><span class="n">jobs</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
-                <span class="n">tasks</span> <span class="p">&lt;-</span> <span class="mi">0</span>
-                <span class="p">&lt;-</span> <span class="n">done</span>
-        <span class="p">}</span>
-<span class="p">}</span>
+        <span class="hl kwa">for</span> i <span class="hl opt">:=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt; *</span>jobs<span class="hl opt">;</span> i<span class="hl opt">++ {</span>
+                tasks <span class="hl opt">&lt;-</span> <span class="hl num">0</span>
+                <span class="hl opt">&lt;-</span> done
+        <span class="hl opt">}</span>
+<span class="hl opt">}</span>
 
-<span class="k">func</span> <span class="n">runner</span><span class="p">(</span><span class="n">tasks</span> <span class="k">chan</span> <span class="nb">int</span><span class="p">,</span> <span class="n">done</span> <span class="k">chan</span> <span class="n">bool</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">for</span> <span class="p">{</span>
-                <span class="k">if</span> <span class="n">arg</span> <span class="p">:=</span> <span class="p">&lt;-</span> <span class="n">tasks</span><span class="p">;</span> <span class="n">arg</span> <span class="p">==</span> <span class="mi">0</span> <span class="p">{</span>
-                        <span class="k">break</span>
-                <span class="p">}</span>
-                <span class="n">worker</span><span class="p">()</span>
-        <span class="p">}</span>
-        <span class="n">done</span> <span class="p">&lt;-</span> <span class="n">true</span>
-<span class="p">}</span>
+<span class="hl kwa">func</span> <span class="hl kwd">runner</span><span class="hl opt">(</span>tasks <span class="hl kwa">chan</span> <span class="hl kwb">int</span><span class="hl opt">,</span> done <span class="hl kwa">chan</span> <span class="hl kwb">bool</span><span class="hl opt">) {</span>
+        <span class="hl kwa">for</span> <span class="hl opt">{</span>
+                <span class="hl kwa">if</span> arg <span class="hl opt">:= &lt;-</span> tasks<span class="hl opt">;</span> arg <span class="hl opt">==</span> <span class="hl num">0</span> <span class="hl opt">{</span>
+                        <span class="hl kwa">break</span>
+                <span class="hl opt">}</span>
+                <span class="hl kwd">worker</span><span class="hl opt">()</span>
+        <span class="hl opt">}</span>
+        done <span class="hl opt">&lt;-</span> <span class="hl kwb">true</span>
+<span class="hl opt">}</span>
 
-<span class="k">func</span> <span class="n">worker</span><span class="p">()</span> <span class="nb">int</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="mi">0</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwa">func</span> <span class="hl kwd">worker</span><span class="hl opt">()</span> <span class="hl kwb">int</span> <span class="hl opt">{</span>
+        <span class="hl kwa">return</span> <span class="hl num">0</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Makefile для прогона по серии параметров:</p>
 
-<div class="highlight"><pre><span class="nv">target</span> <span class="o">=</span> go_threading
+<pre class="hl">
+target <span class="hl opt">=</span> go_threading
 
-all: build
+<span class="hl kwa">all</span><span class="hl opt">:</span> build
 
-build:
-        6g <span class="k">$(</span>target<span class="k">)</span>.go
-        6l -o <span class="k">$(</span>target<span class="k">)</span> <span class="k">$(</span>target<span class="k">)</span>.6
+build<span class="hl opt">:</span>
+        <span class="hl num">6</span>g <span class="hl opt">$(</span>target<span class="hl opt">)</span>.go
+        <span class="hl num">6l</span> <span class="hl opt">-</span>o <span class="hl opt">$(</span>target<span class="hl opt">) $(</span>target<span class="hl opt">)</span><span class="hl num">.6</span>
 
-run:
-        <span class="o">(</span><span class="nb">time</span> -p ./<span class="k">$(</span>target<span class="k">)</span> -tasks<span class="o">=</span><span class="k">$(</span>args<span class="k">)</span> <span class="se">\</span>
-                1&gt;/dev/null<span class="o">)</span> 2&gt;&amp;1 | head -1 | awk <span class="s1">&#39;{ print $$2 }&#39;</span>
+run<span class="hl opt">:</span>
+        <span class="hl opt">(</span>time <span class="hl opt">-</span>p .<span class="hl opt">/$(</span>target<span class="hl opt">) -</span>tasks<span class="hl opt">=$(</span>args<span class="hl opt">)</span> \
+                <span class="hl num">1</span><span class="hl opt">&gt;/</span>dev<span class="hl opt">/</span>null<span class="hl opt">)</span> <span class="hl num">2</span><span class="hl opt">&gt;&amp;</span><span class="hl num">1</span> | head <span class="hl opt">-</span><span class="hl num">1</span> | awk <span class="hl str">'{ print $$2 }'</span>
 
-<span class="nv">n</span> <span class="o">=</span> <span class="se">\</span>
-10000 <span class="se">\</span>
-100000 <span class="se">\</span>
-1000000 <span class="se">\</span>
-10000000 <span class="se">\</span>
-100000000
+n <span class="hl opt">=</span> \
+<span class="hl num">10000</span> \
+<span class="hl num">100000</span> \
+<span class="hl num">1000000</span> \
+<span class="hl num">10000000</span> \
+<span class="hl num">100000000</span>
 
-<span class="nb">test</span>:
-        @for i in <span class="k">$(</span>n<span class="k">)</span>; <span class="k">do</span> <span class="se">\</span>
-                <span class="nb">echo</span> <span class="s2">&quot;`printf &#39;% 10d&#39; $$i`&quot;</span> <span class="sb">`</span><span class="k">$(</span>MAKE<span class="k">)</span> <span class="nv">args</span><span class="o">=</span><span class="nv">$$</span>i run<span class="sb">`</span>; <span class="se">\</span>
-        <span class="k">done</span>
-</pre></div>
+<span class="hl kwa">test</span><span class="hl opt">:</span>
+        &#64;for i in <span class="hl opt">$(</span>n<span class="hl opt">);</span> do \
+                echo <span class="hl str">&quot;`printf '% 10d' $$i`&quot;</span> <span class="hl str">`$(MAKE) args=$$i run`</span><span class="hl opt">;</span> \
+        done
+</pre>
 
 <p>Программа на C++:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;boost/thread.hpp&gt;</span>
-<span class="cp">#include &lt;boost/bind.hpp&gt;</span>
-<span class="cp">#include &lt;queue&gt;</span>
-<span class="cp">#include &lt;string&gt;</span>
-<span class="cp">#include &lt;sstream&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;boost/thread.hpp&gt;</span>
+<span class="hl ppc">#include &lt;boost/bind.hpp&gt;</span>
+<span class="hl ppc">#include &lt;queue&gt;</span>
+<span class="hl ppc">#include &lt;string&gt;</span>
+<span class="hl ppc">#include &lt;sstream&gt;</span>
 
-<span class="k">class</span> <span class="nc">thread_pool</span> <span class="p">{</span>
+<span class="hl kwc">class</span> thread_pool <span class="hl opt">{</span>
 
-  <span class="k">typedef</span> <span class="n">boost</span><span class="o">::</span><span class="n">function0</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">worker</span><span class="p">;</span>
+  <span class="hl kwc">typedef</span> boost<span class="hl opt">::</span>function0<span class="hl opt">&lt;</span><span class="hl kwb">void</span><span class="hl opt">&gt;</span> worker<span class="hl opt">;</span>
 
-  <span class="n">boost</span><span class="o">::</span><span class="n">thread_group</span> <span class="n">threads_</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">queue</span><span class="o">&lt;</span><span class="n">worker</span><span class="o">&gt;</span> <span class="n">queue_</span><span class="p">;</span>
-  <span class="n">boost</span><span class="o">::</span><span class="n">mutex</span> <span class="n">mutex_</span><span class="p">;</span>
-  <span class="n">boost</span><span class="o">::</span><span class="n">condition_variable</span> <span class="n">cv_</span><span class="p">;</span>
-  <span class="kt">bool</span> <span class="n">done_</span><span class="p">;</span>
+  boost<span class="hl opt">::</span>thread_group threads_<span class="hl opt">;</span>
+  std<span class="hl opt">::</span>queue<span class="hl opt">&lt;</span>worker<span class="hl opt">&gt;</span> queue_<span class="hl opt">;</span>
+  boost<span class="hl opt">::</span>mutex mutex_<span class="hl opt">;</span>
+  boost<span class="hl opt">::</span>condition_variable cv_<span class="hl opt">;</span>
+  <span class="hl kwb">bool</span> done_<span class="hl opt">;</span>
 
- <span class="k">public</span><span class="o">:</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
 
-  <span class="n">thread_pool</span><span class="p">()</span> <span class="o">:</span> <span class="n">done_</span><span class="p">(</span><span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">boost</span><span class="o">::</span><span class="kr">thread</span><span class="o">::</span><span class="n">hardware_concurrency</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-      <span class="n">threads_</span><span class="p">.</span><span class="n">create_thread</span><span class="p">(</span><span class="n">boost</span><span class="o">::</span><span class="n">bind</span><span class="p">(</span><span class="o">&amp;</span><span class="n">thread_pool</span><span class="o">::</span><span class="n">run</span><span class="p">,</span> <span class="k">this</span><span class="p">));</span>
-  <span class="p">}</span>
+  <span class="hl kwd">thread_pool</span><span class="hl opt">() :</span> <span class="hl kwd">done_</span><span class="hl opt">(</span><span class="hl kwa">false</span><span class="hl opt">) {</span>
+    <span class="hl kwa">for</span><span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> boost<span class="hl opt">::</span>thread<span class="hl opt">::</span><span class="hl kwd">hardware_concurrency</span><span class="hl opt">(); ++</span>i<span class="hl opt">)</span>
+      threads_<span class="hl opt">.</span><span class="hl kwd">create_thread</span><span class="hl opt">(</span>boost<span class="hl opt">::</span><span class="hl kwd">bind</span><span class="hl opt">(&amp;</span>thread_pool<span class="hl opt">::</span>run<span class="hl opt">,</span> <span class="hl kwa">this</span><span class="hl opt">));</span>
+  <span class="hl opt">}</span>
 
-  <span class="kt">void</span> <span class="n">join</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">threads_</span><span class="p">.</span><span class="n">join_all</span><span class="p">();</span>
-  <span class="p">}</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">join</span><span class="hl opt">() {</span>
+    threads_<span class="hl opt">.</span><span class="hl kwd">join_all</span><span class="hl opt">();</span>
+  <span class="hl opt">}</span>
 
-  <span class="kt">void</span> <span class="n">run</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">worker</span> <span class="n">job</span><span class="p">;</span>
-      <span class="p">{</span>
-        <span class="n">boost</span><span class="o">::</span><span class="n">mutex</span><span class="o">::</span><span class="n">scoped_lock</span> <span class="n">lock</span><span class="p">(</span><span class="n">mutex_</span><span class="p">);</span>
-        <span class="k">while</span> <span class="p">(</span><span class="n">queue_</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">done_</span><span class="p">)</span>
-          <span class="n">cv_</span><span class="p">.</span><span class="n">wait</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">run</span><span class="hl opt">() {</span>
+    <span class="hl kwa">while</span> <span class="hl opt">(</span><span class="hl kwa">true</span><span class="hl opt">) {</span>
+      worker job<span class="hl opt">;</span>
+      <span class="hl opt">{</span>
+        boost<span class="hl opt">::</span>mutex<span class="hl opt">::</span>scoped_lock <span class="hl kwd">lock</span><span class="hl opt">(</span>mutex_<span class="hl opt">);</span>
+        <span class="hl kwa">while</span> <span class="hl opt">(</span>queue_<span class="hl opt">.</span><span class="hl kwd">empty</span><span class="hl opt">() &amp;&amp; !</span>done_<span class="hl opt">)</span>
+          cv_<span class="hl opt">.</span><span class="hl kwd">wait</span><span class="hl opt">(</span>lock<span class="hl opt">);</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="n">queue_</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">done_</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+        <span class="hl kwa">if</span> <span class="hl opt">(</span>queue_<span class="hl opt">.</span><span class="hl kwd">empty</span><span class="hl opt">() &amp;&amp;</span> done_<span class="hl opt">)</span> <span class="hl kwa">return</span><span class="hl opt">;</span>
 
-        <span class="n">job</span> <span class="o">=</span> <span class="n">queue_</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
-        <span class="n">queue_</span><span class="p">.</span><span class="n">pop</span><span class="p">();</span>
-      <span class="p">}</span>
-      <span class="n">execute</span><span class="p">(</span><span class="n">job</span><span class="p">);</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
+        job <span class="hl opt">=</span> queue_<span class="hl opt">.</span><span class="hl kwd">front</span><span class="hl opt">();</span>
+        queue_<span class="hl opt">.</span><span class="hl kwd">pop</span><span class="hl opt">();</span>
+      <span class="hl opt">}</span>
+      <span class="hl kwd">execute</span><span class="hl opt">(</span>job<span class="hl opt">);</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span>
 
-  <span class="kt">void</span> <span class="n">execute</span><span class="p">(</span><span class="k">const</span> <span class="n">worker</span><span class="o">&amp;</span> <span class="n">job</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">job</span><span class="p">();</span>
-  <span class="p">}</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">execute</span><span class="hl opt">(</span><span class="hl kwb">const</span> worker<span class="hl opt">&amp;</span> job<span class="hl opt">) {</span>
+    <span class="hl kwd">job</span><span class="hl opt">();</span>
+  <span class="hl opt">}</span>
 
-  <span class="kt">void</span> <span class="n">add</span><span class="p">(</span><span class="k">const</span> <span class="n">worker</span><span class="o">&amp;</span> <span class="n">job</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">boost</span><span class="o">::</span><span class="n">mutex</span><span class="o">::</span><span class="n">scoped_lock</span> <span class="n">lock</span><span class="p">(</span><span class="n">mutex_</span><span class="p">);</span>
-    <span class="n">queue_</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">job</span><span class="p">);</span>
-    <span class="n">cv_</span><span class="p">.</span><span class="n">notify_one</span><span class="p">();</span>
-  <span class="p">}</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">add</span><span class="hl opt">(</span><span class="hl kwb">const</span> worker<span class="hl opt">&amp;</span> job<span class="hl opt">) {</span>
+    boost<span class="hl opt">::</span>mutex<span class="hl opt">::</span>scoped_lock <span class="hl kwd">lock</span><span class="hl opt">(</span>mutex_<span class="hl opt">);</span>
+    queue_<span class="hl opt">.</span><span class="hl kwd">push</span><span class="hl opt">(</span>job<span class="hl opt">);</span>
+    cv_<span class="hl opt">.</span><span class="hl kwd">notify_one</span><span class="hl opt">();</span>
+  <span class="hl opt">}</span>
 
-  <span class="kt">void</span> <span class="n">finish</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">boost</span><span class="o">::</span><span class="n">mutex</span><span class="o">::</span><span class="n">scoped_lock</span> <span class="n">lock</span><span class="p">(</span><span class="n">mutex_</span><span class="p">);</span>
-    <span class="n">done_</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-    <span class="n">cv_</span><span class="p">.</span><span class="n">notify_all</span><span class="p">();</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">finish</span><span class="hl opt">() {</span>
+    boost<span class="hl opt">::</span>mutex<span class="hl opt">::</span>scoped_lock <span class="hl kwd">lock</span><span class="hl opt">(</span>mutex_<span class="hl opt">);</span>
+    done_ <span class="hl opt">=</span> <span class="hl kwa">true</span><span class="hl opt">;</span>
+    cv_<span class="hl opt">.</span><span class="hl kwd">notify_all</span><span class="hl opt">();</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
 
-<span class="kt">void</span> <span class="n">task</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">volatile</span> <span class="kt">int</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> <span class="hl kwd">task</span><span class="hl opt">() {</span>
+  <span class="hl kwc">volatile</span> <span class="hl kwb">int</span> r <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="n">thread_pool</span> <span class="n">pool</span><span class="p">;</span>
-  <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">:</span> <span class="mi">10000</span><span class="p">;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  thread_pool pool<span class="hl opt">;</span>
+  <span class="hl kwb">int</span> n <span class="hl opt">=</span> argc <span class="hl opt">&gt;</span> <span class="hl num">1</span> ? std<span class="hl opt">::</span><span class="hl kwd">atoi</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]) :</span> <span class="hl num">10000</span><span class="hl opt">;</span>
 
-  <span class="kt">int</span> <span class="n">threads</span> <span class="o">=</span> <span class="n">boost</span><span class="o">::</span><span class="kr">thread</span><span class="o">::</span><span class="n">hardware_concurrency</span><span class="p">();</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;- executing &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">threads</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; concurrent job(s)&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;- running &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">n</span> <span class="o">&lt;&lt;</span> <span class="s">&quot; tasks&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">pool</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">task</span><span class="p">);</span>
-  <span class="p">}</span>
+  <span class="hl kwb">int</span> threads <span class="hl opt">=</span> boost<span class="hl opt">::</span>thread<span class="hl opt">::</span><span class="hl kwd">hardware_concurrency</span><span class="hl opt">();</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;- executing &quot;</span> <span class="hl opt">&lt;&lt;</span> threads <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot; concurrent job(s)&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;- running &quot;</span> <span class="hl opt">&lt;&lt;</span> n <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot; tasks&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> n<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    pool<span class="hl opt">.</span><span class="hl kwd">add</span><span class="hl opt">(</span>task<span class="hl opt">);</span>
+  <span class="hl opt">}</span>
 
-  <span class="n">pool</span><span class="p">.</span><span class="n">finish</span><span class="p">();</span>
-  <span class="n">pool</span><span class="p">.</span><span class="n">join</span><span class="p">();</span>
+  pool<span class="hl opt">.</span><span class="hl kwd">finish</span><span class="hl opt">();</span>
+  pool<span class="hl opt">.</span><span class="hl kwd">join</span><span class="hl opt">();</span>
 
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Makefile:</p>
 
-<div class="highlight"><pre><span class="nv">BOOST</span> <span class="o">=</span> ~/opt/boost-1.46.1
+<pre class="hl">
+BOOST <span class="hl opt">=</span> ~<span class="hl opt">/</span>opt<span class="hl opt">/</span>boost-1.46<span class="hl num">.1</span>
 
-<span class="nv">target</span> <span class="o">=</span> boost_threading
+target <span class="hl opt">=</span> boost_threading
 
-build:
-        g++ -O2 -I <span class="k">$(</span>BOOST<span class="k">)</span> -o <span class="k">$(</span>target<span class="k">)</span> <span class="se">\</span>
-                -lpthread <span class="se">\</span>
-                -lboost_thread <span class="se">\</span>
-                 -L <span class="k">$(</span>BOOST<span class="k">)</span>/stage/lib <span class="se">\</span>
-                <span class="k">$(</span>target<span class="k">)</span>.cpp
+build<span class="hl opt">:</span>
+        g<span class="hl opt">++ -</span>O2 <span class="hl opt">-</span>I <span class="hl opt">$(</span>BOOST<span class="hl opt">) -</span>o <span class="hl opt">$(</span>target<span class="hl opt">)</span> \
+                <span class="hl opt">-</span>lpthread \
+                <span class="hl opt">-</span>lboost_thread \
+                 <span class="hl opt">-</span>L <span class="hl opt">$(</span>BOOST<span class="hl opt">)/</span>stage<span class="hl opt">/</span>lib \
+                <span class="hl opt">$(</span>target<span class="hl opt">)</span>.<span class="hl kwa">cpp</span>
 
-run:
-        <span class="o">(</span><span class="nb">time</span> -p <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="k">$(</span>BOOST<span class="k">)</span>/stage/lib ./<span class="k">$(</span>target<span class="k">)</span> <span class="k">$(</span>args<span class="k">)</span> <span class="se">\</span>
-                1&gt;/dev/null<span class="o">)</span> 2&gt;&amp;1 | head -1 | awk <span class="s1">&#39;{ print $$2 }&#39;</span>
+run<span class="hl opt">:</span>
+        <span class="hl opt">(</span>time <span class="hl opt">-</span>p LD_LIBRARY_PATH<span class="hl opt">=$(</span>BOOST<span class="hl opt">)/</span>stage<span class="hl opt">/</span>lib .<span class="hl opt">/$(</span>target<span class="hl opt">) $(</span>args<span class="hl opt">)</span> \
+                <span class="hl num">1</span><span class="hl opt">&gt;/</span>dev<span class="hl opt">/</span>null<span class="hl opt">)</span> <span class="hl num">2</span><span class="hl opt">&gt;&amp;</span><span class="hl num">1</span> | head <span class="hl opt">-</span><span class="hl num">1</span> | awk <span class="hl str">'{ print $$2 }'</span>
 
-<span class="nv">n</span> <span class="o">=</span> <span class="se">\</span>
-10000 <span class="se">\</span>
-100000 <span class="se">\</span>
-1000000 <span class="se">\</span>
-10000000 <span class="se">\</span>
-100000000
+n <span class="hl opt">=</span> \
+<span class="hl num">10000</span> \
+<span class="hl num">100000</span> \
+<span class="hl num">1000000</span> \
+<span class="hl num">10000000</span> \
+<span class="hl num">100000000</span>
 
-<span class="nb">test</span>:
-        @for i in <span class="k">$(</span>n<span class="k">)</span>; <span class="k">do</span> <span class="se">\</span>
-                <span class="nb">echo</span> <span class="s2">&quot;`printf &#39;% 10d&#39; $$i`&quot;</span> <span class="sb">`</span><span class="k">$(</span>MAKE<span class="k">)</span> <span class="nv">args</span><span class="o">=</span><span class="nv">$$</span>i run<span class="sb">`</span>; <span class="se">\</span>
-        <span class="k">done</span>
-</pre></div>
+<span class="hl kwa">test</span><span class="hl opt">:</span>
+        &#64;for i in <span class="hl opt">$(</span>n<span class="hl opt">);</span> do \
+                echo <span class="hl str">&quot;`printf '% 10d' $$i`&quot;</span> <span class="hl str">`$(MAKE) args=$$i run`</span><span class="hl opt">;</span> \
+        done
+</pre>
 
 <p>В обоих языках число потоков будет равно количеству процессоров - 8. Количество задач, прогоняемых через эти восемь поток будет варьироваться.</p>
 

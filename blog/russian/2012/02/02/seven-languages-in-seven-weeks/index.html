@@ -77,13 +77,14 @@
 
 <p>Примерчик из книги:</p>
 
-<div class="highlight"><pre><span class="c1">// Запускаем future</span>
-<span class="n">futureResult</span> <span class="o">:=</span> <span class="n">URL</span> <span class="n">with</span><span class="o">(</span><span class="s">&quot;http://google.com/&quot;</span><span class="o">)</span> <span class="o">@</span><span class="n">fetch</span>
-<span class="n">writeln</span><span class="o">(</span><span class="s">&quot;Сразу начинаем делать что еще, пока future работает в фоне.&quot;</span><span class="o">)</span>
-<span class="c1">// Эта строка будет выполнена сразу.</span>
-<span class="n">writeln</span><span class="o">(</span><span class="s">&quot;fetched &quot;</span><span class="o">,</span> <span class="n">futureResult</span> <span class="n">size</span><span class="o">,</span> <span class="s">&quot; bytes&quot;</span><span class="o">)</span>
-<span class="c1">// А вот эта строка будет заблокирована, пока future не выполнится.</span>
-</pre></div>
+<pre class="hl">
+<span class="hl opt">//</span> Запускаем future
+futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <span class="hl kwd">with</span><span class="hl opt">(</span><span class="hl str">&quot;http://google.com/&quot;</span><span class="hl opt">) &#64;</span>fetch
+<span class="hl kwd">writeln</span><span class="hl opt">(</span><span class="hl str">&quot;Сразу начинаем делать что еще, пока future работает в фоне.&quot;</span><span class="hl opt">)</span>
+<span class="hl opt">//</span> Эта строка будет выполнена сразу<span class="hl opt">.</span>
+<span class="hl kwd">writeln</span><span class="hl opt">(</span><span class="hl str">&quot;fetched &quot;</span><span class="hl opt">,</span> futureResult size<span class="hl opt">,</span> <span class="hl str">&quot; bytes&quot;</span><span class="hl opt">)</span>
+<span class="hl opt">//</span> А вот эта строка будет заблокирована<span class="hl opt">,</span> пока future не выполнится<span class="hl opt">.</span>
+</pre>
 
 <p>Идем дальше, <strong>Prolog</strong>.</p>
 

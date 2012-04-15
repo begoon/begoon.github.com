@@ -45,20 +45,22 @@
 
 <p><strong>1. Чисто плюсовый вариант, основанный на семантике ссылок.</strong></p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
-  <span class="n">Value</span> <span class="n">field_</span><span class="p">;</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="n">Value</span><span class="o">&amp;</span> <span class="n">field</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">field_</span><span class="p">;</span> <span class="p">}</span>
-  <span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">field</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">field_</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">};</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> Foo <span class="hl opt">{</span>
+  Value field_<span class="hl opt">;</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  Value<span class="hl opt">&amp;</span> <span class="hl kwd">field</span><span class="hl opt">() {</span> <span class="hl kwa">return</span> field_<span class="hl opt">; }</span>
+  <span class="hl kwb">const</span> Value<span class="hl opt">&amp;</span> <span class="hl kwd">field</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> field_<span class="hl opt">; }</span>
+<span class="hl opt">};</span>
+</pre>
 
 <p>Использование:</p>
 
-<div class="highlight"><pre><span class="n">Foo</span> <span class="n">foo</span><span class="p">;</span>
-<span class="n">foo</span><span class="p">.</span><span class="n">field</span><span class="p">()</span> <span class="o">=</span> <span class="n">field_instance</span><span class="p">;</span>
-<span class="n">field_instance</span> <span class="o">=</span> <span class="n">foo</span><span class="p">.</span><span class="n">field</span><span class="p">();</span>
-</pre></div>
+<pre class="hl">
+Foo foo<span class="hl opt">;</span>
+foo<span class="hl opt">.</span><span class="hl kwd">field</span><span class="hl opt">() =</span> field_instance<span class="hl opt">;</span>
+field_instance <span class="hl opt">=</span> foo<span class="hl opt">.</span><span class="hl kwd">field</span><span class="hl opt">();</span>
+</pre>
 
 <p>Плюсы: краткость текста, близость к нотации <a href="http://www.cplusplus.com/forum/general/8147/">свойств</a>, и возможность использования присвоения в каскаде (<code>foo1.field() = foo2.field() = 2;</code>).</p>
 
@@ -66,20 +68,22 @@
 
 <p><strong>2. Способ в стиле Java.</strong></p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
-  <span class="n">Value</span> <span class="n">field_</span><span class="p">;</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="kt">void</span> <span class="n">setField</span><span class="p">(</span><span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">field_</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
-  <span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">getField</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">field_</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">};</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> Foo <span class="hl opt">{</span>
+  Value field_<span class="hl opt">;</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">setField</span><span class="hl opt">(</span><span class="hl kwb">const</span> Value<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span> field_ <span class="hl opt">=</span> value<span class="hl opt">; }</span>
+  <span class="hl kwb">const</span> Value<span class="hl opt">&amp;</span> <span class="hl kwd">getField</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> field_<span class="hl opt">; }</span>
+<span class="hl opt">};</span>
+</pre>
 
 <p>Использование:</p>
 
-<div class="highlight"><pre><span class="n">Foo</span> <span class="n">foo</span><span class="p">;</span>
-<span class="n">foo</span><span class="p">.</span><span class="n">setField</span><span class="p">(</span><span class="n">field_instance</span><span class="p">);</span>
-<span class="n">field_instance</span> <span class="o">=</span> <span class="n">foo</span><span class="p">.</span><span class="n">getField</span><span class="p">();</span>
-</pre></div>
+<pre class="hl">
+Foo foo<span class="hl opt">;</span>
+foo<span class="hl opt">.</span><span class="hl kwd">setField</span><span class="hl opt">(</span>field_instance<span class="hl opt">);</span>
+field_instance <span class="hl opt">=</span> foo<span class="hl opt">.</span><span class="hl kwd">getField</span><span class="hl opt">();</span>
+</pre>
 
 <p>Плюсы: ясность и очевидность синтаксиса.</p>
 
@@ -87,20 +91,22 @@
 
 <p><strong>3. Cтиль Objective-C</strong></p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Foo</span> <span class="p">{</span>
-  <span class="n">Value</span> <span class="n">field_</span><span class="p">;</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="kt">void</span> <span class="n">setField</span><span class="p">(</span><span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span> <span class="n">field_</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
-  <span class="k">const</span> <span class="n">Value</span><span class="o">&amp;</span> <span class="n">field</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">field_</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">};</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> Foo <span class="hl opt">{</span>
+  Value field_<span class="hl opt">;</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">setField</span><span class="hl opt">(</span><span class="hl kwb">const</span> Value<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span> field_ <span class="hl opt">=</span> value<span class="hl opt">; }</span>
+  <span class="hl kwb">const</span> Value<span class="hl opt">&amp;</span> <span class="hl kwd">field</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> field_<span class="hl opt">; }</span>
+<span class="hl opt">};</span>
+</pre>
 
 <p>Использование:</p>
 
-<div class="highlight"><pre><span class="n">Foo</span> <span class="n">foo</span><span class="p">;</span>
-<span class="n">foo</span><span class="p">.</span><span class="n">setField</span><span class="p">(</span><span class="n">field_instance</span><span class="p">);</span>
-<span class="n">field_instance</span> <span class="o">=</span> <span class="n">foo</span><span class="p">.</span><span class="n">field</span><span class="p">();</span>
-</pre></div>
+<pre class="hl">
+Foo foo<span class="hl opt">;</span>
+foo<span class="hl opt">.</span><span class="hl kwd">setField</span><span class="hl opt">(</span>field_instance<span class="hl opt">);</span>
+field_instance <span class="hl opt">=</span> foo<span class="hl opt">.</span><span class="hl kwd">field</span><span class="hl opt">();</span>
+</pre>
 
 <p>Плюсы: краткость текста при чтении (нет почти бессмысленной приставки &ldquo;get&rdquo;) и очевидность при записи.</p>
 

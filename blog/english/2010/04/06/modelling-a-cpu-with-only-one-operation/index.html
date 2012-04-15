@@ -58,38 +58,40 @@
 
 <p>The original NOR interpreter was written on x86 assembly:</p>
 
-<div class="highlight"><pre><span class="nf">cld</span>
-<span class="nl">emCPU:</span>
-<span class="nf">mov</span>  <span class="nb">si</span><span class="p">,</span><span class="nv">emIP</span>
-<span class="nf">lodsw</span>
-<span class="nf">xchg</span> <span class="nb">ax</span><span class="p">,</span><span class="nb">di</span>
-<span class="nf">mov</span>  <span class="nb">di</span><span class="p">,[</span><span class="nb">di</span><span class="p">]</span>
-<span class="nf">lodsw</span>
-<span class="nf">xchg</span> <span class="nb">ax</span><span class="p">,</span><span class="nb">bx</span>
-<span class="nf">or</span>   <span class="nb">di</span><span class="p">,[</span><span class="nb">bx</span><span class="p">]</span>
-<span class="nf">lodsw</span>
-<span class="nf">xchg</span> <span class="nb">ax</span><span class="p">,</span><span class="nb">di</span>
-<span class="nf">not</span>  <span class="nb">ax</span>
-<span class="nf">mov</span>  <span class="nv">emIP</span><span class="p">,</span><span class="nb">si</span>
-<span class="nf">stosw</span>
-<span class="nf">jmp</span>  <span class="nv">short</span> <span class="nv">emCPU</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwa">cld</span>
+<span class="hl kwc">emCPU:</span>
+<span class="hl kwa">mov</span>  <span class="hl kwb">si</span><span class="hl opt">,</span>emIP
+<span class="hl kwa">lodsw</span>
+<span class="hl kwa">xchg</span> <span class="hl kwb">ax</span><span class="hl opt">,</span><span class="hl kwb">di</span>
+<span class="hl kwa">mov</span>  <span class="hl kwb">di</span><span class="hl opt">,[</span><span class="hl kwb">di</span><span class="hl opt">]</span>
+<span class="hl kwa">lodsw</span>
+<span class="hl kwa">xchg</span> <span class="hl kwb">ax</span><span class="hl opt">,</span><span class="hl kwb">bx</span>
+<span class="hl kwa">or</span>   <span class="hl kwb">di</span><span class="hl opt">,[</span><span class="hl kwb">bx</span><span class="hl opt">]</span>
+<span class="hl kwa">lodsw</span>
+<span class="hl kwa">xchg</span> <span class="hl kwb">ax</span><span class="hl opt">,</span><span class="hl kwb">di</span>
+<span class="hl kwa">not</span>  <span class="hl kwb">ax</span>
+<span class="hl kwa">mov</span>  emIP<span class="hl opt">,</span><span class="hl kwb">si</span>
+<span class="hl kwa">stosw</span>
+<span class="hl kwa">jmp  short</span> emCPU
+</pre>
 
 <p>Nothing prevents to write it on any language, for example, Python.</p>
 
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">nor</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-  <span class="k">return</span> <span class="o">~</span><span class="p">(</span><span class="n">a</span> <span class="o">|</span> <span class="n">b</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mh">0xFFFF</span>
+<pre class="hl">
+<span class="hl kwa">def</span> <span class="hl kwd">nor</span><span class="hl opt">(</span>a<span class="hl opt">,</span> b<span class="hl opt">):</span>
+  <span class="hl kwa">return</span> ~<span class="hl opt">(</span>a | b<span class="hl opt">) &amp;</span> <span class="hl num">0xFFFF</span>
 
-<span class="k">def</span> <span class="nf">norcpu</span><span class="p">():</span>
-  <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">IP</span><span class="p">];</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">0</span><span class="p">]</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
-    <span class="n">mem</span><span class="p">[</span><span class="n">IP</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">nor</span><span class="p">(</span><span class="n">mem</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">mem</span><span class="p">[</span><span class="n">b</span><span class="p">])</span>
-    <span class="n">mem</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span>
-</pre></div>
+<span class="hl kwa">def</span> <span class="hl kwd">norcpu</span><span class="hl opt">():</span>
+  <span class="hl kwa">while</span> <span class="hl num">1</span><span class="hl opt">:</span>
+    i <span class="hl opt">=</span> mem<span class="hl opt">[</span>IP<span class="hl opt">];</span>
+    a <span class="hl opt">=</span> mem<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">0</span><span class="hl opt">]</span>
+    b <span class="hl opt">=</span> mem<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">]</span>
+    r <span class="hl opt">=</span> mem<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">2</span><span class="hl opt">]</span>
+    mem<span class="hl opt">[</span>IP<span class="hl opt">] =</span> i <span class="hl opt">+</span> <span class="hl num">3</span>
+    f <span class="hl opt">=</span> <span class="hl kwd">nor</span><span class="hl opt">(</span>mem<span class="hl opt">[</span>a<span class="hl opt">],</span> mem<span class="hl opt">[</span>b<span class="hl opt">])</span>
+    mem<span class="hl opt">[</span>r<span class="hl opt">] =</span> f
+</pre>
 
 <p>Why NOR? The Boolean algebra theory says that any of 14 of 16 Boolean functions could be calculated using just the rest two - NOR and NAND. For instance:</p>
 
@@ -128,17 +130,18 @@ OR @t1, @t2, IP
 
 <p>Recently I&rsquo;ve come back to this NOR interpreter approach but in Python world. I&rsquo;ve modified the original idea a bit to simplify (or just make it possible) an implementation of addition using NOR only, without native code at all. I&rsquo;ve introduced one extra operation in the interpreter ñ the result of NOR is cyclically shifted left by 1 bit and stored the special location in memory.</p>
 
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">norcpu</span><span class="p">():</span>
-  <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">IP</span><span class="p">];</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">0</span><span class="p">]</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">mem</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
-    <span class="n">mem</span><span class="p">[</span><span class="n">IP</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">3</span>
-    <span class="n">f</span> <span class="o">=</span> <span class="n">nor</span><span class="p">(</span><span class="n">mem</span><span class="p">[</span><span class="n">a</span><span class="p">],</span> <span class="n">mem</span><span class="p">[</span><span class="n">b</span><span class="p">])</span>
-    <span class="n">mem</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span>
-    <span class="n">mem</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">f</span> <span class="o">&gt;&gt;</span> <span class="mi">31</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">f</span> <span class="o">&amp;</span> <span class="mh">0x7FFF</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">)</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwa">def</span> <span class="hl kwd">norcpu</span><span class="hl opt">():</span>
+  <span class="hl kwa">while</span> <span class="hl num">1</span><span class="hl opt">:</span>
+    i <span class="hl opt">=</span> mem<span class="hl opt">[</span>IP<span class="hl opt">];</span>
+    a <span class="hl opt">=</span> mem<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">0</span><span class="hl opt">]</span>
+    b <span class="hl opt">=</span> mem<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">]</span>
+    r <span class="hl opt">=</span> mem<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">2</span><span class="hl opt">]</span>
+    mem<span class="hl opt">[</span>IP<span class="hl opt">] =</span> i <span class="hl opt">+</span> <span class="hl num">3</span>
+    f <span class="hl opt">=</span> <span class="hl kwd">nor</span><span class="hl opt">(</span>mem<span class="hl opt">[</span>a<span class="hl opt">],</span> mem<span class="hl opt">[</span>b<span class="hl opt">])</span>
+    mem<span class="hl opt">[</span>r<span class="hl opt">] =</span> f
+    mem<span class="hl opt">[</span>S<span class="hl opt">] = ((</span>f <span class="hl opt">&gt;&gt;</span> <span class="hl num">31</span><span class="hl opt">) &amp;</span> <span class="hl num">1</span><span class="hl opt">)</span> | <span class="hl opt">((</span>f <span class="hl opt">&amp;</span> <span class="hl num">0x7FFF</span><span class="hl opt">) &lt;&lt;</span> <span class="hl num">1</span><span class="hl opt">)</span>
+</pre>
 
 <p>There are two special locations now: <code>IP</code> (instruction pointer) and <code>S</code> (shift register).</p>
 

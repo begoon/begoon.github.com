@@ -65,153 +65,155 @@
 
 <p>Далее, можно просто смотреть по исходнику. Самое интересное место там, где видно, как функция &ldquo;compile()&rdquo; может вызываться из нескольких потоков без каких-либо изменений.</p>
 
-<div class="highlight"><pre><span class="k">package</span> <span class="n">main</span>
+<pre class="hl">
+<span class="hl kwa">package</span> main
 
-<span class="k">import</span> <span class="p">(</span>
-        <span class="s">&quot;archive/tar&quot;</span>
-        <span class="s">&quot;container/vector&quot;</span>
-        <span class="s">&quot;exec&quot;</span>
-        <span class="s">&quot;flag&quot;</span>
-        <span class="s">&quot;fmt&quot;</span>
-        <span class="s">&quot;io&quot;</span>
-        <span class="s">&quot;os&quot;</span>
-        <span class="s">&quot;strings&quot;</span>
-<span class="p">)</span>
+<span class="hl kwa">import</span> <span class="hl opt">(</span>
+        <span class="hl str">&quot;archive/tar&quot;</span>
+        <span class="hl str">&quot;container/vector&quot;</span>
+        <span class="hl str">&quot;exec&quot;</span>
+        <span class="hl str">&quot;flag&quot;</span>
+        <span class="hl str">&quot;fmt&quot;</span>
+        <span class="hl str">&quot;io&quot;</span>
+        <span class="hl str">&quot;os&quot;</span>
+        <span class="hl str">&quot;strings&quot;</span>
+<span class="hl opt">)</span>
 
-<span class="c1">// Два флага: количество потоков и имя компилятора.</span>
-<span class="k">var</span> <span class="n">jobs</span> <span class="p">*</span><span class="nb">int</span> <span class="p">=</span> <span class="n">flag</span><span class="p">.</span><span class="n">Int</span><span class="p">(</span><span class="s">&quot;jobs&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s">&quot;number of concurrent jobs&quot;</span><span class="p">)</span>
-<span class="k">var</span> <span class="n">compiler</span> <span class="p">*</span><span class="nb">string</span> <span class="p">=</span> <span class="n">flag</span><span class="p">.</span><span class="n">String</span><span class="p">(</span><span class="s">&quot;cc&quot;</span><span class="p">,</span> <span class="s">&quot;bcom&quot;</span><span class="p">,</span> <span class="s">&quot;compiler name&quot;</span><span class="p">)</span>
+<span class="hl slc">// Два флага: количество потоков и имя компилятора.</span>
+<span class="hl kwa">var</span> jobs <span class="hl opt">*</span><span class="hl kwb">int</span> <span class="hl opt">=</span> flag<span class="hl opt">.</span><span class="hl kwd">Int</span><span class="hl opt">(</span><span class="hl str">&quot;jobs&quot;</span><span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span> <span class="hl str">&quot;number of concurrent jobs&quot;</span><span class="hl opt">)</span>
+<span class="hl kwa">var</span> compiler <span class="hl opt">*</span><span class="hl kwb">string</span> <span class="hl opt">=</span> flag<span class="hl opt">.</span><span class="hl kwd">String</span><span class="hl opt">(</span><span class="hl str">&quot;cc&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;bcom&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;compiler name&quot;</span><span class="hl opt">)</span>
 
-<span class="k">func</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-        <span class="n">flag</span><span class="p">.</span><span class="n">Parse</span><span class="p">()</span>
-        <span class="n">os</span><span class="p">.</span><span class="n">Args</span> <span class="p">=</span> <span class="n">flag</span><span class="p">.</span><span class="n">Args</span><span class="p">()</span>
-        <span class="n">args</span> <span class="p">:=</span> <span class="n">os</span><span class="p">.</span><span class="n">Args</span>
+<span class="hl kwa">func</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+        flag<span class="hl opt">.</span><span class="hl kwd">Parse</span><span class="hl opt">()</span>
+        os<span class="hl opt">.</span>Args <span class="hl opt">=</span> flag<span class="hl opt">.</span><span class="hl kwd">Args</span><span class="hl opt">()</span>
+        args <span class="hl opt">:=</span> os<span class="hl opt">.</span>Args
 
-        <span class="n">ar</span> <span class="p">:=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">r</span><span class="p">,</span> <span class="n">err</span> <span class="p">:=</span> <span class="n">os</span><span class="p">.</span><span class="n">Open</span><span class="p">(</span><span class="n">ar</span><span class="p">,</span> <span class="n">os</span><span class="p">.</span><span class="n">O_RDONLY</span><span class="p">,</span> <span class="mo">0666</span><span class="p">);</span>
-        <span class="k">if</span> <span class="n">err</span> <span class="p">!=</span> <span class="n">nil</span> <span class="p">{</span>
-                <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;unable to open TAR %s\n&quot;</span><span class="p">,</span> <span class="n">ar</span><span class="p">)</span>
-                <span class="n">os</span><span class="p">.</span><span class="n">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="p">}</span>
-        <span class="c1">// defer - это аналог &quot;finally {}&quot;, гарантированное выполнение</span>
-        <span class="c1">// кода при выходе из блока.</span>
-        <span class="k">defer</span> <span class="n">r</span><span class="p">.</span><span class="n">Close</span><span class="p">()</span>
+        ar <span class="hl opt">:=</span> args<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]</span>
+        r<span class="hl opt">,</span> err <span class="hl opt">:=</span> os<span class="hl opt">.</span><span class="hl kwd">Open</span><span class="hl opt">(</span>ar<span class="hl opt">,</span> os<span class="hl opt">.</span>O_RDONLY<span class="hl opt">,</span> <span class="hl num">0666</span><span class="hl opt">);</span>
+        <span class="hl kwa">if</span> err <span class="hl opt">!=</span> <span class="hl kwb">nil</span> <span class="hl opt">{</span>
+                fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;unable to open TAR %s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> ar<span class="hl opt">)</span>
+                os<span class="hl opt">.</span><span class="hl kwd">Exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>
+        <span class="hl opt">}</span>
+        <span class="hl slc">// defer - это аналог &quot;finally {}&quot;, гарантированное выполнение</span>
+        <span class="hl slc">// кода при выходе из блока.</span>
+        <span class="hl kwa">defer</span> r<span class="hl opt">.</span><span class="hl kwd">Close</span><span class="hl opt">()</span>
 
-        <span class="c1">// Цикл распаковки TAR.</span>
-        <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;- extracting %s\n&quot;</span><span class="p">,</span> <span class="n">ar</span><span class="p">)</span>
-        <span class="c1">// Создаем контекст для распаковки.</span>
-        <span class="n">tr</span> <span class="p">:=</span> <span class="n">tar</span><span class="p">.</span><span class="n">NewReader</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-        <span class="n">tests</span> <span class="p">:=</span> <span class="nb">new</span><span class="p">(</span><span class="n">vector</span><span class="p">.</span><span class="n">StringVector</span><span class="p">)</span>
-        <span class="c1">// Последовательный проход по архиву, сохранение файлов и составление</span>
-        <span class="c1">// списка для компиляции.</span>
-        <span class="k">for</span> <span class="p">{</span>
-                <span class="c1">// Получаем дескриптор следующего файла в архиве.</span>
-                <span class="n">hdr</span><span class="p">,</span> <span class="n">_</span> <span class="p">:=</span> <span class="n">tr</span><span class="p">.</span><span class="n">Next</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">hdr</span> <span class="p">==</span> <span class="n">nil</span> <span class="p">{</span>
-                        <span class="k">break</span>
-                <span class="p">}</span>
-                <span class="n">name</span> <span class="p">:=</span> <span class="p">&amp;</span><span class="n">hdr</span><span class="p">.</span><span class="n">Name</span>
-                <span class="c1">// Если это не заголовочный файл, сохраним имя.</span>
-                <span class="k">if</span> <span class="p">!</span><span class="n">strings</span><span class="p">.</span><span class="n">HasPrefix</span><span class="p">(*</span><span class="n">name</span><span class="p">,</span> <span class="s">&quot;HDR_&quot;</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="n">tests</span><span class="p">.</span><span class="n">Push</span><span class="p">(*</span><span class="n">name</span><span class="p">)</span>
-                <span class="p">}</span>
-                <span class="c1">// Создаем новый файл.</span>
-                <span class="n">w</span><span class="p">,</span> <span class="n">err</span> <span class="p">:=</span> <span class="n">os</span><span class="p">.</span><span class="n">Open</span><span class="p">(</span><span class="s">&quot;data/&quot;</span> <span class="p">+</span> <span class="p">*</span><span class="n">name</span><span class="p">,</span> <span class="n">os</span><span class="p">.</span><span class="n">O_CREAT</span> <span class="p">|</span> <span class="n">os</span><span class="p">.</span><span class="n">O_RDWR</span><span class="p">,</span> <span class="mo">0666</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">err</span> <span class="p">!=</span> <span class="n">nil</span> <span class="p">{</span>
-                        <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;unable to create %s\n&quot;</span><span class="p">,</span> <span class="p">*</span><span class="n">name</span><span class="p">)</span>
-                        <span class="n">os</span><span class="p">.</span><span class="n">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-                <span class="p">}</span>
-                <span class="c1">// Копируем содержимое в текущий файл.</span>
-                <span class="n">io</span><span class="p">.</span><span class="n">Copy</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">tr</span><span class="p">)</span>
-                <span class="n">w</span><span class="p">.</span><span class="n">Close</span><span class="p">()</span>
-        <span class="p">}</span>
+        <span class="hl slc">// Цикл распаковки TAR.</span>
+        fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;- extracting %s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> ar<span class="hl opt">)</span>
+        <span class="hl slc">// Создаем контекст для распаковки.</span>
+        tr <span class="hl opt">:=</span> tar<span class="hl opt">.</span><span class="hl kwd">NewReader</span><span class="hl opt">(</span>r<span class="hl opt">)</span>
+        tests <span class="hl opt">:=</span> <span class="hl kwb">new</span><span class="hl opt">(</span>vector<span class="hl opt">.</span>StringVector<span class="hl opt">)</span>
+        <span class="hl slc">// Последовательный проход по архиву, сохранение файлов и составление</span>
+        <span class="hl slc">// списка для компиляции.</span>
+        <span class="hl kwa">for</span> <span class="hl opt">{</span>
+                <span class="hl slc">// Получаем дескриптор следующего файла в архиве.</span>
+                hdr<span class="hl opt">,</span> _ <span class="hl opt">:=</span> tr<span class="hl opt">.</span><span class="hl kwd">Next</span><span class="hl opt">()</span>
+                <span class="hl kwa">if</span> hdr <span class="hl opt">==</span> <span class="hl kwb">nil</span> <span class="hl opt">{</span>
+                        <span class="hl kwa">break</span>
+                <span class="hl opt">}</span>
+                name <span class="hl opt">:= &amp;</span>hdr<span class="hl opt">.</span>Name
+                <span class="hl slc">// Если это не заголовочный файл, сохраним имя.</span>
+                <span class="hl kwa">if</span> <span class="hl opt">!</span>strings<span class="hl opt">.</span><span class="hl kwd">HasPrefix</span><span class="hl opt">(*</span>name<span class="hl opt">,</span> <span class="hl str">&quot;HDR_&quot;</span><span class="hl opt">) {</span>
+                        tests<span class="hl opt">.</span><span class="hl kwd">Push</span><span class="hl opt">(*</span>name<span class="hl opt">)</span>
+                <span class="hl opt">}</span>
+                <span class="hl slc">// Создаем новый файл.</span>
+                w<span class="hl opt">,</span> err <span class="hl opt">:=</span> os<span class="hl opt">.</span><span class="hl kwd">Open</span><span class="hl opt">(</span><span class="hl str">&quot;data/&quot;</span> <span class="hl opt">+ *</span>name<span class="hl opt">,</span> os<span class="hl opt">.</span>O_CREAT | os<span class="hl opt">.</span>O_RDWR<span class="hl opt">,</span> <span class="hl num">0666</span><span class="hl opt">)</span>
+                <span class="hl kwa">if</span> err <span class="hl opt">!=</span> <span class="hl kwb">nil</span> <span class="hl opt">{</span>
+                        fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;unable to create %s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">, *</span>name<span class="hl opt">)</span>
+                        os<span class="hl opt">.</span><span class="hl kwd">Exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>
+                <span class="hl opt">}</span>
+                <span class="hl slc">// Копируем содержимое в текущий файл.</span>
+                io<span class="hl opt">.</span><span class="hl kwd">Copy</span><span class="hl opt">(</span>w<span class="hl opt">,</span> tr<span class="hl opt">)</span>
+                w<span class="hl opt">.</span><span class="hl kwd">Close</span><span class="hl opt">()</span>
+        <span class="hl opt">}</span>
 
-        <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;- compiling...\n&quot;</span><span class="p">)</span>
-        <span class="p">*</span><span class="n">compiler</span> <span class="p">,</span> <span class="n">_</span> <span class="p">=</span> <span class="n">exec</span><span class="p">.</span><span class="n">LookPath</span><span class="p">(*</span><span class="n">compiler</span><span class="p">)</span>
-        <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;- compiler %s\n&quot;</span><span class="p">,</span> <span class="p">*</span><span class="n">compiler</span><span class="p">)</span>
+        fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;- compiling...</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">)</span>
+        <span class="hl opt">*</span>compiler <span class="hl opt">,</span> _ <span class="hl opt">=</span> exec<span class="hl opt">.</span><span class="hl kwd">LookPath</span><span class="hl opt">(*</span>compiler<span class="hl opt">)</span>
+        fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;- compiler %s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">, *</span>compiler<span class="hl opt">)</span>
 
-        <span class="k">if</span> <span class="p">*</span><span class="n">jobs</span> <span class="p">==</span> <span class="mi">0</span> <span class="p">{</span>
-                <span class="c1">// Вызываем &quot;compile()&quot; последовательно, в основном потоке.</span>
-                <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;- running sequentially\n&quot;</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">tests</span><span class="p">.</span><span class="n">Len</span><span class="p">();</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
-                        <span class="n">compile</span><span class="p">(</span><span class="n">tests</span><span class="p">.</span><span class="n">At</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
-                <span class="p">}</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="c1">// Запускаем &quot;compile()&quot; в параллельных потоках.</span>
-                <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;- running %d concurrent job(s)\n&quot;</span><span class="p">,</span> <span class="p">*</span><span class="n">jobs</span><span class="p">)</span>
+        <span class="hl kwa">if</span> <span class="hl opt">*</span>jobs <span class="hl opt">==</span> <span class="hl num">0</span> <span class="hl opt">{</span>
+                <span class="hl slc">// Вызываем &quot;compile()&quot; последовательно, в основном потоке.</span>
+                fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;- running sequentially</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">)</span>
+                <span class="hl kwa">for</span> i <span class="hl opt">:=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> tests<span class="hl opt">.</span><span class="hl kwd">Len</span><span class="hl opt">();</span> i<span class="hl opt">++ {</span>
+                        <span class="hl kwd">compile</span><span class="hl opt">(</span>tests<span class="hl opt">.</span><span class="hl kwd">At</span><span class="hl opt">(</span>i<span class="hl opt">))</span>
+                <span class="hl opt">}</span>
+        <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
+                <span class="hl slc">// Запускаем &quot;compile()&quot; в параллельных потоках.</span>
+                fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;- running %d concurrent job(s)</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">, *</span>jobs<span class="hl opt">)</span>
 
-                <span class="c1">// Канал задач: в этот канал мы будем класть имена файлов,</span>
-                <span class="c1">// которые надо скомпилировать. Потоки-runner&#39;ы будут ждать</span>
-                <span class="c1">// сообщений из этого канала. Канал имеет ограничение по</span>
-                <span class="c1">// длине. Это аналог семафора, чтобы блокировать главный</span>
-                <span class="c1">// поток, если все runner&#39;ы заняты.</span>
-                <span class="n">tasks</span> <span class="p">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="nb">string</span><span class="p">,</span> <span class="p">*</span><span class="n">jobs</span><span class="p">)</span>
+                <span class="hl slc">// Канал задач: в этот канал мы будем класть имена файлов,</span>
+                <span class="hl slc">// которые надо скомпилировать. Потоки-runner'ы будут ждать</span>
+                <span class="hl slc">// сообщений из этого канала. Канал имеет ограничение по</span>
+                <span class="hl slc">// длине. Это аналог семафора, чтобы блокировать главный</span>
+                <span class="hl slc">// поток, если все runner'ы заняты.</span>
+                tasks <span class="hl opt">:=</span> <span class="hl kwb">make</span><span class="hl opt">(</span><span class="hl kwa">chan</span> <span class="hl kwb">string</span><span class="hl opt">, *</span>jobs<span class="hl opt">)</span>
 
-                <span class="c1">// Канал подтверждения полного завершение потока-runner&#39;а.</span>
-                <span class="c1">// Главный поток будет ждать, пока все runner&#39;ы ответят</span>
-                <span class="c1">// по этому каналу. Тип сообщений тут не важен.</span>
-                <span class="n">done</span> <span class="p">:=</span> <span class="nb">make</span><span class="p">(</span><span class="k">chan</span> <span class="n">bool</span><span class="p">)</span>
+                <span class="hl slc">// Канал подтверждения полного завершение потока-runner'а.</span>
+                <span class="hl slc">// Главный поток будет ждать, пока все runner'ы ответят</span>
+                <span class="hl slc">// по этому каналу. Тип сообщений тут не важен.</span>
+                done <span class="hl opt">:=</span> <span class="hl kwb">make</span><span class="hl opt">(</span><span class="hl kwa">chan</span> <span class="hl kwb">bool</span><span class="hl opt">)</span>
 
-                <span class="c1">// Запускаем runner&#39;ы.</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="p">*</span><span class="n">jobs</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
-                        <span class="k">go</span> <span class="n">runner</span><span class="p">(</span><span class="n">tasks</span><span class="p">,</span> <span class="n">done</span><span class="p">)</span>
-                <span class="p">}</span>
+                <span class="hl slc">// Запускаем runner'ы.</span>
+                <span class="hl kwa">for</span> i <span class="hl opt">:=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt; *</span>jobs<span class="hl opt">;</span> i<span class="hl opt">++ {</span>
+                        <span class="hl kwa">go</span> <span class="hl kwd">runner</span><span class="hl opt">(</span>tasks<span class="hl opt">,</span> done<span class="hl opt">)</span>
+                <span class="hl opt">}</span>
 
-                <span class="c1">// Передаем в канал имена файлов для обработки. При</span>
-                <span class="c1">// достижении максимального размера канала, главный поток</span>
-                <span class="c1">// будет заблокирован.</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">tests</span><span class="p">.</span><span class="n">Len</span><span class="p">();</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
-                        <span class="n">tasks</span> <span class="p">&lt;-</span> <span class="n">tests</span><span class="p">.</span><span class="n">At</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-                <span class="p">}</span>
+                <span class="hl slc">// Передаем в канал имена файлов для обработки. При</span>
+                <span class="hl slc">// достижении максимального размера канала, главный поток</span>
+                <span class="hl slc">// будет заблокирован.</span>
+                <span class="hl kwa">for</span> i <span class="hl opt">:=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> tests<span class="hl opt">.</span><span class="hl kwd">Len</span><span class="hl opt">();</span> i<span class="hl opt">++ {</span>
+                        tasks <span class="hl opt">&lt;-</span> tests<span class="hl opt">.</span><span class="hl kwd">At</span><span class="hl opt">(</span>i<span class="hl opt">)</span>
+                <span class="hl opt">}</span>
 
-                <span class="c1">// Посылаем всем потокам команду завершиться и ждем</span>
-                <span class="c1">// подтверждения о нормальном выходе от каждого потока.</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="p">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="p">*</span><span class="n">jobs</span><span class="p">;</span> <span class="n">i</span><span class="p">++</span> <span class="p">{</span>
-                        <span class="n">tasks</span> <span class="p">&lt;-</span> <span class="s">&quot;&quot;</span>
-                        <span class="p">&lt;-</span> <span class="n">done</span>
-                <span class="p">}</span>
-        <span class="p">}</span>
-<span class="p">}</span>
+                <span class="hl slc">// Посылаем всем потокам команду завершиться и ждем</span>
+                <span class="hl slc">// подтверждения о нормальном выходе от каждого потока.</span>
+                <span class="hl kwa">for</span> i <span class="hl opt">:=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt; *</span>jobs<span class="hl opt">;</span> i<span class="hl opt">++ {</span>
+                        tasks <span class="hl opt">&lt;-</span> <span class="hl str">&quot;&quot;</span>
+                        <span class="hl opt">&lt;-</span> done
+                <span class="hl opt">}</span>
+        <span class="hl opt">}</span>
+<span class="hl opt">}</span>
 
-<span class="c1">// Поток-runner.</span>
-<span class="k">func</span> <span class="n">runner</span><span class="p">(</span><span class="n">tasks</span> <span class="k">chan</span> <span class="nb">string</span><span class="p">,</span> <span class="n">done</span> <span class="k">chan</span> <span class="n">bool</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// Бесконечный цикл.</span>
-        <span class="k">for</span> <span class="p">{</span>
-                <span class="c1">// Ждем сообщения из канала. Обычно, поток заблокирован</span>
-                <span class="c1">// на этом месте.</span>
-                <span class="n">name</span> <span class="p">:=</span> <span class="p">&lt;-</span> <span class="n">tasks</span>
-                <span class="c1">// Если имя пустое, нас просят завершиться.</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="p">==</span> <span class="mi">0</span> <span class="p">{</span>
-                        <span class="k">break</span>
-                <span class="p">}</span>
-                <span class="c1">// Компилируем файл.</span>
-                <span class="n">compile</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-        <span class="p">}</span>
-        <span class="c1">// Посылаем сообщение, что поток завершился.</span>
-        <span class="n">done</span> <span class="p">&lt;-</span> <span class="n">true</span>
-<span class="p">}</span>
+<span class="hl slc">// Поток-runner.</span>
+<span class="hl kwa">func</span> <span class="hl kwd">runner</span><span class="hl opt">(</span>tasks <span class="hl kwa">chan</span> <span class="hl kwb">string</span><span class="hl opt">,</span> done <span class="hl kwa">chan</span> <span class="hl kwb">bool</span><span class="hl opt">) {</span>
+        <span class="hl slc">// Бесконечный цикл.</span>
+        <span class="hl kwa">for</span> <span class="hl opt">{</span>
+                <span class="hl slc">// Ждем сообщения из канала. Обычно, поток заблокирован</span>
+                <span class="hl slc">// на этом месте.</span>
+                name <span class="hl opt">:= &lt;-</span> tasks
+                <span class="hl slc">// Если имя пустое, нас просят завершиться.</span>
+                <span class="hl kwa">if</span> <span class="hl kwb">len</span><span class="hl opt">(</span>name<span class="hl opt">) ==</span> <span class="hl num">0</span> <span class="hl opt">{</span>
+                        <span class="hl kwa">break</span>
+                <span class="hl opt">}</span>
+                <span class="hl slc">// Компилируем файл.</span>
+                <span class="hl kwd">compile</span><span class="hl opt">(</span>name<span class="hl opt">)</span>
+        <span class="hl opt">}</span>
+        <span class="hl slc">// Посылаем сообщение, что поток завершился.</span>
+        done <span class="hl opt">&lt;-</span> <span class="hl kwb">true</span>
+<span class="hl opt">}</span>
 
-<span class="k">func</span> <span class="n">compile</span><span class="p">(</span><span class="n">name</span> <span class="nb">string</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// Вызываем компилятор.</span>
-        <span class="n">c</span><span class="p">,</span> <span class="n">err</span> <span class="p">:=</span> <span class="n">exec</span><span class="p">.</span><span class="n">Run</span><span class="p">(*</span><span class="n">compiler</span><span class="p">,</span> <span class="p">[]</span><span class="nb">string</span><span class="p">{*</span><span class="n">compiler</span><span class="p">,</span> <span class="n">name</span><span class="p">},</span>
-                           <span class="n">os</span><span class="p">.</span><span class="n">Environ</span><span class="p">(),</span> <span class="s">&quot;./data&quot;</span><span class="p">,</span> <span class="n">exec</span><span class="p">.</span><span class="n">DevNull</span><span class="p">,</span>
-                           <span class="n">exec</span><span class="p">.</span><span class="n">PassThrough</span><span class="p">,</span> <span class="n">exec</span><span class="p">.</span><span class="n">PassThrough</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">err</span> <span class="p">!=</span> <span class="n">nil</span> <span class="p">{</span>
-                <span class="n">fmt</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="s">&quot;unable to compile %s (%s)\n&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">err</span><span class="p">.</span><span class="n">String</span><span class="p">())</span>
-                <span class="n">os</span><span class="p">.</span><span class="n">Exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="p">}</span>
-        <span class="n">c</span><span class="p">.</span><span class="n">Wait</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwa">func</span> <span class="hl kwd">compile</span><span class="hl opt">(</span>name <span class="hl kwb">string</span><span class="hl opt">) {</span>
+        <span class="hl slc">// Вызываем компилятор.</span>
+        c<span class="hl opt">,</span> err <span class="hl opt">:=</span> exec<span class="hl opt">.</span><span class="hl kwd">Run</span><span class="hl opt">(*</span>compiler<span class="hl opt">, []</span><span class="hl kwb">string</span><span class="hl opt">{*</span>compiler<span class="hl opt">,</span> name<span class="hl opt">},</span>
+                           os<span class="hl opt">.</span><span class="hl kwd">Environ</span><span class="hl opt">(),</span> <span class="hl str">&quot;./data&quot;</span><span class="hl opt">,</span> exec<span class="hl opt">.</span>DevNull<span class="hl opt">,</span>
+                           exec<span class="hl opt">.</span>PassThrough<span class="hl opt">,</span> exec<span class="hl opt">.</span>PassThrough<span class="hl opt">)</span>
+        <span class="hl kwa">if</span> err <span class="hl opt">!=</span> <span class="hl kwb">nil</span> <span class="hl opt">{</span>
+                fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;unable to compile %s (%s)</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> name<span class="hl opt">,</span> err<span class="hl opt">.</span><span class="hl kwd">String</span><span class="hl opt">())</span>
+                os<span class="hl opt">.</span><span class="hl kwd">Exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>
+        <span class="hl opt">}</span>
+        c<span class="hl opt">.</span><span class="hl kwd">Wait</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">)</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Makefile:</p>
 
-<div class="highlight"><pre><span class="nv">target</span> <span class="o">=</span> tar_extractor
+<pre class="hl">
+target <span class="hl opt">=</span> tar_extractor
 
-all:
-        6g <span class="k">$(</span>target<span class="k">)</span>.go
-        6l -o <span class="k">$(</span>target<span class="k">)</span> <span class="k">$(</span>target<span class="k">)</span>.6
-</pre></div>
+<span class="hl kwa">all</span><span class="hl opt">:</span>
+        <span class="hl num">6</span>g <span class="hl opt">$(</span>target<span class="hl opt">)</span>.go
+        <span class="hl num">6l</span> <span class="hl opt">-</span>o <span class="hl opt">$(</span>target<span class="hl opt">) $(</span>target<span class="hl opt">)</span><span class="hl num">.6</span>
+</pre>
 
 <p>Я погонял это добро под Линуксом 64-бит на восьми процессорном блейде. Во время тестирования я был на машине один, так что результаты разных прогонов можно сравнивать. Файл &ldquo;huge.tar&rdquo; содержит ~15 тысяч исходников и имеет размер один гигабайт.</p>
 

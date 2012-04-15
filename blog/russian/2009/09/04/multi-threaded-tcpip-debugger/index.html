@@ -134,216 +134,217 @@
 
 <p>Теперь, собственно, исходник:</p>
 
-<div class="highlight"><pre><span class="c">#!/usr/bin/python</span>
+<pre class="hl">
+<span class="hl slc">#!/usr/bin/python</span>
 
-<span class="kn">import</span> <span class="nn">socket</span><span class="o">,</span> <span class="nn">string</span><span class="o">,</span> <span class="nn">threading</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">select</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">getopt</span>
-<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">argv</span>
+<span class="hl kwa">import</span> socket<span class="hl opt">,</span> string<span class="hl opt">,</span> threading<span class="hl opt">,</span> os<span class="hl opt">,</span> select<span class="hl opt">,</span> sys<span class="hl opt">,</span> time<span class="hl opt">,</span> getopt
+<span class="hl kwa">from</span> sys <span class="hl kwa">import</span> argv
 
-<span class="k">def</span> <span class="nf">usage</span><span class="p">():</span>
-   <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-   <span class="k">print</span> <span class="s">&quot;usage:&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="s">&quot;-l listen_port -a host -p port [-L file] [-c] [-h?]&quot;</span>
-   <span class="k">print</span> <span class="s">&quot; -a host         - address/host to connect&quot;</span>
-   <span class="k">print</span> <span class="s">&quot; -p port         - remote port to connect&quot;</span>
-   <span class="k">print</span> <span class="s">&quot; -l listen_port  - local port to listen&quot;</span>
-   <span class="k">print</span> <span class="s">&quot; -L file         - log file&quot;</span>
-   <span class="k">print</span> <span class="s">&quot; -c              - supress console output&quot;</span>
-   <span class="k">print</span> <span class="s">&quot; -h or -?        - this help&quot;</span>
-   <span class="k">print</span> <span class="s">&quot; -v              - version&quot;</span>
-   <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="hl kwa">def</span> <span class="hl kwd">usage</span><span class="hl opt">():</span>
+   name <span class="hl opt">=</span> os<span class="hl opt">.</span>path<span class="hl opt">.</span><span class="hl kwd">basename</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">])</span>
+   <span class="hl kwa">print</span> <span class="hl str">&quot;usage:&quot;</span><span class="hl opt">,</span> name<span class="hl opt">,</span> <span class="hl str">&quot;-l listen_port -a host -p port [-L file] [-c] [-h?]&quot;</span>
+   <span class="hl kwa">print</span> <span class="hl str">&quot; -a host         - address/host to connect&quot;</span>
+   <span class="hl kwa">print</span> <span class="hl str">&quot; -p port         - remote port to connect&quot;</span>
+   <span class="hl kwa">print</span> <span class="hl str">&quot; -l listen_port  - local port to listen&quot;</span>
+   <span class="hl kwa">print</span> <span class="hl str">&quot; -L file         - log file&quot;</span>
+   <span class="hl kwa">print</span> <span class="hl str">&quot; -c              - supress console output&quot;</span>
+   <span class="hl kwa">print</span> <span class="hl str">&quot; -h or -?        - this help&quot;</span>
+   <span class="hl kwa">print</span> <span class="hl str">&quot; -v              - version&quot;</span>
+   sys<span class="hl opt">.</span><span class="hl kwd">exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>
 
-<span class="n">PORT</span> <span class="o">=</span> <span class="bp">False</span>
-<span class="n">REMOTE_HOST</span> <span class="o">=</span> <span class="n">REMOTE_PORT</span> <span class="o">=</span> <span class="bp">False</span>
+PORT <span class="hl opt">=</span> <span class="hl kwa">False</span>
+REMOTE_HOST <span class="hl opt">=</span> REMOTE_PORT <span class="hl opt">=</span> <span class="hl kwa">False</span>
 
-<span class="n">CONSOLE</span> <span class="o">=</span> <span class="bp">True</span>
-<span class="n">LOGFILE</span> <span class="o">=</span> <span class="bp">False</span>
+CONSOLE <span class="hl opt">=</span> <span class="hl kwa">True</span>
+LOGFILE <span class="hl opt">=</span> <span class="hl kwa">False</span>
 
-<span class="k">try</span><span class="p">:</span>
-   <span class="n">opts</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">getopt</span><span class="o">.</span><span class="n">getopt</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="s">&quot;l:a:p:L:ch?v&quot;</span><span class="p">)</span>
+<span class="hl kwa">try</span><span class="hl opt">:</span>
+   opts<span class="hl opt">,</span> args <span class="hl opt">=</span> getopt<span class="hl opt">.</span><span class="hl kwd">getopt</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">:],</span> <span class="hl str">&quot;l:a:p:L:ch?v&quot;</span><span class="hl opt">)</span>
 
-   <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">opts</span><span class="p">:</span>
-      <span class="n">opt</span><span class="p">,</span> <span class="n">val</span> <span class="o">=</span> <span class="n">opt</span>
-      <span class="k">if</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-l&quot;</span><span class="p">:</span>
-         <span class="n">PORT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-      <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-a&quot;</span><span class="p">:</span>
-         <span class="n">REMOTE_HOST</span> <span class="o">=</span> <span class="n">val</span>
-      <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-p&quot;</span><span class="p">:</span>
-         <span class="n">REMOTE_PORT</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-      <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-L&quot;</span><span class="p">:</span>
-         <span class="n">LOGFILE</span> <span class="o">=</span> <span class="n">val</span>
-      <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-c&quot;</span><span class="p">:</span>
-         <span class="n">CONSOLE</span> <span class="o">=</span> <span class="bp">False</span>
-      <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-?&quot;</span> <span class="ow">or</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-h&quot;</span><span class="p">:</span>
-         <span class="n">usage</span><span class="p">()</span>
-      <span class="k">elif</span> <span class="n">opt</span> <span class="o">==</span> <span class="s">&quot;-v&quot;</span><span class="p">:</span>
-         <span class="k">print</span> <span class="s">&quot;Python TCP/IP Spy  Version 1.01  Copyright (c) 2009 by Alexander Demin&quot;</span>
-         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-      <span class="k">else</span><span class="p">:</span>
-         <span class="n">usage</span><span class="p">()</span>
+   <span class="hl kwa">for</span> opt <span class="hl kwa">in</span> opts<span class="hl opt">:</span>
+      opt<span class="hl opt">,</span> val <span class="hl opt">=</span> opt
+      <span class="hl kwa">if</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-l&quot;</span><span class="hl opt">:</span>
+         PORT <span class="hl opt">=</span> <span class="hl kwb">int</span><span class="hl opt">(</span>val<span class="hl opt">)</span>
+      <span class="hl kwa">elif</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-a&quot;</span><span class="hl opt">:</span>
+         REMOTE_HOST <span class="hl opt">=</span> val
+      <span class="hl kwa">elif</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-p&quot;</span><span class="hl opt">:</span>
+         REMOTE_PORT <span class="hl opt">=</span> <span class="hl kwb">int</span><span class="hl opt">(</span>val<span class="hl opt">)</span>
+      <span class="hl kwa">elif</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-L&quot;</span><span class="hl opt">:</span>
+         LOGFILE <span class="hl opt">=</span> val
+      <span class="hl kwa">elif</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-c&quot;</span><span class="hl opt">:</span>
+         CONSOLE <span class="hl opt">=</span> <span class="hl kwa">False</span>
+      <span class="hl kwa">elif</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-?&quot;</span> <span class="hl kwa">or</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-h&quot;</span><span class="hl opt">:</span>
+         <span class="hl kwd">usage</span><span class="hl opt">()</span>
+      <span class="hl kwa">elif</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-v&quot;</span><span class="hl opt">:</span>
+         <span class="hl kwa">print</span> <span class="hl str">&quot;Python TCP/IP Spy  Version 1.01  Copyright (c) 2009 by Alexander Demin&quot;</span>
+         sys<span class="hl opt">.</span><span class="hl kwd">exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>
+      <span class="hl kwa">else</span><span class="hl opt">:</span>
+         <span class="hl kwd">usage</span><span class="hl opt">()</span>
 
-   <span class="k">if</span> <span class="ow">not</span> <span class="n">PORT</span><span class="p">:</span>
-      <span class="k">raise</span> <span class="ne">StandardError</span><span class="p">,</span> <span class="s">&quot;listen port is not given&quot;</span>
+   <span class="hl kwa">if not</span> PORT<span class="hl opt">:</span>
+      <span class="hl kwa">raise</span> <span class="hl kwc">StandardError</span><span class="hl opt">,</span> <span class="hl str">&quot;listen port is not given&quot;</span>
 
-   <span class="k">if</span> <span class="ow">not</span> <span class="n">REMOTE_HOST</span><span class="p">:</span>
-      <span class="k">raise</span> <span class="ne">StandardError</span><span class="p">,</span> <span class="s">&quot;remote host is not given&quot;</span>
+   <span class="hl kwa">if not</span> REMOTE_HOST<span class="hl opt">:</span>
+      <span class="hl kwa">raise</span> <span class="hl kwc">StandardError</span><span class="hl opt">,</span> <span class="hl str">&quot;remote host is not given&quot;</span>
 
-   <span class="k">if</span> <span class="ow">not</span> <span class="n">REMOTE_PORT</span><span class="p">:</span>
-      <span class="k">raise</span> <span class="ne">StandardError</span><span class="p">,</span> <span class="s">&quot;remote port is not given&quot;</span>
+   <span class="hl kwa">if not</span> REMOTE_PORT<span class="hl opt">:</span>
+      <span class="hl kwa">raise</span> <span class="hl kwc">StandardError</span><span class="hl opt">,</span> <span class="hl str">&quot;remote port is not given&quot;</span>
 
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-   <span class="k">print</span> <span class="s">&quot;error:&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span>
-   <span class="n">usage</span><span class="p">()</span>
+<span class="hl kwa">except</span> <span class="hl kwc">Exception</span><span class="hl opt">,</span> e<span class="hl opt">:</span>
+   <span class="hl kwa">print</span> <span class="hl str">&quot;error:&quot;</span><span class="hl opt">,</span> e<span class="hl opt">,</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span>
+   <span class="hl kwd">usage</span><span class="hl opt">()</span>
 
-<span class="c"># Remote host</span>
-<span class="n">REMOTE</span> <span class="o">=</span> <span class="p">(</span><span class="n">REMOTE_HOST</span><span class="p">,</span> <span class="n">REMOTE_PORT</span><span class="p">)</span>
+<span class="hl slc"># Remote host</span>
+REMOTE <span class="hl opt">= (</span>REMOTE_HOST<span class="hl opt">,</span> REMOTE_PORT<span class="hl opt">)</span>
 
-<span class="c"># Create logging contitional variable</span>
-<span class="n">log_cond</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span><span class="p">()</span>
+<span class="hl slc"># Create logging contitional variable</span>
+log_cond <span class="hl opt">=</span> threading<span class="hl opt">.</span><span class="hl kwd">Condition</span><span class="hl opt">()</span>
 
-<span class="n">queue</span> <span class="o">=</span> <span class="p">[]</span>
+queue <span class="hl opt">= []</span>
 
-<span class="k">def</span> <span class="nf">logger</span><span class="p">():</span>
-   <span class="k">global</span> <span class="n">queue</span>
-   <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
-      <span class="n">log_cond</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+<span class="hl kwa">def</span> <span class="hl kwd">logger</span><span class="hl opt">():</span>
+   <span class="hl kwa">global</span> queue
+   <span class="hl kwa">while</span> <span class="hl num">1</span><span class="hl opt">:</span>
+      log_cond<span class="hl opt">.</span><span class="hl kwd">acquire</span><span class="hl opt">()</span>
 
-      <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">queue</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-         <span class="n">log_cond</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+      <span class="hl kwa">while</span> <span class="hl kwb">len</span><span class="hl opt">(</span>queue<span class="hl opt">) ==</span> <span class="hl num">0</span><span class="hl opt">:</span>
+         log_cond<span class="hl opt">.</span><span class="hl kwd">wait</span><span class="hl opt">()</span>
 
-      <span class="k">if</span> <span class="n">LOGFILE</span><span class="p">:</span>
-         <span class="k">try</span><span class="p">:</span>
-            <span class="n">logfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">LOGFILE</span><span class="p">,</span> <span class="s">&quot;a+&quot;</span><span class="p">)</span>
-            <span class="n">logfile</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">+</span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">queue</span><span class="p">))</span>
-            <span class="n">logfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-         <span class="k">except</span><span class="p">:</span> <span class="k">pass</span>
+      <span class="hl kwa">if</span> LOGFILE<span class="hl opt">:</span>
+         <span class="hl kwa">try</span><span class="hl opt">:</span>
+            logfile <span class="hl opt">=</span> <span class="hl kwb">open</span><span class="hl opt">(</span>LOGFILE<span class="hl opt">,</span> <span class="hl str">&quot;a+&quot;</span><span class="hl opt">)</span>
+            logfile<span class="hl opt">.</span><span class="hl kwd">writelines</span><span class="hl opt">(</span><span class="hl kwb">map</span><span class="hl opt">(</span><span class="hl kwa">lambda</span> x<span class="hl opt">:</span> x<span class="hl opt">+</span><span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> queue<span class="hl opt">))</span>
+            logfile<span class="hl opt">.</span><span class="hl kwd">close</span><span class="hl opt">()</span>
+         <span class="hl kwa">except</span><span class="hl opt">:</span> <span class="hl kwa">pass</span>
      
-      <span class="k">if</span> <span class="n">CONSOLE</span><span class="p">:</span>
-         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">queue</span><span class="p">:</span>
-            <span class="k">print</span> <span class="n">line</span>
+      <span class="hl kwa">if</span> CONSOLE<span class="hl opt">:</span>
+         <span class="hl kwa">for</span> line <span class="hl kwa">in</span> queue<span class="hl opt">:</span>
+            <span class="hl kwa">print</span> line
       
-      <span class="n">queue</span> <span class="o">=</span> <span class="p">[]</span>
-      <span class="n">log_cond</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+      queue <span class="hl opt">= []</span>
+      log_cond<span class="hl opt">.</span><span class="hl kwd">release</span><span class="hl opt">()</span>
 
-<span class="c"># Thread safe logger</span>
-<span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-   <span class="k">if</span> <span class="n">CONSOLE</span> <span class="ow">or</span> <span class="n">LOGFILE</span><span class="p">:</span>
-      <span class="n">log_cond</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
-      <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%04d</span><span class="s">: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
-      <span class="n">log_cond</span><span class="o">.</span><span class="n">notify</span><span class="p">()</span>
-      <span class="n">log_cond</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+<span class="hl slc"># Thread safe logger</span>
+<span class="hl kwa">def</span> <span class="hl kwd">log</span><span class="hl opt">(</span>thread<span class="hl opt">,</span> msg<span class="hl opt">):</span>
+   <span class="hl kwa">if</span> CONSOLE <span class="hl kwa">or</span> LOGFILE<span class="hl opt">:</span>
+      log_cond<span class="hl opt">.</span><span class="hl kwd">acquire</span><span class="hl opt">()</span>
+      queue<span class="hl opt">.</span><span class="hl kwd">append</span><span class="hl opt">(</span><span class="hl str">&quot;%04d: %s&quot;</span> <span class="hl opt">% (</span>thread<span class="hl opt">,</span> msg<span class="hl opt">))</span>
+      log_cond<span class="hl opt">.</span><span class="hl kwd">notify</span><span class="hl opt">()</span>
+      log_cond<span class="hl opt">.</span><span class="hl kwd">release</span><span class="hl opt">()</span>
 
-<span class="k">def</span> <span class="nf">printable</span><span class="p">(</span><span class="n">ch</span><span class="p">):</span>
-   <span class="k">return</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ch</span> <span class="o">&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="ow">and</span> <span class="s">&#39;.&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ch</span> <span class="o">&gt;=</span> <span class="mi">32</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">chr</span><span class="p">(</span><span class="n">ch</span><span class="p">))</span>
+<span class="hl kwa">def</span> <span class="hl kwd">printable</span><span class="hl opt">(</span>ch<span class="hl opt">):</span>
+   <span class="hl kwa">return</span> <span class="hl opt">(</span><span class="hl kwb">int</span><span class="hl opt">(</span>ch <span class="hl opt">&lt;</span> <span class="hl num">32</span><span class="hl opt">)</span> <span class="hl kwa">and</span> <span class="hl str">'.'</span><span class="hl opt">)</span> <span class="hl kwa">or</span> <span class="hl opt">(</span><span class="hl kwb">int</span><span class="hl opt">(</span>ch <span class="hl opt">&gt;=</span> <span class="hl num">32</span><span class="hl opt">)</span> <span class="hl kwa">and</span> <span class="hl kwb">chr</span><span class="hl opt">(</span>ch<span class="hl opt">))</span>
 
-<span class="c"># Pre-build a printable characters map</span>
-<span class="n">printable_map</span> <span class="o">=</span> <span class="p">[</span> <span class="n">printable</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span> <span class="p">]</span>
+<span class="hl slc"># Pre-build a printable characters map</span>
+printable_map <span class="hl opt">= [</span> <span class="hl kwd">printable</span><span class="hl opt">(</span>x<span class="hl opt">)</span> <span class="hl kwa">for</span> x <span class="hl kwa">in</span> <span class="hl kwb">range</span><span class="hl opt">(</span><span class="hl num">256</span><span class="hl opt">) ]</span>
 
-<span class="c"># Thread safe dumper</span>
-<span class="k">def</span> <span class="nf">log_dump</span><span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+<span class="hl slc"># Thread safe dumper</span>
+<span class="hl kwa">def</span> <span class="hl kwd">log_dump</span><span class="hl opt">(</span>thread<span class="hl opt">,</span> msg<span class="hl opt">):</span>
 
-   <span class="k">if</span> <span class="n">CONSOLE</span> <span class="ow">or</span> <span class="n">LOGFILE</span><span class="p">:</span>
-      <span class="n">log_cond</span><span class="o">.</span><span class="n">acquire</span><span class="p">()</span>
+   <span class="hl kwa">if</span> CONSOLE <span class="hl kwa">or</span> LOGFILE<span class="hl opt">:</span>
+      log_cond<span class="hl opt">.</span><span class="hl kwd">acquire</span><span class="hl opt">()</span>
 
-      <span class="n">width</span> <span class="o">=</span> <span class="mi">16</span>
+      width <span class="hl opt">=</span> <span class="hl num">16</span>
 
-      <span class="n">header</span> <span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="s">&quot;</span><span class="si">%02X</span><span class="s">-&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">width</span><span class="p">),</span> <span class="s">&quot;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-      <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%04d</span><span class="s">: ----: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="n">header</span><span class="p">))</span>
-      <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%04d</span><span class="s">:       </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="s">&#39;-&#39;</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="mi">3</span><span class="p">))</span>
+      header <span class="hl opt">=</span> <span class="hl kwb">reduce</span><span class="hl opt">(</span><span class="hl kwa">lambda</span> x<span class="hl opt">,</span> y<span class="hl opt">:</span> x <span class="hl opt">+ (</span><span class="hl str">&quot;%02X-&quot;</span> <span class="hl opt">%</span> y<span class="hl opt">),</span> <span class="hl kwb">range</span><span class="hl opt">(</span>width<span class="hl opt">),</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">)[</span><span class="hl num">0</span><span class="hl opt">:-</span><span class="hl num">1</span><span class="hl opt">]</span>
+      queue<span class="hl opt">.</span><span class="hl kwd">append</span><span class="hl opt">(</span><span class="hl str">&quot;%04d: ----: %s&quot;</span> <span class="hl opt">% (</span>thread<span class="hl opt">,</span> header<span class="hl opt">))</span>
+      queue<span class="hl opt">.</span><span class="hl kwd">append</span><span class="hl opt">(</span><span class="hl str">&quot;%04d:       %s&quot;</span> <span class="hl opt">% (</span>thread<span class="hl opt">,</span> <span class="hl str">'-'</span> <span class="hl opt">*</span> width <span class="hl opt">*</span> <span class="hl num">3</span><span class="hl opt">))</span>
 
-      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-      <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
-         <span class="n">line</span> <span class="o">=</span> <span class="n">msg</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">width</span><span class="p">]</span>
-         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">break</span>
-         <span class="n">dump</span> <span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="s">&quot;</span><span class="si">%02X</span><span class="s"> &quot;</span> <span class="o">%</span> <span class="nb">ord</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span> <span class="n">line</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-         <span class="n">char</span> <span class="o">=</span> <span class="nb">reduce</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="n">printable_map</span><span class="p">[</span><span class="nb">ord</span><span class="p">(</span><span class="n">y</span><span class="p">)],</span> <span class="n">line</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">)</span>
-         <span class="n">queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%04X</span><span class="s">: </span><span class="si">%04X</span><span class="s">: </span><span class="si">%-*s</span><span class="s">| </span><span class="si">%-*s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">width</span><span class="o">*</span><span class="mi">3</span><span class="p">,</span> <span class="n">dump</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">char</span><span class="p">))</span>
-         <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">width</span>
+      i <span class="hl opt">=</span> <span class="hl num">0</span>
+      <span class="hl kwa">while</span> <span class="hl num">1</span><span class="hl opt">:</span>
+         line <span class="hl opt">=</span> msg<span class="hl opt">[</span>i<span class="hl opt">:</span>i<span class="hl opt">+</span>width<span class="hl opt">]</span>
+         <span class="hl kwa">if</span> <span class="hl kwb">len</span><span class="hl opt">(</span>line<span class="hl opt">) ==</span> <span class="hl num">0</span><span class="hl opt">:</span> <span class="hl kwa">break</span>
+         dump <span class="hl opt">=</span> <span class="hl kwb">reduce</span><span class="hl opt">(</span><span class="hl kwa">lambda</span> x<span class="hl opt">,</span> y<span class="hl opt">:</span> x <span class="hl opt">+ (</span><span class="hl str">&quot;%02X &quot;</span> <span class="hl opt">%</span> <span class="hl kwb">ord</span><span class="hl opt">(</span>y<span class="hl opt">)),</span> line<span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">)</span>
+         char <span class="hl opt">=</span> <span class="hl kwb">reduce</span><span class="hl opt">(</span><span class="hl kwa">lambda</span> x<span class="hl opt">,</span> y<span class="hl opt">:</span> x <span class="hl opt">+</span> printable_map<span class="hl opt">[</span><span class="hl kwb">ord</span><span class="hl opt">(</span>y<span class="hl opt">)],</span> line<span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">)</span>
+         queue<span class="hl opt">.</span><span class="hl kwd">append</span><span class="hl opt">(</span><span class="hl str">&quot;%04X: %04X: %-*s| %-*s&quot;</span> <span class="hl opt">% (</span>thread<span class="hl opt">,</span> i<span class="hl opt">,</span> width<span class="hl opt">*</span><span class="hl num">3</span><span class="hl opt">,</span> dump<span class="hl opt">,</span> width<span class="hl opt">,</span> char<span class="hl opt">))</span>
+         i <span class="hl opt">=</span> i <span class="hl opt">+</span> width
 
-      <span class="n">log_cond</span><span class="o">.</span><span class="n">notify</span><span class="p">()</span>
-      <span class="n">log_cond</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+      log_cond<span class="hl opt">.</span><span class="hl kwd">notify</span><span class="hl opt">()</span>
+      log_cond<span class="hl opt">.</span><span class="hl kwd">release</span><span class="hl opt">()</span>
 
-<span class="c"># Spy thread</span>
-<span class="k">def</span> <span class="nf">spy_thread</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">):</span>
-   <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Thread started&quot;</span><span class="p">)</span>
+<span class="hl slc"># Spy thread</span>
+<span class="hl kwa">def</span> <span class="hl kwd">spy_thread</span><span class="hl opt">(</span>local<span class="hl opt">,</span> addr<span class="hl opt">,</span> thread_id<span class="hl opt">):</span>
+   <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Thread started&quot;</span><span class="hl opt">)</span>
 
-   <span class="k">try</span><span class="p">:</span>
-      <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Connecting to </span><span class="si">%s</span><span class="s">...&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">REMOTE</span><span class="p">))</span>
-      <span class="n">remote</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
-      <span class="n">remote</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">REMOTE</span><span class="p">)</span>
-   <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-      <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Unable connect to </span><span class="si">%s</span><span class="s"> -&gt; </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">REMOTE</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
-      <span class="n">local</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-      <span class="k">return</span>
+   <span class="hl kwa">try</span><span class="hl opt">:</span>
+      <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Connecting to %s...&quot;</span> <span class="hl opt">%</span> <span class="hl kwb">str</span><span class="hl opt">(</span>REMOTE<span class="hl opt">))</span>
+      remote <span class="hl opt">=</span> socket<span class="hl opt">.</span><span class="hl kwd">socket</span><span class="hl opt">(</span>socket<span class="hl opt">.</span>AF_INET<span class="hl opt">,</span> socket<span class="hl opt">.</span>SOCK_STREAM<span class="hl opt">)</span>
+      remote<span class="hl opt">.</span><span class="hl kwd">connect</span><span class="hl opt">(</span>REMOTE<span class="hl opt">)</span>
+   <span class="hl kwa">except</span> <span class="hl kwc">Exception</span><span class="hl opt">,</span> e<span class="hl opt">:</span>
+      <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Unable connect to %s -&gt; %s&quot;</span> <span class="hl opt">% (</span>REMOTE<span class="hl opt">,</span> e<span class="hl opt">))</span>
+      local<span class="hl opt">.</span><span class="hl kwd">close</span><span class="hl opt">()</span>
+      <span class="hl kwa">return</span>
 
-   <span class="n">LOCAL</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span>
+   LOCAL <span class="hl opt">=</span> <span class="hl kwb">str</span><span class="hl opt">(</span>addr<span class="hl opt">)</span>
 
-   <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Remote host: &quot;</span> <span class="o">+</span> <span class="n">LOCAL</span><span class="p">)</span>
+   <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Remote host: &quot;</span> <span class="hl opt">+</span> LOCAL<span class="hl opt">)</span>
 
-   <span class="k">try</span><span class="p">:</span>
-      <span class="n">running</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-      <span class="k">while</span> <span class="n">running</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> 
+   <span class="hl kwa">try</span><span class="hl opt">:</span>
+      running <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+      <span class="hl kwa">while</span> running <span class="hl opt">==</span> <span class="hl num">1</span><span class="hl opt">:</span> 
 
-         <span class="n">rd</span><span class="p">,</span> <span class="n">wr</span><span class="p">,</span> <span class="n">er</span> <span class="o">=</span> <span class="n">select</span><span class="o">.</span><span class="n">select</span><span class="p">([</span><span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">],</span> <span class="p">[],</span> <span class="p">[</span><span class="n">local</span><span class="p">,</span> <span class="n">remote</span><span class="p">],</span> <span class="mi">3600</span><span class="p">)</span>
+         rd<span class="hl opt">,</span> wr<span class="hl opt">,</span> er <span class="hl opt">=</span> select<span class="hl opt">.</span><span class="hl kwd">select</span><span class="hl opt">([</span>local<span class="hl opt">,</span> remote<span class="hl opt">], [], [</span>local<span class="hl opt">,</span> remote<span class="hl opt">],</span> <span class="hl num">3600</span><span class="hl opt">)</span>
 
-         <span class="k">for</span> <span class="n">sock</span> <span class="ow">in</span> <span class="n">er</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">sock</span> <span class="o">==</span> <span class="n">local</span><span class="p">:</span>
-               <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Connection error from &quot;</span> <span class="o">+</span> <span class="n">LOCAL</span><span class="p">)</span>
-               <span class="n">running</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">if</span> <span class="n">sock</span> <span class="o">==</span> <span class="n">remote</span><span class="p">:</span>
-               <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Connection error from &quot;</span> <span class="o">+</span> <span class="n">REMOTE</span><span class="p">)</span>
-               <span class="n">running</span> <span class="o">=</span> <span class="mi">0</span>
+         <span class="hl kwa">for</span> sock <span class="hl kwa">in</span> er<span class="hl opt">:</span>
+            <span class="hl kwa">if</span> sock <span class="hl opt">==</span> local<span class="hl opt">:</span>
+               <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Connection error from &quot;</span> <span class="hl opt">+</span> LOCAL<span class="hl opt">)</span>
+               running <span class="hl opt">=</span> <span class="hl num">0</span>
+            <span class="hl kwa">if</span> sock <span class="hl opt">==</span> remote<span class="hl opt">:</span>
+               <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Connection error from &quot;</span> <span class="hl opt">+</span> REMOTE<span class="hl opt">)</span>
+               running <span class="hl opt">=</span> <span class="hl num">0</span>
 
-         <span class="k">for</span> <span class="n">sock</span> <span class="ow">in</span> <span class="n">rd</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">sock</span> <span class="o">==</span> <span class="n">local</span><span class="p">:</span>
-               <span class="n">val</span> <span class="o">=</span> <span class="n">local</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
-               <span class="k">if</span> <span class="n">val</span><span class="p">:</span> 
-                  <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Recevied from </span><span class="si">%s</span><span class="s"> (</span><span class="si">%d</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">LOCAL</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
-                  <span class="n">log_dump</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
-                  <span class="n">remote</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-                  <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Sent to </span><span class="si">%s</span><span class="s"> (</span><span class="si">%d</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">REMOTE</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
-               <span class="k">else</span><span class="p">:</span>
-                  <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Connection reset by </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">LOCAL</span><span class="p">)</span>
-                  <span class="n">running</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+         <span class="hl kwa">for</span> sock <span class="hl kwa">in</span> rd<span class="hl opt">:</span>
+            <span class="hl kwa">if</span> sock <span class="hl opt">==</span> local<span class="hl opt">:</span>
+               val <span class="hl opt">=</span> local<span class="hl opt">.</span><span class="hl kwd">recv</span><span class="hl opt">(</span><span class="hl num">1024</span><span class="hl opt">)</span>
+               <span class="hl kwa">if</span> val<span class="hl opt">:</span> 
+                  <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Recevied from %s (%d)&quot;</span> <span class="hl opt">% (</span>LOCAL<span class="hl opt">,</span> <span class="hl kwb">len</span><span class="hl opt">(</span>val<span class="hl opt">)))</span>
+                  <span class="hl kwd">log_dump</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> val<span class="hl opt">)</span>
+                  remote<span class="hl opt">.</span><span class="hl kwd">send</span><span class="hl opt">(</span>val<span class="hl opt">)</span>
+                  <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Sent to %s (%d)&quot;</span> <span class="hl opt">% (</span>REMOTE<span class="hl opt">,</span> <span class="hl kwb">len</span><span class="hl opt">(</span>val<span class="hl opt">)))</span>
+               <span class="hl kwa">else</span><span class="hl opt">:</span>
+                  <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Connection reset by %s&quot;</span> <span class="hl opt">%</span> LOCAL<span class="hl opt">)</span>
+                  running <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
 
-            <span class="k">if</span> <span class="n">sock</span> <span class="o">==</span> <span class="n">remote</span><span class="p">:</span>
-               <span class="n">val</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
-               <span class="k">if</span> <span class="n">val</span><span class="p">:</span> 
-                  <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Recevied from </span><span class="si">%s</span><span class="s"> (</span><span class="si">%d</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">REMOTE</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
-                  <span class="n">log_dump</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
-                  <span class="n">local</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-                  <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Sent to </span><span class="si">%s</span><span class="s"> (</span><span class="si">%d</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">LOCAL</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)))</span>
-               <span class="k">else</span><span class="p">:</span>
-                  <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Connection reset by </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">REMOTE</span><span class="p">))</span>
-                  <span class="n">running</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="hl kwa">if</span> sock <span class="hl opt">==</span> remote<span class="hl opt">:</span>
+               val <span class="hl opt">=</span> remote<span class="hl opt">.</span><span class="hl kwd">recv</span><span class="hl opt">(</span><span class="hl num">1024</span><span class="hl opt">)</span>
+               <span class="hl kwa">if</span> val<span class="hl opt">:</span> 
+                  <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Recevied from %s (%d)&quot;</span> <span class="hl opt">% (</span>REMOTE<span class="hl opt">,</span> <span class="hl kwb">len</span><span class="hl opt">(</span>val<span class="hl opt">)))</span>
+                  <span class="hl kwd">log_dump</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> val<span class="hl opt">)</span>
+                  local<span class="hl opt">.</span><span class="hl kwd">send</span><span class="hl opt">(</span>val<span class="hl opt">)</span>
+                  <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Sent to %s (%d)&quot;</span> <span class="hl opt">% (</span>LOCAL<span class="hl opt">,</span> <span class="hl kwb">len</span><span class="hl opt">(</span>val<span class="hl opt">)))</span>
+               <span class="hl kwa">else</span><span class="hl opt">:</span>
+                  <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Connection reset by %s&quot;</span> <span class="hl opt">%</span> <span class="hl kwb">str</span><span class="hl opt">(</span>REMOTE<span class="hl opt">))</span>
+                  running <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
 
-   <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-      <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="p">(</span><span class="s">&quot;Connection terminated: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
+   <span class="hl kwa">except</span> <span class="hl kwc">Exception</span><span class="hl opt">,</span> e<span class="hl opt">:</span>
+      <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">, (</span><span class="hl str">&quot;Connection terminated: &quot;</span> <span class="hl opt">+</span> <span class="hl kwb">str</span><span class="hl opt">(</span>e<span class="hl opt">)))</span>
 
-   <span class="n">remote</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-   <span class="n">local</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+   remote<span class="hl opt">.</span><span class="hl kwd">close</span><span class="hl opt">()</span>
+   local<span class="hl opt">.</span><span class="hl kwd">close</span><span class="hl opt">()</span>
 
-   <span class="n">log</span><span class="p">(</span><span class="n">thread_id</span><span class="p">,</span> <span class="s">&quot;Connection closed&quot;</span><span class="p">)</span>
+   <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Connection closed&quot;</span><span class="hl opt">)</span>
 
-<span class="k">try</span><span class="p">:</span>
-   <span class="c"># Server socket</span>
-   <span class="n">srv</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span> 
-   <span class="n">srv</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="s">&quot;&quot;</span><span class="p">,</span> <span class="n">PORT</span><span class="p">))</span> 
-<span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-   <span class="k">print</span> <span class="s">&quot;error&quot;</span><span class="p">,</span> <span class="n">e</span>
-   <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="hl kwa">try</span><span class="hl opt">:</span>
+   <span class="hl slc"># Server socket</span>
+   srv <span class="hl opt">=</span> socket<span class="hl opt">.</span><span class="hl kwd">socket</span><span class="hl opt">(</span>socket<span class="hl opt">.</span>AF_INET<span class="hl opt">,</span> socket<span class="hl opt">.</span>SOCK_STREAM<span class="hl opt">)</span> 
+   srv<span class="hl opt">.</span><span class="hl kwd">bind</span><span class="hl opt">((</span><span class="hl str">&quot;&quot;</span><span class="hl opt">,</span> PORT<span class="hl opt">))</span> 
+<span class="hl kwa">except</span> <span class="hl kwc">Exception</span><span class="hl opt">,</span> e<span class="hl opt">:</span>
+   <span class="hl kwa">print</span> <span class="hl str">&quot;error&quot;</span><span class="hl opt">,</span> e
+   sys<span class="hl opt">.</span><span class="hl kwd">exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>
 
-<span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
+counter <span class="hl opt">=</span> <span class="hl num">1</span>
 
-<span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[])</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+threading<span class="hl opt">.</span><span class="hl kwd">Thread</span><span class="hl opt">(</span>target<span class="hl opt">=</span>logger<span class="hl opt">,</span> args<span class="hl opt">=[]).</span><span class="hl kwd">start</span><span class="hl opt">()</span>
 
-<span class="n">log</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">&quot;Listen at port </span><span class="si">%d</span><span class="s">, remote host </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">PORT</span><span class="p">,</span> <span class="n">REMOTE</span><span class="p">))</span>
+<span class="hl kwd">log</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">,</span> <span class="hl str">&quot;Listen at port %d, remote host %s&quot;</span> <span class="hl opt">% (</span>PORT<span class="hl opt">,</span> REMOTE<span class="hl opt">))</span>
  
-<span class="k">while</span> <span class="mi">1</span><span class="p">:</span> 
-   <span class="n">srv</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>              
-   <span class="n">local</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">srv</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
-   <span class="n">log</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s">&quot;Connection accepted from </span><span class="si">%s</span><span class="s">, thread </span><span class="si">%d</span><span class="s"> launched&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">addr</span><span class="p">,</span> <span class="n">counter</span><span class="p">))</span>
-   <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">spy_thread</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">[</span><span class="n">local</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="n">counter</span><span class="p">])</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-   <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span> <span class="mi">1</span>
-</pre></div>
+<span class="hl kwa">while</span> <span class="hl num">1</span><span class="hl opt">:</span> 
+   srv<span class="hl opt">.</span><span class="hl kwd">listen</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>              
+   local<span class="hl opt">,</span> addr <span class="hl opt">=</span> srv<span class="hl opt">.</span><span class="hl kwd">accept</span><span class="hl opt">()</span>
+   <span class="hl kwd">log</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">,</span> <span class="hl str">&quot;Connection accepted from %s, thread %d launched&quot;</span> <span class="hl opt">% (</span>addr<span class="hl opt">,</span> counter<span class="hl opt">))</span>
+   threading<span class="hl opt">.</span><span class="hl kwd">Thread</span><span class="hl opt">(</span>target<span class="hl opt">=</span>spy_thread<span class="hl opt">,</span> args<span class="hl opt">=[</span>local<span class="hl opt">,</span> addr<span class="hl opt">,</span> counter<span class="hl opt">]).</span><span class="hl kwd">start</span><span class="hl opt">()</span>
+   counter <span class="hl opt">=</span> counter <span class="hl opt">+</span> <span class="hl num">1</span>
+</pre>
 
 <p>Лично я постоянно использую этот скрипт на Windows, Linux и Solaris.</p>
 

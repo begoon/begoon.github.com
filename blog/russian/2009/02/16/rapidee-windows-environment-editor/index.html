@@ -49,17 +49,18 @@
 
 <p>Файл <code>splitpath.cmd</code>:</p>
 
-<div class="highlight"><pre><span class="p">@</span><span class="k">echo</span> <span class="k">off</span> 
-<span class="k">set</span> <span class="nv">line</span><span class="o">=</span><span class="nv">%path%</span>
-<span class="k">setlocal</span> 
-<span class="nl">:parse_line</span>
-<span class="k">for</span> <span class="n">/F</span> <span class="s2">&quot;delims=; tokens=1,*&quot;</span> <span class="nv">%%a</span> in (<span class="s2">&quot;%line%&quot;</span>) <span class="k">do</span> (
-   <span class="k">echo</span> <span class="nv">%%a</span>
-   <span class="k">set</span> <span class="nv">line</span><span class="o">=</span><span class="nv">%%b</span>
-)
-<span class="k">if</span> <span class="s2">&quot;%line%&quot;</span> <span class="o">NEQ</span> <span class="s2">&quot;&quot;</span> <span class="k">goto</span> <span class="nl">parse_line</span>
-<span class="k">endlocal</span>
-</pre></div>
+<pre class="hl">
+&#64;<span class="hl kwb">echo</span> off 
+<span class="hl kwb">set</span> line<span class="hl opt">=</span><span class="hl kwc">%path%</span>
+<span class="hl kwb">setlocal</span> 
+<span class="hl opt">:</span>parse_line
+<span class="hl kwa">for</span> <span class="hl opt">/</span>F <span class="hl str">&quot;delims=; tokens=1,*&quot;</span> <span class="hl kwc">%%a</span> in <span class="hl opt">(</span><span class="hl str">&quot;%line%&quot;) do (</span>
+<span class="hl str">   echo %%a</span>
+<span class="hl str">   set line=%%b</span>
+<span class="hl str">)</span>
+<span class="hl str">if &quot;</span><span class="hl kwc">%line%&quot;</span> NEQ <span class="hl str">&quot;&quot;</span> <span class="hl kwa">goto</span> parse_line
+<span class="hl kwb">endlocal</span>
+</pre>
 
 <p>Примерный результат его работы выглядит так:</p>
 

@@ -43,13 +43,15 @@
 <div id="post">
   <p>Универсальный класс <a href="/blog/russian/2009/01/29/milliseconds-timer-for-windows-and-unix/">Миллисекундный таймер для Windows и UNIX</a>, дающий возможность работать с миллисекундными интервалами времени в Windows и UNIX получил новую функцию:</p>
 
-<div class="highlight"><pre><span class="k">static</span> <span class="kt">void</span> <span class="n">sleepMs</span><span class="p">(</span><span class="kt">int</span> <span class="n">ms</span><span class="p">);</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">static void</span> <span class="hl kwd">sleepMs</span><span class="hl opt">(</span><span class="hl kwb">int</span> ms<span class="hl opt">);</span>
+</pre>
 
 <p>Эта функция реализует задержку в указанное число миллисекунд. Функция является статической, то есть ей можно пользоваться без создания экземпляра касса:</p>
 
-<div class="highlight"><pre><span class="n">ext</span><span class="o">::</span><span class="n">PreciseTimer</span><span class="o">::</span><span class="n">sleepMs</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
-</pre></div>
+<pre class="hl">
+ext<span class="hl opt">::</span>PreciseTimer<span class="hl opt">::</span><span class="hl kwd">sleepMs</span><span class="hl opt">(</span><span class="hl num">100</span><span class="hl opt">);</span>
+</pre>
 
 <p>Необходимо учитывать, что в UNIX системах данная функция может быть прервана пришедшим системным сигналом, например, сигналом о полученных новых данных в буфер сокета. В этом случае задержка может быть меньне, чем ожидается.</p>
 

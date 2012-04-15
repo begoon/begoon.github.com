@@ -43,10 +43,11 @@
 <div id="post">
   <p>С++ имеет весьма разнообразный синтаксис для конструирования объектов. Надо признать, что порой этот синтаксис весьма неочевиден, и многие вещи надо просто знать, нежели догадаться, как они работают. Например:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">T</span> <span class="p">{...};</span>
-<span class="p">...</span>
-<span class="n">T</span> <span class="n">t</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> T <span class="hl opt">{...};</span>
+<span class="hl opt">...</span>
+T t <span class="hl opt">=</span> <span class="hl kwd">T</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">);</span>
+</pre>
 
 <p>По очевидной логике вещей данный код должен при создании экземпляра класса <code>T</code> вызвать конструктор по умолчанию (без аргументов), затем создать временный объект с помощью конструктора с одним аргументом и скопировать его в исходный объект перегруженным оператором копирования (или может конструктором копирования? ведь слева и справа объекты явно типа <code>T</code>&hellip;).</p>
 
@@ -56,32 +57,33 @@
 
 <p>Итак, файл <code>ctor.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
 
-<span class="k">class</span> <span class="nc">T</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="n">T</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T()&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
-  <span class="n">T</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T(int)&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
-  <span class="n">T</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T(int, int)&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
-  <span class="n">T</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T(const T&amp;)&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
-  <span class="kt">void</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span><span class="p">)</span> 
-    <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;operator=(const T&amp;)&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">};</span>
+<span class="hl kwc">class</span> T <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwd">T</span><span class="hl opt">() {</span> std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T()&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">; }</span>
+  <span class="hl kwd">T</span><span class="hl opt">(</span><span class="hl kwb">int</span><span class="hl opt">) {</span> std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T(int)&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">; }</span>
+  <span class="hl kwd">T</span><span class="hl opt">(</span><span class="hl kwb">int</span><span class="hl opt">,</span> <span class="hl kwb">int</span><span class="hl opt">) {</span> std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T(int, int)&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">; }</span>
+  <span class="hl kwd">T</span><span class="hl opt">(</span><span class="hl kwb">const</span> T<span class="hl opt">&amp;) {</span> std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T(const T&amp;)&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">; }</span>
+  <span class="hl kwb">void</span> <span class="hl kwc">operator</span><span class="hl opt">=(</span><span class="hl kwb">const</span> T<span class="hl opt">&amp;)</span> 
+    <span class="hl opt">{</span> std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;operator=(const T&amp;)&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">; }</span>
+<span class="hl opt">};</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t1           : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t1</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t2(1)        : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t2</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t3 = 1       : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t3</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t4 = T(1)    : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t4</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t5(1, 2)     : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t5</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t6 = T(1, 2) : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t6</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t7; t7 = 1   : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t7</span><span class="p">;</span> <span class="n">t7</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t8; t8 = T(1): &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t8</span><span class="p">;</span> <span class="n">t8</span> <span class="o">=</span> <span class="n">T</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t9(t8)       : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t9</span><span class="p">(</span><span class="n">t8</span><span class="p">);</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T t10 = &#39;a&#39;    : &quot;</span><span class="p">;</span> <span class="n">T</span> <span class="n">t10</span> <span class="o">=</span> <span class="sc">&#39;a&#39;</span><span class="p">;</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T t1           : &quot;</span><span class="hl opt">;</span> T t1<span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T t2(1)        : &quot;</span><span class="hl opt">;</span> T <span class="hl kwd">t2</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">);</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T t3 = 1       : &quot;</span><span class="hl opt">;</span> T t3 <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T t4 = T(1)    : &quot;</span><span class="hl opt">;</span> T t4 <span class="hl opt">=</span> <span class="hl kwd">T</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">);</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T t5(1, 2)     : &quot;</span><span class="hl opt">;</span> T <span class="hl kwd">t5</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">);</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T t6 = T(1, 2) : &quot;</span><span class="hl opt">;</span> T t6 <span class="hl opt">=</span> <span class="hl kwd">T</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">);</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T t7; t7 = 1   : &quot;</span><span class="hl opt">;</span> T t7<span class="hl opt">;</span> t7 <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T t8; t8 = T(1): &quot;</span><span class="hl opt">;</span> T t8<span class="hl opt">;</span> t8 <span class="hl opt">=</span> <span class="hl kwd">T</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">);</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T t9(t8)       : &quot;</span><span class="hl opt">;</span> T <span class="hl kwd">t9</span><span class="hl opt">(</span>t8<span class="hl opt">);</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T t10 = 'a'    : &quot;</span><span class="hl opt">;</span> T t10 <span class="hl opt">=</span> <span class="hl str">'a'</span><span class="hl opt">;</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Компилируем, например в Visual Studio:</p>
 
@@ -110,13 +112,14 @@ T t10 = 'a'    : T(int)
 
 <p>Также интересно, как был создана переменная <code>t10</code>. Видно, что для символьной константы компилятор &ldquo;подобрал&rdquo; наиболее подходящий конструктор. Неявным образом был вызвал конструктор от <code>int</code>. Если подобное поведение не входит в ваши планы, и вам совсем не нужно, чтобы конструктор от <code>int</code> вызывался, когда идет попытка создать объект от типа, который может быть неявно преобразован в <code>int</code>, например <code>char</code>, то можно воспользоваться ключевым словом <code>explicit</code>:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">T</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="p">...</span>
-  <span class="k">explicit</span> <span class="n">T</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T(int)&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span> <span class="p">}</span>
-  <span class="p">...</span>
-<span class="p">};</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> T <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl opt">...</span>
+  <span class="hl kwc">explicit</span> <span class="hl kwd">T</span><span class="hl opt">(</span><span class="hl kwb">int</span><span class="hl opt">) {</span> std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T(int)&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">; }</span>
+  <span class="hl opt">...</span>
+<span class="hl opt">};</span>
+</pre>
 
 <p>Это запретит какое-либо неявное преобразования для аргумента этого конструктора.</p>
 

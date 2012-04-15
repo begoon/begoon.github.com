@@ -45,21 +45,23 @@
 
 <p>Если вместо, например, <code>std::max(a, b)</code> написать <code>(std::max)(a, b)</code>, то результат работы препроцессора выглядит так:</p>
 
-<div class="highlight"><pre><span class="cp">#line 3 &quot;minmax.cpp&quot;</span>
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">min</span><span class="p">)(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl ppc">#line 3</span> <span class="hl pps">&quot;minmax.cpp&quot;</span><span class="hl ppc"></span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwb">int</span> a <span class="hl opt">= (</span>std<span class="hl opt">::</span>min<span class="hl opt">)(</span><span class="hl num">10</span><span class="hl opt">,</span> <span class="hl num">20</span><span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>вместо:</p>
 
-<div class="highlight"><pre><span class="cp">#line 3 &quot;minmax.cpp&quot;</span>
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="p">(((</span><span class="mi">10</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">20</span><span class="p">))</span> <span class="o">?</span> <span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="mi">20</span><span class="p">));</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl ppc">#line 3</span> <span class="hl pps">&quot;minmax.cpp&quot;</span><span class="hl ppc"></span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwb">int</span> a <span class="hl opt">=</span> std<span class="hl opt">::(((</span><span class="hl num">10</span><span class="hl opt">) &lt; (</span><span class="hl num">20</span><span class="hl opt">))</span> ? <span class="hl opt">(</span><span class="hl num">10</span><span class="hl opt">) : (</span><span class="hl num">20</span><span class="hl opt">));</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>и конфликта не происходит. Все компилируется без проблем.</p>
 

@@ -44,27 +44,31 @@
 
 <p>The both:</p>
 
-<div class="highlight"><pre><span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">p</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">const</span> T<span class="hl opt">*</span> p<span class="hl opt">;</span>
+</pre>
 
 <p>and</p>
 
-<div class="highlight"><pre><span class="n">T</span> <span class="k">const</span><span class="o">*</span> <span class="n">p</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+T <span class="hl kwb">const</span><span class="hl opt">*</span> p<span class="hl opt">;</span>
+</pre>
 
 <p>declare the pointer <code>p</code> to a const object but not a const pointer. The pointer itself can be modified:</p>
 
-<div class="highlight"><pre><span class="n">T</span> <span class="k">const</span><span class="o">*</span> <span class="n">p</span><span class="p">;</span>
-<span class="p">...</span>
-<span class="n">p</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+T <span class="hl kwb">const</span><span class="hl opt">*</span> p<span class="hl opt">;</span>
+<span class="hl opt">...</span>
+p <span class="hl opt">=</span> NULL<span class="hl opt">;</span>
+</pre>
 
 <p>But it&rsquo;s impossible to modify the object:</p>
 
-<div class="highlight"><pre><span class="n">T</span> <span class="k">const</span><span class="o">*</span> <span class="n">p</span><span class="p">;</span>
-<span class="p">...</span>
-<span class="n">p</span><span class="o">-&gt;</span><span class="n">some_member</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>   <span class="c1">// ERROR: error C2166: l-value specifies const object</span>
-</pre></div>
+<pre class="hl">
+T <span class="hl kwb">const</span><span class="hl opt">*</span> p<span class="hl opt">;</span>
+<span class="hl opt">...</span>
+p<span class="hl opt">-&gt;</span>some_member <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>   <span class="hl slc">// ERROR: error C2166: l-value specifies const object</span>
+</pre>
 
 <p>This was the introductory and let&rsquo;s talk about the topic.</p>
 

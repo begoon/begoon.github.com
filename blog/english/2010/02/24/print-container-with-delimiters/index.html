@@ -44,85 +44,89 @@
 
 <p>A straightforward solution could be:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;vector&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;vector&gt;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">a</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span> <span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">5</span><span class="p">);</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwb">int</span> a<span class="hl opt">[] = {</span> <span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">,</span> <span class="hl num">3</span><span class="hl opt">,</span> <span class="hl num">4</span><span class="hl opt">,</span> <span class="hl num">5</span> <span class="hl opt">};</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> <span class="hl kwd">v</span><span class="hl opt">(</span>a<span class="hl opt">,</span> a <span class="hl opt">+</span> <span class="hl num">5</span><span class="hl opt">);</span>
 
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> v<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">(); ++</span>i<span class="hl opt">) {</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> v<span class="hl opt">[</span>i<span class="hl opt">];</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>i <span class="hl opt">&lt;</span> v<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">() -</span> <span class="hl num">1</span><span class="hl opt">)</span>
+      std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, &quot;</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
 
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>A condition in the loop solves the problem, it&rsquo;s better to iterate containers using manipulators:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;vector&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;vector&gt;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">a</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span> <span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">5</span><span class="p">);</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwb">int</span> a<span class="hl opt">[] = {</span> <span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">,</span> <span class="hl num">3</span><span class="hl opt">,</span> <span class="hl num">4</span><span class="hl opt">,</span> <span class="hl num">5</span> <span class="hl opt">};</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> <span class="hl kwd">v</span><span class="hl opt">(</span>a<span class="hl opt">,</span> a <span class="hl opt">+</span> <span class="hl num">5</span><span class="hl opt">);</span>
 
-  <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">const_iterator</span> <span class="n">i</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">i</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">()</span> <span class="o">-</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;::</span>const_iterator i <span class="hl opt">=</span> v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">();</span> i <span class="hl opt">!=</span> v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(); ++</span>i<span class="hl opt">) {</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt; *</span>i<span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">() -</span> i <span class="hl opt">&gt;</span> <span class="hl num">1</span><span class="hl opt">)</span>
+      std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, &quot;</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
 
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>It&rsquo;s not also great because iterators of some containers don&rsquo;t support subtraction. For example, this code doesn&rsquo;t compile if we use <code>std::list</code> instead of <code>std::vector</code> (the first example also fails on <code>std::list</code> but due to another reason). The better way is:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;vector&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;vector&gt;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">a</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span> <span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">5</span><span class="p">);</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwb">int</span> a<span class="hl opt">[] = {</span> <span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">,</span> <span class="hl num">3</span><span class="hl opt">,</span> <span class="hl num">4</span><span class="hl opt">,</span> <span class="hl num">5</span> <span class="hl opt">};</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> <span class="hl kwd">v</span><span class="hl opt">(</span>a<span class="hl opt">,</span> a <span class="hl opt">+</span> <span class="hl num">5</span><span class="hl opt">);</span>
 
-  <span class="k">typedef</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">const_iterator</span> <span class="n">iterator</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="n">iterator</span> <span class="n">i</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">i</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">distance</span><span class="o">&lt;</span><span class="n">iterator</span><span class="o">&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwc">typedef</span> std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;::</span>const_iterator iterator<span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>iterator i <span class="hl opt">=</span> v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">();</span> i <span class="hl opt">!=</span> v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(); ++</span>i<span class="hl opt">) {</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt; *</span>i<span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>std<span class="hl opt">::</span>distance<span class="hl opt">&lt;</span>iterator<span class="hl opt">&gt;(</span>i<span class="hl opt">,</span> v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">()) &gt;</span> <span class="hl num">1</span><span class="hl opt">)</span>
+      std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, &quot;</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>The <code>std::distance</code> template can calculate the distance between two iterators even if they don&rsquo;t support arithmetics. But for this kind of containers <code>std::distance</code> just iterates from one to another and the overall time of the print loop seems to be <code>O(N^2)</code> instead of original <code>O(N)</code>. Also we have to use the type name twice — to declare the iterator and to instantiate <code>std::distance</code>. For example, Visual Studio 2008 cannot deduct the type from the parameters of <code>std::distance</code>.</p>
 
 <p>There is another neat way allowing to use iterators (with <code>O(N)</code> time even for containers such as <code>std::list</code>), and to write beautifully and compactly:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;vector&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;vector&gt;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="kt">int</span> <span class="n">a</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span> <span class="p">};</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">5</span><span class="p">);</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwb">int</span> a<span class="hl opt">[] = {</span> <span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">,</span> <span class="hl num">3</span><span class="hl opt">,</span> <span class="hl num">4</span><span class="hl opt">,</span> <span class="hl num">5</span> <span class="hl opt">};</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> <span class="hl kwd">v</span><span class="hl opt">(</span>a<span class="hl opt">,</span> a <span class="hl opt">+</span> <span class="hl num">5</span><span class="hl opt">);</span>
 
-  <span class="k">for</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;::</span><span class="n">const_iterator</span> <span class="n">i</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">i</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="o">--</span><span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;::</span>const_iterator i <span class="hl opt">=</span> v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">();</span> i <span class="hl opt">!=</span> v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(); ++</span>i<span class="hl opt">) {</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt; *</span>i<span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>i <span class="hl opt">!= --</span>v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">())</span>
+      std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, &quot;</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
 
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>The trick with pre-increment <code>--</code> operator allows to check effectively for the last element of a container.</p>
 

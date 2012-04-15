@@ -51,17 +51,19 @@
 
 <p>Было:</p>
 
-<div class="highlight"><pre><span class="p">...</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">packet_size</span> <span class="o">&lt;</span> <span class="mi">1024</span><span class="p">)</span> <span class="p">...</span>
-<span class="p">...</span>
-</pre></div>
+<pre class="hl">
+<span class="hl opt">...</span>
+<span class="hl kwa">if</span> <span class="hl opt">(</span>packet_size <span class="hl opt">&lt;</span> <span class="hl num">1024</span><span class="hl opt">) ...</span>
+<span class="hl opt">...</span>
+</pre>
 
 <p>а стало:</p>
 
-<div class="highlight"><pre><span class="p">...</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">packet_size</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="o">&amp;&amp;</span> <span class="n">packet_size</span> <span class="o">&lt;</span> <span class="mi">1024</span><span class="p">)</span> <span class="p">...</span>
-<span class="p">...</span>
-</pre></div>
+<pre class="hl">
+<span class="hl opt">...</span>
+<span class="hl kwa">if</span> <span class="hl opt">(</span>packet_size <span class="hl opt">&gt;</span> <span class="hl num">10</span> <span class="hl opt">&amp;&amp;</span> packet_size <span class="hl opt">&lt;</span> <span class="hl num">1024</span><span class="hl opt">) ...</span>
+<span class="hl opt">...</span>
+</pre>
 
 <p>Исправили всего одну строчку. Но после компиляции и линковки результирующий файл будет радикально другой: съедет таблица символов, где-то изменится выравнивание, возможно линкер из-за этого изменит размещение сегментов и т.д. Море факторов, из-за которых самое минимальное изменение исходного текста приведет к глобальному изменению результирующего исполняемого файла.</p>
 

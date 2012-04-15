@@ -617,13 +617,25 @@ func build_index() {
   index_js["english"] = build_language_index("english")
 }
 
+var (
+  language_table = map[string]string{
+    "makefile":   "make",
+    "nasm":       "asm",
+    "javascript": "js",
+    "c#":         "cs",
+  }
+)
+
 func highlight(source, language string) string {
-  cmd := exec.Command("pygmentize", "-f", "html", "-l", language, "-O", "encoding=utf-8,outencoding=utf-8")
+  if shortcut, exist := language_table[language]; exist {
+    language = shortcut
+  }
+  cmd := exec.Command("highlight", "--syntax", language, "--fragment", "--encoding=utf-8", "--enclose-pre")
   cmd.Stdin = strings.NewReader(source)
   var out bytes.Buffer
   cmd.Stdout = &out
   if err := cmd.Run(); err != nil {
-    die("Unable to pygmentize, %#v, %#v, %#v, [%s]", err, cmd.Path, cmd.Args, source)
+    die("Unable to colorize, %#v, %#v, %#v, [%s]", err, cmd.Path, cmd.Args, source)
   }
   return out.String()
 }

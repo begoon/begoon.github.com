@@ -43,15 +43,16 @@
 <div id="post">
   <p>Когда я вижу в production коде, в котором мне надо по какой-то причине разобраться, что-то типа:</p>
 
-<div class="highlight"><pre><span class="p">...</span>
-<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">i</span> <span class="o">&amp;</span> <span class="mh">0x06</span><span class="p">)</span> <span class="o">^</span> <span class="mh">0xAA</span><span class="p">);</span>
+<pre class="hl">
+<span class="hl opt">...</span>
+<span class="hl kwb">int</span> x <span class="hl opt">= (</span>i <span class="hl opt">&lt;&lt;</span> <span class="hl num">8</span><span class="hl opt">) | (</span>i <span class="hl opt">&gt;&gt;</span> <span class="hl num">2</span><span class="hl opt">) | ((</span>i <span class="hl opt">&amp;</span> <span class="hl num">0x06</span><span class="hl opt">) ^</span> <span class="hl num">0xAA</span><span class="hl opt">);</span>
 
-<span class="c1">// if (x &gt;= 0x12345)</span>
-<span class="c1">//  x = x &gt;&gt; 3;</span>
+<span class="hl slc">// if (x &gt;= 0x12345)</span>
+<span class="hl slc">//  x = x &gt;&gt; 3;</span>
 
-<span class="n">calc_something_complicated</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
-<span class="p">...</span>
-</pre></div>
+<span class="hl kwd">calc_something_complicated</span><span class="hl opt">(</span>x<span class="hl opt">);</span>
+<span class="hl opt">...</span>
+</pre>
 
 <p>мне хочется рвать и метать. Расчехлить <a href="http://ftp.kernel.org/pub/software/scm/git/docs/git-blame.html">blame</a>, найти автора и заглянуть ему в глаза.</p>
 
@@ -59,14 +60,15 @@
 
 <p>На втором месте у меня стоит отладочная печать, навеки оставленная в коде:</p>
 
-<div class="highlight"><pre><span class="p">...</span>
-<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">i</span> <span class="o">&amp;</span> <span class="mh">0x06</span><span class="p">)</span> <span class="o">^</span> <span class="mh">0xAA</span><span class="p">);</span>
+<pre class="hl">
+<span class="hl opt">...</span>
+<span class="hl kwb">int</span> x <span class="hl opt">= (</span>i <span class="hl opt">&lt;&lt;</span> <span class="hl num">8</span><span class="hl opt">) | (</span>i <span class="hl opt">&gt;&gt;</span> <span class="hl num">2</span><span class="hl opt">) | ((</span>i <span class="hl opt">&amp;</span> <span class="hl num">0x06</span><span class="hl opt">) ^</span> <span class="hl num">0xAA</span><span class="hl opt">);</span>
 
-<span class="c1">// std::cerr &lt;&lt; &quot;На этот раз x = &quot; &lt;&lt; x &lt;&lt; std::endl;</span>
+<span class="hl slc">// std::cerr &lt;&lt; &quot;На этот раз x = &quot; &lt;&lt; x &lt;&lt; std::endl;</span>
 
-<span class="n">calc_something_complicated</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
-<span class="p">...</span>
-</pre></div>
+<span class="hl kwd">calc_something_complicated</span><span class="hl opt">(</span>x<span class="hl opt">);</span>
+<span class="hl opt">...</span>
+</pre>
 
 <p>Снова получается, что автор сомневался и так и не отладил все до конца.</p>
 
@@ -74,15 +76,16 @@
 
 <p>Ну на третьем месте нашего хит-парада - блоки TODO.</p>
 
-<div class="highlight"><pre><span class="p">...</span>
-<span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">i</span> <span class="o">&amp;</span> <span class="mh">0x06</span><span class="p">)</span> <span class="o">^</span> <span class="mh">0xAA</span><span class="p">);</span>
+<pre class="hl">
+<span class="hl opt">...</span>
+<span class="hl kwb">int</span> x <span class="hl opt">= (</span>i <span class="hl opt">&lt;&lt;</span> <span class="hl num">8</span><span class="hl opt">) | (</span>i <span class="hl opt">&gt;&gt;</span> <span class="hl num">2</span><span class="hl opt">) | ((</span>i <span class="hl opt">&amp;</span> <span class="hl num">0x06</span><span class="hl opt">) ^</span> <span class="hl num">0xAA</span><span class="hl opt">);</span>
 
-<span class="c1">// TODO: Заменить тип int на int64, так как на носу эра 64-разрядных машин.</span>
-<span class="c1">// Программист Вася, 06.10.2009. Если что, вы знаете где меня искать.</span>
+<span class="hl slc">// TODO: Заменить тип int на int64, так как на носу эра 64-разрядных машин.</span>
+<span class="hl slc">// Программист Вася, 06.10.2009. Если что, вы знаете где меня искать.</span>
 
-<span class="n">calc_something_complicated</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
-<span class="p">...</span>
-</pre></div>
+<span class="hl kwd">calc_something_complicated</span><span class="hl opt">(</span>x<span class="hl opt">);</span>
+<span class="hl opt">...</span>
+</pre>
 
 <p>Тут еще куда ни шло. Куски TODO можно найти автоматическим поиском при подготовке релиза и перед ответственным слиянием. Но каждый TODO должен быть подписан и датирован, а лучше еще и детально объяснен. Ни что так не помогает оценить &ldquo;нужность&rdquo; куска кода, как дата его последней модификации.</p>
 

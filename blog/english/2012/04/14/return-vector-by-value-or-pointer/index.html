@@ -44,21 +44,23 @@
 
 <p>From clarity perspective the best way is:</p>
 
-<div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">create_vector</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
-  <span class="n">v</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mh">0xDEADC0DE</span><span class="p">);</span>
-  <span class="k">return</span> <span class="n">v</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> <span class="hl kwd">create_vector</span><span class="hl opt">(</span><span class="hl kwb">const size_t</span> N<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> v<span class="hl opt">;</span>
+  v<span class="hl opt">.</span><span class="hl kwd">resize</span><span class="hl opt">(</span>N<span class="hl opt">,</span> <span class="hl num">0xDEADC0DE</span><span class="hl opt">);</span>
+  <span class="hl kwa">return</span> v<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Here the vector instance is being returned <em>by value</em>, which means potential deep copying of the object to the context of the caller.</p>
 
 <p>Immediately a question raises: if the vector is huge, such deep copying can be expensive but absolutely redundant. A &ldquo;more clever&rdquo; approach could be:</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">create_vector</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;*</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">v</span><span class="o">-&gt;</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mh">0xDEADC0DE</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">create_vector</span><span class="hl opt">(</span><span class="hl kwb">const size_t</span> N<span class="hl opt">,</span> std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;*</span> v<span class="hl opt">) {</span>
+  v<span class="hl opt">-&gt;</span><span class="hl kwd">resize</span><span class="hl opt">(</span>N<span class="hl opt">,</span> <span class="hl num">0xDEADC0DE</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Here the vector is passed by pointer which guarantees the absence of deep copying. But this code looks quite bad.</p>
 
@@ -70,29 +72,30 @@ Target: x86_64-apple-darwin11.3.0
 
 <p>By value:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;vector&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;vector&gt;</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">__attribute__</span><span class="p">((</span><span class="n">noinline</span><span class="p">))</span>
-<span class="n">create_vector</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;by value&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
-  <span class="n">v</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mh">0xDEADC0DE</span><span class="p">);</span>
-  <span class="k">return</span> <span class="n">v</span><span class="p">;</span>
-<span class="p">}</span>
+std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> <span class="hl kwd">__attribute__</span><span class="hl opt">((</span>noinline<span class="hl opt">))</span>
+<span class="hl kwd">create_vector</span><span class="hl opt">(</span><span class="hl kwb">const size_t</span> N<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;by value&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> v<span class="hl opt">;</span>
+  v<span class="hl opt">.</span><span class="hl kwd">resize</span><span class="hl opt">(</span>N<span class="hl opt">,</span> <span class="hl num">0xDEADC0DE</span><span class="hl opt">);</span>
+  <span class="hl kwa">return</span> v<span class="hl opt">;</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">100</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="n">create_vector</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mh">0xDEADC0DE</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Test is rubbish&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span> 
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">size_t</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> <span class="hl num">10</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    <span class="hl kwb">const size_t</span> N <span class="hl opt">=</span> <span class="hl num">1024</span> <span class="hl opt">*</span> <span class="hl num">1024</span> <span class="hl opt">*</span> <span class="hl num">100</span><span class="hl opt">;</span>
+    std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> v <span class="hl opt">=</span> <span class="hl kwd">create_vector</span><span class="hl opt">(</span>N<span class="hl opt">);</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>v<span class="hl opt">[</span>i<span class="hl opt">] !=</span> <span class="hl num">0xDEADC0DE</span><span class="hl opt">) {</span>
+      std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Test is rubbish&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+      <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span> 
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Run:</p>
 
@@ -106,28 +109,29 @@ Target: x86_64-apple-darwin11.3.0
 
 <p>Now by pointer:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;vector&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;vector&gt;</span>
 
-<span class="kt">void</span> <span class="n">__attribute__</span><span class="p">((</span><span class="n">noinline</span><span class="p">))</span>
-<span class="n">create_vector</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;*</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;by pointer&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="n">v</span><span class="o">-&gt;</span><span class="n">resize</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mh">0xDEADC0DE</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> <span class="hl kwd">__attribute__</span><span class="hl opt">((</span>noinline<span class="hl opt">))</span>
+<span class="hl kwd">create_vector</span><span class="hl opt">(</span><span class="hl kwb">const size_t</span> N<span class="hl opt">,</span> std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;*</span> v<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;by pointer&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  v<span class="hl opt">-&gt;</span><span class="hl kwd">resize</span><span class="hl opt">(</span>N<span class="hl opt">,</span> <span class="hl num">0xDEADC0DE</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="k">for</span> <span class="p">(</span><span class="n">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">100</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
-    <span class="n">create_vector</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">v</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mh">0xDEADC0DE</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Test is rubbish&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span> 
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">size_t</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> <span class="hl num">10</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    <span class="hl kwb">const size_t</span> N <span class="hl opt">=</span> <span class="hl num">1024</span> <span class="hl opt">*</span> <span class="hl num">1024</span> <span class="hl opt">*</span> <span class="hl num">100</span><span class="hl opt">;</span>
+    std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> v<span class="hl opt">;</span>
+    <span class="hl kwd">create_vector</span><span class="hl opt">(</span>N<span class="hl opt">, &amp;</span>v<span class="hl opt">);</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>v<span class="hl opt">[</span>i<span class="hl opt">] !=</span> <span class="hl num">0xDEADC0DE</span><span class="hl opt">) {</span>
+      std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Test is rubbish&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+      <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span> 
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Run:</p>
 

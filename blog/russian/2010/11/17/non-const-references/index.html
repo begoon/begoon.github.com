@@ -51,12 +51,13 @@
 
 <p>Лично нарвался недавно на собственную мину (конечно, упрощенный вариант):</p>
 
-<div class="highlight"><pre><span class="n">T</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-<span class="p">...</span>
-<span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
-<span class="p">...</span>
-<span class="n">assert</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="mi">10</span><span class="p">);</span> <span class="c1">// BOOM!!! WTF?! Who changed this?</span>
-</pre></div>
+<pre class="hl">
+T a <span class="hl opt">=</span> <span class="hl num">10</span><span class="hl opt">;</span>
+<span class="hl opt">...</span>
+<span class="hl kwd">f</span><span class="hl opt">(</span>a<span class="hl opt">);</span>
+<span class="hl opt">...</span>
+<span class="hl kwa">assert</span><span class="hl opt">(</span>a <span class="hl opt">==</span> <span class="hl num">10</span><span class="hl opt">);</span> <span class="hl slc">// BOOM!!! WTF?! Who changed this?</span>
+</pre>
 
 <p>А причина в <code>void f(T&amp; a);</code>, а должно быть <code>void f(const T&amp; a);</code> или <code>void f(T* a);</code>. Функция <code>f()</code> почему-то изменила значение «а», а писал я ее давно и успел забыть такую ее «особенность». Но из кода <code>f(a)</code> сходу не видно – может эта функция изменить <code>а</code> или нет.</p>
 
@@ -64,13 +65,14 @@
 
 <p>Кстати, один из аргументов, приводимый людьми, выступающими за неконстантные ссылки –это «писать <code>a.</code> приятнее и понятнее, чем <code>a-&gt;</code> или <code>*a</code>». Также ссылка более надежна с точки зрения <code>NULL</code> (сделать ссылку, указывающую на <code>NULL</code> конечно можно, но тут уже надо постараться). Тут можно выйти положения так:</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">ptr_a</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">assert</span><span class="p">(</span><span class="n">ptr_a</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">);</span>
-  <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span> <span class="o">=</span> <span class="o">*</span><span class="n">ptr_a</span><span class="p">;</span>
-  <span class="p">...</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">foo</span><span class="p">())</span> <span class="p">...</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">f</span><span class="hl opt">(</span>T<span class="hl opt">*</span> ptr_a<span class="hl opt">) {</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>ptr_a <span class="hl opt">!=</span> NULL<span class="hl opt">);</span>
+  T<span class="hl opt">&amp;</span> a <span class="hl opt">= *</span>ptr_a<span class="hl opt">;</span>
+  <span class="hl opt">...</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>a<span class="hl opt">.</span><span class="hl kwd">foo</span><span class="hl opt">()) ...</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Небольшой лишний код, но решены обе проблемы: проверка на <code>NULL</code> и необходимость разыменовывать указатель каждый раз. А главное, в вызывающем коде придется писать так: <code>f(&amp;a)</code>, что явно укажет на факт возможной модификации аргумента внутри функции.</p>
 
@@ -82,19 +84,21 @@
 
 <p>Например:</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">print</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">ostream</span><span class="o">&amp;</span> <span class="n">os</span><span class="p">,</span> <span class="k">const</span> <span class="n">T</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">)</span> <span class="p">{</span>
-   <span class="n">os</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">print</span><span class="hl opt">(</span>std<span class="hl opt">::</span>ostream<span class="hl opt">&amp;</span> os<span class="hl opt">,</span> <span class="hl kwb">const</span> T<span class="hl opt">&amp;</span> a<span class="hl opt">) {</span>
+   os <span class="hl opt">&lt;&lt;</span> a<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>или</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">save_to_db</span><span class="p">(</span><span class="n">Database</span><span class="o">&amp;</span> <span class="n">db</span><span class="p">,</span> <span class="p">...)</span> <span class="p">{</span>
-   <span class="n">db</span><span class="p">.</span><span class="n">connect</span><span class="p">();</span>
-   <span class="n">db</span><span class="p">.</span><span class="n">save</span><span class="p">(...)</span>
-   <span class="p">...</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">save_to_db</span><span class="hl opt">(</span>Database<span class="hl opt">&amp;</span> db<span class="hl opt">, ...) {</span>
+   db<span class="hl opt">.</span><span class="hl kwd">connect</span><span class="hl opt">();</span>
+   db<span class="hl opt">.</span><span class="hl kwd">save</span><span class="hl opt">(...)</span>
+   <span class="hl opt">...</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Ну и чтобы два раза не вставать, пара личных маленьких радостей:</p>
 

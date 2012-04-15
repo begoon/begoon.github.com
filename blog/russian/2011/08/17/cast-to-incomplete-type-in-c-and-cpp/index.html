@@ -43,8 +43,9 @@
 <div id="post">
   <p>В режиме С и С++ компилируется без ошибок:</p>
 
-<div class="highlight"><pre><span class="kt">void</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">this_does_not_exist</span> <span class="o">*</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">void</span><span class="hl opt">*</span> p <span class="hl opt">= (</span><span class="hl kwb">struct</span> this_does_not_exist <span class="hl opt">*) -</span><span class="hl num">1</span><span class="hl opt">;</span>
+</pre>
 
 <p>Убираем <code>struct</code> для С++ и получаем:</p>
 
@@ -55,9 +56,10 @@ cast.cpp(1) : error C2059: синтаксическая ошибка: )
 
 <p>Теперь добавляем forward declaration:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">this_does_not_exist</span><span class="p">;</span>
-<span class="kt">void</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">this_does_not_exist</span> <span class="o">*</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> this_does_not_exist<span class="hl opt">;</span>
+<span class="hl kwb">void</span><span class="hl opt">*</span> p <span class="hl opt">= (</span>this_does_not_exist <span class="hl opt">*) -</span><span class="hl num">1</span><span class="hl opt">;</span>
+</pre>
 
 <p>Тут все честно и компилируется без ошибок.</p>
 

@@ -43,39 +43,42 @@
 <div id="post">
   <p>Как совершенно справедливо было замечено в комментариях в <a href="/blog/russian/2009/02/20/difference-between-new-and-new-with-brackets/">посте про разницу между &ldquo;new T()&rdquo; и &ldquo;new T&rdquo;</a> — при объявлении автоматической переменной, а не динамической через new, нельзя использовать скобки, если подразумевается вызвать конструктор по умолчанию. То есть нельзя писать:</p>
 
-<div class="highlight"><pre><span class="n">T</span> <span class="n">a</span><span class="p">();</span>
-</pre></div>
+<pre class="hl">
+T <span class="hl kwd">a</span><span class="hl opt">();</span>
+</pre>
 
 <p>а надо писать:</p>
 
-<div class="highlight"><pre><span class="n">T</span> <span class="n">a</span><span class="p">;</span>
-</pre></div>
+<pre class="hl">
+T a<span class="hl opt">;</span>
+</pre>
 
 <p>так как в первом случае такая запись будет означать декларацию функции a, которая возвращает тип <code>T</code>, а далеко не декларацию переменной класса <code>T</code> с вызовом конструктора по умолчанию.</p>
 
 <p>Не спорю, это очевидно для профессионалов. Для новичков же порой подобная &ldquo;неочевидная&rdquo; разница вызывает затруднения, поэтому приведу простейший пример, которые расставит все на свои места.</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="k">class</span> <span class="nc">T</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="n">T</span><span class="p">()</span> <span class="p">{</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;constructor T()&quot;</span><span class="p">;</span> <span class="p">}</span>
-<span class="p">};</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl kwc">class</span> T <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwd">T</span><span class="hl opt">() {</span> std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;constructor T()&quot;</span><span class="hl opt">; }</span>
+<span class="hl opt">};</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T a: &quot;</span><span class="p">;</span>
-  <span class="c1">// Это синтаксис создания экземпляра класса T с вызовом</span>
-  <span class="c1">// конструктора по умолчанию.</span>
-  <span class="n">T</span> <span class="n">a</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T a: &quot;</span><span class="hl opt">;</span>
+  <span class="hl slc">// Это синтаксис создания экземпляра класса T с вызовом</span>
+  <span class="hl slc">// конструктора по умолчанию.</span>
+  T a<span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
 
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;T b(): &quot;</span><span class="p">;</span>
-  <span class="c1">// А вот это декларация функции &quot;b&quot; без аргументов,</span>
-  <span class="c1">// которая возвращает тип T.</span>
-  <span class="n">T</span> <span class="n">b</span><span class="p">();</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;T b(): &quot;</span><span class="hl opt">;</span>
+  <span class="hl slc">// А вот это декларация функции &quot;b&quot; без аргументов,</span>
+  <span class="hl slc">// которая возвращает тип T.</span>
+  T <span class="hl kwd">b</span><span class="hl opt">();</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Результат:</p>
 

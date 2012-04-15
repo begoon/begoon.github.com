@@ -49,17 +49,18 @@
 
 <p>Например, стандартный вывод при выполнении элементарного теста (файл <code>runner.cpp</code>):</p>
 
-<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
 
-<span class="n">TEST</span><span class="p">(</span><span class="n">One</span><span class="p">,</span> <span class="n">Simple</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>One<span class="hl opt">,</span> Simple<span class="hl opt">) {</span>
+  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
-  <span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
-  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">**</span> argv<span class="hl opt">) {</span>
+  <span class="hl opt">::</span>testing<span class="hl opt">::</span><span class="hl kwd">InitGoogleTest</span><span class="hl opt">(&amp;</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">RUN_ALL_TESTS</span><span class="hl opt">();</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>будет таким:</p>
 
@@ -100,54 +101,55 @@ Expected: 1
 
 <p>Для задания иного формата вывода нужно реализовать свой <code>event listener</code> (назовем его сервис печати). Например (файл <code>runner.cpp</code>):</p>
 
-<div class="highlight"><pre><span class="cp">#include &quot;gtest/gtest.h&quot;</span>
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
 
-<span class="k">using</span> <span class="k">namespace</span> <span class="o">::</span><span class="n">testing</span><span class="p">;</span>
+<span class="hl kwa">using namespace</span> <span class="hl opt">::</span>testing<span class="hl opt">;</span>
 
-<span class="c1">// Данный класс заменит стандартный сервис печати.</span>
-<span class="k">class</span> <span class="nc">LaconicPrinter</span> <span class="o">:</span> <span class="k">public</span> <span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">EmptyTestEventListener</span> <span class="p">{</span>
-  <span class="c1">// Вызывается до начала работы теста.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestStart</span><span class="p">(</span><span class="k">const</span> <span class="n">TestInfo</span><span class="o">&amp;</span> <span class="n">test_info</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;*** Test %s.%s starting.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-           <span class="n">test_info</span><span class="p">.</span><span class="n">test_case_name</span><span class="p">(),</span> <span class="n">test_info</span><span class="p">.</span><span class="n">name</span><span class="p">());</span>
-  <span class="p">}</span>
+<span class="hl slc">// Данный класс заменит стандартный сервис печати.</span>
+<span class="hl kwc">class</span> LaconicPrinter <span class="hl opt">:</span> <span class="hl kwc">public</span> <span class="hl opt">::</span>testing<span class="hl opt">::</span>EmptyTestEventListener <span class="hl opt">{</span>
+  <span class="hl slc">// Вызывается до начала работы теста.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestStart</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestInfo<span class="hl opt">&amp;</span> test_info<span class="hl opt">) {</span>
+    <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;*** Test %s.%s starting.</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span>
+           test_info<span class="hl opt">.</span><span class="hl kwd">test_case_name</span><span class="hl opt">(),</span> test_info<span class="hl opt">.</span><span class="hl kwd">name</span><span class="hl opt">());</span>
+  <span class="hl opt">}</span>
 
-  <span class="c1">// Вызывается при срабатывании какого-либо утверждения или явного вызова </span>
-  <span class="c1">// функции SUCCESS().</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestPartResult</span><span class="p">(</span><span class="k">const</span> <span class="n">TestPartResult</span><span class="o">&amp;</span> <span class="n">test_part_result</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s in %s:%d</span><span class="se">\n</span><span class="s">%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-           <span class="n">test_part_result</span><span class="p">.</span><span class="n">failed</span><span class="p">()</span> <span class="o">?</span> <span class="s">&quot;*** Failure&quot;</span> <span class="o">:</span> <span class="s">&quot;Success&quot;</span><span class="p">,</span>
-           <span class="n">test_part_result</span><span class="p">.</span><span class="n">file_name</span><span class="p">(),</span>
-           <span class="n">test_part_result</span><span class="p">.</span><span class="n">line_number</span><span class="p">(),</span>
-           <span class="n">test_part_result</span><span class="p">.</span><span class="n">summary</span><span class="p">());</span>
-  <span class="p">}</span>
+  <span class="hl slc">// Вызывается при срабатывании какого-либо утверждения или явного вызова </span>
+  <span class="hl slc">// функции SUCCESS().</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestPartResult</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestPartResult<span class="hl opt">&amp;</span> test_part_result<span class="hl opt">) {</span>
+    <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%s in %s:%d</span><span class="hl esc">\n</span><span class="hl str">%s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span>
+           test_part_result<span class="hl opt">.</span><span class="hl kwd">failed</span><span class="hl opt">()</span> ? <span class="hl str">&quot;*** Failure&quot;</span> <span class="hl opt">:</span> <span class="hl str">&quot;Success&quot;</span><span class="hl opt">,</span>
+           test_part_result<span class="hl opt">.</span><span class="hl kwd">file_name</span><span class="hl opt">(),</span>
+           test_part_result<span class="hl opt">.</span><span class="hl kwd">line_number</span><span class="hl opt">(),</span>
+           test_part_result<span class="hl opt">.</span><span class="hl kwd">summary</span><span class="hl opt">());</span>
+  <span class="hl opt">}</span>
 
-  <span class="c1">// Вызывается после выполнения теста.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestEnd</span><span class="p">(</span><span class="k">const</span> <span class="n">TestInfo</span><span class="o">&amp;</span> <span class="n">test_info</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;*** Test %s.%s ending.</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-           <span class="n">test_info</span><span class="p">.</span><span class="n">test_case_name</span><span class="p">(),</span> <span class="n">test_info</span><span class="p">.</span><span class="n">name</span><span class="p">());</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+  <span class="hl slc">// Вызывается после выполнения теста.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestEnd</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestInfo<span class="hl opt">&amp;</span> test_info<span class="hl opt">) {</span>
+    <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;*** Test %s.%s ending.</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span>
+           test_info<span class="hl opt">.</span><span class="hl kwd">test_case_name</span><span class="hl opt">(),</span> test_info<span class="hl opt">.</span><span class="hl kwd">name</span><span class="hl opt">());</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
 
-<span class="n">TEST</span><span class="p">(</span><span class="n">One</span><span class="p">,</span> <span class="n">Simple</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">EXPECT_EQ</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwd">TEST</span><span class="hl opt">(</span>One<span class="hl opt">,</span> Simple<span class="hl opt">) {</span>
+  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">**</span> <span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
-  <span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">InitGoogleTest</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span> <span class="n">argv</span><span class="p">);</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">**</span> argv<span class="hl opt">) {</span>
+  <span class="hl opt">::</span>testing<span class="hl opt">::</span><span class="hl kwd">InitGoogleTest</span><span class="hl opt">(&amp;</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
 
-  <span class="c1">// Получаем ссылку на список сервисов печати.</span>
-  <span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">TestEventListeners</span><span class="o">&amp;</span> <span class="n">listeners</span> <span class="o">=</span>
-      <span class="o">::</span><span class="n">testing</span><span class="o">::</span><span class="n">UnitTest</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">listeners</span><span class="p">();</span>
+  <span class="hl slc">// Получаем ссылку на список сервисов печати.</span>
+  <span class="hl opt">::</span>testing<span class="hl opt">::</span>TestEventListeners<span class="hl opt">&amp;</span> listeners <span class="hl opt">=</span>
+      <span class="hl opt">::</span>testing<span class="hl opt">::</span>UnitTest<span class="hl opt">::</span><span class="hl kwd">GetInstance</span><span class="hl opt">()-&gt;</span><span class="hl kwd">listeners</span><span class="hl opt">();</span>
 
-  <span class="c1">// Удаляем стандартный сервис печати.</span>
-  <span class="k">delete</span> <span class="n">listeners</span><span class="p">.</span><span class="n">Release</span><span class="p">(</span><span class="n">listeners</span><span class="p">.</span><span class="n">default_result_printer</span><span class="p">());</span>
-  <span class="c1">// Добавляем наш сервис в список. Google Test самостоятельно удалит этот объект.</span>
-  <span class="n">listeners</span><span class="p">.</span><span class="n">Append</span><span class="p">(</span><span class="k">new</span> <span class="n">LaconicPrinter</span><span class="p">);</span>
+  <span class="hl slc">// Удаляем стандартный сервис печати.</span>
+  <span class="hl kwa">delete</span> listeners<span class="hl opt">.</span><span class="hl kwd">Release</span><span class="hl opt">(</span>listeners<span class="hl opt">.</span><span class="hl kwd">default_result_printer</span><span class="hl opt">());</span>
+  <span class="hl slc">// Добавляем наш сервис в список. Google Test самостоятельно удалит этот объект.</span>
+  listeners<span class="hl opt">.</span><span class="hl kwd">Append</span><span class="hl opt">(</span><span class="hl kwa">new</span> LaconicPrinter<span class="hl opt">);</span>
 
-  <span class="k">return</span> <span class="n">RUN_ALL_TESTS</span><span class="p">();</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwa">return</span> <span class="hl kwd">RUN_ALL_TESTS</span><span class="hl opt">();</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Теперь отчет по работе тестов будет выглядеть так:</p>
 
@@ -162,42 +164,43 @@ Expected: 1
 
 <p>Полностью интерфейс сервиса печати выглядит так:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">EmptyTestEventListener</span> <span class="o">:</span> <span class="k">public</span> <span class="n">TestEventListener</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="c1">// Вызывается при начале прогона всех тестов.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestProgramStart</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">);</span>
-  <span class="c1">// Вызывается при начале очередной итерации тестирования. Google Test </span>
-  <span class="c1">// позволяет управлять количеством итерации при прогоне тестов.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestIterationStart</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">,</span> <span class="kt">int</span> <span class="n">iteration</span><span class="p">);</span>
-  <span class="c1">// Вызывается до функции Environment::SetUp(), устанавливающей необходимое</span>
-  <span class="c1">// окружение для работы всех тестов.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnEnvironmentsSetUpStart</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">);</span>
-  <span class="c1">// Вызывается после функции Environment::SetUp(), устанавливающей необходимое</span>
-  <span class="c1">// окружение для работы всех тестов.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnEnvironmentsSetUpEnd</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">);</span>
-  <span class="c1">// Вызывается при начале прогона группы тестов (у которых первый параметр</span>
-  <span class="c1">// макроса TEST/TEST_F одинаковый).</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestCaseStart</span><span class="p">(</span><span class="k">const</span> <span class="n">TestCase</span><span class="o">&amp;</span> <span class="n">test_case</span><span class="p">);</span>
-  <span class="c1">// Вызывается при начале работы теста.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestStart</span><span class="p">(</span><span class="k">const</span> <span class="n">TestInfo</span><span class="o">&amp;</span> <span class="n">test_info</span><span class="p">);</span>
-  <span class="c1">// Вызывается при срабатывании утверждения в тесте или явного вызова </span>
-  <span class="c1">// функции SUCCESS().</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestPartResult</span><span class="p">(</span><span class="k">const</span> <span class="n">TestPartResult</span><span class="o">&amp;</span> <span class="n">test_part_result</span><span class="p">);</span>
-  <span class="c1">// Вызывается после завершения работы теста.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestEnd</span><span class="p">(</span><span class="k">const</span> <span class="n">TestInfo</span><span class="o">&amp;</span> <span class="n">test_info</span><span class="p">);</span>
-  <span class="c1">// Вызывается после прогона группы тестов.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestCaseEnd</span><span class="p">(</span><span class="k">const</span> <span class="n">TestCase</span><span class="o">&amp;</span> <span class="n">test_case</span><span class="p">);</span>
-  <span class="c1">// Вызывается до функции Environment::TearDown(), производящей освобождение</span>
-  <span class="c1">// ресурсов, занятых Environment::StartUp().</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnEnvironmentsTearDownStart</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">);</span>
-  <span class="c1">// Вызывается после функции Environment::TearDown().</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnEnvironmentsTearDownEnd</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">);</span>
-  <span class="c1">// Вызывается после очередной итерации тестирования.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestIterationEnd</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">,</span> <span class="kt">int</span> <span class="n">iteration</span><span class="p">);</span>
-  <span class="c1">// Вызывается после прогона всех тестов.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnTestProgramEnd</span><span class="p">(</span><span class="k">const</span> <span class="n">UnitTest</span><span class="o">&amp;</span> <span class="n">unit_test</span><span class="p">);</span>
-<span class="p">};</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> EmptyTestEventListener <span class="hl opt">:</span> <span class="hl kwc">public</span> TestEventListener <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl slc">// Вызывается при начале прогона всех тестов.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestProgramStart</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">);</span>
+  <span class="hl slc">// Вызывается при начале очередной итерации тестирования. Google Test </span>
+  <span class="hl slc">// позволяет управлять количеством итерации при прогоне тестов.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestIterationStart</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">,</span> <span class="hl kwb">int</span> iteration<span class="hl opt">);</span>
+  <span class="hl slc">// Вызывается до функции Environment::SetUp(), устанавливающей необходимое</span>
+  <span class="hl slc">// окружение для работы всех тестов.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnEnvironmentsSetUpStart</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">);</span>
+  <span class="hl slc">// Вызывается после функции Environment::SetUp(), устанавливающей необходимое</span>
+  <span class="hl slc">// окружение для работы всех тестов.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnEnvironmentsSetUpEnd</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">);</span>
+  <span class="hl slc">// Вызывается при начале прогона группы тестов (у которых первый параметр</span>
+  <span class="hl slc">// макроса TEST/TEST_F одинаковый).</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestCaseStart</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestCase<span class="hl opt">&amp;</span> test_case<span class="hl opt">);</span>
+  <span class="hl slc">// Вызывается при начале работы теста.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestStart</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestInfo<span class="hl opt">&amp;</span> test_info<span class="hl opt">);</span>
+  <span class="hl slc">// Вызывается при срабатывании утверждения в тесте или явного вызова </span>
+  <span class="hl slc">// функции SUCCESS().</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestPartResult</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestPartResult<span class="hl opt">&amp;</span> test_part_result<span class="hl opt">);</span>
+  <span class="hl slc">// Вызывается после завершения работы теста.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestEnd</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestInfo<span class="hl opt">&amp;</span> test_info<span class="hl opt">);</span>
+  <span class="hl slc">// Вызывается после прогона группы тестов.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestCaseEnd</span><span class="hl opt">(</span><span class="hl kwb">const</span> TestCase<span class="hl opt">&amp;</span> test_case<span class="hl opt">);</span>
+  <span class="hl slc">// Вызывается до функции Environment::TearDown(), производящей освобождение</span>
+  <span class="hl slc">// ресурсов, занятых Environment::StartUp().</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnEnvironmentsTearDownStart</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">);</span>
+  <span class="hl slc">// Вызывается после функции Environment::TearDown().</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnEnvironmentsTearDownEnd</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">);</span>
+  <span class="hl slc">// Вызывается после очередной итерации тестирования.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestIterationEnd</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">,</span> <span class="hl kwb">int</span> iteration<span class="hl opt">);</span>
+  <span class="hl slc">// Вызывается после прогона всех тестов.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">OnTestProgramEnd</span><span class="hl opt">(</span><span class="hl kwb">const</span> UnitTest<span class="hl opt">&amp;</span> unit_test<span class="hl opt">);</span>
+<span class="hl opt">};</span>
+</pre>
 
 <p>Также из значимого можно отметить новый ключ командной строки ~, позволяющий запускать тесты в случайном порядке. Ключом <code>--gtest_random_seed=SEED</code> можно &ldquo;управлять&rdquo; случайностью этого порядка. Если <code>SEED</code> равен 0, то случайность будет действительно случайной, так как случайная последовательность будет определяться текущим временем.</p>
 

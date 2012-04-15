@@ -43,51 +43,52 @@
 <div id="post">
   <p>Рассмотрим простой пример (<code>virtual_funct_const.cpp</code>):</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
 
-<span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="n">A</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">construct</span><span class="p">();</span>
-  <span class="p">}</span>
+<span class="hl kwc">class</span> A <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwd">A</span><span class="hl opt">() {</span>
+    <span class="hl kwd">construct</span><span class="hl opt">();</span>
+  <span class="hl opt">}</span>
 
-  <span class="o">~</span><span class="n">A</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">destruct</span><span class="p">();</span>
-  <span class="p">}</span>
+  <span class="hl opt">~</span><span class="hl kwd">A</span><span class="hl opt">() {</span>
+    <span class="hl kwd">destruct</span><span class="hl opt">();</span>
+  <span class="hl opt">}</span>
 
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">construct</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;A::construct()&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="p">}</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">construct</span><span class="hl opt">() {</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;A::construct()&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
 
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">destruct</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;A::destruct()&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">destruct</span><span class="hl opt">() {</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;A::destruct()&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
 
-<span class="k">class</span> <span class="nc">B</span><span class="o">:</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="n">B</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">construct</span><span class="p">();</span>
-  <span class="p">}</span>
+<span class="hl kwc">class</span> B<span class="hl opt">:</span> <span class="hl kwc">public</span> A <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwd">B</span><span class="hl opt">() {</span>
+    <span class="hl kwd">construct</span><span class="hl opt">();</span>
+  <span class="hl opt">}</span>
 
-  <span class="o">~</span><span class="n">B</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">destruct</span><span class="p">();</span>
-  <span class="p">}</span>
+  <span class="hl opt">~</span><span class="hl kwd">B</span><span class="hl opt">() {</span>
+    <span class="hl kwd">destruct</span><span class="hl opt">();</span>
+  <span class="hl opt">}</span>
 
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">construct</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;B::construct()&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="p">}</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">construct</span><span class="hl opt">() {</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;B::construct()&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
 
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">destruct</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;B::destruct()&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">destruct</span><span class="hl opt">() {</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;B::destruct()&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">B</span> <span class="n">b</span><span class="p">;</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  B b<span class="hl opt">;</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Что напечатает эта программа?</p>
 

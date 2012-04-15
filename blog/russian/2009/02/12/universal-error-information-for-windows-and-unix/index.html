@@ -53,113 +53,115 @@
 
 <p>Файл <code>systemmessage.h</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#ifndef _EXT_SYSTEM_MESSAGE_H</span>
-<span class="cp">#define _EXT_SYSTEM_MESSAGE_H</span>
+<pre class="hl">
+<span class="hl ppc">#ifndef _EXT_SYSTEM_MESSAGE_H</span>
+<span class="hl ppc">#define _EXT_SYSTEM_MESSAGE_H</span>
 
-<span class="cp">#include &lt;string&gt;</span>
+<span class="hl ppc">#include &lt;string&gt;</span>
 
-<span class="k">namespace</span> <span class="n">ext</span> <span class="p">{</span>
+<span class="hl kwa">namespace</span> ext <span class="hl opt">{</span>
 
-<span class="k">class</span> <span class="nc">SystemMessage</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="c1">// Эта функция возращает код ошибки.</span>
-  <span class="k">static</span> <span class="kt">int</span> <span class="n">code</span><span class="p">();</span>
-  <span class="c1">// Эта функция по коду ошибки возвращает ее текстовое описание, если</span>
-  <span class="c1">// таковое предоставляется операционной системой. Если нет, то </span>
-  <span class="c1">// возвращается строка &quot;?&quot;.</span>
-  <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">message</span><span class="p">(</span><span class="kt">int</span> <span class="n">code</span><span class="p">);</span>
-<span class="p">};</span>
+<span class="hl kwc">class</span> SystemMessage <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl slc">// Эта функция возращает код ошибки.</span>
+  <span class="hl kwb">static int</span> <span class="hl kwd">code</span><span class="hl opt">();</span>
+  <span class="hl slc">// Эта функция по коду ошибки возвращает ее текстовое описание, если</span>
+  <span class="hl slc">// таковое предоставляется операционной системой. Если нет, то </span>
+  <span class="hl slc">// возвращается строка &quot;?&quot;.</span>
+  <span class="hl kwb">static</span> std<span class="hl opt">::</span>string <span class="hl kwd">message</span><span class="hl opt">(</span><span class="hl kwb">int</span> code<span class="hl opt">);</span>
+<span class="hl opt">};</span>
 
-<span class="p">}</span> <span class="c1">// namespace ext</span>
+<span class="hl opt">}</span> <span class="hl slc">// namespace ext</span>
 
-<span class="cp">#endif </span><span class="c1">// _EXT_SYSTEM_MESSAGE_H</span>
-</pre></div>
+<span class="hl ppc">#endif</span> <span class="hl slc">// _EXT_SYSTEM_MESSAGE_H</span><span class="hl ppc"></span>
+</pre>
 
 <p>Файл <code>systemmessage.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &quot;SystemMessage.h&quot;</span>
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;SystemMessage.h&quot;</span><span class="hl ppc"></span>
 
-<span class="cp">#ifdef WIN32</span>
-<span class="cp">#include &lt;windows.h&gt;</span>
-<span class="cp">#else</span>
-<span class="cp">#include &lt;string.h&gt;</span>
-<span class="cp">#include &lt;unistd.h&gt;</span>
-<span class="cp">#include &lt;errno.h&gt;</span>
-<span class="cp">#endif</span>
+<span class="hl ppc">#ifdef WIN32</span>
+<span class="hl ppc">#include &lt;windows.h&gt;</span>
+<span class="hl ppc">#else</span>
+<span class="hl ppc">#include &lt;string.h&gt;</span>
+<span class="hl ppc">#include &lt;unistd.h&gt;</span>
+<span class="hl ppc">#include &lt;errno.h&gt;</span>
+<span class="hl ppc">#endif</span>
 
-<span class="k">namespace</span> <span class="n">ext</span> <span class="p">{</span>
+<span class="hl kwa">namespace</span> ext <span class="hl opt">{</span>
 
-<span class="kt">int</span> <span class="n">SystemMessage</span><span class="o">::</span><span class="n">code</span><span class="p">()</span> <span class="p">{</span>
-<span class="cp">#ifdef WIN32</span>
-  <span class="k">return</span> <span class="n">GetLastError</span><span class="p">();</span>
-<span class="cp">#else</span>
-  <span class="k">return</span> <span class="n">errno</span><span class="p">;</span>
-<span class="cp">#endif</span>
-<span class="p">}</span>
+<span class="hl kwb">int</span> SystemMessage<span class="hl opt">::</span><span class="hl kwd">code</span><span class="hl opt">() {</span>
+<span class="hl ppc">#ifdef WIN32</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">GetLastError</span><span class="hl opt">();</span>
+<span class="hl ppc">#else</span>
+  <span class="hl kwa">return</span> errno<span class="hl opt">;</span>
+<span class="hl ppc">#endif</span>
+<span class="hl opt">}</span>
 
-<span class="c1">// Если система по какой-то причине не имеет функции strerror_r,</span>
-<span class="c1">// то придется лазить напрямую в таблицу сообщений об ошибках.</span>
-<span class="c1">// Для этого надо при компиляции определить макрос LIBC_NO_STRERROR_R.</span>
-<span class="c1">// Пока я видел такое только на HP-UX IA64 v2.</span>
-<span class="cp">#ifndef WIN32</span>
-<span class="cp">#ifndef LIBC_NO_STRERROR_R</span>
-<span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="kt">int</span> <span class="n">sys_nerr</span><span class="p">;</span>
-<span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="kt">char</span><span class="o">*</span> <span class="n">sys_errlist</span><span class="p">[];</span>
-<span class="cp">#endif</span>
-<span class="cp">#endif</span>
+<span class="hl slc">// Если система по какой-то причине не имеет функции strerror_r,</span>
+<span class="hl slc">// то придется лазить напрямую в таблицу сообщений об ошибках.</span>
+<span class="hl slc">// Для этого надо при компиляции определить макрос LIBC_NO_STRERROR_R.</span>
+<span class="hl slc">// Пока я видел такое только на HP-UX IA64 v2.</span>
+<span class="hl ppc">#ifndef WIN32</span>
+<span class="hl ppc">#ifndef LIBC_NO_STRERROR_R</span>
+<span class="hl kwc">extern</span> <span class="hl str">&quot;C&quot;</span> <span class="hl kwb">int</span> sys_nerr<span class="hl opt">;</span>
+<span class="hl kwc">extern</span> <span class="hl str">&quot;C&quot;</span> <span class="hl kwb">char</span><span class="hl opt">*</span> sys_errlist<span class="hl opt">[];</span>
+<span class="hl ppc">#endif</span>
+<span class="hl ppc">#endif</span>
 
-<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">SystemMessage</span><span class="o">::</span><span class="n">message</span><span class="p">(</span><span class="kt">int</span> <span class="n">code</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kt">char</span> <span class="n">msg</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
+std<span class="hl opt">::</span>string SystemMessage<span class="hl opt">::</span><span class="hl kwd">message</span><span class="hl opt">(</span><span class="hl kwb">int</span> code<span class="hl opt">) {</span>
+  <span class="hl kwb">char</span> msg<span class="hl opt">[</span><span class="hl num">1024</span><span class="hl opt">];</span>
 
-<span class="cp">#ifdef WIN32</span>
+<span class="hl ppc">#ifdef WIN32</span>
 
-  <span class="c1">// Версия для Windows</span>
-  <span class="n">FormatMessage</span><span class="p">(</span>
-    <span class="n">FORMAT_MESSAGE_FROM_SYSTEM</span> <span class="o">|</span>
-    <span class="n">FORMAT_MESSAGE_IGNORE_INSERTS</span><span class="p">,</span>
-    <span class="nb">NULL</span><span class="p">,</span>
-    <span class="n">code</span><span class="p">,</span>
-    <span class="n">MAKELANGID</span><span class="p">(</span><span class="n">LANG_NEUTRAL</span><span class="p">,</span> <span class="n">SUBLANG_DEFAULT</span><span class="p">),</span>
-    <span class="n">msg</span><span class="p">,</span>
-    <span class="k">sizeof</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="nb">NULL</span>
-  <span class="p">);</span>
+  <span class="hl slc">// Версия для Windows</span>
+  <span class="hl kwd">FormatMessage</span><span class="hl opt">(</span>
+    FORMAT_MESSAGE_FROM_SYSTEM <span class="hl opt">|</span>
+    FORMAT_MESSAGE_IGNORE_INSERTS<span class="hl opt">,</span>
+    NULL<span class="hl opt">,</span>
+    code<span class="hl opt">,</span>
+    <span class="hl kwd">MAKELANGID</span><span class="hl opt">(</span>LANG_NEUTRAL<span class="hl opt">,</span> SUBLANG_DEFAULT<span class="hl opt">),</span>
+    msg<span class="hl opt">,</span>
+    <span class="hl kwa">sizeof</span><span class="hl opt">(</span>msg<span class="hl opt">) -</span> <span class="hl num">1</span><span class="hl opt">,</span>
+    NULL
+  <span class="hl opt">);</span>
 
-  <span class="kt">char</span><span class="o">*</span> <span class="n">p</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">+</span> <span class="n">strlen</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
+  <span class="hl kwb">char</span><span class="hl opt">*</span> p <span class="hl opt">=</span> msg <span class="hl opt">+</span> <span class="hl kwd">strlen</span><span class="hl opt">(</span>msg<span class="hl opt">);</span>
   
-  <span class="c1">// Обрезаем c конца &#39;\r&#39;, &#39;\n&#39; и &#39;.&#39;</span>
-  <span class="k">for</span><span class="p">(</span><span class="n">p</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">+</span> <span class="n">strlen</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> 
-    <span class="n">p</span> <span class="o">&gt;=</span> <span class="n">msg</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;\n&#39;</span> <span class="o">||</span> <span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;\r&#39;</span> <span class="o">||</span> <span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">&#39;.&#39;</span><span class="p">);</span> <span class="o">--</span><span class="n">p</span><span class="p">)</span> 
-      <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="hl slc">// Обрезаем c конца '\r', '\n' и '.'</span>
+  <span class="hl kwa">for</span><span class="hl opt">(</span>p <span class="hl opt">=</span> msg <span class="hl opt">+</span> <span class="hl kwd">strlen</span><span class="hl opt">(</span>msg<span class="hl opt">) -</span> <span class="hl num">1</span><span class="hl opt">;</span> 
+    p <span class="hl opt">&gt;=</span> msg <span class="hl opt">&amp;&amp; (*</span>p <span class="hl opt">==</span> <span class="hl str">'</span><span class="hl esc">\n</span><span class="hl str">'</span> <span class="hl opt">|| *</span>p <span class="hl opt">==</span> <span class="hl str">'</span><span class="hl esc">\r</span><span class="hl str">'</span> <span class="hl opt">|| *</span>p <span class="hl opt">==</span> <span class="hl str">'.'</span><span class="hl opt">); --</span>p<span class="hl opt">)</span> 
+      <span class="hl opt">*</span>p <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
 
-<span class="cp">#elif LIBC_NO_STRERROR_R</span>
+<span class="hl ppc">#elif LIBC_NO_STRERROR_R</span>
 
-  <span class="c1">// Если UNIX-платформа не имеет функции strerror_r, то делаем ее</span>
-  <span class="c1">// работу вручную. Пока я встретил такое только на HP-UX IA64 v2.</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">code</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">code</span> <span class="o">&gt;=</span> <span class="n">sys_nerr</span><span class="p">)</span>
-    <span class="k">return</span> <span class="s">&quot;?&quot;</span><span class="p">;</span>
+  <span class="hl slc">// Если UNIX-платформа не имеет функции strerror_r, то делаем ее</span>
+  <span class="hl slc">// работу вручную. Пока я встретил такое только на HP-UX IA64 v2.</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>code <span class="hl opt">&lt;</span> <span class="hl num">0</span> <span class="hl opt">||</span> code <span class="hl opt">&gt;=</span> sys_nerr<span class="hl opt">)</span>
+    <span class="hl kwa">return</span> <span class="hl str">&quot;?&quot;</span><span class="hl opt">;</span>
 
-  <span class="n">strncpy</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span> <span class="n">sys_errlist</span><span class="p">[</span><span class="n">code</span><span class="p">],</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="hl kwd">strncpy</span><span class="hl opt">(</span>msg<span class="hl opt">,</span> sys_errlist<span class="hl opt">[</span>code<span class="hl opt">],</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>msg<span class="hl opt">) -</span> <span class="hl num">1</span><span class="hl opt">);</span>
 
-  <span class="c1">// Если сообщение об ошибке длинее чем sizeof(msg)-1, то &#39;\0&#39;</span>
-  <span class="c1">// не будет скопирован, поэтому добавляем его вручну.</span>
-  <span class="n">msg</span><span class="p">[</span><span class="k">sizeof</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="hl slc">// Если сообщение об ошибке длинее чем sizeof(msg)-1, то '\0'</span>
+  <span class="hl slc">// не будет скопирован, поэтому добавляем его вручну.</span>
+  msg<span class="hl opt">[</span><span class="hl kwa">sizeof</span><span class="hl opt">(</span>msg<span class="hl opt">) -</span> <span class="hl num">1</span><span class="hl opt">] =</span> <span class="hl num">0</span><span class="hl opt">;</span>
 
-<span class="cp">#else</span>
+<span class="hl ppc">#else</span>
 
-  <span class="c1">// Для нормальной UNIX-системы просто вызываем strerror_r.</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">strerror_r</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="k">return</span> <span class="s">&quot;?&quot;</span><span class="p">;</span>
+  <span class="hl slc">// Для нормальной UNIX-системы просто вызываем strerror_r.</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwd">strerror_r</span><span class="hl opt">(</span>code<span class="hl opt">,</span> msg<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>msg<span class="hl opt">) -</span> <span class="hl num">1</span><span class="hl opt">) &lt;</span> <span class="hl num">0</span><span class="hl opt">)</span>
+    <span class="hl kwa">return</span> <span class="hl str">&quot;?&quot;</span><span class="hl opt">;</span>
 
-<span class="cp">#endif</span>
+<span class="hl ppc">#endif</span>
 
-  <span class="c1">// Поможем компилятору по возможности оптимизировать </span>
-  <span class="c1">// возвращаемое значение как rvalue.</span>
-  <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">msg</span><span class="p">);</span>
-<span class="p">}</span>
+  <span class="hl slc">// Поможем компилятору по возможности оптимизировать </span>
+  <span class="hl slc">// возвращаемое значение как rvalue.</span>
+  <span class="hl kwa">return</span> std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span>msg<span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="p">}</span> <span class="c1">// namespace ext</span>
-</pre></div>
+<span class="hl opt">}</span> <span class="hl slc">// namespace ext</span>
+</pre>
 
 <p>Теперь посмотрим это в работе.</p>
 
@@ -167,25 +169,26 @@
 
 <p>Тестовая программа <code>systemmessage_test.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;fstream&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;fstream&gt;</span>
 
-<span class="cp">#include &quot;systemmessage.h&quot;</span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;systemmessage.h&quot;</span><span class="hl ppc"></span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="c1">// Пытаемся открыть заведомо несуществующий файл.</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">is</span><span class="p">(</span><span class="s">&quot;__non_existing_file__&quot;</span><span class="p">);</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl slc">// Пытаемся открыть заведомо несуществующий файл.</span>
+  std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span><span class="hl str">&quot;__non_existing_file__&quot;</span><span class="hl opt">);</span>
 
-  <span class="c1">// Печатаем ошибку.</span>
-  <span class="kt">int</span> <span class="n">error</span> <span class="o">=</span> <span class="n">ext</span><span class="o">::</span><span class="n">SystemMessage</span><span class="o">::</span><span class="n">code</span><span class="p">();</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> 
-    <span class="o">&lt;&lt;</span> <span class="n">error</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;, &quot;</span> 
-    <span class="o">&lt;&lt;</span> <span class="n">ext</span><span class="o">::</span><span class="n">SystemMessage</span><span class="o">::</span><span class="n">message</span><span class="p">(</span><span class="n">error</span><span class="p">)</span> 
-    <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="hl slc">// Печатаем ошибку.</span>
+  <span class="hl kwb">int</span> error <span class="hl opt">=</span> ext<span class="hl opt">::</span>SystemMessage<span class="hl opt">::</span><span class="hl kwd">code</span><span class="hl opt">();</span>
+  std<span class="hl opt">::</span>cout 
+    <span class="hl opt">&lt;&lt;</span> error <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, &quot;</span> 
+    <span class="hl opt">&lt;&lt;</span> ext<span class="hl opt">::</span>SystemMessage<span class="hl opt">::</span><span class="hl kwd">message</span><span class="hl opt">(</span>error<span class="hl opt">)</span> 
+    <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
 
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Компилируем в Visual Studio:</p>
 

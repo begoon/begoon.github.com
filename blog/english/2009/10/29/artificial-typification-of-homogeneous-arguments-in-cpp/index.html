@@ -42,18 +42,20 @@
 <div id="post">
   <p>Let&rsquo;s say there is a class with following interface:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Date</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="n">Date</span><span class="p">(</span><span class="kt">int</span> <span class="n">year</span><span class="p">,</span> <span class="kt">int</span> <span class="n">month</span><span class="p">,</span> <span class="kt">int</span> <span class="n">day</span><span class="p">)</span> <span class="p">{</span>
-    <span class="p">...</span>
-  <span class="p">}</span>
-<span class="p">};</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> Date <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwd">Date</span><span class="hl opt">(</span><span class="hl kwb">int</span> year<span class="hl opt">,</span> <span class="hl kwb">int</span> month<span class="hl opt">,</span> <span class="hl kwb">int</span> day<span class="hl opt">) {</span>
+    <span class="hl opt">...</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
+</pre>
 
 <p>Unfortunately not everybody in the world uses the same quite logical notation of Year/Month/Day or Day/Month/Year. Some people prefer Month/Day/Year. But even the first two could be easily mixed up. If the following is written:</p>
 
-<div class="highlight"><pre><span class="n">Data</span> <span class="n">d</span><span class="p">(</span><span class="mi">2009</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
-</pre></div>
+<pre class="hl">
+Data <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl num">2009</span><span class="hl opt">,</span> <span class="hl num">4</span><span class="hl opt">,</span> <span class="hl num">5</span><span class="hl opt">);</span>
+</pre>
 
 <p>Is it 4th of May or 5th of April? Who can be entirely sure what it exactly means without looking in the class declaration?</p>
 
@@ -61,40 +63,45 @@
 
 <p>For instance:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Year</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="k">explicit</span> <span class="n">Year</span><span class="p">(</span><span class="kt">int</span> <span class="n">year</span><span class="p">)</span> <span class="o">:</span> <span class="n">year_</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="p">{}</span>
-  <span class="k">operator</span> <span class="kt">int</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">year_</span><span class="p">;</span> <span class="p">}</span>
- <span class="k">private</span><span class="o">:</span>
-  <span class="kt">int</span> <span class="n">year_</span><span class="p">;</span>
-<span class="p">};</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> Year <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwc">explicit</span> <span class="hl kwd">Year</span><span class="hl opt">(</span><span class="hl kwb">int</span> year<span class="hl opt">) :</span> <span class="hl kwd">year_</span><span class="hl opt">(</span>year<span class="hl opt">) {}</span>
+  <span class="hl kwc">operator</span> <span class="hl kwb">int</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> year_<span class="hl opt">; }</span>
+ <span class="hl kwc">private</span><span class="hl opt">:</span>
+  <span class="hl kwb">int</span> year_<span class="hl opt">;</span>
+<span class="hl opt">};</span>
+</pre>
 
 <p>And similar for the rest:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Month</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-<span class="k">class</span> <span class="nc">Day</span> <span class="p">{</span> <span class="p">...</span> <span class="p">};</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> Month <span class="hl opt">{ ... };</span>
+<span class="hl kwc">class</span> Day <span class="hl opt">{ ... };</span>
+</pre>
 
 <p>Now the interface could look this way:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Date</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-   <span class="n">Date</span><span class="p">(</span><span class="n">Year</span> <span class="n">year</span><span class="p">,</span> <span class="n">Month</span> <span class="n">month</span><span class="p">,</span> <span class="n">Day</span> <span class="n">day</span><span class="p">);</span>
-   <span class="n">Date</span><span class="p">(</span><span class="n">Month</span> <span class="n">month</span><span class="p">,</span> <span class="n">Day</span> <span class="n">day</span><span class="p">,</span> <span class="n">Year</span> <span class="n">year</span><span class="p">);</span>
-   <span class="n">Date</span><span class="p">(</span><span class="n">Day</span> <span class="n">day</span><span class="p">,</span> <span class="n">Month</span> <span class="n">month</span><span class="p">,</span> <span class="n">Year</span> <span class="n">year</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwc">class</span> Date <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+   <span class="hl kwd">Date</span><span class="hl opt">(</span>Year year<span class="hl opt">,</span> Month month<span class="hl opt">,</span> Day day<span class="hl opt">);</span>
+   <span class="hl kwd">Date</span><span class="hl opt">(</span>Month month<span class="hl opt">,</span> Day day<span class="hl opt">,</span> Year year<span class="hl opt">);</span>
+   <span class="hl kwd">Date</span><span class="hl opt">(</span>Day day<span class="hl opt">,</span> Month month<span class="hl opt">,</span> Year year<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>We can instantiate the class as:</p>
 
-<div class="highlight"><pre><span class="n">Date</span> <span class="n">d</span><span class="p">(</span><span class="n">Year</span><span class="p">(</span><span class="mi">2010</span><span class="p">),</span> <span class="n">Month</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">Day</span><span class="p">(</span><span class="mi">5</span><span class="p">));</span>
-</pre></div>
+<pre class="hl">
+Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl kwd">Year</span><span class="hl opt">(</span><span class="hl num">2010</span><span class="hl opt">),</span> <span class="hl kwd">Month</span><span class="hl opt">(</span><span class="hl num">4</span><span class="hl opt">),</span> <span class="hl kwd">Day</span><span class="hl opt">(</span><span class="hl num">5</span><span class="hl opt">));</span>
+</pre>
 
 <p>or</p>
 
-<div class="highlight"><pre><span class="n">Date</span> <span class="n">d</span><span class="p">(</span><span class="n">Month</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="n">Day</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">Year</span><span class="p">(</span><span class="mi">2010</span><span class="p">));</span>
-</pre></div>
+<pre class="hl">
+Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl kwd">Month</span><span class="hl opt">(</span><span class="hl num">4</span><span class="hl opt">),</span> <span class="hl kwd">Day</span><span class="hl opt">(</span><span class="hl num">5</span><span class="hl opt">),</span> <span class="hl kwd">Year</span><span class="hl opt">(</span><span class="hl num">2010</span><span class="hl opt">));</span>
+</pre>
 
 <p>The result is always visible and fully predictable in a calling code. Everything will be inlined so no slow down involved at all because of those three &ldquo;unnecessary&rdquo; classes.</p>
 

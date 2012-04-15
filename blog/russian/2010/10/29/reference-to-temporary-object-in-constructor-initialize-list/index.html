@@ -43,35 +43,37 @@
 <div id="post">
   <p>Имеем два исходника:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
 
-<span class="k">struct</span> <span class="n">A</span> <span class="p">{</span>
-  <span class="n">A</span><span class="p">();</span>
-  <span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">i</span><span class="p">;</span>
-<span class="p">};</span>
+<span class="hl kwb">struct</span> A <span class="hl opt">{</span>
+  <span class="hl kwd">A</span><span class="hl opt">();</span>
+  <span class="hl kwb">const int</span><span class="hl opt">&amp;</span> i<span class="hl opt">;</span>
+<span class="hl opt">};</span>
 
-<span class="n">A</span><span class="o">::</span><span class="n">A</span><span class="p">()</span> <span class="o">:</span> <span class="n">i</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span> <span class="p">{}</span>
+A<span class="hl opt">::</span><span class="hl kwd">A</span><span class="hl opt">() :</span> <span class="hl kwd">i</span><span class="hl opt">(</span><span class="hl num">123</span><span class="hl opt">) {}</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">A</span> <span class="n">a</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  A a<span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> a<span class="hl opt">.</span>i <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>и</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
 
-<span class="k">struct</span> <span class="n">A</span> <span class="p">{</span>
-  <span class="n">A</span><span class="p">()</span> <span class="o">:</span> <span class="n">i</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span> <span class="p">{}</span>
-  <span class="k">const</span> <span class="kt">int</span><span class="o">&amp;</span> <span class="n">i</span><span class="p">;</span>
-<span class="p">};</span>
+<span class="hl kwb">struct</span> A <span class="hl opt">{</span>
+  <span class="hl kwd">A</span><span class="hl opt">() :</span> <span class="hl kwd">i</span><span class="hl opt">(</span><span class="hl num">123</span><span class="hl opt">) {}</span>
+  <span class="hl kwb">const int</span><span class="hl opt">&amp;</span> i<span class="hl opt">;</span>
+<span class="hl opt">};</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">A</span> <span class="n">a</span><span class="p">;</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">.</span><span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  A a<span class="hl opt">;</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> a<span class="hl opt">.</span>i <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Будучи скомпилированными компилятором от Sun или GCC, эти два примера печатают разные результаты. И первый - неправильный. Студия же 2010, с настройками по умолчанию, дает предупреждение и генерирует код, работающий правильно (точнее, как ожидает программист) в обоих случаях.</p>
 

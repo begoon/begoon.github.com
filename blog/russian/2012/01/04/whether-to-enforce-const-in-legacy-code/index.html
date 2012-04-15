@@ -43,10 +43,11 @@
 <div id="post">
   <p>Битый час сегодня спорили с коллегой по следующему вопросу. Имеем код:</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">foo</span><span class="p">(</span><span class="n">T</span><span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">bar</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">foo</span><span class="hl opt">(</span>T<span class="hl opt">*</span> t<span class="hl opt">) {</span>
+  <span class="hl kwd">bar</span><span class="hl opt">(</span>t<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Проблема в том, что функция bar является legacy-функцией одной из наших старых библиотек, которую сейчас мы поменять не можем, и ее сигнатура: <code>void bar(T*)</code>, то есть указатель-параметр не <code>const</code>. Но в реальности эта функция не меняет объект, на который указывает ее параметр.</p>
 
@@ -54,10 +55,11 @@
 
 <p>Я считаю, что код должен выглядеть так:</p>
 
-<div class="highlight"><pre><span class="kt">void</span> <span class="n">foo</span><span class="p">(</span><span class="k">const</span> <span class="n">T</span><span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">bar</span><span class="p">(</span><span class="k">const_cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">));</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">foo</span><span class="hl opt">(</span><span class="hl kwb">const</span> T<span class="hl opt">*</span> t<span class="hl opt">) {</span>
+  <span class="hl kwd">bar</span><span class="hl opt">(</span><span class="hl kwa">const_cast</span><span class="hl opt">&lt;</span>T<span class="hl opt">*&gt;(</span>t<span class="hl opt">));</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Мои аргументы: так как контракт функции foo говорит, что эта функция не будет менять объект, на который указывает указатель, то этот факт <strong>должен</strong> быть отражен в API использованием слова <code>const</code>. И не имеет никакого значения, что по какой-то причине реализация этой функции внутри использует старый код, который неграмотно написан. Да, из-за это приходится делать некрасивое приведение типов, снимая <code>const</code>. Но эта некрасивость локализована внутри <code>foo</code> и в целом не оказывает влияния на стройность нового кода. Более того - если в будущем можно будет отказаться от использования старой функции <code>bar</code>, то проблема вообще исчезнет.</p>
 

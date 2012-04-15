@@ -49,44 +49,45 @@
 
 <p><code>era.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;vector&gt;</span>
-<span class="cp">#include &lt;cmath&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;vector&gt;</span>
+<span class="hl ppc">#include &lt;cmath&gt;</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-  <span class="c1">// Получаем предельное значение эксперимента из командной</span>
-  <span class="c1">// строки. По умолчанию - 100. Это основной, влияющий</span>
-  <span class="c1">// на время работы алгоритма, параметр.</span>
-  <span class="kt">long</span> <span class="n">n</span> <span class="o">=</span> <span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">:</span> <span class="mi">100</span><span class="p">;</span>
-  <span class="c1">// Корень квадратный из максимума, округленный до большего</span>
-  <span class="c1">// целого.</span>
-  <span class="kt">long</span> <span class="n">sqrt_n</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl slc">// Получаем предельное значение эксперимента из командной</span>
+  <span class="hl slc">// строки. По умолчанию - 100. Это основной, влияющий</span>
+  <span class="hl slc">// на время работы алгоритма, параметр.</span>
+  <span class="hl kwb">long</span> n <span class="hl opt">=</span> argc <span class="hl opt">&gt;</span> <span class="hl num">1</span> ? std<span class="hl opt">::</span><span class="hl kwd">atoi</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]) :</span> <span class="hl num">100</span><span class="hl opt">;</span>
+  <span class="hl slc">// Корень квадратный из максимума, округленный до большего</span>
+  <span class="hl slc">// целого.</span>
+  <span class="hl kwb">long</span> sqrt_n <span class="hl opt">=</span> <span class="hl kwa">static_cast</span><span class="hl opt">&lt;</span><span class="hl kwb">long</span><span class="hl opt">&gt;(</span>std<span class="hl opt">::</span><span class="hl kwd">sqrt</span><span class="hl opt">(</span><span class="hl kwa">static_cast</span><span class="hl opt">&lt;</span><span class="hl kwb">double</span><span class="hl opt">&gt;(</span>n<span class="hl opt">))) +</span> <span class="hl num">1</span><span class="hl opt">;</span>
 
-  <span class="c1">// Массив-вектор для хранения значений. Это центр внимания нашего</span>
-  <span class="c1">// эксперимента. Макрос TYPE задает тип элементов вектора и должен</span>
-  <span class="c1">// быть задан в опциях при компиляции: -DTYPE=int или</span>
-  <span class="c1">// -DTYPE=bool соответственно.</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">TYPE</span><span class="o">&gt;</span> <span class="n">S</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+  <span class="hl slc">// Массив-вектор для хранения значений. Это центр внимания нашего</span>
+  <span class="hl slc">// эксперимента. Макрос TYPE задает тип элементов вектора и должен</span>
+  <span class="hl slc">// быть задан в опциях при компиляции: -DTYPE=int или</span>
+  <span class="hl slc">// -DTYPE=bool соответственно.</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>TYPE<span class="hl opt">&gt;</span> <span class="hl kwd">S</span><span class="hl opt">(</span>n<span class="hl opt">,</span> <span class="hl kwa">true</span><span class="hl opt">);</span>
 
-  <span class="c1">// Собственно, решето Эратосфена.</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">sqrt_n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">*</span><span class="n">i</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="n">j</span> <span class="o">+=</span> <span class="n">i</span><span class="p">)</span>
-        <span class="n">S</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+  <span class="hl slc">// Собственно, решето Эратосфена.</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> sqrt_n<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>S<span class="hl opt">[</span>i<span class="hl opt">])</span>
+      <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> j <span class="hl opt">=</span> i<span class="hl opt">*</span>i<span class="hl opt">;</span> j <span class="hl opt">&lt;</span> n<span class="hl opt">;</span> j <span class="hl opt">+=</span> i<span class="hl opt">)</span>
+        S<span class="hl opt">[</span>j<span class="hl opt">] =</span> <span class="hl kwa">false</span><span class="hl opt">;</span>
 
-  <span class="c1">// Подсчет количество найденных простых чисел. Делаем это для</span>
-  <span class="c1">// самопроверки.</span>
-  <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-      <span class="n">count</span><span class="o">++</span><span class="p">;</span>
+  <span class="hl slc">// Подсчет количество найденных простых чисел. Делаем это для</span>
+  <span class="hl slc">// самопроверки.</span>
+  <span class="hl kwb">int</span> count <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> n<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>S<span class="hl opt">[</span>i<span class="hl opt">])</span>
+      count<span class="hl opt">++;</span>
 
-  <span class="c1">// Печатаем найденное количество.</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">count</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="hl slc">// Печатаем найденное количество.</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> count <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
 
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Эксперимент я проводил на ноутбуке с процессором Core 2 1ГГц. Для конкретно этой машины я выбрал предел поиска в 10000000. При этом значении времена работы программы с одной стороны небольшие (удобно для повторения замеров), но другой стороны — весьма показательные.</p>
 
@@ -107,28 +108,29 @@
 
 <p><code>build.cmd</code>:</p>
 
-<div class="highlight"><pre>bcc32 -DTYPE<span class="o">=</span>bool -eera-bcc32-bool.exe era.cpp
-bcc32 -DTYPE<span class="o">=</span>int -eera-bcc32-int.exe era.cpp
-bcc32 -O2 -DTYPE<span class="o">=</span>bool -eera-bcc32-bool-opt.exe era.cpp
-bcc32 -O2 -DTYPE<span class="o">=</span>int -eera-bcc32-int-opt.exe era.cpp
+<pre class="hl">
+bcc32 <span class="hl opt">-</span>DTYPE<span class="hl opt">=</span>bool <span class="hl opt">-</span>eera<span class="hl opt">-</span>bcc32<span class="hl opt">-</span>bool.exe era.cpp
+bcc32 <span class="hl opt">-</span>DTYPE<span class="hl opt">=</span>int <span class="hl opt">-</span>eera<span class="hl opt">-</span>bcc32<span class="hl opt">-</span>int.exe era.cpp
+bcc32 <span class="hl opt">-</span>O2 <span class="hl opt">-</span>DTYPE<span class="hl opt">=</span>bool <span class="hl opt">-</span>eera<span class="hl opt">-</span>bcc32<span class="hl opt">-</span>bool<span class="hl opt">-</span>opt.exe era.cpp
+bcc32 <span class="hl opt">-</span>O2 <span class="hl opt">-</span>DTYPE<span class="hl opt">=</span>int <span class="hl opt">-</span>eera<span class="hl opt">-</span>bcc32<span class="hl opt">-</span>int<span class="hl opt">-</span>opt.exe era.cpp
 
-g++ -DTYPE<span class="o">=</span>bool -o era-g++-bool.exe era.cpp
-g++ -DTYPE<span class="o">=</span>int -o era-g++-int.exe era.cpp
-g++ -O3 -funroll-all-loops -fomit-frame-pointer -mtune<span class="o">=</span>nocona -DTYPE<span class="o">=</span>bool -o era-g++-bool-opt.exe era.cpp
-g++ -O3 -funroll-all-loops -fomit-frame-pointer -mtune<span class="o">=</span>nocona -DTYPE<span class="o">=</span>int -o era-g++-int-opt.exe era.cpp
+g<span class="hl opt">++ -</span>DTYPE<span class="hl opt">=</span>bool <span class="hl opt">-</span>o era<span class="hl opt">-</span>g<span class="hl opt">++-</span>bool.exe era.cpp
+g<span class="hl opt">++ -</span>DTYPE<span class="hl opt">=</span>int <span class="hl opt">-</span>o era<span class="hl opt">-</span>g<span class="hl opt">++-</span>int.exe era.cpp
+g<span class="hl opt">++ -</span>O3 <span class="hl opt">-</span>funroll<span class="hl opt">-</span>all<span class="hl opt">-</span>loops <span class="hl opt">-</span>fomit<span class="hl opt">-</span>frame<span class="hl opt">-</span>pointer <span class="hl opt">-</span>mtune<span class="hl opt">=</span>nocona <span class="hl opt">-</span>DTYPE<span class="hl opt">=</span>bool <span class="hl opt">-</span>o era<span class="hl opt">-</span>g<span class="hl opt">++-</span>bool<span class="hl opt">-</span>opt.exe era.cpp
+g<span class="hl opt">++ -</span>O3 <span class="hl opt">-</span>funroll<span class="hl opt">-</span>all<span class="hl opt">-</span>loops <span class="hl opt">-</span>fomit<span class="hl opt">-</span>frame<span class="hl opt">-</span>pointer <span class="hl opt">-</span>mtune<span class="hl opt">=</span>nocona <span class="hl opt">-</span>DTYPE<span class="hl opt">=</span>int <span class="hl opt">-</span>o era<span class="hl opt">-</span>g<span class="hl opt">++-</span>int<span class="hl opt">-</span>opt.exe era.cpp
 
 call cl2008.cmd
-cl /EHsc /DTYPE<span class="o">=</span>bool /Feera-cl2008-bool.exe era.cpp
-cl /EHsc /DTYPE<span class="o">=</span>int /Feera-cl2008-int.exe era.cpp
-cl /EHsc /arch:SSE2 /O2 -DTYPE<span class="o">=</span>bool /Feera-cl2008-bool-opt.exe era.cpp
-cl /EHsc /arch:SSE2 /O2 -DTYPE<span class="o">=</span>int /Feera-cl2008-int-opt.exe era.cpp
+cl <span class="hl opt">/</span>EHsc <span class="hl opt">/</span>DTYPE<span class="hl opt">=</span>bool <span class="hl opt">/</span>Feera<span class="hl opt">-</span>cl2008<span class="hl opt">-</span>bool.exe era.cpp
+cl <span class="hl opt">/</span>EHsc <span class="hl opt">/</span>DTYPE<span class="hl opt">=</span>int <span class="hl opt">/</span>Feera<span class="hl opt">-</span>cl2008<span class="hl opt">-</span>int.exe era.cpp
+cl <span class="hl opt">/</span>EHsc <span class="hl opt">/</span>arch<span class="hl opt">:</span>SSE2 <span class="hl opt">/</span>O2 <span class="hl opt">-</span>DTYPE<span class="hl opt">=</span>bool <span class="hl opt">/</span>Feera<span class="hl opt">-</span>cl2008<span class="hl opt">-</span>bool<span class="hl opt">-</span>opt.exe era.cpp
+cl <span class="hl opt">/</span>EHsc <span class="hl opt">/</span>arch<span class="hl opt">:</span>SSE2 <span class="hl opt">/</span>O2 <span class="hl opt">-</span>DTYPE<span class="hl opt">=</span>int <span class="hl opt">/</span>Feera<span class="hl opt">-</span>cl2008<span class="hl opt">-</span>int<span class="hl opt">-</span>opt.exe era.cpp
 
 call cl2005.cmd
-cl /EHsc /DTYPE<span class="o">=</span>bool /Feera-cl2005-bool.exe era.cpp
-cl /EHsc /DTYPE<span class="o">=</span>int /Feera-cl2005-int.exe era.cpp
-cl /EHsc /arch:SSE2 /O2 -DTYPE<span class="o">=</span>bool /Feera-cl2005-bool-opt.exe era.cpp
-cl /EHsc /arch:SSE2 /O2 -DTYPE<span class="o">=</span>int /Feera-cl2005-int-opt.exe era.cpp
-</pre></div>
+cl <span class="hl opt">/</span>EHsc <span class="hl opt">/</span>DTYPE<span class="hl opt">=</span>bool <span class="hl opt">/</span>Feera<span class="hl opt">-</span>cl2005<span class="hl opt">-</span>bool.exe era.cpp
+cl <span class="hl opt">/</span>EHsc <span class="hl opt">/</span>DTYPE<span class="hl opt">=</span>int <span class="hl opt">/</span>Feera<span class="hl opt">-</span>cl2005<span class="hl opt">-</span>int.exe era.cpp
+cl <span class="hl opt">/</span>EHsc <span class="hl opt">/</span>arch<span class="hl opt">:</span>SSE2 <span class="hl opt">/</span>O2 <span class="hl opt">-</span>DTYPE<span class="hl opt">=</span>bool <span class="hl opt">/</span>Feera<span class="hl opt">-</span>cl2005<span class="hl opt">-</span>bool<span class="hl opt">-</span>opt.exe era.cpp
+cl <span class="hl opt">/</span>EHsc <span class="hl opt">/</span>arch<span class="hl opt">:</span>SSE2 <span class="hl opt">/</span>O2 <span class="hl opt">-</span>DTYPE<span class="hl opt">=</span>int <span class="hl opt">/</span>Feera<span class="hl opt">-</span>cl2005<span class="hl opt">-</span>int<span class="hl opt">-</span>opt.exe era.cpp
+</pre>
 
 <p>При скрипты <code>cl2005.cmd</code> и <code>cl2008.cmd</code> я уже <a href="/blog/russian/2009/01/29/scripts-for-visual-studio-command-line/">писал</a>.</p>
 
@@ -136,26 +138,27 @@ cl /EHsc /arch:SSE2 /O2 -DTYPE<span class="o">=</span>int /Feera-cl2005-int-opt.
 
 <p>Далее, запуск. Для этого можно использовать следующий скрипт (<code>run.cmd</code>).</p>
 
-<div class="highlight"><pre>ntimer -1 era-cl2005-bool.exe 10000000
-ntimer -1 era-cl2005-int.exe 10000000
-ntimer -1 era-cl2005-bool-opt.exe 10000000
-ntimer -1 era-cl2005-int-opt.exe 10000000
+<pre class="hl">
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>cl2005<span class="hl opt">-</span>bool.exe <span class="hl num">10000000</span>
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>cl2005<span class="hl opt">-</span>int.exe <span class="hl num">10000000</span>
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>cl2005<span class="hl opt">-</span>bool<span class="hl opt">-</span>opt.exe <span class="hl num">10000000</span>
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>cl2005<span class="hl opt">-</span>int<span class="hl opt">-</span>opt.exe <span class="hl num">10000000</span>
 
-ntimer -1 era-cl2008-bool.exe 10000000
-ntimer -1 era-cl2008-int.exe 10000000
-ntimer -1 era-cl2008-bool-opt.exe 10000000
-ntimer -1 era-cl2008-int-opt.exe 10000000
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>cl2008<span class="hl opt">-</span>bool.exe <span class="hl num">10000000</span>
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>cl2008<span class="hl opt">-</span>int.exe <span class="hl num">10000000</span>
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>cl2008<span class="hl opt">-</span>bool<span class="hl opt">-</span>opt.exe <span class="hl num">10000000</span>
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>cl2008<span class="hl opt">-</span>int<span class="hl opt">-</span>opt.exe <span class="hl num">10000000</span>
 
-ntimer -1 era-bcc32-bool.exe 10000000
-ntimer -1 era-bcc32-int.exe 10000000
-ntimer -1 era-bcc32-bool-opt.exe 10000000
-ntimer -1 era-bcc32-int-opt.exe 10000000
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>bcc32<span class="hl opt">-</span>bool.exe <span class="hl num">10000000</span>
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>bcc32<span class="hl opt">-</span>int.exe <span class="hl num">10000000</span>
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>bcc32<span class="hl opt">-</span>bool<span class="hl opt">-</span>opt.exe <span class="hl num">10000000</span>
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>bcc32<span class="hl opt">-</span>int<span class="hl opt">-</span>opt.exe <span class="hl num">10000000</span>
 
-ntimer -1 era-g++-bool.exe 10000000
-ntimer -1 era-g++-int.exe 10000000
-ntimer -1 era-g++-bool-opt.exe 10000000
-ntimer -1 era-g++-int-opt.exe 10000000
-</pre></div>
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>g<span class="hl opt">++-</span>bool.exe <span class="hl num">10000000</span>
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>g<span class="hl opt">++-</span>int.exe <span class="hl num">10000000</span>
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>g<span class="hl opt">++-</span>bool<span class="hl opt">-</span>opt.exe <span class="hl num">10000000</span>
+ntimer <span class="hl opt">-</span><span class="hl num">1</span> era<span class="hl opt">-</span>g<span class="hl opt">++-</span>int<span class="hl opt">-</span>opt.exe <span class="hl num">10000000</span>
+</pre>
 
 <p>Для измерения времени работы я использовал программу <a href="/downloads/ntimer.zip">ntimer</a>. Ее нужно скачать, распаковать и положить <code>ntimer.exe</code> в текущий каталог. Будучи запущенной с ключом &ldquo;-1&rdquo; эта программа печатает времена в одну строку. Нас интересует самое первое печатаемой ей время.</p>
 

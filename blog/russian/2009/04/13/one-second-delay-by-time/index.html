@@ -49,19 +49,20 @@
 
 <p>Фрагмент кода, в котором рабочий цикл имеет условие, позволяющее ему работать время, близкое к одной секунде:</p>
 
-<div class="highlight"><pre><span class="p">...</span>
-<span class="c1">// Получаем номер текущей секунды</span>
-<span class="n">time_t</span> <span class="n">started</span> <span class="o">=</span> <span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
-<span class="c1">// Ждем перехода на следующую секунду</span>
-<span class="k">while</span> <span class="p">(</span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">)</span> <span class="o">==</span> <span class="n">started</span><span class="p">);</span>
-<span class="c1">// И сразу запускаем рабочий цикл</span>
-<span class="n">started</span> <span class="o">=</span> <span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
-<span class="k">do</span> <span class="p">{</span>
-   <span class="c1">// Цикл, работающий в течение секунды</span>
-   <span class="p">...</span>
-<span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">)</span> <span class="o">==</span> <span class="n">started</span><span class="p">);</span>
-<span class="p">...</span>
-</pre></div>
+<pre class="hl">
+<span class="hl opt">...</span>
+<span class="hl slc">// Получаем номер текущей секунды</span>
+<span class="hl kwb">time_t</span> started <span class="hl opt">=</span> <span class="hl kwd">time</span><span class="hl opt">(</span>NULL<span class="hl opt">);</span>
+<span class="hl slc">// Ждем перехода на следующую секунду</span>
+<span class="hl kwa">while</span> <span class="hl opt">(</span><span class="hl kwd">time</span><span class="hl opt">(</span>NULL<span class="hl opt">) ==</span> started<span class="hl opt">);</span>
+<span class="hl slc">// И сразу запускаем рабочий цикл</span>
+started <span class="hl opt">=</span> <span class="hl kwd">time</span><span class="hl opt">(</span>NULL<span class="hl opt">);</span>
+<span class="hl kwa">do</span> <span class="hl opt">{</span>
+   <span class="hl slc">// Цикл, работающий в течение секунды</span>
+   <span class="hl opt">...</span>
+<span class="hl opt">}</span> <span class="hl kwa">while</span> <span class="hl opt">(</span><span class="hl kwd">time</span><span class="hl opt">(</span>NULL<span class="hl opt">) ==</span> started<span class="hl opt">);</span>
+<span class="hl opt">...</span>
+</pre>
 
 <p>Тут, конечно, есть недостатки. Подготовительный цикл ожидания перехода на следующую секунду может &ldquo;есть&rdquo; процессорное время, если <code>time()</code> для вашей системы не отдает time slice. Также сложно сделать какой-то надежный универсальный шаблон или макрос, так как надо гарантированно избежать какого-либо лишнего кода, чтобы не терять точность.</p>
 

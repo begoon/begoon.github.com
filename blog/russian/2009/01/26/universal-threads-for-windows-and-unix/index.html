@@ -53,141 +53,143 @@
 
 <p><code>thread.h</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#ifndef _EXT_THREAD_H</span>
-<span class="cp">#define _EXT_THREAD_H</span>
+<pre class="hl">
+<span class="hl ppc">#ifndef _EXT_THREAD_H</span>
+<span class="hl ppc">#define _EXT_THREAD_H</span>
 
-<span class="cp">#ifdef WIN32</span>
-<span class="cp">#include &lt;windows.h&gt;</span>
-<span class="cp">#else</span>
-<span class="cp">#include &lt;pthread.h&gt;</span>
-<span class="cp">#include &lt;signal.h&gt;</span>
-<span class="cp">#endif</span>
+<span class="hl ppc">#ifdef WIN32</span>
+<span class="hl ppc">#include &lt;windows.h&gt;</span>
+<span class="hl ppc">#else</span>
+<span class="hl ppc">#include &lt;pthread.h&gt;</span>
+<span class="hl ppc">#include &lt;signal.h&gt;</span>
+<span class="hl ppc">#endif</span>
 
-<span class="k">namespace</span> <span class="n">ext</span> <span class="p">{</span>
+<span class="hl kwa">namespace</span> ext <span class="hl opt">{</span>
 
-<span class="cp">#ifdef WIN32</span>
-<span class="k">typedef</span> <span class="n">HANDLE</span> <span class="n">ThreadType</span><span class="p">;</span>
-<span class="cp">#else</span>
-<span class="k">typedef</span> <span class="n">pthread_t</span> <span class="n">ThreadType</span><span class="p">;</span>
-<span class="cp">#endif</span>
+<span class="hl ppc">#ifdef WIN32</span>
+<span class="hl kwc">typedef</span> HANDLE ThreadType<span class="hl opt">;</span>
+<span class="hl ppc">#else</span>
+<span class="hl kwc">typedef</span> pthread_t ThreadType<span class="hl opt">;</span>
+<span class="hl ppc">#endif</span>
 
-<span class="k">class</span> <span class="nc">Thread</span> <span class="p">{</span>
-<span class="k">public</span><span class="o">:</span>
-  <span class="n">Thread</span><span class="p">()</span> <span class="p">{}</span>
-  <span class="k">virtual</span> <span class="o">~</span><span class="n">Thread</span><span class="p">();</span>
+<span class="hl kwc">class</span> Thread <span class="hl opt">{</span>
+<span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwd">Thread</span><span class="hl opt">() {}</span>
+  <span class="hl kwc">virtual</span> <span class="hl opt">~</span><span class="hl kwd">Thread</span><span class="hl opt">();</span>
 
-  <span class="c1">// Функция запуска потока. Ее нельзя совместить с конструктором</span>
-  <span class="c1">// класса, так как может случиться, что поток запустится до того,</span>
-  <span class="c1">// как объект будет полностью сформирован. А это может спокойно </span>
-  <span class="c1">// произойти, если вызвать pthread_create или CreateThread в</span>
-  <span class="c1">// в конструкторе. А вызов виртуальной функции в конструкторе, </span>
-  <span class="c1">// да еще и в конструкторе недосформированного объекта, </span>
-  <span class="c1">// в лучшем случае приведет к фатальной ошибке вызова чисто </span>
-  <span class="c1">// виртуальной функции, либо в худшем случае падению программы </span>
-  <span class="c1">// с нарушением защиты памяти. Запуск же потока после работы</span>
-  <span class="c1">// конструктора избавляет от этих проблем. </span>
-  <span class="kt">void</span> <span class="n">Start</span><span class="p">();</span>
+  <span class="hl slc">// Функция запуска потока. Ее нельзя совместить с конструктором</span>
+  <span class="hl slc">// класса, так как может случиться, что поток запустится до того,</span>
+  <span class="hl slc">// как объект будет полностью сформирован. А это может спокойно </span>
+  <span class="hl slc">// произойти, если вызвать pthread_create или CreateThread в</span>
+  <span class="hl slc">// в конструкторе. А вызов виртуальной функции в конструкторе, </span>
+  <span class="hl slc">// да еще и в конструкторе недосформированного объекта, </span>
+  <span class="hl slc">// в лучшем случае приведет к фатальной ошибке вызова чисто </span>
+  <span class="hl slc">// виртуальной функции, либо в худшем случае падению программы </span>
+  <span class="hl slc">// с нарушением защиты памяти. Запуск же потока после работы</span>
+  <span class="hl slc">// конструктора избавляет от этих проблем. </span>
+  <span class="hl kwb">void</span> <span class="hl kwd">Start</span><span class="hl opt">();</span>
 
-  <span class="c1">// Главная функция потока, реализующая работу потока.</span>
-  <span class="c1">// Поток завершается, когда эта функция заканчивает работу.</span>
-  <span class="c1">// Крайне рекомендуется ловить ВСЕ исключения в данной функции</span>
-  <span class="c1">// через try-catch(...). Возникновение неловимого никем </span>
-  <span class="c1">// исключения приведет к молчаливому падению программы без</span>
-  <span class="c1">// возможности объяснить причину.</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">Execute</span><span class="p">()</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="hl slc">// Главная функция потока, реализующая работу потока.</span>
+  <span class="hl slc">// Поток завершается, когда эта функция заканчивает работу.</span>
+  <span class="hl slc">// Крайне рекомендуется ловить ВСЕ исключения в данной функции</span>
+  <span class="hl slc">// через try-catch(...). Возникновение неловимого никем </span>
+  <span class="hl slc">// исключения приведет к молчаливому падению программы без</span>
+  <span class="hl slc">// возможности объяснить причину.</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">Execute</span><span class="hl opt">() =</span> <span class="hl num">0</span><span class="hl opt">;</span>
 
-  <span class="c1">// Присоединение к потоку.</span>
-  <span class="c1">// Данная функция вернет управление только когда поток</span>
-  <span class="c1">// завершит работу. Применяется при синхронизации потоков,</span>
-  <span class="c1">// если надо отследить завершение потока.</span>
-  <span class="kt">void</span> <span class="n">Join</span><span class="p">();</span>
+  <span class="hl slc">// Присоединение к потоку.</span>
+  <span class="hl slc">// Данная функция вернет управление только когда поток</span>
+  <span class="hl slc">// завершит работу. Применяется при синхронизации потоков,</span>
+  <span class="hl slc">// если надо отследить завершение потока.</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">Join</span><span class="hl opt">();</span>
 
-  <span class="c1">// Уничтожение потока.</span>
-  <span class="c1">// Принудительно уничтожает поток извне. Данный способ</span>
-  <span class="c1">// завершения потока является крайне нерекомендуемым.</span>
-  <span class="c1">// Правильнее завершать поток логически, предусмотрев</span>
-  <span class="c1">// в функции Execute() условие для выхода, так самым</span>
-  <span class="c1">// обеспечив потоку нормальное завершение.</span>
-  <span class="kt">void</span> <span class="n">Kill</span><span class="p">();</span>
+  <span class="hl slc">// Уничтожение потока.</span>
+  <span class="hl slc">// Принудительно уничтожает поток извне. Данный способ</span>
+  <span class="hl slc">// завершения потока является крайне нерекомендуемым.</span>
+  <span class="hl slc">// Правильнее завершать поток логически, предусмотрев</span>
+  <span class="hl slc">// в функции Execute() условие для выхода, так самым</span>
+  <span class="hl slc">// обеспечив потоку нормальное завершение.</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">Kill</span><span class="hl opt">();</span>
 
-<span class="k">private</span><span class="o">:</span>
-  <span class="n">ThreadType</span> <span class="n">__handle</span><span class="p">;</span>
+<span class="hl kwc">private</span><span class="hl opt">:</span>
+  ThreadType __handle<span class="hl opt">;</span>
 
-  <span class="c1">// Защита от случайного копирования объекта в C++</span>
-  <span class="n">Thread</span><span class="p">(</span><span class="k">const</span> <span class="n">Thread</span><span class="o">&amp;</span><span class="p">);</span>
-  <span class="kt">void</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="k">const</span> <span class="n">Thread</span><span class="o">&amp;</span><span class="p">);</span>
-<span class="p">};</span>
+  <span class="hl slc">// Защита от случайного копирования объекта в C++</span>
+  <span class="hl kwd">Thread</span><span class="hl opt">(</span><span class="hl kwb">const</span> Thread<span class="hl opt">&amp;);</span>
+  <span class="hl kwb">void</span> <span class="hl kwc">operator</span><span class="hl opt">=(</span><span class="hl kwb">const</span> Thread<span class="hl opt">&amp;);</span>
+<span class="hl opt">};</span>
 
-<span class="p">}</span> <span class="c1">// ext</span>
+<span class="hl opt">}</span> <span class="hl slc">// ext</span>
 
-<span class="cp">#endif</span>
-</pre></div>
+<span class="hl ppc">#endif</span>
+</pre>
 
 <p><code>thread.cpp</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &quot;thread.h&quot;</span>
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;thread.h&quot;</span><span class="hl ppc"></span>
 
-<span class="k">namespace</span> <span class="n">ext</span> <span class="p">{</span>
+<span class="hl kwa">namespace</span> ext <span class="hl opt">{</span>
 
-<span class="k">static</span> <span class="kt">void</span> <span class="n">ThreadCallback</span><span class="p">(</span><span class="n">Thread</span><span class="o">*</span> <span class="n">who</span><span class="p">)</span> <span class="p">{</span>
-<span class="cp">#ifndef WIN32</span>
-  <span class="c1">// Далаем поток &quot;убиваемым&quot; через pthread_cancel.</span>
-  <span class="kt">int</span> <span class="n">old_thread_type</span><span class="p">;</span>
-  <span class="n">pthread_setcanceltype</span><span class="p">(</span><span class="n">PTHREAD_CANCEL_ASYNCHRONOUS</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">old_thread_type</span><span class="p">);</span>
-<span class="cp">#endif</span>
-  <span class="n">who</span><span class="o">-&gt;</span><span class="n">Execute</span><span class="p">();</span> 
-<span class="p">}</span>
+<span class="hl kwb">static void</span> <span class="hl kwd">ThreadCallback</span><span class="hl opt">(</span>Thread<span class="hl opt">*</span> who<span class="hl opt">) {</span>
+<span class="hl ppc">#ifndef WIN32</span>
+  <span class="hl slc">// Далаем поток &quot;убиваемым&quot; через pthread_cancel.</span>
+  <span class="hl kwb">int</span> old_thread_type<span class="hl opt">;</span>
+  <span class="hl kwd">pthread_setcanceltype</span><span class="hl opt">(</span>PTHREAD_CANCEL_ASYNCHRONOUS<span class="hl opt">, &amp;</span>old_thread_type<span class="hl opt">);</span>
+<span class="hl ppc">#endif</span>
+  who<span class="hl opt">-&gt;</span><span class="hl kwd">Execute</span><span class="hl opt">();</span> 
+<span class="hl opt">}</span>
 
-<span class="cp">#ifdef WIN32</span>
+<span class="hl ppc">#ifdef WIN32</span>
 
-<span class="n">Thread</span><span class="o">::~</span><span class="n">Thread</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">CloseHandle</span><span class="p">(</span><span class="n">__handle</span><span class="p">);</span>
-<span class="p">}</span>
+Thread<span class="hl opt">::~</span><span class="hl kwd">Thread</span><span class="hl opt">() {</span>
+  <span class="hl kwd">CloseHandle</span><span class="hl opt">(</span>__handle<span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">void</span> <span class="n">Thread</span><span class="o">::</span><span class="n">Start</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">__handle</span> <span class="o">=</span> <span class="n">CreateThread</span><span class="p">(</span>
-    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> 
-    <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">LPTHREAD_START_ROUTINE</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ThreadCallback</span><span class="p">),</span> <span class="k">this</span><span class="p">,</span>
-    <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
-  <span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> Thread<span class="hl opt">::</span><span class="hl kwd">Start</span><span class="hl opt">() {</span>
+  __handle <span class="hl opt">=</span> <span class="hl kwd">CreateThread</span><span class="hl opt">(</span>
+    <span class="hl num">0</span><span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span> 
+    <span class="hl kwa">reinterpret_cast</span><span class="hl opt">&lt;</span>LPTHREAD_START_ROUTINE<span class="hl opt">&gt;(</span>ThreadCallback<span class="hl opt">),</span> <span class="hl kwa">this</span><span class="hl opt">,</span>
+    <span class="hl num">0</span><span class="hl opt">,</span> <span class="hl num">0</span>
+  <span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">void</span> <span class="n">Thread</span><span class="o">::</span><span class="n">Join</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">WaitForSingleObject</span><span class="p">(</span><span class="n">__handle</span><span class="p">,</span>  <span class="n">INFINITE</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> Thread<span class="hl opt">::</span><span class="hl kwd">Join</span><span class="hl opt">() {</span>
+  <span class="hl kwd">WaitForSingleObject</span><span class="hl opt">(</span>__handle<span class="hl opt">,</span>  INFINITE<span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">void</span> <span class="n">Thread</span><span class="o">::</span><span class="n">Kill</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">TerminateThread</span><span class="p">(</span><span class="n">__handle</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> Thread<span class="hl opt">::</span><span class="hl kwd">Kill</span><span class="hl opt">() {</span>
+  <span class="hl kwd">TerminateThread</span><span class="hl opt">(</span>__handle<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="cp">#else</span>
+<span class="hl ppc">#else</span>
 
-<span class="n">Thread</span><span class="o">::~</span><span class="n">Thread</span><span class="p">()</span> <span class="p">{</span>
-<span class="p">}</span>
+Thread<span class="hl opt">::~</span><span class="hl kwd">Thread</span><span class="hl opt">() {</span>
+<span class="hl opt">}</span>
 
-<span class="k">extern</span> <span class="s">&quot;C&quot;</span>
-<span class="k">typedef</span> <span class="kt">void</span> <span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">pthread_callback</span><span class="p">)(</span><span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+<span class="hl kwc">extern</span> <span class="hl str">&quot;C&quot;</span>
+<span class="hl kwc">typedef</span> <span class="hl kwb">void</span> <span class="hl opt">*(*</span>pthread_callback<span class="hl opt">)(</span><span class="hl kwb">void</span> <span class="hl opt">*);</span>
 
-<span class="kt">void</span> <span class="n">Thread</span><span class="o">::</span><span class="n">Start</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">pthread_create</span><span class="p">(</span>
-    <span class="o">&amp;</span><span class="n">__handle</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> 
-    <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">pthread_callback</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ThreadCallback</span><span class="p">),</span> 
-    <span class="k">this</span>
-  <span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> Thread<span class="hl opt">::</span><span class="hl kwd">Start</span><span class="hl opt">() {</span>
+  <span class="hl kwd">pthread_create</span><span class="hl opt">(</span>
+    <span class="hl opt">&amp;</span>__handle<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span> 
+    <span class="hl kwa">reinterpret_cast</span><span class="hl opt">&lt;</span>pthread_callback<span class="hl opt">&gt;(</span>ThreadCallback<span class="hl opt">),</span> 
+    <span class="hl kwa">this</span>
+  <span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">void</span> <span class="n">Thread</span><span class="o">::</span><span class="n">Join</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">pthread_join</span><span class="p">(</span><span class="n">__handle</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> Thread<span class="hl opt">::</span><span class="hl kwd">Join</span><span class="hl opt">() {</span>
+  <span class="hl kwd">pthread_join</span><span class="hl opt">(</span>__handle<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="kt">void</span> <span class="n">Thread</span><span class="o">::</span><span class="n">Kill</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">pthread_cancel</span><span class="p">(</span><span class="n">__handle</span><span class="p">);</span>
-<span class="p">}</span>
+<span class="hl kwb">void</span> Thread<span class="hl opt">::</span><span class="hl kwd">Kill</span><span class="hl opt">() {</span>
+  <span class="hl kwd">pthread_cancel</span><span class="hl opt">(</span>__handle<span class="hl opt">);</span>
+<span class="hl opt">}</span>
 
-<span class="cp">#endif</span>
+<span class="hl ppc">#endif</span>
 
-<span class="p">}</span> <span class="c1">// ext</span>
-</pre></div>
+<span class="hl opt">}</span> <span class="hl slc">// ext</span>
+</pre>
 
 <p>Возникает резонный вопрос — я почему ни один из вызовов функций не проверяет код ошибки. Вдруг что? Я могу сказать, что я встретил только один случай возврата ошибки от pthread_create.</p>
 

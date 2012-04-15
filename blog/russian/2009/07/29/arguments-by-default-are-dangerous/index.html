@@ -45,32 +45,33 @@
 
 <p>Вот книжный пример (<code>default_values.cpp</code>):</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
 
-<span class="k">class</span> <span class="nc">X</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="k">virtual</span> <span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;X::f(): &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+<span class="hl kwc">class</span> X <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">f</span><span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">) {</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;X::f(): &quot;</span> <span class="hl opt">&lt;&lt;</span> i <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
 
-<span class="k">class</span> <span class="nc">Y</span><span class="o">:</span> <span class="k">public</span> <span class="n">X</span> <span class="p">{</span>
- <span class="k">public</span><span class="o">:</span>
-  <span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Y::f(): &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">};</span>
+<span class="hl kwc">class</span> Y<span class="hl opt">:</span> <span class="hl kwc">public</span> X <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">f</span><span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">) {</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Y::f(): &quot;</span> <span class="hl opt">&lt;&lt;</span> i <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">};</span>
 
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">X</span><span class="o">*</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Y</span><span class="p">;</span>
-  <span class="n">a</span><span class="o">-&gt;</span><span class="n">f</span><span class="p">();</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  X<span class="hl opt">*</span> a <span class="hl opt">=</span> <span class="hl kwa">new</span> Y<span class="hl opt">;</span>
+  a<span class="hl opt">-&gt;</span><span class="hl kwd">f</span><span class="hl opt">();</span>
 
-  <span class="n">Y</span><span class="o">*</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Y</span><span class="p">;</span>
-  <span class="n">b</span><span class="o">-&gt;</span><span class="n">f</span><span class="p">();</span>
+  Y<span class="hl opt">*</span> b <span class="hl opt">=</span> <span class="hl kwa">new</span> Y<span class="hl opt">;</span>
+  b<span class="hl opt">-&gt;</span><span class="hl kwd">f</span><span class="hl opt">();</span>
 
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Что распечатает эта программа? Вот что:</p>
 

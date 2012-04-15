@@ -45,15 +45,16 @@
 
 <p>Программа <code>x.c</code>:</p>
 
-<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="kt">char</span> <span class="n">s</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
-  <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;C&#39;</span><span class="p">;</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="sc">&#39;+&#39;</span><span class="p">;</span> <span class="n">s</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="n">s</span><span class="p">[</span><span class="k">sizeof</span><span class="p">(</span><span class="sc">&#39; &#39;</span><span class="p">)</span> <span class="o">^</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
-  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
-</pre></div>
+<pre class="hl">
+<span class="hl ppc">#include &lt;stdio.h&gt;</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwb">char</span> s<span class="hl opt">[</span><span class="hl num">4</span><span class="hl opt">];</span>
+  s<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">] =</span> <span class="hl str">'C'</span><span class="hl opt">;</span> s<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> s<span class="hl opt">[</span><span class="hl num">2</span><span class="hl opt">] =</span> <span class="hl str">'+'</span><span class="hl opt">;</span> s<span class="hl opt">[</span><span class="hl num">3</span><span class="hl opt">] =</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  s<span class="hl opt">[</span><span class="hl kwa">sizeof</span><span class="hl opt">(</span><span class="hl str">' '</span><span class="hl opt">) ^</span> <span class="hl num">5</span><span class="hl opt">] =</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> s<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 
 <p>Компилируем и запускаем.</p>
 
