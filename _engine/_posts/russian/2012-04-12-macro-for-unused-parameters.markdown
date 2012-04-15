@@ -25,7 +25,7 @@ void f(int a, int /* b */) {
 #define DISCARD_UNUNSED_PARAMETER(x) (void)x
 
 void f(int a, int b) {
-  DISCARD_UNUNSED_PARAMETER(b)
+  DISCARD_UNUNSED_PARAMETER(b);
   ...
 }
 {% endcodeblock %}

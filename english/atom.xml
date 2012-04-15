@@ -205,7 +205,7 @@ Target: x86_64-apple-darwin11.3.0
 <div class="highlight"><pre><span class="cp">#define DISCARD_UNUNSED_PARAMETER(x) (void)x</span>
 
 <span class="kt">void</span> <span class="n">f</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">DISCARD_UNUNSED_PARAMETER</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+  <span class="n">DISCARD_UNUNSED_PARAMETER</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
   <span class="p">...</span>
 <span class="p">}</span>
 </pre></div>
