@@ -5,13 +5,35 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-14T17:27:00Z</updated>
+  <updated>2012-04-15T14:17:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Peter van der Linden, &#34;Expert C Programming&#34;]]></title>
+    <link href="http://demin.ws/blog/english/2012/04/15/expert-c-programming/"/>
+    <updated>2012-04-15T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/04/15/expert-c-programming/</id>
+    <content type="html"><![CDATA[<p><a href="http://www.amazon.com/Expert-Programming-Peter-van-Linden/dp/0131774298/">Expert C Programming</a>, Peter van der Linden</p>
+
+<p><img src="http://demin.ws/images/covers/english/expert-c-programming-deep-c-secrets-cover.jpg" alt="" />
+</p>
+
+<p>Just have come across this book in Twitter. A simple search gives plenty of options to read it.</p>
+
+<p>I wouldn&rsquo;t buy it for myself because for a more or less experienced programmer it doesn&rsquo;t give anything new. But if you have a hour or two, it makes sense, for a tea or a coffee, to browse and refresh in memory various quirks of pointers, memory models (thanks to the weird segmentation inherited from 8086 and 80286), ABI, peculiarities of linking in UNIX and Windows, and interesting facts from the history of the languagemand its editions over time.</p>
+
+<p>This book has a little bit of everything.</p>
+
+<p>P.S. By the way, I thought I know C much better than C++, just because the language is smaller and simpler. More over, I began programming in C much earlier. Thus I&rsquo;d taken a <a href="http://www.brainbench.com/xml/bb/common/testcenter/taketest.xml?testId=52">Brainbench C test</a> at some time, and it turned out that there are still many aspects of the language which I haven&rsquo;t come across so far.</p>
+
+<p>Agreed, the Brainbench is only a test, in many respects far from reality, but nevertheless allowing to expand the scope of self-understanding.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to return a vector from a function: by value or by reference?]]></title>

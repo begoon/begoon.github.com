@@ -6,7 +6,7 @@
 ]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-14T17:27:00Z</updated>
+  <updated>2012-04-15T14:17:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
@@ -15,13 +15,35 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Peter van der Linden, "Expert C Programming"]]></title>
+    <link href="http://demin.ws/blog/russian/2012/04/15/expert-c-programming/"/>
+    <updated>2012-04-15T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/04/15/expert-c-programming/</id>
+    <content type="html"><![CDATA[<p><a href="http://www.amazon.com/Expert-Programming-Peter-van-Linden/dp/0131774298/">Expert C Programming</a>, Peter van der Linden</p>
+
+<p><img src="http://demin.ws/images/covers/english/expert-c-programming-deep-c-secrets-cover.jpg" alt="" />
+</p>
+
+<p>Случайно наткнулся где-то в твиттере на эту книгу. Несложный поиск дает множество вариантов c ней ознакомиться.</p>
+
+<p>Покупать для себя я бы не стал. Для более менее опытного программиста на С тут нет ничего нового. Но, как всегда это бывает, имеет смысл за часик, под чай или кофе, пролистать и освежить в памяти разнообразные причуды указателей, моделей памяти (вечное здоровье сегментированной особым образом модели памяти родом из 8086 и 80286), ABI, особенности линковки в UNIX и Windows, ну и факты из истории языка и разнообразных его редакций.</p>
+
+<p>В этой книге всего понемногу.</p>
+
+<p>P.S. Кстати, я думал, что знаю C потенциально лучше чем С++, просто потому, что язык объективно меньше и проще. Да и писать на нем я начал раньше. И решил я как-то сдать <a href="http://www.brainbench.com/xml/bb/common/testcenter/taketest.xml?testId=52">тест по С</a> на Брейнбенче. Оказывается, есть столько аспектов языка, которые я раньше просто не встречал.</p>
+
+<p>Понимаю, Брейнбенч - всего лишь тест, во многом далекий от реальности, но все равно позволяет расширить, так сказать, рамки понимания самого себя.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Как вернуть vector из функции: по значению или по ссылке?]]></title>
     <link href="http://demin.ws/blog/russian/2012/04/14/return-vector-by-value-or-pointer/"/>
     <updated>2012-04-14T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/russian/2012/04/14/return-vector-by-value-or-pointer/</id>
     <content type="html"><![CDATA[<p>Есть функция, создающая каким-то определенным образом экземпляр <code>vector</code>. Вопрос: как вернуть этот экземпляр вызывающему?</p>
 
-<p>Правильное с точки зрения логики и стройности программы выглядит так:</p>
+<p>Правильное с точки зрения логики и стройности программы решение выглядит так:</p>
 
 <div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">create_vector</span><span class="p">(</span><span class="k">const</span> <span class="n">size_t</span> <span class="n">N</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span><span class="p">;</span>
