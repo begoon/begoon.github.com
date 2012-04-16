@@ -37,9 +37,10 @@ var search_first = false
 
 function init_search(caption) {
   var search_obj = search_object()
-  if (search_obj.value == "") {
+  if (search_obj.value == "" || search_obj.value == caption) {
     search_obj.value = caption
     search_first = true
+    filter("")
   } else {
     filter(search_obj.value)  
   }
