@@ -18073,7 +18073,7 @@ ri["ящиком"]=[110]
 ri["ящику"]=[110]
 ri["ёрзанье"]=[242,55,94]
 
-var nb_posts = 342
+var nb_posts = 275
 
 function show_post(i, visible) {
     var o = document.getElementById("post_" + i)
@@ -18117,7 +18117,7 @@ function init_search(caption) {
     search_first = true
     filter("")
   } else {
-    filter(search_obj.value)  
+    filter(search_obj.value)
   }
   search_obj.style.visibility = "visible"
 }

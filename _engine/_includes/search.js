@@ -1,5 +1,3 @@
-var nb_posts = {{.NumberOfPosts}}
-
 function show_post(i, visible) {
     var o = document.getElementById("post_" + i)
     if (o != null) o.style.display = visible ? "block" : "none"
@@ -42,7 +40,7 @@ function init_search(caption) {
     search_first = true
     filter("")
   } else {
-    filter(search_obj.value)  
+    filter(search_obj.value)
   }
   search_obj.style.visibility = "visible"
 }

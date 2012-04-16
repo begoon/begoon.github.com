@@ -44,7 +44,8 @@ type Posts []*Page
 type ReversedIndex map[string](map[string]bool)
 
 var (
-  posts = make(Posts, 0)
+  posts           = make(Posts, 0)
+  number_of_posts = make(map[string]int)
 
   // This map is used to check whether a post with a given date already exists.
   post_dates = make(map[string]string)
@@ -257,8 +258,6 @@ func render_page(p Page) string {
     return render_page(inc)
   }
 
-  // This function returns the date of the lastest post in a given language.
-  // This date is used as a "updated" time stamp in the RSS feed.
   last_update := func(language string) string {
     for _, p := range posts {
       if (*p)["language"] == language {
@@ -279,10 +278,15 @@ func render_page(p Page) string {
     return s
   }
 
+  now := func() string {
+    return time.Now().Format(time.RFC3339)
+  }
+
   funcs := template.FuncMap{
     "include":               include,
     "last_update":           last_update,
     "replace_relative_urls": replace_relative_urls,
+    "now":                   now,
   }
 
   type Data struct {
@@ -290,13 +294,13 @@ func render_page(p Page) string {
     Posts         Posts
     Host          string
     ReversedIndex map[string]string
-    NumberOfPosts int
+    NumberOfPosts map[string]int
   }
 
   tpl := template.Must(template.New(p["filename"]).Funcs(funcs).Parse(p["content"]))
 
   var b bytes.Buffer
-  if err := tpl.Execute(&b, Data{p, posts, SiteHost, index_js, len(posts)}); err != nil {
+  if err := tpl.Execute(&b, Data{p, posts, SiteHost, index_js, number_of_posts}); err != nil {
     die("Unable to execute template, error [%v]", err)
   }
 
@@ -391,6 +395,10 @@ func process_post(filename string) {
     die("Unable to parse the post date, error [%v]", err)
   }
 
+  if _, err := time.Parse(DateTimeFormat, p["date"]); err != nil {
+    die("Unable to parse the post date and time, error [%v]", err)
+  }
+
   // All posts before this date must have a blogspot id attribute.
   if date.Before(BlogspotPostDate) && p["blogspot"] == "" {
     die("All posts before '%s' must have a blogspot id", BlogspotPostDate.String())
@@ -473,14 +481,23 @@ func process_posts() {
   if err := filepath.Walk(PostsDir, callback); err != nil {
     die("Walking through posts failed, error %#v", err)
   }
+
+  // Sort posts by descending creation date.
   sort.Sort(posts)
-  languages := make(map[string]int)
+
+  // Count a number of posts in each language.
+  post_indecies := make(map[string]int)
   for _, p := range posts {
-    languages[(*p)["language"]] += 1
+    language := (*p)["language"]
+    post_indecies[language] += 1
+    number_of_posts[language] += 1
   }
+
   for _, p := range posts {
-    (*p)["index"] = strconv.Itoa(languages[(*p)["language"]])
-    languages[(*p)["language"]] -= 1
+    language := (*p)["language"]
+    // Index posts independently in each language.
+    (*p)["index"] = strconv.Itoa(post_indecies[language])
+    post_indecies[language] -= 1
   }
 }
 

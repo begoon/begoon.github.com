@@ -5,26 +5,9 @@ language: english
 ---
 <div class="title">{{.Page.title}} / Blog about programming for beginners and beyond</div>
 
-<script language="javascript">
-(function() {
-    function async_load(){
-        var s = document.createElement('script');
-        s.type = 'text/javascript';
-        s.async = true;
-        s.src = '/js/english/search.js?{{last_update "english"}}';
-        var x = document.getElementsByTagName('script')[0];
-        x.parentNode.insertBefore(s, x);
-    }
-    if (window.attachEvent)
-        window.attachEvent('onload', async_load);
-    else
-        window.addEventListener('load', async_load, false);
-})();
-</script>
+<script type="text/javascript" src="/js/{{.Page.language}}/search_loader.js"></script>
 
-<div style="float: right">
-  <input id="search" type="text" onkeyup="filter(this.value)" onclick="remove_search_caption()"/>
-</div>
+{{include "search_button.html"}}
 
 <ul class="posts">
 {{range .Posts}}{{if .english}}

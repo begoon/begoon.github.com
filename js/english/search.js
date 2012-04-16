@@ -3564,7 +3564,7 @@ ri["zero"]=[35,40,7]
 ri["zip"]=[10,37]
 ri["или"]=[21]
 
-var nb_posts = 342
+var nb_posts = 67
 
 function show_post(i, visible) {
     var o = document.getElementById("post_" + i)
@@ -3608,7 +3608,7 @@ function init_search(caption) {
     search_first = true
     filter("")
   } else {
-    filter(search_obj.value)  
+    filter(search_obj.value)
   }
   search_obj.style.visibility = "visible"
 }
