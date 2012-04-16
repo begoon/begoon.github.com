@@ -2,8 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   
-  <title><![CDATA[Программирование - это просто!
-]]></title>
+  <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
   <updated>2012-04-15T14:17:00Z</updated>
