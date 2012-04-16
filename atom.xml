@@ -5,13 +5,133 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-15T14:17:00Z</updated>
+  <updated>2012-04-16T17:57:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Самые первые книги]]></title>
+    <link href="http://demin.ws/blog/russian/2012/04/16/first-books/"/>
+    <updated>2012-04-16T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/04/16/first-books/</id>
+    <content type="html"><![CDATA[<p>Я писал как-то про одну из своих любимых книг - <a href="http://demin.ws/blog/russian/2009/02/26/etudes-for-programmers/">Чарльз Уэзерелл, &ldquo;Этюды для программистов&rdquo;</a>.</p>
+
+<p>Но были еще несколько книг, от которых у меня нежно вибрирует что-то внутри. Не потому, что все книги были особенно хорошие. Просто они были первыми. Про них можно сказать, что я их зачитал до дыр.</p>
+
+<p>Некоторые позже переиздавались, но я привожу их первые издания.</p>
+
+<p>Книги приводится в хронологическом порядке, по мере взросления, так сказать. Удивительно, я до сих пор помню очень многое из этих книг.</p>
+
+<h1>Время Радио-86РК и Синклера.</h1>
+
+<p>Зеленко Г.В., Панов В.В., Попов С.Н., &ldquo;<a href="http://vipbook.info/pk/pk_uchebniki/25501-Zelenko-G.V.-Panov-V.V.-Popov-S.N.-Domashniy-kompy.html">Домашний компьютер</a>&rdquo;, 1989</p>
+
+<p><img src="http://demin.ws/images/covers/russian/home-computer-radio86-cover.jpg" alt="" />
+</p>
+
+<p>Брат собирает Радио-86РК, а эта книга является странным руководством по всему: основам микроэлектроники, программированию для КР580 (Intel 8080) в машинных кодах и ассемблере, и под занавес - на Бейсике.</p>
+
+<p>У меня есть теория, что то, что человек плотно изучает в возрасте от 9-14 лет, настолько крепко врезается в мозг, что удалить это практически невозможно. Иначе как можно объяснить, что до сих пор помню машинные коды Intel 8080 со времен Радио-86РК, но не могу вспомнить, что делает код, который я писал месяц назад.</p>
+
+<hr />
+
+<p>Г. Х. Геворкян, В. Н. Семенов, &ldquo;<a href="http://www.ozon.ru/context/detail/id/7394425/">Бейсик - это просто</a>&rdquo;, 1989</p>
+
+<p><img src="http://demin.ws/images/covers/russian/basic-this-is-simple-cover.jpg" alt="" />
+</p>
+
+<p>Практически никакая книга по содержанию, но пару лет назад я купил ее оригинальное издание. Хотелось снова подержать его в руках.</p>
+
+<hr />
+
+<p>В. П. Дьяконов, &ldquo;<a href="http://www.ozon.ru/context/detail/id/2317102/">Справочник по алгоритмам и программам на языке бейсик для персональных ЭВМ</a>&rdquo;, 1989</p>
+
+<p><img src="http://demin.ws/images/covers/russian/algorithms-and-programs-reference-for-basic-cover.jpg" alt="" />
+</p>
+
+<p>Не могу сказать, чтобы я много понимал в этой книге тогда. Но в ней было много много примеров, на различных диалектах Бейсика.</p>
+
+<h1>Время Агата в школе.</h1>
+
+<p>Мымрин М. П., &ldquo;Конструкция, применение, программирование и ремонт ПЭВМ &ldquo;Агат&rdquo;, 1990</p>
+
+<p><img src="http://demin.ws/images/covers/russian/operating-manual-of-agat-computer-cover.jpg" alt="" />
+</p>
+
+<hr />
+
+<p>Морер У., &ldquo;<a href="http://reslib.com/book/Yazik_assemblera_dlya_personaljnogo_kompjyutera_Epl">Язык ассемблера для персонального компьютера Эпл</a>&rdquo;, 1987</p>
+
+<p><img src="http://demin.ws/images/covers/russian/assembler-language-for-apple-compuler-cover.jpg" alt="" />
+</p>
+
+<p>Эта книга была иконой и наверное единственным доступным тогда руководством по программированию на ассемблерe для 6502. Храню до сих пор.</p>
+
+<h1>Начало времени IBM PC.</h1>
+
+<p>В. Э. Фигурнов, &ldquo;<a href="http://www.ozon.ru/context/detail/id/5435709/">IBM PC для пользователя</a>&rdquo;, 1990</p>
+
+<p><img src="http://demin.ws/images/covers/russian/ibm-pc-for-user-cover.jpg" alt="" />
+</p>
+
+<p>А кто не читал эту книгу? Хотя бы одно из изданий? В первом издании, что на картинке, между прочим, был исходник самодельного &ldquo;антивируса&rdquo;, написанного на Турбо-Паскале 5.0, который сканировал все файлы на жестком диске и запоминал их контрольные суммы.</p>
+
+<hr />
+
+<p>В. В. Фаронов &ldquo;Программирование в среде Турбо-Паскаль 5.0 на персональных ЭВМ&rdquo;, 1990</p>
+
+<p><img src="http://demin.ws/images/covers/russian/turbo-pascal-5.0-cover.jpg" alt="" />
+</p>
+
+<p>Мега-книга своего времени. Описание библиотеки Турбо-Паскаля (а где его еще было взять?), много довольно низкоуровневых примеров (например, работа с экранной областью из Паскаля!). Этой книги у меня долго не было в личном пользовании, поэтому я переписывал ее фрагменты вручную.</p>
+
+<hr />
+
+<p>Гербер Шилдт, &ldquo;<a href="http://knigi.tr200.net/v.php?id=64308">Язык СИ для профессионалов</a>&rdquo;, 1989</p>
+
+<p><img src="http://demin.ws/images/covers/russian/language-c-for-professionals-cover.jpg" alt="" />
+</p>
+
+<p>Очень много нового: алгоритм отрисовки отрезка без использования вещественной арифметики, отрисовка окружности без синусов и косинусов, интерпретатор Бейсика, программирования аппаратного таймера и многое другое.</p>
+
+<hr />
+
+<p>П. Нортон, Д.Соухе, &ldquo;<a href="http://rutracker.org/forum/viewtopic.php?t=3842039">Язык ассемблера для IBM PC</a>&rdquo;, 1993</p>
+
+<p><img src="http://demin.ws/images/covers/russian/norton-assembler-language-for-ibm-pc-cover.jpg" alt="" />
+</p>
+
+<p>После этой книги понял, что на ассемблере <em>можно писать</em> большие вещи.</p>
+
+<hr />
+
+<p>С.Н. Баранов, Н.Р. Ноздрунов, &ldquo;<a href="http://fforum.winglion.ru/viewtopic.php?f=37&amp;t=2015">Язык Форт и его реализации</a>&rdquo;, 1988</p>
+
+<p><img src="http://demin.ws/images/covers/russian/forth-and-its-implementations-cover.jpg" alt="" />
+</p>
+
+<p>Форт - это срыв мозга. Удивительный язык. И книга отличная.</p>
+
+<hr />
+
+<p>П. Хижняк, &ldquo;<a href="http://rutracker.org/forum/viewtopic.php?t=1942170">Пишем вирус&hellip; и антивирус</a>&rdquo;, 1991</p>
+
+<p><img src="http://demin.ws/images/covers/russian/develop-virus-and-antivirus-cover.jpg" alt="" />
+</p>
+
+<p>Это был для меня реальный хит, крупицы &ldquo;хакерского знания&rdquo; в форме доступной книги. Естественно, вирус&hellip; и антивирус были запущены на школьный Robotron.</p>
+
+<hr />
+
+<p>Вроде все.</p>
+
+<p>Кто поделится своими историями?</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Peter van der Linden, "Expert C Programming"]]></title>
