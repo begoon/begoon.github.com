@@ -474,6 +474,14 @@ func process_posts() {
     die("Walking through posts failed, error %#v", err)
   }
   sort.Sort(posts)
+  languages := make(map[string]int)
+  for _, p := range posts {
+    languages[(*p)["language"]] += 1
+  }
+  for _, p := range posts {
+    (*p)["index"] = strconv.Itoa(languages[(*p)["language"]])
+    languages[(*p)["language"]] -= 1
+  }
 }
 
 func process_parsable_file(filename string) {
