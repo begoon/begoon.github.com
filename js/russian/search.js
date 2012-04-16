@@ -18103,7 +18103,7 @@ function filter(s) {
             filtered = true
         }
     }
-    for (var i = 0; i < nb_posts; ++i) {
+    for (var i = 1; i <= nb_posts; ++i) {
         show_post(i, filtered ? (visible[i] == search_words.length) : true)
     }
 }
