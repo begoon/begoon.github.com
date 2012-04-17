@@ -81,6 +81,8 @@ var (
   BlogspotPostDate, _ = time.Parse(DateFormat, "2012-04-01")
 
   files_cache = make(map[string]*string)
+
+  slash = string(os.PathSeparator)
 )
 
 func (p Posts) Len() int           { return len(p) }
@@ -582,7 +584,7 @@ func check_links() {
     if info == nil || info.IsDir() || filepath.Base(path) == ".DS_Store" {
       return err
     }
-    if strings.Contains(path, "/_engine/") {
+    if strings.Contains(path, slash+"_engine"+slash) {
       return err
     }
     ext := filepath.Ext(path)
