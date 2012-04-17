@@ -60,7 +60,7 @@ var (
   AttrsRE           = *regexp.MustCompile("(?Um)^([^\\:]+?)\\: (.+)$")
   CategoriesRE      = *regexp.MustCompile("(?m)^- (.+)$")
   ImgRE             = *regexp.MustCompile("{% img (\\S+?) %}")
-  CodeblockRE       = *regexp.MustCompile("(?sU)({% codeblock lang\\:([^ ]+) %}(.*){% endcodeblock %})")
+  CodeblockRE       = *regexp.MustCompile("(?smU)(^{% codeblock lang\\:([^ ]+) %}(.*){% endcodeblock %})")
   YoutubeRE         = *regexp.MustCompile("(?sU){% youtube (\\S+?) %}")
   YoutubeExtRE      = *regexp.MustCompile("(?sU){% youtube (\\S+?) (\\d+) (\\d+) %}")
   ImgReplaceRE      = *regexp.MustCompile("(?s)(<img .*?src=[\"'])(/[^\"']+?)([\"'].*?\\/>)")
@@ -68,7 +68,7 @@ var (
   PostNameRE        = *regexp.MustCompile("^.*((\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d))-([^ \\.]+)\\.markdown$")
   BlogspotRE        = *regexp.MustCompile("^http:\\/\\/(easy|meta)-coding\\.blogspot\\.com\\/\\d\\d\\d\\d\\/\\d\\d\\/.+\\.html$")
   BlogspotEnglishRE = *regexp.MustCompile("-english(\\.html)$")
-  UnprocessedTagsRE = *regexp.MustCompile("(?Us){%.*?}")
+  UnprocessedTagsRE = *regexp.MustCompile("(?Ums)^{%.*?}")
   ExtLinkRE         = *regexp.MustCompile("((http|https|ftp)\\:\\/\\/|mailto\\:)")
   CheckHrefRE       = *regexp.MustCompile("(?s)<(?:a|link) .*?href=[\"']([^#][^\"']*?)[\"'].*?>")
   CheckImgRE        = *regexp.MustCompile("(?s)<img .*?src=[\"']([^\"']+?)[\"'].*?>")
@@ -110,7 +110,7 @@ func trace(format string, v ...interface{}) {
   log.Close()
 }
 
-// This function loads up a file  and removes '\r' from its content.
+// This function loads up a fileand removes '\r' from its content.
 func load_file(filename string) *string {
   if t, ok := files_cache[filename]; ok {
     return t
