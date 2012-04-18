@@ -3,7 +3,7 @@
 /* Highlighting theme: Kwrite Editor */
 
 body.hl	{ background-color:#e0eaee; }
-pre.hl	{ color:#000000; background-color:#e0eaee; font-size:10pt; font-family:Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace;}
+pre.hl	{ color:#000000; background-color:#e0eaee; font-size:.8em; line-height:1.4em; font-family:Menlo,Monaco,"Andale Mono","lucida console","Courier New",monospace;}
 .hl.num { color:#b07e00; }
 .hl.esc { color:#ff00ff; }
 .hl.str { color:#bf0303; }

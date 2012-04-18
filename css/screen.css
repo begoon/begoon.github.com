@@ -1,4 +1,4 @@
-f/*****************************************************************************/
+/*****************************************************************************/
 /*
 /* Common
 /*
@@ -17,17 +17,12 @@ html, body {
 
 body {
   background-color: white;
-  font-family: helvetica, arial, clean, sans-serif;
-  *font-size: small;
+  font-family: "PT Serif", "Georgia", "Helvetica Neue", Arial, sans-serif
   text-align: center;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-size: 100%;
-}
-
-h1 {
-  margin-bottom: 1em;
+  font-family: "PT Serif", "Georgia", "Helvetica Neue", Arial, sans-serif
 }
 
 p {
@@ -46,15 +41,10 @@ a:visited {
   color: #808080;
 }
 
-table {
-  font-size: inherit;
-  font: 100%;
-}
-
 blockquote {
-  margin-left: 4em;
+  font-style: italic;
   padding-left: 1em;
-  border-left: 4px solid #eee;
+  border-left: 4px solid rgba(170, 170, 170, 0.5);
 }
 
 /*****************************************************************************/
@@ -165,6 +155,7 @@ ul.posts span {
 
 #post {
   margin-bottom: 2em;
+  font-size: 110%;
 }
 
 /* standard */
@@ -181,32 +172,14 @@ ul.posts span {
 }
 
 #post code {
+  font-family: Menlo, Monaco, "Andale Mono", "Lucida console", "Courier New", monospace;
+  font-size: 80%;
   border: 1px solid #ddd;
   background-color: #eef;
-  font-size: 100%;
   padding: 0 .2em;
+  border-radius: .4em;
 }
 
 #post pre code {
   border: none;
-}
-
-/* terminal */
-
-#post pre.terminal {
-  border: 1px solid black;
-  background-color: #333;
-  color: white;
-}
-
-#post pre.terminal code {
-  background-color: #333;
-}
-
-#related {
-  margin-top: 2em;
-}
-
-#related h2 {
-  margin-bottom: 1em;
 }
