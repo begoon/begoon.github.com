@@ -5,13 +5,47 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-15T14:17:00Z</updated>
+  <updated>2012-04-18T21:30:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Feuer A., &#34;The C puzzle book&#34;]]></title>
+    <link href="http://demin.ws/blog/english/2012/04/18/c-puzzle-book/"/>
+    <updated>2012-04-18T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/04/18/c-puzzle-book/</id>
+    <content type="html"><![CDATA[<p><a href="http://www.amazon.co.uk/gp/product/0201604612/">Feuer A., &ldquo;The C puzzle book&rdquo;</a></p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/0201604612/"><img src="http://demin.ws/images/covers/english/c-puzzle-book-cover.jpg"/></a></p>
+
+<p>The first edition of this book was in 1982. Old code in C, which was considered to be &ldquo;good&rdquo; in the past, today quite often doesn&rsquo;t stand up to criticism (even though its criticising is a pointless exercise), but it&rsquo;s worth to study.</p>
+
+<p>I was extremely curious to have a look at puzzles in C created in eighteenth. So, fasten your seat belts. If The Hell in C exists, this is it. I&rsquo;ve given a few &ldquo;problems&rdquo; from this book.</p>
+
+<h2>Pointers</h2>
+
+<p><img src="http://demin.ws/images/blog/c-puzzle-book/pointers-and-arrays-pointer-stew.png" alt="" />
+</p>
+
+<h2>Preprocessor</h2>
+
+<p><img src="http://demin.ws/images/blog/c-puzzle-book/preprocessor-caution-pays.png" alt="" />
+</p>
+
+<h2>Storage classes</h2>
+
+<p><img src="http://demin.ws/images/blog/c-puzzle-book/storage-classes-files.png" alt="" />
+</p>
+
+<p>For me, these snippets are obvious candidates for <a href="http://www.ioccc.org">Obfuscated C Code Context</a>. When have to deal with such code in real life, switching to another reality is the the best solution.</p>
+
+<p>After skimming the book to the end (they give the solutions there), you begin to understand its usefulness. Without seeing bad code, it&rsquo;s difficult to recognize the good one.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Peter van der Linden, &#34;Expert C Programming&#34;]]></title>

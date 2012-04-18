@@ -5,13 +5,47 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-17T23:42:00Z</updated>
+  <updated>2012-04-18T21:30:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Feuer A., "The C puzzle book"]]></title>
+    <link href="http://demin.ws/blog/russian/2012/04/18/c-puzzle-book/"/>
+    <updated>2012-04-18T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/04/18/c-puzzle-book/</id>
+    <content type="html"><![CDATA[<p><a href="http://www.amazon.co.uk/gp/product/0201604612/">Feuer A., &ldquo;The C puzzle book&rdquo;</a></p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/0201604612/"><img src="http://demin.ws/images/covers/english/c-puzzle-book-cover.jpg"/></a></p>
+
+<p>Первое издание этой книги датировано 1982 годом. Старый код на С, даже очень хороший в прошлом, по современным понятиям чаще всего не выдерживает критики, хотя критиковать его ненужное занятие. Его стоит изучать и делать выводы.</p>
+
+<p>Поэтому мне было страшно интересно, какие такие пазлы на С были в восьмидесятые. Итак, пристегните ремни. Если в программировании на С бывает <em>адъ</em>, то это он. Ниже я привел несколько задачек из этой книги.</p>
+
+<h2>Работа с указателями</h2>
+
+<p><img src="http://demin.ws/images/blog/c-puzzle-book/pointers-and-arrays-pointer-stew.png" alt="" />
+</p>
+
+<h2>Игры с препроцессором</h2>
+
+<p><img src="http://demin.ws/images/blog/c-puzzle-book/preprocessor-caution-pays.png" alt="" />
+</p>
+
+<h2>Типы размещения переменных</h2>
+
+<p><img src="http://demin.ws/images/blog/c-puzzle-book/storage-classes-files.png" alt="" />
+</p>
+
+<p>Для меня &ndash; это не задачки, а кандидаты на <a href="http://www.ioccc.org">Obfuscated C Code Context</a>. Глядя на такой код в жизни (а такое бывает), хочется самоустраниться.</p>
+
+<p>Пролистав книгу до конца (кстати, в ее конце приводятся решения всех этих так называемых задач), понимаешь все-таки ее полезность, так как плохие примеры могут служить и в добрых целях.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Goblog: Самодельный статический движок для блога на Go]]></title>
