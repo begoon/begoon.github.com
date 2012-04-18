@@ -35,3 +35,6 @@ code-css:
 	--font Menlo,Monaco,\"Andale\ Mono\",\"lucida\ console\",\"Courier\ New\",monospace
 	cat _site/css/highlight.css
 
+newpost:
+	ruby newpost.rb
+
