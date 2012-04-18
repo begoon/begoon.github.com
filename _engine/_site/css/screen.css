@@ -183,3 +183,8 @@ ul.posts span {
 #post pre code {
   border: none;
 }
+
+#post img {
+  border: 1px solid #000;
+}
+
