@@ -12,6 +12,12 @@ title: Projects
 * [p4patch][] - A utility to transfer Perforce change sets across machines
 * [Biometrical identification system Handscan][]
 
+## TCP/IP proxy/debugger
+
+* [Python][py-tcpspy]
+* [Erlang][erl-tcpspy]
+* [Go][go-tcpspy]
+
 ## Blogs
 
 * [Programming DIY][], a blog about programming (frozen after migration to this site).
@@ -22,7 +28,10 @@ title: Projects
 [lemonbind]: http://code.google.com/p/lemonbind/
 [luascript]: http://code.google.com/p/luascript
 [p4patch]: http://code.google.com/p/p4patch
-[TCP/IP proxy на Erlang'e]: /blog/russian/2011/11/22/tcpip-proxy-in-erlang/
 [Biometrical identification system Handscan]: http://handscan.ru/en/
 
 [Programming DIY]: http://meta-coding.blogspot.com
+
+[py-tcpspy]: https://github.com/begoon/py-tcpspy
+[erl-tcpspy]: https://github.com/begoon/erl-tcpspy
+[go-tcpspy]: https://github.com/begoon/go-tcpspy

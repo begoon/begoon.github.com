@@ -10,9 +10,14 @@ title: "Проекты"
 * [lemonbind][] - [Обертка генератора парсеров грамматик Lemon для C++][]
 * [luascript][] - [Скрипты на Lua в С++][]
 * [p4patch][] - Утилита для переноса changeset'ов Perforce между машинами
-* [TCP/IP proxy на Erlang'e][]
 * [Перевод документации по Google Test and Google Mock][]
 * [Система биометрической идентификации Handscan][]
+
+## TCP/IP proxy/debugger
+
+* [Питон][py-tcpspy]
+* [Эрланг][erl-tcpspy]
+* [Go][go-tcpspy]
 
 ## Радио-86РК
 
@@ -38,8 +43,11 @@ title: "Проекты"
 [Скрипты на Lua в С++]: /blog/russian/2009/06/12/lua-scripts-in-cpp/
 [luascript]: http://code.google.com/p/luascript
 [p4patch]: http://code.google.com/p/p4patch
-[TCP/IP proxy на Erlang'e]: /blog/russian/2011/11/22/tcpip-proxy-in-erlang/
 [Система биометрической идентификации Handscan]: http://handscan.ru/
+
+[py-tcpspy]: https://github.com/begoon/py-tcpspy
+[erl-tcpspy]: https://github.com/begoon/erl-tcpspy
+[go-tcpspy]: https://github.com/begoon/go-tcpspy
 
 [Яйца всмятку, сэр!]: http://english-eggs.blogspot.com
 [Программирование - это просто!]: http://easy-coding.blogspot.com
