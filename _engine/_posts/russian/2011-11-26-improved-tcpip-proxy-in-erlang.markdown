@@ -59,7 +59,7 @@ B итоге я окончательно допилил программу, и �
 
 Для интересующихся - [исходник доступен][tcp_proxy.erl].
 
-[tcp_proxy.erl]: https://github.com/begoon/tcp_proxy/blob/master/tcp_proxy.erl
+[tcp_proxy.erl]: https://github.com/begoon/erl-tcpspy/blob/master/tcp_proxy.erl
 
 Посты по теме:
 
