@@ -304,7 +304,7 @@ func main() {
 
     time wget http://localhost:8080/download/otp_src_R15B01.tar.gz
     ...
-    Saving to: `otp_src_R15B01.tar.gz'
+    Saving to: `otp_src_R15B01.tar.gz.1'
     ...
     real	0m56.209s
     
