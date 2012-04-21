@@ -5,13 +5,365 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-18T21:30:00Z</updated>
+  <updated>2012-04-21T15:30:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[TCP/IP proxy на Go]]></title>
+    <link href="http://demin.ws/blog/russian/2012/04/21/tcpip-proxy-in-go/"/>
+    <updated>2012-04-21T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/04/21/tcpip-proxy-in-go/</id>
+    <content type="html"><![CDATA[<p>Я снова вернулся к любимой <a href="http://demin.ws/blog/russian/2011/11/19/problem-to-try-new-languages/">задаче для освоения новых языков</a>. После <a href="http://demin.ws/blog/russian/2012/04/17/static-blog-engine-goblog/">написания движка для блога на Go</a>, захотелось снова поразмять пальцы, болезный TCP/IP proxy/debugger теперь написан на Go.</p>
+
+<p>Вкратце, TCP/IP proxy - это программа, которая умеет принимать соединения и &ldquo;пробрасывать&rdquo; их на указанный адрес. Попутно ведутся логи переданных данных. Это очень удобно при отладке различных самодельных сетевых протоколов.</p>
+
+<p>В плане функциональности версия на Go, как и <a href="http://demin.ws/blog/russian/2011/11/26/improved-tcpip-proxy-in-erlang/">эрганговская</a>, ведет три лога: двунаправленный шестнадцатеричный дамп и бинарные логи в обоих направлениях, &ldquo;от&rdquo; и &ldquo;к&rdquo; удаленному хосту. <a href="http://demin.ws/blog/russian/2009/09/04/multi-threaded-tcpip-debugger/">Питоновская версия</a> бинарные логи не ведет.</p>
+
+<p>Конечно, все многопоточно. И так как в Go параллельное программирование настолько просто (и безопасно), количество параллельных активностей для каждого соединения даже больше, чем в версии на Эрланге.</p>
+
+<p>На Эрланге для каждого соединения работали следующие четыре потока:</p>
+
+<ul>
+<li>двунаправленный дамп-логгер</li>
+<li>два потока для двоичных логов принимаемых и посылаемых данных</li>
+<li>главный поток, мультиплексирующий чтение из локального и удаленного сокетов</li>
+</ul>
+
+<p>В версии на Go немного иначе:</p>
+
+<ul>
+<li>двунаправленный дамп-логгер</li>
+<li>два потока для двоичных логов принимаемых и посылаемых данных</li>
+<li>два <strong>независимых</strong> потока для чтения и чтения из локального и удаленного сокета</li>
+</ul>
+
+<p>Итого, 5.</p>
+
+<p>В обоих случаях потоки чтения логируют данные, посылая сообщения потокам-логгерам. Конечно, нет никаких глупостей типа мьютексов или условных переменных. Проблемы согласования элегантно решаются через каналы Go.</p>
+
+<p>Ниже привожу исходник. Он отличается от того, что в репозитории, наличием обильных комментариев. Для людей, не очень знакомых с Go, могут быть интересны некоторые моменты.</p>
+
+<pre class="hl">
+<span class="hl kwa">package</span> main
+
+<span class="hl kwa">import</span> <span class="hl opt">(</span>
+  <span class="hl str">&quot;flag&quot;</span>
+  <span class="hl str">&quot;fmt&quot;</span>
+  <span class="hl str">&quot;net&quot;</span>
+  <span class="hl str">&quot;os&quot;</span>
+  <span class="hl str">&quot;strings&quot;</span>
+  <span class="hl str">&quot;time&quot;</span>
+  <span class="hl str">&quot;encoding/hex&quot;</span>
+  <span class="hl str">&quot;runtime&quot;</span>
+<span class="hl opt">)</span>
+
+<span class="hl kwa">var</span> <span class="hl opt">(</span>
+  host        <span class="hl opt">*</span><span class="hl kwb">string</span> <span class="hl opt">=</span> flag<span class="hl opt">.</span><span class="hl kwd">String</span><span class="hl opt">(</span><span class="hl str">&quot;host&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;target host or address&quot;</span><span class="hl opt">)</span>
+  port        <span class="hl opt">*</span><span class="hl kwb">string</span> <span class="hl opt">=</span> flag<span class="hl opt">.</span><span class="hl kwd">String</span><span class="hl opt">(</span><span class="hl str">&quot;port&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;0&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;target port&quot;</span><span class="hl opt">)</span>
+  listen_port <span class="hl opt">*</span><span class="hl kwb">string</span> <span class="hl opt">=</span> flag<span class="hl opt">.</span><span class="hl kwd">String</span><span class="hl opt">(</span><span class="hl str">&quot;listen_port&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;0&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;listen port&quot;</span><span class="hl opt">)</span>
+<span class="hl opt">)</span>
+
+<span class="hl kwa">func</span> <span class="hl kwd">die</span><span class="hl opt">(</span>format <span class="hl kwb">string</span><span class="hl opt">,</span> v <span class="hl opt">...</span><span class="hl kwa">interface</span><span class="hl opt">{}) {</span>
+  os<span class="hl opt">.</span>Stderr<span class="hl opt">.</span><span class="hl kwd">WriteString</span><span class="hl opt">(</span>fmt<span class="hl opt">.</span><span class="hl kwd">Sprintf</span><span class="hl opt">(</span>format<span class="hl opt">+</span><span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> v<span class="hl opt">...))</span>
+  os<span class="hl opt">.</span><span class="hl kwd">Exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// Данная функция реализует поток для двунаправленного дампа. </span>
+<span class="hl kwa">func</span> <span class="hl kwd">connection_logger</span><span class="hl opt">(</span>data <span class="hl kwa">chan</span> <span class="hl opt">[]</span><span class="hl kwb">byte</span><span class="hl opt">,</span> conn_n <span class="hl kwb">int</span><span class="hl opt">,</span> local_info<span class="hl opt">,</span> remote_info <span class="hl kwb">string</span><span class="hl opt">) {</span>
+  log_name <span class="hl opt">:=</span> fmt<span class="hl opt">.</span><span class="hl kwd">Sprintf</span><span class="hl opt">(</span><span class="hl str">&quot;log-%s-%04d-%s-%s.log&quot;</span><span class="hl opt">,</span> <span class="hl kwd">format_time</span><span class="hl opt">(</span>time<span class="hl opt">.</span><span class="hl kwd">Now</span><span class="hl opt">()),</span>
+                          conn_n<span class="hl opt">,</span> local_info<span class="hl opt">,</span> remote_info<span class="hl opt">)</span>
+  <span class="hl kwd">logger_loop</span><span class="hl opt">(</span>data<span class="hl opt">,</span> log_name<span class="hl opt">)</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// Данная функция реализует двоичный лог.</span>
+<span class="hl kwa">func</span> <span class="hl kwd">binary_logger</span><span class="hl opt">(</span>data <span class="hl kwa">chan</span> <span class="hl opt">[]</span><span class="hl kwb">byte</span><span class="hl opt">,</span> conn_n <span class="hl kwb">int</span><span class="hl opt">,</span> peer <span class="hl kwb">string</span><span class="hl opt">) {</span>
+  log_name <span class="hl opt">:=</span> fmt<span class="hl opt">.</span><span class="hl kwd">Sprintf</span><span class="hl opt">(</span><span class="hl str">&quot;log-binary-%s-%04d-%s.log&quot;</span><span class="hl opt">,</span> <span class="hl kwd">format_time</span><span class="hl opt">(</span>time<span class="hl opt">.</span><span class="hl kwd">Now</span><span class="hl opt">()),</span>
+                           conn_n<span class="hl opt">,</span> peer<span class="hl opt">)</span>
+  <span class="hl kwd">logger_loop</span><span class="hl opt">(</span>data<span class="hl opt">,</span> log_name<span class="hl opt">)</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// Данная функция реализует поток логирования. Создает лог-файл и начинает</span>
+<span class="hl slc">// принимает сообщения. Каждое сообщение - это кусок данных для помещения</span>
+<span class="hl slc">// в лог. Если пришли пустые данные - выходим.</span>
+<span class="hl slc">//</span>
+<span class="hl kwa">func</span> <span class="hl kwd">logger_loop</span><span class="hl opt">(</span>data <span class="hl kwa">chan</span> <span class="hl opt">[]</span><span class="hl kwb">byte</span><span class="hl opt">,</span> log_name <span class="hl kwb">string</span><span class="hl opt">) {</span>
+  f<span class="hl opt">,</span> err <span class="hl opt">:=</span> os<span class="hl opt">.</span><span class="hl kwd">Create</span><span class="hl opt">(</span>log_name<span class="hl opt">)</span>
+  <span class="hl kwa">if</span> err <span class="hl opt">!=</span> <span class="hl kwb">nil</span> <span class="hl opt">{</span>
+    <span class="hl kwd">die</span><span class="hl opt">(</span><span class="hl str">&quot;Unable to create file %s, %v</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> log_name<span class="hl opt">,</span> err<span class="hl opt">)</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">defer</span> f<span class="hl opt">.</span><span class="hl kwd">Close</span><span class="hl opt">()</span>  <span class="hl slc">// Гарантируем закрытие файла в случае падения.</span>
+  <span class="hl kwa">for</span> <span class="hl opt">{</span>
+    b <span class="hl opt">:= &lt;-</span>data
+    <span class="hl kwa">if</span> <span class="hl kwb">len</span><span class="hl opt">(</span>b<span class="hl opt">) ==</span> <span class="hl num">0</span> <span class="hl opt">{</span>
+      <span class="hl kwa">break</span>
+    <span class="hl opt">}</span>
+    f<span class="hl opt">.</span><span class="hl kwd">Write</span><span class="hl opt">(</span>b<span class="hl opt">)</span>
+    f<span class="hl opt">.</span><span class="hl kwd">Sync</span><span class="hl opt">()</span>       <span class="hl slc">// На всякий случай flush'имся.</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwa">func</span> <span class="hl kwd">format_time</span><span class="hl opt">(</span>t time<span class="hl opt">.</span>Time<span class="hl opt">)</span> <span class="hl kwb">string</span> <span class="hl opt">{</span>
+  <span class="hl kwa">return</span> t<span class="hl opt">.</span><span class="hl kwd">Format</span><span class="hl opt">(</span><span class="hl str">&quot;2006.01.02-15.04.05&quot;</span><span class="hl opt">)</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwa">func</span> <span class="hl kwd">printable_addr</span><span class="hl opt">(</span>a net<span class="hl opt">.</span>Addr<span class="hl opt">)</span> <span class="hl kwb">string</span> <span class="hl opt">{</span>
+  <span class="hl kwa">return</span> strings<span class="hl opt">.</span><span class="hl kwd">Replace</span><span class="hl opt">(</span>a<span class="hl opt">.</span><span class="hl kwd">String</span><span class="hl opt">(),</span> <span class="hl str">&quot;:&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;-&quot;</span><span class="hl opt">, -</span><span class="hl num">1</span><span class="hl opt">)</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// Структура, в которой передаются параметры соединения. Объединено, чтобы</span>
+<span class="hl slc">// не таскать много параметров.</span>
+<span class="hl kwa">type</span> Channel <span class="hl kwa">struct</span> <span class="hl opt">{</span>
+  from<span class="hl opt">,</span> to net<span class="hl opt">.</span>Conn
+  logger<span class="hl opt">,</span> binary_logger <span class="hl kwa">chan</span> <span class="hl opt">[]</span><span class="hl kwb">byte</span>
+  ack <span class="hl kwa">chan</span> <span class="hl kwb">bool</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// Функция, &quot;качающая&quot; данные из одного сокета и передающая их в другой.</span>
+<span class="hl slc">// Попутно ведется логирование.</span>
+<span class="hl kwa">func</span> <span class="hl kwd">pass_through</span><span class="hl opt">(</span>c <span class="hl opt">*</span>Channel<span class="hl opt">) {</span>
+  from_peer <span class="hl opt">:=</span> <span class="hl kwd">printable_addr</span><span class="hl opt">(</span>c<span class="hl opt">.</span>from<span class="hl opt">.</span><span class="hl kwd">LocalAddr</span><span class="hl opt">())</span>
+  to_peer <span class="hl opt">:=</span> <span class="hl kwd">printable_addr</span><span class="hl opt">(</span>c<span class="hl opt">.</span>to<span class="hl opt">.</span><span class="hl kwd">LocalAddr</span><span class="hl opt">())</span>
+
+  b <span class="hl opt">:=</span> <span class="hl kwb">make</span><span class="hl opt">([]</span><span class="hl kwb">byte</span><span class="hl opt">,</span> <span class="hl num">10240</span><span class="hl opt">)</span>
+  offset <span class="hl opt">:=</span> <span class="hl num">0</span>
+  packet_n <span class="hl opt">:=</span> <span class="hl num">0</span>
+  <span class="hl kwa">for</span> <span class="hl opt">{</span>
+    n<span class="hl opt">,</span> err <span class="hl opt">:=</span> c<span class="hl opt">.</span>from<span class="hl opt">.</span><span class="hl kwd">Read</span><span class="hl opt">(</span>b<span class="hl opt">)</span>
+    <span class="hl kwa">if</span> err <span class="hl opt">!=</span> <span class="hl kwb">nil</span> <span class="hl opt">{</span>
+      c<span class="hl opt">.</span>logger <span class="hl opt">&lt;- []</span><span class="hl kwb">byte</span><span class="hl opt">(</span>fmt<span class="hl opt">.</span><span class="hl kwd">Sprintf</span><span class="hl opt">(</span><span class="hl str">&quot;Disconnected from %s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> from_peer<span class="hl opt">))</span>
+      <span class="hl kwa">break</span>
+    <span class="hl opt">}</span>
+    <span class="hl kwa">if</span> n <span class="hl opt">&gt;</span> <span class="hl num">0</span> <span class="hl opt">{</span>
+      <span class="hl slc">// Если что-то пришло, то логируем и пересылаем на выход.</span>
+      c<span class="hl opt">.</span>logger <span class="hl opt">&lt;- []</span><span class="hl kwb">byte</span><span class="hl opt">(</span>fmt<span class="hl opt">.</span><span class="hl kwd">Sprintf</span><span class="hl opt">(</span><span class="hl str">&quot;Received (#%d, %08X) %d bytes from %s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> 
+                                     packet_n<span class="hl opt">,</span> offset<span class="hl opt">,</span> n<span class="hl opt">,</span> from_peer<span class="hl opt">))</span>
+      <span class="hl slc">// Это все, что нужно для преобразования в hex-дамп. Удобно, не так ли?</span>
+      c<span class="hl opt">.</span>logger <span class="hl opt">&lt;- []</span><span class="hl kwb">byte</span><span class="hl opt">(</span>hex<span class="hl opt">.</span><span class="hl kwd">Dump</span><span class="hl opt">(</span>b<span class="hl opt">[:</span>n<span class="hl opt">]))</span>
+      c<span class="hl opt">.</span>binary_logger <span class="hl opt">&lt;-</span> b<span class="hl opt">[:</span>n<span class="hl opt">]</span>
+      c<span class="hl opt">.</span>to<span class="hl opt">.</span><span class="hl kwd">Write</span><span class="hl opt">(</span>b<span class="hl opt">[:</span>n<span class="hl opt">])</span>
+      c<span class="hl opt">.</span>logger <span class="hl opt">&lt;- []</span><span class="hl kwb">byte</span><span class="hl opt">(</span>fmt<span class="hl opt">.</span><span class="hl kwd">Sprintf</span><span class="hl opt">(</span><span class="hl str">&quot;Sent (#%d) to %s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> packet_n<span class="hl opt">,</span> to_peer<span class="hl opt">))</span>
+      offset <span class="hl opt">+=</span> n
+      packet_n <span class="hl opt">+=</span> <span class="hl num">1</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span>
+  c<span class="hl opt">.</span>from<span class="hl opt">.</span><span class="hl kwd">Close</span><span class="hl opt">()</span>
+  c<span class="hl opt">.</span>to<span class="hl opt">.</span><span class="hl kwd">Close</span><span class="hl opt">()</span>
+  c<span class="hl opt">.</span>ack <span class="hl opt">&lt;-</span> <span class="hl kwb">true</span>   <span class="hl slc">// Посылаем сообщение в главный поток, что мы закончили.</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// Данная функция обслуживает соединение. Запускает необходимые потоки и ждет</span>
+<span class="hl slc">// их завершения.</span>
+<span class="hl kwa">func</span> <span class="hl kwd">process_connection</span><span class="hl opt">(</span>local net<span class="hl opt">.</span>Conn<span class="hl opt">,</span> conn_n <span class="hl kwb">int</span><span class="hl opt">,</span> target <span class="hl kwb">string</span><span class="hl opt">) {</span>
+  <span class="hl slc">// Соединяемся к удаленном сокету, куда будем пересылать данные.</span>
+  remote<span class="hl opt">,</span> err <span class="hl opt">:=</span> net<span class="hl opt">.</span><span class="hl kwd">Dial</span><span class="hl opt">(</span><span class="hl str">&quot;tcp&quot;</span><span class="hl opt">,</span> target<span class="hl opt">)</span>
+  <span class="hl kwa">if</span> err <span class="hl opt">!=</span> <span class="hl kwb">nil</span> <span class="hl opt">{</span>
+    fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;Unable to connect to %s, %v</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> target<span class="hl opt">,</span> err<span class="hl opt">)</span>
+  <span class="hl opt">}</span>
+  
+  local_info <span class="hl opt">:=</span> <span class="hl kwd">printable_addr</span><span class="hl opt">(</span>remote<span class="hl opt">.</span><span class="hl kwd">LocalAddr</span><span class="hl opt">())</span>
+  remote_info <span class="hl opt">:=</span> <span class="hl kwd">printable_addr</span><span class="hl opt">(</span>remote<span class="hl opt">.</span><span class="hl kwd">RemoteAddr</span><span class="hl opt">())</span>
+
+  <span class="hl slc">// Засекаем начальное время.</span>
+  started <span class="hl opt">:=</span> time<span class="hl opt">.</span><span class="hl kwd">Now</span><span class="hl opt">()</span>
+  
+  <span class="hl slc">// Создаем каналы для обмена с логгерами.</span>
+  logger <span class="hl opt">:=</span> <span class="hl kwb">make</span><span class="hl opt">(</span><span class="hl kwa">chan</span> <span class="hl opt">[]</span><span class="hl kwb">byte</span><span class="hl opt">)</span>
+  from_logger <span class="hl opt">:=</span> <span class="hl kwb">make</span><span class="hl opt">(</span><span class="hl kwa">chan</span> <span class="hl opt">[]</span><span class="hl kwb">byte</span><span class="hl opt">)</span>
+  to_logger <span class="hl opt">:=</span> <span class="hl kwb">make</span><span class="hl opt">(</span><span class="hl kwa">chan</span> <span class="hl opt">[]</span><span class="hl kwb">byte</span><span class="hl opt">)</span>
+
+  <span class="hl slc">// Канал для получения подтверждений от качающих потоков.</span>
+  ack <span class="hl opt">:=</span> <span class="hl kwb">make</span><span class="hl opt">(</span><span class="hl kwa">chan</span> <span class="hl kwb">bool</span><span class="hl opt">)</span>
+
+  <span class="hl slc">// Запускаем логгеры.</span>
+  <span class="hl kwa">go</span> <span class="hl kwd">connection_logger</span><span class="hl opt">(</span>logger<span class="hl opt">,</span> conn_n<span class="hl opt">,</span> local_info<span class="hl opt">,</span> remote_info<span class="hl opt">)</span>
+  <span class="hl kwa">go</span> <span class="hl kwd">binary_logger</span><span class="hl opt">(</span>from_logger<span class="hl opt">,</span> conn_n<span class="hl opt">,</span> local_info<span class="hl opt">)</span>
+  <span class="hl kwa">go</span> <span class="hl kwd">binary_logger</span><span class="hl opt">(</span>to_logger<span class="hl opt">,</span> conn_n<span class="hl opt">,</span> remote_info<span class="hl opt">)</span>
+
+  logger <span class="hl opt">&lt;- []</span><span class="hl kwb">byte</span><span class="hl opt">(</span>fmt<span class="hl opt">.</span><span class="hl kwd">Sprintf</span><span class="hl opt">(</span><span class="hl str">&quot;Connected to %s at %s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> target<span class="hl opt">,</span>
+                               <span class="hl kwd">format_time</span><span class="hl opt">(</span>started<span class="hl opt">)))</span>
+
+  <span class="hl slc">// Запускаем качающие потоки.</span>
+  <span class="hl kwa">go</span> <span class="hl kwd">pass_through</span><span class="hl opt">(&amp;</span>Channel<span class="hl opt">{</span>remote<span class="hl opt">,</span> local<span class="hl opt">,</span> logger<span class="hl opt">,</span> to_logger<span class="hl opt">,</span> ack<span class="hl opt">})</span>
+  <span class="hl kwa">go</span> <span class="hl kwd">pass_through</span><span class="hl opt">(&amp;</span>Channel<span class="hl opt">{</span>local<span class="hl opt">,</span> remote<span class="hl opt">,</span> logger<span class="hl opt">,</span> from_logger<span class="hl opt">,</span> ack<span class="hl opt">})</span>
+
+  <span class="hl slc">// Ждем подтверждения об их завершении.</span>
+  <span class="hl opt">&lt;-</span>ack
+  <span class="hl opt">&lt;-</span>ack
+
+  <span class="hl slc">// Вычисляем длительность соединения.</span>
+  finished <span class="hl opt">:=</span> time<span class="hl opt">.</span><span class="hl kwd">Now</span><span class="hl opt">()</span>
+  duration <span class="hl opt">:=</span> finished<span class="hl opt">.</span><span class="hl kwd">Sub</span><span class="hl opt">(</span>started<span class="hl opt">)</span>
+  logger <span class="hl opt">&lt;- []</span><span class="hl kwb">byte</span><span class="hl opt">(</span>fmt<span class="hl opt">.</span><span class="hl kwd">Sprintf</span><span class="hl opt">(</span><span class="hl str">&quot;Finished at %s, duration %s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span>
+                               <span class="hl kwd">format_time</span><span class="hl opt">(</span>started<span class="hl opt">),</span> duration<span class="hl opt">.</span><span class="hl kwd">String</span><span class="hl opt">()))</span>
+
+  <span class="hl slc">// Посылаем логгерам команды закругляться. Мы тут не ждем от них</span>
+  <span class="hl slc">// подтверждения, так как они и так завершатся рано или поздно, а они нам</span>
+  <span class="hl slc">// более не нужны.</span>
+  logger <span class="hl opt">&lt;- []</span><span class="hl kwb">byte</span><span class="hl opt">{}</span>
+  from_logger <span class="hl opt">&lt;- []</span><span class="hl kwb">byte</span><span class="hl opt">{}</span>
+  to_logger <span class="hl opt">&lt;- []</span><span class="hl kwb">byte</span><span class="hl opt">{}</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwa">func</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl slc">// Просим Go использовать все имеющиеся в системе процессоры.</span>
+  runtime<span class="hl opt">.</span><span class="hl kwd">GOMAXPROCS</span><span class="hl opt">(</span>runtime<span class="hl opt">.</span><span class="hl kwd">NumCPU</span><span class="hl opt">())</span>
+  <span class="hl slc">// Разбираем командную строку (несложно, не правда ли?)</span>
+  flag<span class="hl opt">.</span><span class="hl kwd">Parse</span><span class="hl opt">()</span>
+  <span class="hl kwa">if</span> flag<span class="hl opt">.</span><span class="hl kwd">NFlag</span><span class="hl opt">() !=</span> <span class="hl num">3</span> <span class="hl opt">{</span>
+    fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;usage: gotcpspy -host target_host -port target_port -listen_post=local_port</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">)</span>
+    flag<span class="hl opt">.</span><span class="hl kwd">PrintDefaults</span><span class="hl opt">()</span>
+    os<span class="hl opt">.</span><span class="hl kwd">Exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>
+  <span class="hl opt">}</span>
+  target <span class="hl opt">:=</span> net<span class="hl opt">.</span><span class="hl kwd">JoinHostPort</span><span class="hl opt">(*</span>host<span class="hl opt">, *</span>port<span class="hl opt">)</span>
+  fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;Start listening on port %s and forwarding data to %s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span>
+             <span class="hl opt">*</span>listen_port<span class="hl opt">,</span> target<span class="hl opt">)</span>
+
+  ln<span class="hl opt">,</span> err <span class="hl opt">:=</span> net<span class="hl opt">.</span><span class="hl kwd">Listen</span><span class="hl opt">(</span><span class="hl str">&quot;tcp&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;:&quot;</span><span class="hl opt">+*</span>listen_port<span class="hl opt">)</span>
+  <span class="hl kwa">if</span> err <span class="hl opt">!=</span> <span class="hl kwb">nil</span> <span class="hl opt">{</span>
+    fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;Unable to start listener, %v</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> err<span class="hl opt">)</span>
+    os<span class="hl opt">.</span><span class="hl kwd">Exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>
+  <span class="hl opt">}</span>
+  conn_n <span class="hl opt">:=</span> <span class="hl num">1</span>
+  <span class="hl kwa">for</span> <span class="hl opt">{</span>
+    <span class="hl slc">// Ждем новых соединений.</span>
+    <span class="hl kwa">if</span> conn<span class="hl opt">,</span> err <span class="hl opt">:=</span> ln<span class="hl opt">.</span><span class="hl kwd">Accept</span><span class="hl opt">();</span> err <span class="hl opt">==</span> <span class="hl kwb">nil</span> <span class="hl opt">{</span>
+      <span class="hl slc">// Запускаем поток обработки соединения.</span>
+      <span class="hl kwa">go</span> <span class="hl kwd">process_connection</span><span class="hl opt">(</span>conn<span class="hl opt">,</span> conn_n<span class="hl opt">,</span> target<span class="hl opt">)</span>
+      conn_n <span class="hl opt">+=</span> <span class="hl num">1</span>
+    <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
+      fmt<span class="hl opt">.</span><span class="hl kwd">Printf</span><span class="hl opt">(</span><span class="hl str">&quot;Accept failed, %v</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> err<span class="hl opt">)</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Повторюсь, каждое соединения обслуживается <strong>пятью</strong> потоками. И сделал я это не ради прикола. Просто мне показалось, что логически есть явно независимые подзадачи, которые было бы логично запустить параллельно. Если б я писал все на C++/boost, я б скорее всего замутил все одном потоке для каждого соединения (а может быть и вся программа была бы чисто однопотоковой через какие-нибудь изощренные библиотеки мультиплексирования), и не исключено, что на C++ в итоге еще и работало бы быстрее, несмотря на один поток. Но я хочу сказать не об этом. Go подталкивает на многопоточное программирование (а не отталкивает, как C++, даже на стероидах нового стандарта). Так или иначе, будут задачи, где удобная многопоточность станет ключевым фактором.</p>
+
+<p>Запустить можно так (требуется как минимум Go релиз 1):</p>
+
+<pre><code>go run gotcpspy.go -host pop.yandex.ru -port 110 -local_port 8080
+</code></pre>
+
+<p>Выведется:</p>
+
+<pre><code>Start listening on port 8080 and forwarding data to pop.yandex.ru:110
+</code></pre>
+
+<p>Затем, если в другом окне ввести:</p>
+
+<pre><code>telnet localhost 8080
+</code></pre>
+
+<p>и ввести, например, <code>USER test</code> <code>&lt;ENTER&gt;</code> и <code>PASS none</code> <code>&lt;ENTER&gt;</code>, то будут созданы три лога (дата в имени будет, конечно другая).</p>
+
+<p>Общий лог <code>log-2012.04.20-19.55.17-0001-192.168.1.41-49544-213.180.204.37-110.log</code>:</p>
+
+<pre><code>Connected to pop.yandex.ru:110 at 2012.04.20-19.55.17
+Received (#0, 00000000) 38 bytes from 192.168.1.41-49544
+00000000  2b 4f 4b 20 50 4f 50 20  59 61 21 20 76 31 2e 30  |+OK POP Ya! v1.0|
+00000010  2e 30 6e 61 40 32 36 20  48 74 6a 4a 69 74 63 50  |.0na@26 HtjJitcP|
+00000020  52 75 51 31 0d 0a                                 |RuQ1..|
+Sent (#0) to [--1]-8080
+Received (#0, 00000000) 11 bytes from [--1]-8080
+00000000  55 53 45 52 20 74 65 73  74 0d 0a                 |USER test..|
+Sent (#0) to 192.168.1.41-49544
+Received (#1, 00000026) 23 bytes from 192.168.1.41-49544
+00000000  2b 4f 4b 20 70 61 73 73  77 6f 72 64 2c 20 70 6c  |+OK password, pl|
+00000010  65 61 73 65 2e 0d 0a                              |ease...|
+Sent (#1) to [--1]-8080
+Received (#1, 0000000B) 11 bytes from [--1]-8080
+00000000  50 41 53 53 20 6e 6f 6e  65 0d 0a                 |PASS none..|
+Sent (#1) to 192.168.1.41-49544
+Received (#2, 0000003D) 72 bytes from 192.168.1.41-49544
+00000000  2d 45 52 52 20 5b 41 55  54 48 5d 20 6c 6f 67 69  |-ERR [AUTH] logi|
+00000010  6e 20 66 61 69 6c 75 72  65 20 6f 72 20 50 4f 50  |n failure or POP|
+00000020  33 20 64 69 73 61 62 6c  65 64 2c 20 74 72 79 20  |3 disabled, try |
+00000030  6c 61 74 65 72 2e 20 73  63 3d 48 74 6a 4a 69 74  |later. sc=HtjJit|
+00000040  63 50 52 75 51 31 0d 0a                           |cPRuQ1..|
+Sent (#2) to [--1]-8080
+Disconnected from 192.168.1.41-49544
+Disconnected from [--1]-8080
+Finished at 2012.04.20-19.55.17, duration 5.253979s
+</code></pre>
+
+<p>Двоичный лог исходящих данных <code>log-binary-2012.04.20-19.55.17-0001-192.168.1.41-49544.log</code>:</p>
+
+<pre><code>USER test
+PASS none
+</code></pre>
+
+<p>Двоичный лог входящих данных <code>log-binary-2012.04.20-19.55.17-0001-213.180.204.37-110.log</code>:</p>
+
+<pre><code>+OK POP Ya! v1.0.0na@26 HtjJitcPRuQ1
++OK password, please.
+-ERR [AUTH] login failure or POP3 disabled, try later. sc=HtjJitcPRuQ1
+</code></pre>
+
+<p>Теперь измерим производительность. Прокачаем файл напрямую, а потом через эту программу.</p>
+
+<p>Качаем напрямую (файл размером около 72MB):</p>
+
+<pre><code>time wget http://www.erlang.org/download/otp_src_R15B01.tar.gz
+...
+Saving to: `otp_src_R15B01.tar.gz'
+...
+real    1m2.819s
+</code></pre>
+
+<p>Теперь закачаем через программу, предварительно запустив ее:</p>
+
+<pre><code>go run gotcpspy.go -host=www.erlang.org -port=80 -listen_port=8080
+</code></pre>
+
+<p>Качаем:</p>
+
+<pre><code>time wget http://localhost:8080/download/otp_src_R15B01.tar.gz
+...
+Saving to: `otp_src_R15B01.tar.gz'
+...
+real    0m56.209s
+</code></pre>
+
+<p>На всякий случай, можно сравнить результаты:</p>
+
+<pre><code>diff otp_src_R15B01.tar.gz otp_src_R15B01.tar.gz.1
+</code></pre>
+
+<p>У меня файлы одинаковые, значит все работает верно.</p>
+
+<p>Теперь время. Я повторял эксперимент несколько раз (на Mac Air), и, что удивительно, закачка через программу всегда была не то, чтобы медленнее, а даже немного быстрее. Например, напрямую &ndash; 1m2.819s, через программу &ndash; 0m56.209s. Единственное объяснение, что <code>wget</code> возможно работает в один поток, а программа принимает данные из локального и удаленного сокета в два потока, что может давать небольшое ускорение. Но, разница все равно минимальна, и возможно на другой машине или сети ее будет не видно, но главное, что работает как минимум <strong>не медленнее</strong>, чем напрямую, несмотря на создание в процессе передачи весьма массивных логов.</p>
+
+<p>Итак, пока среди трех вариантов такой программы, на Питоне, Эрланге и Go, последняя мне нравится больше всего.</p>
+
+<p>Как мне показалось, неплохой эксперимент с параллельностью в Go.</p>
+
+<h3>Посты по теме</h3>
+
+<ul>
+<li><a href="http://demin.ws/blog/russian/2011/11/19/problem-to-try-new-languages/">Задача для освоения новых языков</a></li>
+<li><a href="http://demin.ws/blog/russian/2011/11/22/tcpip-proxy-in-erlang/">TCP/IP proxy на Erlang&rsquo;e</a></li>
+<li><a href="http://demin.ws/blog/russian/2011/11/26/improved-tcpip-proxy-in-erlang/">Улучшенный TCP/IP proxy на Erlang&rsquo;e</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/09/04/multi-threaded-tcpip-debugger/">Мультипотоковый отладчик TCP/IP соединений</a> (на Питоне)</li>
+</ul>
+
+<h3>Ссылки на репозитории</h3>
+
+<ul>
+<li><a href="https://github.com/begoon/go-tcpspy">Go</a></li>
+<li><a href="https://github.com/begoon/erl-tcpspy">Эрланг</a></li>
+<li><a href="https://github.com/begoon/py-tcpspy">Питон</a></li>
+</ul>
+
+<h3>P.S.</h3>
+
+<p>Кстати, если кто-то из джавистов замутил бы схожую программу (если можно, не требующую для сборки Eclipse/IDEA/ant/maven/spring/log4j/ivy и прочее), было бы очень интересно сравнить. И не в плане эффективности и скорости, а в плане красоты, изящности.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Feuer A., "The C puzzle book"]]></title>
