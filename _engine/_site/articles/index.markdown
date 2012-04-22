@@ -8,6 +8,8 @@ title: "Статьи"
 
 **Хабр**
 
+* [TCP/IP proxy на Go][]
+* [Goblog: Самодельный статический движок для блога на Go][]
 * [Maximite — Ностальгия с паяльником по временам Радио-86РК и Спектрума][]
 * [MapReduce для начинающих на Erlang'e][]
 * [Chromebook Samsung 5 3G в первом лондонском офлайновом магазине][]
@@ -27,6 +29,8 @@ title: "Статьи"
 
 [Интервью проекту OpenQuality.ru]: http://experience.openquality.ru/alexander-demin-interview/
 
+[TCP/IP proxy на Go]: http://habrahabr.ru/post/142527/
+[Goblog: Самодельный статический движок для блога на Go]: http://habrahabr.ru/post/142287/
 [Maximite — Ностальгия с паяльником по временам Радио-86РК и Спектрума]: http://habrahabr.ru/post/136625/
 [MapReduce для начинающих на Erlang'e]: http://habrahabr.ru/post/133750/
 [Chromebook Samsung 5 3G в первом лондонском офлайновом магазине]: http://habrahabr.ru/post/129584/
