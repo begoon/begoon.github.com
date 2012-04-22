@@ -5,6 +5,7 @@ date: 2012-04-12 17:21
 title: "Macro for unused parameters"
 categories:
 - macro
+- english
 ---
 Sometimes there is a function (or a method) having declared but unused parameters. It can be legacy code or just bad design. Normally the compiler gives a warning about this. 
 

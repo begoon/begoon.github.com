@@ -5,6 +5,7 @@ date: 2012-04-12 21:30
 title: 'Dustin Boswell, Trevor Foucher, "The art of readable code"'
 categories:
 - book
+- english
 ---
 [Dustin Boswell, Trevor Foucher, "The art of readable code"][]
 

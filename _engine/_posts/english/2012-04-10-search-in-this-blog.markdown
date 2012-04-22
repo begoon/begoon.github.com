@@ -3,6 +3,8 @@ layout: post
 language: english
 title: "How to search in this blog?"
 date: 2012-04-10 16:59
+categories:
+- english
 ---
 As noted, the posts in this blog have no tags anymore. Technically the tags are still supported, but not displayed (no individual feeds per tag, or a cloud of tag, or other kinds of navigation).
 

@@ -3,6 +3,8 @@ layout: post
 language: english
 date: 2012-04-10 23:13
 title: "Asynchronous JavaScript loading"
+categories:
+- english
 ---
 If you look closely, the search field on the main page appears with a little delay. It becomes visible only when the search index script is fully loaded. But the script is being loaded asynchronously, in background. I googled the following example: 
 

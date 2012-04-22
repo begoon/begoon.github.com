@@ -5,6 +5,7 @@ date: 2012-04-15 14:17
 title: 'Peter van der Linden, "Expert C Programming"'
 categories:
 - book
+- russian
 ---
 [Expert C Programming][], Peter van der Linden
 

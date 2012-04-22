@@ -7,6 +7,7 @@ categories:
 - cplusplus
 - benchmark
 - stl
+- english
 ---
 Let's imagine there is a function creating a `vector`. This function needs to return this vector to the caller. What's the better way doing it?
 
