@@ -5,13 +5,256 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-18T21:30:00Z</updated>
+  <updated>2012-04-23T00:02:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Goblog: A handmade static blog engine in Go running this blog]]></title>
+    <link href="http://demin.ws/blog/english/2012/04/23/static-blog-engine-goblog/"/>
+    <updated>2012-04-23T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/04/23/static-blog-engine-goblog/</id>
+    <content type="html"><![CDATA[<p>I love writing, playing with examples, testing, thinking. But I don&rsquo;t like fiddling with formatting, uploading pictures, composing, etc.</p>
+
+<p>Because of laziness I began using Blogspot. It gives plenty of bells and whistles: templates, widgets, instant indexing by Google, statistics, even comments become to be a tree at some point. Everything seems to be great, but alas, the online Blogspot editor isn&rsquo;t designed to create programmer posts. When it requires to insert a code or a table, sufferings begin. For example, for my another blog, not about programming, called &ldquo;<a href="http://english-eggs.blogspot.com">Boiled eggs, sir!</a>&rdquo;, &ldquo;the capabilities&rdquo; of Blogspot are more or less enough.</p>
+
+<p>I want to keep sources of the posts in a nice and clear format, not spoiled by HTML. It turned out that the posts sources are spread across my computer here and there, sometimes in multiple copies. You begin creating a post simply in an editor only formatting paragraphs, without links and images, and eventually you save the final version. Then you compose HTML during that the post body maybe also changed. Thus I&rsquo;m lazy to update the original, non-HTML version, so finally, only the spoiled by HTML version remains up to date. But this is not the end of the store still. Often after publishing you spot on a typo, go to the Blogspot online editor and fix it right on the page. Again, that very first document and its local, prior to uploading the HTML version, don&rsquo;t have all the corrections. Ultimately, only the online edition in Blogspot is relevant. Of course, it is possible to export the entire blog from Blogspot (maybe even automatically, on regular basis) and back them up, but again, everything will be in the HTML format.</p>
+
+<p>Some time ago I began using <a href="http://docutils.sourceforge.net/rst.html">ReST</a>. The life had become a bit easier. ReST allows to write text in the more or less predictable layout (paragraphs, links, code), and then HTML is generated from it, and then later pasted (again, manually) into the Blogspot editor. All my attempts using <a href="http://code.google.com/p/googlecl/">Google Command Line</a>, in fact, failed. The problem of the outdated original documents (after online fixed) still stood. Furthermore, ReST didn&rsquo;t solve the problem with pictures. I had to upload them somewhere in advance to do the a proper local preview.</p>
+
+<p>I almost cannot explain why, but the idea of dynamic blog engines like WordPress scared me. Use of a database to keep posts seemed to me unnecessarily complicated.</p>
+
+<p>I was almost ready to choose an intermediate solution &ndash; <a href="http://www.dokuwiki.org/dokuwiki">Doku Wiki</a>, for example, <a href="http://vak.ru/doku.php/proj">vak.ru</a>. This engine is dynamic, but it stores the posts as files. Plus, it supports versioning. Doku can be used as the engine for the whole site, not only the blog. Though its design is unsightly, but pictures and other arbitrary attachments are handled by Doku automatically.</p>
+
+<p>There was another option, which I almost signed up for &ndash; <a href="http://www.tiddlywiki.com/">TiddlyWiki</a>. TiddlyWiki is my favorite tool on Windows for notes. Why only Windows? Because on Mac I simply use regular plain text files in Documents or Desktop, and <a href="http://en.wikipedia.org/wiki/Spotlight_(software)">Spotlight</a> provides the instant search. Therefore on Mac the instant search, the killer feature of TiddlyWiki, didn&rsquo;t make any sense. But I digressed.</p>
+
+<p>It turns out, there are TiddlyWiki fans which converted it to a blog engine, a static-dynamic mutant.</p>
+
+<p>For instance, here is an example of a blog running TiddlyWiki &ndash; <a href="http://rsignell.tiddlyspot.com/">Rich Signell&rsquo;s Work Log</a>. Esoterics, in my opinion. It isn&rsquo;t quite clear even how to implement comments, at least Disqus. But surprisingly, there is public hosting based on Tiddly &ndash; <a href="http://tiddlyspot.com/">tiddlyspot</a>.</p>
+
+<p>Finally, I had got hooked on purely static blog engines. The charm of it is that such blog can be hosted anywhere. Neither database nor even no server scripting is required. But further &ndash; it is more. GitHub and Heroku provide not only free hosting but also git as the CMS.</p>
+
+<p>For example, there is a static blog engine called <a href="http://jekyllrb.com/">Jekyll</a>. In Jekyll posts are created in Markdown or Textile, therefore the formatting issue is solved. No ugly HTML anymore. In fact, the engine can drive the entire website, not only the blog, plus some source files are deployed as a blog.</p>
+
+<p>The comments, as the main dynamics in blogs, can be implemented via, for instance, <a href="http://disqus.com">Disqus</a>. By the way, there is a quite popular pure zen approach to the comments &ndash; static ones (to me, such word combination is the oxymoron in the first place). With the static comments there is a comment entering form somewhere on the page along with the <em>statically</em> rendered existing comments. You enter a comment and submit. Then it gets sent to the blog owner. He or she approves (or rejects) it, clicks somewhere, and the comment is placed to a file. Then the blog is re-compiled and finally deployed to public. Obviously, it is far from real-time, which is the heart of commenting, in my humble opinion.</p>
+
+<p>I very much appreciate discussion, and such approach is not for me. I use Disqus. By the way, all the comments can be easily exported from Disqus, and, for instance, converted to a static form.</p>
+
+<p>But let&rsquo;s go back to Jekyll. GitHub directly supports it (its author is the GitHub co-founder) and can render Jekyll projects for you (of course, you still can render locally). You simply <code>git push</code> your stuff to GitHub, and after a moment it becomes visible in GitHub Pages.</p>
+
+<p>Heroku works slightly different. Heroku hosts Ruby, therefore a Heroku project is a bunch of pages, plus a mini web server application serving them. Looks a bit scary, but such servee in Ruby is very simple:</p>
+
+<pre class="hl">
+<span class="hl kwa">require</span> <span class="hl str">'bundler/setup'</span>
+<span class="hl kwa">require</span> <span class="hl str">'sinatra/base'</span>
+
+<span class="hl kwa">class</span> SinatraStaticServer <span class="hl opt">&lt;</span> Sinatra<span class="hl opt">:</span><span class="hl kwc">:Base</span>  
+
+  <span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl kwc">/.+/</span>) <span class="hl kwa">do</span>
+    <span class="hl kwd">send_sinatra_file</span><span class="hl opt">(</span>request<span class="hl opt">.</span>path) <span class="hl esc">{404}</span>
+  <span class="hl kwa">end</span>
+
+  <span class="hl kwa">def</span> <span class="hl kwd">send_sinatra_file</span><span class="hl opt">(</span>path<span class="hl opt">, &amp;</span>missing_file_block)
+    file_path <span class="hl opt">=</span> File<span class="hl opt">.</span><span class="hl kwd">join</span><span class="hl opt">(</span>File<span class="hl opt">.</span><span class="hl kwd">dirname</span><span class="hl opt">(</span>__FILE__)<span class="hl opt">,</span> <span class="hl str">'public'</span><span class="hl opt">,</span>  path)
+    file_path <span class="hl opt">=</span> File<span class="hl opt">.</span><span class="hl kwd">join</span><span class="hl opt">(</span>file_path<span class="hl opt">,</span> <span class="hl str">'index.html'</span>) <span class="hl kwa">unless</span> file_path <span class="hl opt">=</span>~ <span class="hl kwc">/\.[a-z]+$/</span>i  
+    File<span class="hl opt">.</span>exist<span class="hl opt">?(</span>file_path) <span class="hl opt">?</span> <span class="hl kwd">send_file</span><span class="hl opt">(</span>file_path) <span class="hl opt">:</span> missing_file_block<span class="hl opt">.</span>call
+  <span class="hl kwa">end</span>
+<span class="hl kwa">end</span>
+
+run SinatraStaticServer
+</pre>
+
+<p>As strangely enough it sounds, Heroku as blog hosting is simpler than GitHub. Additionally, your git repository on Heroku remains private, whereas on GitHub by default it is public. I don&rsquo;t see any problems with it though, because it is all available anyway to everybody via the web site, but some people prefer keeping blog guts or bits of unfinished work in private.</p>
+
+<p>Also, both GitHub Pages and Heroku support a proper second level domain if you have one.</p>
+
+<p>Well, I had chosen Jekyll and Heroku hosting. Alas, vanilla Jekyll has no HTML templates or themes, and you have to design it. If you&rsquo;re lazy, you can try <a href="http://octopress.org/">Octopress</a>.</p>
+
+<p>Octopress is a static blog engine based on Jekyll. &ldquo;Based&rdquo; means, this is Jekyll plus a bunch of useful plugins, a very nice HTML5-compatible theme, and scripts helping in deployment to GitHub Pages and Heroku,</p>
+
+<p>So, I had installed Octopress, tried a couple of posts, rendered locally, deployed to GutHub and Heroky. Everything was amazing, I had began the most tedious part &ndash; converting posts from lovely Blogspot. In fact, it was almost pure manual cut-and-paste work. Three weeks of struggle, and my poor three hundred posts were done.</p>
+
+<p>Everything was ready to launch my nice or shiny static blog. But here I had met my main disappointment. The precious Jekyll, written in Ruby, rendered my hundred posts (attention!) 15 minutes (on Mac Air). As you can understand, at the beginning I had to rebuild a hundred of times &ndash; design changes, formatting etc. So, 15 minutes wasn&rsquo;t even close to any acceptable time, at all.</p>
+
+<p>At random, I found a bottle neck in Jekyll/Octopress &ndash; the majority of those 15 minutes were spent generating the RSS file, <code>atom.xml</code>. For some reason, in original templates, that RSS filed included only the latest twenty posts. But my blog is small, and I included all posts there. It had caused that 15 minutes build.</p>
+
+<p>All this seemed to me an absurdity (at all my love to Ruby). After some analysis (at that time I began to understand how Jekyll worked, more or less) and unwillingness to fix Jekyll trying to speed it up, I asked a question &ndash; what if I develop the static engine by myself? using Jekyll&rsquo;s principles? After all it is only work with files, strings, and templates. Besides, I wanted to blog in two languages, but Jekyll didn&rsquo;t support that. Having my own engine seemed to be a very cool idea because I would free to implement exactly that I wanted.</p>
+
+<p>Instrumentation? As a real man in C++/boost? Perhaps. I suspect it would work very fast, but it is boring. I&rsquo;d chosen Go. It is natively compiled, has simplified memory management (thanks to the garbage collector), regular expressions, maps, templates, <a href="https://github.com/russross/blackfriday">Markdown library</a>. Everything, except the later, is out of the box. There should not be any performance issues. Here just the first release of Go had been arrived, now installation on both Windows and Mac became much easier.</p>
+
+<p>So, after three nights, my own wheel had been made &ndash; <a href="https://github.com/begoon/begoon.github.com">Goblog</a>. The project is fully open. The web site and its source are in the same repository.</p>
+
+<h2>Architecture</h2>
+
+<p>There are two main locations: a project and a target web site/blog. The first contains source files. In the process of assembly the project files are copied to the target directory preserving the relative directory structure. By default, the files are copied &ldquo;as is&rdquo;, as binaries. If a file has one of the following extensions: <code>html</code>, <code>xml</code>, or <code>js</code>, it is processed by <a href="http://weekly.golang.org/pkg/text/template/">Go template library</a>. Files with the <code>markdown</code> extension are also processed by the <a href="https://github.com/russross/blackfriday">Markdown library</a>.</p>
+
+<p>Directories:</p>
+
+<ul>
+<li><code>&lt;root&gt;</code> &ndash; Here is the compiled/built web site as it is visible at <a href="http://demin.ws/">http://demin.ws/</a>.</li>
+<li><code>&lt;root&gt;/_engine</code> &ndash; This is the project: source files and the blog generator.</li>
+</ul>
+
+<p>Subdirectories and files in <code>_engine</code>:</p>
+
+<ul>
+<li><p><code>_includes</code> &ndash; Include files available by <code>&#123;{include &ldquo;filename&rdquo;}}</code> macro.</p></li>
+
+<li><p><code>_layouts</code> &ndash; Layouts (see below).</p></li>
+
+<li><p><code>_site</code> &ndash; Actually, the source directories and files. This directory is the root of a future site. Files from here are copied to the target directory. Some files are processed by templates.</p></li>
+
+<li><p><code>_posts</code> &ndash; Posts. These files are process specially. Besides templates, they are renamed according to the blog structure, where the date is included to URL: <code>domain/blog/year/month/day/post-title</code>.</p></li>
+</ul>
+
+<p>The posts are Markdown files having a special preamble and name. These files are deployed to a separate directory, <code>/blog</code>. The post meta information is collected and propagated to the template place holders. Also the post sources are used to <a href="https://github.com/begoon/begoon.github.com/blob/9f088a83e86e54112696dd3954681b0450f40d91/_engine/main.go#L601">build the reverted index</a> of search.</p>
+
+<h2>Layouts</h2>
+
+<p>The concept of layouts is grabbed from Jekyll. If a post or a page has the <code>layout</code> attribute in its preamble (<a href="https://raw.github.com/begoon/begoon.github.com/master/_engine/_posts/english/2009-01-24-why-i-have-started-this-blog.markdown">for example</a>), a layout of the given name is loaded (from <code>_layouts</code> directory), the post body is put to the <code>Page.child</code> place holder, the layout is rendered, and the result becomes the final HTML page of the post. This is incredibly useful for similar pages, like posts. The layouts can be nested.</p>
+
+<h2>Generator</h2>
+
+<p>Now, the generator &ndash; <a href="https://github.com/begoon/begoon.github.com/blob/master/_engine/main.go">main.go</a>.</p>
+
+<p>To build the blog, I go to the <code>_engine</code> directory and do:</p>
+
+<pre><code>make
+</code></pre>
+
+<p>It prints roughly the following:</p>
+
+<pre><code>_engine$ make
+gofmt -w=true -tabs=false -tabwidth=2 main.go
+go run main.go 
+Go static blog generator  Copyright (C) 2012 by Alexander Demin
+Words in russian index: 18452
+Words in english index: 3563
+15.672979s
+Processed 344 posts.
+</code></pre>
+
+<p>If no errors, in the root directory (in <code>..</code> with regard to <code>_engine</code>) the compiled files should be created, ready for deployment. On my Mac Air the build takes 15 seconds (hello, Jekyll/Octopress and goodbye). The entire project is under git, so it is clear anytime which files are new, deleted, or changed.</p>
+
+<p>Then the built site can be viewed locally (see below).</p>
+
+<p>When you are happy with changes, let&rsquo;s add and submit them (the sources from <code>_site/</code> along with the assembled files) locally:</p>
+
+<pre><code>git add ../*
+git commit -m &quot;New post about ...&quot;
+</code></pre>
+
+<p>At last, let&rsquo;s deploy to GitHub:</p>
+
+<pre><code>git push
+</code></pre>
+
+<p>Almost immediately the files become visible at <a href="http://demin.ws/">demin.ws</a>.</p>
+
+<p>In <a href="https://github.com/begoon/begoon.github.com/blob/master/_engine/Makefile">Makefile</a> there is a couple of extra commands making life easier.</p>
+
+<h2>Local testing</h2>
+
+<p>To check/preview the site locally I temporarily add <code>127.0.0.1 demin.ws</code> to <code>/etc/hosts</code> and launch a mini web server. Remember, how it looked in Ruby? Tiny, right? Check out this:</p>
+
+<pre class="hl">
+<span class="hl kwa">package</span> main
+<span class="hl kwa">import</span> <span class="hl str">&quot;net/http&quot;</span>
+<span class="hl kwa">func</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwb">panic</span><span class="hl opt">(</span>http<span class="hl opt">.</span><span class="hl kwd">ListenAndServe</span><span class="hl opt">(</span><span class="hl str">&quot;:80&quot;</span><span class="hl opt">,</span> http<span class="hl opt">.</span><span class="hl kwd">FileServer</span><span class="hl opt">(</span>http<span class="hl opt">.</span><span class="hl kwd">Dir</span><span class="hl opt">(</span><span class="hl str">&quot;..&quot;</span><span class="hl opt">))))</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Nice? Now run it:</p>
+
+<pre><code>go run server.go&amp;
+</code></pre>
+
+<p>It may require <code>sudo</code> to acquire the port 80.</p>
+
+<p>Generally speaking, there is no need touching <code>/etc/hosts</code>, just use <code>localhost:80</code>. Only for checking the RSS file, <code>atom.xml</code>, having full URLs, you have to fiddle with hosts.</p>
+
+<h2>Syntax highlighting</h2>
+
+<p>As a Markdown extension I have a special tag for blocks of code:</p>
+
+<pre><code>{% codeblock lang:xxx %}
+...
+{% endcodeblock %}
+</code></pre>
+
+<p>I inherited the idea from Octopress. Markdown library already has the syntax for code:</p>
+
+<pre><code>``` xxx
+...
+```
+</code></pre>
+
+<p>where <code>xxx</code> is a language.</p>
+
+<p>My own tag aims to add additional attributes easier, for example, turning on the line number, tabs conversion, etc.</p>
+
+<p>Then I had to decide how to highlight the syntax. I tried a couple of online libraries, which color right on the page, but all of them had minor glitches here and there, and I went for static coloring.</p>
+
+<p>The first, which came to my mind, was <a href="http://pygments.org/">pygments</a>. It seemed okay, but thanks to the Python, it worked really slow. The total built time had increased from 15 seconds to two minutes. The main time was spent for a code coloring. I started thinking about a cache for the already highlighted code and similar nonsense, but after a little research the problem was solved radically.</p>
+
+<p>I just needed a colorizer, implemented in a language suitable for this problem. I found two options: <a href="http://www.gnu.org/software/src-highlite/">GNU Source-highlight</a> and <a href="http://www.andre-simon.de/doku/highlight/en/highlight.html">Highlight</a>. Both are in C++, the both worked almost instantly.</p>
+
+<p>For example, a guy <a href="http://petereisentraut.blogspot.co.uk/2009/07/adding-color-to-console-pygments-vs.html">compared pygments vs syntax-highlight</a>.</p>
+
+<p>I liked Highlight because it supports more languages (for example, the first one even didn&rsquo;t support Go). After migration to Highlight, the built time came to normal, ~15-16 seconds, and I was satisfied.</p>
+
+<p>The colorizer is invoked from the regular expression callback parsing the <code>{% codeblock %}</code> tag (function <a href="https://github.com/begoon/begoon.github.com/blob/9f088a83e86e54112696dd3954681b0450f40d91/_engine/main.go#L656">highlight()</a>).</p>
+
+<h2>Markdown editors</h2>
+
+<p>There are plenty of editors having Markdown preview. I use <a href="http://markdownpad.com/">MarkdownPad</a> for Windows and <a href="http://markedapp.com/">Marked</a> on Mac.</p>
+
+<h2>Tag (categories)</h2>
+
+<p>At the moment I have decided not to use tags at all. Based on a personal experience, I have realised that I never use tag neither in my blog nor in others. Besides, views on the post categorization changes over time, and at times you have to maintain a completely outdated tag just for the sake of uniformity. For example, what is the point of the <code>c++</code> tag in my blog? Who on Earth even used it?</p>
+
+<p>But the minimalism isn&rsquo;t a way to make life more complicated. On the contrary, I search in my old posts all the time. With Blogspot I went to the front page and used &#8984;-F (sorry, CTRL-F) to search across the post titles. Exactly for this purpose I started placing almost all informative posts into the right column on the front page.</p>
+
+<p>In the new blog everything &ldquo;works&rdquo; similar with the post catalog on the front page. During the migration I had improved some titles to be more informative for search.</p>
+
+<p>But! All of this doen&rsquo;t matter anymore because of the <a href="http://demin.ws/blog/english/2012/04/10/search-in-this-blog/">fully functional context search capability</a> in the new blog.</p>
+
+<h2>Sanity checks</h2>
+
+<p>One of annoying inconveniences of Jekyll is that it never checks anything in the content. But I passed though it fully converting posts from Blogspot: broken links, missing quotes, bad dates and so on. That&rsquo;s why the Goblog checks everything &ndash; formats, links, overall semantics, and it stops the build in the case of an error. When I added the <a href="https://github.com/begoon/begoon.github.com/blob/9f088a83e86e54112696dd3954681b0450f40d91/_engine/main.go#L581">check_links()</a> function, I had found a bunch of dead links.</p>
+
+<h2>Two languages</h2>
+
+<p>There was another issue with Jekyll &ndash; an absence of bilingualism. I want at least two languages in the blog, bit I didn&rsquo;t want to hard code the &ldquo;transparent&rdquo; support of Russian and English. So, I added the concept of the language to each post (or a file), and the language attribute is propagated to templates. Goblog doesn&rsquo;t know about particular languages, but it allows to figure it out in templates.</p>
+
+<p>For example, the <a href="https://github.com/begoon/begoon.github.com/blob/master/_engine/_site/index.html">front page in Russian</a> and the <a href="https://github.com/begoon/begoon.github.com/blob/master/_engine/_site/english/index.html">front page in English</a>.</p>
+
+<h2>Minor issues</h2>
+
+<p>I don&rsquo;t like web programming: javascript, css, html, or web design, which I cannot do at all. But I had to do it for Goblog (Octopress was much easier in this). I based my design on the <a href="http://tom.preston-werner.com/">Jekyll&rsquo;s author site</a>. The design is very simple. Besides, many people read the blog via RSS anyway and go the blog web site for commenting only. Hence, I need the properly working RSS feed and the post page providing comfortable reading, without fancy fonts and weird formatting.</p>
+
+<h2>Conclusion</h2>
+
+<p>Do you think, I&rsquo;ll start convincing you to use my engine? Not at all. I tried to make it flexible and not hard coded specifically to this blog, but I had to migrate my old posts from Blogspot and comments, support two languages etc. At the result there are a couple of places still hard coded (especially in the area of Disqus links).</p>
+
+<p>I can only recommend trying to implement the personal blog engine by yourself. Why? First, it usually takes a few nights only. Second, you will implement the only required bared minimum without complicated and unnecessary bell and whistles. Third, it is fun.</p>
+
+<p>&#9632;</p>
+
+<p>Related links:</p>
+
+<ul>
+<li><a href="http://www.gnu.org/software/src-highlite/">GNU Source-highlight</a></li>
+<li><a href="http://www.andre-simon.de/doku/highlight/en/highlight.html">Highlight</a></li>
+<li><a href="http://petereisentraut.blogspot.co.uk/2009/07/adding-color-to-console-pygments-vs.html">Adding Color to the Console: Pygments vs. Source-highlight</a></li>
+</ul>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Feuer A., &#34;The C puzzle book&#34;]]></title>
