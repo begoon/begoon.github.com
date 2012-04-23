@@ -1,0 +1,29 @@
+---
+layout: post
+title: "vcprompt - information about SCM in the command line prompt"
+language: english
+date: 2012-04-23 02:27
+comments: true
+categories: 
+- command line
+- english
+- scm
+- vcprompt
+---
+Sometimes, working with git, you may forget which branch you are currently in. In this case [vcprompt][] can help. It allows to see right in the command line prompt various information about your current repository, for example, a current branch name, or a fact of having changed or untracked files.
+
+For example, my `PS1` variable is:
+
+    \W `vcprompt -f "%m%u %s:%b"`\$
+
+making the prompt in `bash` to be like this:
+
+    _engine +? git:master$
+    
+It says that the current directory is `_engine` and there is a git repository here, the current branch is `master`, and there are changed (`+`) and also untracked files (`?`). If there is no repo in the current repository, the prompt will be normal.
+
+[vcprompt]: https://github.com/djl/vcprompt
+
+vcprompt supports not only git, but bzr, cvs, darcs, fossil, hg, svn.
+
+It requires Python, and is also hardly usable on Windows.

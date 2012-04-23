@@ -5,13 +5,38 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-21T15:30:00Z</updated>
+  <updated>2012-04-23T02:27:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[vcprompt - информация о SCM в командной строке]]></title>
+    <link href="http://demin.ws/blog/russian/2012/04/23/vcprompt/"/>
+    <updated>2012-04-23T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/04/23/vcprompt/</id>
+    <content type="html"><![CDATA[<p>Порой, работая с git в командной, забываешь, в какой ветке ты сейчас. На выручку приходит <a href="https://github.com/djl/vcprompt">vcprompt</a>, который позволяет прямо в приглашении командной строки видеть разнообразную информацию от текущем репозитории, например, название текущей ветки, или признак наличия изменения к локальных файлах и т.д.</p>
+
+<p>Вот, например, моя переменная <code>PS1</code>:</p>
+
+<pre><code>\W `vcprompt -f &quot;%m%u %s:%b&quot;`\$
+</code></pre>
+
+<p>И мое приглашение в <code>bash</code> выглядит, например, так:</p>
+
+<pre><code>_engine +? git:master$
+</code></pre>
+
+<p>Я вижу, что я в каталоге <code>_engine</code>, в каталоге существует репозиторий git, текущая ветка <code>master</code>, есть измененные файлы (<code>+</code>), и есть новые, еще не добавленные в git файлы (<code>?</code>). Если в текущем каталоге нет никакого репозитория, приглашения будет как обычно.</p>
+
+<p>vcprompt поддерживает не только git, а также bzr, cvs, darcs, fossil, hg, svn.</p>
+
+<p>Написана на Питоне. Увы, для Windows, скорее все, прикрутить не получится.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[TCP/IP proxy на Go]]></title>

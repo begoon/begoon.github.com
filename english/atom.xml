@@ -5,13 +5,38 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-23T00:02:00Z</updated>
+  <updated>2012-04-23T02:27:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[vcprompt - information about SCM in the command line prompt]]></title>
+    <link href="http://demin.ws/blog/english/2012/04/23/vcprompt/"/>
+    <updated>2012-04-23T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/04/23/vcprompt/</id>
+    <content type="html"><![CDATA[<p>Sometimes, working with git, you may forget which branch you are currently in. In this case <a href="https://github.com/djl/vcprompt">vcprompt</a> can help. It allows to see right in the command line prompt various information about your current repository, for example, a current branch name, or a fact of having changed or untracked files.</p>
+
+<p>For example, my <code>PS1</code> variable is:</p>
+
+<pre><code>\W `vcprompt -f &quot;%m%u %s:%b&quot;`\$
+</code></pre>
+
+<p>making the prompt in <code>bash</code> to be like this:</p>
+
+<pre><code>_engine +? git:master$
+</code></pre>
+
+<p>It says that the current directory is <code>_engine</code> and there is a git repository here, the current branch is <code>master</code>, and there are changed (<code>+</code>) and also untracked files (<code>?</code>). If there is no repo in the current repository, the prompt will be normal.</p>
+
+<p>vcprompt supports not only git, but bzr, cvs, darcs, fossil, hg, svn.</p>
+
+<p>It requires Python, and is also hardly usable on Windows.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Goblog: A handmade static blog engine in Go running this blog]]></title>
