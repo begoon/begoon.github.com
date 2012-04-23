@@ -5,13 +5,99 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-23T02:27:00Z</updated>
+  <updated>2012-04-23T23:07:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Тест: что дано, при каком условии, что требуется доказать]]></title>
+    <link href="http://demin.ws/blog/russian/2012/04/23/test-given-when-then/"/>
+    <updated>2012-04-23T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/04/23/test-given-when-then/</id>
+    <content type="html"><![CDATA[<p>После тренинга <a href="http://demin.ws/blog/russian/2010/04/28/programming-with-guts/">Кевлина Хенни</a>, я понял, что отсутствие под рукой удобной библиотеки для unit тестирования не является причиной его не использовать. Макрос <code>assert</code>, который есть везде, является достаточным условием для использования тестов.</p>
+
+<p>Например, есть мини-проект в один файл, и не охота тащить Google Test или cmockery. Я обычно делаю что-то такое:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;cassert&gt;</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">foo</span><span class="hl opt">(...) {</span>
+  <span class="hl slc">// something</span>
+<span class="hl opt">}</span>
+
+<span class="hl opt">...</span>
+
+<span class="hl ppc">#ifdef UNIT_TESTING</span>
+<span class="hl kwb">void</span> <span class="hl kwd">Test_for_a_particular_use_case</span><span class="hl opt">() {</span>
+  <span class="hl slc">// Initialization</span>
+  <span class="hl opt">...</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>condition_1<span class="hl opt">);</span>
+  <span class="hl opt">...</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>condition_N<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+<span class="hl opt">...</span>
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(...) {</span>
+  <span class="hl kwd">Test_for_a_particular_use_case</span><span class="hl opt">();</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> “All tests passed<span class="hl opt">.</span>” <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl ppc">#else</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(...) {</span>
+  <span class="hl slc">// a proper main</span>
+<span class="hl opt">}</span>
+
+<span class="hl ppc">#endif</span>
+</pre>
+
+<p>Тут, конечно, не так удобно, так как иногда забываешь добавить запуск теста в <code>main()</code>, и вроде как бы все работает, но на самом деле просто тест не запускается.</p>
+
+<p>Но! Все это мелочи, по сравнению с удобством, которое дают тесты.</p>
+
+<h3>P.S.</h3>
+
+<p>Кстати, заметил за собой интересую привычку. Практически всегда, когда пишу функцию, работающую с файлами, всегда рождаются две, например:</p>
+
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">FunctionDoingSomethingFromStream</span><span class="hl opt">(</span>std<span class="hl opt">::</span>istream<span class="hl opt">*</span> is<span class="hl opt">) {</span>
+  <span class="hl opt">...</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">FunctionDoingSomethingFromFile</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> filename<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span>filename<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">FunctionDoingSomethingFromStream</span><span class="hl opt">(&amp;</span>is<span class="hl opt">);</span>  
+<span class="hl opt">}</span>
+</pre>
+
+<p>Первая функция прекрасно тестируется, так как ей можно подсунуть <code>std::istringstream</code> с тестовыми данными. Вторую же можно практически не тестировать (ну разве что на фазе QA, на реальных файлах, но не в unit-тестах в процессе сборки).</p>
+
+<p>Еще интересный приемчик от Кевина Хенни. У теста обычно есть объект тестирования (класс или функция), начальное условие (pre-condition) и конечное состояние (post-condition). И данные фазы удобно подчеркнуть в комментариях словами “Given”, “When” и “Then”, например:</p>
+
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">Test_for_a_particular_use_case_to_check</span><span class="hl opt">() {</span>
+  <span class="hl slc">// Given:</span>
+  ClassToTest a<span class="hl opt">;</span>
+  <span class="hl slc">// When:</span>
+  a<span class="hl opt">.</span><span class="hl kwd">do_this</span><span class="hl opt">(...);</span>
+  a<span class="hl opt">.</span><span class="hl kwd">do_that</span><span class="hl opt">(...);</span>
+  a<span class="hl opt">.</span><span class="hl kwd">setup_something</span><span class="hl opt">(...);</span>
+  <span class="hl slc">// Then:</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>condition_1<span class="hl opt">);</span>
+  <span class="hl opt">...</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>condition_N<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Явное разделение этих фаз провоцирует правильную структуру теста: без циклов и условий, и работа только по одному сценарию (для другого сценария будет другой тест).</p>
+
+<p>&#9632;</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[vcprompt - информация о SCM в командной строке]]></title>
