@@ -84,7 +84,7 @@ Well, I had chosen Jekyll and Heroku hosting. Alas, vanilla Jekyll has no HTML t
 
 [Octopress]: http://octopress.org/
 
-Octopress is a static blog engine based on Jekyll. "Based" means, this is Jekyll plus a bunch of useful plugins, a very nice HTML5-compatible theme, and scripts helping in deployment to GitHub Pages and Heroku,
+Octopress is a static blog engine based on Jekyll. "Based" means, this is Jekyll plus a bunch of useful plugins, a very nice HTML5-compatible theme, and scripts helping in deployment to GitHub Pages and Heroku.
 
 So, I had installed Octopress, tried a couple of posts, rendered locally, deployed to GutHub and Heroky. Everything was amazing, I had began the most tedious part -- converting posts from lovely Blogspot. In fact, it was almost pure manual cut-and-paste work. Three weeks of struggle, and my poor three hundred posts were done.
 

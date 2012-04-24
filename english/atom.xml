@@ -206,7 +206,7 @@ run SinatraStaticServer
 
 <p>Well, I had chosen Jekyll and Heroku hosting. Alas, vanilla Jekyll has no HTML templates or themes, and you have to design it. If you&rsquo;re lazy, you can try <a href="http://octopress.org/">Octopress</a>.</p>
 
-<p>Octopress is a static blog engine based on Jekyll. &ldquo;Based&rdquo; means, this is Jekyll plus a bunch of useful plugins, a very nice HTML5-compatible theme, and scripts helping in deployment to GitHub Pages and Heroku,</p>
+<p>Octopress is a static blog engine based on Jekyll. &ldquo;Based&rdquo; means, this is Jekyll plus a bunch of useful plugins, a very nice HTML5-compatible theme, and scripts helping in deployment to GitHub Pages and Heroku.</p>
 
 <p>So, I had installed Octopress, tried a couple of posts, rendered locally, deployed to GutHub and Heroky. Everything was amazing, I had began the most tedious part &ndash; converting posts from lovely Blogspot. In fact, it was almost pure manual cut-and-paste work. Three weeks of struggle, and my poor three hundred posts were done.</p>
 
