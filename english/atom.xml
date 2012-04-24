@@ -5,13 +5,34 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-23T23:07:00Z</updated>
+  <updated>2012-04-24T20:53:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Live programming in circa]]></title>
+    <link href="http://demin.ws/blog/english/2012/04/24/live-programming-in-circa/"/>
+    <updated>2012-04-24T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/04/24/live-programming-in-circa/</id>
+    <content type="html"><![CDATA[<p>Remember that amazing presentation from Bret Victor &ldquo;<a href="http://vimeo.com/36579366">Inventing on Principle</a>&rdquo;?</p>
+
+<p>It is called live coding. What You Code Is What You See - WYCIWYS.</p>
+
+<p>I thought his demos were hardcoded. But it turns out, there is a real programming language allowing such crazy things in runtime. Check out a short video:</p>
+
+<iframe src="http://player.vimeo.com/video/23773218" width="400" height="300" frameborder="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+
+<p>The language is called <a href="http://circa-lang.org">circa</a>. Currently it is alpha. On my amateurish opinion in the game development, it is very convenient for experiements with gameplay, at least for 2D games.</p>
+
+<p>Here is an interesting article from the author about <a href="http://circa-lang.org/about/inlined_state.html">preserving the runtime state</a> on live code changes.</p>
+
+<p><a href="http://livecoding.co.uk/doku.php/videos">A collection is videos with more live coding</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Test: Give, When, Then]]></title>
