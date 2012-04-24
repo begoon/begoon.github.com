@@ -52,7 +52,7 @@ I very much appreciate discussion, and such approach is not for me. I use Disqus
 
 But let's go back to Jekyll. GitHub directly supports it (its author is the GitHub co-founder) and can render Jekyll projects for you (of course, you still can render locally). You simply `git push` your stuff to GitHub, and after a moment it becomes visible in GitHub Pages.
 
-Heroku works slightly different. Heroku hosts Ruby, therefore a Heroku project is a bunch of pages, plus a mini web server application serving them. Looks a bit scary, but such servee in Ruby is very simple:
+Heroku works slightly different. Heroku hosts Ruby, therefore a Heroku project is a bunch of pages, plus a mini web server application serving them. Looks a bit scary, but such server in Ruby is very simple:
 
 {% codeblock lang:ruby %}
 require 'bundler/setup'
