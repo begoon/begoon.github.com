@@ -329,10 +329,19 @@ func markup(s string) string {
 func precheck_post(s string) {
   s = CodeblockRemoveRE.ReplaceAllLiteralString(s, "")
 
+  host_prefix := SiteHost + "/"
+
   targets := map[string]string{}
   if m := MarkdownTargetsRE.FindAllStringSubmatch(s, -1); m != nil {
     for _, g := range m {
-      targets[g[1]] = g[2]
+      url := g[2]
+      targets[g[1]] = url
+      // Check that URL hasn't the site domain as a prefix. The exception is:
+      // "$domain/_engine".
+      if strings.HasPrefix(url, host_prefix) && len(url) > len(host_prefix) &&
+        url[len(host_prefix)] != '_' {
+        die("Unnecessary absolute link [%s]", url)
+      }
     }
   }
 
