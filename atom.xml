@@ -5,13 +5,33 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-24T20:53:00Z</updated>
+  <updated>2012-04-25T22:28:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Josuttis N., "The C++ Standard Library: A Tutorial and Reference", 2nd edition]]></title>
+    <link href="http://demin.ws/blog/russian/2012/04/25/cpp-standard-library-2nd-edition/"/>
+    <updated>2012-04-25T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/04/25/cpp-standard-library-2nd-edition/</id>
+    <content type="html"><![CDATA[<p>Nicolai M. Josuttis, &ldquo;<a href="http://www.amazon.co.uk/The-Standard-Library-Tutorial-Reference/dp/0321623215/">The C++ Standard Library: A Tutorial and Reference</a>&rdquo;, 2nd edition</p>
+
+<p><img src="http://demin.ws/images/covers/english/cpp-standard-library-2nd-edition-cover.jpg" alt="" />
+</p>
+
+<p>Вчера приехала эта книга. Хотел я что-то конкретное написать, но передумал, ибо в этом нет смысла. Книгу надо просто иметь, если есть интерес в новом стандарте C++ сегодня. Тут приводится исчерпывающее описание новой версии STL, естественно, с описанием новых возможностей самого языка. Много примеров. Как мне кажется, это пока первая книга по C++ 2011 такого калибра.</p>
+
+<p>Лично мне пока даже просто интересно листать оглавление и глядеть, что и как вообще есть в новом языке и библиотеках (например, открыл для себя существование <a href="http://en.cppreference.com/w/cpp/chrono">chrono</a>).</p>
+
+<h3>P.S.</h3>
+
+<p>Чтобы два раза не вставать. Обычно я пользуюсь сайтом <a href="http://www.cplusplus.com/">http://www.cplusplus.com/</a> качестве справочника по C++. Для нового стандарта появился еще один &ndash; <a href="http://en.cppreference.com/w/">http://en.cppreference.com/w/</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA["Живое" программирование на circa]]></title>

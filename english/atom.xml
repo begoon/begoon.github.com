@@ -5,13 +5,27 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-24T20:53:00Z</updated>
+  <updated>2012-04-25T22:28:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Josuttis N., &#34;The C++ Standard Library: A Tutorial and Reference&#34;, 2nd edition]]></title>
+    <link href="http://demin.ws/blog/english/2012/04/25/cpp-standard-library-2nd-edition/"/>
+    <updated>2012-04-25T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/04/25/cpp-standard-library-2nd-edition/</id>
+    <content type="html"><![CDATA[<p>Nicolai M. Josuttis, &ldquo;<a href="http://www.amazon.co.uk/The-Standard-Library-Tutorial-Reference/dp/0321623215/">The C++ Standard Library: A Tutorial and Reference</a>&rdquo;, 2nd edition</p>
+
+<p><img src="http://demin.ws/images/covers/english/cpp-standard-library-2nd-edition-cover.jpg" alt="" />
+</p>
+
+<p>Yesterday the book had arrived. I wanted to write a proper detailed review, but realised it doesn&rsquo;t make sense at all. This is a must have book if you&rsquo;re interested in the new C++ 2011. The book is an exhaustive reference with a lot of examples of the new STL and the language itself. In my view, this is the first big C++ 2011 book at the moment.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Live programming in circa]]></title>
