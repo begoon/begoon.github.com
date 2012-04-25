@@ -59,5 +59,5 @@ Compile and run:
 
 The difference is obvious. The second one is much faster.
 
-`std::endl` always `flush`es the stream. In turn, `\n` simple puts a new line character to the stream, and in most cases this is exactly what we need. And `std::flush`, if necessary, can be called afterwards, once, explicitly.
+`std::endl` always `flush`es the stream. In turn, `\n` simply puts a new line character to the stream, and in most cases this is exactly what we need. And `std::flush`, if necessary, can be called afterwards, once, explicitly.
 

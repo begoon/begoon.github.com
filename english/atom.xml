@@ -70,7 +70,7 @@ sys 0m0.008s
 
 <p>The difference is obvious. The second one is much faster.</p>
 
-<p><code>std::endl</code> always <code>flush</code>es the stream. In turn, <code>\n</code> simple puts a new line character to the stream, and in most cases this is exactly what we need. And <code>std::flush</code>, if necessary, can be called afterwards, once, explicitly.</p>
+<p><code>std::endl</code> always <code>flush</code>es the stream. In turn, <code>\n</code> simply puts a new line character to the stream, and in most cases this is exactly what we need. And <code>std::flush</code>, if necessary, can be called afterwards, once, explicitly.</p>
 ]]></content>
   </entry>
   
