@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>What is faster: std::endl vs "\n"?</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>What is faster: std::endl vs &#34;\n&#34;?</h1>
+<div id="post">
+  <p>To this day I believed, that <code>std::endl</code> is always better that <code>\n</code> in C++ streams (portability, for instance). It turns out that no.</p>
+
+<p>A code with <code>std::endl</code>:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;string&gt;</span>
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> <span class="hl num">1000000</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    std<span class="hl opt">::</span>string <span class="hl kwd">s</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl str">'x'</span><span class="hl opt">);</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> s <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Compile and run:</p>
+
+<pre><code>clang++ -o endl -O3 endl.cpp &amp;&amp; time ./endl &gt;rubbish
+
+real    0m4.518s
+user    0m1.080s
+sys 0m3.311s
+</code></pre>
+
+<p>A code with <code>\n</code>:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;string&gt;</span>
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> <span class="hl num">1000000</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    std<span class="hl opt">::</span>string <span class="hl kwd">s</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl str">'x'</span><span class="hl opt">);</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> s <span class="hl opt">&lt;&lt;</span> <span class="hl str">'</span><span class="hl esc">\n</span><span class="hl str">'</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Compile and run:</p>
+
+<pre><code>clang++ -o endl -O3 endl.cpp &amp;&amp; time ./endl &gt;rubbish
+
+real    0m0.263s
+user    0m0.236s
+sys 0m0.008s    
+</code></pre>
+
+<p>The difference is obvious. The second one is much faster.</p>
+
+<p><code>std::endl</code> always <code>flush</code>es the stream. In turn, <code>\n</code> simple puts a new line character to the stream, and in most cases this is exactly what we need. And <code>std::flush</code>, if necessary, can be called afterwards, once, explicitly.</p>
+
+</div>
+
+<hr />
+
+
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/04/25/endl-vs-new-line/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/04/25/endl-vs-new-line/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

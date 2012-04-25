@@ -5,13 +5,74 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-25T22:28:00Z</updated>
+  <updated>2012-04-25T23:28:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Кто быстрее: std::endl или "\n"?]]></title>
+    <link href="http://demin.ws/blog/russian/2012/04/25/endl-vs-new-line/"/>
+    <updated>2012-04-25T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/04/25/endl-vs-new-line/</id>
+    <content type="html"><![CDATA[<p>До сегодняшнего дня я свято верил, что в потоках <code>std::endl</code> &ndash; это всегда правильнее, чем <code>\n</code>. Переносимость, и все такое. Но, увы.</p>
+
+<p>Код с <code>std::endl</code>:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;string&gt;</span>
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> <span class="hl num">1000000</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    std<span class="hl opt">::</span>string <span class="hl kwd">s</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl str">'x'</span><span class="hl opt">);</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> s <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Компилируем и запускаем:</p>
+
+<pre><code>clang++ -o endl -O3 endl.cpp &amp;&amp; time ./endl &gt;rubbish
+
+real    0m4.518s
+user    0m1.080s
+sys 0m3.311s
+</code></pre>
+
+<p>Код с <code>\n</code>:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;string&gt;</span>
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> <span class="hl num">1000000</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    std<span class="hl opt">::</span>string <span class="hl kwd">s</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl str">'x'</span><span class="hl opt">);</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> s <span class="hl opt">&lt;&lt;</span> <span class="hl str">'</span><span class="hl esc">\n</span><span class="hl str">'</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Компилируем и запускаем:</p>
+
+<pre><code>clang++ -o endl -O3 endl.cpp &amp;&amp; time ./endl &gt;rubbish
+
+real    0m0.263s
+user    0m0.236s
+sys 0m0.008s    
+</code></pre>
+
+<p>Разница очевидна.</p>
+
+<p><code>std::endl</code> всегда <code>flush</code>ит поток, сбрасывая буфера. <code>\n</code> же просто пихает в поток символ начала новой строки, и большинстве случаев это и требуется. А когда надо, можно отдельно вызвать <code>std::flush</code>, один раз.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Josuttis N., "The C++ Standard Library: A Tutorial and Reference", 2nd edition]]></title>
