@@ -63,6 +63,7 @@ var (
   CodeblockRE       = *regexp.MustCompile("(?smU)(^{% codeblock lang\\:([^ ]+) %}(.*){% endcodeblock %})")
   YoutubeRE         = *regexp.MustCompile("(?sU){% youtube (\\S+?) %}")
   YoutubeExtRE      = *regexp.MustCompile("(?sU){% youtube (\\S+?) (\\d+) (\\d+) %}")
+  IncludeRE         = *regexp.MustCompile("(?sU){% include (\\S+?) %}")
   ImgReplaceRE      = *regexp.MustCompile("(?s)(<img .*?src=[\"'])(/[^\"']+?)([\"'].*?\\/>)")
   HrefReplaceRE     = *regexp.MustCompile("(?s)(<a .*?href=[\"'])(/[^\"']+?)([\"'].*?>)")
   PostNameRE        = *regexp.MustCompile("^.*((\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d))-([^ \\.]+)\\.markdown$")
@@ -237,6 +238,17 @@ func process_tags(post string) string {
   post = YoutubeExtRE.ReplaceAllString(post,
     "<iframe width=\"$2\" height=\"$3\" "+
       "src=\"http://www.youtube.com/embed/$1?color=white&theme=light\"></iframe>")
+
+  include := func(s string) string {
+    m := IncludeRE.FindAllStringSubmatch(s, -1)
+    if m == nil {
+      die("Bad include [%s]", s)
+    }
+    return *load_file(filepath.Join(IncludesDir, m[0][1]))
+  }
+
+  // {% include filename %}
+  post = IncludeRE.ReplaceAllStringFunc(post, include)
 
   return post
 }
