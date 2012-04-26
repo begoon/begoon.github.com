@@ -464,6 +464,9 @@ func process_post(filename string) {
 
   p["content"] = markup(p["content"])
   p["rss"] = p["content"]
+  if p["language"] == "english" {
+    p["rss"] += "<hr/><a href=\"/english/about/\">Disclaimer</a>"
+  }
 
   p["post"] = "yes"
   p[p["language"]] = "yes"

@@ -71,7 +71,7 @@ sys 0m0.008s
 <p>The difference is obvious. The second one is much faster.</p>
 
 <p><code>std::endl</code> always <code>flush</code>es the stream. In turn, <code>\n</code> simply puts a new line character to the stream, and in most cases this is exactly what we need. And <code>std::flush</code>, if necessary, can be called afterwards, once, explicitly.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -85,7 +85,7 @@ sys 0m0.008s
 </p>
 
 <p>Yesterday the book had arrived. I wanted to write a proper detailed review, but realised it doesn&rsquo;t make sense at all. This is a must have book if you&rsquo;re interested in the new C++ 2011. The book is an exhaustive reference with a lot of examples of the new STL and the language itself. In my view, this is the first big C++ 2011 book at the moment.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -106,7 +106,7 @@ sys 0m0.008s
 <p>Here is an interesting article from the author about <a href="http://circa-lang.org/about/inlined_state.html">preserving the runtime state</a> on live code changes.</p>
 
 <p><a href="http://livecoding.co.uk/doku.php/videos">A collection is videos with more live coding</a>.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -192,7 +192,7 @@ sys 0m0.008s
 <p>Such explicit split enforces proper test structuring: without loop and branches, and testing for only one scenario (for another scenario it will be another test).</p>
 
 <p>&#9632;</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -217,7 +217,7 @@ sys 0m0.008s
 <p>vcprompt supports not only git, but bzr, cvs, darcs, fossil, hg, svn.</p>
 
 <p>It requires Python, and is also hardly usable on Windows.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -460,7 +460,7 @@ git commit -m &quot;New post about ...&quot;
 <li><a href="http://www.andre-simon.de/doku/highlight/en/highlight.html">Highlight</a></li>
 <li><a href="http://petereisentraut.blogspot.co.uk/2009/07/adding-color-to-console-pygments-vs.html">Adding Color to the Console: Pygments vs. Source-highlight</a></li>
 </ul>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -494,7 +494,7 @@ git commit -m &quot;New post about ...&quot;
 <p>For me, these snippets are obvious candidates for <a href="http://www.ioccc.org">Obfuscated C Code Context</a>. When have to deal with such code in real life, switching to another reality is the the best solution.</p>
 
 <p>After skimming the book to the end (they give the solutions there), you begin to understand its usefulness. Without seeing bad code, it&rsquo;s difficult to recognize the good one.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -516,7 +516,7 @@ git commit -m &quot;New post about ...&quot;
 <p>P.S. By the way, I thought I know C much better than C++, just because the language is smaller and simpler. More over, I began programming in C much earlier. Thus I&rsquo;d taken a <a href="http://www.brainbench.com/xml/bb/common/testcenter/taketest.xml?testId=52">Brainbench C test</a> at some time, and it turned out that there are still many aspects of the language which I haven&rsquo;t come across so far.</p>
 
 <p>Agreed, the Brainbench is only a test, in many respects far from reality, but nevertheless allowing to expand the scope of self-understanding.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -636,7 +636,7 @@ std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span cla
 <p>Also in the context of move semantics in C++11 there won&rsquo;t be unnecessary copying at all if the class is &ldquo;properly&rdquo; implemented (which is true for STL classes).</p>
 
 <p>Conclusion: use STL containers where ever possible and trust the compiler. Sometimes, of course, the compiler is wrong, but such cases are much less than vice versa.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -669,7 +669,7 @@ std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span cla
 <p>They began with a naive implementation and then worked through two more versions showing that sensitive balance between efficiency and readability. I think that even experienced developers may find this example interesting to play with.</p>
 
 <p>To sum up, this book can fit perfectly into your team book shelf and be used as a quick reference of how-tos. Buying for yourself is questionable, because at home you&rsquo;d probably prefer something more fundamental.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -704,7 +704,7 @@ std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span cla
 <p>This macro is clear, and you can easily find all such places in the project.</p>
 
 <p>By they way, in <code>Go</code> this situation is treated as the error, not warning. It can be annoying when you add, remove, comment out and put back things all the time, because sometimes you do have unused stuff. But eventually such approach doesn&rsquo;t allow that temporary garbage to spread and stay in the code (for example, in C++ who on Earth wants to clean up the list of included STL headers after hours of coding?)</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -734,7 +734,7 @@ std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span cla
 </pre>
 
 <p>They say, this is a modern HTML5 compatible method, the idiom.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -757,7 +757,7 @@ std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span cla
 <p>For me - this is very convenient!</p>
 
 <p>Checked in Chrome and Safari on Mac.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -776,7 +776,7 @@ std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span cla
 </ul>
 
 <p>The article discovers an implementation in Ruby. Now NOR assembly code looks almost as a regular assembler language. I was amazed how powerful Ruby is in creating domain specific languages (DSL). Mostly because it allows to omit parentheses in function calls.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -846,7 +846,7 @@ std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span cla
   <span class="hl opt">}</span>
 <span class="hl opt">}</span>
 </pre>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -934,7 +934,7 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
 <p>Haskell is a taught guy. The introduction in this book is very light and minimal, just to remember the word &ldquo;Haskell&rdquo;. I read &ldquo;<a href="http://www.amazon.co.uk/Programming-Haskell-Graham-Hutton/dp/0521692695">Programming in Haskell</a>&rdquo; and currently I&rsquo;m on &ldquo;<a href="http://www.amazon.co.uk/Real-World-Haskell-Bryan-OSullivan/dp/0596514980">Real World Haskell</a>&rdquo;, that&rsquo;s why I simply skimmed the chapter in this book.</p>
 
 <p>Okay, to sum up. This book is to be read just once, to broaden your outlook.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -968,7 +968,7 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
 <li>Scala - a sophisticated language requiring a &ldquo;deep dive&rdquo;, and without a real suitable problem the interest is gone. Twitter is already re-written in Scala ;-).</li>
 <li>Racket - an interesting Lisp based animal on steroids of a very powerful library.</li>
 </ul>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1004,7 +1004,7 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
 <p>Again, the graph formalization is dead simple - you only need to specify pairs of connected vertices. Also, in DOT you can describe directed graphs and extra attributes of the vertices.</p>
 
 <p>To sum up, great technology.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1150,7 +1150,7 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
 <p>When my brother was building <a href="http://radio86.googlecode.com/hg/online/radio86.html">Radio-86RK Emulator</a> and Spectrum about twenty years ago, there was a joke about DIY projects published in radio electronics magazines: if a author says that his device doesn’t required any tuning, there is at least a little chance to get it working; but the author says that his device does require some minor tuning&hellip;</p>
 
 <p>Anyway, if you want to come back to your 8-bit youth with a soldering iron in hands — build Maximite.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1187,7 +1187,7 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
 <p>The good thing is that such monitor doesn’t require any changes in the target software, and can be implemented on any language suitable for easy text parsing, for example, Ruby or Python.</p>
 
 <p>Am I reinventing a wheel?</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1224,7 +1224,7 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
 <p>Dilemma.</p>
 
 <p>P.S. There is another esoteric approach — to create a temporary deep copy of <code>T</code> inside <code>foo</code> and pass it to <code>bar</code> by non-const pointer. Personally if I have to choose between quick but badly designed code and slow but nicely written code I usually go for the second one. Tomorrow we can buy another faster computer and the slow code will be faster, but that computer will make the bad code better.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1245,7 +1245,7 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
 <p>It is fascinating reading. Maybe just because the author is talented, I don&rsquo;t know.</p>
 
 <p>Conclusion: strongly recommend.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1276,7 +1276,7 @@ permanent self education and nurturing your curiosity (CQ + PQ always greater th
 <p>Frankly, there were moments in my life when I doubted and thought I would be better off doing, for instance, real estate, natural resources, ads or media rather than software. If you have even a tiny similar concern this book will wipe it out forever, and maybe even show the way.</p>
 
 <p>To conclude: very useful, interesting and fascinating reading.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1314,7 +1314,7 @@ permanent self education and nurturing your curiosity (CQ + PQ always greater th
 <p>VS2010 and GCC compile it perfectly and it prints out <code>B::foo()</code>.</p>
 
 <p>I have concluded that the virtual function mechanism usually implemented via vtable is runtime, but public/private is compile time, and they don&rsquo;t depend on each other.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1353,7 +1353,7 @@ permanent self education and nurturing your curiosity (CQ + PQ always greater th
 <p>Sometimes people still visit blogs directly, for instance, to find previous posts or explore “social” details. In this case all these bells and whistles in a form of JavaScript gadgets are very useful and save a lot of time. Blogspot allows adding them in a few clicks.</p>
 
 <p>But coming back to the question at the beginning – do I really need them? If the content is interesting the audience will inevitably find you. A word of mouth in a form of Twitter or Facebook will attract people. But if the content is crap all those bells and whistles (and SEO) will not help.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1470,7 +1470,7 @@ permanent self education and nurturing your curiosity (CQ + PQ always greater th
 <p>Even at the shop, where WiFi was really fast, working fully online becomes annoying very soon due to network lags. The official &ldquo;Offline Gmail&rdquo; is available but it is a joke, and barely usable seriously.</p>
 
 <p>For 50 quid I could buy it right there, just because I use Google&rsquo;s products and is willing to play with this &ldquo;Google Console&rdquo;, but 400 is &ldquo;no, thank you&rdquo;.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1503,7 +1503,7 @@ cast.cpp(1) : error C2059: syntax error : ')'
 <p>All examples conform the Standard but to be honest the first one is really odd.</p>
 
 <p>GCC gives a warning at least.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1516,7 +1516,7 @@ cast.cpp(1) : error C2059: syntax error : ')'
 <p><img src="http://demin.ws/images/blog/software-development-in-one-picture.jpg" /></p>
 
 <p>Every time I come across famous Shakespeare&rsquo;s trade off &ldquo;to refactor or not refactor&rdquo; I come back to this picture. You can keep going to put more and more cheap crutches preventing your house from irreversible falling down. It can help for sometime but at some point there will be a point of no return. Or you can get all the people out of the house for a while and rebuilt it of bricks.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1625,7 +1625,7 @@ HP C/aC++ for Integrity Servers B3910B A.06.22 [Nov 14 2008]
 <p><em>Character movement is performed differently in different implementations, so moves involving overlapping source and destination strings may yield surprises.</em></p>
 
 <p><strong>Conclusion</strong>: <code>strcpy()</code> is bad, due to many reasons.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1642,7 +1642,7 @@ HP C/aC++ for Integrity Servers B3910B A.06.22 [Nov 14 2008]
 <p>Crossings are always considered in pairs. For example, if three edges are crossed in one physical point, formally there are still three crossings, not one.</p>
 
 <p>O(n*m) solution exists.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1720,7 +1720,7 @@ std<span class="hl opt">::</span>string <span class="hl kwd">f</span><span class
 </pre>
 
 <p>It prints out <code>1024</code> twice.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1743,7 +1743,7 @@ std<span class="hl opt">::</span>string <span class="hl kwd">f</span><span class
 </pre>
 
 <p>To me personally the expression <code>&quot;12345678&quot;[i]</code> cuts the eye. But from the language point of view everything is fine.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1768,7 +1768,7 @@ std<span class="hl opt">::</span>string <span class="hl kwd">f</span><span class
 <p><a href="http://skillsmatter.com/podcast/home/generic-programming-with-c-plus-plus-0x">Generic Programming with C++ 0x</a></p>
 
 <p><a href="http://skillsmatter.com/event/home/accu-2011">Other videos are also available</a>.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1844,7 +1844,7 @@ symbolic link created for link4 &lt;&lt;===&gt;&gt; file
 <p>In general, such simple task as links in the file system, solved in UNIX more than twenty years ago, has been solved in Windows in traditional for this operating system way - there are multiple solutions with different level of compatibility.</p>
 
 <p>By the way, &ldquo;<a href="http://www.amazon.co.uk/Windows-Internals-PRO-Developer-Mark-Russinovich/dp/0735625301/">Windows Internals</a>&rdquo; is bloody fantastic, strongly recommend.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1919,7 +1919,7 @@ Crash : FFFFFFFF</p>
 <p>Here seems the exit code wasn&rsquo;t even propagated to <code>system()</code>.</p>
 
 <p>Conclusion: it (as usually) really depends on the operating system.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -1940,7 +1940,7 @@ Crash : FFFFFFFF</p>
 <p>Every new feature or bug fix I start from creating a test demonstrating how it should work, and, obviously, this test must fail. Then I implement a bit of functionality to make this test working. I cannot image how I might develop this project further without unit tests.</p>
 
 <p>By the way, this is a classical approach when tests are written beforehand. And the main code complements the tests afterwards.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -2003,7 +2003,7 @@ Crash : FFFFFFFF</p>
 <p>As explained in #4, the purchase authorization logic is not based on the account balance, but on the daily limits. And it works similarly for debit and credit cards. The bank can adjust the daily limit, slightly exceeding the account balance, even for debit cards.</p>
 
 <p>Hope all this information will help you avoid some unpleasant surprises when using plastic cards.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -2026,7 +2026,7 @@ Crash : FFFFFFFF</p>
 <p>In summary, if you need minimalistic and fast XP, MicroXP is a very good candidate.</p>
 
 <p>P.S. Don&rsquo;t visit microxp.org. This is a fake to fish e-mails.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -2035,7 +2035,7 @@ Crash : FFFFFFFF</p>
     <updated>2011-02-16T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions-link/</id>
     <content type="html"><![CDATA[<p>For some reason Google Reader wasn&rsquo;t able to index my last huge post - <a href="http://demin.ws/blog/english/2011/02/16/norcpu-hacking-challenge-analisys-and-solutions/">One-command NORCPU program hacking challenge: analysis and solutions</a>.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -3912,7 +3912,7 @@ def <span class="hl kwd">FADD</span><span class="hl opt">(</span>mask<span class
 <span class="hl pps">f.write(js)</span>
 <span class="hl pps">f.close()</span><span class="hl ppc"></span>
 </pre>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -3941,7 +3941,7 @@ def <span class="hl kwd">FADD</span><span class="hl opt">(</span>mask<span class
 <p>Here you go - <a href="http://demin.ws/projects/norcpu/challenge/norcpu.html">the challenge</a>.</p>
 
 <p>P.S. The first one solved the problem will get a little prize! Information is on the page.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -3962,7 +3962,7 @@ def <span class="hl kwd">FADD</span><span class="hl opt">(</span>mask<span class
 <p>Which screencasts do you watch? What can you recommend?</p>
 
 <p>P.S. By the way, I like <a href="http://www.pragprog.com/">The pragmatic Bookshelf</a> online store more and more. All books are in multiple DRM free formats (pdf, mobi, epub).</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4042,7 +4042,7 @@ field_instance <span class="hl opt">=</span> foo<span class="hl opt">.</span><sp
 <p>Cons: haven&rsquo;t found so far.</p>
 
 <p>All three have rights to live but from the style perspective it&rsquo;s good to be consistent and use only one style across one project.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4053,7 +4053,7 @@ field_instance <span class="hl opt">=</span> foo<span class="hl opt">.</span><sp
     <content type="html"><![CDATA[<p>I don&rsquo;t claim that is more efficient rather the traditional method but looks very cool.</p>
 
 <iframe width="425" height="344" src="http://www.youtube.com/embed/EsgMzkUivKo?color=white&theme=light"></iframe>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4085,7 +4085,7 @@ field_instance <span class="hl opt">=</span> foo<span class="hl opt">.</span><sp
 </code></pre>
 
 <p>Be careful.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4266,7 +4266,7 @@ carry = (a &amp; b) | (carry &amp; (a ^ b))
 <ul>
 <li><a href="http://demin.ws/blog/english/2010/03/17/swap-two-numeric-variable-using-xor/">Swap two numeric variables using XOR</a></li>
 </ul>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4294,7 +4294,7 @@ a ^= b;
 </code></pre>
 
 <p><strong>Update</strong>: Here is a perfect link to <a href="http://graphics.stanford.edu/~seander/bithacks.html">Bit Twiddling Hacks</a> with lots of similar bitwise tips.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4543,7 +4543,7 @@ parse-log<span class="hl opt">:</span>
 </code></pre>
 
 <p>C++ using <code>std::vector&lt;book&gt;</code> has beaten C and Go. The second is Go&rsquo;s implementation also using <code>bool</code>. And on the third place are C, C++ with <code>std::vector&lt;int&gt;</code> and Go with <code>int</code>.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4640,7 +4640,7 @@ parse-log<span class="hl opt">:</span>
 </pre>
 
 <p>The trick with pre-increment <code>--</code> operator allows to check effectively for the last element of a container.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4649,7 +4649,7 @@ parse-log<span class="hl opt">:</span>
     <updated>2010-02-24T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/english/2010/02/24/what-is-sizeof-for-composite-types/</id>
     <content type="html"><![CDATA[<p>The simplest way to understand the value of <code>sizeof</code> for composite types (structures and classes) before digging in to the alignment is to remember that sizeof returns the difference between addresses of two consequent elements of an array containing instances of the type.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4666,7 +4666,7 @@ parse-log<span class="hl opt">:</span>
 <ul>
 <li><a href="http://demin.ws/blog/english/2009/09/23/first-little-step-into-test-driven-development/">The first little step into Test Driven Development</a></li>
 </ul>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4703,7 +4703,7 @@ parse-log<span class="hl opt">:</span>
 <li>remember that an inheritance - a re-use of interfaces but not code itself</li>
 <li>don&rsquo;t the compiler too much ;-) (Steve wrote them and knows that they may hit your back)</li>
 </ul>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4732,7 +4732,7 @@ parse-log<span class="hl opt">:</span>
 <p>As always I&rsquo;ve got that I did not even have heard of some very famous things. For example, <a href="http://en.wikipedia.org/wiki/Literate_programming">Literate programming</a> from Donald Knuth or <a href="http://en.wikipedia.org/wiki/Bloom_filter">Bloom filter</a>.</p>
 
 <p>In general, I&rsquo;ve found the book very interesting. If you are longing covers like &ldquo;should I program the entire career&hellip;&rdquo; or &ldquo;should I shift to management or architects because young is pressing from the back&hellip;&rdquo;. Here is given an excellent, but the hidden answer: any of these ways can bring and satisfaction and, importantly, wealth. That&rsquo;s the beauty of our profession. Just do the thing that you want to work till night, look around wondering what&rsquo;s going on and not worry that you can be unnecessary - you can&rsquo;t.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4785,7 +4785,7 @@ parse-log<span class="hl opt">:</span>
 <p>Hope I was able to attract into the ranks of git users a few more enthusiasts.</p>
 
 <p>Once accustomed to the constant presence on hand a version control, you want it to be everywhere. Even when repairing a car.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4800,7 +4800,7 @@ parse-log<span class="hl opt">:</span>
 <p>Please be patient because after the invitation is sent it could take a couple of days until you get it.</p>
 
 <p>And one more thing &ndash; share your own invitations because Wave is cool where there are many people in it.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4835,7 +4835,7 @@ parse-log<span class="hl opt">:</span>
 <p>I do support only Chrome really but they say it also works in Firefox and Safari with more or less of little glitches.</p>
 
 <p>It is difficult to explain my fun from this project. This is something deep inside.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4911,7 +4911,7 @@ Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl k
 <p>I agree there is more typing job but it fully gets you rid of any typos and consequently of silly but annoying bugs.</p>
 
 <p>Any objections?</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4920,7 +4920,7 @@ Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl k
     <updated>2009-10-29T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/english/2009/10/29/codepad/</id>
     <content type="html"><![CDATA[<p>I&rsquo;ve recently discovered for myself <a href="http://codepad.org">codepad.org</a> and amazingly started to use quite regularly when something needs to try out when sitting in the middle of nowhere (for instance, in a meeting room).</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4976,7 +4976,7 @@ Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl k
 <p>Otherwise all percentage characters are treated as formatters because the first parameter of <code>printf()</code> is a format and all non-escaped <code>%</code> characters will be deleted. That is what was happening to me.</p>
 
 <p>Conclusion (following after the first one - &ldquo;serves you right&rdquo;): It is much safer to write in C++ and use STL streams for formatting.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -4987,7 +4987,7 @@ Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl k
     <content type="html"><![CDATA[<p>This is a great video about Google Mock from the authors.</p>
 
 <iframe width="425" height="344" src="http://www.youtube.com/embed/sYpCyLI47rM?color=white&theme=light"></iframe>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -5006,7 +5006,7 @@ Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl k
 <p>If an owner of some project does not want to make you as a contributor but you are desperately keen to show off your work on the project, you can simply clone it and keep going to work on your own fork. Entire history of an original project will be fully inherited.</p>
 
 <p>A clone can be cloned as well.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -5021,7 +5021,7 @@ Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl k
 <p>They cover not only the framework itself and samples of using it but also there is a couple of words about the test driven development methodology. There are some basic recommendations given for writing testable code.</p>
 
 <p>In whole it would be not worse ten minutes to have a look and give it some thoughts.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -5048,7 +5048,7 @@ Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl k
 <p>Albert Huang, Larry Rudolph, &ldquo;<a href="http://www.amazon.co.uk/Bluetooth-Essentials-Programmers-Albert-Huang/dp/0521703751/">Bluetooth Essentials for Programmers</a>&ldquo;</p>
 
 <p><img src="http://demin.ws/images/covers/english/bluetooth-essentials-for-programmers-cover.jpg" /></p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -5201,7 +5201,7 @@ Expected: 1
 <p>I have stopped to develop anything without tests long time ago and Google Test makes this process easier and faster.</p>
 
 <p>I have already upgraded to the version 1.4.0, and you?</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -5239,7 +5239,7 @@ Even if you do not understand Russian there is no problem at all. Just launch th
 <p>The wonderful 8-bit world of Radio-86RK is coming back!</p>
 
 <p><strong>Update</strong>: Version 0.3 is released. It works much faster and does not thrash CPU anymore. Also I have included a few applications (interpreters, compilers, tools etc.)</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -5284,7 +5284,7 @@ p<span class="hl opt">-&gt;</span>some_member <span class="hl opt">=</span> <spa
 <p>That is why <code>T const* p;</code> could be treated differently, notably &ldquo;a type <code>T</code> which is <code>const</code> and the pointer to this type&rdquo;. Readability becomes a bit better.</p>
 
 <p>Of course, all these are questions of a coding style and it&rsquo;s always recommended to be consistent modifying existing sources. But if you&rsquo;re just learning or beginning a new project or something when it&rsquo;s feasible to try something fresh, it may worth not to refuse yourself in this experience.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -5409,7 +5409,7 @@ p<span class="hl opt">-&gt;</span>some_member <span class="hl opt">=</span> <spa
 <p>I try to avoid working on the same change set on different platforms (I mean &ldquo;working&rdquo; as doing source changes).</p>
 
 <p>Hope all the this will help to improve your Perforce workflow.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -5958,7 +5958,7 @@ All 3 tests passed
 <p>Other languages have the unit testing frameworks as well. For jUnit for Java, pyUnit for Python and so on. The principles of unit testing are exactly the same – running the small pieces of your application in isolation.</p>
 
 <p>QA (Quality Assurance) testing and regression testing are another big topic. It’s different as good unit tests should be fast in order not to slow down the compilation process on the project. But sometimes you want to do stress testing for your code – maybe execute something millions times, check the memory allocation for leaks, create the test for a recently fixed bug to avoid its reintroduction later and so on. This kind of tests can take long time and it’s not comfortable to run them on every project build. Here the QA and regression testing step onto the scene. It’s also quite an interesting topic and I will try to cover it soon as well.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -6002,7 +6002,7 @@ Error E2140 vs_double_semicolumn.c 3: Declaration is not allowed here in functio
 <ul>
 <li><a href="http://demin.ws/blog/english/2009/09/12/pointer-cast-bug-in-codegear-borland-compiler/">Pointer cast bug in Codegear (Borland) C++ compiler</a></li>
 </ul>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -6033,7 +6033,7 @@ Fatal F1004 bcc32_5.93_cast_bug.cpp 4: Internal compiler error
 </code></pre>
 
 <p>Nice one. I love internal compiler errors. Do you have some similar stuff in your collection?</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -6111,7 +6111,7 @@ A::destruct()
 <p>For a destructor everything works vice versa. A destructor knows that all child classes are already destructed and nothing can be called from them. Therefore it just changes an address of the virtual functions table to the address of its own table address and nicely calls an implementation of the virtual function defined in its own class.</p>
 
 <p>Thus a virtual function is not virtual if it&rsquo;s called from a constructor or a destructor.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -6130,7 +6130,7 @@ A::destruct()
 <p>They say it&rsquo;s enough to get only 33 points for the Round 1 which means you had to solve one small dataset and one large dataset from any problem.</p>
 
 <p>Does anybody participate?</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -6355,7 +6355,7 @@ std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>String<sp
 </blockquote>
 
 <p>Summarizing, it&rsquo;s worth to just trust <code>std::string</code>. For majority of problems it performs pretty well, and its functionality can be extended by template algorithms.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
@@ -6366,7 +6366,7 @@ std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>String<sp
     <content type="html"><![CDATA[<p>This is the first and probably the last non-technical post in this blog. Everything further will be extremely technical about computers, programming, robots etc. The idea was to create a collection of my personal tips and tricks invented or grabbed. Things are being forgotten very quickly, and the online collection might help keeping it at hand. In addition, it&rsquo;s silly to keep ideas under the pillow. Ideas must be shared, and I&rsquo;m going to do right here.</p>
 
 <p>Follow the announcements.</p>
-]]></content>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
 
