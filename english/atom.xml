@@ -5,13 +5,82 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-25T23:28:00Z</updated>
+  <updated>2012-04-27T01:44:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Date and time formatting in Go]]></title>
+    <link href="http://demin.ws/blog/english/2012/04/27/date-and-time-formatting-in-go/"/>
+    <updated>2012-04-27T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/04/27/date-and-time-formatting-in-go/</id>
+    <content type="html"><![CDATA[<p>Often, when we need a format or a template for date or time, we usually go for something like <code>YYYY</code>, <code>MM</code>, <code>mm:ss</code>, etc). Developing the static blog engine for this blog in Go, I&rsquo;ve come across another approach &ndash; a use the real hardcoded values instead of the special symbols. For instance:</p>
+
+<pre class="hl">
+<span class="hl kwa">func</span> <span class="hl kwd">format_time</span><span class="hl opt">(</span>t time<span class="hl opt">.</span>Time<span class="hl opt">)</span> <span class="hl kwb">string</span> <span class="hl opt">{</span>
+  <span class="hl kwa">return</span> t<span class="hl opt">.</span><span class="hl kwd">Format</span><span class="hl opt">(</span><span class="hl str">&quot;2006.01.02-15.04.05&quot;</span><span class="hl opt">)</span>  <span class="hl slc">// Similar to YYYY.MM.DD-hh.mm.ss</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>A full list of &ldquo;magic&rdquo; values (from <a href="http://golang.org/src/pkg/time/format.go">time/format.go</a>):</p>
+
+<pre class="hl">
+stdLongMonth      <span class="hl opt">=</span> <span class="hl str">&quot;January&quot;</span>
+stdMonth          <span class="hl opt">=</span> <span class="hl str">&quot;Jan&quot;</span>
+stdNumMonth       <span class="hl opt">=</span> <span class="hl str">&quot;1&quot;</span>
+stdZeroMonth      <span class="hl opt">=</span> <span class="hl str">&quot;01&quot;</span>
+stdLongWeekDay    <span class="hl opt">=</span> <span class="hl str">&quot;Monday&quot;</span>
+stdWeekDay        <span class="hl opt">=</span> <span class="hl str">&quot;Mon&quot;</span>
+stdDay            <span class="hl opt">=</span> <span class="hl str">&quot;2&quot;</span>
+stdUnderDay       <span class="hl opt">=</span> <span class="hl str">&quot;_2&quot;</span>
+stdZeroDay        <span class="hl opt">=</span> <span class="hl str">&quot;02&quot;</span>
+stdHour           <span class="hl opt">=</span> <span class="hl str">&quot;15&quot;</span>
+stdHour12         <span class="hl opt">=</span> <span class="hl str">&quot;3&quot;</span>
+stdZeroHour12     <span class="hl opt">=</span> <span class="hl str">&quot;03&quot;</span>
+stdMinute         <span class="hl opt">=</span> <span class="hl str">&quot;4&quot;</span>
+stdZeroMinute     <span class="hl opt">=</span> <span class="hl str">&quot;04&quot;</span>
+stdSecond         <span class="hl opt">=</span> <span class="hl str">&quot;5&quot;</span>
+stdZeroSecond     <span class="hl opt">=</span> <span class="hl str">&quot;05&quot;</span>
+stdLongYear       <span class="hl opt">=</span> <span class="hl str">&quot;2006&quot;</span>
+stdYear           <span class="hl opt">=</span> <span class="hl str">&quot;06&quot;</span>
+stdPM             <span class="hl opt">=</span> <span class="hl str">&quot;PM&quot;</span>
+stdpm             <span class="hl opt">=</span> <span class="hl str">&quot;pm&quot;</span>
+stdTZ             <span class="hl opt">=</span> <span class="hl str">&quot;MST&quot;</span>
+stdISO8601TZ      <span class="hl opt">=</span> <span class="hl str">&quot;Z0700&quot;</span>  <span class="hl slc">// prints Z for UTC</span>
+stdISO8601ColonTZ <span class="hl opt">=</span> <span class="hl str">&quot;Z07:00&quot;</span> <span class="hl slc">// prints Z for UTC</span>
+stdNumTZ          <span class="hl opt">=</span> <span class="hl str">&quot;-0700&quot;</span>  <span class="hl slc">// always numeric</span>
+stdNumShortTZ     <span class="hl opt">=</span> <span class="hl str">&quot;-07&quot;</span>    <span class="hl slc">// always numeric</span>
+stdNumColonTZ     <span class="hl opt">=</span> <span class="hl str">&quot;-07:00&quot;</span> <span class="hl slc">// always numeric</span>
+</pre>
+
+<p>A few examples:</p>
+
+<pre class="hl">
+ANSIC       <span class="hl opt">=</span> <span class="hl str">&quot;Mon Jan _2 15:04:05 2006&quot;</span>
+UnixDate    <span class="hl opt">=</span> <span class="hl str">&quot;Mon Jan _2 15:04:05 MST 2006&quot;</span>
+RubyDate    <span class="hl opt">=</span> <span class="hl str">&quot;Mon Jan 02 15:04:05 -0700 2006&quot;</span>
+RFC822      <span class="hl opt">=</span> <span class="hl str">&quot;02 Jan 06 15:04 MST&quot;</span>
+RFC822Z     <span class="hl opt">=</span> <span class="hl str">&quot;02 Jan 06 15:04 -0700&quot;</span> <span class="hl slc">// RFC822 with numeric zone</span>
+RFC850      <span class="hl opt">=</span> <span class="hl str">&quot;Monday, 02-Jan-06 15:04:05 MST&quot;</span>
+RFC1123     <span class="hl opt">=</span> <span class="hl str">&quot;Mon, 02 Jan 2006 15:04:05 MST&quot;</span>
+RFC1123Z    <span class="hl opt">=</span> <span class="hl str">&quot;Mon, 02 Jan 2006 15:04:05 -0700&quot;</span> <span class="hl slc">// RFC1123 with numeric zone</span>
+RFC3339     <span class="hl opt">=</span> <span class="hl str">&quot;2006-01-02T15:04:05Z07:00&quot;</span>
+RFC3339Nano <span class="hl opt">=</span> <span class="hl str">&quot;2006-01-02T15:04:05.999999999Z07:00&quot;</span>
+Kitchen     <span class="hl opt">=</span> <span class="hl str">&quot;3:04PM&quot;</span>
+<span class="hl slc">// Handy time stamps.</span>
+Stamp      <span class="hl opt">=</span> <span class="hl str">&quot;Jan _2 15:04:05&quot;</span>
+StampMilli <span class="hl opt">=</span> <span class="hl str">&quot;Jan _2 15:04:05.000&quot;</span>
+StampMicro <span class="hl opt">=</span> <span class="hl str">&quot;Jan _2 15:04:05.000000&quot;</span>
+StampNano  <span class="hl opt">=</span> <span class="hl str">&quot;Jan _2 15:04:05.000000000&quot;</span>
+</pre>
+
+<p>I didn&rsquo;t see such approach before, I&rsquo;ve found it clearer and more logical.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[What is faster: std::endl vs &#34;\n&#34;?]]></title>

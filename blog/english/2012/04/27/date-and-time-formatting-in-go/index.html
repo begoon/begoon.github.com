@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Date and time formatting in Go</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Date and time formatting in Go</h1>
+<div id="post">
+  <p>Often, when we need a format or a template for date or time, we usually go for something like <code>YYYY</code>, <code>MM</code>, <code>mm:ss</code>, etc). Developing the static blog engine for this blog in Go, I&rsquo;ve come across another approach &ndash; a use the real hardcoded values instead of the special symbols. For instance:</p>
+
+<pre class="hl">
+<span class="hl kwa">func</span> <span class="hl kwd">format_time</span><span class="hl opt">(</span>t time<span class="hl opt">.</span>Time<span class="hl opt">)</span> <span class="hl kwb">string</span> <span class="hl opt">{</span>
+  <span class="hl kwa">return</span> t<span class="hl opt">.</span><span class="hl kwd">Format</span><span class="hl opt">(</span><span class="hl str">&quot;2006.01.02-15.04.05&quot;</span><span class="hl opt">)</span>  <span class="hl slc">// Similar to YYYY.MM.DD-hh.mm.ss</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>A full list of &ldquo;magic&rdquo; values (from <a href="http://golang.org/src/pkg/time/format.go">time/format.go</a>):</p>
+
+<pre class="hl">
+stdLongMonth      <span class="hl opt">=</span> <span class="hl str">&quot;January&quot;</span>
+stdMonth          <span class="hl opt">=</span> <span class="hl str">&quot;Jan&quot;</span>
+stdNumMonth       <span class="hl opt">=</span> <span class="hl str">&quot;1&quot;</span>
+stdZeroMonth      <span class="hl opt">=</span> <span class="hl str">&quot;01&quot;</span>
+stdLongWeekDay    <span class="hl opt">=</span> <span class="hl str">&quot;Monday&quot;</span>
+stdWeekDay        <span class="hl opt">=</span> <span class="hl str">&quot;Mon&quot;</span>
+stdDay            <span class="hl opt">=</span> <span class="hl str">&quot;2&quot;</span>
+stdUnderDay       <span class="hl opt">=</span> <span class="hl str">&quot;_2&quot;</span>
+stdZeroDay        <span class="hl opt">=</span> <span class="hl str">&quot;02&quot;</span>
+stdHour           <span class="hl opt">=</span> <span class="hl str">&quot;15&quot;</span>
+stdHour12         <span class="hl opt">=</span> <span class="hl str">&quot;3&quot;</span>
+stdZeroHour12     <span class="hl opt">=</span> <span class="hl str">&quot;03&quot;</span>
+stdMinute         <span class="hl opt">=</span> <span class="hl str">&quot;4&quot;</span>
+stdZeroMinute     <span class="hl opt">=</span> <span class="hl str">&quot;04&quot;</span>
+stdSecond         <span class="hl opt">=</span> <span class="hl str">&quot;5&quot;</span>
+stdZeroSecond     <span class="hl opt">=</span> <span class="hl str">&quot;05&quot;</span>
+stdLongYear       <span class="hl opt">=</span> <span class="hl str">&quot;2006&quot;</span>
+stdYear           <span class="hl opt">=</span> <span class="hl str">&quot;06&quot;</span>
+stdPM             <span class="hl opt">=</span> <span class="hl str">&quot;PM&quot;</span>
+stdpm             <span class="hl opt">=</span> <span class="hl str">&quot;pm&quot;</span>
+stdTZ             <span class="hl opt">=</span> <span class="hl str">&quot;MST&quot;</span>
+stdISO8601TZ      <span class="hl opt">=</span> <span class="hl str">&quot;Z0700&quot;</span>  <span class="hl slc">// prints Z for UTC</span>
+stdISO8601ColonTZ <span class="hl opt">=</span> <span class="hl str">&quot;Z07:00&quot;</span> <span class="hl slc">// prints Z for UTC</span>
+stdNumTZ          <span class="hl opt">=</span> <span class="hl str">&quot;-0700&quot;</span>  <span class="hl slc">// always numeric</span>
+stdNumShortTZ     <span class="hl opt">=</span> <span class="hl str">&quot;-07&quot;</span>    <span class="hl slc">// always numeric</span>
+stdNumColonTZ     <span class="hl opt">=</span> <span class="hl str">&quot;-07:00&quot;</span> <span class="hl slc">// always numeric</span>
+</pre>
+
+<p>A few examples:</p>
+
+<pre class="hl">
+ANSIC       <span class="hl opt">=</span> <span class="hl str">&quot;Mon Jan _2 15:04:05 2006&quot;</span>
+UnixDate    <span class="hl opt">=</span> <span class="hl str">&quot;Mon Jan _2 15:04:05 MST 2006&quot;</span>
+RubyDate    <span class="hl opt">=</span> <span class="hl str">&quot;Mon Jan 02 15:04:05 -0700 2006&quot;</span>
+RFC822      <span class="hl opt">=</span> <span class="hl str">&quot;02 Jan 06 15:04 MST&quot;</span>
+RFC822Z     <span class="hl opt">=</span> <span class="hl str">&quot;02 Jan 06 15:04 -0700&quot;</span> <span class="hl slc">// RFC822 with numeric zone</span>
+RFC850      <span class="hl opt">=</span> <span class="hl str">&quot;Monday, 02-Jan-06 15:04:05 MST&quot;</span>
+RFC1123     <span class="hl opt">=</span> <span class="hl str">&quot;Mon, 02 Jan 2006 15:04:05 MST&quot;</span>
+RFC1123Z    <span class="hl opt">=</span> <span class="hl str">&quot;Mon, 02 Jan 2006 15:04:05 -0700&quot;</span> <span class="hl slc">// RFC1123 with numeric zone</span>
+RFC3339     <span class="hl opt">=</span> <span class="hl str">&quot;2006-01-02T15:04:05Z07:00&quot;</span>
+RFC3339Nano <span class="hl opt">=</span> <span class="hl str">&quot;2006-01-02T15:04:05.999999999Z07:00&quot;</span>
+Kitchen     <span class="hl opt">=</span> <span class="hl str">&quot;3:04PM&quot;</span>
+<span class="hl slc">// Handy time stamps.</span>
+Stamp      <span class="hl opt">=</span> <span class="hl str">&quot;Jan _2 15:04:05&quot;</span>
+StampMilli <span class="hl opt">=</span> <span class="hl str">&quot;Jan _2 15:04:05.000&quot;</span>
+StampMicro <span class="hl opt">=</span> <span class="hl str">&quot;Jan _2 15:04:05.000000&quot;</span>
+StampNano  <span class="hl opt">=</span> <span class="hl str">&quot;Jan _2 15:04:05.000000000&quot;</span>
+</pre>
+
+<p>I didn&rsquo;t see such approach before, I&rsquo;ve found it clearer and more logical.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/04/27/date-and-time-formatting-in-go/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/04/27/date-and-time-formatting-in-go/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
