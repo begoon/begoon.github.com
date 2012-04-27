@@ -5,7 +5,7 @@ language: english
 date: 2012-04-25 23:28
 comments: true
 categories: 
-- russian
+- english
 - cplusplus
 - stl
 ---

@@ -7,7 +7,7 @@ comments: true
 categories: 
 - book
 - cpluscplus
-- russian
+- english
 - stl
 - link
 ---
