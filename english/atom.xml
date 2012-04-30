@@ -72,9 +72,7 @@ std<span class="hl opt">::</span>tr1<span class="hl opt">::</span>uniform_int<sp
 std<span class="hl opt">::</span>mt19937_64 engine<span class="hl opt">;</span>
 
 <span class="hl kwb">void</span> <span class="hl kwd">generate</span><span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;&amp;</span> v<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">for_each</span><span class="hl opt">(</span>v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(), [](</span><span class="hl kwc">decltype</span><span class="hl opt">(</span>v<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]) &amp;</span>i<span class="hl opt">) {</span>
-    i <span class="hl opt">=</span> <span class="hl kwd">uniform</span><span class="hl opt">(</span>engine<span class="hl opt">);</span> 
-  <span class="hl opt">});</span>
+  std<span class="hl opt">::</span><span class="hl kwd">for_each</span><span class="hl opt">(</span>v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(), [](</span>Type<span class="hl opt">&amp;</span> i<span class="hl opt">) {</span> i <span class="hl opt">=</span> <span class="hl kwd">uniform</span><span class="hl opt">(</span>engine<span class="hl opt">); });</span>
 <span class="hl opt">}</span>
 </pre>
 
@@ -131,11 +129,9 @@ sort_async
 <span class="hl ppc">#include &lt;sstream&gt;</span>
 <span class="hl ppc">#include &lt;algorithm&gt;</span>
 <span class="hl ppc">#include &lt;iomanip&gt;</span>
-<span class="hl ppc">#include &lt;utility&gt;</span>
-<span class="hl ppc">#include &lt;numeric&gt;</span>
 <span class="hl ppc">#include &lt;future&gt;</span>
 <span class="hl ppc">#include &lt;random&gt;</span>
-<span class="hl ppc">#include &lt;ctime&gt;</span>
+<span class="hl ppc">#include &lt;chrono&gt;</span>
 <span class="hl ppc">#include &lt;cstdlib&gt;</span>
 
 <span class="hl kwb">const int</span> ITERATIONS_NUM <span class="hl opt">=</span> <span class="hl num">10</span><span class="hl opt">;</span>
@@ -161,9 +157,7 @@ std<span class="hl opt">::</span>tr1<span class="hl opt">::</span>uniform_int<sp
 std<span class="hl opt">::</span>mt19937_64 engine<span class="hl opt">;</span>
 
 <span class="hl kwb">void</span> <span class="hl kwd">generate</span><span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;&amp;</span> v<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">for_each</span><span class="hl opt">(</span>v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(), [](</span><span class="hl kwc">decltype</span><span class="hl opt">(</span>v<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]) &amp;</span>i<span class="hl opt">) {</span>
-    i <span class="hl opt">=</span> <span class="hl kwd">uniform</span><span class="hl opt">(</span>engine<span class="hl opt">);</span> 
-  <span class="hl opt">});</span>
+  std<span class="hl opt">::</span><span class="hl kwd">for_each</span><span class="hl opt">(</span>v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(), [](</span>Type<span class="hl opt">&amp;</span> i<span class="hl opt">) {</span> i <span class="hl opt">=</span> <span class="hl kwd">uniform</span><span class="hl opt">(</span>engine<span class="hl opt">); });</span>
 <span class="hl opt">}</span>
 
 <span class="hl kwb">void</span> <span class="hl kwd">check_sorted</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;&amp;</span> v<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> msg<span class="hl opt">) {</span>
@@ -184,9 +178,7 @@ std<span class="hl opt">::</span>string <span class="hl kwd">data_file_name</spa
 <span class="hl opt">}</span>
 
 <span class="hl kwb">void</span> <span class="hl kwd">save_file</span><span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;</span> array<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">for_each</span><span class="hl opt">(</span>array<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> array<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(), [](</span><span class="hl kwc">decltype</span><span class="hl opt">(</span>array<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]) &amp;</span>i<span class="hl opt">) {</span>
-    <span class="hl kwd">endian_swap</span><span class="hl opt">(</span>i<span class="hl opt">);</span>
-  <span class="hl opt">});</span>
+  std<span class="hl opt">::</span><span class="hl kwd">for_each</span><span class="hl opt">(</span>array<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> array<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(), [](</span>Type<span class="hl opt">&amp;</span> i<span class="hl opt">) {</span> <span class="hl kwd">endian_swap</span><span class="hl opt">(</span>i<span class="hl opt">); });</span>
   std<span class="hl opt">::</span>ofstream <span class="hl kwd">os</span><span class="hl opt">(</span>name<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">(),</span> std<span class="hl opt">::</span>ios<span class="hl opt">::</span>binary<span class="hl opt">|</span>std<span class="hl opt">::</span>ios<span class="hl opt">::</span>out<span class="hl opt">);</span>
   <span class="hl kwc">auto</span> <span class="hl kwb">const</span> bytes_to_write <span class="hl opt">=</span> array<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">() *</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>array<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]);</span>
   std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Saving &quot;</span> <span class="hl opt">&lt;&lt;</span> array<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">() &lt;&lt;</span> <span class="hl str">&quot; bytes to &quot;</span> <span class="hl opt">&lt;&lt;</span> name <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
@@ -195,13 +187,10 @@ std<span class="hl opt">::</span>string <span class="hl kwd">data_file_name</spa
 
 <span class="hl kwb">int</span> <span class="hl kwd">main_generate</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
   std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Generation</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
-  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> times<span class="hl opt">;</span>
-  <span class="hl kwc">auto</span> times_sum <span class="hl opt">=</span> <span class="hl num">0.0</span><span class="hl opt">;</span>
   <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwc">auto</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> ITERATIONS_NUM<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
     std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;</span> <span class="hl kwd">unsorted</span><span class="hl opt">(</span>DATA_SIZE<span class="hl opt">);</span>
     <span class="hl kwd">generate</span><span class="hl opt">(</span>unsorted<span class="hl opt">);</span>
     <span class="hl kwd">save_file</span><span class="hl opt">(</span>unsorted<span class="hl opt">,</span> <span class="hl kwd">data_file_name</span><span class="hl opt">(</span>i<span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">));</span>
-
     std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Sorting...</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
     std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>unsorted<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> unsorted<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">());</span>
     <span class="hl kwd">check_sorted</span><span class="hl opt">(</span>unsorted<span class="hl opt">,</span> <span class="hl str">&quot;check sorted array&quot;</span><span class="hl opt">);</span>
@@ -222,9 +211,7 @@ std<span class="hl opt">::</span>string <span class="hl kwd">data_file_name</spa
       <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, loaded &quot;</span> <span class="hl opt">&lt;&lt;</span> is<span class="hl opt">.</span><span class="hl kwd">gcount</span><span class="hl opt">() &lt;&lt;</span> <span class="hl str">&quot; words but should be &quot;</span> <span class="hl opt">&lt;&lt;</span> to_load <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
     std<span class="hl opt">::</span><span class="hl kwd">exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">);</span>
   <span class="hl opt">}</span>
-  std<span class="hl opt">::</span><span class="hl kwd">for_each</span><span class="hl opt">(</span>array<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> array<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(), [](</span><span class="hl kwc">decltype</span><span class="hl opt">(</span>array<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]) &amp;</span> v<span class="hl opt">){</span>
-    <span class="hl kwd">endian_swap</span><span class="hl opt">(</span>v<span class="hl opt">);</span>
-  <span class="hl opt">});</span>
+  std<span class="hl opt">::</span><span class="hl kwd">for_each</span><span class="hl opt">(</span>array<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> array<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(), [](</span>Type<span class="hl opt">&amp;</span> v<span class="hl opt">){</span> <span class="hl kwd">endian_swap</span><span class="hl opt">(</span>v<span class="hl opt">); });</span>
 <span class="hl opt">}</span>
 
 <span class="hl kwb">int</span> <span class="hl kwd">naive_quick_sort</span><span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;::</span>iterator begin<span class="hl opt">,</span> std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;::</span>iterator end<span class="hl opt">) {</span>
@@ -254,13 +241,11 @@ std<span class="hl opt">::</span>string <span class="hl kwd">data_file_name</spa
   <span class="hl kwd">naive_quick_sort</span><span class="hl opt">(</span>arr<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> arr<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">());</span>
 <span class="hl opt">}</span>
 
-<span class="hl ppc">#undef max</span>
-
 <span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
   <span class="hl kwa">if</span> <span class="hl opt">(</span>argc <span class="hl opt">==</span> <span class="hl num">2</span> <span class="hl opt">&amp;&amp; !</span>std<span class="hl opt">::</span><span class="hl kwd">strcmp</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">],</span> <span class="hl str">&quot;generate&quot;</span><span class="hl opt">))</span>
     <span class="hl kwa">return</span> <span class="hl kwd">main_generate</span><span class="hl opt">(</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
 
-  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> times<span class="hl opt">;</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">double</span><span class="hl opt">&gt;</span> times<span class="hl opt">;</span>
   <span class="hl kwc">auto</span> times_sum <span class="hl opt">=</span> <span class="hl num">0.0</span><span class="hl opt">;</span>
   <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwc">auto</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> ITERATIONS_NUM<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
     std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;</span> unsorted<span class="hl opt">;</span>
@@ -272,15 +257,14 @@ std<span class="hl opt">::</span>string <span class="hl kwd">data_file_name</spa
     <span class="hl kwd">check_sorted</span><span class="hl opt">(</span>verify<span class="hl opt">,</span> <span class="hl str">&quot;verify array&quot;</span><span class="hl opt">);</span>
 
     std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, Started&quot;</span><span class="hl opt">;</span>
-    <span class="hl kwc">auto</span> <span class="hl kwb">const</span> started <span class="hl opt">=</span> <span class="hl kwd">clock</span><span class="hl opt">() / (</span>CLOCKS_PER_SEC <span class="hl opt">/</span> <span class="hl num">1000</span><span class="hl opt">);</span>
+    <span class="hl kwc">auto</span> start <span class="hl opt">=</span> std<span class="hl opt">::</span>chrono<span class="hl opt">::</span>high_resolution_clock<span class="hl opt">::</span><span class="hl kwd">now</span><span class="hl opt">();</span>
 
     <span class="hl kwd">quick_sort</span><span class="hl opt">(</span>unsorted<span class="hl opt">);</span>
 
-    <span class="hl kwc">auto</span> <span class="hl kwb">const</span> finished <span class="hl opt">=</span> <span class="hl kwd">clock</span><span class="hl opt">() / (</span>CLOCKS_PER_SEC <span class="hl opt">/</span> <span class="hl num">1000</span><span class="hl opt">);</span>
-
+    <span class="hl kwc">auto</span> stop <span class="hl opt">=</span> std<span class="hl opt">::</span>chrono<span class="hl opt">::</span>high_resolution_clock<span class="hl opt">::</span><span class="hl kwd">now</span><span class="hl opt">();</span>
     std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, Stopped, &quot;</span><span class="hl opt">;</span>
-    <span class="hl kwc">auto</span> <span class="hl kwb">const</span> duration <span class="hl opt">=</span> finished <span class="hl opt">-</span> started<span class="hl opt">;</span>
-    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Duration = &quot;</span> <span class="hl opt">&lt;&lt;</span> duration<span class="hl opt">;</span>
+    <span class="hl kwc">auto</span> duration <span class="hl opt">=</span> std<span class="hl opt">::</span>chrono<span class="hl opt">::</span>duration<span class="hl opt">&lt;</span><span class="hl kwb">double</span><span class="hl opt">&gt;(</span>stop <span class="hl opt">-</span> start<span class="hl opt">).</span><span class="hl kwd">count</span><span class="hl opt">();</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> duration<span class="hl opt">;</span>
 
     <span class="hl kwd">check_sorted</span><span class="hl opt">(</span>unsorted<span class="hl opt">,</span> <span class="hl str">&quot;sorted array&quot;</span><span class="hl opt">);</span>
 
@@ -299,11 +283,15 @@ std<span class="hl opt">::</span>string <span class="hl kwd">data_file_name</spa
   <span class="hl kwc">auto</span> <span class="hl kwb">const</span> average_fixed <span class="hl opt">= (</span>times_sum <span class="hl opt">-</span> max_element <span class="hl opt">-</span> min_element<span class="hl opt">) /</span>
                              <span class="hl opt">(</span>ITERATIONS_NUM <span class="hl opt">-</span> <span class="hl num">2</span><span class="hl opt">);</span>
 
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Average: &quot;</span> <span class="hl opt">&lt;&lt;</span> average <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;ms, &quot;</span> 
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Average: &quot;</span> <span class="hl opt">&lt;&lt;</span> average <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;s, &quot;</span> 
             <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Average without max/min: &quot;</span>
-            <span class="hl opt">&lt;&lt;</span> average_fixed <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;ms.&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+            <span class="hl opt">&lt;&lt;</span> average_fixed <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;s.&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
 <span class="hl opt">}</span>
 </pre>
+
+<p>Finally, a CPU utilization graph. We see 100% spikes on each iteration.</p>
+
+<p><img src="http://demin.ws/images/blog/multithreaded-quicksort-cpu-utilization.png" /></p>
 <hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
