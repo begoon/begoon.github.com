@@ -60,9 +60,7 @@ std::tr1::uniform_int<Type> uniform(
 std::mt19937_64 engine;
 
 void generate(std::vector<Type>& v) {
-  std::for_each(v.begin(), v.end(), [](decltype(v[0]) &i) {
-    i = uniform(engine); 
-  });
+  std::for_each(v.begin(), v.end(), [](Type& i) { i = uniform(engine); });
 }
 {% endcodeblock %}
 
@@ -116,11 +114,9 @@ void generate(std::vector<Type>& v) {
 #include <sstream>
 #include <algorithm>
 #include <iomanip>
-#include <utility>
-#include <numeric>
 #include <future>
 #include <random>
-#include <ctime>
+#include <chrono>
 #include <cstdlib>
 
 const int ITERATIONS_NUM = 10;
@@ -146,9 +142,7 @@ std::tr1::uniform_int<Type> uniform(
 std::mt19937_64 engine;
 
 void generate(std::vector<Type>& v) {
-  std::for_each(v.begin(), v.end(), [](decltype(v[0]) &i) {
-    i = uniform(engine); 
-  });
+  std::for_each(v.begin(), v.end(), [](Type& i) { i = uniform(engine); });
 }
 
 void check_sorted(const std::vector<Type>& v, const std::string& msg) {
@@ -169,9 +163,7 @@ std::string data_file_name(const int i, const std::string& suffix) {
 }
 
 void save_file(std::vector<Type> array, const std::string& name) {
-  std::for_each(array.begin(), array.end(), [](decltype(array[0]) &i) {
-    endian_swap(i);
-  });
+  std::for_each(array.begin(), array.end(), [](Type& i) { endian_swap(i); });
   std::ofstream os(name.c_str(), std::ios::binary|std::ios::out);
   auto const bytes_to_write = array.size() * sizeof(array[0]);
   std::cout << "Saving " << array.size() << " bytes to " << name << "\n";
@@ -180,13 +172,10 @@ void save_file(std::vector<Type> array, const std::string& name) {
 
 int main_generate(int argc, char* argv[]) {
   std::cout << "Generation\n";
-  std::vector<int> times;
-  auto times_sum = 0.0;
   for (auto i = 0; i < ITERATIONS_NUM; ++i) {
     std::vector<Type> unsorted(DATA_SIZE);
     generate(unsorted);
     save_file(unsorted, data_file_name(i, ""));
-
     std::cout << "Sorting...\n";
     std::sort(unsorted.begin(), unsorted.end());
     check_sorted(unsorted, "check sorted array");
@@ -207,9 +196,7 @@ void load_file(std::vector<Type>& array, const std::string& name) {
       << ", loaded " << is.gcount() << " words but should be " << to_load << "\n";
     std::exit(1);
   }
-  std::for_each(array.begin(), array.end(), [](decltype(array[0]) & v){
-    endian_swap(v);
-  });
+  std::for_each(array.begin(), array.end(), [](Type& v){ endian_swap(v); });
 }
 
 int naive_quick_sort(std::vector<Type>::iterator begin, std::vector<Type>::iterator end) {
@@ -239,13 +226,11 @@ void quick_sort(std::vector<Type>& arr) {
   naive_quick_sort(arr.begin(), arr.end());
 }
 
-#undef max
-
 int main(int argc, char* argv[]) {
   if (argc == 2 && !std::strcmp(argv[1], "generate"))
     return main_generate(argc, argv);
 
-  std::vector<int> times;
+  std::vector<double> times;
   auto times_sum = 0.0;
   for (auto i = 0; i < ITERATIONS_NUM; ++i) {
     std::vector<Type> unsorted;
@@ -257,15 +242,14 @@ int main(int argc, char* argv[]) {
     check_sorted(verify, "verify array");
 
     std::cout << ", Started";
-    auto const started = clock() / (CLOCKS_PER_SEC / 1000);
+    auto start = std::chrono::high_resolution_clock::now();
 
     quick_sort(unsorted);
 
-    auto const finished = clock() / (CLOCKS_PER_SEC / 1000);
-
+    auto stop = std::chrono::high_resolution_clock::now();
     std::cout << ", Stopped, ";
-    auto const duration = finished - started;
-    std::cout << "Duration = " << duration;
+    auto duration = std::chrono::duration<double>(stop - start).count();
+    std::cout << duration;
 
     check_sorted(unsorted, "sorted array");
 
@@ -284,8 +268,12 @@ int main(int argc, char* argv[]) {
   auto const average_fixed = (times_sum - max_element - min_element) /
                              (ITERATIONS_NUM - 2);
 
-  std::cout << "Average: " << average << "ms, " 
+  std::cout << "Average: " << average << "s, " 
             << "Average without max/min: "
-            << average_fixed << "ms." << std::endl;
+            << average_fixed << "s." << std::endl;
 }
 {% endcodeblock %}
+
+Под занавес, картинка загрузки процессоров. Явно видны всплески на каждой итерации, когда система используется подзавязку.
+
+{% img /images/blog/multithreaded-quicksort-cpu-utilization.png %}
