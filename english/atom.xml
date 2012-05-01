@@ -5,13 +5,40 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-04-28T23:46:00Z</updated>
+  <updated>2012-05-01T13:10:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Bug in std::async() in Visual Studio 11 (preview)]]></title>
+    <link href="http://demin.ws/blog/english/2012/05/01/async-bug-in-visual-studio-11-preview/"/>
+    <updated>2012-05-01T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/05/01/async-bug-in-visual-studio-11-preview/</id>
+    <content type="html"><![CDATA[<p>Come across a bug in the Visual Studio 11 (preview).</p>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;future&gt;</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwc">auto</span> i <span class="hl opt">=</span> <span class="hl num">0L</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> <span class="hl num">1000000</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    <span class="hl kwc">auto</span> f <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">async</span><span class="hl opt">([](){</span> <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">; });</span>
+    f<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">();</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>This code consistently crashes (and doesn&rsquo;t throw). When decreasing a number of iteration, at some point to stops crashing.</p>
+
+<p>The compiler cl.exe 17.00.40825.2, IDE 11.0.40825.2 PREREL. <a href="http://stackoverflow.com/questions/10301432/number-of-async-futures-in-c11">Posted on Stack Overflow</a>. They say, likely it is the bug.</p>
+
+<p>Where to file a bug to VS?</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Multi-threaded QuickSort]]></title>
