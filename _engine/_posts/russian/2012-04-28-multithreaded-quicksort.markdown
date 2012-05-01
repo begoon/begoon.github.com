@@ -277,3 +277,9 @@ int main(int argc, char* argv[]) {
 Под занавес, картинка загрузки процессоров. Явно видны всплески на каждой итерации, когда система используется подзавязку.
 
 {% img /images/blog/multithreaded-quicksort-cpu-utilization.png %}
+
+### Добавка
+
+В комментариях есть интересная ссылка на статью "[Dynamic Task Parallelism][]" от Microsort, где также приводится вариант многопоточного QuickSort'a.
+
+[Dynamic Task Parallelism]: http://msdn.microsoft.com/en-us/library/gg663539.aspx

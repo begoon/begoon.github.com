@@ -279,3 +279,9 @@ int main(int argc, char* argv[]) {
 Finally, a CPU utilization graph. We see 100% spikes on each iteration.
 
 {% img /images/blog/multithreaded-quicksort-cpu-utilization.png %}
+
+### Update
+
+There is an article from Microsort, "[Dynamic Task Parallelism][]", also showing how to implement multithreaded Quicksort.
+
+[Dynamic Task Parallelism]: http://msdn.microsoft.com/en-us/library/gg663539.aspx
