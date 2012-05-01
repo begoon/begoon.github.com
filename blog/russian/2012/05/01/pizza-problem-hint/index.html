@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Как понятно объяснить задачу о разрезании пиццы</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Как понятно объяснить задачу о разрезании пиццы</h1>
+<div id="post">
+  <p>Есть классическая задача о разрезании пиццы, в которой спрашивается количество разрезов пиццы, чтобы в итоге получилось N кусков. Фактически это задача о разбиении плоскости прямыми. В &ldquo;Конкретной математике&rdquo; есть вот такое объяснение:</p>
+
+<p><img src="/images/blog/knuth-on-pizza-problem.png" /></p>
+
+<p>Я читал его много раз, но так и не мог понять &ndash; почему именно так?</p>
+
+<p>В итоге, я нашел вот эту страницу &ndash; <a href="http://www.jimloy.com/geometry/plane.htm">Dividing The Plane</a>, где есть такое предложение:</p>
+
+<blockquote>
+<p>Let&rsquo;s say that we&rsquo;ve got n lines (for some arbitrary n). And we add an n+1th line. That line goes through region-line-region-line-&hellip;-line-region. It went through n lines and n+1 regions (assuming that all of the lines intersect). For each region that it went through, it added a region (split that region into two regions).</p>
+</blockquote>
+
+<p>И вот эта фраза на пальцах объясняет, почему именно <code>n</code>-я прямая добавляет <code>n + 1</code> регионов. Идея тут в визуализации прохода новой прямой через существующие регионы.</p>
+
+</div>
+
+<hr />
+
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/05/01/pizza-problem-hint/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/05/01/pizza-problem-hint/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

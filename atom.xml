@@ -5,13 +5,34 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-01T13:10:00Z</updated>
+  <updated>2012-05-01T23:45:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Как понятно объяснить задачу о разрезании пиццы]]></title>
+    <link href="http://demin.ws/blog/russian/2012/05/01/pizza-problem-hint/"/>
+    <updated>2012-05-01T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/05/01/pizza-problem-hint/</id>
+    <content type="html"><![CDATA[<p>Есть классическая задача о разрезании пиццы, в которой спрашивается количество разрезов пиццы, чтобы в итоге получилось N кусков. Фактически это задача о разбиении плоскости прямыми. В &ldquo;Конкретной математике&rdquo; есть вот такое объяснение:</p>
+
+<p><img src="http://demin.ws/images/blog/knuth-on-pizza-problem.png" /></p>
+
+<p>Я читал его много раз, но так и не мог понять &ndash; почему именно так?</p>
+
+<p>В итоге, я нашел вот эту страницу &ndash; <a href="http://www.jimloy.com/geometry/plane.htm">Dividing The Plane</a>, где есть такое предложение:</p>
+
+<blockquote>
+<p>Let&rsquo;s say that we&rsquo;ve got n lines (for some arbitrary n). And we add an n+1th line. That line goes through region-line-region-line-&hellip;-line-region. It went through n lines and n+1 regions (assuming that all of the lines intersect). For each region that it went through, it added a region (split that region into two regions).</p>
+</blockquote>
+
+<p>И вот эта фраза на пальцах объясняет, почему именно <code>n</code>-я прямая добавляет <code>n + 1</code> регионов. Идея тут в визуализации прохода новой прямой через существующие регионы.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Баг с std::async() в Visual Studio 11 (preview)]]></title>
