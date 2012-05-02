@@ -20,5 +20,5 @@ categories:
 
 > Let's say that we've got n lines (for some arbitrary n). And we add an n+1th line. That line goes through region-line-region-line-...-line-region. It went through n lines and n+1 regions (assuming that all of the lines intersect). For each region that it went through, it added a region (split that region into two regions).
 
-И вот эта фраза на пальцах объясняет, почему именно `n`-я прямая добавляет `n + 1` регионов. Идея тут в визуализации прохода новой прямой через существующие регионы.
+И вот эта фраза на пальцах объясняет, почему именно `n`-я прямая добавляет `n` регионов. Идея тут в визуализации прохода новой прямой через существующие регионы.
 
