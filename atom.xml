@@ -5,13 +5,36 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-01T23:45:00Z</updated>
+  <updated>2012-05-02T23:19:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Anthony Williams, "C++ Concurrency in Action"]]></title>
+    <link href="http://demin.ws/blog/russian/2012/05/02/cpp-concurrency-in-action/"/>
+    <updated>2012-05-02T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/05/02/cpp-concurrency-in-action/</id>
+    <content type="html"><![CDATA[<p>Довелось мне в этом году посетить <a href="http://accu.org/index.php/conferences/accu_conference_2012">ACCU 2012</a>. Практически все в этом году было про С++ 2011. Одна из презентаций, которые я посетил, была &ldquo;C++11 concurrency tutorial&rdquo; от <a href="http://www.boost.org/users/people/anthony_williams.html">Антони Вильямса</a>, не больше не меньше, мейнтейнера boost::thread.</p>
+
+<p>Его презентация <a href="http://www.justsoftwaresolutions.co.uk/files/c++11_concurrency.pdf">доступна</a> с <a href="http://www.justsoftwaresolutions.co.uk/files/c++11_concurrency_code.zip">примерами</a>.</p>
+
+<p>Вторая его презентация, увы, которую я не посетил, называлась &ldquo;Dataflow, Actors and High Level Structures in Concurrent Applications&rdquo;. Фактически, там было показано, как можно на С++ забацать actor&rsquo;ы практически как в Эрланге.</p>
+
+<p>Эта презентация тоже <a href="http://www.justsoftwaresolutions.co.uk/files/dataflow_and_actors.pdf">доступна</a> с <a href="http://www.justsoftwaresolutions.co.uk/files/dataflow_and_actors_code.zip">примерами</a>.</p>
+
+<p>Рекомендую.</p>
+
+<p>Идем далее. Недавно вышла книга, <a href="http://www.amazon.co.uk/C-Concurrency-Action-Practical-Multithreading/dp/1933988770/">C++ Concurrency in Action</a> этого же автора (Anthony Williams).</p>
+
+<p><img src="http://demin.ws/images/covers/english/cpp-concurrency-in-action.jpg" /></p>
+
+<p>Если хотите знать все про memory model в C++, почитайте пятую главу (и не только пятую).</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Как понятно объяснить задачу о разрезании пиццы]]></title>

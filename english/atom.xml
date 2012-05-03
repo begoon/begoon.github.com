@@ -5,13 +5,36 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-01T13:10:00Z</updated>
+  <updated>2012-05-02T23:19:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Anthony Williams, &#34;C++ Concurrency in Action&#34;]]></title>
+    <link href="http://demin.ws/blog/english/2012/05/02/cpp-concurrency-in-action/"/>
+    <updated>2012-05-02T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/05/02/cpp-concurrency-in-action/</id>
+    <content type="html"><![CDATA[<p>I managed to attend <a href="http://accu.org/index.php/conferences/accu_conference_2012">ACCU 2012</a> this year. It was almost all about C++ 2011. One of the presentations I have attended was &ldquo;C++11 concurrency tutorial&rdquo; from <a href="http://www.boost.org/users/people/anthony_williams.html">Anthony Williams</a>. He is, no more no less, the maintainer of boost::thread.</p>
+
+<p>His presentation is <a href="http://www.justsoftwaresolutions.co.uk/files/c++11_concurrency.pdf">available</a> with <a href="http://www.justsoftwaresolutions.co.uk/files/c++11_concurrency_code.zip">examples</a>.</p>
+
+<p>Unfortunately, I missed his second presentation, &ldquo;Dataflow, Actors and High Level Structures in Concurrent Applications&rdquo;. In fact, it was about implementing the concept of actors, similar as in Erlang, in C++ 2011.</p>
+
+<p>This presentation is also <a href="http://www.justsoftwaresolutions.co.uk/files/dataflow_and_actors.pdf">available</a> with <a href="http://www.justsoftwaresolutions.co.uk/files/dataflow_and_actors_code.zip">examples</a>.</p>
+
+<p>Recommend.</p>
+
+<p>Going further. Anthony&rsquo;s book, <a href="http://www.amazon.co.uk/C-Concurrency-Action-Practical-Multithreading/dp/1933988770/">C++ Concurrency in Action</a>, has been released recently.</p>
+
+<p><img src="http://demin.ws/images/covers/english/cpp-concurrency-in-action.jpg" /></p>
+
+<p>If you want an exhaustive explanation about the C++ memory model, please read the chapters 5 (along with all others).</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Bug in std::async() in Visual Studio 11 (preview)]]></title>
