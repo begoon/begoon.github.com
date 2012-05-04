@@ -5,13 +5,45 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-02T23:19:00Z</updated>
+  <updated>2012-05-03T23:47:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Pimpl and smart pointers]]></title>
+    <link href="http://demin.ws/blog/english/2012/05/03/pimpl-and-smart-pointers/"/>
+    <updated>2012-05-03T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/05/03/pimpl-and-smart-pointers/</id>
+    <content type="html"><![CDATA[<p>Sometimes I realise that I don&rsquo;t know obvious things. My discovery of today is about Pimpl and smart pointers. For some reason I thought that the forward class declaration is only possible if the class is referenced by a pointer or a reference (#1), that is used in a form of <code>T*</code> or <code>T&amp;</code> (#2). Therefore, when I wanted Pimpl, I didn&rsquo;t use smart pointers because it seemed that it needed the full class definition.</p>
+
+<p><code>A.h</code>:
+<pre class="hl">
+<span class="hl ppc">#include &lt;memory&gt;</span>
+<span class="hl kwc">class</span> A_pimpl<span class="hl opt">;</span>
+<span class="hl kwc">class</span> A <span class="hl opt">{</span>
+  <span class="hl opt">&hellip;</span>
+  std<span class="hl opt">::</span>unique_ptr<span class="hl opt">&lt;</span>A_pimpl<span class="hl opt">&gt;</span> p<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre></p>
+
+<p>I believed to some reason that it will not work because the class <code>A_pimpl</code> is partially defined. I was surprised as a child when tried and realised that it works! The fact #1 is not equivalent to the fact #2.</p>
+
+<p>Now in <code>A.cpp</code> I can write:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;module.h&quot;</span><span class="hl ppc"></span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;pimpl.h&quot;</span><span class="hl ppc"></span>
+
+A<span class="hl opt">::</span><span class="hl kwd">A</span><span class="hl opt">() :</span> <span class="hl kwd">p</span><span class="hl opt">(</span><span class="hl kwa">new</span> <span class="hl kwd">A_pimpl</span><span class="hl opt">()) {}</span>
+</pre>
+
+<p>Everything above also works for <code>std::shared_ptr</code> (C++ 2011), <code>boost::scoped_ptr</code>, and <code>boost::shared_ptr</code>.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Anthony Williams, &#34;C++ Concurrency in Action&#34;]]></title>

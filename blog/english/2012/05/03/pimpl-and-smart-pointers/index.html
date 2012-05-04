@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Pimpl and smart pointers</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Pimpl and smart pointers</h1>
+<div id="post">
+  <p>Sometimes I realise that I don&rsquo;t know obvious things. My discovery of today is about Pimpl and smart pointers. For some reason I thought that the forward class declaration is only possible if the class is referenced by a pointer or a reference (#1), that is used in a form of <code>T*</code> or <code>T&amp;</code> (#2). Therefore, when I wanted Pimpl, I didn&rsquo;t use smart pointers because it seemed that it needed the full class definition.</p>
+
+<p><code>A.h</code>:
+<pre class="hl">
+<span class="hl ppc">#include &lt;memory&gt;</span>
+<span class="hl kwc">class</span> A_pimpl<span class="hl opt">;</span>
+<span class="hl kwc">class</span> A <span class="hl opt">{</span>
+  <span class="hl opt">&hellip;</span>
+  std<span class="hl opt">::</span>unique_ptr<span class="hl opt">&lt;</span>A_pimpl<span class="hl opt">&gt;</span> p<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre></p>
+
+<p>I believed to some reason that it will not work because the class <code>A_pimpl</code> is partially defined. I was surprised as a child when tried and realised that it works! The fact #1 is not equivalent to the fact #2.</p>
+
+<p>Now in <code>A.cpp</code> I can write:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;module.h&quot;</span><span class="hl ppc"></span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;pimpl.h&quot;</span><span class="hl ppc"></span>
+
+A<span class="hl opt">::</span><span class="hl kwd">A</span><span class="hl opt">() :</span> <span class="hl kwd">p</span><span class="hl opt">(</span><span class="hl kwa">new</span> <span class="hl kwd">A_pimpl</span><span class="hl opt">()) {}</span>
+</pre>
+
+<p>Everything above also works for <code>std::shared_ptr</code> (C++ 2011), <code>boost::scoped_ptr</code>, and <code>boost::shared_ptr</code>.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/05/03/pimpl-and-smart-pointers/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/05/03/pimpl-and-smart-pointers/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
