@@ -26,10 +26,35 @@ class A {
 В `A.cpp` можно теперь спокойно писать:
 
 {% codeblock lang:cpp %}
-#include "module.h"
+#include "A.h"
 #include "pimpl.h"
 
 A::A() : p(new A_pimpl()) {}
 {% endcodeblock %}
 
 Все выше сказанное также работает для `std::shared_ptr` (C++ 2011), `boost::scoped_ptr` и `boost::shared_ptr`.
+
+**Дополнение**
+
+Как меня поправили в комментариях, у класса `A` обязательно должен быть явно задан деструктор, причем его тело должно быть именно в `A.cpp`, а не в заголовочном файле. Иначе будет ошибка типа "error C2338: can't delete an incomplete type".
+
+`A.h`:
+{% codeblock lang:cpp %}
+#include <memory>
+class A_pimpl;
+class A {
+  A();
+  ~A();
+  std::unique_ptr<A_pimpl> p;
+}
+{% endcodeblock %}
+
+и `A.cpp`:
+
+{% codeblock lang:cpp %}
+#include "A.h"
+#include "pimpl.h"
+
+A::A() : p(new A_pimpl()) {}
+A::~A() {}
+{% endcodeblock %}

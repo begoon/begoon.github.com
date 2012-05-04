@@ -25,7 +25,8 @@
 <span class="hl ppc">#include &lt;memory&gt;</span>
 <span class="hl kwc">class</span> A_pimpl<span class="hl opt">;</span>
 <span class="hl kwc">class</span> A <span class="hl opt">{</span>
-  <span class="hl opt">&hellip;</span>
+  <span class="hl kwd">A</span><span class="hl opt">();</span>
+  <span class="hl opt">~</span><span class="hl kwd">A</span><span class="hl opt">();</span>
   std<span class="hl opt">::</span>unique_ptr<span class="hl opt">&lt;</span>A_pimpl<span class="hl opt">&gt;</span> p<span class="hl opt">;</span>
 <span class="hl opt">}</span>
 </pre></p>
@@ -39,9 +40,14 @@
 <span class="hl ppc">#include</span> <span class="hl pps">&quot;pimpl.h&quot;</span><span class="hl ppc"></span>
 
 A<span class="hl opt">::</span><span class="hl kwd">A</span><span class="hl opt">() :</span> <span class="hl kwd">p</span><span class="hl opt">(</span><span class="hl kwa">new</span> <span class="hl kwd">A_pimpl</span><span class="hl opt">()) {}</span>
+A<span class="hl opt">::~</span><span class="hl kwd">A</span><span class="hl opt">() {}</span>
 </pre>
 
 <p>Everything above also works for <code>std::shared_ptr</code> (C++ 2011), <code>boost::scoped_ptr</code>, and <code>boost::shared_ptr</code>.</p>
+
+<p><strong>Update</strong></p>
+
+<p>It is important that class <code>A</code> must an explicitly provided destructor. Moreover, its body must in <code>A.cpp</code>, not in the header. Otherwise, it will be a compilation error, for example, &ldquo;error C2338: can&rsquo;t delete an incomplete type&rdquo;.</p>
 <hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   

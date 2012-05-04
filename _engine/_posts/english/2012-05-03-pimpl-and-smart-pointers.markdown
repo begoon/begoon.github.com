@@ -16,7 +16,8 @@ Sometimes I realise that I don't know obvious things. My discovery of today is a
 #include <memory>
 class A_pimpl;
 class A {
-  ...
+  A();
+  ~A();
   std::unique_ptr<A_pimpl> p;
 }
 {% endcodeblock %}
@@ -30,6 +31,11 @@ Now in `A.cpp` I can write:
 #include "pimpl.h"
 
 A::A() : p(new A_pimpl()) {}
+A::~A() {}
 {% endcodeblock %}
 
 Everything above also works for `std::shared_ptr` (C++ 2011), `boost::scoped_ptr`, and `boost::shared_ptr`.
+
+**Update**
+
+It is important that class `A` must an explicitly provided destructor. Moreover, its body must in `A.cpp`, not in the header. Otherwise, it will be a compilation error, for example, "error C2338: can't delete an incomplete type".

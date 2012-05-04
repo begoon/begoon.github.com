@@ -57,13 +57,38 @@
 <p>В <code>A.cpp</code> можно теперь спокойно писать:</p>
 
 <pre class="hl">
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;module.h&quot;</span><span class="hl ppc"></span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;A.h&quot;</span><span class="hl ppc"></span>
 <span class="hl ppc">#include</span> <span class="hl pps">&quot;pimpl.h&quot;</span><span class="hl ppc"></span>
 
 A<span class="hl opt">::</span><span class="hl kwd">A</span><span class="hl opt">() :</span> <span class="hl kwd">p</span><span class="hl opt">(</span><span class="hl kwa">new</span> <span class="hl kwd">A_pimpl</span><span class="hl opt">()) {}</span>
 </pre>
 
 <p>Все выше сказанное также работает для <code>std::shared_ptr</code> (C++ 2011), <code>boost::scoped_ptr</code> и <code>boost::shared_ptr</code>.</p>
+
+<p><strong>Дополнение</strong></p>
+
+<p>Как меня поправили в комментариях, у класса <code>A</code> обязательно должен быть явно задан деструктор, причем его тело должно быть именно в <code>A.cpp</code>, а не в заголовочном файле. Иначе будет ошибка типа &ldquo;error C2338: can&rsquo;t delete an incomplete type&rdquo;.</p>
+
+<p><code>A.h</code>:
+<pre class="hl">
+<span class="hl ppc">#include &lt;memory&gt;</span>
+<span class="hl kwc">class</span> A_pimpl<span class="hl opt">;</span>
+<span class="hl kwc">class</span> A <span class="hl opt">{</span>
+  <span class="hl kwd">A</span><span class="hl opt">();</span>
+  <span class="hl opt">~</span><span class="hl kwd">A</span><span class="hl opt">();</span>
+  std<span class="hl opt">::</span>unique_ptr<span class="hl opt">&lt;</span>A_pimpl<span class="hl opt">&gt;</span> p<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre></p>
+
+<p>и <code>A.cpp</code>:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;A.h&quot;</span><span class="hl ppc"></span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;pimpl.h&quot;</span><span class="hl ppc"></span>
+
+A<span class="hl opt">::</span><span class="hl kwd">A</span><span class="hl opt">() :</span> <span class="hl kwd">p</span><span class="hl opt">(</span><span class="hl kwa">new</span> <span class="hl kwd">A_pimpl</span><span class="hl opt">()) {}</span>
+A<span class="hl opt">::~</span><span class="hl kwd">A</span><span class="hl opt">() {}</span>
+</pre>
 
 </div>
 
