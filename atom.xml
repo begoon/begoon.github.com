@@ -27,6 +27,136 @@
 <p><img src="http://demin.ws/images/blog/translate-ru-clean.png" /></p>
 
 <p>Вопрос: кто-нибудь может указать на какой-нибудь API в Хроме или готовое расширение, которым можно было автоматически править CSS? Я видел подобные расширения для Хрома, которыми можно менять и убирать элементы Gmail и Google Reader, но они были заточены именно под продукты Гугла. Универсального я никак не могу найти.</p>
+
+<h3>Обновление</h3>
+
+<p>Решение найдено. Надо поставить <a href="https://chrome.google.com/webstore/detail/oiaejidbmkiecgbjeifoejpgmdaleoha/related">Stylebot</a> и добавить в нем CSS-фильтр на адрес www.translate.ru. Текст CSS-добавки ниже. После этого страничка будет содержать только минимальный набор нужных элементов.</p>
+
+<pre class="hl">
+<span class="hl kwd">#contentBlock</span> header <span class="hl opt">{</span>
+    <span class="hl kwa">display</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#ctl00_SiteContent_templatesBlock</span> <span class="hl opt">{</span>
+    <span class="hl kwa">display</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#passportMenu</span> <span class="hl opt">{</span>
+    <span class="hl kwa">display</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#bott_link</span> <span class="hl opt">{</span>
+    <span class="hl kwa">display</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+topAdvert <span class="hl opt">{</span>
+    <span class="hl kwa">display</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#topAdvert</span> <span class="hl opt">{</span>
+    <span class="hl kwa">display</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#subscribeForm</span> <span class="hl opt">{</span>
+    <span class="hl kwa">display</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#adv4Blocks</span> <span class="hl opt">{</span>
+    <span class="hl kwa">display</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#bottomAdvSection</span> <span class="hl opt">{</span>
+    <span class="hl kwa">display</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#blogRSS</span> <span class="hl opt">{</span>
+    <span class="hl kwa">display</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#rightSection</span> <span class="hl opt">{</span>
+    <span class="hl kwa">display</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#viewMode</span> <span class="hl opt">{</span>
+    <span class="hl kwa">display</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#viewModeBlock</span> <span class="hl opt">{</span>
+    <span class="hl kwa">display</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#tmOther</span> <span class="hl opt">{</span>
+    <span class="hl kwa">display</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#resultBlock</span> <span class="hl opt">{</span>
+    <span class="hl kwa">float</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+    <span class="hl kwa">width</span><span class="hl opt">:</span> <span class="hl num">100</span><span class="hl opt">%;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#sourceBlock</span> <span class="hl opt">{</span>
+    <span class="hl kwa">float</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+    <span class="hl kwa">width</span><span class="hl opt">:</span> <span class="hl num">100</span><span class="hl opt">%;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#mainSection</span> <span class="hl opt">{</span>
+    <span class="hl kwa">margin</span><span class="hl opt">:</span> <span class="hl num">0px</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#contentBlock</span> <span class="hl opt">{</span>
+    <span class="hl kwa">border</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+    <span class="hl kwa">border-radius</span><span class="hl opt">:</span> <span class="hl num">0px</span><span class="hl opt">;</span>
+    <span class="hl kwa">box-shadow</span><span class="hl opt">:</span> <span class="hl num">0 0</span><span class="hl opt">;</span>
+    <span class="hl kwa">margin</span><span class="hl opt">:</span> <span class="hl num">0</span><span class="hl opt">;</span>
+    <span class="hl kwa">max-width</span><span class="hl opt">:</span> <span class="hl num">100</span><span class="hl opt">%;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#dir_set</span> <span class="hl opt">{</span>
+    <span class="hl kwa">margin</span><span class="hl opt">:</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#dmenu</span> <span class="hl opt">{</span>
+    <span class="hl kwa">float</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#btr_web</span> <span class="hl opt">{</span>
+    <span class="hl kwa">float</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwc">.selDiv</span> <span class="hl opt">{</span>
+    <span class="hl kwa">padding</span><span class="hl opt">:</span> <span class="hl num">0</span><span class="hl opt">;</span>
+    <span class="hl kwa">float</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#ctl00_SiteContent_rLang</span> <span class="hl opt">{</span>
+    <span class="hl kwa">min-width</span><span class="hl opt">:</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#ctl00_SiteContent_sLang</span> <span class="hl opt">{</span>
+    <span class="hl kwa">min-width</span><span class="hl opt">:</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">select</span> <span class="hl opt">{</span>
+    <span class="hl kwa">border</span><span class="hl opt">:</span> <span class="hl num">1px</span> solid<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwc">.wrapp</span> <span class="hl opt">{</span>
+    <span class="hl kwa">padding</span><span class="hl opt">:</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwd">#bTranslate</span> <span class="hl opt">{</span>
+    <span class="hl kwa">margin-left</span><span class="hl opt">:</span> <span class="hl num">1em</span><span class="hl opt">;</span>
+    <span class="hl kwa">padding</span><span class="hl opt">:</span> <span class="hl num">2px</span><span class="hl opt">;</span>
+    <span class="hl kwa">font-weight</span><span class="hl opt">:</span> normal<span class="hl opt">;</span>
+    <span class="hl kwa">background-color</span><span class="hl opt">:</span> <span class="hl num">#ccc</span><span class="hl opt">;</span>
+    <span class="hl kwa">-webkit-border-radius</span><span class="hl opt">:</span> <span class="hl num">2px</span><span class="hl opt">;</span>
+    <span class="hl kwa">color</span><span class="hl opt">:</span> <span class="hl num">#003333</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">body</span> <span class="hl opt">{</span>
+    <span class="hl kwa">background</span><span class="hl opt">:</span> none<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
 ]]></content>
   </entry>
   
