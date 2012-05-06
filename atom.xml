@@ -5,13 +5,300 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-03T23:47:00Z</updated>
+  <updated>2012-05-05T23:32:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Сравнение скорости atomic, spinlock и mutex]]></title>
+    <link href="http://demin.ws/blog/russian/2012/05/05/atomic-spinlock-mutex/"/>
+    <updated>2012-05-05T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/05/05/atomic-spinlock-mutex/</id>
+    <content type="html"><![CDATA[<p>Было мне интересно сравнить скорость разных вариантов блокировок: atomic, spinlock, mutex.</p>
+
+<h2>Без синхронизации</h2>
+
+<p>Для начала вариант вообще без какой-либо синхронизации:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;future&gt;</span>
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+
+<span class="hl kwc">volatile</span> <span class="hl kwb">int</span> value <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">loop</span><span class="hl opt">(</span><span class="hl kwb">bool</span> inc<span class="hl opt">,</span> <span class="hl kwb">int</span> limit<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Started &quot;</span> <span class="hl opt">&lt;&lt;</span> inc <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot; &quot;</span> <span class="hl opt">&lt;&lt;</span> limit <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> limit<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>inc<span class="hl opt">) {</span> 
+      <span class="hl opt">++</span>value<span class="hl opt">;</span>
+    <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
+      <span class="hl opt">--</span>value<span class="hl opt">;</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwc">auto</span> f <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">async</span><span class="hl opt">(</span>std<span class="hl opt">::</span>launch<span class="hl opt">::</span>async<span class="hl opt">,</span> std<span class="hl opt">::</span><span class="hl kwd">bind</span><span class="hl opt">(</span>loop<span class="hl opt">,</span> <span class="hl kwa">true</span><span class="hl opt">,</span> <span class="hl num">20000000</span><span class="hl opt">));</span>
+  <span class="hl kwd">loop</span><span class="hl opt">(</span><span class="hl kwa">false</span><span class="hl opt">,</span> <span class="hl num">10000000</span><span class="hl opt">);</span>
+  f<span class="hl opt">.</span><span class="hl kwd">wait</span><span class="hl opt">();</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> value <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Компилировать будем clang&rsquo;ом:</p>
+
+<pre><code>clang++ -std=c++11 -stdlib=libc++ -O3 -o test test.cpp &amp;&amp; time ./test
+</code></pre>
+
+<p>Запускаем:</p>
+
+<pre><code>SSttaarrtteedd  10  2100000000000000
+
+11177087
+
+real    0m0.070s
+user    0m0.089s
+sys 0m0.002s
+</code></pre>
+
+<p>Видно, что операции операторов инкремента и декремента неатомарные, и переменная <code>value</code> в конце содержит мусор.</p>
+
+<h2>Инструкция LOCK</h2>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;future&gt;</span>
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+
+<span class="hl kwc">volatile</span> <span class="hl kwb">int</span> value <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">loop</span><span class="hl opt">(</span><span class="hl kwb">bool</span> inc<span class="hl opt">,</span> <span class="hl kwb">int</span> limit<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Started &quot;</span> <span class="hl opt">&lt;&lt;</span> inc <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot; &quot;</span> <span class="hl opt">&lt;&lt;</span> limit <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> limit<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>inc<span class="hl opt">) {</span> 
+      <span class="hl kwa">asm</span><span class="hl opt">(</span><span class="hl str">&quot;LOCK&quot;</span><span class="hl opt">);</span>
+      <span class="hl opt">++</span>value<span class="hl opt">;</span>
+    <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
+      <span class="hl kwa">asm</span><span class="hl opt">(</span><span class="hl str">&quot;LOCK&quot;</span><span class="hl opt">);</span>
+      <span class="hl opt">--</span>value<span class="hl opt">;</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwc">auto</span> f <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">async</span><span class="hl opt">(</span>std<span class="hl opt">::</span>launch<span class="hl opt">::</span>async<span class="hl opt">,</span> std<span class="hl opt">::</span><span class="hl kwd">bind</span><span class="hl opt">(</span>loop<span class="hl opt">,</span> <span class="hl kwa">true</span><span class="hl opt">,</span> <span class="hl num">20000000</span><span class="hl opt">));</span>
+  <span class="hl kwd">loop</span><span class="hl opt">(</span><span class="hl kwa">false</span><span class="hl opt">,</span> <span class="hl num">10000000</span><span class="hl opt">);</span>
+  f<span class="hl opt">.</span><span class="hl kwd">wait</span><span class="hl opt">();</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> value <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+<span class="hl opt">}</span> 
+</pre>
+
+<p>Запускаем:</p>
+
+<pre><code>SSttaarrtteedd  10  2000000100000000
+
+10000000
+
+real    0m0.481s
+user    0m0.779s
+sys 0m0.005s
+</code></pre>
+
+<p>Тут уже <code>value</code> содержит правильное значение, но, конечно, это абсолютно непереносимый хак, заточенный под x86, и который, например, у меня работает только с <code>-O3</code> (с <code>-O2</code> падает с &ldquo;illegal instruction&rdquo;, так как между командой LOCK и инкрементом/декрементом компилятор сует что-то еще).</p>
+
+<h2>Atomic</h2>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;future&gt;</span>
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;boost/interprocess/detail/atomic.hpp&quot;</span><span class="hl ppc"></span>
+
+<span class="hl kwa">using namespace</span> boost<span class="hl opt">::</span>interprocess<span class="hl opt">::</span>ipcdetail<span class="hl opt">;</span>
+
+<span class="hl kwc">volatile</span> boost<span class="hl opt">::</span><span class="hl kwb">uint32_t</span> value <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">loop</span><span class="hl opt">(</span><span class="hl kwb">bool</span> inc<span class="hl opt">,</span> <span class="hl kwb">int</span> limit<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Started &quot;</span> <span class="hl opt">&lt;&lt;</span> inc <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot; &quot;</span> <span class="hl opt">&lt;&lt;</span> limit <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> limit<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>inc<span class="hl opt">) {</span> 
+      <span class="hl kwd">atomic_inc32</span><span class="hl opt">(&amp;</span>value<span class="hl opt">);</span>
+    <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
+      <span class="hl kwd">atomic_dec32</span><span class="hl opt">(&amp;</span>value<span class="hl opt">);</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwc">auto</span> f <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">async</span><span class="hl opt">(</span>std<span class="hl opt">::</span>launch<span class="hl opt">::</span>async<span class="hl opt">,</span> std<span class="hl opt">::</span><span class="hl kwd">bind</span><span class="hl opt">(</span>loop<span class="hl opt">,</span> <span class="hl kwa">true</span><span class="hl opt">,</span> <span class="hl num">20000000</span><span class="hl opt">));</span>
+  <span class="hl kwd">loop</span><span class="hl opt">(</span><span class="hl kwa">false</span><span class="hl opt">,</span> <span class="hl num">10000000</span><span class="hl opt">);</span>
+  f<span class="hl opt">.</span><span class="hl kwd">wait</span><span class="hl opt">();</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl kwd">atomic_read32</span><span class="hl opt">(&amp;</span>value<span class="hl opt">) &lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Запускаем:</p>
+
+<pre><code>SSttaarrtteedd  10  2100000000000000
+
+10000000
+
+real    0m0.457s
+user    0m0.734s
+sys 0m0.004s
+</code></pre>
+
+<p>Результат правильный, и время почти такое же, как и с командой <code>LOCK</code>. Неудивительно, так как <code>atomic</code> на самом тоже использует инструкцию <code>LOCK</code>, но просто точно гарантированным и проверенным образом.</p>
+
+<h2>Spinlock</h2>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;future&gt;</span>
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;boost/smart_ptr/detail/spinlock.hpp&quot;</span><span class="hl ppc"></span>
+
+boost<span class="hl opt">::</span>detail<span class="hl opt">::</span>spinlock lock<span class="hl opt">;</span>
+<span class="hl kwc">volatile</span> <span class="hl kwb">int</span> value <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">loop</span><span class="hl opt">(</span><span class="hl kwb">bool</span> inc<span class="hl opt">,</span> <span class="hl kwb">int</span> limit<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Started &quot;</span> <span class="hl opt">&lt;&lt;</span> inc <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot; &quot;</span> <span class="hl opt">&lt;&lt;</span> limit <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> limit<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    std<span class="hl opt">::</span>lock_guard<span class="hl opt">&lt;</span>boost<span class="hl opt">::</span>detail<span class="hl opt">::</span>spinlock<span class="hl opt">&gt;</span> <span class="hl kwd">guard</span><span class="hl opt">(</span>lock<span class="hl opt">);</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>inc<span class="hl opt">) {</span> 
+      <span class="hl opt">++</span>value<span class="hl opt">;</span>
+    <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
+      <span class="hl opt">--</span>value<span class="hl opt">;</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwc">auto</span> f <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">async</span><span class="hl opt">(</span>std<span class="hl opt">::</span>launch<span class="hl opt">::</span>async<span class="hl opt">,</span> std<span class="hl opt">::</span><span class="hl kwd">bind</span><span class="hl opt">(</span>loop<span class="hl opt">,</span> <span class="hl kwa">true</span><span class="hl opt">,</span> <span class="hl num">20000000</span><span class="hl opt">));</span>
+  <span class="hl kwd">loop</span><span class="hl opt">(</span><span class="hl kwa">false</span><span class="hl opt">,</span> <span class="hl num">10000000</span><span class="hl opt">);</span>
+  f<span class="hl opt">.</span><span class="hl kwd">wait</span><span class="hl opt">();</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> value <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Запускаем:</p>
+
+<pre><code>SSttaarrtteedd  10  2100000000000000
+
+10000000
+
+real    0m0.541s
+user    0m0.675s
+sys 0m0.089s
+</code></pre>
+
+<p>Немного медленнее, но не на много.</p>
+
+<h2>Mutex</h2>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;future&gt;</span>
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+
+std<span class="hl opt">::</span>mutex mutex<span class="hl opt">;</span>
+<span class="hl kwc">volatile</span> <span class="hl kwb">int</span> value <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">loop</span><span class="hl opt">(</span><span class="hl kwb">bool</span> inc<span class="hl opt">,</span> <span class="hl kwb">int</span> limit<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Started &quot;</span> <span class="hl opt">&lt;&lt;</span> inc <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot; &quot;</span> <span class="hl opt">&lt;&lt;</span> limit <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> limit<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    std<span class="hl opt">::</span>lock_guard<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>mutex<span class="hl opt">&gt;</span> <span class="hl kwd">guard</span><span class="hl opt">(</span>mutex<span class="hl opt">);</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>inc<span class="hl opt">) {</span> 
+      <span class="hl opt">++</span>value<span class="hl opt">;</span>
+    <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
+      <span class="hl opt">--</span>value<span class="hl opt">;</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwc">auto</span> f <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">async</span><span class="hl opt">(</span>std<span class="hl opt">::</span>launch<span class="hl opt">::</span>async<span class="hl opt">,</span> std<span class="hl opt">::</span><span class="hl kwd">bind</span><span class="hl opt">(</span>loop<span class="hl opt">,</span> <span class="hl kwa">true</span><span class="hl opt">,</span> <span class="hl num">20000000</span><span class="hl opt">));</span>
+  <span class="hl kwd">loop</span><span class="hl opt">(</span><span class="hl kwa">false</span><span class="hl opt">,</span> <span class="hl num">10000000</span><span class="hl opt">);</span>
+  f<span class="hl opt">.</span><span class="hl kwd">wait</span><span class="hl opt">();</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> value <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Запускаем:</p>
+
+<pre><code>SSttaarrtteedd  10  2010000000000000
+
+10000000
+
+real    0m25.229s
+user    0m7.011s
+sys 0m22.667s
+</code></pre>
+
+<p>Вот тут, конечно, реально медленнее.</p>
+
+<h2>Сравнительная табличка</h2>
+
+<table>
+<thead>
+<tr>
+<td><strong>Метод</strong></td>
+<td><strong>Время (сек.)</strong></td>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>Без синхронизации</td>
+<td>0.070</td>
+</tr>
+
+<tr>
+<td>LOCK</td>
+<td>0.481</td>
+</tr>
+
+<tr>
+<td>Atomic</td>
+<td>0.457</td>
+</tr>
+
+<tr>
+<td>Spinlock</td>
+<td>0.541</td>
+</tr>
+
+<tr>
+<td>Mutex</td>
+<td>22.667</td>
+</tr>
+</tbody>
+</table>
+
+<p>Конечно, очень многое зависит от платформы и компилятора (я тестировал на Mac Air и clang). Но лично я, например, получил интересное наблюдение, что spinlock, несмотря на значительную сложную реализации, судя по сгенерированному кому, почти не уступает atomic&rsquo;у.</p>
+
+<p>Жалко, что мой clang пока не поддерживает <code>atomic</code>, и пришлось использовать boost.</p>
+
+<h3>P.S.</h3>
+
+<p>В C++ 2011 гарантируется, что при многопоточном использовании стандартных потоков гарантируется отсутствие data race, но неперемешивание вывода не гарантируется.</p>
+
+<blockquote>
+<p>Concurrent access to a synchronized (§27.5.3.4) standard iostream object’s formatted and unformatted input (§27.7.2.1) and output (§27.7.3.1) functions or a standard C stream by multiple threads shall not result in a data race (§1.10). [ Note: Users must still synchronize concurrent use of these objects and streams by multiple threads if they wish to avoid interleaved characters. — end note ]</p>
+</blockquote>
+
+<h3>Посты по теме</h3>
+
+<ul>
+<li><a href="http://demin.ws/blog/russian/2010/12/27/atomicy-of-int-and-pointer/">Атомарность типа int и указателя</a></li>
+</ul>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Pimpl и умные указатели]]></title>
