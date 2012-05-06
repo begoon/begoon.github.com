@@ -30,7 +30,7 @@
 
 <h3>Обновление</h3>
 
-<p>Решение найдено. Надо поставить <a href="https://chrome.google.com/webstore/detail/oiaejidbmkiecgbjeifoejpgmdaleoha/related">Stylebot</a> и добавить в нем CSS-фильтр на адрес www.translate.ru. Текст CSS-добавки ниже. После этого страничка будет содержать только минимальный набор нужных элементов.</p>
+<p>Решение найдено. Надо поставить <a href="https://chrome.google.com/webstore/detail/oiaejidbmkiecgbjeifoejpgmdaleoha/">Stylebot</a> и добавить в нем CSS-фильтр на адрес www.translate.ru. Текст CSS-добавки ниже. После этого страничка будет содержать только минимальный набор нужных элементов.</p>
 
 <pre class="hl">
 <span class="hl kwd">#contentBlock</span> header <span class="hl opt">{</span>

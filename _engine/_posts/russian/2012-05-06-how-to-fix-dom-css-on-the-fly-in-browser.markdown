@@ -24,7 +24,7 @@ categories:
 
 Решение найдено. Надо поставить [Stylebot][] и добавить в нем CSS-фильтр на адрес www.translate.ru. Текст CSS-добавки ниже. После этого страничка будет содержать только минимальный набор нужных элементов.
 
-[Stylebot]: https://chrome.google.com/webstore/detail/oiaejidbmkiecgbjeifoejpgmdaleoha/related
+[Stylebot]: https://chrome.google.com/webstore/detail/oiaejidbmkiecgbjeifoejpgmdaleoha/
 
 {% codeblock lang:css %}
 #contentBlock header {
