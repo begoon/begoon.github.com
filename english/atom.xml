@@ -66,7 +66,7 @@ sys 0m0.002s
 
 <p>Obviously, the increment and decrement operations aren&rsquo;t atomic, and the <code>value</code> variable contains garbage at the end.</p>
 
-<h2>Инструкция LOCK</h2>
+<h2>LOCK</h2>
 
 <pre class="hl">
 <span class="hl ppc">#include &lt;future&gt;</span>

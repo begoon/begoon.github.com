@@ -55,7 +55,7 @@ Run:
 
 Obviously, the increment and decrement operations aren't atomic, and the `value` variable contains garbage at the end.
 
-## Инструкция LOCK
+## LOCK
 
 {% codeblock lang:cpp %}
 #include <future>
