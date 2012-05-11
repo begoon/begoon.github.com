@@ -8,6 +8,7 @@ title: "Статьи"
 
 **Хабр**
 
+* [RetroBSD on Maximite][]
 * [Многопоточный QuickSort на С++ 2011][]
 * [TCP/IP proxy на Go][]
 * [Goblog: Самодельный статический движок для блога на Go][]
@@ -30,6 +31,7 @@ title: "Статьи"
 
 [Интервью проекту OpenQuality.ru]: http://experience.openquality.ru/alexander-demin-interview/
 
+[RetroBSD on Maximite]: http://habrahabr.ru/hub/diy/posts/
 [Многопоточный QuickSort на С++ 2011]: http://habrahabr.ru/post/143055/
 [TCP/IP proxy на Go]: http://habrahabr.ru/post/142527/
 [Goblog: Самодельный статический движок для блога на Go]: http://habrahabr.ru/post/142287/
