@@ -5,13 +5,56 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-05T23:32:00Z</updated>
+  <updated>2012-05-11T20:48:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RetroBSD on Maximite]]></title>
+    <link href="http://demin.ws/blog/english/2012/05/11/retrobsd-on-maximite/"/>
+    <updated>2012-05-11T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/05/11/retrobsd-on-maximite/</id>
+    <content type="html"><![CDATA[<p>I <a href="http://demin.ws/blog/english/2012/01/19/maximite-kit/">wrote</a> how I built Maximite.</p>
+
+<p>Yesterday I was in mood and decided to install <a href="http://retrobsd.org/">RetroBSD</a> there.</p>
+
+<p>RetroBSD is a real UNIX, derived from 2.11BSD and intended for embedded systems with fixed memory mapping. Its target platform is Microchip PIC32 microcontroller with 128KB RAM and 512KB of Flash, which can provide flexible RAM partitioning between user and kernel modes.</p>
+
+<p>RetroBSD implements real preemptive multitasking and memory protection using hardware capabilities. It provides standard POSIX API (fork, exec, wait4, etc.), plus it may have a C compiler in the system allowing on-board development. The kernel is burned into the chip and the filesystem is loaded from an SD-card.</p>
+
+<p>RetroBSD works not only on Maximite, but also on a few alternative boards based on PIC32 (chipKIT Max32, Sparkfun UBW32, Microchip Explorer 16, Microchip PIC32 USB/Ethernet Starter Kit, Olimex Duinomite, Duinomite-Mini and Duinomite-Mega, eflightworks).</p>
+
+<p>After a little fiddling around with the <a href="http://code.google.com/p/mphidflash/">bootloader</a> and <a href="http://retrobsd.org/wiki/installation-2/">library dependencies</a> I managed to build the binaries and upload them onto the device.</p>
+
+<p>A solemn moment of powering on&hellip;</p>
+
+<p><img src="http://demin.ws/images/blog/retrobsd-on-maximite-login.png" alt="" />
+</p>
+
+<p>This is UNIX!</p>
+
+<p>Of course, games first. The Worm.</p>
+
+<p><img src="http://demin.ws/images/blog/retrobsd-on-maximite-worm.png" alt="" />
+</p>
+
+<p>Canfield</p>
+
+<p><img src="http://demin.ws/images/blog/retrobsd-on-maximite-canfield.png" alt="" />
+</p>
+
+<p>Now a bit of programming &ndash; Forth.</p>
+
+<p><img src="http://demin.ws/images/blog/retrobsd-on-maximite-forth.png" alt="" />
+</p>
+
+<p>At the moment RetroBSD only communicates via the serial port and doesn&rsquo;t support VGA and PS/2 interfaces provided by Maximite, but Serge Vakulenko, the author, has their support in the roadmap.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Comparing the performance of atomic, spinlock and mutex]]></title>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>RetroBSD на Maximite</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>RetroBSD на Maximite</h1>
+<div id="post">
+  <p>Я <a href="/blog/russian/2012/01/19/maximite-kit/">уже писал</a>, как собирал Maximite.</p>
+
+<p>Вчера как-то был настрой, и решил я поставить туда <a href="http://retrobsd.org/">RetroBSD</a>.</p>
+
+<p>RetroBSD &ndash; это настоящий UNIX, являющийся наследником 2.11BSD и предназначенный для встраиваемых систем с фиксированной структурой памяти. На текущий момент работает на микроконтроллере Microchip PIC32 с 128 килобайтами памяти и 512 килобайтами Flash. Данный процессор позволяет разделять адресное пространство ядра и пользовательских процессов.</p>
+
+<p>RetroBSD обеспечивает защиту памяти ядра, используя аппаратные возможности микропроцессора, полноценную вытесняющую многозадачность, POSIX API (fork, exec, wait4 и т.д.). Можно писать программы прямо на устройстве, так как есть компилятор С. Ядро системы прошивается в кристалл, а файловая система загружается с SD-карты.</p>
+
+<p>RetroBSD поддерживает не только аппаратуру Maximite, но и ряд альтернативных устройств на базе PIC32 (chipKIT Max32, Sparkfun UBW32, Microchip Explorer 16, Microchip PIC32 USB/Ethernet Starter Kit, Olimex Duinomite, Duinomite-Mini и Duinomite-Mega, eflightworks).</p>
+
+<p>После небольшой возни с <a href="http://code.google.com/p/mphidflash/">программой-загрузчиком</a> и <a href="http://retrobsd.org/wiki/installation-2/">установкой необходимых библиотек</a>, получилось все собрать и залить на устройство.</p>
+
+<p>Торжественный момент включения, и&hellip;</p>
+
+<p><img src="/images/blog/retrobsd-on-maximite-login.png" alt="" />
+</p>
+
+<p>Это UNIX!</p>
+
+<p>Сначала, конечно, игры. Питон, он же Червяк.</p>
+
+<p><img src="/images/blog/retrobsd-on-maximite-worm.png" alt="" />
+</p>
+
+<p>Пасьянс:</p>
+
+<p><img src="/images/blog/retrobsd-on-maximite-canfield.png" alt="" />
+</p>
+
+<p>Я теперь немного посерьезнее &ndash; Forth.</p>
+
+<p><img src="/images/blog/retrobsd-on-maximite-forth.png" alt="" />
+</p>
+
+<p>На данный момент RetroBSD работает только через последовательный порт и не поддерживает VGA и PS/2, но у Сергея Вакуленко, автора RetroBSD, есть планы написать эти драйвера.</p>
+
+</div>
+
+<hr />
+
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/05/11/retrobsd-on-maximite/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/05/11/retrobsd-on-maximite/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

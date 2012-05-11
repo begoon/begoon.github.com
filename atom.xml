@@ -5,13 +5,56 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-06T13:46:00Z</updated>
+  <updated>2012-05-11T20:48:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RetroBSD на Maximite]]></title>
+    <link href="http://demin.ws/blog/russian/2012/05/11/retrobsd-on-maximite/"/>
+    <updated>2012-05-11T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/05/11/retrobsd-on-maximite/</id>
+    <content type="html"><![CDATA[<p>Я <a href="http://demin.ws/blog/russian/2012/01/19/maximite-kit/">уже писал</a>, как собирал Maximite.</p>
+
+<p>Вчера как-то был настрой, и решил я поставить туда <a href="http://retrobsd.org/">RetroBSD</a>.</p>
+
+<p>RetroBSD &ndash; это настоящий UNIX, являющийся наследником 2.11BSD и предназначенный для встраиваемых систем с фиксированной структурой памяти. На текущий момент работает на микроконтроллере Microchip PIC32 с 128 килобайтами памяти и 512 килобайтами Flash. Данный процессор позволяет разделять адресное пространство ядра и пользовательских процессов.</p>
+
+<p>RetroBSD обеспечивает защиту памяти ядра, используя аппаратные возможности микропроцессора, полноценную вытесняющую многозадачность, POSIX API (fork, exec, wait4 и т.д.). Можно писать программы прямо на устройстве, так как есть компилятор С. Ядро системы прошивается в кристалл, а файловая система загружается с SD-карты.</p>
+
+<p>RetroBSD поддерживает не только аппаратуру Maximite, но и ряд альтернативных устройств на базе PIC32 (chipKIT Max32, Sparkfun UBW32, Microchip Explorer 16, Microchip PIC32 USB/Ethernet Starter Kit, Olimex Duinomite, Duinomite-Mini и Duinomite-Mega, eflightworks).</p>
+
+<p>После небольшой возни с <a href="http://code.google.com/p/mphidflash/">программой-загрузчиком</a> и <a href="http://retrobsd.org/wiki/installation-2/">установкой необходимых библиотек</a>, получилось все собрать и залить на устройство.</p>
+
+<p>Торжественный момент включения, и&hellip;</p>
+
+<p><img src="http://demin.ws/images/blog/retrobsd-on-maximite-login.png" alt="" />
+</p>
+
+<p>Это UNIX!</p>
+
+<p>Сначала, конечно, игры. Питон, он же Червяк.</p>
+
+<p><img src="http://demin.ws/images/blog/retrobsd-on-maximite-worm.png" alt="" />
+</p>
+
+<p>Пасьянс:</p>
+
+<p><img src="http://demin.ws/images/blog/retrobsd-on-maximite-canfield.png" alt="" />
+</p>
+
+<p>Я теперь немного посерьезнее &ndash; Forth.</p>
+
+<p><img src="http://demin.ws/images/blog/retrobsd-on-maximite-forth.png" alt="" />
+</p>
+
+<p>На данный момент RetroBSD работает только через последовательный порт и не поддерживает VGA и PS/2, но у Сергея Вакуленко, автора RetroBSD, есть планы написать эти драйвера.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Как подкорректировать DOM/CSS налету в браузере?]]></title>
