@@ -5,13 +5,40 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-11T20:48:00Z</updated>
+  <updated>2012-05-12T19:49:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Суета вокруг REST или Richardson L., Ruby S., "RESTful Web Services"]]></title>
+    <link href="http://demin.ws/blog/russian/2012/05/12/restful-web-services/"/>
+    <updated>2012-05-12T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/05/12/restful-web-services/</id>
+    <content type="html"><![CDATA[<p>В упор не пойму, как можно писать книги про REST. Зачем мучить клавиатуру и рожать аж целую книгу про тему, которую можно выразить в паре предложений?</p>
+
+<p><a href="http://shop.oreilly.com/product/9780596529260.do">Leonard Richardson, Sam Ruby, &ldquo;RESTful Web Services&rdquo;</a></p>
+
+<p><img src="http://demin.ws/images/covers/english/restful-web-services-cover.gif" /></p>
+
+<p>Итак, если опустить нудное описание HTTP библиотек Ruby, Python, Java и curl, еще более нудное описание форматов HTML4, XHTML, HTML5, Atom, XML, чуть менее нудное описание нескольких Ajax-библиотек, крайне нудное описание стандартных response-кодов HTTP, нереально нудное описание стандартных заголовков HTTP, то суть книги можно выразить весьма кратко. Вот REST в моем превратном, но кратком изложении.</p>
+
+<p>При проектировании web-сервиса следует:</p>
+
+<ol>
+<li>(Самое главное) При проектировании структуры URL&rsquo;ов вложить в нее максимальное количество смысла, представляя это как некий язык запросов к вашим данным, читаемый и понимаемый <strong>человеком</strong>. Например, вместо <code>http://domain/engine.php?func=123&amp;id=test</code> для получения данных о пользователе, должно быть <code>http://domain/users/test</code>.</li>
+<li>Максимально полно использовать стандартные команды и коды ответов HTTP. Не только GET и POST, но и, например, PUT, DELETE, OPTION, HEAD, и не только коды ответа 200 и 500, а <a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes">множество других</a>.</li>
+<li>При проектировании HTTP-ответов следует добавлять в ответ информацию о возможных переходах из текущего состояния сессии в другие состояния.</li>
+</ol>
+
+<p>Все! Вы знаете содержимое этой книги.</p>
+
+<p>Редкий случай, когда ну очень хочется попросить деньги назад за книгу. Продать ее не получится, ибо электронная она.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RetroBSD на Maximite]]></title>

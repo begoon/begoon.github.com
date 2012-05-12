@@ -5,13 +5,40 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-11T20:48:00Z</updated>
+  <updated>2012-05-12T19:49:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Fuss about REST, or Richardson L., Ruby S., &#34;RESTful Web Services&#34;]]></title>
+    <link href="http://demin.ws/blog/english/2012/05/12/restful-web-services/"/>
+    <updated>2012-05-12T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/05/12/restful-web-services/</id>
+    <content type="html"><![CDATA[<p>Kill me, but I don&rsquo;t understand why people write books about REST. Why you torture yourself, the keyboard, and finally your readers with a topic which can be explained in a few sentences?</p>
+
+<p><a href="http://shop.oreilly.com/product/9780596529260.do">Leonard Richardson, Sam Ruby, &ldquo;RESTful Web Services&rdquo;</a></p>
+
+<p><img src="http://demin.ws/images/covers/english/restful-web-services-cover.gif" /></p>
+
+<p>So, skipping a tedious chapter of HTTL libraries in Ruby, Python, Java and curl, more tedious chapter on HTML4, XHTML, HTML5, Atom, XML, a little less tedious chapter about a couple of Ajax libraries, extremely tedious chapter with standard HTTP response codes, unrealistically tedious chapter about standard HTTP headers, the essence of the book can be expressed very briefly. This is my summary of the entire book.</p>
+
+<p>Developing a web-service you should follow some recommendations:</p>
+
+<ol>
+<li>(Main one) Designing a URL structure you put as much meaning into there as possible. You should treat URLs as a query language for your data, which is readable and writable by <strong>human</strong>. For example, instead of <code>http://domain/engine.php?func=123&amp;id=test</code> for get user details it should be something like <code>http://domain/users/test</code>.</li>
+<li>Use all standard HTTP commands and response codes: not only GET and POST, but also PUT, DELETE, OPTION, HEAD, and not only 200 and 500, but the range of the standard <a href="http://en.wikipedia.org/wiki/List_of_HTTP_status_codes">HTTP response codes</a>.</li>
+<li>HTTP response should contain links to other resources reachable from the current one.</li>
+</ol>
+
+<p>That&rsquo;s it! Now you know the whole book.</p>
+
+<p>This is a rare situation when I&rsquo;m seriously considering money back. Unfortunately I cannot re-sell because it&rsquo;s a bloody e-book.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[RetroBSD on Maximite]]></title>
