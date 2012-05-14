@@ -27,7 +27,7 @@ The [project is open-sourced][Maximite project] (schematics, PCB artwork, source
 
 Even if quickly flip through the [documentation][], no doubts - a list features is impressive. All peripherals are available directly from BASIC.
 
-[documentation]: http://geoffg.net/Downloads/Maximite/Maximite%20User%20Manual%20V3.0.pdf
+[documentation]: http://geoffg.net/maximite.html#Downloads
 
 Programs and data can be stored on a SD card. If there is a "AUTORUN.BAS" file on the card, BASIC will run at the start.
 

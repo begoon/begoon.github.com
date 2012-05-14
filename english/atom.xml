@@ -1843,7 +1843,7 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
 
 <p>The <a href="http://geoffg.net/maximite.html">project is open-sourced</a> (schematics, PCB artwork, sources).</p>
 
-<p>Even if quickly flip through the <a href="http://geoffg.net/Downloads/Maximite/Maximite%20User%20Manual%20V3.0.pdf">documentation</a>, no doubts - a list features is impressive. All peripherals are available directly from BASIC.</p>
+<p>Even if quickly flip through the <a href="http://geoffg.net/maximite.html#Downloads">documentation</a>, no doubts - a list features is impressive. All peripherals are available directly from BASIC.</p>
 
 <p>Programs and data can be stored on a SD card. If there is a &ldquo;AUTORUN.BAS&rdquo; file on the card, BASIC will run at the start.</p>
 
