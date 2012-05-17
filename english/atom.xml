@@ -5,13 +5,38 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-13T13:52:00Z</updated>
+  <updated>2012-05-17T07:48:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Why a getter doesn&#39;t need a &#34;get&#34; prefix]]></title>
+    <link href="http://demin.ws/blog/english/2012/05/17/why-getter-does-not-need-get-prefix/"/>
+    <updated>2012-05-17T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/05/17/why-getter-does-not-need-get-prefix/</id>
+    <content type="html"><![CDATA[<h3>Idea</h3>
+
+<p>Newer use a <code>get</code> prefix for getters.</p>
+
+<h3>Why?</h3>
+
+<p>Usually we consider member functions to be getters if they simply return a reference or pointer to a private member, just for the sake of data incapsulation. Such functions don&rsquo;t do anything really, they have no payload.</p>
+
+<p>So, there is nothing requiring a &ldquo;get&rdquo; verb to describe its meaning. The getter is just an alias of a member. The &ldquo;get&rdquo; prefix is only required when a function does a <strong>real</strong> data transformation or computation, for instance, <code>getLastTick()</code> or <code>getFullUserName()</code>. But it is even better here to replace &ldquo;get&rdquo; by something more meaningful, <code>extractLastTick()</code> and <code>buildFullUserName()</code>.</p>
+
+<p>&#9632;</p>
+
+<p>Related posts:</p>
+
+<ul>
+<li><a href="http://demin.ws/blog/english/2010/11/09/naming-convension-for-getters-and-setters-in-cpp/">Naming convension for getters and setters in C++</a></li>
+</ul>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Standing office desk]]></title>

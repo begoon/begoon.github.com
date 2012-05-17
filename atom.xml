@@ -5,13 +5,38 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-13T13:52:00Z</updated>
+  <updated>2012-05-17T07:48:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Почему геттеру не нужен префикс "get"]]></title>
+    <link href="http://demin.ws/blog/russian/2012/05/17/why-getter-does-not-need-get-prefix/"/>
+    <updated>2012-05-17T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/05/17/why-getter-does-not-need-get-prefix/</id>
+    <content type="html"><![CDATA[<h3>Идея</h3>
+
+<p>Никогда не использовать префикс <code>get</code> для функций-getter&rsquo;ов.</p>
+
+<h3>Почему?</h3>
+
+<p>Обычно геттерами называют микро-функции или методы, которые элементарно возвращают ссылку или указатель на член класса, просто ради идеи не давать прямой доступ к нему. В них обычно нет какой логики.</p>
+
+<p>Получается, эта функция, &ldquo;геттер&rdquo;, ничего не делает, что может описываться глаголом <code>get</code>. Геттер &ndash; это просто синоним члена класса. Смысловая нагрузка слова <code>get</code> тут начисто отсутствует. Префикс <code>get</code> нужен только если под ним скрывается <strong>реальное</strong> действие или вычисление, например, <code>getLastTick()</code> или <code>getFullUserName()</code>. А еще лучше заменить слово <code>get</code> на что-нибудь более информативное: <code>extractLastTick()</code> или <code>buildFullUserName()</code>.</p>
+
+<p>&#9632;</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="http://demin.ws/blog/russian/2010/11/09/how-to-name-getters-and-setters/">Как называть getter&rsquo;ы и setter&rsquo;ы</a></li>
+</ul>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Стоячее офисное место]]></title>
