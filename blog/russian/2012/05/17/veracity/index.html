@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Veracity - альтернатива git, Mercurial, Bazaar и fossil</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Veracity - альтернатива git, Mercurial, Bazaar и fossil</h1>
+<div id="post">
+  <p>Некоторое время назад я услышал про &ldquo;еще одну&rdquo; распределенную систему контроля версий, называемую <a href="http://veracity-scm.com">Veracity</a>. Заявлялось, что это достойный кандидат побиться со всеми ведущими DVCS.</p>
+
+<p>Итак, сразу же пузомерка с официального сайта.</p>
+
+<p><img src="/images/blog/veracity-comparison.png" alt="" />
+</p>
+
+<p>Мне все-таки хотелось понять, что у них тут есть такого, ради чего они замутили этот проект. Я посмотрел их презентацию с OSCON 2011:</p>
+
+<p>#1</p>
+
+<iframe width="560" height="420" src="http://www.youtube.com/embed/1qCIff0N3Yw?color=white&theme=light"></iframe>
+
+<p>#2</p>
+
+<iframe width="560" height="420" src="http://www.youtube.com/embed/iqDu7s7hSsg?color=white&theme=light"></iframe>
+
+<p>#3</p>
+
+<iframe width="560" height="420" src="http://www.youtube.com/embed/HH8nFadt9SA?color=white&theme=light"></iframe>
+
+<p>Вот мои субъективные заметки:</p>
+
+<ul>
+<li>Явный отказ от GPL (камень в огород git, hg, bazaar). Говорят, это более привлекательно для корпоративного использования.</li>
+<li>Возможность использования внешнего хранилища для репозитория (например, MSSQL или Oracle). Опять таки, это может порадовать корпорации, который любят хранить данные так, как они хотят.</li>
+<li>File locks (сомнительная возможность в целом, по мне).</li>
+<li>Bug tracking (fossil это тоже умеет).</li>
+<li>Build tracking (вроде как уникальная (пока) возможность).</li>
+<li>Система написана на чистом С и изначально поддерживает Windows, Linux и Mac.</li>
+</ul>
+
+<p>А вот пара принципиальных решений:</p>
+
+<ul>
+<li>Нет и не будет индекса как в git.</li>
+<li>Нет и не будет какой-либо возможности менять историю (то есть даже опечатку в описании последнего коммита исправить нельзя).</li>
+</ul>
+
+<p>Лично для меня эти два пункта являются ключевыми, и они не вписываются в мой стиль использования DVCS (именно по этой причине я отказался от fossil для своих проектов, хоть мне и очень нравилось иметь локальные Wiki и баг-трекер).</p>
+
+<p>В итоге получается, ключевыми возможностями остаются &ldquo;не-GPL&rdquo; и внешние хранилища. То есть явная атака на корпоративное использование. Кстати, у основателя компании (Eric Sink) уже была компания и продукт по контролю версий, которые был куплены Майкрософтом.</p>
+
+<p>Итак, мой субъективный вывод: это попытка привнести DVCS в мир корпораций.</p>
+
+<h3>Традиционная рубрика &ldquo;Чтобы два раза не вставать&rdquo;</h3>
+
+<p>Eric Sink написал книгу &ldquo;<a href="http://www.ericsink.com/vcbe/">Version Control by Example</a>&rdquo;, в которой есть более менее честное сравнение Veracity с основными VCS. Я пролистал ее за полчасика. Наткнулся на мега-цитату, суть которой яростно исповедую и активно продвигаю вокруг (выделение жирным мое).</p>
+
+<blockquote>
+<p>11. Don’t comment out code</p>
+
+<p>When using a VCS, you shouldn’t comment out a big section of code simply because you think you might need it someday. <strong>Just delete it</strong>. The previous version of the file is still in your version control history, so you can always get it back if and when you need it. This practice is particularly important for web developers, where the commented-out stuff may adversely affect your page load times.</p>
+</blockquote>
+
+</div>
+
+<hr />
+
+
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/05/17/veracity/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/05/17/veracity/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

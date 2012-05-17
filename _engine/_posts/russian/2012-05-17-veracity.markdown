@@ -1,0 +1,64 @@
+---
+layout: post
+title: "Veracity - альтернатива git, Mercurial, Bazaar и fossil"
+language: russian
+date: 2012-05-17 20:10
+comments: true
+categories: 
+- bazaar
+- git
+- mercurial
+- russian
+- veracity
+---
+Некоторое время назад я услышал про "еще одну" распределенную систему контроля версий, называемую [Veracity][]. Заявлялось, что это достойный кандидат побиться со всеми ведущими DVCS.
+
+[Veracity]: http://veracity-scm.com
+
+Итак, сразу же пузомерка с официального сайта.
+
+![](/images/blog/veracity-comparison.png)
+
+Мне все-таки хотелось понять, что у них тут есть такого, ради чего они замутили этот проект. Я посмотрел их презентацию с OSCON 2011:
+
+#1
+
+{% youtube 1qCIff0N3Yw %}
+
+#2
+
+{% youtube iqDu7s7hSsg %}
+
+#3
+
+{% youtube HH8nFadt9SA %}
+
+Вот мои субъективные заметки:
+
+* Явный отказ от GPL (камень в огород git, hg, bazaar). Говорят, это более привлекательно для корпоративного использования.
+* Возможность использования внешнего хранилища для репозитория (например, MSSQL или Oracle). Опять таки, это может порадовать корпорации, который любят хранить данные так, как они хотят.
+* File locks (сомнительная возможность в целом, по мне).
+* Bug tracking (fossil это тоже умеет).
+* Build tracking (вроде как уникальная (пока) возможность).
+* Система написана на чистом С и изначально поддерживает Windows, Linux и Mac.
+
+А вот пара принципиальных решений:
+
+* Нет и не будет индекса как в git.
+* Нет и не будет какой-либо возможности менять историю (то есть даже опечатку в описании последнего коммита исправить нельзя).
+
+Лично для меня эти два пункта являются ключевыми, и они не вписываются в мой стиль использования DVCS (именно по этой причине я отказался от fossil для своих проектов, хоть мне и очень нравилось иметь локальные Wiki и баг-трекер).
+
+В итоге получается, ключевыми возможностями остаются "не-GPL" и внешние хранилища. То есть явная атака на корпоративное использование. Кстати, у основателя компании (Eric Sink) уже была компания и продукт по контролю версий, которые был куплены Майкрософтом.
+
+Итак, мой субъективный вывод: это попытка привнести DVCS в мир корпораций.
+
+### Традиционная рубрика "Чтобы два раза не вставать"
+
+Eric Sink написал книгу "[Version Control by Example][]", в которой есть более менее честное сравнение Veracity с основными VCS. Я пролистал ее за полчасика. Наткнулся на мега-цитату, суть которой яростно исповедую и активно продвигаю вокруг (выделение жирным мое).
+
+> 11\. Don’t comment out code
+> 
+> When using a VCS, you shouldn’t comment out a big section of code simply because you think you might need it someday. **Just delete it**. The previous version of the file is still in your version control history, so you can always get it back if and when you need it. This practice is particularly important for web developers, where the commented-out stuff may adversely affect your page load times.
+
+[Version Control by Example]: http://www.ericsink.com/vcbe/
