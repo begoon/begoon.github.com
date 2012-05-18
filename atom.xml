@@ -5,13 +5,41 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-17T20:10:00Z</updated>
+  <updated>2012-05-18T15:37:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Печать std::string через printf() в Visual Studio]]></title>
+    <link href="http://demin.ws/blog/russian/2012/05/18/printing-std-string-via-printf-in-visual-studio/"/>
+    <updated>2012-05-18T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/05/18/printing-std-string-via-printf-in-visual-studio/</id>
+    <content type="html"><![CDATA[<p>В ходе нескольких code review уже неоднократно встречаю вот такое:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;string&gt;</span>
+<span class="hl ppc">#include &lt;cstdio&gt;</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  std<span class="hl opt">::</span>string s <span class="hl opt">=</span> <span class="hl str">&quot;12345678&quot;</span><span class="hl opt">;</span>
+  std<span class="hl opt">::</span><span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;[%s]</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> s<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Явная опечатка с пропущеным вызовом <code>s.c_str()</code>. Но странно, что Студия, даже с <code>/Wall</code> не дает никакого предупрежнения, и более того &ndash; код не падает. Но вот <code>gcc</code> предупреждает:</p>
+
+<pre><code>warning: cannot pass objects of non-POD type 'struct std::string' through '...'; call will abort at runtime
+</code></pre>
+
+<p>и программа при запуске благополучно падает с <code>Illegal instruction</code>.</p>
+
+<p>Неужели в Студии специально сделали, что работал такое глюк просто потому, что это слишком распространенная опечатка?</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Veracity - альтернатива git, Mercurial, Bazaar и fossil]]></title>

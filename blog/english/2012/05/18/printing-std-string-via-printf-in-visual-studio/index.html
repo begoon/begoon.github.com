@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Printing std::string via printf() in Visual Studio</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Printing std::string via printf() in Visual Studio</h1>
+<div id="post">
+  <p>So often in code reviews I see something like this:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;string&gt;</span>
+<span class="hl ppc">#include &lt;cstdio&gt;</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  std<span class="hl opt">::</span>string s <span class="hl opt">=</span> <span class="hl str">&quot;12345678&quot;</span><span class="hl opt">;</span>
+  std<span class="hl opt">::</span><span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;[%s]</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> s<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>This is an obvious typo of missing <code>s.c_str()</code> instead of just <code>s</code>. Weirdly, Visual Studio doesn&rsquo;t warn you even with <code>/Wall</code>. More over, the code works!. But <code>gcc</code> warns though:</p>
+
+<pre><code>warning: cannot pass objects of non-POD type 'struct std::string' through '...'; call will abort at runtime
+</code></pre>
+
+<p>and the program dies with <code>Illegal instruction</code>.</p>
+
+<p>Did they really implement a trick in STL to make programs having such  typo working just because this typo is very common?</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/05/18/printing-std-string-via-printf-in-visual-studio/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/05/18/printing-std-string-via-printf-in-visual-studio/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
