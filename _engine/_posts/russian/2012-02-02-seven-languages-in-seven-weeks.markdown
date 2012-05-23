@@ -98,7 +98,7 @@ writeln("fetched ", futureResult size, " bytes")
 
 Хаскелл суров, и данная книга - это крайне минимальное введение, просто для запоминания слова Хаскелл. Я кое как осилил [отличную книгу Душкина][Функциональное программирование на языке Haskell] и "[Programming in Haskell][]", а сейчас читаю "[Real World Haskell][]", поэтому главу этой книги просто пролистал.
 
-[Функциональное программирование на языке Haskell]: http://www.ozon.ru/context/detail/id/3039995/
+[Функциональное программирование на языке Haskell]: http://www.ozon.ru/context/detail/id/3039995/?partner=easy-coding
 [Programming in Haskell]: http://www.amazon.co.uk/Programming-Haskell-Graham-Hutton/dp/0521692695
 [Real World Haskell]: http://www.amazon.co.uk/Real-World-Haskell-Bryan-OSullivan/dp/0596514980
 

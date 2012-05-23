@@ -11,7 +11,7 @@ categories:
 ---
 To my shame, I thought that Windows still lives in the previous century without links in the file system. I knew about junctions, links to directories, which can be created, for instance, in FAR via Alt-F6.
 
-But today, thumbing through "[Windows Internals][]", I came across a paragraph about it.
+But today, thumbing through "Windows Internals", I came across a paragraph about it.
 
 So, there is a little log from the console (Windows 7).
 
@@ -70,6 +70,6 @@ Also, note that even `link3` points to a directory, it doesn't behave as a regul
 
 In general, such simple task as links in the file system, solved in UNIX more than twenty years ago, has been solved in Windows in traditional for this operating system way - there are multiple solutions with different level of compatibility.
 
-By the way, "[Windows Internals][]" is bloody fantastic, strongly recommend.
+By the way, "Windows Internals" is bloody fantastic, strongly recommend.
 
-[Windows Internals]: http://www.amazon.co.uk/Windows-Internals-PRO-Developer-Mark-Russinovich/dp/0735625301/
+<a href="http://www.amazon.co.uk/gp/product/0735625301/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0735625301"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0735625301&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0735625301" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />

@@ -8,10 +8,11 @@ blogspot: http://easy-coding.blogspot.com/2010/04/programming-with-guts.html
 categories:
 - russian
 ---
-Вчера был на тренинге [Kevlin Henny][] под названием «Programming with GUTs». (Кевлин автор нескольких книг, например «[Things Every Programming Should Know][]»)
+Вчера был на тренинге [Kevlin Henny][] под названием «Programming with GUTs». (Кевлин автор нескольких книг, например «Things Every Programming Should Know»)
 
 [Kevlin Henny]: http://www.boost.org/users/people/kevlin_henney.html
-[Things Every Programming Should Know]: http://www.amazon.com/Things-Every-Programmer-Should-Know/dp/0596809484/
+
+<a href="http://www.amazon.co.uk/gp/product/0596809484/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0596809484"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0596809484&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0596809484" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 
 «GUT» – это сокращение от Good Unit Tests.
 

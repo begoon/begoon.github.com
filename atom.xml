@@ -739,9 +739,9 @@ A<span class="hl opt">::~</span><span class="hl kwd">A</span><span class="hl opt
 
 <p>Рекомендую.</p>
 
-<p>Идем далее. Недавно вышла книга, <a href="http://www.amazon.co.uk/C-Concurrency-Action-Practical-Multithreading/dp/1933988770/">C++ Concurrency in Action</a> этого же автора (Anthony Williams).</p>
+<p>Идем далее. Недавно вышла книга, &ldquo;C++ Concurrency in Action&rdquo; этого же автора (Anthony Williams).</p>
 
-<p><img src="http://demin.ws/images/covers/english/cpp-concurrency-in-action.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/1933988770/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=1933988770"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=1933988770&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=1933988770" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>Если хотите знать все про memory model в C++, почитайте пятую главу (и не только пятую).</p>
 ]]></content>
@@ -1214,10 +1214,9 @@ sys 0m0.008s
     <link href="http://demin.ws/blog/russian/2012/04/25/cpp-standard-library-2nd-edition/"/>
     <updated>2012-04-25T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/russian/2012/04/25/cpp-standard-library-2nd-edition/</id>
-    <content type="html"><![CDATA[<p>Nicolai M. Josuttis, &ldquo;<a href="http://www.amazon.co.uk/The-Standard-Library-Tutorial-Reference/dp/0321623215/">The C++ Standard Library: A Tutorial and Reference</a>&rdquo;, 2nd edition</p>
+    <content type="html"><![CDATA[<p>Nicolai M. Josuttis, &ldquo;The C++ Standard Library: A Tutorial and Reference&rdquo;, 2nd edition</p>
 
-<p><img src="http://demin.ws/images/covers/english/cpp-standard-library-2nd-edition-cover.jpg" alt="" />
-</p>
+<p><a href="http://www.amazon.co.uk/gp/product/0321623215/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0321623215"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0321623215&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0321623215" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>Вчера приехала эта книга. Хотел я что-то конкретное написать, но передумал, ибо в этом нет смысла. Книгу надо просто иметь, если есть интерес в новом стандарте C++ сегодня. Тут приводится исчерпывающее описание новой версии STL, естественно, с описанием новых возможностей самого языка. Много примеров. Как мне кажется, это пока первая книга по C++ 2011 такого калибра.</p>
 
@@ -1718,9 +1717,9 @@ real    0m56.209s
     <link href="http://demin.ws/blog/russian/2012/04/18/c-puzzle-book/"/>
     <updated>2012-04-18T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/russian/2012/04/18/c-puzzle-book/</id>
-    <content type="html"><![CDATA[<p><a href="http://www.amazon.co.uk/gp/product/0201604612/">Feuer A., &ldquo;The C puzzle book&rdquo;</a></p>
+    <content type="html"><![CDATA[<p>Feuer A., &ldquo;The C puzzle book&rdquo;</p>
 
-<p><a href="http://www.amazon.co.uk/gp/product/0201604612/"><img src="http://demin.ws/images/covers/english/c-puzzle-book-cover.jpg"/></a></p>
+<p><a href="http://www.amazon.co.uk/gp/product/0201604612/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0201604612"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0201604612&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0201604612" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>Первое издание этой книги датировано 1982 годом. Старый код на С, даже очень хороший в прошлом, по современным понятиям чаще всего не выдерживает критики, хотя критиковать его ненужное занятие. Его стоит изучать и делать выводы.</p>
 
@@ -2020,7 +2019,7 @@ git commit -m &quot;New post about ...&quot;
 
 <hr />
 
-<p>Г. Х. Геворкян, В. Н. Семенов, &ldquo;<a href="http://www.ozon.ru/context/detail/id/7394425/">Бейсик - это просто</a>&rdquo;, 1989</p>
+<p>Г. Х. Геворкян, В. Н. Семенов, &ldquo;<a href="http://www.ozon.ru/context/detail/id/7394425/?partner=easy-coding">Бейсик - это просто</a>&rdquo;, 1989</p>
 
 <p><img src="http://demin.ws/images/covers/russian/basic-this-is-simple-cover.jpg" alt="" />
 </p>
@@ -2029,7 +2028,7 @@ git commit -m &quot;New post about ...&quot;
 
 <hr />
 
-<p>В. П. Дьяконов, &ldquo;<a href="http://www.ozon.ru/context/detail/id/2317102/">Справочник по алгоритмам и программам на языке бейсик для персональных ЭВМ</a>&rdquo;, 1989</p>
+<p>В. П. Дьяконов, &ldquo;<a href="http://www.ozon.ru/context/detail/id/2317102/?partner=easy-coding">Справочник по алгоритмам и программам на языке бейсик для персональных ЭВМ</a>&rdquo;, 1989</p>
 
 <p><img src="http://demin.ws/images/covers/russian/algorithms-and-programs-reference-for-basic-cover.jpg" alt="" />
 </p>
@@ -2054,7 +2053,7 @@ git commit -m &quot;New post about ...&quot;
 
 <h2>Начало времени IBM PC.</h2>
 
-<p>В. Э. Фигурнов, &ldquo;<a href="http://www.ozon.ru/context/detail/id/5435709/">IBM PC для пользователя</a>&rdquo;, 1990</p>
+<p>В. Э. Фигурнов, &ldquo;<a href="http://www.ozon.ru/context/detail/id/5435709/?partner=easy-coding">IBM PC для пользователя</a>&rdquo;, 1990</p>
 
 <p><img src="http://demin.ws/images/covers/russian/ibm-pc-for-user-cover.jpg" alt="" />
 </p>
@@ -2119,10 +2118,9 @@ git commit -m &quot;New post about ...&quot;
     <link href="http://demin.ws/blog/russian/2012/04/15/expert-c-programming/"/>
     <updated>2012-04-15T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/russian/2012/04/15/expert-c-programming/</id>
-    <content type="html"><![CDATA[<p><a href="http://www.amazon.com/Expert-Programming-Peter-van-Linden/dp/0131774298/">Expert C Programming</a>, Peter van der Linden</p>
+    <content type="html"><![CDATA[<p>&ldquo;Expert C Programming&rdquo;, Peter van der Linden</p>
 
-<p><img src="http://demin.ws/images/covers/english/expert-c-programming-deep-c-secrets-cover.jpg" alt="" />
-</p>
+<p><a href="http://www.amazon.co.uk/gp/product/0131774298/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0131774298"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0131774298&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0131774298" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>Случайно наткнулся где-то в твиттере на эту книгу. Несложный поиск дает множество вариантов c ней ознакомиться.</p>
 
@@ -2673,7 +2671,7 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
 
 <p>Ну и под занавес, <strong>Haskell</strong>.</p>
 
-<p>Хаскелл суров, и данная книга - это крайне минимальное введение, просто для запоминания слова Хаскелл. Я кое как осилил <a href="http://www.ozon.ru/context/detail/id/3039995/">отличную книгу Душкина</a> и &ldquo;<a href="http://www.amazon.co.uk/Programming-Haskell-Graham-Hutton/dp/0521692695">Programming in Haskell</a>&rdquo;, а сейчас читаю &ldquo;<a href="http://www.amazon.co.uk/Real-World-Haskell-Bryan-OSullivan/dp/0596514980">Real World Haskell</a>&rdquo;, поэтому главу этой книги просто пролистал.</p>
+<p>Хаскелл суров, и данная книга - это крайне минимальное введение, просто для запоминания слова Хаскелл. Я кое как осилил <a href="http://www.ozon.ru/context/detail/id/3039995/?partner=easy-coding">отличную книгу Душкина</a> и &ldquo;<a href="http://www.amazon.co.uk/Programming-Haskell-Graham-Hutton/dp/0521692695">Programming in Haskell</a>&rdquo;, а сейчас читаю &ldquo;<a href="http://www.amazon.co.uk/Real-World-Haskell-Bryan-OSullivan/dp/0596514980">Real World Haskell</a>&rdquo;, поэтому главу этой книги просто пролистал.</p>
 
 <p><strong>Вывод</strong>: книга 100% одноразовая, но, как говориться, раз не&hellip; полезно для кругозора и для программистских терок на кухне.</p>
 ]]></content>
@@ -3004,9 +3002,9 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
 
 <p>Из недавнего.</p>
 
-<p>&ldquo;<a href="http://www.amazon.com/World-Flat-3-0-History-Twenty-first/dp/0312425074/">The world is flat 3.0: A Brief History of the Twenty-first Century</a>&rdquo;, Thomas L. Friedman</p>
+<p>&ldquo;The world is flat 3.0: A Brief History of the Twenty-first Century&rdquo;, Thomas L. Friedman</p>
 
-<p><img src="http://demin.ws/images/covers/english/world-is-flat-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/0312425074/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0312425074"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0312425074&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0312425074" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>Убийственная книга для осознания, что:</p>
 
@@ -5374,7 +5372,7 @@ std<span class="hl opt">::</span>string <span class="hl kwd">f</span><span class
     <id>http://demin.ws/blog/russian/2011/05/09/links-to-files-and-folder-in-windows/</id>
     <content type="html"><![CDATA[<p>К своему стыду я думал, что Windows все еще существует в прошлом веке без возможности делать ссылки на файлы в файловой системе. Я знал про ссылки на каталоги (junctions), которые можно делать, например, в FAR&rsquo;е через Alt-F6.</p>
 
-<p>Но сегодня, открыв &ldquo;<a href="http://www.amazon.co.uk/Windows-Internals-PRO-Developer-Mark-Russinovich/dp/0735625301/">Windows Internals</a>&rdquo; в случайном месте, наткнулся на параграф про данный вопрос.</p>
+<p>Но сегодня, открыв &ldquo;Windows Internals&rdquo; в случайном месте, наткнулся на параграф про данный вопрос.</p>
 
 <p>Итак, просто привожу небольшой лог с консоли (Windows 7).</p>
 
@@ -5440,7 +5438,9 @@ symbolic link created for link4 &lt;&lt;===&gt;&gt; file
 
 <p>В общем, такая простая задача как ссылки внутри файловой системы, решенная в UNIXах более двадцати лет назад, решена в Windows традиционным для этой операционной системы путем - решений много, и каждое имеет свой уровень совместимости.</p>
 
-<p>И книга, &ldquo;<a href="http://www.amazon.co.uk/Windows-Internals-PRO-Developer-Mark-Russinovich/dp/0735625301/">Windows Internals</a>&rdquo;, чертовски хороша, рекомендую.</p>
+<p>И книга, &ldquo;Windows Internals&rdquo;, чертовски хороша, рекомендую.</p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/0735625301/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0735625301"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0735625301&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0735625301" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 ]]></content>
   </entry>
   
@@ -11109,7 +11109,9 @@ b1 = 15
     <link href="http://demin.ws/blog/russian/2010/04/28/programming-with-guts/"/>
     <updated>2010-04-28T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/russian/2010/04/28/programming-with-guts/</id>
-    <content type="html"><![CDATA[<p>Вчера был на тренинге <a href="http://www.boost.org/users/people/kevlin_henney.html">Kevlin Henny</a> под названием «Programming with GUTs». (Кевлин автор нескольких книг, например «<a href="http://www.amazon.com/Things-Every-Programmer-Should-Know/dp/0596809484/">Things Every Programming Should Know</a>»)</p>
+    <content type="html"><![CDATA[<p>Вчера был на тренинге <a href="http://www.boost.org/users/people/kevlin_henney.html">Kevlin Henny</a> под названием «Programming with GUTs». (Кевлин автор нескольких книг, например «Things Every Programming Should Know»)</p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/0596809484/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0596809484"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0596809484&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0596809484" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>«GUT» – это сокращение от Good Unit Tests.</p>
 
@@ -11301,9 +11303,9 @@ b1 = 15
     <id>http://demin.ws/blog/russian/2010/04/07/google-way/</id>
     <content type="html"><![CDATA[<p>Было интересно почитать про историю Google, посему купил вот эту книгу.</p>
 
-<p><a href="http://www.amazon.co.uk/Google-Way-Revolutionary-Management-Revolutionizing/dp/1593271840">Bernard Girard, &ldquo;The Google Way&rdquo;</a></p>
+<p>Bernard Girard, &ldquo;The Google Way&rdquo;</p>
 
-<p><img src="http://demin.ws/images/covers/english/google-way-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/1593271840/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=1593271840"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=1593271840&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=1593271840" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>Не могу сказать, что мне особо понравилось, хоть фактов в книге предостачно: и про самое начало, и про выход на <a href="http://ru.wikipedia.org/wiki/%D0%9F%D0%B5%D1%80%D0%B2%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%83%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5">IPO</a> (работая сейчас в сфере finance, знаю, как обычно инвестиционные банкиры наживаются на процедуре IPO, но Гугл их сильно в этом плане разочаровал, не дав им кусок своего пирога), и про правило 20%, и про систему peer review, и про наличие технической иерархии и про многое другое.</p>
 
@@ -11337,9 +11339,9 @@ b1 = 15
     <id>http://demin.ws/blog/russian/2010/04/07/rework/</id>
     <content type="html"><![CDATA[<p>Книга от создателей компании <a href="http://37signals.com/">37 signals</a> и <a href="http://rubyonrails.org/">Ruby on Rails</a> о том, как можно вести малый бизнес в IT, не разрывая зад по 10-12 часов в день, а только с 9 до 5, и при этом достойно и даже очень зарабатывать.</p>
 
-<p><a href="http://www.amazon.co.uk/Rework-Jason-Fried/dp/0307463745">Jason Fried, David Heinemeier Hansson, &ldquo;Rework&rdquo;</a></p>
+<p>Jason Fried, David Heinemeier Hansson, &ldquo;Rework&rdquo;</p>
 
-<p><img src="http://demin.ws/images/covers/english/rework-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/0307463745/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0307463745"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0307463745&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0307463745" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>Довольно пафосная книга, состоящая из мини глав, похожих на посты в блоге (эта книга и родилась из блога), но многие ее посылы стоит усвоить. С ними легче и приятнее жить, и во многом ранее скучном и нудном может появиться вдруг смысл. Также книга может подтолкнуть в мир самостоятельной работы на самого себя, например, написание shareware.</p>
 
@@ -12881,7 +12883,7 @@ int main() {
     <id>http://demin.ws/blog/russian/2009/12/16/cpp-common-knowledge/</id>
     <content type="html"><![CDATA[<p>Побывал на тренинге <a href="http://semantics.org/instructorbio.html">Steve Dewhurst</a>&lsquo;а &ldquo;<a href="http://semantics.org/courses/Cpp-Common-Knowledge-Training.html">C++ Common Knowledge</a>&rdquo;. У меня уже давно есть его книга:</p>
 
-<p><img src="http://demin.ws/images/covers/english/cpp-common-knowledge-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/0321321928/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0321321928"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0321321928&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0321321928" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>и в целом конкретно этот тренинг посвящен темам из нее.</p>
 
@@ -12916,9 +12918,9 @@ int main() {
     <id>http://demin.ws/blog/russian/2009/12/15/coder-at-work/</id>
     <content type="html"><![CDATA[<p>Неспешно дочитал &ldquo;Coders at Work&rdquo;.</p>
 
-<p><a href="http://www.amazon.co.uk/Coders-Work-Reflections-Craft-Programming/dp/1430219483/">Peter Seibel, &ldquo;Coders at Work&rdquo;</a></p>
+<p>Peter Seibel, &ldquo;Coders at Work&rdquo;</p>
 
-<p><img src="http://demin.ws/images/covers/english/coders-at-work-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/1430219483/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=1430219483"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=1430219483&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=1430219483" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>Книга состоит из интервью с десятком известных программистов. Тут есть создатели UNIX, Netscape, JavaScript, Smalltalk, Haskell, Erland, Ghostscript, ЖЖ и также есть просто Дональд Кнут. В общем, не самые последние люди.</p>
 
@@ -14413,9 +14415,9 @@ std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>String<sp
     <id>http://demin.ws/blog/russian/2009/07/30/elements-of-programming/</id>
     <content type="html"><![CDATA[<p><a href="http://ru.wikipedia.org/wiki/%D0%A1%D1%82%D0%B5%D0%BF%D0%B0%D0%BD%D0%BE%D0%B2,_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B2%D0%B8%D1%87">Александр Степанов</a> - это создатель STL. Ни добавить, ни отнять. Последние годы он занимается в основном преподаванием и написанием книг.</p>
 
-<p>Недавно я купил его последнюю книгу &ldquo;<a href="http://www.amazon.com/gp/product/032163537X">Elements of Programming</a>&rdquo;.</p>
+<p>Недавно я купил его последнюю книгу &ldquo;Elements of Programming&rdquo;.</p>
 
-<p><img src="http://demin.ws/images/covers/english/elements-of-programming-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/032163537X/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=032163537X"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=032163537X&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=032163537X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>Довольно своеобразная книга. Много математики, приводимой как обоснование тех или иных приемов в программировании (язык, конечно, С++), из-за чего читается немного тяжело. Забавно, я читал многие его публикации до этого, и как-то заметил, что чем дальше, тем больше он использует формальную математику для описания программирования.</p>
 
@@ -15122,11 +15124,9 @@ winrar a <span class="hl opt">-</span>v <span class="hl opt">-</span>r <span cla
 
 <p>Даже книжку, помню, для этого специально купил. Хорошая, кстати, книжка. Все доступно и понятно о bluetooth с точки зрения программиста. Рассмотрены несколько стеков разных производителей, их сравнение и использование на разных языках и платформах.</p>
 
-<p>Albert Huang, Larry Rudolph</p>
+<p>Albert Huang, Larry Rudolph, &ldquo;Bluetooth Essentials for Programmers&rdquo;</p>
 
-<p><a href="http://www.amazon.co.uk/Bluetooth-Essentials-Programmers-Albert-Huang/dp/0521703751/">Bluetooth Essentials for Programmers</a></p>
-
-<p><img src="http://demin.ws/images/covers/english/bluetooth-essentials-for-programmers-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/0521703751/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0521703751"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0521703751&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0521703751" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p><strong>Обновление</strong>: Небольшое видео, демонстрирующее все в работе:</p>
 
@@ -15469,11 +15469,9 @@ std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> scrip
     <link href="http://demin.ws/blog/russian/2009/05/17/pragmatic-version-control-using-git/"/>
     <updated>2009-05-17T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/russian/2009/05/17/pragmatic-version-control-using-git/</id>
-    <content type="html"><![CDATA[<p>Travis Swicegood</p>
+    <content type="html"><![CDATA[<p>Travis Swicegood, &ldquo;Pragmatic Version Control using Git&rdquo;</p>
 
-<p><a href="http://www.amazon.co.uk/Pragmatic-Version-Control-Using-Git/dp/1934356158/">Pragmatic Version Control using Git</a></p>
-
-<p><img src="http://demin.ws/images/covers/english/pragmatic-version-control-using-git-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/1934356158/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=1934356158"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=1934356158&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=1934356158" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>Хорошее введение в распределенную систему контроля версий <a href="http://git-scm.org/">Git</a> от сообщества разработчиков ядра Линукса и от <a href="http://www.youtube.com/watch?v=4XpnKHJAok8">Линуса Торвальдса</a> в частности.</p>
 
@@ -17444,7 +17442,7 @@ LONG WINAPI <span class="hl kwd">ExceptionFilter</span><span class="hl opt">(</s
 
 <p><img src="http://demin.ws/images/blog/efp-vigenere-cryptotext-english.jpg" /></p>
 
-<p>Решить задачу предложенным автором способом не получилось, и наши решили все по-своему (советская математическая школа показала себя), выявив, что метод автора не совсем правильный. В русском варианте в главе 24 есть “партия переводчика”, где описывается “советский” способ решения. Попутно наши переводчики выяснили, что в <a href="http://www.amazon.com/Etudes-Programmers-Charles-Wetherell/dp/0132918072/">английском оригинале</a> есть опечатка! Одна из строк шифровки просто пропущена. Уже после перевода они связывались с господином Уэзереллом, и тот подтвердил факт наличия досадной опечатки.</p>
+<p>Решить задачу предложенным автором способом не получилось, и наши решили все по-своему (советская математическая школа показала себя), выявив, что метод автора не совсем правильный. В русском варианте в главе 24 есть “партия переводчика”, где описывается “советский” способ решения. Попутно наши переводчики выяснили, что в английском оригинале, &ldquo;Etudes for programmers&rdquo;, есть опечатка! Одна из строк шифровки просто пропущена. Уже после перевода они связывались с господином Уэзереллом, и тот подтвердил факт наличия досадной опечатки.</p>
 
 <p>Кстати, в интернете ходит много решений “этюдов” Уэзерелла. Например, программа, <a href="http://vak.ru/doku.php/proj/kalah/kalah">играющая в Калах</a>, или <a href="http://vak.ru/doku.php/proj/trac/trac">интерпретатор символьного интерактивного языка TRAC</a>.</p>
 
@@ -17452,7 +17450,7 @@ LONG WINAPI <span class="hl kwd">ExceptionFilter</span><span class="hl opt">(</s
 
 <p>Пару дней назад королевская почта доставила мне то, что я так давно мечтал полистать лично — это английский оригинал этой книги.</p>
 
-<p><img src="http://demin.ws/images/covers/english/etudes-for-programmers-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/0132918072/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0132918072"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0132918072&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0132918072" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>Книга была издана аж в 1978 (я тогда даже не ходил пешком под стол, а просто лежал) и более не переиздавалась. Я купил списанный библиотечный экземпляр. Немного потертый, переклеенный скотчем по корешку, с библиотечным кармашком для карточки на обратной стороне обложки. Экстаз, один словом.</p>
 
@@ -19294,7 +19292,7 @@ std<span class="hl opt">::</span>string <span class="hl kwd">val</span><span cla
 <span class="hl opt">);</span>
 </pre>
 
-<p>Скотт Мейерс в книге &ldquo;<a href="http://www.ozon.ru/context/detail/id/1253685/">Эффективное использование STL. Библиотека программиста</a>&rdquo; в Совете 6 &ldquo;Остерегайтесь странностей лексического разбора C++&rdquo; (стр. 42, изд. &ldquo;Питер&rdquo; 2002) дает исчерпывающее объяснение этого &ldquo;феномена&rdquo;. Ответ крайне меня опечалил, так как вскрыл некоторую нелогичность и корявость в целом стройного и красивого языка С++ в данном вопросе. Очевидно, что причины этого в сохранения в С++ обратной совместимости с С, но от этого не легче.</p>
+<p>Скотт Мейерс в книге &ldquo;<a href="http://www.ozon.ru/context/detail/id/1253685/?partner=easy-coding">Эффективное использование STL. Библиотека программиста</a>&rdquo; в Совете 6 &ldquo;Остерегайтесь странностей лексического разбора C++&rdquo; (стр. 42, изд. &ldquo;Питер&rdquo; 2002) дает исчерпывающее объяснение этого &ldquo;феномена&rdquo;. Ответ крайне меня опечалил, так как вскрыл некоторую нелогичность и корявость в целом стройного и красивого языка С++ в данном вопросе. Очевидно, что причины этого в сохранения в С++ обратной совместимости с С, но от этого не легче.</p>
 
 <p>Итак, давайте разберемся по порядку (чтобы меня не обвинили в плагиате, сразу скажу, что я буду следовать примерному тексту Мейерса, так как он дал великолепное объяснение с примерами, и изобретать велосипед в данном случае было бы неразумно). Как мы предполагали, код <code>std::istream_iterator&lt;char&gt;(is)</code> создает экземпляр потокового итератора, привязанного к потоку <code>is</code>. И все бы ничего, если такая конструкция используется как самостоятельное объявление. Вся проблема в именно в использовании такого выражения в контексте вызова функции (в данном случае, конструктора), то есть в качестве параметра. Мейерс приводит следующий пример:</p>
 
@@ -19375,7 +19373,7 @@ std<span class="hl opt">::</span>string <span class="hl kwd">val</span><span cla
 
 <p>Соглашусь, от этого может слегка заболеть голова, причем совершенно без причины.</p>
 
-<p>Как написал Герб Саттер в книге &ldquo;<a href="http://www.ozon.ru/context/detail/id/2342923/">Новые сложные задачи на С++</a>&rdquo; (он тоже посвятил этому вопросу целую главу, “Задача 23. Инициализация ли это?”, стр. 192, изд. “Вильямс”), что такие моменты синтаксиса С++ являются его &ldquo;темными углами&rdquo;, и их стоит избегать. Рассмотренный пример можно упростить, объявив итератор отдельно, а не прямо в тексте вызова конструктора, тем самым не заходить в &ldquo;темный угол&rdquo;. Не так элегантно, зато просто и понятно:</p>
+<p>Как написал Герб Саттер в книге &ldquo;<a href="http://www.ozon.ru/context/detail/id/2342923/?partner=easy-coding">Новые сложные задачи на С++</a>&rdquo; (он тоже посвятил этому вопросу целую главу, “Задача 23. Инициализация ли это?”, стр. 192, изд. “Вильямс”), что такие моменты синтаксиса С++ являются его &ldquo;темными углами&rdquo;, и их стоит избегать. Рассмотренный пример можно упростить, объявив итератор отдельно, а не прямо в тексте вызова конструктора, тем самым не заходить в &ldquo;темный угол&rdquo;. Не так элегантно, зато просто и понятно:</p>
 
 <pre class="hl">
 std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span><span class="hl str">&quot;testfile.txt&quot;</span><span class="hl opt">);</span>

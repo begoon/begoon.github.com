@@ -9,6 +9,10 @@ title: "Я"
 
 Живу, люблю, программирую.
 
+### Disclaimer
+
+{% include russian/disclaimer.html %}
+
 * Twitter [begoon][]
 * [Google+][]
 

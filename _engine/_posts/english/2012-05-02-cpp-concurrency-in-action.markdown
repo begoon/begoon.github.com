@@ -29,10 +29,8 @@ This presentation is also [available][Dataflow, Actors and High Level Structures
 
 Recommend.
 
-Going further. Anthony's book, [C++ Concurrency in Action][], has been released recently.
+Going further. Anthony's book, "C++ Concurrency in Action", has been released recently.
 
-[C++ Concurrency in Action]: http://www.amazon.co.uk/C-Concurrency-Action-Practical-Multithreading/dp/1933988770/
-
-{% img /images/covers/english/cpp-concurrency-in-action.jpg %}
+<a href="http://www.amazon.co.uk/gp/product/1933988770/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=1933988770"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=1933988770&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=1933988770" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 
 If you want an exhaustive explanation about the C++ memory model, please read the chapters 5 (along with all others).

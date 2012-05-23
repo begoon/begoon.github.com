@@ -33,7 +33,7 @@ categories:
 
 Г. Х. Геворкян, В. Н. Семенов, "[Бейсик - это просто][]", 1989
 
-[Бейсик - это просто]: http://www.ozon.ru/context/detail/id/7394425/
+[Бейсик - это просто]: http://www.ozon.ru/context/detail/id/7394425/?partner=easy-coding
 
 ![](/images/covers/russian/basic-this-is-simple-cover.jpg)
 
@@ -43,7 +43,7 @@ categories:
 
 В. П. Дьяконов, "[Справочник по алгоритмам и программам на языке бейсик для персональных ЭВМ][]", 1989
 
-[Справочник по алгоритмам и программам на языке бейсик для персональных ЭВМ]: http://www.ozon.ru/context/detail/id/2317102/
+[Справочник по алгоритмам и программам на языке бейсик для персональных ЭВМ]: http://www.ozon.ru/context/detail/id/2317102/?partner=easy-coding
 
 ![](/images/covers/russian/algorithms-and-programs-reference-for-basic-cover.jpg)
 
@@ -69,7 +69,7 @@ categories:
 
 В. Э. Фигурнов, "[IBM PC для пользователя][]", 1990
 
-[IBM PC для пользователя]: http://www.ozon.ru/context/detail/id/5435709/
+[IBM PC для пользователя]: http://www.ozon.ru/context/detail/id/5435709/?partner=easy-coding
 
 ![](/images/covers/russian/ibm-pc-for-user-cover.jpg)
 

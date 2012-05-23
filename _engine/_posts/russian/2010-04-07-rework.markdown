@@ -14,11 +14,9 @@ categories:
 [37 signals]: http://37signals.com/
 [Ruby on Rails]: http://rubyonrails.org/
 
-[Jason Fried, David Heinemeier Hansson, "Rework"][]
+Jason Fried, David Heinemeier Hansson, "Rework"
 
-[Jason Fried, David Heinemeier Hansson, "Rework"]: http://www.amazon.co.uk/Rework-Jason-Fried/dp/0307463745
-
-{% img /images/covers/english/rework-cover.jpg %}
+<a href="http://www.amazon.co.uk/gp/product/0307463745/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0307463745"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0307463745&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0307463745" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 
 Довольно пафосная книга, состоящая из мини глав, похожих на посты в блоге (эта книга и родилась из блога), но многие ее посылы стоит усвоить. С ними легче и приятнее жить, и во многом ранее скучном и нудном может появиться вдруг смысл. Также книга может подтолкнуть в мир самостоятельной работы на самого себя, например, написание shareware.
 

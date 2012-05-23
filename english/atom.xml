@@ -557,9 +557,9 @@ A<span class="hl opt">::~</span><span class="hl kwd">A</span><span class="hl opt
 
 <p>Recommend.</p>
 
-<p>Going further. Anthony&rsquo;s book, <a href="http://www.amazon.co.uk/C-Concurrency-Action-Practical-Multithreading/dp/1933988770/">C++ Concurrency in Action</a>, has been released recently.</p>
+<p>Going further. Anthony&rsquo;s book, &ldquo;C++ Concurrency in Action&rdquo;, has been released recently.</p>
 
-<p><img src="http://demin.ws/images/covers/english/cpp-concurrency-in-action.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/1933988770/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=1933988770"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=1933988770&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=1933988770" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>If you want an exhaustive explanation about the C++ memory model, please read the chapters 5 (along with all others).</p>
 <hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
@@ -1013,10 +1013,9 @@ sys 0m0.008s
     <link href="http://demin.ws/blog/english/2012/04/25/cpp-standard-library-2nd-edition/"/>
     <updated>2012-04-25T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/english/2012/04/25/cpp-standard-library-2nd-edition/</id>
-    <content type="html"><![CDATA[<p>Nicolai M. Josuttis, &ldquo;<a href="http://www.amazon.co.uk/The-Standard-Library-Tutorial-Reference/dp/0321623215/">The C++ Standard Library: A Tutorial and Reference</a>&rdquo;, 2nd edition</p>
+    <content type="html"><![CDATA[<p>Nicolai M. Josuttis, &ldquo;The C++ Standard Library: A Tutorial and Reference&rdquo;, 2nd edition</p>
 
-<p><img src="http://demin.ws/images/covers/english/cpp-standard-library-2nd-edition-cover.jpg" alt="" />
-</p>
+<p><a href="http://www.amazon.co.uk/gp/product/0321623215/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0321623215"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0321623215&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0321623215" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>Yesterday the book had arrived. I wanted to write a proper detailed review, but realised it doesn&rsquo;t make sense at all. This is a must have book if you&rsquo;re interested in the new C++ 2011. The book is an exhaustive reference with a lot of examples of the new STL and the language itself. In my view, this is the first big C++ 2011 book at the moment.</p>
 <hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
@@ -1402,9 +1401,9 @@ git commit -m &quot;New post about ...&quot;
     <link href="http://demin.ws/blog/english/2012/04/18/c-puzzle-book/"/>
     <updated>2012-04-18T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/english/2012/04/18/c-puzzle-book/</id>
-    <content type="html"><![CDATA[<p><a href="http://www.amazon.co.uk/gp/product/0201604612/">Feuer A., &ldquo;The C puzzle book&rdquo;</a></p>
+    <content type="html"><![CDATA[<p>Feuer A., &ldquo;The C puzzle book&rdquo;</p>
 
-<p><a href="http://www.amazon.co.uk/gp/product/0201604612/"><img src="http://demin.ws/images/covers/english/c-puzzle-book-cover.jpg"/></a></p>
+<p><a href="http://www.amazon.co.uk/gp/product/0201604612/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0201604612"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0201604612&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0201604612" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>The first edition of this book was in 1982. Old code in C, which was considered to be &ldquo;good&rdquo; in the past, today quite often doesn&rsquo;t stand up to criticism (even though its criticising is a pointless exercise), but it&rsquo;s worth to study.</p>
 
@@ -1436,10 +1435,9 @@ git commit -m &quot;New post about ...&quot;
     <link href="http://demin.ws/blog/english/2012/04/15/expert-c-programming/"/>
     <updated>2012-04-15T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/english/2012/04/15/expert-c-programming/</id>
-    <content type="html"><![CDATA[<p><a href="http://www.amazon.com/Expert-Programming-Peter-van-Linden/dp/0131774298/">Expert C Programming</a>, Peter van der Linden</p>
+    <content type="html"><![CDATA[<p>&ldquo;Expert C Programming&rdquo;, Peter van der Linden</p>
 
-<p><img src="http://demin.ws/images/covers/english/expert-c-programming-deep-c-secrets-cover.jpg" alt="" />
-</p>
+<p><a href="http://www.amazon.co.uk/gp/product/0131774298/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0131774298"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0131774298&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0131774298" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>Just have come across this book in Twitter. A simple search gives plenty of options to read it.</p>
 
@@ -2166,9 +2164,9 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
     <link href="http://demin.ws/blog/english/2011/12/27/steve-jobs-the-exclusive-biography/"/>
     <updated>2011-12-27T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/english/2011/12/27/steve-jobs-the-exclusive-biography/</id>
-    <content type="html"><![CDATA[<p>&ldquo;<a href="http://www.amazon.co.uk/Steve-Jobs-Exclusive-Walter-Isaacson/dp/1408703742">Steve Jobs: The Exclusive Biography</a>&rdquo; by Walter Isaacson</p>
+    <content type="html"><![CDATA[<p>&ldquo;Steve Jobs: The Exclusive Biography&rdquo; by Walter Isaacson</p>
 
-<p><img src="http://demin.ws/images/covers/english/steve-jobs-exclusive-biography-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/1408703742/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=1408703742"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=1408703742&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=1408703742" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>I thought that biographies are for &ldquo;old people&rdquo;. This book has changed that mindset in me. Being driven by massive ads and recently emerged love with Apple products and philosophy I had started reading.</p>
 
@@ -2191,9 +2189,9 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
 
 <p>A recent.</p>
 
-<p>&ldquo;<a href="http://www.amazon.com/World-Flat-3-0-History-Twenty-first/dp/0312425074/">The world is flat 3.0: A Brief History of the Twenty-first Century</a>&rdquo;, Thomas L. Friedman</p>
+<p>&ldquo;The world is flat 3.0: A Brief History of the Twenty-first Century&rdquo;, Thomas L. Friedman</p>
 
-<p><img src="http://demin.ws/images/covers/english/world-is-flat-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/0312425074/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0312425074"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0312425074&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0312425074" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>This is a killer book to understand or even discover that nowadays:</p>
 
@@ -2201,8 +2199,7 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
 <li>individuals can compete with corporations</li>
 <li>an importance of engineering and especially computer education is increasing enormously</li>
 <li>a number of places on the Earth when you can have decent life doing what you love to do is not narrowed to the US and a few EU countries anymore</li>
-<li>India, China, Russia and many other countries have a very strong position competing with even US now without immigration
-permanent self education and nurturing your curiosity (CQ + PQ always greater that IQ) is the only way to remain valuable</li>
+<li>India, China, Russia and many other countries have a very strong position competing with even US now without immigration permanent self education and nurturing your curiosity (CQ + PQ always greater that IQ) is the only way to remain valuable</li>
 </ul>
 
 <p>And many other topics.</p>
@@ -2712,7 +2709,7 @@ std<span class="hl opt">::</span>string <span class="hl kwd">f</span><span class
     <id>http://demin.ws/blog/english/2011/05/09/symbolic-links-to-files-and-directories-in-windows/</id>
     <content type="html"><![CDATA[<p>To my shame, I thought that Windows still lives in the previous century without links in the file system. I knew about junctions, links to directories, which can be created, for instance, in FAR via Alt-F6.</p>
 
-<p>But today, thumbing through &ldquo;<a href="http://www.amazon.co.uk/Windows-Internals-PRO-Developer-Mark-Russinovich/dp/0735625301/">Windows Internals</a>&rdquo;, I came across a paragraph about it.</p>
+<p>But today, thumbing through &ldquo;Windows Internals&rdquo;, I came across a paragraph about it.</p>
 
 <p>So, there is a little log from the console (Windows 7).</p>
 
@@ -2777,7 +2774,9 @@ symbolic link created for link4 &lt;&lt;===&gt;&gt; file
 
 <p>In general, such simple task as links in the file system, solved in UNIX more than twenty years ago, has been solved in Windows in traditional for this operating system way - there are multiple solutions with different level of compatibility.</p>
 
-<p>By the way, &ldquo;<a href="http://www.amazon.co.uk/Windows-Internals-PRO-Developer-Mark-Russinovich/dp/0735625301/">Windows Internals</a>&rdquo; is bloody fantastic, strongly recommend.</p>
+<p>By the way, &ldquo;Windows Internals&rdquo; is bloody fantastic, strongly recommend.</p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/0735625301/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0735625301"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0735625301&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0735625301" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 <hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
@@ -5610,9 +5609,9 @@ parse-log<span class="hl opt">:</span>
     <id>http://demin.ws/blog/english/2009/12/16/cpp-common-knowledge/</id>
     <content type="html"><![CDATA[<p>I went to the <a href="http://semantics.org/instructorbio.html">Steve Dewhurst</a>&rsquo;s training &ldquo;<a href="http://semantics.org/courses/Cpp-Common-Knowledge-Training.html">C++ Common Knowledge course</a>&rdquo;. I&rsquo;ve been having his book quite a long time:</p>
 
-<p>Stephen Dewhurst, &ldquo;<a href="http://www.amazon.co.uk/Common-Knowledge-Essential-Intermediate-Programming/dp/0321321928/">C++ Common Knowledge</a>&ldquo;</p>
+<p>Stephen Dewhurst, &ldquo;C++ Common Knowledge&rdquo;</p>
 
-<p><img src="http://demin.ws/images/covers/english/cpp-common-knowledge-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/0321321928/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0321321928"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0321321928&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0321321928" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>and in general, this training is specifically focused on the topics from it.</p>
 
@@ -5645,11 +5644,11 @@ parse-log<span class="hl opt">:</span>
     <link href="http://demin.ws/blog/english/2009/12/15/coders-at-work/"/>
     <updated>2009-12-15T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/english/2009/12/15/coders-at-work/</id>
-    <content type="html"><![CDATA[<p>Slowly finished reading &ldquo;<a href="http://www.amazon.co.uk/Coders-Work-Reflections-Craft-Programming/dp/1430219483/">Coders at Work</a>&rdquo;.</p>
+    <content type="html"><![CDATA[<p>Slowly finished reading &ldquo;Coders at Work&rdquo;.</p>
 
-<p>Peter Seibel, &ldquo;<a href="http://www.amazon.co.uk/Coders-Work-Reflections-Craft-Programming/dp/1430219483/">Coders at Work</a>&ldquo;</p>
+<p>Peter Seibel, &ldquo;Coders at Work&rdquo;</p>
 
-<p><img src="http://demin.ws/images/covers/english/coders-at-work-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/1430219483/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=1430219483"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=1430219483&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=1430219483" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>The book consists of interviews with a dozen well-known programmers. Here are creators of UNIX, Netscape, JavaScript, Smalltalk, Haskell, Erlang, Ghostscript, LJ and also merely Donald Knuth.</p>
 
@@ -5696,11 +5695,11 @@ parse-log<span class="hl opt">:</span>
 
 <p>The only thing that you need to choose on taste alone is program for merging in a graphical mode to resolve conflicts. Here all are in their preferences.</p>
 
-<p>I would recommend the very good book to start with git.</p>
+<p>I would recommend a very good book to start with git.</p>
 
-<p>Travis Swicegood, &ldquo;<a href="http://www.amazon.co.uk/Pragmatic-Version-Control-Using-Git/dp/1934356158/">Pragmatic Version Control using Git</a>&ldquo;</p>
+<p>Travis Swicegood, &ldquo;Pragmatic Version Control using Git&rdquo;</p>
 
-<p><img src="http://demin.ws/images/covers/english/pragmatic-version-control-using-git-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/1934356158/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=1934356158"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=1934356158&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=1934356158" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
 <p>This is the very good introduction into Git from the community of Linux kernel developers and from Linux Torvalds in particular.</p>
 
@@ -5979,9 +5978,9 @@ Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl k
 
 <p>I have even bought the book for this case. By the way the book is quite nice. It tells about Bluetooth from the programmer&rsquo;s point of view in a simple and clean manner. A few stacks of different vendors are covered, their comparison is given and accompanied with examples on different languages and platforms.</p>
 
-<p>Albert Huang, Larry Rudolph, &ldquo;<a href="http://www.amazon.co.uk/Bluetooth-Essentials-Programmers-Albert-Huang/dp/0521703751/">Bluetooth Essentials for Programmers</a>&ldquo;</p>
+<p>Albert Huang, Larry Rudolph, &ldquo;Bluetooth Essentials for Programmers&rdquo;</p>
 
-<p><img src="http://demin.ws/images/covers/english/bluetooth-essentials-for-programmers-cover.jpg" /></p>
+<p><a href="http://www.amazon.co.uk/gp/product/0521703751/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0521703751"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0521703751&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0521703751" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 <hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   

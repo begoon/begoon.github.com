@@ -11,11 +11,9 @@ categories:
 ---
 К своему стыду я думал, что Windows все еще существует в прошлом веке без возможности делать ссылки на файлы в файловой системе. Я знал про ссылки на каталоги (junctions), которые можно делать, например, в FAR'е через Alt-F6.
 
-Но сегодня, открыв "[Windows Internals][]" в случайном месте, наткнулся на параграф про данный вопрос.
+Но сегодня, открыв "Windows Internals" в случайном месте, наткнулся на параграф про данный вопрос.
 
 Итак, просто привожу небольшой лог с консоли (Windows 7).
-
-[Windows Internals]: http://www.amazon.co.uk/Windows-Internals-PRO-Developer-Mark-Russinovich/dp/0735625301/
 
     ver
 
@@ -72,4 +70,6 @@ categories:
 
 В общем, такая простая задача как ссылки внутри файловой системы, решенная в UNIXах более двадцати лет назад, решена в Windows традиционным для этой операционной системы путем - решений много, и каждое имеет свой уровень совместимости.
 
-И книга, "[Windows Internals][]", чертовски хороша, рекомендую.
+И книга, "Windows Internals", чертовски хороша, рекомендую.
+
+<a href="http://www.amazon.co.uk/gp/product/0735625301/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0735625301"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0735625301&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0735625301" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />

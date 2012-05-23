@@ -14,11 +14,9 @@ categories:
 
 [Александр Степанов]: http://ru.wikipedia.org/wiki/%D0%A1%D1%82%D0%B5%D0%BF%D0%B0%D0%BD%D0%BE%D0%B2,_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B2%D0%B8%D1%87
 
-Недавно я купил его последнюю книгу "[Elements of Programming][]".
+Недавно я купил его последнюю книгу "Elements of Programming".
 
-[Elements of Programming]: http://www.amazon.com/gp/product/032163537X
-
-{% img /images/covers/english/elements-of-programming-cover.jpg %}
+<a href="http://www.amazon.co.uk/gp/product/032163537X/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=032163537X"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=032163537X&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=032163537X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 
 Довольно своеобразная книга. Много математики, приводимой как обоснование тех или иных приемов в программировании (язык, конечно, С++), из-за чего читается немного тяжело. Забавно, я читал многие его публикации до этого, и как-то заметил, что чем дальше, тем больше он использует формальную математику для описания программирования.
 
