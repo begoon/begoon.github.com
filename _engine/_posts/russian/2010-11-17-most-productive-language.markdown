@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "На какой языке вы более продуктивны?"
+title: "На каком языке вы более продуктивны?"
 language: russian
 date: 2010-11-17 01:00
 comments: true
