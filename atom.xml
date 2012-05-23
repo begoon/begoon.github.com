@@ -5,13 +5,35 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-19T12:43:00Z</updated>
+  <updated>2012-05-23T06:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Партнерские ссылки в данном блоге]]></title>
+    <link href="http://demin.ws/blog/russian/2012/05/23/partner-links-in-this-blog/"/>
+    <updated>2012-05-23T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/05/23/partner-links-in-this-blog/</id>
+    <content type="html"><![CDATA[<p>Вчера добавил партнерский идентификатор в ссылки на книги на Амазоне. Озоновский у меня уже стоит с некоторого времени. Понятия не имею, что из этого выйдет. Буду сообщать, если что-то интересное получится.</p>
+
+<p>Далее, внизу каждого поста есть ссылка &ldquo;Disclaimer&rdquo;, чтобы не было недопонимания. Я обычно ссылаюсь на книги, которые читал или рецензировал сам, и их рекомендация ни как не связана издателями или автором.</p>
+
+<p>Информация, размещенная на коммерческой основе, будет явно указана прямо в теле поста со словом &ldquo;Реклама&rdquo;.</p>
+
+<p>Есть желание обсудить? Прошу в комментарии.</p>
+
+<h3>Ссылки по теме</h3>
+
+<ul>
+<li><a href="https://affiliate-program.amazon.co.uk/">Amazon affiliate program</a></li>
+<li><a href="http://www.ozon.ru/context/partner/">Партнерская программа Озона</a></li>
+</ul>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Интервью с Питером Соммерладом]]></title>
