@@ -5,13 +5,44 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-23T20:18:00Z</updated>
+  <updated>2012-05-28T06:49:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[&#34;iWoz: How I Invented the Personal Computer and Had Fun Along the Way&#34;, Gina Smith]]></title>
+    <link href="http://demin.ws/blog/english/2012/05/28/iwoz-how-i-intented-the-personal-computer/"/>
+    <updated>2012-05-28T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/05/28/iwoz-how-i-intented-the-personal-computer/</id>
+    <content type="html"><![CDATA[<p><a href="http://www.amazon.co.uk/gp/product/140015328X/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=140015328X"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=140015328X&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=140015328X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p>A quote from the book:</p>
+
+<blockquote>
+<p>I don&rsquo;t believe anything really revolutionary has ever been invented by committee.</p>
+</blockquote>
+
+<p>Huh!? Only for the sake of this quote this book is worth to be read.</p>
+
+<p><a href="http://demin.ws/blog/english/2011/12/27/steve-jobs-the-exclusive-biography/">Steve Jobs biography</a> was interesting reading, even quite long though. Steve Wozniak&rsquo;s book is much shorter, and also closer to people with engineering background.</p>
+
+<p>Steve Wozniak tells a story how it all happened. How he spent nights at school time designing, re-designing, then again and again re-designing non-existent yet computers just on paper. It helped him develop a unique habit to always use a minimum number of chips in his circuit designs. A perfect example is a first floppy disk controller for the Apple 2 computer. Instead of a complicated and costly purely hardware solution he put a few chips and then implemented the rest in 6502 assembly language, having masterly fulfilled requirements for signal timings. Additionally, he designed, again using a few chips, a state machine, which he programmed directly in 4-bit machines codes also designed by himself (a handmade programmable logic matrix approach). Eventually, at some day Steve had invented the Apple 2, a revolutionary personal computer with the color TV-display and the full keyboard. By the way, contrary to the ordinary opinion, Jobs didn&rsquo;t participate in its development. In a few years that computer made both Steves multi millionaires and started the Apple Computers. It is no wonder that the Apple surpassed everybody on the market &ndash; it was simpler, cheaper and have a bunch of unique features.</p>
+
+<p>But that wasn&rsquo;t the end of the story. After Steve got into a plan crash on a small airplane, operating himself, and after that incident he was suffering from partial amnesia for some time. Then he quit Apple, and, again, contrary to the ordinary opinion, he wasn&rsquo;t fired, suspended or something because they all had quarreled. He just wanted to start another project &ndash; a universal remote control for consumer electronics. Formally, till now Steve is still an Apple employee, even with a salary.</p>
+
+<p>But that wasn&rsquo;t also the end of the story. For some reason Steve decided to organize an open air rock gig, a festival, similar to Woodstock. In fact, he did a few of them. Of course, the technology was involved. These festivals had a live satellite connection to USSR (they used equipment installed for the Olympic games in Moscow in the eightieth), right through the &ldquo;iron curtain&rdquo;.</p>
+
+<p>After that Steve taught bases of computers at school for more than ten years and was engaged in philanthropy.</p>
+
+<p>The whole slice of the book is also devoted to pranks Steve have been constantly doing through his life. For example, a Dial-A-Joke service he ran in his own apartment, or a portable TV jammer, and that big one, &ldquo;The Zaltair Prank&rdquo;, when Steve spread a rumor about a competing computer company, called Zaltair (remember The Altair which launched Bill Gates to the orbit?). Even Jobs believed it and only after years realised that it was a setup.</p>
+
+<p>So, if you have at least a little interest in biographies, it is worth to read this engaging story about the good fellow, genius engineer, who transformed the industry of personal computers once and for all.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[&#34;The biased attitude to your own product&#34; pattern]]></title>
