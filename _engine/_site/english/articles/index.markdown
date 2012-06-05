@@ -1,10 +1,10 @@
 ---
 layout: default
 language: english
-title: "Acticles"
+title: "Articles"
 ---
 
-### Links to publications
+# Links to publications
 
 * [The Beauty of Concurrency in Go][], (The Pragmatic BookShelf magazine)
 * A review of "The Art of Readable Code" by Dustin Boswell and Trevor Foucher, [C Vu Volume 24 Issue 2][], page 27
