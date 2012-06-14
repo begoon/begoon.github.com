@@ -5,13 +5,92 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-05-28T06:49:00Z</updated>
+  <updated>2012-06-14T00:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Что быстрее: поиск в list, deque и forward_list или удаление из vector]]></title>
+    <link href="http://demin.ws/blog/russian/2012/06/14/selecting-container-in-stl-for-intensive-lookup-and-deletion/"/>
+    <updated>2012-06-14T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/06/14/selecting-container-in-stl-for-intensive-lookup-and-deletion/</id>
+    <content type="html"><![CDATA[<p>Задача: есть контейнер, в котором надо находить произвольные элементы и удалять их. Если оставить за рамками обсуждения общую резонность данной задачи и ее альтернативные решения, например, через дополнительный индекс для исключения линейного поиска, то получается, надо выяснить, что быстрее: искать по списку за O(N) и удалять за O(1), или получить элемент в векторе за O(1) и удалять за O(N). Как-то интуиция подсказывает, то если хода нет, то надо ходить с бубей, то есть, если не знаешь что использовать, сначала попробуй вектор. Блочная сдвижка элементов вектора выглядит более оптимизируемой, нежели проход по связному списку. Но мне хотелось немного цифр.</p>
+
+<p>Итак:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;future&gt;</span>
+<span class="hl ppc">#include &lt;vector&gt;</span>
+<span class="hl ppc">#include &lt;deque&gt;</span>
+<span class="hl ppc">#include &lt;list&gt;</span>
+<span class="hl ppc">#include &lt;forward_list&gt;</span>
+<span class="hl ppc">#include &lt;typeinfo&gt;</span>
+<span class="hl ppc">#include &lt;iterator&gt;</span>
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+
+<span class="hl kwc">template</span> <span class="hl opt">&lt;</span>typename T<span class="hl opt">&gt;</span>
+<span class="hl kwb">void</span> <span class="hl kwd">go</span><span class="hl opt">(</span>T f<span class="hl opt">) {</span>
+  <span class="hl kwc">auto</span> start <span class="hl opt">=</span> std<span class="hl opt">::</span>chrono<span class="hl opt">::</span>high_resolution_clock<span class="hl opt">::</span><span class="hl kwd">now</span><span class="hl opt">();</span>
+  <span class="hl kwd">f</span><span class="hl opt">();</span>
+  <span class="hl kwc">auto</span> stop <span class="hl opt">=</span> std<span class="hl opt">::</span>chrono<span class="hl opt">::</span>high_resolution_clock<span class="hl opt">::</span><span class="hl kwd">now</span><span class="hl opt">();</span>
+  <span class="hl kwc">auto</span> duration <span class="hl opt">=</span> std<span class="hl opt">::</span>chrono<span class="hl opt">::</span>duration<span class="hl opt">&lt;</span><span class="hl kwb">double</span><span class="hl opt">&gt;(</span>stop <span class="hl opt">-</span> start<span class="hl opt">).</span><span class="hl kwd">count</span><span class="hl opt">();</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> duration <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">erase</span><span class="hl opt">(</span>std<span class="hl opt">::</span>forward_list<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;&amp;</span> c<span class="hl opt">,</span> std<span class="hl opt">::</span>forward_list<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;::</span>iterator i<span class="hl opt">) {</span>
+  c<span class="hl opt">.</span><span class="hl kwd">erase_after</span><span class="hl opt">(</span>i<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwc">template</span> <span class="hl opt">&lt;</span>typename T<span class="hl opt">&gt;</span> <span class="hl kwb">void</span> <span class="hl kwd">erase</span><span class="hl opt">(</span>T<span class="hl opt">&amp;</span> c<span class="hl opt">,</span> typename T<span class="hl opt">::</span>iterator i<span class="hl opt">) {</span>
+  c<span class="hl opt">.</span><span class="hl kwd">erase</span><span class="hl opt">(</span>i<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwc">template</span> <span class="hl opt">&lt;</span>typename T<span class="hl opt">&gt;</span> <span class="hl kwb">void</span> <span class="hl kwd">test</span><span class="hl opt">() {</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl kwc">typeid</span><span class="hl opt">(</span>T<span class="hl opt">).</span><span class="hl kwd">name</span><span class="hl opt">() &lt;&lt;</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
+  <span class="hl kwb">size_t const</span> N <span class="hl opt">=</span> <span class="hl num">100000</span><span class="hl opt">;</span>
+  T <span class="hl kwd">v</span><span class="hl opt">(</span>N<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">);</span>
+  std<span class="hl opt">::</span><span class="hl kwd">srand</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">);</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwc">auto</span> t <span class="hl opt">=</span> N<span class="hl opt">;</span> t <span class="hl opt">&gt;</span> <span class="hl num">0</span><span class="hl opt">; --</span>t<span class="hl opt">) {</span>
+    <span class="hl kwc">auto</span> i <span class="hl opt">=</span> v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">();</span>
+    std<span class="hl opt">::</span><span class="hl kwd">advance</span><span class="hl opt">(</span>i<span class="hl opt">,</span> std<span class="hl opt">::</span><span class="hl kwd">rand</span><span class="hl opt">() %</span> t<span class="hl opt">);</span>
+    <span class="hl kwd">erase</span><span class="hl opt">(</span>v<span class="hl opt">,</span> i<span class="hl opt">);</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwd">go</span> <span class="hl opt">(</span>test<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;&gt;);</span>
+  <span class="hl kwd">go</span> <span class="hl opt">(</span>test<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>list<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;&gt;);</span>
+  <span class="hl kwd">go</span> <span class="hl opt">(</span>test<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>forward_list<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;&gt;);</span>
+  <span class="hl kwd">go</span> <span class="hl opt">(</span>test<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>deque<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;&gt;);</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Перегруженная функция <code>erase</code> сделана для единоообразия функции <code>test</code>.</p>
+
+<p>Компилируем в VS11:</p>
+
+<pre><code>cl /O2 /EHsc test.cpp &amp;&amp; test
+</code></pre>
+
+<p>Результат:</p>
+
+<pre><code>class std::vector&lt;int,class std::allocator&lt;int&gt; &gt;
+1.40678
+class std::list&lt;int,class std::allocator&lt;int&gt; &gt;
+8.85827
+class std::forward_list&lt;int,class std::allocator&lt;int&gt; &gt;
+8.70124
+class std::deque&lt;int,class std::allocator&lt;int&gt; &gt;
+9.19784
+</code></pre>
+
+<p>Разница, конечно, не в разы, но и не совсем уже незаметная, как для <code>list</code> и <code>forward_list</code>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA["iWoz: How I Invented the Personal Computer and Had Fun Along the Way", Gina Smith]]></title>
