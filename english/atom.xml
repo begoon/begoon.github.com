@@ -5,13 +5,148 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-06-14T00:00:00Z</updated>
+  <updated>2012-06-20T20:52:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Mini computers: MK802, CuBox, Raspberry PI]]></title>
+    <link href="http://demin.ws/blog/english/2012/06/20/mk802-cubox-raspberry-pi/"/>
+    <updated>2012-06-20T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/06/20/mk802-cubox-raspberry-pi/</id>
+    <content type="html"><![CDATA[<p>Seems that homemade microcomputers are coming back. I already wrote about <a href="http://demin.ws/blog/english/2012/01/19/maximite-kit/">Maximite</a>.</p>
+
+<p>Lately I had an opportunity to play with a few devices of such sort, but slightly upper class based on ARM, not PIC32.</p>
+
+<p>I apologize at once for quality of pictures, but I didn&rsquo;t manage properly taking pictures of the bright computer screen neither on iPhone nor on a camera.</p>
+
+<h1>MK802 (aka Mini Android 4.0)</h1>
+
+<p>This is a device I have bought. It costs 70$ + delivery. There is another, more modern 1GB model already available on the <a href="https://www.miniand.com">official website</a>. Mine has 512MB only.</p>
+
+<p>My photos:</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0362.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0363.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0364.JPG" alt="" />
+</p>
+
+<p>The USB #1. The device can be powered via this socket but they say it needs at least two amps, so powering from a regular computer may not work. I connected a keyboard here.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0366.JPG" alt="" />
+</p>
+
+<p>Mini HDMI. I also managed to connect to a DVI monitor via an adapter.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0368.JPG" alt="" />
+</p>
+
+<p>At the end face there is another USB port and an external power connector.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0369.JPG" alt="" />
+</p>
+
+<p>Micro-SD. The case of the device as a whole is a just bit bigger than a regular USB stick.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0371.JPG" alt="" />
+</p>
+
+<p>Connected to TV. Android is built-in. Booting time to this splash-screen is ~5s.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0372.JPG" alt="" />
+</p>
+
+<p>Time of the full boot is ~25s.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0374.JPG" alt="" />
+</p>
+
+<p>Connected a mouse, somehow entered a WiFi password in the virtual keyboard and checked out the proper website.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0379.JPG" alt="" />
+</p>
+
+<p>The desktop is optimized as a media center, that&rsquo;s why everything is so big on the screen. After some fiddling with fonts, I had got this:</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0386.JPG" alt="" />
+</p>
+
+<p>Now another proper website.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0380.JPG" alt="" />
+</p>
+
+<p>Internal storage characteristics.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0383.JPG" alt="" />
+</p>
+
+<p>The version of Android.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0384.JPG" alt="" />
+</p>
+
+<p>Pre-installed applications.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0385.JPG" alt="" />
+</p>
+
+<p>Finally, yet another proper website. Unfortunately, JSLinux wasn&rsquo;t able to boot up fully. Maybe because of the web browser.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0387.JPG" alt="" />
+</p>
+
+<p>Built-in Android doesn&rsquo;t require a flash card. If to prepare a card with another Linux, MK802 will boot from it. I have tried images of Ubuntu 12.04 and Lubuntu from the official website. Alas, it worked very slow and unresponsive. MK802 does require a proper distro optimized specifically for this platform.</p>
+
+<p>On the <a href="https://www.miniand.com/forums/forums/2/topics/1">official forum</a> there are more photos of MK802. Also there are <a href="https://www.miniand.com/forums/forums/2/topics/19">disassembly slides</a> of a slightly different model.</p>
+
+<p>Conclusion: It is not quite clear who is the audience of this device. Even Maximite allows to play with hardware, but here&hellip; Maybe running <a href="http://xbmc.org/">XBMC</a> as a media center might have at least little sense.</p>
+
+<h1>CuBox</h1>
+
+<p>Produced <a href="http://solid-run.com/">SolidRun</a>. The device was purchased by one of my colleagues, annoyed waiting his Raspberry PI (I&rsquo;m also still waiting mine), and I was able to play with it.</p>
+
+<p>CPU is slower, but the <a href="http://solid-run.com/products/cubox">peripherals</a> are much more advanced (no WiFi, though), and they also promise 1080p video. So CuBox is more likely to be a media center.</p>
+
+<p>It&rsquo;s a proper cube, which side is roughly as a match box.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/cubox/image_0.jpeg" alt="" />
+</p>
+
+<p>Power, Ethernet, HDMI, Micro-SD, USBx2, eSATA.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/cubox/image_1.jpeg" alt="" />
+</p>
+
+<p>SPDIF, micro-USB (console).</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/cubox/image_2.jpeg" alt="" />
+</p>
+
+<p>Frankly, the device looks being made in someone&rsquo;s kitchen. On the second picture it&rsquo;s clearly visible that the connectors are not quite aligned with the case. But the device in general works fine. It has Ubuntu 10.04 pre-installed.</p>
+
+<h1>Raspberry PI</h1>
+
+<p>This board was given to me by another colleague of mine who had eventually got it. It came as is, without a power supply and a flash card to boot from. You have to prepare everything by yourself. Fortunately, plenty of stuff is available online.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/raspberry-pi/raspberry-pi.jpg" alt="" />
+</p>
+
+<p>What does make PI different from MK802 and CuBox is general purpose ports (GPIO) (in the top left corner). Theoretically you can plug in your own homemade devices into Raspberry PI. PI was developed as an educational device, not an end user one.</p>
+
+<h1>Instead of the conclusion</h1>
+
+<p>The market of tiny computers is exploding. They grow as mushrooms after the rain. ARM is great, apart from one little issue &ndash; Chrome isn&rsquo;t yet available on it due to obvious reasons.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[What is faster: search in lists or deletion from vector]]></title>

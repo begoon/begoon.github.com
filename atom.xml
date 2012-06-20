@@ -5,13 +5,148 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-06-14T00:00:00Z</updated>
+  <updated>2012-06-20T20:52:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Мини-компьютеры: MK802, CuBox, Raspberry PI]]></title>
+    <link href="http://demin.ws/blog/russian/2012/06/20/mk802-cubox-raspberry-pi/"/>
+    <updated>2012-06-20T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/06/20/mk802-cubox-raspberry-pi/</id>
+    <content type="html"><![CDATA[<p>Тема микрокомпьютеров однозначно пошла на взлет. Про <a href="http://demin.ws/blog/russian/2012/01/19/maximite-kit/">сборку Maximite я уже писал</a>.</p>
+
+<p>За последнее время удалось пощупать еще несколько мини машин, правда несколько иного класса, чем Maximite, построенных на ARMах.</p>
+
+<p>Сразу извиняюсь за качество фоток, но нормально фотографировать яркий экран у меня не получилось ни на айфон, ни на мыльницу.</p>
+
+<h1>MK802 (он же Mini Android 4.0)</h1>
+
+<p>Этот я купил сам. Цена вопроса - 70$ + доставка. На <a href="https://www.miniand.com">официальном сайте</a> уже продается более современная модель с гигом памяти. У меня только 512МБ.</p>
+
+<p>Мои фотки:</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0362.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0363.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0364.JPG" alt="" />
+</p>
+
+<p>USB номер один. Через него можно также питать, но говорят, что требуется два ампера, так что просто от компьютера может не получится. Я через этот разъем подключал клавиатуру.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0366.JPG" alt="" />
+</p>
+
+<p>Mini HDMI. Через переходник также получилось подключить к DVI-монитору.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0368.JPG" alt="" />
+</p>
+
+<p>На торце еще USB и внешнее питание.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0369.JPG" alt="" />
+</p>
+
+<p>Разъем микро-SD. По размеру весь корпус чуть больше флешки обычного дизайна.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0371.JPG" alt="" />
+</p>
+
+<p>Подключил к телеку. Андроид вшит, время загрузки до этой заставки ~5 секунд.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0372.JPG" alt="" />
+</p>
+
+<p>Время полной загрузки ~25 секунд.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0374.JPG" alt="" />
+</p>
+
+<p>Подключил мышь, кое-как на виртуальной клавиатуре ввел пароль WiFi и сразу зашел на правильный сайт.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0379.JPG" alt="" />
+</p>
+
+<p>Десктоп ориентирован на использование как медиа-центра, поэтому все такое громадное на экране. Немного поёрзав со шрифтами, получил такое.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0386.JPG" alt="" />
+</p>
+
+<p>Теперь еще один правильный сайт.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0380.JPG" alt="" />
+</p>
+
+<p>Параметры внутреннего хранилища.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0383.JPG" alt="" />
+</p>
+
+<p>Что за андроид.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0384.JPG" alt="" />
+</p>
+
+<p>Предустановленные приложения.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0385.JPG" alt="" />
+</p>
+
+<p>Под занавес еще один правильный сайт. Увы, JSLinux не смог запуститься. Наверное, дело в браузере.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/mk802/IMG_0387.JPG" alt="" />
+</p>
+
+<p>Вшитый андроид работает флешки не требует. Если подготовить флешку с другим линуксом, то он с нее загрузится. А попробовал образы Ubuntu 12.04 и Lubuntu с официального сайта. Увы, реально все шевелится очень неотзывчиво. Нужен нормальный дистрибутив, оптимизированный под эту платформу.</p>
+
+<p>Можно поглядеть еще картинки на <a href="https://www.miniand.com/forums/forums/2/topics/1">официальном форуме</a>. Также есть <a href="https://www.miniand.com/forums/forums/2/topics/19">процедура разбора</a>.</p>
+
+<p>Вывод: не совсем ясно, для чего нужно такое устройство. С Maximite можно хоть на аппаратном уровне поиграться. А тут: разве что запустить <a href="http://xbmc.org/">XBMC</a> и использовать машину подобного рода как медиа-центр.</p>
+
+<h1>CuBox</h1>
+
+<p>Производится <a href="http://solid-run.com/">SolidRun</a>. Этот девайс купил коллега, уставший ждать Raspberry PI (я свой тоже еще не получил), и дал мне поиграться.</p>
+
+<p>Тут процессор немного послабее, но <a href="http://solid-run.com/products/cubox">больше периферии</a> (хотя нет WiFi), и тоже обещают 1080p видео. Этот больше тянет на роль медиа-центра.</p>
+
+<p>Представляет собой кубик, со стороной примерно как спичечный коробок.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/cubox/image_0.jpeg" alt="" />
+</p>
+
+<p>Питание, сеть, HDMI, micro-SD, два USB, eSATA.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/cubox/image_1.jpeg" alt="" />
+</p>
+
+<p>SPDIF, micro-USB (консоль).</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/cubox/image_2.jpeg" alt="" />
+</p>
+
+<p>Девайс выполнен как-то кустарно. Корпус, судя по второй картинке, точили явно руками, и не очень прямо. Но в целом &ndash; работает отлично. На борту Ubuntu 10.04.</p>
+
+<h1>Raspberry PI</h1>
+
+<p>Этот девайс мне дал другой коллега, таки дождавшийся заветной платки. Она продается как есть, без блока питания и флешки для загрузки. Надо самому ее готовить, хотя информации в сети полно.</p>
+
+<p><img src="http://demin.ws/images/blog/mini-computers/raspberry-pi/raspberry-pi.jpg" alt="" />
+</p>
+
+<p>Из интересного: у PI есть порты-пины общего назначения (GPIO) (на фотке в левом верхнем углу), к которым можно теоретически подключать всякие самоделки. Вообще, PI задумывался как образовательное устройство, а не конечное.</p>
+
+<h1>Вместо заключения</h1>
+
+<p>Какой-то прям бум наблюдается с подобными миниатюрными компьютерами. Растут как грибы. И ARM - это здорово. Одна с ними пока засада &ndash; Хром на них не работает по понятным причинам.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Что быстрее: поиск в list, deque и forward_list или удаление из vector]]></title>
