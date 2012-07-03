@@ -14,11 +14,37 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Может быть Java быть быстрее C++?]]></title>
+    <title type="html"><![CDATA[Can Java be faster C++?]]></title>
     <link href="http://demin.ws/blog/english/2012/07/03/can-java-be-faster-cpp/"/>
     <updated>2012-07-03T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/english/2012/07/03/can-java-be-faster-cpp/</id>
-    <content type="html"><![CDATA[<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+    <content type="html"><![CDATA[<p>I have a friend, <a href="http://stas-blogspot.blogspot.com/">Stas</a>. As true programmers we periodically argue on a million dollar question: what is faster, C++ (me) or Java (he), especially along with having various amounts of various drinks. Undoubtedly, not the technology, a social part of such disputes is the main one. But sometimes, sober-headed, when I think about such comparison, I cannot convince even myself that Java can work faster or at least with the same speed as C++.</p>
+
+<p>Let&rsquo;s assume that:</p>
+
+<ul>
+<li>We compare C++ 2011 generating native code and vanilla Java 7 generating JVM code. The JVM code will be compiled into machine code by the JIT compiler later on at runtime when the code is executed first time.</li>
+<li>Suppose, both C++ and Java compilers generate the most effective code as language semantics in a maximum.</li>
+</ul>
+
+<p>Denote <code>A</code> to be the linear machine code execution speed, <code>B</code> &ndash; the speed of compiling bytecode into  machine code. So, the overall execution speed is:</p>
+
+<pre><code>V(C++) = A1 + B1
+V(Java) = A2 + B2
+</code></pre>
+
+<p>Obviously, <code>B1 = 0</code>, because C++ generates native code and doesn&rsquo;t require extra work at all at runtime. But <code>B2</code> is <em>always</em> greater than zero by definition. Regardless how effective the JIT compiler is, it <em>always</em> requires some time to compile bytecode into native code. Furthermore, it doesn&rsquo;t compile all at once. It compiles &ldquo;just-in-time&rdquo; when the code is actually executed. There is always a non-zero probability that the program execution flow may be paused by the JIT compiler. Even we assume that the JIT compiler uses sophisticated code prediction algorithms to reduce <code>B2</code> as much as possible, it cannot eliminate <code>B2</code> completely.</p>
+
+<p>Now let&rsquo;s have a look at <code>A1</code> and <code>A2</code>. These parameters define how fast the generated code is. In my personal, totally subjective and biased view, C++ (not C) has more chances for better optimization because of the templates (the compiler has full language semantics to inline) and the native machine code generation (the compiler can use the most effective machine instructions in each situation). Unfortunately, I&rsquo;m not an expert in Java generics. I have just heard that they are not &ldquo;native&rdquo; citizens in Java. Also the Java compiler has to generate portable bytecode and cannot optimize on each particular platform. I hope, the JIT compiler tries to optimize it at runtime but there is no semantics information available anymore. Then the JIT compiler faces the trade-off between the speed and quality of compilation. C++ doesn&rsquo;t have this problem because the compilation phase can be as long as necessary.</p>
+
+<p>Well, I cannot convince even myself that Java can be faster than C++. I&rsquo;d like to, but I have no arguments.</p>
+
+<p>With Stas we did a few straightforward benchmarks based on QuickSort. Java worked ~10% slower on average.</p>
+
+<p>Prior to C++ 2011 we could say that C++ had no a well-defined memory model and a standard library for concurrency. It might allow Java to beat C++ using multi-threading and concurrency. But now C++ has these features. In general either C++ or Java provide pretty low-level API for concurrency comparing, for instance, to goroutines in Go or actors in Scala (though <code>std::async()</code> is quite powerful feature now in C++).</p>
+
+<p>Agreed, 10% don&rsquo;t always play the key role. Sometimes, advanced mechanisms of introspection, IDEs, managed execution, code hot swapping, etc. &ndash; in fact, everything what the Java <em>platform</em> provides, are more important than just byte threshing. But there is nothing about speed, right?</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
   <entry>
