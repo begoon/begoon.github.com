@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Может быть Java быть быстрее C++?</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Может быть Java быть быстрее C++?</h1>
+<div id="post">
+  <p>Есть у меня друг, <a href="http://stas-blogspot.blogspot.com/">Стас</a>, с которым мы частенько, как настоящие программисты, особенно при наличии разных средств внутреннего подогрева, регулярно имеем традиционные пузомерки C++ (я) vs Java (он). Понятно, что социальная составляющая является основной в данных беседах, и, очевидно, полного конценсуса тут нет и быть не может, что и хорошо.</p>
+
+<p>Но иногда, уже на трезвую голову, когда я думаю о подобном сравнении, при всем моем желании понять, почему Java в принципе может быть не то что быстрее, а хотя бы не медленнее C++, у меня не хватает аргументов даже для себя самого.</p>
+
+<p>Для начала несколько &ldquo;дано&rdquo;:</p>
+
+<ul>
+<li>Мы сравниваем С++ 2011, компилируемый в машинный код, и обычную Java 7 (не real-time, embedded или что-то в этом роде), компилируемую в JVM-код, который только в процессе выполнения будет налету через JIT тоже компилироваться в машинный код.</li>
+<li>Допустим, компиляторы C++ и Java генерируют максимально эффективный код, насколько семантика языка позволяет оптимизировать.</li>
+</ul>
+
+<p>Положим, <code>A</code> &ndash; это линейная скорость выполнения машинного когда. <code>B</code> &ndash; скорость компиляции байт-кода JVM в машинный код. Тогда общая скорость выполнения кода:</p>
+
+<pre><code>V(C++) = A1 + B1
+V(Java) = A2 + B2
+</code></pre>
+
+<p>Очевидно, что <code>B1 = 0</code>, так как С++ генерирует машинный код напрямую и не требует дополнительной работы в процессы выполнения. Но <code>B2</code> стопроцентно НЕ ноль, так как каким бы эффективным не был компилятор JIT, он ВСЕГДА требует какого-то времени для компиляцию. Более того, JIT не компилирует все сразу, а &ldquo;подкомпилирует&rdquo; по мере прохождения путей выполнения. Получается, всегда есть ненулевая вероятность, что неожиданно придется выполнить код, ранее не требуемый, и потребуется время на его компиляцию. Даже если предположить, что компилятор JIT применяет изощренные способы предсказания путей выполнения и делает все, чтобы уменьшить <code>B2</code>, но <code>B2</code> по определению не 0. Если был бы 0, то не было бы JVM, а был бы чистый машинный код.</p>
+
+<p>Далее, рассмотрим <code>A1</code> и <code>A2</code>. Эти параметры определяют, насколько эффективно компилятор создает код (или байт-код). По моему личному, субъективному и предвзятому мнению, у С++ (не С) больше шансов на оптимизацию благодаря шаблонам (компилятор имеет полноценную семантическую информацию для проведения inline&rsquo;а) и генерация машинного кода под конкретную платформу (компилятор точно знает, какие машинные инструкции были бы максимально эффективны в каждом случае). Увы, я не особо силен в generic&rsquo;ах Java, и руководствуюсь только слухами, что в Java они &ldquo;ненастоящие&rdquo;, добавленные гораздо позже и уступающие шаблонам C++. И так как компилятор обязан выдать стандартный переносимый JVM-код, то нет возможности оптимизировать под конкретную платформу. Есть надежда, что это сделает JIT, но там уже не будет семантической информации для более глубокой оптимизации. А еще JIT должен быть быстр, то есть будет компромисс между качеством оптимизации и скоростью компиляции. В С++ такой проблемы нет, так как компилировать можно как угодно долго.</p>
+
+<p>Итак, это мои доводы для меня самого, измеренные в виртуальных попугаях. Не получается у меня убедить самого себя, что Java может быть быстрее или хотя бы на уровне с С++ по скорости. Буду рад за помощь в понимании этого вопроса.</p>
+
+<p>Мы со Стасом проводили несколько несложных сравнений, в основном на реализации QuickSort, и Java по линейной скорости кода проигрывала где-то на 10%.</p>
+
+<p>До C++ 2011 можно было говорить, у С++ нет модели памяти и стандартной библиотеки для потоков, поэтому у Java есть шанс выиграть на многопоточности, но сейчас у С++ все на месте. А походы к многопоточности у С++ и Java, как мне кажется, одинаково неудобные (хотя <code>std::async()</code> &ndash; это очень сильная возможность), и им обоим далеко до goroutines в Go, actor&rsquo;ов в Scala и т.д.</p>
+
+<p>Понятно, что 10% не всегда делают погоду. Иногда важнее развитые инструменты интроспекции, среды разработки, контролируемое выполнение, замена кода налету и много другое, что дает <em>платформа</em> Java, и не дает &ldquo;молотилка&rdquo; C++. Но зачем говорить про скорость то?</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/07/03/can-java-be-faster-cpp/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/07/03/can-java-be-faster-cpp/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
