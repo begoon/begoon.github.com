@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Может быть Java быть быстрее C++?"
+title: "Может ли Java быть быстрее C++?"
 language: russian
 date: 2012-07-03 22:20
 comments: true
