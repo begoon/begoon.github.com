@@ -61,6 +61,8 @@ var (
   CategoriesRE      = *regexp.MustCompile("(?m)^- (.+)$")
   ImgRE             = *regexp.MustCompile("{% img (\\S+?) %}")
   CodeblockRE       = *regexp.MustCompile("(?smU)(^{% codeblock lang\\:([^ ]+) %}(.*){% endcodeblock %})")
+  QuotedCodeRE1     = *regexp.MustCompile("(?smU)^``` ([^ \n]+?)")
+  QuotedCodeRE2     = *regexp.MustCompile("(?smU)^```")
   YoutubeRE         = *regexp.MustCompile("(?sU){% youtube (\\S+?) %}")
   YoutubeExtRE      = *regexp.MustCompile("(?sU){% youtube (\\S+?) (\\d+) (\\d+) %}")
   IncludeRE         = *regexp.MustCompile("(?sU){% include (\\S+?) %}")
@@ -69,12 +71,13 @@ var (
   PostNameRE        = *regexp.MustCompile("^.*((\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d))-([^ \\.]+)\\.markdown$")
   BlogspotRE        = *regexp.MustCompile("^http:\\/\\/(easy|meta)-coding\\.blogspot\\.com\\/\\d\\d\\d\\d\\/\\d\\d\\/.+\\.html$")
   BlogspotEnglishRE = *regexp.MustCompile("-english(\\.html)$")
-  UnprocessedTagsRE = *regexp.MustCompile("(?Ums)^{%.*?}")
+  UnprocessedTagsRE = *regexp.MustCompile("(?Ums)^({%.*?}|```)")
   ExtLinkRE         = *regexp.MustCompile("((http|https|ftp)\\:\\/\\/|mailto\\:)")
   CheckHrefRE       = *regexp.MustCompile("(?s)<(?:a|link) .*?href=[\"']([^#][^\"']*?)[\"'].*?>")
   CheckImgRE        = *regexp.MustCompile("(?s)<img .*?src=[\"']([^\"']+?)[\"'].*?>")
   DisqusShortNameRE = *regexp.MustCompile("http\\:\\/\\/((easy|meta)-coding).blogspot.com\\/\\d\\d\\d\\d\\/\\d\\d\\/.+?\\.html")
   CodeblockRemoveRE = *regexp.MustCompile("(?s){% codeblock [^%]*?%}.+?{% endcodeblock %}")
+  QuoteCodeRemoveRE = *regexp.MustCompile("(?s)``` [^%]*?.+?```")
   MarkdownTargetsRE = *regexp.MustCompile("(?m)^\\[([^\\]]+?)\\]\\: (.*?)$")
   MarkdownLinks1RE  = *regexp.MustCompile("\\[([^\\]]+?)\\]\\[\\]")
   MarkdownLinks2RE  = *regexp.MustCompile("\\[([^\\]]+?)\\]\\[([^\\]]+?)\\]")
@@ -212,6 +215,9 @@ func process_tags(post string) string {
   // {% img URL %}
   post = ImgRE.ReplaceAllString(post, "<img src=\"$1\" />")
 
+  post = QuotedCodeRE1.ReplaceAllString(post, "{% codeblock lang:$1 %}")
+  post = QuotedCodeRE2.ReplaceAllString(post, "{% endcodeblock %}")
+
   codeblock := func(s string) string {
     m := CodeblockRE.FindAllStringSubmatch(s, -1)
     if m == nil {
@@ -340,6 +346,7 @@ func markup(s string) string {
 
 func precheck_post(s string) {
   s = CodeblockRemoveRE.ReplaceAllLiteralString(s, "")
+  s = QuoteCodeRemoveRE.ReplaceAllLiteralString(s, "")
 
   host_prefix := SiteHost + "/"
 
