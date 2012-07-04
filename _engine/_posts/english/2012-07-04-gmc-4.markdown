@@ -124,7 +124,7 @@ Everything is in Japanese, but Google Translate does an amazing job.
 
 ### Programming languages
 
-- [Assember](http://musashinodenpa.com/misc/GMC4/)
+- [Assembler](http://musashinodenpa.com/misc/GMC4/)
 - [C compiler](http://terus.jp/engineering/gmc4cc/) and
   [Assembler](http://terus.jp/engineering/gmc4cc/gmc4as.html)
 - [BASIC](http://softyasu.net/g4cbasic.html)
