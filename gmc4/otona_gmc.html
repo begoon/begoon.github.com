@@ -1,0 +1,434 @@
+<html><head><meta http-equiv="Content-Language" content="en-us"><meta http-equiv="Content-Type" content="text/html; charset=shift-jis"><title>Programming the Gakken GMC-4 Microcomputer</title></head>
+
+<body>
+<p align="center"><b><font size="5"><i>Programming the Gakken GMC-4 Microcomputer</i></font></b></p>
+
+<p>Gakken publishes the line of Otona no Kagaku (Adult Science) build-it kits.  The GMC-4 is a 4-bit microcomputer based on their F-Maikon R-165 kit.  The GMC-4 hit the streets on June 30, 2009, with a street price of 2500 yen if purchased in Japan.</p>
+
+									<div>
+<div dir="ltr">
+<p><i><b><font size="4">History: </font></b></i><br /> <b>12/04/09:</b> Added link to the full Tandy MCT English manual.<br /><b>07/02/09: </b>Wrote this knol.</p>
+<p>================================================================ </p>
+<p>The Gakken GMC-4 4-bit microcomputer kit shares the same basic instruction set as their F-Maikon (microcomputer) R-165 model.&#160; Kocharin wrote an <a href="http://homepage2.nifty.com/kocha_web">R-165 simulator</a>, and you can find a GMC-4 assembler <a href="http://musashinodenpa.com/misc/GMC4/">here</a>.&#160; The R-165 user manual in Japanese is <a href="http://otonanokagaku.net/magazine/vol24/pdf/vol24manual.pdf">here</a>.</p>
+
+<p>The GMC-4 is apparently based on the earlier Tandy Microcomputer Trainer.&#160; You can find the full <a href="http://www.polylith.com/%7Ebrendan/ClassicComputers/Tandy/uCptrTrainManual1.html">English manual for the MCT here</a>.</p>
+<p>&#8212;===&#8212;===&#8212;===&#8212;===&#8212;===&#8212;===&#8212;===&#8212;===&#8212;===&#8212;===&#8212;===&#8212;===&#8212;===&#8212;===&#8212; </p>
+
+<p>The GMC-4 consists of a hex keypad (with <b>A SET</b>, <b>INCR</b>, <b>RUN</b> and <b>RESET</b> keys), a speaker, one 7-segment LED and seven regular 2-pin LEDs.&#160; </p>
+<p>Memory is laid out as follows:</p>
+<table width="293" border="1">
+<tbody>
+
+<tr>
+<td colspan="2">00 &#8211; 4F&#160;&#160; Program Memory</td>
+</tr>
+<tr>
+<td colspan="2">50 &#8211; 5F&#160;&#160; Data Memory</td>
+</tr>
+<tr>
+
+<td>6F&#160;&#160; A Register</td>
+<td>69&#160;&#160; A&#8217; Register</td>
+</tr>
+<tr>
+<td>6C&#160;&#160; B Register</td>
+<td>67&#160;&#160; B&#8217; Register</td>
+
+</tr>
+<tr>
+<td>6E&#160;&#160; Y Register</td>
+<td>68&#160;&#160; Y&#8217; Register</td>
+</tr>
+<tr>
+<td>6D&#160;&#160; Z Register</td>
+
+<td>66&#160;&#160; Z&#8217; Register</td>
+</tr>
+</tbody>
+</table>
+<p> The registers are all 4 bits wide.&#160; A&#8217; &#8211; Z&#8217; are auxiliary registers.<br /> A register is used for most calculations.<br /> Y register is used as an offset to point into data memory.&#160; The calculated address value is Y register + 0&#215;50.</p>
+
+<p>==================================================================</p>
+<p>There are 7 pre-loaded programs, which are activated by pressing <b>RESET</b>, the program number, <b>RUN</b>.&#160; Some of the programs need data to be loaded starting from address 50 first before running.&#160; Refer to the program description in the mook for details.</p>
+<table width="51%" border="1">
+<tbody>
+<tr>
+<td width="95" align="center"><b>Program<br />  Number</b></td>
+
+<td><b>Program</b></td>
+</tr>
+<tr>
+<td width="95" align="center">9</td>
+<td>Organ</td>
+</tr>
+<tr>
+<td width="95" align="center">B</td>
+<td>Sound Hit Game</td>
+</tr>
+<tr>
+<td width="95" align="center">C</td>
+
+<td>Whack-a-mole</td>
+</tr>
+<tr>
+<td width="95" align="center">D</td>
+<td>Tennis</td>
+</tr>
+<tr>
+<td width="95" align="center">E</td>
+<td>Timer</td>
+</tr>
+<tr>
+<td width="95" align="center">A</td>
+
+<td>Music Player</td>
+</tr>
+<tr>
+<td width="95" align="center">F</td>
+<td>Morse Code Generator</td>
+</tr>
+</tbody>
+</table>
+<p> Instructions for the Morse code generator are only found on the <a href="http://otonanokagaku.net/magazine/vol24/">Otona no Kagaku</a> site.</p>
+
+<p>==================================================================</p>
+<p>The GMC-4 keys are as follows:</p>
+<table width="530" border="1">
+<tbody>
+<tr>
+<td><b>Key</b></td>
+<td width="537"><b>Description</b></td>
+</tr>
+<tr>
+<td align="center"><b>A SET</b></td>
+<td width="537">When you enter a 2-byte address value and then press <b>  A SET</b>, the address pointer will change to the value entered.&#160;   The 2-pin LEDs will light to represent the binary value of the current   address, and the 7-segment readout will then show the value of the data   at that address.</td>
+
+</tr>
+<tr>
+<td align="center"><b>INCR</b></td>
+<td width="537">Increments the address pointer.&#160; If you entered a   hex number for code or data, that value will be stored to memory before   incrementing the address pointer.</td>
+</tr>
+<tr>
+<td align="center"><b>RUN</b></td>
+<td width="537">Execute.&#160; If you want to run a pre-loaded program,   enter the program number and then press <b>RUN</b> (as given in the   table above).&#160; Otherwise, select the execute mode (see table below)   and then press <b>RUN</b>.&#160; The program will start at the current   address.&#160; Normally, the sequence is: <b><br />  RESET 1 RUN</b></td>
+
+</tr>
+<tr>
+<td align="center"><b>RESET</b></td>
+<td width="537">Resets the address pointer to <b>0 0</b>.&#160; Does not   affect the contents of the code or data memory</td>
+</tr>
+<tr>
+<td align="center"><b>Hard Reset</b></td>
+<td width="537">This is the unmarked button located beside the CPU.&#160;   A hard reset sets the address pointer to <b>0 0</b> and sets memory from   00 to 6F to hex <b>F</b>.</td>
+
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>==================================================================</p>
+<p></p>
+<p>Entering code to write your own program consists of pressing the <b>RESET</b> key, pressing the single-byte hex character to enter, then <b>INCR</b>.&#160; The 2-pin LEDs will light up to show in binary the address you have advanced to, and the 7-segment readout will show the character you entered (prior to pressing <b>INCR</b>).&#160; Continue entering the program and pressing <b>INCR</b> as needed.&#160; Note that there&#8217;s no real end condition for programs.&#160; Gakken&#8217;s examples always use infinite loops, either jumping to the beginning of the program, or to the address of the <b>JUMP</b> instruction itself.</p>
+
+<p>To review your program, press <b>RESET</b>, then <b>INCR</b>.&#160; This will advance you to the next address and the current code value will be displayed on the 7-segment readout.&#160; Entering a new code value and pressing <b>INCR</b> will overwrite the existing code.&#160; You can jump to a specific address by entering the 2-byte address and then pressing <b>A SET</b>. (I.e. &#8211; [<b>1</b>] [<b>E</b>] <b>A SET</b> to point to address 1E.)</p>
+
+<p>Some programs require data to be loaded into the data memory.&#160; To get to the data memory, enter [<b>5</b>] [<b>0</b>] and then press <b>A SET</b>.&#160; You can then enter data just as you added code, by pressing the single byte hex value of the data followed by <b>INCR</b>.&#160; You can verify the data values by entering [<b>5</b>] [<b>0</b>] <b>A SET</b>, and then pressing<b> INCR</b> to advance through the memory addresses.</p>
+
+<p>================================================================== </p>
+<p>To execute your program, press <b>RESET</b>, the execute mode, <b>RUN</b>.</p>
+<table width="53%" border="1">
+<tbody>
+<tr>
+<td align="center"><b>Execute<br />  Mode</b></td>
+<td align="center"><b>Run<br />  Mode</b></td>
+
+<td align="center"><b>2-pin LEDs<br />  Display Address</b></td>
+<td align="center"><b>Key<br />  Click</b></td>
+</tr>
+<tr>
+<td align="center">1</td>
+<td align="center">RUN</td>
+<td align="center">&#160;No</td>
+<td align="center">No</td>
+
+</tr>
+<tr>
+<td align="center">2</td>
+<td align="center">RUN</td>
+<td align="center">Yes</td>
+<td align="center">No</td>
+</tr>
+<tr>
+<td align="center">5</td>
+<td align="center">STEP</td>
+<td align="center">No</td>
+
+<td align="center">No</td>
+</tr>
+<tr>
+<td align="center">6</td>
+<td align="center">STEP</td>
+<td align="center">Yes</td>
+<td align="center">Yes</td>
+</tr>
+</tbody>
+</table>
+<p>==================================================================</p>
+
+<p>Program code table:</p>
+<table width="632" border="1">
+<tbody>
+<tr>
+<td width="99" align="center"><b>Instruction<br />  4-bit Code</b></td>
+<td width="116" align="center"><b>Mnemonic</b></td>
+<td width="139" align="center"><b>Action</b></td>
+<td width="105" align="center"><b>Result<br />  Flag</b></td>
+
+<td><b>Detail</b></td>
+</tr>
+<tr>
+<td width="99" align="center">0</td>
+<td width="116" align="center">KA</td>
+<td width="139" align="center">K-&gt;Ar</td>
+<td width="105" align="center">0, 1</td>
+<td>The pressed key from the hex keypad is saved to the A register.&#160;   If a key is not pressed, the Flag is set to 1, otherwise it is 0.</td>
+
+</tr>
+<tr>
+<td width="99" align="center">1</td>
+<td width="116" align="center">AO</td>
+<td width="139" align="center">Ar-&gt;Op</td>
+<td width="105" align="center">1</td>
+<td>The 7-segment readout displays the value currently contained in the   A register.</td>
+</tr>
+<tr>
+<td width="99" align="center">2</td>
+
+<td width="116" align="center">CH</td>
+<td width="139" align="center">Ar&lt;=&gt;Br<br />  Yr&lt;=&gt;Zr</td>
+<td width="105" align="center">1</td>
+<td>Exchange the contents of the A and B registers, and the Y and Z   registers.</td>
+</tr>
+<tr>
+<td width="99" align="center">3</td>
+
+<td width="116" align="center">CY</td>
+<td width="139" align="center">Ar&lt;=&gt;Yr</td>
+<td width="105" align="center">1</td>
+<td>Exchange the contents of the A and Y registers.</td>
+</tr>
+<tr>
+<td width="99" align="center">4</td>
+<td width="116" align="center">AM</td>
+<td width="139" align="center">Ar-&gt;M</td>
+
+<td width="105" align="center">1</td>
+<td>Write the contents of the A register to data memory (memory address   is 50 + Y register).</td>
+</tr>
+<tr>
+<td width="99" align="center">5</td>
+<td width="116" align="center">MA</td>
+<td width="139" align="center">M-&gt;Ar</td>
+<td width="105" align="center">1</td>
+<td>Write the contents of data memory (50 + Y register) to the A   register.</td>
+
+</tr>
+<tr>
+<td width="99" align="center">6</td>
+<td width="116" align="center">M+</td>
+<td width="139" align="center">M+Ar-&gt;Ar</td>
+<td width="105" align="center">0, 1</td>
+<td>Add the contents of data memory (50 + Y register) to the A register.&#160;   If there is overflow, the Flag is set to 1, otherwise 0.</td>
+</tr>
+<tr>
+
+<td width="99" align="center">7</td>
+<td width="116" align="center">M-</td>
+<td width="139" align="center">M-Ar-&gt;Ar</td>
+<td width="105" align="center">0, 1</td>
+<td>Subtract the contents of data memory (50 + Y register) from the A   register.&#160; If the result is negative, the Flag is set to 1,   otherwise 0.</td>
+</tr>
+<tr>
+<td width="99" align="center">8</td>
+
+<td width="116" align="center">TIA [ ]</td>
+<td width="139" align="center">[ ] -&gt; Ar</td>
+<td width="105" align="center">1</td>
+<td>Transfer immediate to the A register.</td>
+</tr>
+<tr>
+<td width="99" align="center">9</td>
+<td width="116" align="center">AIA [ ]</td>
+<td width="139" align="center">Ar + [ ] -&gt; Ar</td>
+
+<td width="105" align="center">0, 1</td>
+<td>Add immediate to the A register.&#160; If there is overflow, the   Flag is set to 1, otherwise 0.</td>
+</tr>
+<tr>
+<td width="99" align="center">A</td>
+<td width="116" align="center">TIY [ ]</td>
+<td width="139" align="center">[ ] -&gt; Yr</td>
+<td width="105" align="center">1</td>
+
+<td>Transfer immediate to the Y register.</td>
+</tr>
+<tr>
+<td width="99" align="center">B</td>
+<td width="116" align="center">AIY [ ]</td>
+<td width="139" align="center">Yr + [ ] -&gt; Yr</td>
+<td width="105" align="center">0, 1</td>
+<td>Add immediate to the Y register.&#160; If there is overflow, the   Flag is set to 1, otherwise 0.</td>
+
+</tr>
+<tr>
+<td width="99" align="center">C</td>
+<td width="116" align="center">CIA [ ]</td>
+<td width="139" align="center">Ar != [ ] ?</td>
+<td width="105" align="center">0, 1</td>
+<td>Compare immediate to the A register.&#160; If equal, Flag reset to   0, otherwise set to 1.</td>
+</tr>
+<tr>
+<td width="99" align="center">D</td>
+
+<td width="116" align="center">CIY [ ]</td>
+<td width="139" align="center">Yr != [ ] ?</td>
+<td width="105" align="center">0, 1</td>
+<td>Compare immediate to the Y register.&#160; If equal, Flag reset to   0, otherwise set to 1.</td>
+</tr>
+<tr>
+<td width="99" align="center">E</td>
+<td width="116" align="center">&#8212;</td>
+<td width="139" align="center">&#8212;</td>
+<td width="105" align="center">&#8212;</td>
+
+<td>Extended code.&#160; See table below.</td>
+</tr>
+<tr>
+<td width="99" align="center">F</td>
+<td width="116" align="center">JUMP [ ] [ ]</td>
+<td width="139">&#160;</td>
+<td width="105" align="center">1</td>
+<td>Jump to the immediate address if the Flag is 1, otherwise just   increment the program counter.&#160; The Flag is then set to 1.&#160;   Note that this is an absolute address.&#160; That is, JUMP [0] [2] will   change the address pointer to hex address 0&#215;02.&#160; You can jump both   forward and backward in program space.</td>
+
+</tr>
+</tbody>
+</table>
+<p>&#160;</p>
+<p>Extended code table.:</p>
+<table width="632" border="1">
+<tbody>
+<tr>
+<td width="99" align="center">E0</td>
+<td width="137" align="center">CAL RSTO</td>
+<td width="83" align="center">1</td>
+<td>Clear the 7-segment readout.</td>
+
+</tr>
+<tr>
+<td width="99" align="center">E1</td>
+<td width="137" align="center">CAL SETR</td>
+<td width="83" align="center">1</td>
+<td>Turn on the 2-pin LED using the Y register (Y register takes the   value of 0-6).</td>
+</tr>
+<tr>
+<td width="99" align="center">E2</td>
+<td width="137" align="center">CAL RSTR</td>
+<td width="83" align="center">1</td>
+
+<td>Turn off the 2-pin LED using the Y register (Y register takes the   value of 0-6).</td>
+</tr>
+<tr>
+<td width="99" align="center">E3</td>
+<td width="137" align="center">&#8212;</td>
+<td width="83" align="center">&#8212;</td>
+<td>Not used.</td>
+</tr>
+<tr>
+<td width="99" align="center">E4</td>
+<td width="137" align="center">CAL CMPL</td>
+<td width="83" align="center">1</td>
+
+<td>Complement the A register (1 &lt;=&gt; 0).</td>
+</tr>
+<tr>
+<td width="99" align="center">E5</td>
+<td width="137" align="center">CAL CHNG</td>
+<td width="83" align="center">1</td>
+<td>Swap the A/B/Y/Z registers with A&#8217;/B&#8217;/Y&#8217;/Z&#8217;</td>
+
+</tr>
+<tr>
+<td width="99" align="center">E6</td>
+<td width="137" align="center">CAL SIFT</td>
+<td width="83" align="center">0, 1</td>
+<td>Shift the A register right 1 bit.&#160; If the starting value is   even (bit 0 = 0), set the Flag to 1, otherwise 0.</td>
+</tr>
+<tr>
+<td width="99" align="center">E7</td>
+<td width="137" align="center">CAL ENDS</td>
+
+<td width="83" align="center">1</td>
+<td>Play the End sound.</td>
+</tr>
+<tr>
+<td width="99" align="center">E8</td>
+<td width="137" align="center">CAL ERRS</td>
+<td width="83" align="center">1</td>
+<td>Play the Error sound.</td>
+</tr>
+<tr>
+<td width="99" align="center">E9</td>
+
+<td width="137" align="center">CAL SHTS</td>
+<td width="83" align="center">1</td>
+<td>Play a short &#8220;pi&#8221; sound.</td>
+</tr>
+<tr>
+<td width="99" align="center">EA</td>
+<td width="137" align="center">CAL LONS</td>
+<td width="83" align="center">1</td>
+
+<td>Play a longer &#8220;pi-&#8221; sound.</td>
+</tr>
+<tr>
+<td width="99" align="center">EB</td>
+<td width="137" align="center">CAL SUND</td>
+<td width="83" align="center">1</td>
+<td>Play a note based on the value of the A register (allowed values are   1 &#8211; E).</td>
+
+</tr>
+<tr>
+<td width="99" align="center">EC</td>
+<td width="137" align="center">CAL TIMR</td>
+<td width="83" align="center">1</td>
+<td>Pause for the time calculated by (value of A register +1) * 0.1   seconds.</td>
+</tr>
+<tr>
+<td width="99" align="center">ED</td>
+<td width="137" align="center">CAL DSPR</td>
+<td width="83" align="center">1</td>
+
+<td>Set the 2-pin LEDs with the value from data memory.&#160; The data   to display is as follows: the upper three bits come from memory address   5F (bits 0-2), and the lower four from memory address 5E (bits 0-3).</td>
+</tr>
+<tr>
+<td width="99" align="center">EE</td>
+<td width="137" align="center">CAL DEM-</td>
+<td width="83" align="center">1</td>
+<td>Subtract the value of the A register from the value in data memory.&#160;   The new value is stored in data memory as a decimal.&#160; Afterwards,   the Y register is decremented by 1.</td>
+
+</tr>
+<tr>
+<td width="99" align="center">EF</td>
+<td width="137" align="center">CAL DEM+</td>
+<td width="83" align="center">1</td>
+<td>Add the value of the A register to the value in data memory.&#160;   The new value is stored in memory as a decimal.&#160; If the result is   overflow, data memory will be automatically adjusted.&#160; Afterwards,   the Y register is decremented.</td>
+</tr>
+
+</tbody>
+</table>
+<p></div>
+</div>
+
+<a href="http://tsoj.manga.org/gakken/gakken_index.html">Return to the Gakken Index Page</a>
+
+</body>
+</html>

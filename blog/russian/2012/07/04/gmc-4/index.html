@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Микрокомпьютер GMC-4</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Микрокомпьютер GMC-4</h1>
+<div id="post">
+  <p><a href="http://ramlamyammambam.livejournal.com/190698.html">По наводке Сергея Вакуленко</a>, я купил <a href="http://en.wikipedia.org/wiki/GMC-4">GMC-4</a>. Все-таки в подобных устройствах есть какой-то неповторимый шарм. Заказал в забавном японском магазине гаджетов <a href="http://www.japantrendshop.com/gmc4-microcomputer-p-789.html">Japan Trend Shop</a>.</p>
+
+<p><img src="/images/blog/gmc4/gmc4.jpg" alt="" />
+</p>
+
+<p>GMC-4 &ndash; это четырехбитный микрокомпьютер. Характеристики компьютера:</p>
+
+<ul>
+<li>размер слова 4 бита</li>
+<li>восемь регистров, один регистр-флаг</li>
+<li>15 однословных и 16 двухсловных машинных инструкций</li>
+<li>память программ 80 слов</li>
+<li>память данных 16 слов</li>
+<li>ПЗУ c набором из 7 игр: орган, угадай мелодию, дави моль, теннис, таймер, музыкальный плеер, генератор морзе</li>
+<li>семь светодиодов - порт вывода шины адреса</li>
+<li>семисегментный индикатор - порт вывода шины данных</li>
+<li>20-кнопочная клавиатура - порт ввода</li>
+<li>динамик для вывода звука</li>
+<li>кнопка сброса</li>
+<li>питание от 3-х батареек AA</li>
+</ul>
+
+<p>Вся архитектура описывается одним небольшим документом &ndash; <a href="http://tsoj.manga.org/gakken/otona_gmc.html">Programming the Gakken GMC-4 Microcomputer</a>.</p>
+
+<p>Сегодня приехала моя посылка. GMC-4 является приложением к одному из выпусков журнала &ldquo;Otona no Kagaku&rdquo; издательства Gakken, 24-й номер за 2009 год. Коробка с конструктором приклеена к журналу. Все на японском.</p>
+
+<p><img src="/images/blog/gmc4/IMG_0458.JPG" alt="" />
+</p>
+
+<p>Забавно, на обратной стороне коробки изображены машинные инструкции GMC-4. Все умещается в одну таблицу.</p>
+
+<p><img src="/images/blog/gmc4/IMG_0459.JPG" alt="" />
+</p>
+
+<p>Плата, пищалка, подставка, фрагменты клавиатуры и винты.</p>
+
+<p><img src="/images/blog/gmc4/IMG_0460.JPG" alt="" />
+</p>
+
+<p>Инструкция на японском &ndash; это жестко.</p>
+
+<p><img src="/images/blog/gmc4/IMG_0469.JPG" alt="" />
+</p>
+
+<p>Ставим батарейки и закрепляем пищалку.</p>
+
+<p><img src="/images/blog/gmc4/IMG_0463.JPG" alt="" />
+</p>
+
+<p>Плата.</p>
+
+<p><img src="/images/blog/gmc4/IMG_0461.JPG" alt="" />
+</p>
+
+<p><img src="/images/blog/gmc4/IMG_0462.JPG" alt="" />
+</p>
+
+<p>Наклеиваем клавиатуру.</p>
+
+<p><img src="/images/blog/gmc4/IMG_0464.JPG" alt="" />
+</p>
+
+<p><img src="/images/blog/gmc4/IMG_0466.JPG" alt="" />
+</p>
+
+<p>Включаем&hellip; It&rsquo;s alive! Alive!!!</p>
+
+<p><img src="/images/blog/gmc4/IMG_0468.JPG" alt="" />
+</p>
+
+<p>Итак: клавиатура, семисегментник, под ним процессор, затем пипка &ldquo;hard reset&rdquo;. Сверху семь  светодиодов, управляемых индивидуально. Они, например, используются для отображения текущего адреса. Мне это все напомнило <a href="http://ru.wikipedia.org/wiki/%D0%AE%D0%A2-88">ЮТ-88</a>. В его <a href="http://junetech.chat.ru/kollection/ut88/1step.htm">первой модификации</a> был только семисегментный индикатор и похожая клавиатура.</p>
+
+<p><img src="/images/blog/gmc4/ut88-minimal.jpg" alt="" />
+</p>
+
+<p>Попробуем чего-нибудь написать. Например, простая программа, которая ждет нажатия на клавиатуре и затем отображает код нажатой кнопки на семисегментном индикаторе.</p>
+
+<pre><code>00: 0     KA 0       ; Считываем код кнопки (0-F) в A. Если нажата, то Flag=0, иначе Flag=1.
+01: F00   JUMP 00    ; Если Flag=1 (не нажата), то переходим на 00.   
+04: 1     AO         ; Выводим A на семисегментник и устанавливаем Flag=1
+05: F00   JUMP 00    ; Если Flag=1 (тут всегда 1), то переходим на 00.
+</code></pre>
+
+<p>Для ввода жмем: <code>RESET 0 INCR F INCR 0 INCR 0 INCR 1 INCR F INCR 0 INCR 0 INCR RESET</code></p>
+
+<p>Для запуска: <code>RESET 1 RUN</code></p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/t-S86rICAPk" frameborder="0" allowfullscreen></iframe>
+
+<p>Интересно, эта железка позволяет <strong>пошагово трассировать</strong> программу. Если запустить программу через <code>RESET 6 RUN</code>, то она будет останавливаться после каждой инструкции, и текущий адрес будет на верхних светодиодах в двоичном коде. Для выполнения следующей инструкции надо нажать <code>INCR</code> и т.д. Можно прервать программу, нажав <code>RESET</code>, и, например, посмотреть содержимое регистров. Они являются ячейками памяти. Какая никакая отладка.</p>
+
+<p>Теперь программа по сложнее: бегущий огонек по верхним семи светодиодам с отображением текущего номера на семисегментнике.</p>
+
+<pre><code>00: 80    TIA 0     ; A=0
+02: 1     AO        ; Выводим A на семисегментник.
+03: 3     CY        ; Сохраняем A в Y.
+04: E1    CAL SETR  ; Зажигаем светодиод, номер которого в Y.
+06: 84    TIA 4     ; A=4
+08: EC    CAL TMR   ; Задержка (A+1)*0.1 секунд (0.5 сек).
+0A: E2    CAL RSTR  ; Гасим светодиод, номер которого в Y.
+0C: 3     CY        ; Восстанавливаем A из Y.
+0D: 91    AIA 1     ; A = A + 1
+0F: C7    CIA 7     ; Если A=7, то Flag=0. Иначе Flag=1.
+11: F02   JUMP 02   ; Переход на 02, если Flag=1. Также устанавливаем Flag=1.
+13: F00   JUMP 00   ; Безусловный переход на 00 (Flag=1 после предыдущей команды).
+</code></pre>
+
+<p>Коды: <code>8 0 1 3 E 1 8 4 E C E 2 3 9 1 C 7 F 0 2 F 0 0</code></p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/bdEUUtv93r0" frameborder="0" allowfullscreen></iframe>
+
+<h2>Что есть из средств разработки?</h2>
+
+<p>Увы, почти все ресурсы на японском, но Google Translate творит чудеса.</p>
+
+<h2><a href="http://dansan.air-nifty.com/blog/gmc4-simulator.html">Симулятор</a></h2>
+
+<p><img src="/images/blog/gmc4/gmc4simulator.png" alt="" />
+</p>
+
+<h3>Автоматический загрузчик</h3>
+
+<iframe width="420" height="315" src="http://www.youtube.com/embed/lagnC5CpsUE" frameborder="0" allowfullscreen></iframe>
+
+<h3>Языки программирования</h3>
+
+<ul>
+<li><a href="http://musashinodenpa.com/misc/GMC4/">Ассемблер</a></li>
+<li><a href="http://terus.jp/engineering/gmc4cc/">Компилятор C</a> и
+<a href="http://terus.jp/engineering/gmc4cc/gmc4as.html">Ассемблер</a></li>
+<li><a href="http://softyasu.net/g4cbasic.html">Бейсик</a></li>
+</ul>
+
+<h1>Вместо заключения</h1>
+
+<p>Классная игрушка. Я начал программировать на <a href="http://radio86.googlecode.com/hg/online/radio86.html">Радио-86РК</a> в машинных кодах, набивая их в Мониторе. Тут почти такие же ощущения. Выпуск журнала, приложением которого является GMC-4, судя по картинкам (я по-японски не читаю, увы), содержит иллюстрированную историю микропроцессоров, начиная с <a href="http://en.wikipedia.org/wiki/Intel_4004">Intel 4004</a>. Далее идут десятки различных примеров программ и проектов, в которых используется GMC-4. Красота!</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/07/04/gmc-4/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/07/04/gmc-4/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
