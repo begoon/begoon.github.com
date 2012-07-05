@@ -677,10 +677,11 @@ func build_index() {
 
 var (
   language_table = map[string]string{
-    "makefile":   "make",
-    "nasm":       "asm",
-    "javascript": "js",
-    "c#":         "cs",
+    "makefile":    "make",
+    "nasm":        "asm",
+    "javascript":  "js",
+    "c#":          "cs",
+    "objective-c": "objc",
   }
 )
 
