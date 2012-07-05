@@ -8,6 +8,7 @@ title: "Статьи"
 
 **Хабр**
 
+* [Микрокомпьютер GMC-4][]
 * [RetroBSD on Maximite][]
 * [Многопоточный QuickSort на С++ 2011][]
 * [TCP/IP proxy на Go][]
@@ -24,13 +25,13 @@ title: "Статьи"
 * [Распространенные заблуждения про банковские карточки][]
 * [Эмулятор Радио-86РК на Javascript][]
 
-
 **Разное**
 
 * [Интервью проекту OpenQuality.ru][]
 
 [Интервью проекту OpenQuality.ru]: http://experience.openquality.ru/alexander-demin-interview/
 
+[Микрокомпьютер GMC-4]: http://habrahabr.ru/post/147157/
 [RetroBSD on Maximite]: http://habrahabr.ru/post/143679/
 [Многопоточный QuickSort на С++ 2011]: http://habrahabr.ru/post/143055/
 [TCP/IP proxy на Go]: http://habrahabr.ru/post/142527/
