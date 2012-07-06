@@ -5,13 +5,147 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-07-04T19:22:00Z</updated>
+  <updated>2012-07-06T21:25:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Энигма, Колоссус или история Британской криптографии в Блетчли-парке]]></title>
+    <link href="http://demin.ws/blog/russian/2012/07/06/bletchley-park-colossus/"/>
+    <updated>2012-07-06T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/07/06/bletchley-park-colossus/</id>
+    <content type="html"><![CDATA[<p>Сегодня ездил в <a href="http://www.bletchleypark.org.uk/">Bletchley Park</a>, благо час на машине от дома. Это место было объектом максимальной секретности в годы Второй Мировой. На этой военном базе, например, Алан Тьюринг взламывал коды <a href="http://ru.wikipedia.org/wiki/%D0%AD%D0%BD%D0%B8%D0%B3%D0%BC%D0%B0">Энигмы</a>, и тут был построен <a href="http://en.wikipedia.org/wiki/Colossus_computer">Колоссус</a>, ламповый компьютер, использовавшийся для взлома шифров.</p>
+
+<p>Сейчас тут музей криптографии и шифрования. Недавно Колоссус был восстановлен, и можно посмотреть его в действии. У меня была цель посмотреть Колоссус и Энигму.</p>
+
+<p>В этот день была как назло нормальная английская погода &ndash; лил дождь. Мой любимый билайновский зонт пришелся как всегда кстати.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0508.JPG" alt="" />
+</p>
+
+<p>Тут старались сохранить дух времен войны &ndash; если б не наклейка на стекле, сошло бы за фотографию того времени.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0492.JPG" alt="" />
+</p>
+
+<p>Иллюстрации в прошлом всегда выполнялись с любовью и внимаем к деталям.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0494.JPG" alt="" />
+</p>
+
+<p>Какой-то револьвер. Глаз зацепился, так как он был так близко.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0495.JPG" alt="" />
+</p>
+
+<p>Интересно, что лично я &ldquo;<a href="http://ru.wikipedia.org/wiki/MP_38">Шмайсер</a>&rdquo; видел так близко первый раз в жизни.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0496.JPG" alt="" />
+</p>
+
+<p>Вам это ничего не напоминает? Обжимку для витой пары? Это устройство времен Второй Мировой.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0498.JPG" alt="" />
+</p>
+
+<p>Видимо, это диск-ключ Энигмы, вернее какой-то энигма-подобной машины.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0499.JPG" alt="" />
+</p>
+
+<p>Собственно, Энигма, вернее их тут очень много. Я то представлял себе, что Энигма - это конкретный аппарат, который я знаю по американскому ремиксу фильма &ldquo;Das Boot&rdquo;. Оказывается, их выпускали все кому не лень.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0501.JPG" alt="" />
+</p>
+
+<p>Шифровальный аппарат от Сименса.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0502.JPG" alt="" />
+</p>
+
+<p>Или вот уже портативная версия.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0503.JPG" alt="" />
+</p>
+
+<p>Тут все экспонаты реальные, им по 70 лет и более. Их просто вежливо просят руками не трогать.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0504.JPG" alt="" />
+</p>
+
+<p>А вот машина <a href="http://ru.wikipedia.org/wiki/Turing_Bombe">Bombe</a>, конкретно используемая для взлома кода Энигмы.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0505.JPG" alt="" />
+</p>
+
+<p>Вид сзади.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0506.JPG" alt="" />
+</p>
+
+<p>Ее фрагмент в действии.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/yzxyn5G6cno" frameborder="0" allowfullscreen></iframe>
+
+<p>В радиорубке.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0509.JPG" alt="" />
+</p>
+
+<p>И вот я уже на полпути к заветной цели &ndash; Колоссусу.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0510.JPG" alt="" />
+</p>
+
+<p>И так, вот Он &ndash; супер-секретный компьютер британских спецслужб времен войны. Усилиями энтузиастов девайс был недавно восстановлен и запущен. Представляет собой две панели, набитые в основном лампами. Это передняя панель, слева.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0512.JPG" alt="" />
+</p>
+
+<p>Передняя панель, справа.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0513.JPG" alt="" />
+</p>
+
+<p>Сзади справа. Так как все это трещит и шевелится (перфоленты, ролики всякие), то стоит реальный гул. Напольные вентиляторы уже нашего времени охлаждают лампы.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0514.JPG" alt="" />
+</p>
+
+<p>Сзади слева.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0515.JPG" alt="" />
+</p>
+
+<p>С боку между панелями. На осциллографе даже показывается какой-то сигнал.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0516.JPG" alt="" />
+</p>
+
+<p>Как работает Колоссус.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0518.JPG" alt="" />
+</p>
+
+<p>Если честно, то я как-то не впечатлился. Ну гудит, ну что-то там ездит туда-сюда. Наверное, если б можно было б программу закодить прямо на месте, можно бы и вставило бы.</p>
+
+<p>В том же здании, где стоит Колоссус, находится <a href="http://www.tnmoc.org/">The National Museum of Computing</a>. Увы, сегодня он был закрыт. Даже взятка в размере 50$ лично в руки дежурному не состоялась. А так хотелось заглянуть в зал мейнфреймов и персоналок.</p>
+
+<p>Грустная фотка через решетку.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0511.JPG" alt="" />
+</p>
+
+<p>В любом музее есть всегда магазин сувенирки. Тут, на удивление, процентов на 80 &ndash; книги про историю криптографии. А вот то, что должно быть в любом уважающем себя книжном магазине &ndash; диван.</p>
+
+<p><img src="http://demin.ws/images/blog/bletchley-park/IMG_0507.JPG" alt="" />
+</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Микрокомпьютер GMC-4]]></title>
