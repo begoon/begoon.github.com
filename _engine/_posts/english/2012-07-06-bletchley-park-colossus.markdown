@@ -26,7 +26,7 @@ If to skip a sticker on the windows, you may think that The War is still on.
 
 ![](/images/blog/bletchley-park/IMG_0492.JPG)
 
-Illustrations in the past ware always created with love to details and general beauty.  
+Illustrations in the past were always created with love to details and general beauty.  
 
 ![](/images/blog/bletchley-park/IMG_0494.JPG)
 
