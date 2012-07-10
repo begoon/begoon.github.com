@@ -5,13 +5,46 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-07-10T23:57:00Z</updated>
+  <updated>2012-07-11T00:29:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Raspberry Pi arrived]]></title>
+    <link href="http://demin.ws/blog/english/2012/07/11/raspberry-pi-arrived/"/>
+    <updated>2012-07-11T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/07/11/raspberry-pi-arrived/</id>
+    <content type="html"><![CDATA[<p>After a few months of waiting and agiotage it finally arrived. I have dived again into a wonderful world on fiddling with kernels, patches, firmware, a bit of soldering, forums and blogs, trying to explore this wonderful piece of hardware.</p>
+
+<p>I suspect there will be series of blog posts about Raspberry Pi.</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/arrived/IMG_0487.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/arrived/IMG_0488.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/arrived/IMG_0489.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/arrived/IMG_0490.JPG" alt="" />
+</p>
+
+<p>Frankly, even before receiving my own RPi I already had to solder the SD socket on another RPi which was broken. There is a rumor spreading that this type of SD sockets is very unreliable.</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/arrived/IMG_0491.JPG" alt="" />
+</p>
+
+<p>In contrast I cannot complain at all about an SD socket used in <a href="http://demin.ws/blog/english/2012/01/19/maximite-kit/">Maximite</a> but it was a different type.</p>
+
+<p><img src="http://demin.ws/images/blog/maximite-kit/img_0107.jpg" alt="" />
+</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[USB Serial Console for Raspberry Pi on Mac OSX Lion: Olimex USB Serial Cable]]></title>
