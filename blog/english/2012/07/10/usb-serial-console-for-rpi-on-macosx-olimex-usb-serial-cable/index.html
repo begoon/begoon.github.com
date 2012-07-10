@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>USB Serial Console for Raspberry Pi on Mac OSX Lion: Olimex USB Serial Cable</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>USB Serial Console for Raspberry Pi on Mac OSX Lion: Olimex USB Serial Cable</h1>
+<div id="post">
+  <p>I recently started playing to Raspberry Pi. Along with other questions I wanted to try talking to RPi via a serial cable. The <a href="http://elinux.org/Rpi_Low-level_peripherals">documentation about RPi peripherals</a> says that at reset only pins GPIO 14 &amp; 15 (TxD, RxD) are assigned to the alternate function UART. So, it should work out of the box.</p>
+
+<p>I decided to buy <a href="https://www.olimex.com/dev/usb-serial-cable.html">Olimex USB To Serial Cable</a>. It was available on eBay as <a href="http://www.ebay.co.uk/itm/Olimex-USB-SERIAL-CABLE-Olinuxino-console-cable-alternative-to-Raspberry-Pi-/280917749304?pt=UK_BOI_Electrical_Components_Supplies_ET&amp;hash=item416800ae38">Olimex USB-SERIAL-CABLE Olinuxino console cable alternative to Raspberry Pi</a>.</p>
+
+<p>This cable provides 3.3V output levels which are strongly recommended for RPi (not 5V), and its 3 wires with male plugs can be directly connected to the RPi GPIO P1 header.</p>
+
+<p><img src="/images/blog/olimex-cable/olimex-usb-serial-cable-olinuxino-console-cable.png" alt="" />
+</p>
+
+<p>Unfortunately, at a time of this writing, there were no drivers for Mac OSX available on the <a href="https://www.olimex.com/dev/usb-serial-cable.html">official website</a>, and OSX Lion (10.7.4) didn&rsquo;t recognize this device. It was an unpleasant surprise because before I saw that Lion perfectly recognized other USB-RS232 hardware based on different chipsets (Microchip, for example).</p>
+
+<p>I checked the Product ID and Manufacturer on the Olimex cable. When the cable is connected, click on &ldquo;About This Mac &gt; More Info… &gt; System Report… &gt; USB&rdquo;.</p>
+
+<p><img src="/images/blog/olimex-cable/pl2303-serial-usb-on-lion.png" alt="" />
+</p>
+
+<p>Then Googling for a Prolific driver for Mac brought me to a great blog post, called &ldquo;<a href="http://xbsd.nl/2011/07/pl2303-serial-usb-on-osx-lion.html">PL2303 Serial-USB on OSX Lion</a>&rdquo;. Following the instructions I installed the driver and connected to Raspberry Pi.</p>
+
+<p>In short I did the following:</p>
+
+<pre><code>cd /tmp
+wget http://xbsd.nl/~martijn/log/osx-pl2303.kext.tgz
+tar xvzf http://xbsd.nl/~martijn/log/osx-pl2303.kext.tgz
+cd osx-pl2303.kext
+sudo cp -R osx-pl2303.kext /System/Library/Extensions/
+cd /System/Library/Extensions
+chmod -R 755 osx-pl2303.kext
+chown -R root:wheel osx-pl2303.kext
+cd /System/Library/Extensions
+
+kextload ./osx-pl2303.kext
+kextcache -system-cache
+</code></pre>
+
+<blockquote>
+<p>Note: Just in case, I made a copy of the &ldquo;<a href="/files/olimex-cable/osx-pl2303.kext.tgz">osx-pl2303.kext.tgz</a>&rdquo; file.</p>
+</blockquote>
+
+<p>You can make sure that everything is installed correctly by:</p>
+
+<pre><code>kextstat -b nl.bjaelectronics.driver.PL2303
+</code></pre>
+
+<p>It should print the following:</p>
+
+<pre><code>Index Refs Address            Size       Wired      Name (Version) &lt;Linked Against&gt;
+   74    0 0xffffff7f808ee000 0xb000     0xb000     nl.bjaelectronics.driver.PL2303 (1.0.0d1) &lt;73 34 5 4 3&gt;
+</code></pre>
+
+<blockquote>
+<p>Note: If you need to <em>unload</em> the driver for some reason, you check that the driver is loaded (by <code>kextstat</code> command above), and then:</p>
+</blockquote>
+
+<pre><code>sudo kextunload /System/Library/Extensions/osx-pl2303.kext
+</code></pre>
+
+<p>When the driver is installed, reconnect the cable to USB. There should be two device drivers created <code>/dev/cu.PL2303-00002006</code> and <code>/dev/tty.PL2303-00002006</code>. You can check it by:</p>
+
+<pre><code>ls /dev/*PL*
+</code></pre>
+
+<p>It should print:</p>
+
+<pre><code>/dev/cu.PL2303-00002006     /dev/tty.PL2303-00002006
+</code></pre>
+
+<p>Now let&rsquo;s connect the cable to the RPi header P1. It&rsquo;s better to disconnect it from USB temporarily.</p>
+
+<p>The pinout of the cable is the following:</p>
+
+<table>
+<thead>
+<tr>
+<td><strong>Wire</strong></td>
+<td><strong>Desc</strong></td>
+<td><strong>Rip GPIO</strong></td>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>Blue</td>
+<td>GND</td>
+<td>0v</td>
+</tr>
+
+<tr>
+<td>Green</td>
+<td>Rx</td>
+<td>14/TxD</td>
+</tr>
+
+<tr>
+<td>Red</td>
+<td>Tx</td>
+<td>15/RxD</td>
+</tr>
+</tbody>
+</table>
+
+<p>An example of the connection:</p>
+
+<p><img src="/images/blog/olimex-cable/pl2303-serial-usb-on-lion-connected.jpg" alt="" />
+</p>
+
+<p>When all three wires are attached, you can connect the cable back to USB. Now any terminal emulator software can talk to RPi via the <code>/dev/cu.PL2303-00002006</code> device. I used Minicom:</p>
+
+<pre><code>minicom -D /dev/cu.PL2303-00002006 -b 115200
+</code></pre>
+
+<p>It should print something like this:</p>
+
+<pre><code>Welcome to minicom 2.6.1
+
+OPTIONS: 
+Compiled on May 10 2012, 07:16:49.
+Port /dev/cu.PL2303-00002006
+
+Press Meta-Z for help on special keys
+
+
+Debian GNU/Linux 6.0 raspberrypi ttyAMA0
+
+raspberrypi login:    
+</code></pre>
+
+<p>Finally, you may want to re-direct the RPi console from HDMI to the serial port (ttyAMA0). In this case RPi will be printing boot messages to the serial console instead of the monitor.</p>
+
+<p><em>You need to login to your RPi</em> (via SSH, telnet or just established serial connection) and execute the following:</p>
+
+<pre><code>sudo mount /dev/mmcblk0p1 /mnt
+</code></pre>
+
+<p>This will mount your boot partition to <code>/mnt</code>. Now you need to edit the kernel commund line:</p>
+
+<pre><code>sudo vi /mnt/cmdline.txt
+</code></pre>
+
+<p>In <code>cmdline.txt</code> make sure that <code>console=ttyAMA0,115200</code> and <code>kgdboc=ttyAMA0,115200</code>, and there is no another <code>console=</code> assignment, for example to <code>tty0</code>. After you save the changes and reboot RPi, you may see RPi boot messages in the terminal emulator connected to <code>/dev/cu.PL2303-00002006</code>.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/07/10/usb-serial-console-for-rpi-on-macosx-olimex-usb-serial-cable/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/07/10/usb-serial-console-for-rpi-on-macosx-olimex-usb-serial-cable/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
