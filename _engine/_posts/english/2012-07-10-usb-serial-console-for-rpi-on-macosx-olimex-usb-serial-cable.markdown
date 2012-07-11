@@ -15,7 +15,7 @@ I recently started playing to Raspberry Pi. Along with other questions I wanted 
 
 I decided to buy [Olimex USB To Serial Cable]. It was available on eBay as [Olimex USB-SERIAL-CABLE Olinuxino console cable alternative to Raspberry Pi][]. 
 
-This cable provides 3.3V output levels which are strongly recommended for RPi (not 5V), and its 3 wires with male plugs can be directly connected to the RPi GPIO P1 header.
+This cable provides 3.3V output levels which are strongly recommended for RPi (not 5V), and its 3 wires with female plugs can be directly connected to the RPi GPIO P1 header.
 
 [Olimex USB To Serial Cable]: https://www.olimex.com/dev/usb-serial-cable.html
 [Olimex USB-SERIAL-CABLE Olinuxino console cable alternative to Raspberry Pi]: http://www.ebay.co.uk/itm/Olimex-USB-SERIAL-CABLE-Olinuxino-console-cable-alternative-to-Raspberry-Pi-/280917749304?pt=UK_BOI_Electrical_Components_Supplies_ET&hash=item416800ae38
