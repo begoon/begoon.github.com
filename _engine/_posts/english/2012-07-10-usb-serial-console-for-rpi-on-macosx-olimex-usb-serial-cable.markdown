@@ -28,7 +28,7 @@ I checked the Product ID and Manufacturer on the Olimex cable. When the cable is
 
 ![](/images/blog/olimex-cable/pl2303-serial-usb-on-lion.png)
 
-Then Googling for a Prolific driver for Mac brought me to a great blog post, called "[PL2303 Serial-USB on OSX Lion][]". Following the instructions I installed the driver and connected to Raspberry Pi.
+Googling for a Prolific driver for Mac brought me to a great blog post, called "[PL2303 Serial-USB on OSX Lion][]". Following the instructions I installed the driver and connected to Raspberry Pi.
 
 [PL2303 Serial-USB on OSX Lion]: http://xbsd.nl/2011/07/pl2303-serial-usb-on-osx-lion.html
 
