@@ -60,7 +60,7 @@ Now a portable modification.
 
 ![](/images/blog/bletchley-park/IMG_0503.JPG)
 
-All exhibits are real and more that 70 years old.
+All exhibits are real and more than 70 years old.
 
 ![](/images/blog/bletchley-park/IMG_0504.JPG)
 
