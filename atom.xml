@@ -5,13 +5,61 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-07-24T22:23:00Z</updated>
+  <updated>2012-07-25T20:06:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Загрузчик для GMC-4 в сборе]]></title>
+    <link href="http://demin.ws/blog/russian/2012/07/25/gmc4-loader-assembled/"/>
+    <updated>2012-07-25T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/07/25/gmc4-loader-assembled/</id>
+    <content type="html"><![CDATA[<p>Захотелось мне тоже смастерить загрузчик для <a href="http://demin.ws/blog/russian/2012/07/04/gmc-4/">GMC-4</a>. По совету того же Сергея Вакуленко решено было использовать вот такого зверя:</p>
+
+<p><img src="http://demin.ws/images/blog/gmc4-loader/ubw-proto-pic.jpg" alt="" />
+</p>
+
+<p>Это <a href="http://www.sparkfun.com/products/762">USB Bit Whacker</a>. Сборка на PIC18, которая со своей стандартной прошивкой позволяет управлять пачкой входов и выходов через простейший <a href="http://schmalzhaus.com/UBW/Doc/FirmwareDDocumentation_v149.html">&ldquo;птичий&rdquo; язык</a>, команды которого подаются через виртуальный последовательный порт.</p>
+
+<p>Схема.</p>
+
+<p><img src="http://demin.ws/images/blog/gmc4-loader/gmc4-loader-schematic.jpg" alt="" />
+</p>
+
+<p>Сначала макет.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/eg6OZMAI5mg" frameborder="0" allowfullscreen></iframe>
+
+<p>Травить плату было лень, поэтому слепил на макетной. Выглядит неказисто, но работает.</p>
+
+<p><img src="http://demin.ws/images/blog/gmc4-loader/IMG_0586.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/gmc4-loader/IMG_0587.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/gmc4-loader/IMG_0588.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/gmc4-loader/IMG_0590.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/gmc4-loader/IMG_0589.JPG" alt="" />
+</p>
+
+<p>В работе.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/F2tciUH0NFg" frameborder="0" allowfullscreen></iframe>
+
+<p>Все таки GMC-4 &ndash; вещь!</p>
+
+<p>P.S. Выложил исходник на Github &ndash; <a href="https://github.com/begoon/gmc4-loader/">gmc4-loader</a>. Если написать на Питоне или Руби,  будет еще проще. А программирование последовательных портов в UNIX &ndash; это круто.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Интервью с Энтони Уильямсом]]></title>

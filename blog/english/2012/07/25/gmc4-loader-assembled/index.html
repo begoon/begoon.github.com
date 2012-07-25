@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>GMC-4 Microcomputer USB loader</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>GMC-4 Microcomputer USB loader</h1>
+<div id="post">
+  <p>I decided to build my own USB loader for <a href="/blog/english/2012/07/04/gmc-4/">GMC-4</a>. Following the advice of Serg Vakulenko, the following board was purchased:</p>
+
+<p><img src="/images/blog/gmc4-loader/ubw-proto-pic.jpg" alt="" />
+</p>
+
+<p>This is a <a href="http://www.sparkfun.com/products/762">USB Bit Whacker</a>, a development board based on PIC18. Its default firmware allows to control I/O pins via <a href="http://schmalzhaus.com/UBW/Doc/FirmwareDDocumentation_v149.html">simple commands</a> over a virtual serial port.</p>
+
+<p>Schematic.</p>
+
+<p><img src="/images/blog/gmc4-loader/gmc4-loader-schematic.jpg" alt="" />
+</p>
+
+<p>A prototype.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/eg6OZMAI5mg" frameborder="0" allowfullscreen></iframe>
+
+<p>I was lazy to etch the board, so soldered manually. Looks unsightly but works.</p>
+
+<p><img src="/images/blog/gmc4-loader/IMG_0586.JPG" alt="" />
+</p>
+
+<p><img src="/images/blog/gmc4-loader/IMG_0587.JPG" alt="" />
+</p>
+
+<p><img src="/images/blog/gmc4-loader/IMG_0588.JPG" alt="" />
+</p>
+
+<p><img src="/images/blog/gmc4-loader/IMG_0590.JPG" alt="" />
+</p>
+
+<p><img src="/images/blog/gmc4-loader/IMG_0589.JPG" alt="" />
+</p>
+
+<p>In action.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/F2tciUH0NFg" frameborder="0" allowfullscreen></iframe>
+
+<p>After all, GMC-4 is THE thing!</p>
+
+<p>P.S. The sources are available on Github &ndash; <a href="https://github.com/begoon/gmc4-loader/">gmc4-loader</a>. I suspect that in Python or Ruby it might be much nicer, but it was a nice exercise programming serial ports in UNIX.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/07/25/gmc4-loader-assembled/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/07/25/gmc4-loader-assembled/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Загрузчик для GMC-4 в сборе</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Загрузчик для GMC-4 в сборе</h1>
+<div id="post">
+  <p>Захотелось мне тоже смастерить загрузчик для <a href="/blog/russian/2012/07/04/gmc-4/">GMC-4</a>. По совету того же Сергея Вакуленко решено было использовать вот такого зверя:</p>
+
+<p><img src="/images/blog/gmc4-loader/ubw-proto-pic.jpg" alt="" />
+</p>
+
+<p>Это <a href="http://www.sparkfun.com/products/762">USB Bit Whacker</a>. Сборка на PIC18, которая со своей стандартной прошивкой позволяет управлять пачкой входов и выходов через простейший <a href="http://schmalzhaus.com/UBW/Doc/FirmwareDDocumentation_v149.html">&ldquo;птичий&rdquo; язык</a>, команды которого подаются через виртуальный последовательный порт.</p>
+
+<p>Схема.</p>
+
+<p><img src="/images/blog/gmc4-loader/gmc4-loader-schematic.jpg" alt="" />
+</p>
+
+<p>Сначала макет.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/eg6OZMAI5mg" frameborder="0" allowfullscreen></iframe>
+
+<p>Травить плату было лень, поэтому слепил на макетной. Выглядит неказисто, но работает.</p>
+
+<p><img src="/images/blog/gmc4-loader/IMG_0586.JPG" alt="" />
+</p>
+
+<p><img src="/images/blog/gmc4-loader/IMG_0587.JPG" alt="" />
+</p>
+
+<p><img src="/images/blog/gmc4-loader/IMG_0588.JPG" alt="" />
+</p>
+
+<p><img src="/images/blog/gmc4-loader/IMG_0590.JPG" alt="" />
+</p>
+
+<p><img src="/images/blog/gmc4-loader/IMG_0589.JPG" alt="" />
+</p>
+
+<p>В работе.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/F2tciUH0NFg" frameborder="0" allowfullscreen></iframe>
+
+<p>Все таки GMC-4 &ndash; вещь!</p>
+
+<p>P.S. Выложил исходник на Github &ndash; <a href="https://github.com/begoon/gmc4-loader/">gmc4-loader</a>. Если написать на Питоне или Руби,  будет еще проще. А программирование последовательных портов в UNIX &ndash; это круто.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/07/25/gmc4-loader-assembled/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/07/25/gmc4-loader-assembled/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

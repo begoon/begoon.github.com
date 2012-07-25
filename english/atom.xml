@@ -5,13 +5,61 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-07-24T22:23:00Z</updated>
+  <updated>2012-07-25T20:06:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[GMC-4 Microcomputer USB loader]]></title>
+    <link href="http://demin.ws/blog/english/2012/07/25/gmc4-loader-assembled/"/>
+    <updated>2012-07-25T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/07/25/gmc4-loader-assembled/</id>
+    <content type="html"><![CDATA[<p>I decided to build my own USB loader for <a href="http://demin.ws/blog/english/2012/07/04/gmc-4/">GMC-4</a>. Following the advice of Serg Vakulenko, the following board was purchased:</p>
+
+<p><img src="http://demin.ws/images/blog/gmc4-loader/ubw-proto-pic.jpg" alt="" />
+</p>
+
+<p>This is a <a href="http://www.sparkfun.com/products/762">USB Bit Whacker</a>, a development board based on PIC18. Its default firmware allows to control I/O pins via <a href="http://schmalzhaus.com/UBW/Doc/FirmwareDDocumentation_v149.html">simple commands</a> over a virtual serial port.</p>
+
+<p>Schematic.</p>
+
+<p><img src="http://demin.ws/images/blog/gmc4-loader/gmc4-loader-schematic.jpg" alt="" />
+</p>
+
+<p>A prototype.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/eg6OZMAI5mg" frameborder="0" allowfullscreen></iframe>
+
+<p>I was lazy to etch the board, so soldered manually. Looks unsightly but works.</p>
+
+<p><img src="http://demin.ws/images/blog/gmc4-loader/IMG_0586.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/gmc4-loader/IMG_0587.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/gmc4-loader/IMG_0588.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/gmc4-loader/IMG_0590.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/gmc4-loader/IMG_0589.JPG" alt="" />
+</p>
+
+<p>In action.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/F2tciUH0NFg" frameborder="0" allowfullscreen></iframe>
+
+<p>After all, GMC-4 is THE thing!</p>
+
+<p>P.S. The sources are available on Github &ndash; <a href="https://github.com/begoon/gmc4-loader/">gmc4-loader</a>. I suspect that in Python or Ruby it might be much nicer, but it was a nice exercise programming serial ports in UNIX.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Interview with Anthony Williams]]></title>
