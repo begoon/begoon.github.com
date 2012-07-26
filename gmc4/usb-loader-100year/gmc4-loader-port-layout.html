@@ -1,0 +1,282 @@
+<h1>GMC-4 loader port layout</h1>
+
+<table>
+<thead>
+<tr>
+<td>Key</td>
+<td>Code</td>
+<td>Port B: 43210</td>
+<td>IC2 PB3:PB2</td>
+<td>Row</td>
+<td>IC1 PB4:PB1:PB0</td>
+<td>Column</td>
+<td>Crossing</td>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0</td>
+<td>00</td>
+<td>00000</td>
+<td>00</td>
+<td>0,1,2,3,RST</td>
+<td>000</td>
+<td>0,4,8,C</td>
+<td>0</td>
+</tr>
+
+<tr>
+<td>1</td>
+<td>01</td>
+<td>00001</td>
+<td>00</td>
+<td>0,1,2,3,RST</td>
+<td>001</td>
+<td>1,5,9,D</td>
+<td>1</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>02</td>
+<td>00010</td>
+<td>00</td>
+<td>0,1,2,3,RST</td>
+<td>010</td>
+<td>2,6,A,E</td>
+<td>2</td>
+</tr>
+
+<tr>
+<td>3</td>
+<td>03</td>
+<td>00011</td>
+<td>00</td>
+<td>0,1,2,3,RST</td>
+<td>011</td>
+<td>3,7,B,F</td>
+<td>3</td>
+</tr>
+
+<tr>
+<td>4</td>
+<td>04</td>
+<td>00100</td>
+<td>01</td>
+<td>4,5,6,7,RUN</td>
+<td>000</td>
+<td>0,4,8,C</td>
+<td>4</td>
+</tr>
+
+<tr>
+<td>5</td>
+<td>05</td>
+<td>00101</td>
+<td>01</td>
+<td>4,5,6,7,RUN</td>
+<td>001</td>
+<td>1,5,9,D</td>
+<td>5</td>
+</tr>
+
+<tr>
+<td>6</td>
+<td>06</td>
+<td>00110</td>
+<td>01</td>
+<td>4,5,6,7,RUN</td>
+<td>010</td>
+<td>2,6,A,E</td>
+<td>6</td>
+</tr>
+
+<tr>
+<td>7</td>
+<td>07</td>
+<td>00111</td>
+<td>01</td>
+<td>4,5,6,7,RUN</td>
+<td>011</td>
+<td>3,7,B,F</td>
+<td>7</td>
+</tr>
+
+<tr>
+<td>8</td>
+<td>08</td>
+<td>01000</td>
+<td>10</td>
+<td>8,9,A,B,INC</td>
+<td>000</td>
+<td>0,4,8,C</td>
+<td>8</td>
+</tr>
+
+<tr>
+<td>9</td>
+<td>09</td>
+<td>01001</td>
+<td>10</td>
+<td>8,9,A,B,INC</td>
+<td>001</td>
+<td>1,5,9,D</td>
+<td>9</td>
+</tr>
+
+<tr>
+<td>A</td>
+<td>0A</td>
+<td>01010</td>
+<td>10</td>
+<td>8,9,A,B,INC</td>
+<td>010</td>
+<td>2,6,A,E</td>
+<td>A</td>
+</tr>
+
+<tr>
+<td>B</td>
+<td>0B</td>
+<td>01011</td>
+<td>10</td>
+<td>8,9,A,B,INC</td>
+<td>011</td>
+<td>3,7,B,F</td>
+<td>B</td>
+</tr>
+
+<tr>
+<td>C</td>
+<td>0C</td>
+<td>01100</td>
+<td>11</td>
+<td>C,D,E,F,ADR</td>
+<td>000</td>
+<td>0,4,8,C</td>
+<td>C</td>
+</tr>
+
+<tr>
+<td>D</td>
+<td>0D</td>
+<td>01101</td>
+<td>11</td>
+<td>C,D,E,F,ADR</td>
+<td>001</td>
+<td>1,5,9,D</td>
+<td>D</td>
+</tr>
+
+<tr>
+<td>E</td>
+<td>0E</td>
+<td>01110</td>
+<td>11</td>
+<td>C,D,E,F,ADR</td>
+<td>010</td>
+<td>2,6,A,E</td>
+<td>E</td>
+</tr>
+
+<tr>
+<td>F</td>
+<td>0F</td>
+<td>01111</td>
+<td>11</td>
+<td>C,D,E,F,ADR</td>
+<td>011</td>
+<td>3,7,B,F</td>
+<td>F</td>
+</tr>
+
+<tr>
+<td>RST</td>
+<td>10</td>
+<td>10000</td>
+<td>00</td>
+<td>0,1,2,3,RST</td>
+<td>100</td>
+<td>RST,RUN,INC,ADR</td>
+<td>RST</td>
+</tr>
+
+<tr>
+<td>RUN</td>
+<td>14</td>
+<td>10100</td>
+<td>01</td>
+<td>4,5,6,7,RUN</td>
+<td>100</td>
+<td>RST,RUN,INC,ADR</td>
+<td>RUN</td>
+</tr>
+
+<tr>
+<td>INC</td>
+<td>18</td>
+<td>11000</td>
+<td>10</td>
+<td>8,9,A,B,INC</td>
+<td>100</td>
+<td>RST,RUN,INC,ADR</td>
+<td>INC</td>
+</tr>
+
+<tr>
+<td>ADR</td>
+<td>1C</td>
+<td>11100</td>
+<td>11</td>
+<td>C,D,E,F,ADR</td>
+<td>100</td>
+<td>RST,RUN,INC,ADR</td>
+<td>ADR</td>
+</tr>
+</tbody>
+</table>
+
+<p>This is a simplified version of the original <code>gmc.c</code>.</p>
+
+<pre class="hl">
+<span class="hl ppc">#define GMC4_ADRSET 0x1C</span>  <span class="hl com">/* 00011100 */</span><span class="hl ppc"></span>
+<span class="hl ppc">#define GMC4_INCR   0x18</span>  <span class="hl com">/* 00011000 */</span><span class="hl ppc"></span>
+<span class="hl ppc">#define GMC4_RUN    0x14</span>  <span class="hl com">/* 00010100 */</span><span class="hl ppc"></span>
+<span class="hl ppc">#define GMC4_RESET  0x10</span>  <span class="hl com">/* 00010000 */</span><span class="hl ppc"></span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">gmc4wait</span><span class="hl opt">(</span><span class="hl kwb">short</span> waittime<span class="hl opt">) {</span> <span class="hl kwa">do</span> <span class="hl opt">{}</span> <span class="hl kwa">while</span><span class="hl opt">(</span>waittime<span class="hl opt">-- &gt;</span> <span class="hl num">0</span><span class="hl opt">); }</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">gmc4init</span><span class="hl opt">() {</span>
+    DDRB <span class="hl opt">|=</span> <span class="hl num">0x1f</span><span class="hl opt">;</span>
+    DDRB <span class="hl opt">|=</span> <span class="hl num">1</span> <span class="hl opt">&lt;&lt;</span> <span class="hl num">6</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span><span class="hl kwb">unsigned char</span> key<span class="hl opt">) {</span>
+    PORTB <span class="hl opt">&amp;= ~</span><span class="hl num">0x1f</span><span class="hl opt">;</span>
+    PORTB <span class="hl opt">|=</span> <span class="hl num">0x1f</span> <span class="hl opt">&amp;</span> key<span class="hl opt">;</span>
+    
+    PORTB <span class="hl opt">&amp;= ~(</span><span class="hl num">1</span> <span class="hl opt">&lt;&lt;</span> <span class="hl num">6</span><span class="hl opt">);</span>
+    <span class="hl kwd">gmc4wait</span><span class="hl opt">(</span><span class="hl num">8000</span><span class="hl opt">);</span>
+    PORTB <span class="hl opt">|= ~(</span><span class="hl num">1</span> <span class="hl opt">&lt;&lt;</span> <span class="hl num">6</span><span class="hl opt">);</span>
+    <span class="hl kwd">gmc4wait</span><span class="hl opt">(</span><span class="hl num">8000</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">gmc4sendkey</span><span class="hl opt">(</span><span class="hl kwb">char</span> key<span class="hl opt">) {</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>key <span class="hl opt">&gt;=</span> <span class="hl str">'0'</span> <span class="hl opt">&amp;&amp;</span> key <span class="hl opt">&lt;=</span> <span class="hl str">'9'</span><span class="hl opt">) {</span>
+        <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span>key <span class="hl opt">-</span> <span class="hl str">'0'</span><span class="hl opt">);</span>
+    <span class="hl opt">}</span> <span class="hl kwa">else if</span><span class="hl opt">(</span>key <span class="hl opt">&gt;=</span> <span class="hl str">'A'</span> <span class="hl opt">&amp;&amp;</span> key <span class="hl opt">&lt;=</span> <span class="hl str">'F'</span><span class="hl opt">) {</span>
+        <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span>key <span class="hl opt">-</span> <span class="hl str">'A'</span> <span class="hl opt">+</span> <span class="hl num">10</span><span class="hl opt">);</span>
+    <span class="hl opt">}</span> <span class="hl kwa">else if</span><span class="hl opt">(</span>key <span class="hl opt">&gt;=</span> <span class="hl str">'a'</span> <span class="hl opt">&amp;&amp;</span> key <span class="hl opt">&lt;=</span> <span class="hl str">'f'</span><span class="hl opt">) {</span>
+        <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span>key <span class="hl opt">-</span> <span class="hl str">'a'</span> <span class="hl opt">+</span> <span class="hl num">10</span><span class="hl opt">);</span>
+    <span class="hl opt">}</span> <span class="hl kwa">else if</span><span class="hl opt">(</span>key <span class="hl opt">==</span> <span class="hl str">'S'</span> <span class="hl opt">||</span> key <span class="hl opt">==</span> <span class="hl str">'s'</span><span class="hl opt">) {</span>
+        <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span>GMC4_ADRSET<span class="hl opt">);</span>
+    <span class="hl opt">}</span> <span class="hl kwa">else if</span><span class="hl opt">(</span>key <span class="hl opt">==</span> <span class="hl str">'I'</span> <span class="hl opt">||</span> key <span class="hl opt">==</span> <span class="hl str">'i'</span><span class="hl opt">) {</span>
+        <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span>GMC4_INCR<span class="hl opt">);</span>
+    <span class="hl opt">}</span> <span class="hl kwa">else if</span><span class="hl opt">(</span>key <span class="hl opt">==</span> <span class="hl str">'G'</span> <span class="hl opt">||</span> key <span class="hl opt">==</span> <span class="hl str">'g'</span><span class="hl opt">) {</span>
+        <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span>GMC4_RUN<span class="hl opt">);</span>
+    <span class="hl opt">}</span> <span class="hl kwa">else if</span><span class="hl opt">(</span>key <span class="hl opt">==</span> <span class="hl str">'R'</span> <span class="hl opt">||</span> key <span class="hl opt">==</span> <span class="hl str">'r'</span><span class="hl opt">) {</span>
+        <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span>GMC4_RESET<span class="hl opt">);</span>
+    <span class="hl opt">}</span>
+<span class="hl opt">}</span>
+</pre>

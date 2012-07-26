@@ -5,13 +5,139 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-07-25T20:06:00Z</updated>
+  <updated>2012-07-26T20:22:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Resources about GMC-4 Microcomputer]]></title>
+    <link href="http://demin.ws/blog/english/2012/07/26/resources-about-gmc4-microcomputer/"/>
+    <updated>2012-07-26T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/07/26/resources-about-gmc4-microcomputer/</id>
+    <content type="html"><![CDATA[<p>Most of the resources are in Japanese but Google Translate in Chrome
+does decent work instantly translating into English. The resources
+in English are marked.</p>
+
+<p>GMC-4 is cloned from other microcomputers, and its instruction
+set is compatible with:</p>
+
+<ul>
+<li>FX-microcomputer R-165</li>
+<li><a href="http://demin.ws/gmc4/doc/Tandy Microcomputer Trainer 28-260.pdf">Tandy Microcomputer Trainer</a> (english)</li>
+</ul>
+
+<p>Links to various resources about GMC-4.</p>
+
+<ul>
+<li><p>Official magazine issues</p>
+
+<ul>
+<li><a href="http://otonanokagaku.net/feature/vol23/index.html">http://otonanokagaku.net/feature/vol23/index.html</a></li>
+<li><a href="http://otonanokagaku.net/magazine/vol24/index.html">http://otonanokagaku.net/magazine/vol24/index.html</a></li>
+<li><a href="http://otonanokagaku.net/english/magazine/vol24/index.html">http://otonanokagaku.net/english/magazine/vol24/index.html</a> (english)</li>
+</ul></li>
+
+<li><p>Review and documentation</p>
+
+<ul>
+<li><a href="http://demin.ws/gmc4/otona_gmc.html">Programming the Gakken GMC-4 Microcomputer</a>,
+architecture and instruction set (english)</li>
+<li><a href="http://demin.ws/gmc4/doc/GMC-4 Microcomputer Manual.pdf">GMC-4 Microcomputer Manual</a> (english)</li>
+<li><a href="http://www.pwv.co.jp/~take/TakeWiki/index.php?GMC-4%E3%82%B3%E3%83%B3%E3%83%91%E3%82%A4%E3%83%A9%E3%83%BC">About GMC-4 (introduction, instruction set, simulator, compiler)</a></li>
+<li><a href="http://demin.ws/blog/english/2012/07/04/gmc-4/">GMC-4 microcomputer</a> (english)</li>
+</ul></li>
+
+<li><p>Firmware</p></li>
+</ul>
+
+<p><strong>There are no sources available of the original GMC-4 firmware.</strong></p>
+
+<ul>
+<li><p>Hardware</p>
+
+<ul>
+<li>Schematic
+(<a href="http://demin.ws/gmc4/hardware/schematic/GMC-4 Schematic.pdf">version 1</a>,
+<a href="http://demin.ws/gmc4/hardware/schematic/GMC-4 Schematic v0.12.jpg">version 2</a>)</li>
+<li><a href="http://100year.cocolog-nifty.com/blog/2009/08/gmc-4-2ea0.html">Keypad connector for the loader</a>
+(<a href="http://demin.ws/gmc4/hardware/keypad-connection/gmc4-keypad-board-upside.jpg">upside</a>,
+<a href="http://demin.ws/gmc4/hardware/keypad-connection/gmc4-keypad-board-downside.jpg">downside</a>,
+<a href="http://demin.ws/gmc4/hardware/keypad-connection/gmc4-keypad-schematic.jpg">schematic</a>)</li>
+<li><a href="http://100year.cocolog-nifty.com/blog/2009/08/gmc-4-loaderusb.html">USB loader 1</a>
+(<a href="http://demin.ws/gmc4/usb-loader-100year/gmc4loader-assembled.jpg">assembled</a>,
+<a href="http://demin.ws/gmc4/usb-loader-100year/gmc4loader-interface-board.jpg">interface board</a>,
+<a href="http://demin.ws/gmc4/usb-loader-100year/gmc4loader-schematic-v101.jpg">schematic</a>,
+<a href="http://demin.ws/gmc4/usb-loader-100year/gmc4-loader-port-layout.html">port layout</a>,
+<a href="http://demin.ws/gmc4/usb-loader-100year/gmc4_loader_farm_v2.01.zip">firmware sources</a>,
+<a href="http://demin.ws/gmc4/usb-loader-100year/74HC_HCT4051.pdf">74HC4051 datasheet</a>)</li>
+</ul></li>
+
+<li><p>Blogs</p>
+
+<ul>
+<li><a href="http://blog.nshdot.com/search/label/gmc-4/">http://blog.nshdot.com/search/label/gmc-4/</a></li>
+<li><a href="http://airvariable.asablo.jp/blog/cat/gmc-4/">http://airvariable.asablo.jp/blog/cat/gmc-4/</a></li>
+<li><a href="http://100year.cocolog-nifty.com/blog/gmc4/">http://100year.cocolog-nifty.com/blog/gmc4/</a></li>
+<li><a href="http://www.geocities.jp/yasuho68k/gmc4/">http://www.geocities.jp/yasuho68k/gmc4/</a> (a bunch of sample programs)</li>
+<li><a href="http://d.hatena.ne.jp/yasuho/searchdiary?word=%2A%5B4%A5%D3%A5%C3%A5%C8%A5%DE%A5%A4%A5%B3%A5%F3%5D">http://d.hatena.ne.jp/yasuho/searchdiary?word=%2A%5B4%A5%D3%A5%C3%A5%C8%A5%DE%A5%A4%A5%B3%A5%F3%5D</a></li>
+</ul></li>
+
+<li><p>Simulators</p>
+
+<ul>
+<li><a href="http://dansan.air-nifty.com/blog/gmc4-simulator.html">GMC-4 simulator</a>
+(<a href="http://demin.ws/gmc4/images/gmc4-simulator-windows.png">screenshot</a>)</li>
+<li><a href="http://homepage2.nifty.com/kocha_web/fxms/fxms.html">FX-microcomputer R-165 simulator</a>
+(<a href="http://demin.ws/gmc4/images/fx-164-simulator.png">screenshot</a>)</li>
+<li><a href="https://sites.google.com/site/shuitic2000/home22">On Android</a></li>
+</ul></li>
+
+<li><p>Loaders</p>
+
+<ul>
+<li><a href="http://demin.ws/blog/english/2012/07/25/gmc4-loader-assembled/">GMC-4 Microcomputer USB loader based on UBW</a> (english)</li>
+<li><a href="http://100year.cocolog-nifty.com/blog/2009/08/gmc-4-loaderusb.html">GMC-4 USB loader based on the AVR controller</a></li>
+<li><a href="http://airvariable.asablo.jp/blog/2009/08/21/4530702">GMC-4 loader based a PIC development board</a></li>
+</ul></li>
+
+<li><p>Assemblers</p>
+
+<ul>
+<li><a href="http://www.musashinodenpa.com/misc/GMC4/">http://www.musashinodenpa.com/misc/GMC4/</a></li>
+<li><a href="http://slashdot.jp/~roto/journal/481254">http://slashdot.jp/~roto/journal/481254</a></li>
+<li><a href="https://github.com/jasperla/gmc4-as/">https://github.com/jasperla/gmc4-as/</a></li>
+<li><a href="http://fxm.piroyan.com/">http://fxm.piroyan.com/</a></li>
+<li><a href="http://d.hatena.ne.jp/nicotakuya/20090702/1246521731">http://d.hatena.ne.jp/nicotakuya/20090702/1246521731</a></li>
+</ul></li>
+
+<li><p>Compilers</p>
+
+<ul>
+<li><a href="http://terus.jp/engineering/gmc4cc/">C Compiler</a></li>
+<li><a href="http://softyasu.net/g4cbasic.html">BASIC Compiler</a></li>
+</ul></li>
+
+<li><p>Replications</p>
+
+<ul>
+<li><a href="http://code.google.com/p/avr-gmc-4/">avr-gmc-4</a> (AVR)</li>
+<li><a href="http://akkera102.sakura.ne.jp/gbadev/index.php?NO.102%20gmc4">devkitARM</a> (ARM)
+(<a href="http://demin.ws/gmc4/replica/devkitARM/102_gmc4.png">screenshot</a>,
+<a href="http://demin.ws/gmc4/replica/devkitARM/102_gmc4.zip">sources</a>)</li>
+</ul></li>
+
+<li><p>Links collection from the Official Wiki</p>
+
+<ul>
+<li><a href="http://www15.atwiki.jp/gmc4/pages/12.html">http://www15.atwiki.jp/gmc4/pages/12.html</a></li>
+</ul></li>
+</ul>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[GMC-4 Microcomputer USB loader]]></title>
