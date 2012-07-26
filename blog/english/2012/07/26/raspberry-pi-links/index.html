@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Raspberry Pi links</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Raspberry Pi links</h1>
+<div id="post">
+  <p>Playing with <a href="/blog/english/2012/07/11/raspberry-pi-arrived/">Raspberry Pi</a> I have collected a bunch of
+more or less useful links, so I decided to put them all together.</p>
+
+<h2>Initial re-partitioning</h2>
+
+<p>At the time of this writing the standard Debian images (stable)
+distributed from the official Raspberry Pi website were built
+for 2GB SD cards. It is possible to copy them to larger cards
+and it will work but space above 2GB will be wasted.</p>
+
+<p>There are a few simple steps to re-partition the card after
+the first boot.</p>
+
+<p>Images:</p>
+
+<p><a href="http://raspberrypi.org/downloads/">http://raspberrypi.org/downloads/</a></p>
+
+<p>Step by step:</p>
+
+<p><a href="https://projects.drogon.net/raspberry-pi/initial-setup1/">https://projects.drogon.net/raspberry-pi/initial-setup1/</a></p>
+
+<p>In short:</p>
+
+<pre><code>printf &quot;d\n3\nd\n2\nn\np\n2\n157696\n\nw\n&quot; | sudo fdisk -cu /dev/mmcblk0
+sudo shutdown -r now
+sudo resize2fs /dev/mmcblk0p2
+</code></pre>
+
+<h2>Troubleshooting</h2>
+
+<p><a href="http://elinux.org/R-Pi_Troubleshooting">http://elinux.org/R-Pi_Troubleshooting</a></p>
+
+<h2>GPIO</h2>
+
+<h3>General info</h3>
+
+<p><a href="http://elinux.org/Rpi_Low-level_peripherals">http://elinux.org/Rpi_Low-level_peripherals</a></p>
+
+<h3>WiringPi</h3>
+
+<p><a href="https://projects.drogon.net/raspberry-pi/wiringpi/">https://projects.drogon.net/raspberry-pi/wiringpi/</a></p>
+
+<ul>
+<li><a href="https://projects.drogon.net/raspberry-pi/wiringpi/pins/">Pins</a>
+
+<ul>
+<li><a href="https://projects.drogon.net/raspberry-pi/wiringpi/special-pin-functions/">Special Pins</a></li>
+</ul></li>
+<li><a href="https://projects.drogon.net/raspberry-pi/wiringpi/download-and-install/">Download and install</a></li>
+<li>Wrappers
+
+<ul>
+<li><a href="https://rubygems.org/gems/wiringpi/">Ruby</a></li>
+</ul></li>
+</ul>
+
+<h3>RPI.GPIO</h3>
+
+<p><a href="http://pypi.python.org/pypi/RPi.GPIO">http://pypi.python.org/pypi/RPi.GPIO</a></p>
+
+<p>Homepage: <a href="http://raspberry-gpio-python.googlecode.com">http://raspberry-gpio-python.googlecode.com</a></p>
+
+<p>How to install:</p>
+
+<pre><code>cd /tmp
+wget http://raspberry-gpio-python.googlecode.com/files/RPi.GPIO-0.2.0.tar.gz
+tar xzvf RPi.GPIO-0.2.0.tar.gz
+cd tar xzvf RPi.GPIO-0.2.0
+python setup.py install
+</code></pre>
+
+<p>Sample program:</p>
+
+<pre><code>import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)
+pin = 4
+GPIO.setup(pin, GPIO.OUT)
+while True:
+    GPIO.output(pin, True)
+    GPIO.output(pin, False)
+</code></pre>
+
+<h3>Benchmarking Raspberry Pi GPIO speed</h3>
+
+<p><a href="http://codeandlife.com/2012/07/03/benchmarking-raspberry-pi-gpio-speed/">http://codeandlife.com/2012/07/03/benchmarking-raspberry-pi-gpio-speed/</a></p>
+
+<h3>Example with 2 LEDs</h3>
+
+<p><a href="https://projects.drogon.net/raspberry-pi/gpio-examples/tux-crossing/2-two-more-leds/">https://projects.drogon.net/raspberry-pi/gpio-examples/tux-crossing/2-two-more-leds/</a></p>
+
+<h3>GPIO Port on the Raspberry Pi</h3>
+
+<p><a href="http://chrishatton.org/archives/88">http://chrishatton.org/archives/88</a></p>
+
+<h2>SPI/I2C 3.2 kernel</h2>
+
+<p>This kernel is based the 3.2 branch. It comes with I2C drivers and a bunch
+of staging drivers (for example, WiFi).</p>
+
+<p><a href="http://bootc.net/projects/raspberry-pi-kernel">http://bootc.net/projects/raspberry-pi-kernel</a></p>
+
+<h2>I2C</h2>
+
+<h3>Quick2Write</h3>
+
+<ul>
+<li><a href="http://quick2wire.com/">http://quick2wire.com/</a></li>
+<li><a href="http://quick2wire.com/blog/">http://quick2wire.com/blog/</a></li>
+<li><a href="http://quick2wire.com/2012/05/an-experimental-gpio-python-library-for-the-raspberry-pi/">An experimental GPIO Python library for the Raspberry Pi</a></li>
+</ul>
+
+<h3>Linux I2C interface</h3>
+
+<p><a href="http://kernel.org/doc/Documentation/i2c/dev-interface">http://kernel.org/doc/Documentation/i2c/dev-interface</a></p>
+
+<h2>I2C examples</h2>
+
+<p><a href="http://robot-electronics.co.uk/htm/raspberry_pi_examples.htm">I2C examples</a></p>
+
+<p><a href="http://raspberrypi.org/phpBB3/viewtopic.php?f=44&amp;t=8043">Example I2C Code</a></p>
+
+<pre><code>echo ds1307 0x68 &gt; /sys/class/i2c-adapter/i2c-0/new_device
+</code></pre>
+
+<h3>I2C and the Raspberry Pi</h3>
+
+<p>Explanations why and how I2C was added to BootC RPi kernel:</p>
+
+<p><a href="http://bootc.net/archives/2012/05/19/i2c-and-the-raspberry-pi/">http://bootc.net/archives/2012/05/19/i2c-and-the-raspberry-pi/</a></p>
+
+<h3>MCP23017 I2C IO expander</h3>
+
+<p><a href="http://nathan.chantrell.net/20120519/raspberry-pi-and-the-mcp23017-i2c-io-expander/">http://nathan.chantrell.net/20120519/raspberry-pi-and-the-mcp23017-i2c-io-expander/</a></p>
+
+<h2>Complete I2C setup on Raspberry Pi</h2>
+
+<p><a href="http://robot-electronics.co.uk/files/rpi_i2c_setup.doc">http://robot-electronics.co.uk/files/rpi_i2c_setup.doc</a></p>
+
+<p>Set up for using i2c with Raspberry Pi running the standard Debian
+squeeze distribution.</p>
+
+<pre><code>sudo dpkg-reconfigure tzdata
+sudo apt-get update
+sudo apt-get upgrade 
+sudo apt-get install ca-certificates
+</code></pre>
+
+<p>Install hexxeh&rsquo;s rpi-upgrade tool <a href="https://github.com/Hexxeh/rpi-update#readme:">https://github.com/Hexxeh/rpi-update#readme:</a></p>
+
+<pre><code>sudo wget http://goo.gl/1BOfJ -O /usr/bin/rpi-update
+sudo chmod +x /usr/bin/rpi-update
+sudo apt-get install git-core
+
+sudo rpi-update
+</code></pre>
+
+<p>Restart rpi for updates to finish:</p>
+
+<pre><code>sudo shutdown -r now
+</code></pre>
+
+<p>Download Chris Boots&rsquo;s kernel with the i2c drivers in as a Debian package
+from his website <a href="http://bootc.net">http://bootc.net</a>. Navigate to where the Debian package
+was saved using command line and install the Debian package.</p>
+
+<pre><code>dpkg -i linux-image-3.2.18-rpi1+_5_armel.deb
+</code></pre>
+
+<p>Copy /boot/vmlinuz-3.2.18rpi1+ to /boot/kernel.img:</p>
+
+<pre><code>sudo cp /boot/vmlinuz-3.2.18rpi+ /boot/kernel.img
+</code></pre>
+
+<p>Restart RPi again:</p>
+
+<pre><code>sudo shutdown -r now
+</code></pre>
+
+<p>Download i2c-tools:</p>
+
+<pre><code>sudo apt-get install i2c-tools
+</code></pre>
+
+<p>If you run ls /dev/i2c* you will not be able to see any i2c ports
+(e.g. /dev/i2c-0) listed. At start up the i2c ports will not be active.
+Make it active using modprobe:</p>
+
+<pre><code>sudo modprobe i2c-dev
+</code></pre>
+
+<p>Now look to see if your i2c ports exist in /dev:</p>
+
+<pre><code>ls /dev/i2c*
+i2cdetect -l
+dmesg | grep i2c
+</code></pre>
+
+<p>You should see two i2c ports listed named /dev/i2c-0 and /dev/i2c-1.
+/dev/i2c-0 is the one we will be using.  Another way of listing them
+is to run i2cdetect -l (a tool that came with the i2c-tools you installed
+earlier).</p>
+
+<p>Change permissions of the i2c-0 port to let you access:</p>
+
+<pre><code>sudo chmod 666 /dev/i2c-0
+</code></pre>
+
+<p>You should now be able to download and run some of our example c code.
+You will need to modprobe i2c-dev and change the permissions of the i2c
+port every time you boot up as these setting are not saved by default.</p>
+
+<h2>Checking Firmware Version</h2>
+
+<p>Firmware should be up-to-date. Its update is harmless and cannot
+brick your RPi.</p>
+
+<pre><code>/opt/vc/bin/vcgencmd version
+</code></pre>
+
+<h2>RPI update</h2>
+
+<h3>Method 1</h3>
+
+<p><a href="https://github.com/Hexxeh/rpi-update">https://github.com/Hexxeh/rpi-update</a></p>
+
+<pre><code>wget https://raw.github.com/Hexxeh/rpi-update/master/rpi-update -O /usr/bin/rpi-update &amp;&amp; chmod +x /usr/bin/rpi-update
+
+sudo apt-get install ca-certificates
+rpi-update
+</code></pre>
+
+<h3>Method 2</h3>
+
+<p><a href="http://iroylabs.blogspot.co.uk/2012/06/raspberrypi-mouse-and-keyboard-does-not.html">http://iroylabs.blogspot.co.uk/2012/06/raspberrypi-mouse-and-keyboard-does-not.html</a></p>
+
+<pre><code>wget https://raw.github.com/Hexxeh/rpi-update/master/rpi-update
+chmod +x rpi-update
+mv rpi-update /usr/bin/rpi-update
+sudo rpi-update
+</code></pre>
+
+<h2>Keeping Raspberry Pi fresh</h2>
+
+<p><a href="http://wrightrocket.blogspot.co.uk/2012/06/keeping-your-raspberry-pi-fresh.html">http://wrightrocket.blogspot.co.uk/2012/06/keeping-your-raspberry-pi-fresh.html</a></p>
+
+<h2>USB to serial cable</h2>
+
+<p>Olimex USB-SERIAL-CABLE Olinuxino console cable alternative to Raspberry Pi.</p>
+
+<ul>
+<li>three wires for Breadboard connection</li>
+<li>SERIAL output 3.3V voltage levels</li>
+<li>GND=BLUE, RX(INPUT)=GREEN, TX(OUTPUT)=RED</li>
+</ul>
+
+<p>BLUE (GND) -&gt; 0v
+GREEN (RX) -&gt; GPIO 14/TxD (BCM), or 15 (wiringPi)
+RED (TX) -&gt; GPIO 15/RxD (BCD), or 16 (wiringPi)</p>
+
+<h3>Driver for Mac OSX Lion</h3>
+
+<p><a href="http://xbsd.nl/2011/07/pl2303-serial-usb-on-osx-lion.html">http://xbsd.nl/2011/07/pl2303-serial-usb-on-osx-lion.html</a></p>
+
+<pre><code>cd /tmp
+wget http://xbsd.nl/~martijn/log/osx-pl2303.kext.tgz
+tar xvzf osx-pl2303.kext.tgz
+cd osx-pl2303.kext
+sudo cp -R osx-pl2303.kext /System/Library/Extensions/
+cd /System/Library/Extensions
+chmod -R 755 osx-pl2303.kext
+chown -R root:wheel osx-pl2303.kext
+cd /System/Library/Extensions
+
+kextload ./osx-pl2303.kext
+kextcache -system-cache
+</code></pre>
+
+<p>Check:</p>
+
+<pre><code>kextstat -b nl.bjaelectronics.driver.PL2303
+
+Index Refs Address            Size       Wired      Name (Version) &lt;Linked Against&gt;
+   74    0 0xffffff7f808ee000 0xb000     0xb000     nl.bjaelectronics.driver.PL2303 (1.0.0d1) &lt;73 34 5 4 3&gt;
+</code></pre>
+
+<h3>Unload the driver (if needed)</h3>
+
+<p>Check &ldquo;kextstat&rdquo; first, and if &ldquo;nl.bjaelectronics.driver.PL2303&rdquo; is there, it can be unloaded by:</p>
+
+<pre><code>sudo kextunload /System/Library/Extensions/osx-pl2303.kext/
+</code></pre>
+
+<h3>Driver as a package</h3>
+
+<p><a href="http://changux.co/osx-installer-to-pl2303-serial-usb-on-osx-lio">http://changux.co/osx-installer-to-pl2303-serial-usb-on-osx-lio</a></p>
+
+<h3>PL-2303 cables on Mac</h3>
+
+<p><a href="http://planet-rcs.de/article/mac_serial_port/">http://planet-rcs.de/article/mac_serial_port/</a></p>
+
+<h2>WiFi</h2>
+
+<p><a href="http://raspberrywifi.com/">http://raspberrywifi.com/</a></p>
+
+<h3>ASUS N10 WiFi adaptor</h3>
+
+<p>Kernel 3.2.21-rpi1+ already has this driver, but it requires firmware.</p>
+
+<ol>
+<li><p>Add the following line to /etc/apt/sources.list:</p>
+
+<p>deb <a href="http://backports.debian.org/debian-backports">http://backports.debian.org/debian-backports</a> squeeze-backports non-free</p></li>
+
+<li><p>Update the package index:</p>
+
+<p>sudo apt-get update</p></li>
+
+<li><p>Install firmware-realtek deb package:</p>
+
+<p>sudo apt-get install firmware-realtek</p></li>
+</ol>
+
+<p>Check:</p>
+
+<pre><code>sudo iwlist wlan0 scan
+</code></pre>
+
+<p>Post-setup:</p>
+
+<pre><code>sudo vi /etc/network/interfaces
+
+auto wlan0
+iface wlan0 inet dhcp
+wpa-ssid &quot;your_ssid&quot;
+wpa-psk &quot;your_password&quot;
+</code></pre>
+
+<h2>Cool gadgets</h2>
+
+<h3>VGA over serial port</h3>
+
+<p><a href="http://hobbytronics.co.uk/serial-vga">http://hobbytronics.co.uk/serial-vga</a></p>
+
+<h3>Cardboard case</h3>
+
+<p><a href="http://squareitround.co.uk/Resources/Punnet_net_Mk1.pdf">http://squareitround.co.uk/Resources/Punnet_net_Mk1.pdf</a></p>
+
+<h2>Blogs about Raspberry PI</h2>
+
+<ul>
+<li><a href="https://projects.drogon.net/raspberry-pi/">https://projects.drogon.net/raspberry-pi/</a></li>
+<li><a href="http://bootc.net/projects/raspberry-pi-kernel">http://bootc.net/projects/raspberry-pi-kernel</a>
+
+<ul>
+<li><a href="http://bootc.net/">http://bootc.net/</a></li>
+</ul></li>
+<li><a href="http://raspberrypi.homelabs.org.uk/">http://raspberrypi.homelabs.org.uk/</a></li>
+<li><a href="http://pi.gadgetoid.co.uk/">http://pi.gadgetoid.co.uk/</a></li>
+<li><a href="http://codeandlife.com/topics/raspberry-pi/">http://codeandlife.com/topics/raspberry-pi/</a></li>
+<li><a href="http://blog.mx17.net/category/hardware/raspberry-pi/">http://blog.mx17.net/category/hardware/raspberry-pi/</a></li>
+</ul>
+
+<h2>Useful sites</h2>
+
+<ul>
+<li><a href="https://projects.drogon.net/">https://projects.drogon.net/</a></li>
+<li><a href="http://hobbytronics.co.uk/">http://hobbytronics.co.uk/</a></li>
+<li><a href="http://codeandlife.com/">http://codeandlife.com/</a></li>
+<li><a href="http://sparkfun.com/">http://sparkfun.com/</a></li>
+<li><a href="http://gadgetoid.com/">http://gadgetoid.com/</a></li>
+</ul>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/07/26/raspberry-pi-links/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/07/26/raspberry-pi-links/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
