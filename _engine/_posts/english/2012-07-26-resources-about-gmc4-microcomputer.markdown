@@ -19,7 +19,8 @@ set is compatible with:
   - FX-microcomputer R-165
   - [Tandy Microcomputer Trainer](/gmc4/doc/Tandy Microcomputer Trainer 28-260.pdf) (english)
 
-Links to various resources about GMC-4.
+Links to various resources about GMC-4
+--------------------------------------
 
 * Official magazine issues
 
