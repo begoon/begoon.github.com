@@ -8,6 +8,7 @@ title: "Статьи"
 
 **Хабр**
 
+* [Пайка для начинающих][]
 * [Энигма, Колоссус или история Британской криптографии в Блетчли-парке][]
 * [Микрокомпьютер GMC-4][]
 * [RetroBSD on Maximite][]
@@ -32,6 +33,7 @@ title: "Статьи"
 
 [Интервью проекту OpenQuality.ru]: http://experience.openquality.ru/alexander-demin-interview/
 
+[Пайка для начинающих]: http://habrahabr.ru/post/148656/
 [Энигма, Колоссус или история Британской криптографии в Блетчли-парке]: http://habrahabr.ru/post/147302/
 [Микрокомпьютер GMC-4]: http://habrahabr.ru/post/147157/
 [RetroBSD on Maximite]: http://habrahabr.ru/post/143679/
