@@ -1,3 +1,5 @@
+// Simple static blog generator.
+
 package main
 
 import (
