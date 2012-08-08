@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>"Programming 32-bit Microcontrollers in C, Exploring the PIC32", Lucio Di Jasio</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/interview/">интервью</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>&#34;Programming 32-bit Microcontrollers in C, Exploring the PIC32&#34;, Lucio Di Jasio</h1>
+<div id="post">
+  <p>Работая с Джефом Грэхемом <a href="/blog/russian/2012/08/07/interview-with-geoff-graham/">над интервью</a>, я узнал от него про книгу, идеи и готовые части кода из которой стали основой некоторых подсистем программой части Maximite.</p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/B005VO36UG/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B005VO36UG&amp;linkCode=as2&amp;tag=prodiy-21">Programming 32-bit Microcontrollers in C: Exploring the PIC32 (Embedded Technology)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B005VO36UG" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/B005VO36UG/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B005VO36UG&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B005VO36UG&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B005VO36UG" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p>Мой личный опыт с микроконтроллерами PICmicro закончился лет десять назад, когда с братом делами автомобильную сигнализацию на основе GSM телефона. В сердце был PIC16, DTFM декодер (уникальная, кстати на тот момент фича, когда можно было рулить сигнализацией, позвонив на ее номер и пикая с трубку циферьки) и датчики.</p>
+
+<p><img src="/images/blog/sms-alarm-system.jpg" alt="" />
+</p>
+
+<p>Потом было еще насколько проектов на PIC12. Меня реально перло, что микруху с несчастными восемью ногами можно <strong>программировать</strong>, на <strong>С</strong>!</p>
+
+<p>Потом как-то все засохло. Я переехал, и многое из &ldquo;добра&rdquo; не взял с собой. Но вот недавно, после сборки <a href="/blog/russian/2012/01/19/maximite-kit/">Maximite</a> и <a href="/blog/english/2012/07/11/raspberry-pi-arrived/">покупки</a> <a href="/blog/english/2012/07/26/raspberry-pi-links/">Raspberry Pi</a>, вся эта тема вернулась. Но время не стоит на месте, и современные PIC32 уже на ядре MIPS, все из себя 32-х битные, плюс с какой никакой виртуализацией адресов, что позволяет делать несложные операционные системы с разделением ядра и пользовательских процессов (например, RetroBSD, которая, кстати,
+<a href="/blog/russian/2012/05/11/retrobsd-on-maximite/">прекрасно работает на Maximite</a>).</p>
+
+<p>Так вот, возвращаясь к книге. В желании освежить в памяти эту тему, я отрыл ее. К моему удивлению, я, не отрываясь, с удовольствием прочитал ее по диагонали за пару вечеров.</p>
+
+<p>Книга очень грамотно построена и рассчитана на людей с минимальными знаниями о микроконтроллерах. Там даже есть экскурс в язык С для желающих. Начиная &ldquo;от печки&rdquo; в виде примитивных примеров с картинками и подробными объяснениями, автор постепенно раскрывает весьма недетский набор тем:</p>
+
+<ul>
+<li>модель памяти</li>
+<li>прерывания (например, для таймера или портов ввода/вывода)</li>
+<li>последовательные и параллельные интерфейсы (например, подключение LCD-экранчика или PS/2 клавиатуры)</li>
+<li>аналогово-цифровые и цифро-аналоговые преобразования (подключение, например, датчика температуры или джойстика для игры)</li>
+<li>генерация черно-белого видео сигнала (например, для композитного или VGA-сигнала) с небанальным использованием прямого доступа в память (DMA), кстати, еще одной модной примочки PIC32, для быстрого пропихивания битов из буфера в основной памяти в канал SPI</li>
+<li>работа SD/MMC картами</li>
+<li>реализация файловой FAT</li>
+<li>генерация звука через модуль ШИМ (PWM)</li>
+</ul>
+
+<p>Все примеры законченные и работающие. Особенно будет удобно, если иметь диск от книги.</p>
+
+<p>Одним небольшим неудобством было то, что автор использует среду MPLAB и компилятор С32 (все-таки книга вышла аж в 2008 году), а Microchip последнее время всех активно пересаживает на MPLAB-X, который есть не только для Windows, но и Linux и OSX, и компилятор XC32 на базе GCC. Хотя файлы проектов несложно импортируются в новую среду, в книге явно не хватает объяснений про элементарные makefile&rsquo;ы. Но это компенсируется подробными картинками окон конфигурации, отладчика и симулятора. В принципе, книгу можно читать даже не имея компьютера под рукой.</p>
+
+<p>Итак, проглядев книгу, вы будете понимать что и как возможно сделать на PIC32. А если решите собрать и запрограммировать реальный проект, у вас будет достаточно начального работающего кода и понимания, как запустить кристалл.</p>
+
+<p><strong>Вывод</strong>: настоятельно рекомендуемая книга. Кстати, вышла она не недавно, так что можно найти в хорошем PDF-ном качестве, хотя купив ее, вы негласно скажете автору спасибо.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/08/08/exploring-pic32/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/08/08/exploring-pic32/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

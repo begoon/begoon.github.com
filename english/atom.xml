@@ -5,13 +5,58 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-08-07T17:00:00Z</updated>
+  <updated>2012-08-08T22:13:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[&#34;Programming 32-bit Microcontrollers in C, Exploring the PIC32&#34; by Lucio Di Jasio]]></title>
+    <link href="http://demin.ws/blog/english/2012/08/08/exploring-pic32/"/>
+    <updated>2012-08-08T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/08/08/exploring-pic32/</id>
+    <content type="html"><![CDATA[<p>Working on <a href="http://demin.ws/blog/english/2012/08/07/interview-with-geoff-graham/">the interview with Geoff Graham</a>, he told me about a book where he took a lot of inspiration and working code as well for the Maximite software.</p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/B005VO36UG/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B005VO36UG&amp;linkCode=as2&amp;tag=prodiy-21">Programming 32-bit Microcontrollers in C: Exploring the PIC32 (Embedded Technology)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B005VO36UG" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/B005VO36UG/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B005VO36UG&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B005VO36UG&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B005VO36UG" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p>I stopped programming for PICs about ten year ago when we were developing a GSM phone based alarm system. We used the PIC16 chip and a DTFM decoder (be the way, the feature of controlling the alarm system dialing to it and using DTFM signals was pretty awesome that time) and a bunch of sensors.</p>
+
+<p><img src="http://demin.ws/images/blog/sms-alarm-system.jpg" alt="" />
+</p>
+
+<p>I also worked with PIC12. I was stunned of just an 8-pin chip <strong>programmable in C</strong>!</p>
+
+<p>Then I moved to the UK and left a lot of stuff at home. But recently it all has come back when I built <a href="http://demin.ws/blog/english/2012/01/19/maximite-kit/">Maximite</a> and <a href="http://demin.ws/blog/english/2012/07/11/raspberry-pi-arrived/">also bought</a> <a href="http://demin.ws/blog/english/2012/07/26/raspberry-pi-links/">Raspberry Pi</a>. Since then the technology has stepped forward, of course. Now PIC32 chips are based on the MIPS kernel, almost fully 32-bit and have a primitive virtual memory capabilities. It allows creating simple operating systems when the kernel has its own protected memory from users processes. For example, <a href="http://demin.ws/blog/english/2012/05/11/retrobsd-on-maximite/">RetroBSD perfectly works on Maximite</a>.</p>
+
+<p>Back to the book. I wanted to refresh my PIC knowledge and opened the book. To my surprise I swallowed it in a couple of evenings non-stop.</p>
+
+<p>The book is organized perfectly and suitable for people having minimal experience in microcontrollers. But it covers serious topics such that:</p>
+
+<ul>
+<li>memory model</li>
+<li>interrupts (for example, timers or I/O)</li>
+<li>serial or parallel interfaces (for example, connecting to a LCD display or a PS/2 keyboard)</li>
+<li>ADC/DAC (for example, a temperature sensor or an analog joystick)</li>
+<li>generating black/white video signal (for example, composite or VGA) using non-trivial DMA-based data transfer for a memory buffer to the SPI channel</li>
+<li>SD/MMC cards interface</li>
+<li>implementation of the FAT</li>
+<li>sound generation via PWM</li>
+</ul>
+
+<p>All example are complete and working. It can be even better if you have a companion CD of the book.</p>
+
+<p>The only little issue was that the author used MPLAB and the C32 compiler (remember, the book was released in 2008), but Microchip strongly recommend migrating to MPLAB-X (which, by the way, the only choice for Linux and OSX) and the XC32 compiler based on GCC. Of course, the project files can be easily converted to the new MPLAB-X format, the book lacks examples of simple Makefiles. But it compensates it with exhaustive screenshots and commentaries about configuration windows, the debugger and the simulator. It is possible to read the book even without a computer.</p>
+
+<p>If you read the book, you&rsquo;ll understand what can be implemented with PIC32 and how things work in it. If you decide to implement a project, you have enough examples plus understanding how to start the crystal.</p>
+
+<p><strong>The conclusion</strong>: Highly recommended.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Interview with Geoff Graham]]></title>
