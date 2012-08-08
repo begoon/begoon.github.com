@@ -5,13 +5,35 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-08-08T22:13:00Z</updated>
+  <updated>2012-08-08T22:36:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[MOXA NPort 5150]]></title>
+    <link href="http://demin.ws/blog/english/2012/08/08/moxa-nport-5150/"/>
+    <updated>2012-08-08T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/08/08/moxa-nport-5150/</id>
+    <content type="html"><![CDATA[<p>My brother has presented me this animal &ndash; <a href="http://www.moxa.com/product/nport_5150.htm">MOXA NPort 5150</a>.</p>
+
+<p><img src="http://demin.ws/images/blog/moxa/nport/5150/IMG_0699.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/moxa/nport/5150/IMG_0697.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/moxa/nport/5150/IMG_0698.JPG" alt="" />
+</p>
+
+<p>This device allows to connect legacy RS-232 devices to the world of TCP/IP. We used such things years ago developing software for POSes and ATMs. Just change a dialing script from something like <code>ATDT12345678</code> to <code>ATD192.168.1.1</code> and off you go.</p>
+
+<p>Have no idea what to do with this now. I even have no proper RS-232 port, only via a USB cable. Interestingly, back those days such devices were very expensive.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[&#34;Programming 32-bit Microcontrollers in C, Exploring the PIC32&#34; by Lucio Di Jasio]]></title>

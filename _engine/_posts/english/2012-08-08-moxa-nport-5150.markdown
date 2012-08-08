@@ -1,0 +1,24 @@
+---
+layout: post
+title: "MOXA NPort 5150"
+language: english
+date: 2012-08-08 22:36
+comments: true
+categories: 
+- english
+- moxa
+- nport
+---
+My brother has presented me this animal -- [MOXA NPort 5150][]. 
+
+[MOXA NPort 5150]: http://www.moxa.com/product/nport_5150.htm
+
+![](/images/blog/moxa/nport/5150/IMG_0699.JPG)
+
+![](/images/blog/moxa/nport/5150/IMG_0697.JPG)
+
+![](/images/blog/moxa/nport/5150/IMG_0698.JPG)
+
+This device allows to connect legacy RS-232 devices to the world of TCP/IP. We used such things years ago developing software for POSes and ATMs. Just change a dialing script from something like `ATDT12345678` to `ATD192.168.1.1` and off you go.
+
+Have no idea what to do with this now. I even have no proper RS-232 port, only via a USB cable. Interestingly, back those days such devices were very expensive. 
