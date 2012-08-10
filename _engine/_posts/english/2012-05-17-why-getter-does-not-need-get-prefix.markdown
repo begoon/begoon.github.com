@@ -10,7 +10,7 @@ categories:
 ---
 ### Idea
 
-Newer use a `get` prefix for getters.
+Never use a `get` prefix for getters.
 
 ### Why?
 

@@ -2602,7 +2602,7 @@ class std::deque&lt;int,class std::allocator&lt;int&gt; &gt;
     <id>http://demin.ws/blog/english/2012/05/17/why-getter-does-not-need-get-prefix/</id>
     <content type="html"><![CDATA[<h3>Idea</h3>
 
-<p>Newer use a <code>get</code> prefix for getters.</p>
+<p>Never use a <code>get</code> prefix for getters.</p>
 
 <h3>Why?</h3>
 
