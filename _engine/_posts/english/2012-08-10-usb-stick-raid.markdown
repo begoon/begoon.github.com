@@ -22,8 +22,6 @@ I've bought an extender with 12 ports.
 
 <a href="http://www.amazon.co.uk/gp/product/B0051PGX2I/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B0051PGX2I&amp;linkCode=as2&amp;tag=prodiy-21">Satechi 12 Port USB Hub with Power Adapter &amp; 2 Control Switches</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B0051PGX2I" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
 
-<a href="http://www.amazon.co.uk/gp/product/B0051PGX2I/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B0051PGX2I&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B0051PGX2I&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B0051PGX2I" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
-
 ![](/images/blog/usb-stick-raid/satechi-12-usb-port-extender.jpg)
 
 Plugging them all in...
@@ -46,7 +44,7 @@ Wait for five minutes and it's done.
 
 ![](/images/blog/usb-stick-raid/disk-utility-crazy-raid-completed.png)
 
-`df` perfectly sees the drive.
+"df" perfectly sees the drive.
 
 ![](/images/blog/usb-stick-raid/df-crazy-raid.png)
 
