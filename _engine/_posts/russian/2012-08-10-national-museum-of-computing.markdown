@@ -15,7 +15,7 @@ categories:
 [Энигма, Колоссус или история Британской криптографии в Блетчли-парке]: /blog/russian/2012/07/06/bletchley-park-colossus/
 [The National Museum of Computing]: http://www.tnmoc.org/
 
-Настоящая BBS, хоть в на Windows.
+Настоящая BBS, хоть и на Windows.
 
 ![](/images/blog/bletchley-park/tnmoc/IMG_0716.JPG)
 
