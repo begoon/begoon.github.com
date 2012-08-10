@@ -33,6 +33,7 @@ title: "Статьи"
 
 [Интервью проекту OpenQuality.ru]: http://experience.openquality.ru/alexander-demin-interview/
 
+[Национальный компьютерный музей в Блечли Парке]: http://habrahabr.ru/post/149362/
 [Пайка для начинающих]: http://habrahabr.ru/post/148656/
 [Энигма, Колоссус или история Британской криптографии в Блетчли-парке]: http://habrahabr.ru/post/147302/
 [Микрокомпьютер GMC-4]: http://habrahabr.ru/post/147157/
