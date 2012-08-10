@@ -5,13 +5,80 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-08-10T00:32:00Z</updated>
+  <updated>2012-08-10T22:26:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[RAID из USB флешек]]></title>
+    <link href="http://demin.ws/blog/russian/2012/08/10/usb-stick-raid/"/>
+    <updated>2012-08-10T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/08/10/usb-stick-raid/</id>
+    <content type="html"><![CDATA[<p>Нашел я тут пакетик с USB флешками разных лет использования. Как обычно, в работе только две самые последние и самых больших размеров. Остальные &ndash; тут.</p>
+
+<p><img src="http://demin.ws/images/blog/usb-stick-raid/bunch-of-usb-stricks.jpg" alt="" />
+</p>
+
+<p>Размеры от 64 мегов до 32 гигов.</p>
+
+<p><img src="http://demin.ws/images/blog/usb-stick-raid/usb-stricks-sorted.jpg" alt="" />
+</p>
+
+<p>И возникла идея сделать из них RAID, например, просто &ldquo;concatenated disk&rdquo;, ибо в OSX это делается очень просто. Идеи тут минимум, но было интересно попробовать.</p>
+
+<p>Купил я вот такой девайс на двенадцать сосков.</p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/B0051PGX2I/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B0051PGX2I&amp;linkCode=as2&amp;tag=prodiy-21">Satechi 12 Port USB Hub with Power Adapter &amp; 2 Control Switches</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B0051PGX2I" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/B0051PGX2I/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B0051PGX2I&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B0051PGX2I&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B0051PGX2I" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p><img src="http://demin.ws/images/blog/usb-stick-raid/satechi-12-usb-port-extender.jpg" alt="" />
+</p>
+
+<p>Втыкаем&hellip;</p>
+
+<p><img src="http://demin.ws/images/blog/usb-stick-raid/usb-stricks-raid-assembled.jpg" alt="" />
+</p>
+
+<p>И запускаем Disk Utility. Все флешки, вроде, видятся.</p>
+
+<p><img src="http://demin.ws/images/blog/usb-stick-raid/disk-utility-disks-connected.png" alt="" />
+</p>
+
+<p>Создаем диск типа &ldquo;concatenated disk&rdquo; с именем &ldquo;Crazy RAID&rdquo; и добавляем туда флешки, предварительно их отформатировав в HPFS+ для единообразия.</p>
+
+<p><img src="http://demin.ws/images/blog/usb-stick-raid/disk-utility-crazy-raid-created.png" alt="" />
+</p>
+
+<p>Подтверждаем&hellip;</p>
+
+<p><img src="http://demin.ws/images/blog/usb-stick-raid/disk-utility-crazy-raid-confirmation.png" alt="" />
+</p>
+
+<p>Ждем минут пять и готово.</p>
+
+<p><img src="http://demin.ws/images/blog/usb-stick-raid/disk-utility-crazy-raid-completed.png" alt="" />
+</p>
+
+<p>В системе видится.</p>
+
+<p><img src="http://demin.ws/images/blog/usb-stick-raid/df-crazy-raid.png" alt="" />
+</p>
+
+<p>Можно теперь чего-нибудь туда скопировать.</p>
+
+<p><img src="http://demin.ws/images/blog/usb-stick-raid/mc-crazy-raid-copying.png" alt="" />
+</p>
+
+<p>Конечно, конструктивного применения тут реально ноль, ибо все флешки разные и кроме их объединения в один диск сложно что-то еще сделать в плане RAID. Скорость записи будет определяться той флешкой, на которую идет запись в данный момент. При параллельном чтении, возможно, будет ускорение.</p>
+
+<p>Но выглядит приколько!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Национальный компьютерный музей в Блечли Парке]]></title>
