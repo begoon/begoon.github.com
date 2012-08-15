@@ -9,7 +9,7 @@ categories:
 - education
 - russian
 ---
-[Закончил][Algorithms: Design and Analysis, Part I, Statement of Accomplishment] онлайновый курс [Algorithms: Design and Analysis, Part I][] на [coursera.org][]
+[Закончил][Algorithms: Design and Analysis, Part I, Statement of Accomplishment] онлайновый курс [Algorithms: Design and Analysis, Part I][] на [coursera.org][].
 
 [Algorithms: Design and Analysis, Part I]: https://class.coursera.org/algo-2012-002/class/index
 [Algorithms: Design and Analysis, Part I, Statement of Accomplishment]: /files/education/2012/coursera/stanford/algo1/statement-of-accomplishment.pdf
