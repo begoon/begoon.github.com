@@ -3,6 +3,13 @@ layout: default
 language: russian
 title: "Проекты"
 ---
+# Учебные курсы
+
+* [Algorithms: Design and Analysis, Part I][] (Июль 2012), [Statement of Accomplishment][Algorithms: Design and Analysis, Part I, Statement of Accomplishment].
+
+[Algorithms: Design and Analysis, Part I]: https://class.coursera.org/algo-2012-002/class/index
+[Algorithms: Design and Analysis, Part I, Statement of Accomplishment]: /files/education/2012/coursera/stanford/algo1/statement-of-accomplishment.pdf
+
 # Проекты
 
 * [nxtbtrc][] - [Управление Lego NXT через bluetooth][]

@@ -3,6 +3,13 @@ layout: default
 language: english
 title: Projects
 ---
+# Online courses
+
+* [Algorithms: Design and Analysis, Part I][] (July 2012), [Statement of Accomplishment][Algorithms: Design and Analysis, Part I, Statement of Accomplishment].
+
+[Algorithms: Design and Analysis, Part I]: https://class.coursera.org/algo-2012-002/class/index
+[Algorithms: Design and Analysis, Part I, Statement of Accomplishment]: /files/education/2012/coursera/stanford/algo1/statement-of-accomplishment.pdf
+
 # Projects
 
 * [nxtbtrc][] - [Lego NXT remote control via bluetooth][]
