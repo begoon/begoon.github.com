@@ -1,3 +1,5 @@
+// Makefile
+
 all: format run
 
 file = main
