@@ -12,6 +12,7 @@ title: "Проекты"
 
 # Проекты
 
+* [gmc4-loader][] - [Загрузчик через USB для микрокомпьютера GMC-4][]
 * [nxtbtrc][] - [Управление Lego NXT через bluetooth][]
 * [J2ME апплет для управления NXT через bluetooth][NXT Brick remote control over Bluetooth]
 * [lemonbind][] - [Обертка генератора парсеров грамматик Lemon для C++][]
@@ -19,6 +20,9 @@ title: "Проекты"
 * [p4patch][] - Утилита для переноса changeset'ов Perforce между машинами
 * [Перевод документации по Google Test and Google Mock][]
 * [Система биометрической идентификации Handscan][]
+
+[gmc4-loader]: https://github.com/begoon/gmc4-loader/
+[Загрузчик через USB для микрокомпьютера GMC-4]: http://demin.ws/blog/russian/2012/07/25/gmc4-loader-assembled/
 
 ## TCP/IP proxy/debugger
 
