@@ -12,12 +12,16 @@ title: Projects
 
 # Projects
 
+* [gmc4-loader][] - [USB loader for the GMC-4 microcomputer][]
 * [nxtbtrc][] - [Lego NXT remote control via bluetooth][]
 * [J2ME applet for NXT remote control][NXT Brick remote control over Bluetooth]
 * [lemonbind][] - Lemon parser generator wrapper for C++
 * [luascript][] - Lua script in С++
 * [p4patch][] - A utility to transfer Perforce change sets across machines
 * [Biometrical identification system Handscan][]
+
+[gmc4-loader]: https://github.com/begoon/gmc4-loader/
+[USB loader for the GMC-4 microcomputer]: http://demin.ws/blog/english/2012/07/25/gmc4-loader-assembled/
 
 ## TCP/IP proxy/debugger
 

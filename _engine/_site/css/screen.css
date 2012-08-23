@@ -52,6 +52,10 @@ ul {
   margin-top: 1em;
 }
 
+pre {
+  margin-top: 1em;
+}
+
 table td {
   padding: 0 .5em;
 }
