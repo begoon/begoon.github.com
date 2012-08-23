@@ -6,6 +6,7 @@ date: 2012-08-23 02:14
 comments: true
 categories: 
 - maximite
+- pic32
 - radio86
 - russian
 ---
