@@ -5,13 +5,170 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-08-23T02:14:00Z</updated>
+  <updated>2012-08-25T16:57:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Английские слова, представимые шестнадцатеричными цифрами]]></title>
+    <link href="http://demin.ws/blog/russian/2012/08/25/english-words-in-hex/"/>
+    <updated>2012-08-25T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/08/25/english-words-in-hex/</id>
+    <content type="html"><![CDATA[<p>Программисты любят &ldquo;волшебные&rdquo; числа с нестандартным, часто вербальным смыслом. Шестнадцатеричная система подходит для этого как нельзя лучше.</p>
+
+<p>Например, если нужно число-заглушка для 16-и или 32-x битного указателя, используются слова из следующего набора:</p>
+
+<pre><code>ABBE
+ACED
+BABE
+BADE
+BEAD
+BEEF
+BODE
+CADE
+CAFE
+CEDE
+COCA
+CODA
+CODE
+DACE
+DADO
+DEAD
+DEAF
+DECO
+DEED
+DODO
+FACE
+FADE
+FEED
+FOOD
+OBOE
+</code></pre>
+
+<p>Например:</p>
+
+<pre><code>DEADFACE
+ACEDFEED  
+</code></pre>
+
+<p>Можно пойти дальше и не ограничиваться симметричным разделением. В этом случае слов будет больше:</p>
+
+<pre><code>ABBE
+ABE
+ABODE
+ACCEDE
+ACCEDED
+ACE
+ACED
+ADD
+ADDED
+ADO
+ADOBE
+BAA
+BABE
+BAD
+BADE
+BAOBAB
+BE
+BEAD
+BEADED
+BED
+BEDDED
+BEE
+BEEF
+BOA
+BOB
+BOBBED
+BODE
+BODED
+BOO
+BOOBOO
+BOOED
+CAB
+CACAO
+CAD
+CADE
+CAFE
+CEDE
+CEDED
+COB
+COCA
+COCOA
+COD
+CODA
+CODE
+CODED
+COFFEE
+COO
+COOED
+DAB
+DABBED
+DACE
+DAD
+DADO
+DEAD
+DEAF
+DEB
+DECADE
+DECAF
+DECO
+DECODE
+DECODED
+DEE
+DEED
+DEFACE
+DEFACED
+DO
+DOC
+DODO
+DOE
+DOFFED
+EBB
+EBBED
+EFFACE
+EFFACED
+FAB
+FACADE
+FACE
+FACED
+FAD
+FADE
+FADED
+FED
+FEE
+FEED
+FOB
+FOBBED
+FOE
+FOOD
+OAF
+OBOE
+ODD
+ODE
+OF
+OFF
+</code></pre>
+
+<p>Например:</p>
+
+<pre><code>BADCOCOA
+BADCODED
+FADEDDOC
+CODEDBOB
+</code></pre>
+
+<p>Ну а на 64-битной системе можно писать почти предложения.</p>
+
+<pre><code>EBBEDDEADBAOBAB
+</code></pre>
+
+<p>Кто предложит фразу для следующего, 128-и битного поколения?</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Радио-86РК на железе Maximite]]></title>
