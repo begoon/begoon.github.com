@@ -9,6 +9,7 @@ title: "Статьи"
 
 **Хабр**
 
+* [Радио-86РК на железе Maximite][]
 * [RAID из USB флешек][]
 * [Национальный компьютерный музей в Блечли Парке][]
 * [Пайка для начинающих][]
@@ -36,6 +37,7 @@ title: "Статьи"
 
 [Интервью проекту OpenQuality.ru]: http://experience.openquality.ru/alexander-demin-interview/
 
+[Радио-86РК на железе Maximite]: http://habrahabr.ru/post/150080/
 [RAID из USB флешек]: http://habrahabr.ru/post/149421/
 [Национальный компьютерный музей в Блечли Парке]: http://habrahabr.ru/post/149362/
 [Пайка для начинающих]: http://habrahabr.ru/post/148656/
