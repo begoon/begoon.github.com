@@ -7,6 +7,7 @@ title: "Interviews"
 My interviews with interesting people
 =====================================
 
+* [Charles Wetherell], the author of the “Etudes for programmers” book.
 * [Geoff Graham][], the author and creator of the Maximite 
   microcomputer. Projects: MMBasic.
 * [Anthony Williams][], the author of the “C++ Concurrency in Action”
@@ -16,6 +17,7 @@ My interviews with interesting people
   and director of IFS Institute for Software, the C++ Standard
   contributor and Eclipse CDT developer. Projects: CUTE, Mockator.
 
+[Charles Wetherell]: /blog/english/2012/08/25/interview-with-charles-wetherell/
 [Geoff Graham]: /blog/english/2012/08/07/interview-with-geoff-graham/
 [Anthony Williams]: /blog/english/2012/07/24/interview-with-anthony-williams/
 [Peter Sommerlad]: /blog/english/2012/05/19/peter-sommerlad-interview/
