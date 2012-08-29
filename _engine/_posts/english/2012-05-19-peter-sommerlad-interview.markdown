@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Interview with Peter Sommerlad"
+title: "An interview with Peter Sommerlad"
 language: english
 date: 2012-05-19 12:43
 comments: true

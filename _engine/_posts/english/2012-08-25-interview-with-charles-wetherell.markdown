@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Interview with Charles Wetherell"
+title: "An interview with Charles Wetherell"
 language: english
 date: 2012-08-25 20:01
 comments: true

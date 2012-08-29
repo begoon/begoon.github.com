@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Interview with Geoff Graham"
+title: "An interview with Geoff Graham"
 language: english
 date: 2012-08-07 17:00
 comments: true

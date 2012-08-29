@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Interview with Anthony Williams"
+title: "An interview with Anthony Williams"
 language: english
 date: 2012-07-24 22:23
 comments: true
