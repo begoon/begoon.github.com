@@ -4,7 +4,8 @@ language: english
 title: "Articles"
 ---
 
-**Links to publications**
+Links to publications
+=====================
 
 * [RESTful Web Service in Go Powered by the Google App Engine][], Dr.Dobb's / August 2012
 * [The Beauty of Concurrency in Go][], (The Pragmatic BookShelf magazine)
