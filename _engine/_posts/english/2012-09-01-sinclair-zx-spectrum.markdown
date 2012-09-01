@@ -21,7 +21,7 @@ Now it is genuine!
 
 ![](/images/blog/sinclair-zx-spectrum/IMG_0705.JPG)
 
-Open it up! It did risk to detach the keyboard, so I had to photograph from two angles.
+Open it up! It didn't risk to detach the keyboard, so I had to photograph from two angles.
 
 ![](/images/blog/sinclair-zx-spectrum/IMG_0708.JPG)
 
