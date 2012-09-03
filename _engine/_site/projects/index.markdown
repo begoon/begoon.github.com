@@ -32,20 +32,24 @@ title: "Проекты"
 
 ## Радио-86РК
 
-* [Эмулятор процессора Intel 8080 (КР580)][]
+* [Эмулятор на микрокомпьютере Maximite][Эмулятор Радио-86РК на микрокомпьютере Maximite] / 2012
 * [Эмулятор на JavaScript][Эмулятор Радио-86РК на JavaScript]
 * [Эмулятор под Windows][Эмулятор Радио-86РК под Windows]
 * [Эмулятор под DOS][Эмулятор Радио-86РК под DOS]
+
+* [Эмулятор процессора Intel 8080 (КР580)][]
 
 ## Блоги
 
 * [Яйца всмятку, сэр!][], Субъективные заметки о Великобритании
 * [Программирование - это просто!][], блог о программировании (более не обновляется в связи с переездом на этот сайт).
 
-[Эмулятор процессора Intel 8080 (КР580)]: https://github.com/begoon/i8080-core/
+[Эмулятор Радио-86РК на микрокомпьютере Maximite]: https://github.com/begoon/rk86-maximite/
 [Эмулятор Радио-86РК на JavaScript]: http://radio86.googlecode.com
 [Эмулятор Радио-86РК под Windows]: /projects/radio86/emulator/windows/
 [Эмулятор Радио-86РК под DOS]: /projects/radio86/emulator/dos/
+
+[Эмулятор процессора Intel 8080 (КР580)]: https://github.com/begoon/i8080-core/
 
 [nxtbtrc]: http://code.google.com/p/nxtbtrc
 [Управление Lego NXT через bluetooth]: /blog/russian/2009/06/24/lego-nxt-remote-control-via-bluetooth/
