@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Levels for Sokoban</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/interview/">interview</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Levels for Sokoban</h1>
+<div id="post">
+  <p>At the times of XTs and DOS I loved playing Sokoban. The game I had was a
+tiny executable (less than 10Kb) for DOS called <a href="/files/pusher.zip">pusher.exe</a>:</p>
+
+<p><img src="/images/blog/pusher-sokoban-level-01.png" alt="" />
+</p>
+
+<p>That was the first, simplest level, but how about this one?</p>
+
+<p><img src="/images/blog/pusher-sokoban-level-59.png" alt="" />
+</p>
+
+<p><em>The game perfectly works in DOSEmu: <code>DOSEmu -exit pusher.exe</code>.</em></p>
+
+<p>Lazy people can checkout a quick vidoe instead:</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/3zi-ZuL6GKI" frameborder="0" allowfullscreen></iframe>
+
+<p>I was curious how 60 maps fitted into such a tiny executable. After a bit
+of fiddling with IDA I wrote a simple program to extract the maps from the
+<code>pusher.exe</code> binary and print them out. For example:</p>
+
+<pre><code>*************************************
+Maze: 1
+File offset: 148C, DS:00FC, table offset: 0000
+Size X: 22
+Size Y: 11
+End: 14BD
+Length: 50
+
+    XXXXX
+    X   X
+    X*  X
+  XXX  *XXX
+  X  *  * X
+XXX X XXX X     XXXXXX
+X   X XXX XXXXXXX  ..X
+X *  *             ..X
+XXXXX XXXX X@XXXX  ..X
+    X      XXX  XXXXXX
+    XXXXXXXX
+
+*************************************
+</code></pre>
+
+<p>All the map <a href="https://raw.github.com/begoon/sokoban-maps/master/maps/sokoban-maps-60-plain.txt">are available</a>.</p>
+
+<p>The maps are compressed with a Huffman-like approach using bit sequences
+of variable length. Each level has the following structure:</p>
+
+<ul>
+<li>map size X (1 byte)</li>
+<li>map size Y (1 byte)</li>
+<li>X*Y bytes of the map represented as a sequence of pairs &lt;COUNTER&gt;&lt;CODE&gt;.
+&lt;COUNTER&gt; is either a single 0 bit which means one repetition,
+or four bits <code>0 D3 D2 D1</code>, where the number of repetitions
+<code>N = 2 + D3*4 + D2*2 + D1</code> (values 2 to 9). &lt;CODE&gt; has five different
+values: 00 - an empty space, 01 - a wall, 10 - a barrel, 101 - a place
+for the barrel, 111 - a barrel already in place.</li>
+<li>Player&rsquo;s start position X (1 byte)</li>
+<li>Player&rsquo;s start position Y (1 byte)</li>
+</ul>
+
+<p>And so for all 60 maps.</p>
+
+<p>In the file <a href="https://github.com/begoon/sokoban-maps/blob/master/pushermaps.c">pushermaps.c</a> there is an implementation of the simple
+decompressor.</p>
+
+<p>During <a href="https://github.com/begoon/sokoban-maps/blob/master/disasm/pusher.lst">disassembling</a> the maps also had been presented in the
+convenient plain text form but still compressed.</p>
+
+<pre><code>level_01        db 16h, 0Bh, 0A2h, 0DFh, 38h, 32h, 1Fh, 38h, 2Ah, 3, 0E6h
+                db 12h, 0C0h, 0A5h, 0F2h, 83h, 2, 81h, 3, 0E4h, 12h, 82h
+                db 25h, 6, 0CDh, 64h, 22h, 51h, 0ACh, 11h, 0A1h, 0Ah, 5
+                db 0E5h, 11h, 0B1h, 14h, 82h, 29h, 82h, 31h, 0A0h, 0E1h
+                db 2Ch, 18h, 0D1h, 0CFh, 80h, 0Ch, 8
+level_02        db 0Eh, 0Ah, 0F6h, 58h, 0Ch, 68h, 0Dh, 94h, 0C6h, 80h
+                db 85h, 2, 82h, 18h, 0D0h, 15h, 4Ch, 10h, 0C6h, 0C2h, 18h
+                db 21h, 8Dh, 1, 6, 4, 39h, 10h, 0A0h, 81h, 80h, 85h, 2
+                db 8, 20h, 60h, 34h, 1Bh, 0Ch, 1Eh, 0CAh, 7, 4
+level_03        db 11h, 0Ah, 0E3h, 9Fh, 0Eh, 7, 0C2h, 11h, 42h, 1Fh, 8
+                db 50h, 23h, 0E0h, 85h, 4, 0Ch, 1Eh, 84h, 8, 0A6h, 0B4h
+                db 10h, 85h, 2, 82h, 59h, 0D4h, 28h, 14h, 90h, 0D6h, 83h
+                db 0DFh, 7Ch, 0Eh, 1
+</code></pre>
+
+<p>&hellip; etc.</p>
+
+<p>So if you&rsquo;d like to implement a quick and compact Sokoban for some reason,
+there is a <a href="https://github.com/begoon/sokoban-maps/blob/master/maps/sokoban-maps-60-compressed.txt">bunch of already created and nicely compressed maps</a>.</p>
+
+<p>I know that there are tons of levels for Sokoban in the internet, plus
+automated Sokoban solvers and similar stuff. But it still doesn&rsquo;t make
+all that fun of dissecting the twenty years old or more binary less
+interesting.</p>
+
+<p>The project is available at GitHub&rsquo;e &ndash; <a href="https://github.com/begoon/sokoban-maps">https://github.com/begoon/sokoban-maps</a>.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/09/04/sokoban-maps/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/09/04/sokoban-maps/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
