@@ -9,6 +9,7 @@ title: "Статьи"
 
 **Хабр**
 
+* [Родной Sinclair ZX Spectrum][]
 * [Интервью с Чарльзом Уэзереллом][], автором книги "Этюды для программистов"
 * [Радио-86РК на железе Maximite][]
 * [RAID из USB флешек][]
@@ -38,6 +39,7 @@ title: "Статьи"
 
 [Интервью проекту OpenQuality.ru]: http://experience.openquality.ru/alexander-demin-interview/
 
+[Родной Sinclair ZX Spectrum]: http://habrahabr.ru/post/150684/
 [Интервью с Чарльзом Уэзереллом]: http://habrahabr.ru/post/150238/
 [Радио-86РК на железе Maximite]: http://habrahabr.ru/post/150080/
 [RAID из USB флешек]: http://habrahabr.ru/post/149421/

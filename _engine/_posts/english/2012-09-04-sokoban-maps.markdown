@@ -78,7 +78,7 @@ decompressor.
 
 [pushermaps.c]: https://github.com/begoon/sokoban-maps/blob/master/pushermaps.c
 
-During [disassembling][pusher.lst] the maps also had been presented in the
+When [disassembling][pusher.lst] the maps also had been presented in the
 convenient plain text form but still compressed.
 
     level_01        db 16h, 0Bh, 0A2h, 0DFh, 38h, 32h, 1Fh, 38h, 2Ah, 3, 0E6h

@@ -85,7 +85,7 @@ for the barrel, 111 - a barrel already in place.</li>
 <p>In the file <a href="https://github.com/begoon/sokoban-maps/blob/master/pushermaps.c">pushermaps.c</a> there is an implementation of the simple
 decompressor.</p>
 
-<p>During <a href="https://github.com/begoon/sokoban-maps/blob/master/disasm/pusher.lst">disassembling</a> the maps also had been presented in the
+<p>When <a href="https://github.com/begoon/sokoban-maps/blob/master/disasm/pusher.lst">disassembling</a> the maps also had been presented in the
 convenient plain text form but still compressed.</p>
 
 <pre><code>level_01        db 16h, 0Bh, 0A2h, 0DFh, 38h, 32h, 1Fh, 38h, 2Ah, 3, 0E6h
