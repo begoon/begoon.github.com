@@ -23,7 +23,7 @@ That was the first, simplest level, but how about this one?
 
 *The game perfectly works in DOSEmu: `DOSEmu -exit pusher.exe`.*
 
-Lazy people can checkout a quick vidoe instead:
+Lazy people can checkout a quick video instead:
 
 <iframe width="640" height="360" src="http://www.youtube.com/embed/3zi-ZuL6GKI" frameborder="0" allowfullscreen></iframe>
 
