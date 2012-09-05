@@ -5,13 +5,931 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-05T19:33:00Z</updated>
+  <updated>2012-09-05T21:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[US Visa: Мое первое приложения для iPhone]]></title>
+    <link href="http://demin.ws/blog/russian/2012/09/05/usvisa-my-first-iphone-app/"/>
+    <updated>2012-09-05T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/09/05/usvisa-my-first-iphone-app/</id>
+    <content type="html"><![CDATA[<h2>Почему, собственно?</h2>
+
+<p>Имея Mac и iPhone, не попытаться написать мобильное приложение? Как-то неправильно. Благо тут подвернулась задачка, которая прекрасно легла в тему, как весьма полезная и в то же время не очень сложная в реализации. Итак, я погрузился в Objective-C и Cocoa.</p>
+
+<h2>Disclaimer</h2>
+
+<p>Прошу помнить, что не только мое первое приложение для iOS, но и первое приложение на Objective-C в принципе. Ни разу не претендую ни качество реализации, ни на эффективность, но хочу сказать, что получился весьма целостный несложный пример, который дает представление об Objective-C и разработке под iOS в целом. Особенно для тех, кто вообще этот язык не знает.</p>
+
+<h2>Disclaimer 2</h2>
+
+<p>Данный пост был изначально опубликован в виде статьи в журнале «The Pragmatic Bookshelf Magazine» на английском языке &ndash; <a href="http://pragprog.com/magazines/2012-09/us-visa-my-first-iphone-app/">US Visa: My First iPhone App</a>. Русская версия, публикуемая здесь, не является точным переводом журнальной версии, так как была написана как отдельный текст несколько позже.</p>
+
+<h2>«Хьюстон! У нас проблема!»</h2>
+
+<p>За последний год я несколько раз вынужден был подавать на американскую визу в посольстве в Лондоне. Каждый раз мне говорили, что конкретно в моем случае требуется «administrative processing». Документы то у тебя принимают, но потом вместо визы дают номерок (batch number) и говорят периодически заглядывать на их сайт, где есть PDF-ка, в которой по данному номеру следует искать указания, что делать дальше (досылать еще документы, посылать паспорт и т.д.). Нажимаешь на <a href="http://photos.state.gov/libraries/unitedkingdom/164203/cons-visa/admin_processing_dates.pdf">ссылку</a>, открывается файл, жмешь CTRL-F, вводишь номер (batch number) и вперед.</p>
+
+<p>Возникла идея автоматизации &ndash; сделать приложение для айфона, в которое может вбить номер заявки один раз, и затем одним нажатием на кнопку получать статус обработки визы. Приложение должно уметь скачивать PDF файл, парсить его и вычленять данные по заявке.</p>
+
+<h2>Что делать, если у меня Windows?</h2>
+
+<p>Не все еще потеряно. Objective-C можно запустить на Windows через Cygwin или MinGW. Более того, проект <a href="http://www.gnustep.org/">GNUstep</a> дает возможность использовать библиотеки AppKit и Foundation для написания графических программ в Windows на Objective-C. Увы, я не буду погружаться столь глубоко в этой статье. Мы сделаем только приложение, работающее в командной строке. Оно будет уметь скачивать PDF и парсить его. Собрать приложение можно будет и на Windows, и на Маке. После, мы практически без изменений будем использовать модули этого приложения для создания полноценной программы для iOS. Но, увы, это уже только для владельцев Маков. Можно, конечно, Хакинтош на виртуалку поставить и гонять приложение на симуляторе айфона в Xcode, но вот загрузить его в реальный айфон вряд ли получится без настоящего Мака.</p>
+
+<h2>Установка GNUstep под Windows</h2>
+
+<p>Я нашел два великолепныx поста:</p>
+
+<ul>
+<li>«<a href="http://solarianprogrammer.com/2011/09/14/learn-objective-c-on-windows/">Learn Objective-C on Windows</a>» &ndash; Как поставить GNUstep и попробовать минимальное приложение.</li>
+<li>«<a href="http://solarianprogrammer.com/2012/03/21/clang-objective-c-windows/">Clang and Objective-C on Windows</a>» &ndash; Как собрать свежий компилятор Clang под Windows. К сожалению, GCC, идущий на данный момент с GNUstep, не поддерживает уровня языка Objective-C, требуемого Apple&rsquo;ом. К тому же, Apple полностью переключился на Clang с некоторого времени. Так что, надо собирать Clang, так как установщика под Windows у него пока нет. Я просто следовал один в один инструкциям из поста, и все встало без проблем.</li>
+</ul>
+
+<h2>Неплохо было бы познакомиться с Objective-C и iOS API</h2>
+
+<p>Я про Objective-C не знал ничего, кроме слухов о его необычном подходе к управлению памятью, поэтому пришлось пролистать следующие книжки.</p>
+
+<p><strong>Предупреждение</strong>: <em>Ссылки снизу содержат мой личный номер партнерской программы с Амазоном. От возможных покупок, совершенных после перехода по этим ссылкам, я могу получить небольшой процент. Если вас это не устраивает, пожалуйста, не нажимайте на ссылки, или вручную «почистите» URL через cut-paste. Спасибо за понимание.</em></p>
+
+<p>1. <a href="http://www.amazon.co.uk/gp/product/B007OWBAB0/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;tag=prodiy-21&amp;linkCode=as2&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B007OWBAB0">iOS Programming: The Big Nerd Ranch Guide, 3/e (Big Nerd Ranch Guides)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B007OWBAB0" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/B007OWBAB0/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;tag=prodiy-21&amp;linkCode=as2&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B007OWBAB0"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;Format=_SL160_&amp;ASIN=B007OWBAB0&amp;MarketPlace=GB&amp;ID=AsinImage&amp;WS=1&amp;tag=prodiy-21&amp;ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B007OWBAB0" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p>2. <a href="http://www.amazon.co.uk/gp/product/0321706285/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;tag=prodiy-21&amp;linkCode=as2&amp;camp=1634&amp;creative=6738&amp;creativeASIN=0321706285">Objective-C Programming: The Big Nerd Ranch Guide (Big Nerd Ranch Guides)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=0321706285" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/0321706285/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;tag=prodiy-21&amp;linkCode=as2&amp;camp=1634&amp;creative=6738&amp;creativeASIN=0321706285"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;Format=_SL160_&amp;ASIN=0321706285&amp;MarketPlace=GB&amp;ID=AsinImage&amp;WS=1&amp;tag=prodiy-21&amp;ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=0321706285" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p>3. <a href="http://www.amazon.co.uk/gp/product/B006GFZ288/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;tag=prodiy-21&amp;linkCode=as2&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B006GFZ288">Programming in Objective-C (4th Edition) (Developer&rsquo;s Library)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B006GFZ288" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/B006GFZ288/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;tag=prodiy-21&amp;linkCode=as2&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B006GFZ288"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;Format=_SL160_&amp;ASIN=B006GFZ288&amp;MarketPlace=GB&amp;ID=AsinImage&amp;WS=1&amp;tag=prodiy-21&amp;ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B006GFZ288" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p>А еще есть один волшебный бесплатный документ &ndash;  «<a href="http://pierre.chachatelier.fr/programmation/fichiers/cpp-objc-en.pdf">From C++ to Objective-C</a>».</p>
+
+<p>Итак, задача делится на три основные части:</p>
+
+<ul>
+<li>Парсер PDF</li>
+<li>Скачивалка PDF (желательно ее сделать без привязки к интерфейсу)</li>
+<li>Интерфейс под iOS</li>
+</ul>
+
+<p>После ознакомления с Objective-C, могу сказать, что для более менее опытного разработчика на C или C++, особенно, если есть опыт разработки UI (я в свое время много возился с Delphi/C++Builder), «въехать» в Objective-C и Cocoa несложно. Достаточно сфокусироваться на весьма необычной полу-ручной модели управления памятью (особенно после RAII в C++ и сборщика мусора в Java). Objective-C сам управляет памятью, но вот контроль за подсчетом ссылок на объекты для их правильного освобождения лежит на вас. Надо понять принцип, иначе утечки памяти неизбежны. У меня именно так и было в начале. Благо отличные инструменты профилировки в Xcode позволяют основные проблемы выявлять практически сразу.</p>
+
+<p>Ниже я приведу несколько личных субъективных впечатлений, как новичка в Objective-C и Cocoa. Вряд ли это будет интересно, если вы уже имеете опыт в них, но вот если нет &ndash; думаю, будет интересно.</p>
+
+<p>Для начала интересно посмотреть, как в Objective-C формируются имена функций-членов класса. Это почти как человеческий язык. Если я по-английски скажу «please, find a needle in a portion of some data and add the result to a list implemented as a mutable array», в Objective-C это будет:</p>
+
+<pre class="hl">
+<span class="hl opt">+ (</span><span class="hl kwb">bool</span><span class="hl opt">)</span>findInPortion<span class="hl opt">:(</span>NSMutableData <span class="hl opt">*)</span>someData 
+               needle<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>aNeedle
+             andAddTo<span class="hl opt">:(</span>NSMutableArray<span class="hl opt">*)</span>aList <span class="hl opt">{</span>
+   ...
+<span class="hl opt">}</span>
+</pre>
+
+<p>Если прочитать этот код слева направо сверху вниз, то получается почти полноценное предложение. Формально, полное имя этого метода - <code>findInPortion:needle:andAddTo:</code>. Аргументы именованы, и их имена являются частью полного имени метода. Если правильно давать имена переменных аргументов (<code>someData</code>, <code>aNeedle</code> and <code>aList</code>), то можно фактически писать по-английски. Конечно, это все довольно «многословный» подход, но фантастическая система предсказания в Xcode при наборе кода позволяет быстро и просто набивать все эти обороты. Обратите внимание также, что традиционное выравнивание при разбивке длинных строк происходит по двоеточию, разделяющему формальное имя параметра от переменной, его представляющей.</p>
+
+<p>В Objective-C нетрадиционный синтаксис для вызова методов. Например, вместо:</p>
+
+<pre class="hl">
+NSMutableArray<span class="hl opt">*</span> list <span class="hl opt">=</span> NSMutableArray.alloc.init<span class="hl opt">;</span>
+</pre>
+
+<p>пишется:</p>
+
+<pre class="hl">
+NSMutableArray<span class="hl opt">*</span> list <span class="hl opt">= [[</span>NSMutableArray alloc<span class="hl opt">]</span> init<span class="hl opt">];</span>    
+</pre>
+
+<p>Выглядит странно, но это вопрос привычки. Опять таки, система предсказания кода при вводе позволяет вводить квадратные скобки даже почти физически не набивая их.</p>
+
+<p>Objective-C и Cocoa используют активно несколько шаблонов программирования, которые просто необходимо освоить. Например, делегаты. Они везде в Cocoa. Делегат &ndash; это класс, содержащий в себе обратные вызовы. Вместе передачи пачки отдельных функций или методов, просто передается один объект, реализующий все требуемые обратные вызовы. Например, я использовал стандартный класс <a href="https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/Foundation/Classes/nsurlconnection_Class/Reference/Reference.html">NSURLConnection</a> для скачивания PDF&rsquo;ки. Этот класс требует предоставление ему делегата <a href="https://developer.apple.com/library/mac/#documentation/Foundation/Reference/NSURLConnectionDelegate_Protocol/Reference/Reference.html#//apple_ref/occ/intf/NSURLConnectionDelegate">NSURLConnectionDelegate</a>, методы которого вызываются при различных событиях в процессе скачивания.</p>
+
+<p>Итак, пара недель вечерних бдений за книгами, и я набросал остов моего первого приложения. Но это была только первая часть марлезонского балета. Далее надо было разобраться с форматом PDF.</p>
+
+<h2>Парсер PDF</h2>
+
+<p>Как уже было сказано, файл, содержащий информацию из посольства, в формате PDF. Описание этого формата доступно на <a href="http://www.adobe.com/devnet/pdf/pdf_reference_archive.html">сайте Adobe</a>. Я использовал документ «<a href="http://wwwimages.adobe.com/www.adobe.com/content/dam/Adobe/en/devnet/pdf/pdfs/pdf_reference_archives/PDFReference.pdf">PDF Reference third edition, Version 1.4</a>».</p>
+
+<p>Разбор PDF у меня реализован весьма кондово. Так как данные приходят порциями, то мы будем анализировать документ по частям, последовательно. Каждую новую порцию данных добавляем в буфер и пытаемся в нем разобрать формат PDF. Сначала ищем фрагменты, обрамленные в маркеры <code>stream</code> и <code>endstream</code>. Содержимое каждого такого блока «разжимаем» через <code>zlib/inflate</code>. После это уже чистый текст, и мы в нем ищем наш batch number, конечно, с учетом языка разметки PDF. Если номер обнаружен, то печатаем его и переходим к следующему блоку.</p>
+
+<p>Основные шаги парсера:</p>
+
+<p>1. Если в данных, принятых на текущий момент, есть блок, ограниченных тегами <code>stream\r\n</code> и <code>endstream\r\n</code>, то вырезаем его из буфера и «разжимаем» через <code>zlib/inflate</code>.</p>
+
+<p>2. Разжатый на первом шаге блок являет текстовым. Нам надо найти в нем фрагменты, обрамленные тегами <code>BT\r\n</code> (Begin Text) и <code>ET\r\n</code> (End Text). Находим все такие блоки и объединяем их в список строк.</p>
+
+<p>3. Внутри каждой строки, найденной на шаге 2, удаляем подстроки, неокруженные круглыми скобками. Все что вокруг круглых скобок &ndash; это служебная информация, и она нам не нужна.</p>
+
+<p>4. Итак, мы вычленили чистый текст из PDF&rsquo;ки. Логически информация в этом файле организована в виде таблицы с тремя колонками: номер заявки (batch number), статус и дата. Увы, среди этого еще попадаются колонтитулы страниц. Чтобы их отсеить, мы будем смотреть, что если текущая строка выглядит как batch number (11 цифр), то за ней обязательно идет строка-статус и строка-даты. Берем их и снова ждем нового batch number&rsquo;а.</p>
+
+<p>Как я уже сказал, разбор заточен под конкретный файл, и если в посольстве его изменят, то все сломается. Если хотя бы использовать регулярные выражения, то будет гораздо гибче, но я оставлю это читателям на самостоятельную проработку.</p>
+
+<p><strong>ДОПОЛНЕНИЕ</strong>. В процессе работы над статьей, появилась идея сделать специальный веб-сервис, обращаясь к которому по простым URL&rsquo;ам можно получать данные о заявке, а вся «кухня» по разбору PDF&rsquo;ки происходит «на облаке». В журнале Dr.Dobb&rsquo;s недавно вышла моя статья - <a href="http://www.drdobbs.com/cloud/restful-web-service-in-go-powered-by-the/240006401">RESTful Web Service in Go Powered by the Google App Engine</a>, описывающая данный подход. Желающие могут «допилить» приложение для работы через этот веб-сервис. Можно вообще сделать хитро: сначала обратиться к веб-сервису, и если от него есть ответ, то на этом закончить, а если нет &ndash; запустить процедуру самостоятельного скачивания и разбора PDF&rsquo;ки.</p>
+
+<h2>Приложение для командной строки</h2>
+
+<p>Итак, мы знаем почти все, чтобы написать приложение, которое будет скачивать PDF и вычленять из него информацию по нашей заявке. Приложение будет работать из командной строки. Его можно будет собрать из на Маке, и на Windows через GNUstep и Clang. Далее, исходные файлы этого приложения будут использоваться без изменений для версии под iOS.</p>
+
+<p>Файлы:</p>
+
+<ul>
+<li><code>BatchPDFParser.m</code> (и <code>.h</code>) &ndash; PDF-парсер.</li>
+<li><code>NSURLConnectionDirectDownload.m</code> (и <code>.h</code>) &ndash; Скачивалка. Тут «обвеска» для <code>NSURLConnection</code> (инициализация, делегаты, цикл обработки событий).</li>
+<li><code>DirectDownloadDelegate.m</code> (и <code>.h</code>) &ndash; Делегат для <code>NSURLConnection</code>, принимающий вызовы в различные моменты скачивания.</li>
+<li><code>ViewController.m</code> &ndash; прототип ViewController. Это «прослойка» между скачивалкой и будущим графическим интерфейсом. В OSX и iOS используется концепция MVC (Model-View-Controller). «Контроллер» обеспечивает связь между элементами интерфейса и бизнес-логикой приложения. Текущий контроллер в основном содержит заглушки, которые будут реализованы в полной графической версии.</li>
+<li><code>main-cli.m</code> &ndash; Точка входа.</li>
+</ul>
+
+<h3>BatchPDFParser.h</h3>
+
+<p>Этот файл содержит объявление класса <code>Batch</code>, содержащего информацию об обновлении статуса заявки, и класса <code>BatchPDFParser</code>, который реализует метод <code>findInPortion:needle:andAddTo:</code> (кстати, это статический метод класса, видите <code>+</code> начале строки?).</p>
+
+<pre class="hl">
+<span class="hl kwc">&#64;interface</span> Batch<span class="hl opt">:</span> NSObject <span class="hl opt">{</span>
+  NSString <span class="hl opt">*</span>batchNumber<span class="hl opt">, *</span>status<span class="hl opt">, *</span>date<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+<span class="hl kwc">&#64;property</span> <span class="hl opt">(</span>atomic<span class="hl opt">,</span> copy<span class="hl opt">)</span> NSString<span class="hl opt">*</span> batchNumber<span class="hl opt">, *</span>status<span class="hl opt">, *</span>date<span class="hl opt">;</span>
+<span class="hl kwc">&#64;end</span>
+
+<span class="hl kwc">&#64;interface</span> BatchPDFParser<span class="hl opt">:</span> NSObject
+
+<span class="hl opt">+ (</span><span class="hl kwb">bool</span><span class="hl opt">)</span>findInPortion<span class="hl opt">:(</span>NSMutableData <span class="hl opt">*)</span>data needle<span class="hl opt">:(</span>NSString<span class="hl opt">*</span> <span class="hl kwb">const</span><span class="hl opt">)</span>needle andAddTo<span class="hl opt">:(</span>NSMutableArray<span class="hl opt">*)</span>list<span class="hl opt">;</span>
+
+<span class="hl kwc">&#64;end</span>
+</pre>
+
+<h3>BatchPDFParser.m</h3>
+
+<p>В этом файле реализация парсера PDF.</p>
+
+<pre class="hl">
+<span class="hl ppc">#import &lt;Foundation/Foundation.h&gt;</span>
+<span class="hl ppc">#import</span> <span class="hl pps">&quot;BatchPDFParser.h&quot;</span><span class="hl ppc"></span>
+<span class="hl ppc">#import</span> <span class="hl pps">&quot;zlib.h&quot;</span><span class="hl ppc"></span>
+
+<span class="hl kwc">&#64;implementation</span> Batch
+<span class="hl kwc">&#64;synthesize</span> batchNumber<span class="hl opt">,</span> status<span class="hl opt">,</span> date<span class="hl opt">;</span>
+
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span> dealloc <span class="hl opt">{</span>
+    <span class="hl opt">[</span>batchNumber release<span class="hl opt">];</span>
+    <span class="hl opt">[</span>status release<span class="hl opt">];</span>
+    <span class="hl opt">[</span>date release<span class="hl opt">];</span>
+    <span class="hl opt">[</span><span class="hl kwa">super</span> dealloc<span class="hl opt">];</span>
+<span class="hl opt">}</span>
+<span class="hl kwc">&#64;end</span>
+
+<span class="hl kwc">&#64;implementation</span> BatchPDFParser
+</pre>
+
+<p>Метод <code>findInData:fromOffset:needle:</code> ищет подстроку в данном блоке данных (типа <code>strstr()</code>). Поиск примитивный, и его можно ускорить, например, реализовав алгоритм КМП.</p>
+
+<pre class="hl">
+<span class="hl opt">+ (</span><span class="hl kwb">int</span><span class="hl opt">)</span> findInData<span class="hl opt">:(</span>NSMutableData <span class="hl opt">*)</span>data fromOffset<span class="hl opt">:(</span><span class="hl kwb">size_t</span><span class="hl opt">)</span>offset needle<span class="hl opt">:(</span><span class="hl kwb">char const</span> <span class="hl opt">*</span> <span class="hl kwb">const</span><span class="hl opt">)</span>needle <span class="hl opt">{</span>
+    <span class="hl kwb">int const</span> needleSize <span class="hl opt">=</span> <span class="hl kwd">strlen</span><span class="hl opt">(</span>needle<span class="hl opt">);</span>
+    <span class="hl kwb">char const</span><span class="hl opt">*</span> <span class="hl kwb">const</span> bytes <span class="hl opt">= [</span>data mutableBytes<span class="hl opt">];</span>
+    <span class="hl kwb">int const</span> bytesLength <span class="hl opt">= [</span>data length<span class="hl opt">] -</span> needleSize<span class="hl opt">;</span>
+    <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> bytesLength<span class="hl opt">;) {</span>
+        <span class="hl kwb">char const</span><span class="hl opt">*</span> <span class="hl kwb">const</span> current <span class="hl opt">=</span> <span class="hl kwd">memchr</span><span class="hl opt">(</span>bytes <span class="hl opt">+</span> i<span class="hl opt">,</span> needle<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">],</span> bytesLength <span class="hl opt">-</span> i<span class="hl opt">);</span>
+        <span class="hl kwa">if</span> <span class="hl opt">(</span>current <span class="hl opt">==</span> NULL<span class="hl opt">)</span> <span class="hl kwa">return</span> <span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">;</span>
+        <span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwd">memcmp</span><span class="hl opt">(</span>current<span class="hl opt">,</span> needle<span class="hl opt">,</span> needleSize<span class="hl opt">) ==</span> <span class="hl num">0</span><span class="hl opt">)</span> <span class="hl kwa">return</span> current <span class="hl opt">-</span> bytes<span class="hl opt">;</span>
+        i <span class="hl opt">=</span> current <span class="hl opt">-</span> bytes <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">;</span>
+    <span class="hl opt">}</span>
+    <span class="hl kwa">return</span> <span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Метод <code>isBatchNumber:number:</code> проверяет, является ли строка номером заявки (batch number):</p>
+
+<pre class="hl">
+<span class="hl opt">+ (</span><span class="hl kwb">bool</span><span class="hl opt">)</span> isBatchNumber<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>number <span class="hl opt">{</span>
+    <span class="hl kwb">long long const</span> value <span class="hl opt">= [</span>number longLongValue<span class="hl opt">];</span>
+    <span class="hl kwa">return</span> value <span class="hl opt">&gt;=</span> <span class="hl num">20000000000L</span> <span class="hl opt">&amp;&amp;</span> value <span class="hl opt">&lt;</span> <span class="hl num">29000000000L</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Метод <code>findBatchNumberInChunk:needle:andAddTo:</code> ищет фрагменты, обрамленные тегами <code>BT</code> и <code>ET</code>. В них выделяет текст в круглых скобках, и уже среди найденного выделяет конкретно номер заявки, строку-статус и строку-дату.</p>
+
+<pre class="hl">
+<span class="hl opt">+ (</span><span class="hl kwb">bool</span><span class="hl opt">)</span> findBatchNumberInChunk<span class="hl opt">:(</span><span class="hl kwb">char const</span><span class="hl opt">*)</span>chunk needle<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>needle andAddTo<span class="hl opt">:(</span>NSMutableArray<span class="hl opt">*)</span>list <span class="hl opt">{</span>
+    <span class="hl kwb">enum</span> <span class="hl opt">{</span>
+        waitBT<span class="hl opt">,</span> waitText<span class="hl opt">,</span> insideText
+    <span class="hl opt">}</span> state <span class="hl opt">=</span> waitBT<span class="hl opt">;</span>
+    <span class="hl kwb">enum</span> <span class="hl opt">{</span>
+        waitBatchNumber<span class="hl opt">,</span> waitStatus<span class="hl opt">,</span> waitDate
+    <span class="hl opt">}</span> batchParserState <span class="hl opt">=</span> waitBatchNumber<span class="hl opt">;</span>
+    NSMutableString<span class="hl opt">*</span> line <span class="hl opt">= [[</span>NSMutableString alloc<span class="hl opt">]</span> init<span class="hl opt">];</span>
+    Batch<span class="hl opt">*</span> batch <span class="hl opt">=</span> <span class="hl kwa">nil</span><span class="hl opt">;</span>
+    <span class="hl kwb">bool</span> found <span class="hl opt">=</span> NO<span class="hl opt">;</span>
+    <span class="hl kwa">while</span> <span class="hl opt">(*</span>chunk<span class="hl opt">) {</span>
+        <span class="hl kwa">if</span> <span class="hl opt">(</span>state <span class="hl opt">==</span> waitBT<span class="hl opt">) {</span>
+            <span class="hl kwa">if</span> <span class="hl opt">(</span>chunk<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">] ==</span> <span class="hl str">'B'</span> <span class="hl opt">&amp;&amp;</span> chunk<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] ==</span> <span class="hl str">'T'</span><span class="hl opt">) {</span>
+                state <span class="hl opt">=</span> waitText<span class="hl opt">;</span>
+                <span class="hl opt">[</span>line deleteCharactersInRange<span class="hl opt">:</span><span class="hl kwd">NSMakeRange</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">, [</span>line length<span class="hl opt">])];</span>
+            <span class="hl opt">}</span>
+        <span class="hl opt">}</span> <span class="hl kwa">else if</span> <span class="hl opt">(</span>state <span class="hl opt">==</span> waitText<span class="hl opt">) {</span>
+            <span class="hl kwa">if</span> <span class="hl opt">(</span>chunk<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">] ==</span> <span class="hl str">'('</span><span class="hl opt">) {</span>
+                state <span class="hl opt">=</span> insideText<span class="hl opt">;</span>
+            <span class="hl opt">}</span> <span class="hl kwa">else if</span> <span class="hl opt">(</span>chunk<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">] ==</span> <span class="hl str">'E'</span> <span class="hl opt">&amp;&amp;</span> chunk<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] ==</span> <span class="hl str">'T'</span><span class="hl opt">) {</span>
+                <span class="hl kwa">if</span> <span class="hl opt">(</span>batchParserState <span class="hl opt">==</span> waitBatchNumber<span class="hl opt">) {</span>
+                    <span class="hl kwa">if</span> <span class="hl opt">([</span><span class="hl kwa">self</span> isBatchNumber<span class="hl opt">:</span>line<span class="hl opt">]) {</span>
+                        <span class="hl opt">[</span>batch autorelease<span class="hl opt">];</span>
+                        batch <span class="hl opt">= [[</span>Batch alloc<span class="hl opt">]</span> init<span class="hl opt">];</span>
+                        batch.batchNumber <span class="hl opt">=</span> line<span class="hl opt">;</span>
+                        batchParserState <span class="hl opt">=</span> waitStatus<span class="hl opt">;</span>
+                    <span class="hl opt">}</span>
+                <span class="hl opt">}</span> <span class="hl kwa">else if</span> <span class="hl opt">(</span>batchParserState <span class="hl opt">==</span> waitStatus<span class="hl opt">) {</span>
+                    batch.status <span class="hl opt">=</span> line<span class="hl opt">;</span>
+                    batchParserState <span class="hl opt">=</span> waitDate<span class="hl opt">;</span>
+                <span class="hl opt">}</span> <span class="hl kwa">else if</span> <span class="hl opt">(</span>batchParserState <span class="hl opt">==</span> waitDate<span class="hl opt">) {</span>
+                    batch.date <span class="hl opt">=</span> line<span class="hl opt">;</span>
+                    batchParserState <span class="hl opt">=</span> waitBatchNumber<span class="hl opt">;</span>
+                    <span class="hl kwa">if</span> <span class="hl opt">([</span>batch.batchNumber isEqualToString<span class="hl opt">:</span>needle<span class="hl opt">]) {</span>
+                        NSString<span class="hl opt">*</span> pair <span class="hl opt">= [</span>NSString stringWithFormat<span class="hl opt">:</span>&#64;<span class="hl str">&quot;%&#64;</span><span class="hl esc">\n</span><span class="hl str">%&#64;&quot;</span><span class="hl opt">,</span> batch.status<span class="hl opt">,</span> batch.date<span class="hl opt">];</span>
+                        <span class="hl opt">[</span>list addObject<span class="hl opt">:</span>pair<span class="hl opt">];</span>
+                        <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;Found match: '%&#64;' '%&#64;' '%&#64;'&quot;</span><span class="hl opt">,</span> batch.batchNumber<span class="hl opt">,</span> batch.status<span class="hl opt">,</span> batch.date<span class="hl opt">);</span>
+                        found <span class="hl opt">=</span> YES<span class="hl opt">;</span>
+                    <span class="hl opt">}</span>
+                <span class="hl opt">}</span>
+                <span class="hl opt">[</span>line autorelease<span class="hl opt">];</span>
+                line <span class="hl opt">= [[</span>NSMutableString alloc<span class="hl opt">]</span> init<span class="hl opt">];</span>
+                state <span class="hl opt">=</span> waitBT<span class="hl opt">;</span>
+            <span class="hl opt">}</span>
+        <span class="hl opt">}</span> <span class="hl kwa">else if</span> <span class="hl opt">(</span>state <span class="hl opt">==</span> insideText<span class="hl opt">) {</span>
+            <span class="hl kwa">if</span> <span class="hl opt">(</span>chunk<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">] ==</span> <span class="hl str">')'</span><span class="hl opt">) {</span>
+                state <span class="hl opt">=</span> waitText<span class="hl opt">;</span>
+            <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
+                <span class="hl kwb">char const</span> c<span class="hl opt">[</span><span class="hl num">2</span><span class="hl opt">] = {</span> chunk<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">],</span> <span class="hl num">0</span> <span class="hl opt">};</span>
+                <span class="hl opt">[</span>line appendString<span class="hl opt">:[</span>NSString stringWithUTF8String<span class="hl opt">:&amp;</span>c<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]]];</span>
+            <span class="hl opt">}</span>
+        <span class="hl opt">}</span>
+        chunk <span class="hl opt">+=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+    <span class="hl opt">}</span>
+    <span class="hl opt">[</span>line release<span class="hl opt">];</span>
+    <span class="hl opt">[</span>batch release<span class="hl opt">];</span>
+    <span class="hl kwa">return</span> found<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Теперь главный метод <code>findInPortion:needle:andAddTo:</code>. Тут выделяются куски, обрамленные тегами <code>stream\r\n</code> и <code>endstream\r\n</code>, содержимое разжимается через <code>zlib/inflate</code> и передается в <code>findBatchNumberInChunk:needle:andAddTo:</code> на анализ.</p>
+
+<pre class="hl">
+<span class="hl opt">+ (</span><span class="hl kwb">bool</span><span class="hl opt">)</span>findInPortion<span class="hl opt">:(</span>NSMutableData <span class="hl opt">*)</span>portion needle<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>needle andAddTo<span class="hl opt">:(</span>NSMutableArray<span class="hl opt">*)</span>list <span class="hl opt">{</span>
+    <span class="hl kwb">static char const</span><span class="hl opt">*</span> <span class="hl kwb">const</span> streamStartMarker <span class="hl opt">=</span> <span class="hl str">&quot;stream</span><span class="hl esc">\x0d\x0a</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
+    <span class="hl kwb">static char const</span><span class="hl opt">*</span> <span class="hl kwb">const</span> streamStopMarker <span class="hl opt">=</span> <span class="hl str">&quot;endstream</span><span class="hl esc">\x0d\x0a</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
+    <span class="hl kwb">bool</span> found <span class="hl opt">=</span> <span class="hl kwa">false</span><span class="hl opt">;</span>
+    <span class="hl kwa">while</span> <span class="hl opt">(</span><span class="hl kwa">true</span><span class="hl opt">) {</span>
+        <span class="hl kwb">int const</span> beginPosition <span class="hl opt">= [</span><span class="hl kwa">self</span> findInData<span class="hl opt">:</span>portion fromOffset<span class="hl opt">:</span><span class="hl num">0</span> needle<span class="hl opt">:</span>streamStartMarker<span class="hl opt">];</span>
+        <span class="hl kwa">if</span> <span class="hl opt">(</span>beginPosition <span class="hl opt">== -</span><span class="hl num">1</span><span class="hl opt">)</span> <span class="hl kwa">break</span><span class="hl opt">;</span>
+        <span class="hl kwb">int const</span> endPosition <span class="hl opt">= [</span><span class="hl kwa">self</span> findInData<span class="hl opt">:</span>portion fromOffset<span class="hl opt">:</span>beginPosition needle<span class="hl opt">:</span>streamStopMarker<span class="hl opt">];</span>
+        <span class="hl kwa">if</span> <span class="hl opt">(</span>endPosition <span class="hl opt">== -</span><span class="hl num">1</span><span class="hl opt">)</span> <span class="hl kwa">break</span><span class="hl opt">;</span>
+        <span class="hl kwb">int const</span> blockLength <span class="hl opt">=</span> endPosition <span class="hl opt">+</span> <span class="hl kwd">strlen</span><span class="hl opt">(</span>streamStopMarker<span class="hl opt">) -</span> beginPosition<span class="hl opt">;</span>
+
+        <span class="hl kwb">char const</span><span class="hl opt">*</span> <span class="hl kwb">const</span> zipped <span class="hl opt">= [</span>portion mutableBytes<span class="hl opt">] +</span> beginPosition <span class="hl opt">+</span> <span class="hl kwd">strlen</span><span class="hl opt">(</span>streamStartMarker<span class="hl opt">);</span>
+        z_stream zstream<span class="hl opt">;</span>
+        <span class="hl kwd">memset</span><span class="hl opt">(&amp;</span>zstream<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>zstream<span class="hl opt">));</span>
+        <span class="hl kwb">int const</span> zippedLength <span class="hl opt">=</span> blockLength <span class="hl opt">-</span> <span class="hl kwd">strlen</span><span class="hl opt">(</span>streamStartMarker<span class="hl opt">) -</span> <span class="hl kwd">strlen</span><span class="hl opt">(</span>streamStopMarker<span class="hl opt">);</span>
+
+        zstream.avail_in <span class="hl opt">=</span> zippedLength<span class="hl opt">;</span>
+        zstream.avail_out <span class="hl opt">=</span> zstream.avail_in <span class="hl opt">*</span> <span class="hl num">10</span><span class="hl opt">;</span>
+        zstream.next_in <span class="hl opt">= (</span>Bytef<span class="hl opt">*)</span>zipped<span class="hl opt">;</span>
+        <span class="hl kwb">char</span><span class="hl opt">*</span> <span class="hl kwb">const</span> unzipped <span class="hl opt">=</span> <span class="hl kwd">malloc</span><span class="hl opt">(</span>zstream.avail_out<span class="hl opt">);</span>
+        zstream.next_out <span class="hl opt">= (</span>Bytef<span class="hl opt">*)</span>unzipped<span class="hl opt">;</span>
+        <span class="hl kwb">int const</span> zstatus <span class="hl opt">=</span> <span class="hl kwd">inflateInit</span><span class="hl opt">(&amp;</span>zstream<span class="hl opt">);</span>
+        <span class="hl kwa">if</span> <span class="hl opt">(</span>zstatus <span class="hl opt">==</span> Z_OK<span class="hl opt">) {</span>
+            <span class="hl kwb">int const</span> inflateStatus <span class="hl opt">=</span> <span class="hl kwd">inflate</span><span class="hl opt">(&amp;</span>zstream<span class="hl opt">,</span> Z_FINISH<span class="hl opt">);</span>
+            <span class="hl kwa">if</span> <span class="hl opt">(</span>inflateStatus <span class="hl opt">&gt;=</span> <span class="hl num">0</span><span class="hl opt">) {</span>
+                found <span class="hl opt">=</span> found || <span class="hl opt">[</span>BatchPDFParser findBatchNumberInChunk<span class="hl opt">:</span>unzipped needle<span class="hl opt">:</span>needle andAddTo<span class="hl opt">:</span>list<span class="hl opt">];</span>
+            <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
+                <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;inflate() failed, error %d&quot;</span><span class="hl opt">,</span> inflateStatus<span class="hl opt">);</span>
+            <span class="hl opt">}</span>
+        <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
+            <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;Unable to initialize zlib, error %d&quot;</span><span class="hl opt">,</span> zstatus<span class="hl opt">);</span>
+        <span class="hl opt">}</span>
+        <span class="hl kwd">free</span><span class="hl opt">(</span>unzipped<span class="hl opt">);</span>
+        <span class="hl kwd">inflateEnd</span><span class="hl opt">(&amp;</span>zstream<span class="hl opt">);</span>
+
+        <span class="hl kwb">int const</span> cutLength <span class="hl opt">=</span> endPosition <span class="hl opt">+</span> <span class="hl kwd">strlen</span><span class="hl opt">(</span>streamStopMarker<span class="hl opt">);</span>
+        <span class="hl opt">[</span>portion replaceBytesInRange<span class="hl opt">:</span><span class="hl kwd">NSMakeRange</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">,</span> cutLength<span class="hl opt">)</span> withBytes<span class="hl opt">:</span>NULL length<span class="hl opt">:</span><span class="hl num">0</span><span class="hl opt">];</span>
+    <span class="hl opt">}</span>
+    <span class="hl kwa">return</span> found<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwc">&#64;end</span>
+</pre>
+
+<h3>DirectDownloadViewDelegate.h</h3>
+
+<p>Заголовок делегата для <code>NSURLConnectionDelegate</code>:</p>
+
+<pre class="hl">
+<span class="hl kwc">&#64;protocol</span> DirectDownloadViewDelegate<span class="hl opt">&lt;</span>NSObject<span class="hl opt">&gt;</span>
+
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span>setProgress<span class="hl opt">: (</span><span class="hl kwb">float</span><span class="hl opt">)</span>progress<span class="hl opt">;</span>
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span>appendStatus<span class="hl opt">: (</span>NSString<span class="hl opt">*)</span>status<span class="hl opt">;</span>
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span>setCompleteDate<span class="hl opt">: (</span>NSString<span class="hl opt">*)</span>date<span class="hl opt">;</span>
+
+<span class="hl kwc">&#64;end</span>
+</pre>
+
+<h3>DirectDownloadDelegate.h</h3>
+
+<p>Собственно, сам делегат <code>NSURLConnectionDelegate</code>.</p>
+
+<pre class="hl">
+<span class="hl ppc">#import</span> <span class="hl pps">&quot;DirectDownloadViewDelegate.h&quot;</span><span class="hl ppc"></span>
+
+<span class="hl kwc">&#64;interface</span> DirectDownloadDelegate <span class="hl opt">:</span> NSObject <span class="hl opt">{</span>
+    NSError <span class="hl opt">*</span>error<span class="hl opt">;</span>
+    <span class="hl kwa">BOOL</span> done<span class="hl opt">;</span>
+    <span class="hl kwa">BOOL</span> found<span class="hl opt">;</span>
+    NSMutableData <span class="hl opt">*</span>receivedData<span class="hl opt">;</span>
+    <span class="hl kwb">float</span> expectedBytes<span class="hl opt">,</span> receivedBytes<span class="hl opt">;</span>
+    <span class="hl kwa">id</span><span class="hl opt">&lt;</span>DirectDownloadViewDelegate<span class="hl opt">&gt;</span> viewDelegate<span class="hl opt">;</span>
+    NSString<span class="hl opt">*</span> needle<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl opt">- (</span><span class="hl kwa">id</span><span class="hl opt">)</span> initWithNeedle<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>aNeedle andViewDelegate<span class="hl opt">:(</span><span class="hl kwa">id</span><span class="hl opt">&lt;</span>DirectDownloadViewDelegate<span class="hl opt">&gt;)</span>aViewDelegate<span class="hl opt">;</span>
+
+<span class="hl kwc">&#64;property</span> <span class="hl opt">(</span>atomic<span class="hl opt">,</span> readonly<span class="hl opt">,</span> getter<span class="hl opt">=</span>isDone<span class="hl opt">)</span> <span class="hl kwa">BOOL</span> done<span class="hl opt">;</span>
+<span class="hl kwc">&#64;property</span> <span class="hl opt">(</span>atomic<span class="hl opt">,</span> readonly<span class="hl opt">,</span> getter<span class="hl opt">=</span>isFound<span class="hl opt">)</span> <span class="hl kwa">BOOL</span> found<span class="hl opt">;</span>
+<span class="hl kwc">&#64;property</span> <span class="hl opt">(</span>atomic<span class="hl opt">,</span> readonly<span class="hl opt">)</span> NSError <span class="hl opt">*</span>error<span class="hl opt">;</span>
+
+<span class="hl kwc">&#64;end</span>
+</pre>
+
+<h3>DirectDownloadDelegate.m</h3>
+
+<p>И его реализация:</p>
+
+<pre class="hl">
+<span class="hl ppc">#import &lt;Foundation/Foundation.h&gt;</span>
+
+<span class="hl ppc">#import</span> <span class="hl pps">&quot;DirectDownloadDelegate.h&quot;</span><span class="hl ppc"></span>
+<span class="hl ppc">#import</span> <span class="hl pps">&quot;BatchPDFParser.h&quot;</span><span class="hl ppc"></span>
+
+<span class="hl kwc">&#64;implementation</span> DirectDownloadDelegate
+<span class="hl kwc">&#64;synthesize</span> error<span class="hl opt">,</span> done<span class="hl opt">,</span> found<span class="hl opt">;</span>
+</pre>
+
+<p>Конструктор <code>initWithNeedle:andViewDelegate:</code> создает делегата и параметризирует его другим делегатом, <code>DirectDownloadViewDelegate</code>, который будет использоваться для задачи обновления экрана. Тут, кстати, мы впервые видит и деструктор, <code>(void) dealloc:</code>.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwa">id</span><span class="hl opt">)</span> initWithNeedle<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>aNeedle andViewDelegate<span class="hl opt">:(</span><span class="hl kwa">id</span><span class="hl opt">&lt;</span>DirectDownloadViewDelegate<span class="hl opt">&gt;)</span>aViewDelegate <span class="hl opt">{</span>
+    viewDelegate <span class="hl opt">=</span> aViewDelegate<span class="hl opt">;</span>
+    <span class="hl opt">[</span>viewDelegate retain<span class="hl opt">];</span>
+
+    needle <span class="hl opt">= [[</span>NSString alloc<span class="hl opt">]</span> initWithString<span class="hl opt">:</span>aNeedle<span class="hl opt">];</span>
+    receivedData <span class="hl opt">= [[</span>NSMutableData alloc<span class="hl opt">]</span> init<span class="hl opt">];</span>
+    expectedBytes <span class="hl opt">=</span> receivedBytes <span class="hl opt">=</span> <span class="hl num">0.0</span><span class="hl opt">;</span>
+    found <span class="hl opt">=</span> NO<span class="hl opt">;</span>
+
+    <span class="hl kwa">return self</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span> dealloc <span class="hl opt">{</span>
+    <span class="hl opt">[</span>error release<span class="hl opt">];</span>
+    <span class="hl opt">[</span>receivedData release<span class="hl opt">];</span>
+    <span class="hl opt">[</span>needle release<span class="hl opt">];</span>
+    <span class="hl opt">[</span>viewDelegate release<span class="hl opt">];</span>
+    <span class="hl opt">[</span><span class="hl kwa">super</span> dealloc<span class="hl opt">];</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Метод <code>connectionDidFinishLoading:</code> вызывается, когда соединение закончено.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span> connectionDidFinishLoading<span class="hl opt">:(</span>NSURLConnection <span class="hl opt">*)</span>connection <span class="hl opt">{</span>
+    done <span class="hl opt">=</span> YES<span class="hl opt">;</span>
+    <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;Connection finished&quot;</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Метод <code>connection:didFailWithError:</code> вызывает при ошибке при скачивании файла.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span> connection<span class="hl opt">:(</span>NSURLConnection <span class="hl opt">*)</span>connection didFailWithError<span class="hl opt">:(</span>NSError <span class="hl opt">*)</span>anError <span class="hl opt">{</span>
+    error <span class="hl opt">= [</span>anError retain<span class="hl opt">];</span>
+    <span class="hl opt">[</span><span class="hl kwa">self</span> connectionDidFinishLoading<span class="hl opt">:</span>connection<span class="hl opt">];</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Метод <code>connection:didReceiveData:</code> вызывается, когда получена новая порция данных из канала. Каждую такую порцию мы добавляем в буфер, обновляем индикатор прогресса скачивания (через еще один делегат, <code>viewDelegate</code>), затем пробуем вычленить фрагменты данных по PDF формату, и, наконец, печатаем то, что было найдено.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span> connection<span class="hl opt">:(</span>NSURLConnection <span class="hl opt">*)</span>connection didReceiveData<span class="hl opt">:(</span>NSData <span class="hl opt">*)</span>someData <span class="hl opt">{</span>
+    receivedBytes <span class="hl opt">+= [</span>someData length<span class="hl opt">];</span>
+    <span class="hl opt">[</span>viewDelegate setProgress<span class="hl opt">:(</span>receivedBytes <span class="hl opt">/</span> expectedBytes<span class="hl opt">)];</span>
+    <span class="hl opt">[</span>receivedData appendData<span class="hl opt">:</span>someData<span class="hl opt">];</span>
+
+    NSMutableArray<span class="hl opt">*</span> list <span class="hl opt">= [[</span>NSMutableArray alloc<span class="hl opt">]</span> init<span class="hl opt">];</span>
+    <span class="hl kwb">bool</span> foundInCurrentPortion <span class="hl opt">= [</span>BatchPDFParser findInPortion<span class="hl opt">:</span>receivedData needle<span class="hl opt">:</span>needle andAddTo<span class="hl opt">:</span>list<span class="hl opt">];</span>
+    <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwa">id</span> batch <span class="hl kwa">in</span> list<span class="hl opt">) {</span>
+        <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;[%&#64;]&quot;</span><span class="hl opt">, [</span>batch stringByReplacingOccurrencesOfString<span class="hl opt">:</span>&#64;<span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span> withString<span class="hl opt">:</span>&#64;<span class="hl str">&quot;</span><span class="hl esc">\\</span><span class="hl str">n&quot;</span><span class="hl opt">]);</span>
+        <span class="hl opt">[</span>viewDelegate appendStatus<span class="hl opt">:</span>batch<span class="hl opt">];</span>
+    <span class="hl opt">}</span>
+    <span class="hl opt">[</span>list release<span class="hl opt">];</span>
+    found <span class="hl opt">=</span> found || foundInCurrentPortion<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Последний обратный вызов делегата <code>NSURLConnectionDelegate</code>, что мы используем, называется <code>connection:didReceiveResponse:</code>. Он вызывается, когда получен информационный ответ по HTTP, содержащий заголовки. Мы из заголовка «Content-Length» берем длину будущего файла, чтобы позже сообразно обновлять индикатор скачивания.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span>connection<span class="hl opt">:(</span>NSURLConnection <span class="hl opt">*)</span>connection didReceiveResponse<span class="hl opt">:(</span>NSHTTPURLResponse <span class="hl opt">*)</span>someResponse <span class="hl opt">{</span>
+    NSDictionary <span class="hl opt">*</span>headers <span class="hl opt">= [</span>someResponse allHeaderFields<span class="hl opt">];</span>
+    <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;[didReceiveResponse] response headers: %&#64;&quot;</span><span class="hl opt">,</span> headers<span class="hl opt">);</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>headers<span class="hl opt">) {</span>
+        <span class="hl kwa">if</span> <span class="hl opt">([</span>headers objectForKey<span class="hl opt">:</span> &#64;<span class="hl str">&quot;Content-Length&quot;</span><span class="hl opt">]) {</span>
+            <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;Content-Length: %&#64;&quot;</span><span class="hl opt">, [</span>headers objectForKey<span class="hl opt">:</span> &#64;<span class="hl str">&quot;Content-Length&quot;</span><span class="hl opt">]);</span>
+            expectedBytes <span class="hl opt">= [[</span>headers objectForKey<span class="hl opt">:</span> &#64;<span class="hl str">&quot;Content-Length&quot;</span><span class="hl opt">]</span> floatValue<span class="hl opt">];</span>
+        <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
+            <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;No Content-Length header found&quot;</span><span class="hl opt">);</span>
+        <span class="hl opt">}</span>
+    <span class="hl opt">}</span>
+<span class="hl opt">}</span>
+</pre>
+
+<h3>NSURLConnectionDirectDownload.h</h3>
+
+<p>В этом файле находится метод <code>donwloadAtURL:searching:viewingOn:</code>, который мы добавляем к классу <code>NSURLConnection</code>. Интересно тут то, что через понятие категорий в Objective-C можно «примешивать» новые методы к существующим классам. Тут мы к классу <code>NSURLConnection</code> добавляем категорию <code>DirectDownload</code>.</p>
+
+<pre class="hl">
+<span class="hl kwc">&#64;interface</span> <span class="hl kwd">NSURLConnection</span> <span class="hl opt">(</span>DirectDownload<span class="hl opt">)</span>
+
+<span class="hl opt">+ (</span><span class="hl kwa">BOOL</span><span class="hl opt">)</span> downloadAtURL<span class="hl opt">:(</span>NSURL <span class="hl opt">*)</span>url searching<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>batchNumber viewingOn<span class="hl opt">:(</span><span class="hl kwa">id</span><span class="hl opt">)</span>viewDelegate<span class="hl opt">;</span>
+
+<span class="hl kwc">&#64;end</span>
+</pre>
+
+<h3>NSURLConnectionDirectDownload.m</h3>
+
+<p>Ну и финальная часть скачивалки PDF. Метод <code>donwloadAtURL:searching:viewingOn:</code> создает соединение и запускает скачивание. Затем происходит ожидание в цикле <code>NSRunLoop</code>, пока скачивание не закончится. Этот цикл позволяет приложению реагировать на события в процессе скачивания. Обратите внимание, это до сих пор скачивалка ни как не привязана к графическому интерфейсу. Она использует делегат <code>viewDelegate</code> для общения с «мордой» приложения.</p>
+
+<pre class="hl">
+<span class="hl ppc">#import &lt;Foundation/Foundation.h&gt;</span>
+<span class="hl ppc">#import</span> <span class="hl pps">&quot;DirectDownloadDelegate.h&quot;</span><span class="hl ppc"></span>
+
+<span class="hl kwc">&#64;implementation</span> <span class="hl kwd">NSURLConnection</span> <span class="hl opt">(</span>DirectDownload<span class="hl opt">)</span>
+
+<span class="hl opt">+ (</span><span class="hl kwa">BOOL</span><span class="hl opt">)</span> downloadAtURL<span class="hl opt">:(</span>NSURL <span class="hl opt">*)</span>url searching<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>batchNumber viewingOn<span class="hl opt">:(</span><span class="hl kwa">id</span><span class="hl opt">)</span>viewDelegate <span class="hl opt">{</span>
+    NSMutableURLRequest <span class="hl opt">*</span>request <span class="hl opt">= [[</span>NSMutableURLRequest alloc<span class="hl opt">]</span> initWithURL<span class="hl opt">:</span>url<span class="hl opt">];</span>
+
+    DirectDownloadDelegate <span class="hl opt">*</span>delegate <span class="hl opt">= [[[</span>DirectDownloadDelegate alloc<span class="hl opt">]</span> initWithNeedle<span class="hl opt">:</span>batchNumber andViewDelegate<span class="hl opt">:</span>viewDelegate<span class="hl opt">]</span> autorelease<span class="hl opt">];</span>
+    NSURLConnection <span class="hl opt">*</span>connection <span class="hl opt">= [[</span>NSURLConnection alloc<span class="hl opt">]</span> initWithRequest<span class="hl opt">:</span>request delegate<span class="hl opt">:</span>delegate<span class="hl opt">];</span>
+    <span class="hl opt">[</span>request release<span class="hl opt">];</span>
+
+    <span class="hl kwa">while</span> <span class="hl opt">([</span>delegate isDone<span class="hl opt">] ==</span> NO<span class="hl opt">) {</span>
+        <span class="hl opt">[[</span>NSRunLoop currentRunLoop<span class="hl opt">]</span> runUntilDate<span class="hl opt">:[</span>NSDate dateWithTimeIntervalSinceNow<span class="hl opt">:</span><span class="hl num">1.0</span><span class="hl opt">]];</span>
+    <span class="hl opt">}</span>
+
+    <span class="hl kwa">if</span> <span class="hl opt">([</span>delegate isFound<span class="hl opt">] !=</span> YES<span class="hl opt">) {</span>
+        <span class="hl opt">[</span>viewDelegate appendStatus<span class="hl opt">:</span>&#64;<span class="hl str">&quot;This batch number is not found.&quot;</span><span class="hl opt">];</span>
+        <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;This batch number is not found.&quot;</span><span class="hl opt">);</span>
+    <span class="hl opt">}</span>
+
+    <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;PDF is processed&quot;</span><span class="hl opt">);</span>
+    <span class="hl opt">[</span>connection release<span class="hl opt">];</span>
+
+    NSDateFormatter<span class="hl opt">*</span> dateFormatter <span class="hl opt">= [[</span>NSDateFormatter alloc<span class="hl opt">]</span> init<span class="hl opt">];</span>
+    dateFormatter.dateFormat <span class="hl opt">=</span> &#64;<span class="hl str">&quot;yyyy/MM/dd HH:mm:ss&quot;</span><span class="hl opt">;</span>
+    NSString<span class="hl opt">*</span> lastUpdateDate <span class="hl opt">= [</span>dateFormatter stringFromDate<span class="hl opt">:[</span>NSDate date<span class="hl opt">]];</span>
+    <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;Last update at: %&#64;&quot;</span><span class="hl opt">,</span> lastUpdateDate<span class="hl opt">);</span>
+    <span class="hl opt">[</span>viewDelegate setCompleteDate<span class="hl opt">:</span>lastUpdateDate<span class="hl opt">];</span>
+    <span class="hl opt">[</span>dateFormatter release<span class="hl opt">];</span>
+
+    NSError <span class="hl opt">*</span>error <span class="hl opt">= [</span>delegate error<span class="hl opt">];</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>error <span class="hl opt">!=</span> <span class="hl kwa">nil</span><span class="hl opt">) {</span>
+        <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;Download error: %&#64;&quot;</span><span class="hl opt">,</span> error<span class="hl opt">);</span>
+        <span class="hl kwa">return</span> NO<span class="hl opt">;</span>
+    <span class="hl opt">}</span>
+
+    <span class="hl kwa">return</span> YES<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwc">&#64;end</span>
+</pre>
+
+<h3>ViewController.m</h3>
+
+<p>Как уже было сказано, в приложении для командной строки контроллер будет содержать только заглушки, которые мы реализуем позже в полной версии программы.</p>
+
+<pre class="hl">
+<span class="hl ppc">#import &lt;Foundation/Foundation.h&gt;</span>
+
+<span class="hl ppc">#import</span> <span class="hl pps">&quot;DirectDownloadViewDelegate.h&quot;</span><span class="hl ppc"></span>
+
+<span class="hl ppc">#define IBAction void</span>
+</pre>
+
+<p>Пустой класс-заглушка <code>ViewController</code>.</p>
+
+<pre class="hl">
+<span class="hl kwc">&#64;interface</span> ViewController <span class="hl opt">:</span> NSObject <span class="hl opt">&lt;</span>DirectDownloadViewDelegate<span class="hl opt">&gt;</span>
+<span class="hl kwc">&#64;end</span>
+
+<span class="hl ppc">#import</span> <span class="hl pps">&quot;NSURLConnectionDirectDownload.h&quot;</span><span class="hl ppc"></span>
+</pre>
+
+<p>Адрес, откуда качать файл.</p>
+
+<pre class="hl">
+<span class="hl kwb">static char const</span><span class="hl opt">*</span> <span class="hl kwb">const</span> pdf <span class="hl opt">=</span> <span class="hl str">&quot;http://photos.state.gov/libraries/unitedkingdom/164203/cons-visa/admin_processing_dates.pdf&quot;</span><span class="hl opt">;</span>
+</pre>
+
+<p>И mock-реализация класса-контроллера.</p>
+
+<pre class="hl">
+<span class="hl kwc">&#64;implementation</span> ViewController
+</pre>
+
+<p>Тестовый обратный вызов <code>appendStatus:</code> вызывается, когда обнаружено очередное обновление по заявке. Тут мы просто логируем, а в полном приложении будем обновлять экранную форму.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span> appendStatus<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>status <span class="hl opt">{</span>
+    <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;appendStatus(): '%&#64;'&quot;</span><span class="hl opt">, [</span>status stringByReplacingOccurrencesOfString<span class="hl opt">:</span>&#64;<span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span> withString<span class="hl opt">:</span>&#64;<span class="hl str">&quot;</span><span class="hl esc">\\</span><span class="hl str">n&quot;</span><span class="hl opt">]);</span>
+    <span class="hl slc">// Some code is skipped here because not required for the command line mode.</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Тестовый обратный вызов <code>setProgress:</code> вызывается, когда после принятия очередной порции данных надо обновить индикатор скачивания.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span> setProgress<span class="hl opt">:(</span><span class="hl kwb">float</span><span class="hl opt">)</span>progress <span class="hl opt">{</span>
+    <span class="hl slc">// Some code is skipped here because not required for the command line mode.</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Тестовый обратный вызов <code>setCompleteDate:</code> вызывается, когда анализ PDF полностью закончен. Тут, опять, мы просто логируем.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span> setCompleteDate<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>date <span class="hl opt">{</span>
+    <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;setCompleteDate(): '%&#64;'&quot;</span><span class="hl opt">,</span> date<span class="hl opt">);</span>
+    <span class="hl slc">// Some code is skipped here because not required for the command line mode.</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Ну и финальный метод, который все запускает, <code>updateBatchStatus:</code>. В полной программе он будет вызываться при нажатии кнопки на форме. Тут он вызывается из <code>main()</code>.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwb">bool</span><span class="hl opt">)</span> updateBatchStatus<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>batchNumber <span class="hl opt">{</span>
+    NSURL <span class="hl opt">*</span>url <span class="hl opt">= [[[</span>NSURL alloc<span class="hl opt">]</span> initWithString<span class="hl opt">:[</span>NSString stringWithCString<span class="hl opt">:</span>pdf encoding<span class="hl opt">:</span>NSASCIIStringEncoding<span class="hl opt">]]</span> autorelease<span class="hl opt">];</span>
+    <span class="hl kwa">return</span> <span class="hl opt">[</span>NSURLConnection downloadAtURL<span class="hl opt">:</span>url searching<span class="hl opt">:</span>batchNumber viewingOn<span class="hl opt">:</span><span class="hl kwa">self</span><span class="hl opt">];</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwc">&#64;end</span>
+</pre>
+
+<h3>main-cli.m</h3>
+
+<p>Запуск из командной строки.</p>
+
+<pre class="hl">
+<span class="hl ppc">#import &lt;Foundation/Foundation.h&gt;</span>
+<span class="hl ppc">#import</span> <span class="hl pps">&quot;DirectDownloadDelegate.h&quot;</span><span class="hl ppc"></span>
+
+<span class="hl kwc">&#64;interface</span> ViewController <span class="hl opt">:</span> NSObject <span class="hl opt">&lt;</span>DirectDownloadViewDelegate<span class="hl opt">&gt;</span>
+<span class="hl opt">- (</span><span class="hl kwb">bool</span><span class="hl opt">)</span> updateBatchStatus<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>batchNumber<span class="hl opt">;</span>
+<span class="hl kwc">&#64;end</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span> <span class="hl opt">*</span>argv<span class="hl opt">[]) {</span>
+    <span class="hl kwc">&#64;autoreleasepool</span> <span class="hl opt">{</span>
+        ViewController<span class="hl opt">*</span> viewController <span class="hl opt">= [</span>ViewController alloc<span class="hl opt">];</span>
+        <span class="hl opt">[</span>viewController updateBatchStatus<span class="hl opt">:[</span>NSString stringWithCString<span class="hl opt">:</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]</span> encoding<span class="hl opt">:</span>NSASCIIStringEncoding<span class="hl opt">]];</span>
+        <span class="hl opt">[</span>viewController release<span class="hl opt">];</span>
+    <span class="hl opt">}</span>
+    <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<h3>Попробуем все это собрать и запустить?</h3>
+
+<p><code>Makefile</code> для Мак:</p>
+
+<pre class="hl">
+files <span class="hl opt">=</span> \
+    ViewController.m \
+    BatchPDFParser.m \
+    NSURLConnectionDirectDownload.m \
+    DirectDownloadDelegate.m
+    main-cli.m
+
+<span class="hl kwa">all</span><span class="hl opt">:</span> build run
+
+build<span class="hl opt">:</span>
+    clang <span class="hl opt">-</span>o USVisaTest <span class="hl opt">-</span>DTESTING <span class="hl opt">-</span>framework Foundation <span class="hl opt">-</span>lz <span class="hl opt">$(</span>files<span class="hl opt">)</span>
+
+run<span class="hl opt">:</span>
+    .<span class="hl opt">/</span>USVisaTest <span class="hl num">20121456171</span>
+</pre>
+
+<p>Makefile <code>GNUmakefile</code> для GNUstep:</p>
+
+<pre class="hl">
+<span class="hl kwb">include</span> <span class="hl opt">$(</span>GNUSTEP_MAKEFILES<span class="hl opt">)/</span>common.make
+
+TOOL_NAME <span class="hl opt">=</span> USVisa
+USVisa_OBJC_FILES <span class="hl opt">=</span> \
+    ..<span class="hl opt">/</span>ViewController.m \
+    ..<span class="hl opt">/</span>BatchPDFParser.m \
+    ..<span class="hl opt">/</span>NSURLConnectionDirectDownload.m \
+    ..<span class="hl opt">/</span>DirectDownloadDelegate.m \
+    ..<span class="hl opt">/</span>main-cli.m
+USVisa_TOOL_LIBS <span class="hl opt">= -</span>lz
+ADDITIONAL_OBJCFLAGS <span class="hl opt">= -</span>DTESTING
+CC <span class="hl opt">=</span> clang
+
+<span class="hl kwb">include</span> <span class="hl opt">$(</span>GNUSTEP_MAKEFILES<span class="hl opt">)/</span>tool.make
+
+run<span class="hl opt">:</span>
+    .<span class="hl opt">/</span>obj<span class="hl opt">/</span>USVisa <span class="hl num">20121456171</span>
+</pre>    
+
+<p>Набираем <code>make</code>. Windows:</p>
+
+<pre><code>This is gnustep-make 2.6.2. Type 'mmake print-gnustep-make-help' for help.
+Making all for tool USVisa...
+ Creating obj/USVisa.obj/../...
+ Compiling file ViewController.m ...
+ Compiling file BatchPDFParser.m ...
+ Compiling file NSURLConnectionDirectDownload.m ...
+ Compiling file DirectDownloadDelegate.m ...
+ Compiling file main-cli.m ...
+ Linking tool USVisa ...
+</code></pre>
+
+<p>Можно запустить проверить реальную заявку:</p>
+
+<pre><code>make run
+</code></pre>
+
+<p>У меня вывелось следующее:</p>
+
+<pre><code>This is gnustep-make 2.6.2. Type 'mmake print-gnustep-make-help' for help.
+./obj/USVisa 20121456171
+2012-06-19 17:27:11.472 USVisa[3420] [didReceiveResponse] response headers: {&quot;Accept-Ranges&quot; = bytes; &quot;Cache-Control&quot; = &quot;max-age=600&quot;; Connection = &quot;keep-alive&quot;; &quot;Content-Length&quot; = 2237242; &quot;Content-Type&quot; = &quot;application/pdf&quot;; Date = &quot;Tue, 19 Jun 2012 16:27:11 GMT&quot;; ETag = &quot;\&quot;4b2ca3e41de5ba4ae45670e776edfc3b:1339778351\&quot;&quot;; &quot;Last-Modified&quot; = &quot;Fri, 15 Jun 2012 16:06:15 GMT&quot;; Server = Apache; }
+2012-06-19 17:27:11.604 USVisa[3420] Content-Length: 2237242
+2012-06-19 17:27:12.093 USVisa[3420] Found match: '20121456171' 'send passport &amp; new travel itinerary' '14-Jun-12'
+2012-06-19 17:27:12.104 USVisa[3420] [send passport &amp; new travel itinerary\n14-Jun-12]
+2012-06-19 17:27:12.111 USVisa[3420] appendStatus(): 'send passport &amp; new travel itinerary\n14-Jun-12'
+2012-06-19 17:27:13.769 USVisa[3420] Connection finished
+2012-06-19 17:27:13.774 USVisa[3420] PDF is processed
+2012-06-19 17:27:13.961 USVisa[3420] Last update at: 2012/06/19 16:27:13
+2012-06-19 17:27:13.972 USVisa[3420] setCompleteDate(): '2012/06/19 16:27:13'
+</code></pre>
+
+<p>Итак, все работает: скачивалка и парсер PDF. Теперь займемся версией под iOS. Увы, только для пользователей Mac.</p>
+
+<h2>Макет экранной формы</h2>
+
+<p>Я сделал приложение крайне простым: одна форма с полем ввода, кнопкой и местом для вывода обновлений.</p>
+
+<p><img src="http://demin.ws/images/blog/usvisa/app/usvisa-application-screenshot.png" alt="" />
+</p>
+
+<p>Индикатор скачивания и крутящийся бегунок появляются временно.</p>
+
+<h3>ViewController.h</h3>
+
+<p>Вот сейчас это полная реализации контроллера. Через макрос <code>TESTING</code> я сделал разделение между упрощенной и полной версией.</p>
+
+<pre class="hl">
+<span class="hl ppc">#import &lt;Foundation/Foundation.h&gt;</span>
+<span class="hl ppc">#import</span> <span class="hl pps">&quot;DirectDownloadViewDelegate.h&quot;</span><span class="hl ppc"></span>
+
+<span class="hl ppc">#ifdef TESTING</span>
+<span class="hl ppc">#define IBAction void</span>
+<span class="hl kwc">&#64;interface</span> ViewController <span class="hl opt">:</span> NSObject <span class="hl opt">&lt;</span>DirectDownloadViewDelegate<span class="hl opt">&gt;</span>
+<span class="hl kwc">&#64;end</span>
+<span class="hl ppc">#else</span>
+<span class="hl ppc">#import</span> <span class="hl pps">&quot;ViewController.h&quot;</span><span class="hl ppc"></span>
+<span class="hl ppc">#endif</span>
+
+<span class="hl ppc">#import</span> <span class="hl pps">&quot;NSURLConnectionDirectDownload.h&quot;</span><span class="hl ppc"></span>
+
+<span class="hl kwb">static char const</span><span class="hl opt">*</span> <span class="hl kwb">const</span> pdf <span class="hl opt">=</span> <span class="hl str">&quot;http://photos.state.gov/libraries/unitedkingdom/164203/cons-visa/admin_processing_dates.pdf&quot;</span><span class="hl opt">;</span>
+
+<span class="hl kwc">&#64;implementation</span> ViewController
+
+<span class="hl ppc">#ifndef TESTING</span>
+<span class="hl kwc">&#64;synthesize</span> updateProgressView<span class="hl opt">,</span> batchNumberTextField<span class="hl opt">,</span> statusTextView<span class="hl opt">,</span> lastUpdatedLabel<span class="hl opt">,</span> updateButton<span class="hl opt">;</span>
+<span class="hl ppc">#endif</span>
+
+NSString<span class="hl opt">*</span> <span class="hl kwb">const</span> PropertiesFilename <span class="hl opt">=</span> &#64;<span class="hl str">&quot;Properties&quot;</span><span class="hl opt">;</span>
+
+NSString <span class="hl opt">*</span><span class="hl kwd">pathInDocumentDirectory</span><span class="hl opt">(</span>NSString <span class="hl opt">*</span>fileName<span class="hl opt">) {</span>
+    NSArray <span class="hl opt">*</span>documentDirectories <span class="hl opt">=</span> <span class="hl kwd">NSSearchPathForDirectoriesInDomains</span><span class="hl opt">(</span>NSDocumentDirectory<span class="hl opt">,</span> NSUserDomainMask<span class="hl opt">,</span> YES<span class="hl opt">);</span>
+    NSString <span class="hl opt">*</span>documentDirectory <span class="hl opt">= [</span>documentDirectories objectAtIndex<span class="hl opt">:</span><span class="hl num">0</span><span class="hl opt">];</span>
+    <span class="hl kwa">return</span> <span class="hl opt">[</span>documentDirectory stringByAppendingPathComponent<span class="hl opt">:</span>fileName<span class="hl opt">];</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Сейчас обратный вызов <code>appendStatus:</code> не только логирует, но и обновляет экранную форму.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span> appendStatus<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>status <span class="hl opt">{</span>
+    <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;appendStatus(): '%&#64;'&quot;</span><span class="hl opt">, [</span>status stringByReplacingOccurrencesOfString<span class="hl opt">:</span>&#64;<span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span> withString<span class="hl opt">:</span>&#64;<span class="hl str">&quot;</span><span class="hl esc">\\</span><span class="hl str">n&quot;</span><span class="hl opt">]);</span>
+<span class="hl ppc">#ifndef TESTING</span>
+    <span class="hl kwa">if</span> <span class="hl opt">([[</span>statusTextView text<span class="hl opt">]</span> length<span class="hl opt">] ==</span> <span class="hl num">0</span><span class="hl opt">)</span>
+        <span class="hl opt">[</span>statusTextView setText<span class="hl opt">:</span>&#64;<span class="hl str">&quot;Status:</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">];</span>
+    <span class="hl opt">[</span>statusTextView setText<span class="hl opt">:[[</span>statusTextView text<span class="hl opt">]</span> stringByAppendingString<span class="hl opt">:</span>status<span class="hl opt">]];</span>
+    <span class="hl opt">[</span>statusTextView setText<span class="hl opt">:[[</span>statusTextView text<span class="hl opt">]</span> stringByAppendingString<span class="hl opt">:</span>&#64;<span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">]];</span>
+<span class="hl ppc">#endif</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p><code>setProcess:</code> обновляет индикатор скачивания.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span> setProgress<span class="hl opt">:(</span><span class="hl kwb">float</span><span class="hl opt">)</span>progress <span class="hl opt">{</span>
+<span class="hl ppc">#ifndef TESTING</span>
+    updateProgressView.progress <span class="hl opt">=</span> progress<span class="hl opt">;</span>
+<span class="hl ppc">#endif</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p><code>setCompleteDate:</code> выводит дату обновления в текстовое поле на экране.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span> setCompleteDate<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>date <span class="hl opt">{</span>
+    <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;setCompleteDate(): '%&#64;'&quot;</span><span class="hl opt">,</span> date<span class="hl opt">);</span>
+<span class="hl ppc">#ifndef TESTING</span>
+    <span class="hl opt">[</span>lastUpdatedLabel setText<span class="hl opt">:</span>date<span class="hl opt">];</span>
+<span class="hl ppc">#endif</span>
+<span class="hl opt">}</span>
+
+<span class="hl opt">- (</span><span class="hl kwb">bool</span><span class="hl opt">)</span> updateBatchStatus<span class="hl opt">:(</span>NSString<span class="hl opt">*)</span>batchNumber <span class="hl opt">{</span>
+    NSURL <span class="hl opt">*</span>url <span class="hl opt">= [[[</span>NSURL alloc<span class="hl opt">]</span> initWithString<span class="hl opt">:[</span>NSString stringWithCString<span class="hl opt">:</span>pdf encoding<span class="hl opt">:</span>NSASCIIStringEncoding<span class="hl opt">]]</span> autorelease<span class="hl opt">];</span>
+    <span class="hl kwa">return</span> <span class="hl opt">[</span>NSURLConnection downloadAtURL<span class="hl opt">:</span>url searching<span class="hl opt">:</span>batchNumber viewingOn<span class="hl opt">:</span><span class="hl kwa">self</span><span class="hl opt">];</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Теперь несколько вызовов, специфичных для iOS. Метод <code>viewDidLoad:</code> вызывается системой, когда экранная форма загружена и готова к использованию. Тут мы вручную создаем крутящийся бегунок и подправляем высоты двух элементов, кнопки и поля ввода, так как почему-то Xcode Interface Builder не позволяет менять их при дизайне формы.</p>
+
+<pre class="hl">
+<span class="hl ppc">#ifndef TESTING</span>
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span>viewDidLoad
+<span class="hl opt">{</span>
+    <span class="hl opt">[</span><span class="hl kwa">super</span> viewDidLoad<span class="hl opt">];</span>
+    <span class="hl slc">// Do any additional setup after loading the view, typically from a nib.</span>
+    spinnerActivityIndicatorView <span class="hl opt">= [[</span>UIActivityIndicatorView alloc<span class="hl opt">]</span> initWithActivityIndicatorStyle<span class="hl opt">:</span>UIActivityIndicatorViewStyleWhiteLarge<span class="hl opt">];</span>
+    <span class="hl opt">[</span>spinnerActivityIndicatorView setColor<span class="hl opt">:[</span>UIColor blueColor<span class="hl opt">]];</span>
+    CGSize size <span class="hl opt">= [[</span><span class="hl kwa">self</span> view<span class="hl opt">]</span> frame<span class="hl opt">]</span>.size<span class="hl opt">;</span>
+    <span class="hl opt">[</span>spinnerActivityIndicatorView setCenter<span class="hl opt">:</span><span class="hl kwd">CGPointMake</span><span class="hl opt">(</span>size.width <span class="hl opt">/</span> <span class="hl num">2</span><span class="hl opt">,</span> size.height <span class="hl opt">/</span> <span class="hl num">2</span> <span class="hl opt">+</span> <span class="hl num">60</span><span class="hl opt">)];</span>
+    <span class="hl opt">[</span><span class="hl kwa">self</span>.view addSubview<span class="hl opt">:</span>spinnerActivityIndicatorView<span class="hl opt">];</span>
+
+    CGRect rect <span class="hl opt">= [</span><span class="hl kwa">self</span>.updateButton bounds<span class="hl opt">];</span>
+    rect.size.height <span class="hl opt">+=</span> <span class="hl num">10</span><span class="hl opt">;</span>
+    <span class="hl opt">[</span><span class="hl kwa">self</span>.updateButton setBounds<span class="hl opt">:</span>rect<span class="hl opt">];</span>
+
+    rect <span class="hl opt">= [</span><span class="hl kwa">self</span>.batchNumberTextField bounds<span class="hl opt">];</span>
+    rect.size.height <span class="hl opt">+=</span> <span class="hl num">20</span><span class="hl opt">;</span>
+    <span class="hl opt">[</span><span class="hl kwa">self</span>.batchNumberTextField setBounds<span class="hl opt">:</span>rect<span class="hl opt">];</span>
+
+<span class="hl ppc">#ifdef DEBUG</span>
+    <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;DEBUG mode&quot;</span><span class="hl opt">);</span>
+<span class="hl ppc">#endif</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p><code>viewDidUnload</code> вызывается, когда форма становится неактивной.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span>viewDidUnload
+<span class="hl opt">{</span>
+    <span class="hl opt">[</span><span class="hl kwa">super</span> viewDidUnload<span class="hl opt">];</span>
+    <span class="hl slc">// Release any retained subviews of the main view.</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Метод <code>shouldAutorotateToInterfaceOrientation:</code> позволяет контролировать поведение для смене ориентации аппарата. Тут мы разрешаем только портретное положение, не вверх ногами.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwa">BOOL</span><span class="hl opt">)</span>shouldAutorotateToInterfaceOrientation<span class="hl opt">:(</span>UIInterfaceOrientation<span class="hl opt">)</span>interfaceOrientation
+<span class="hl opt">{</span>
+    <span class="hl kwa">return</span> <span class="hl opt">(</span>interfaceOrientation <span class="hl opt">==</span> UIInterfaceOrientationPortrait<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+<span class="hl ppc">#endif</span>
+</pre>
+
+<p>Метод <code>launchUpdate:</code> вызывает при нажатии на кнопку <code>Update</code> на форме. Мы блокируем кнопку от повторного нажатия, вывод индикатор скачивания и крутящийся бегунок.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span>IBAction<span class="hl opt">)</span>launchUpdate<span class="hl opt">:(</span><span class="hl kwa">id</span><span class="hl opt">)</span>sender <span class="hl opt">{</span>
+    <span class="hl opt">[</span><span class="hl kwa">self</span> setProgress<span class="hl opt">:</span><span class="hl num">0.0</span><span class="hl opt">];</span>
+<span class="hl ppc">#ifndef TESTING</span>
+    <span class="hl opt">[</span>updateButton setEnabled<span class="hl opt">:</span> NO<span class="hl opt">];</span>
+    <span class="hl opt">[</span>updateProgressView setHidden<span class="hl opt">:</span>NO<span class="hl opt">];</span>
+
+    NSString<span class="hl opt">*</span> previousStatus <span class="hl opt">= [</span>statusTextView text<span class="hl opt">];</span>
+    <span class="hl opt">[</span>statusTextView setText<span class="hl opt">:</span>&#64;<span class="hl str">&quot;&quot;</span><span class="hl opt">];</span>
+
+    NSString<span class="hl opt">*</span> batchNumber <span class="hl opt">= [</span>batchNumberTextField text<span class="hl opt">];</span>
+
+    <span class="hl opt">[</span>spinnerActivityIndicatorView startAnimating<span class="hl opt">];</span>
+    <span class="hl kwa">BOOL</span> <span class="hl kwb">const</span> ok <span class="hl opt">= [</span><span class="hl kwa">self</span> updateBatchStatus<span class="hl opt">:</span>batchNumber<span class="hl opt">];</span>
+    <span class="hl opt">[</span>spinnerActivityIndicatorView stopAnimating<span class="hl opt">];</span>
+
+    <span class="hl kwa">if</span> <span class="hl opt">(!</span>ok<span class="hl opt">) {</span>
+        UIAlertView <span class="hl opt">*</span>alert <span class="hl opt">=</span> 
+            <span class="hl opt">[[</span>UIAlertView alloc<span class="hl opt">]</span> initWithTitle<span class="hl opt">:</span>&#64;<span class="hl str">&quot;Error&quot;</span>
+                                       message<span class="hl opt">:</span>&#64;<span class="hl str">&quot;Internet connectivity problem&quot;</span>
+                                      delegate<span class="hl opt">:</span><span class="hl kwa">self</span> cancelButtonTitle<span class="hl opt">:</span><span class="hl kwa">nil</span>
+                             otherButtonTitles<span class="hl opt">:</span>&#64;<span class="hl str">&quot;OK&quot;</span><span class="hl opt">,</span> <span class="hl kwa">nil</span><span class="hl opt">];</span>
+        <span class="hl opt">[</span>alert show<span class="hl opt">];</span>
+        <span class="hl opt">[</span>alert release<span class="hl opt">];</span>
+        <span class="hl opt">[</span>statusTextView setText<span class="hl opt">:</span>previousStatus<span class="hl opt">];</span>
+    <span class="hl opt">}</span>
+
+    <span class="hl opt">[</span>updateProgressView setHidden<span class="hl opt">:</span>YES<span class="hl opt">];</span>
+    <span class="hl opt">[</span>updateButton setEnabled<span class="hl opt">:</span> YES<span class="hl opt">];</span>
+<span class="hl ppc">#endif</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Методы <code>saveProperties:</code> и <code>loadProperties:</code> сохраняют и восстанавливают содержимое формы при запуске и остановке приложения. Обратите внимание, что для сохранения данных в файле надо запросить у системы положение предназначенного для этого каталога.</p>
+
+<pre class="hl">
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span> saveProperties <span class="hl opt">{</span>
+    NSDictionary <span class="hl opt">*</span>props <span class="hl opt">= [[</span>NSDictionary alloc<span class="hl opt">]</span> initWithObjectsAndKeys<span class="hl opt">:</span>
+<span class="hl ppc">#ifndef TESTING</span>
+                          batchNumberTextField.text<span class="hl opt">,</span> &#64;<span class="hl str">&quot;batchNumberTextField&quot;</span><span class="hl opt">,</span>
+                          statusTextView.text<span class="hl opt">,</span> &#64;<span class="hl str">&quot;statusTextView&quot;</span><span class="hl opt">,</span>
+                          lastUpdatedLabel.text<span class="hl opt">,</span> &#64;<span class="hl str">&quot;lastUpdatedLabel&quot;</span><span class="hl opt">,</span>
+<span class="hl ppc">#endif</span>
+                           <span class="hl kwa">nil</span><span class="hl opt">];</span>
+    <span class="hl kwa">for</span> <span class="hl opt">(</span>NSString<span class="hl opt">*</span> key <span class="hl kwa">in</span> props<span class="hl opt">) {</span>
+        <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;%&#64; - %&#64;&quot;</span><span class="hl opt">,</span> key<span class="hl opt">, [</span>props objectForKey<span class="hl opt">:</span>key<span class="hl opt">]);</span>
+    <span class="hl opt">}</span>
+
+    NSString<span class="hl opt">*</span> filename <span class="hl opt">=</span> <span class="hl kwd">pathInDocumentDirectory</span><span class="hl opt">(</span>PropertiesFilename<span class="hl opt">);</span>
+    <span class="hl kwa">if</span> <span class="hl opt">([</span>props writeToFile<span class="hl opt">:</span>filename atomically<span class="hl opt">:</span>YES<span class="hl opt">] ==</span> NO<span class="hl opt">)</span>
+        <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;Unable to save properties into file [%&#64;]&quot;</span><span class="hl opt">,</span> filename<span class="hl opt">);</span>
+
+    <span class="hl opt">[</span>props release<span class="hl opt">];</span>
+<span class="hl opt">}</span>
+
+<span class="hl opt">- (</span><span class="hl kwb">void</span><span class="hl opt">)</span> loadProperties <span class="hl opt">{</span>
+    NSDictionary <span class="hl opt">*</span>props <span class="hl opt">= [[</span>NSDictionary alloc<span class="hl opt">]</span> initWithContentsOfFile<span class="hl opt">:</span><span class="hl kwd">pathInDocumentDirectory</span><span class="hl opt">(</span>PropertiesFilename<span class="hl opt">)];</span>
+    <span class="hl kwa">for</span> <span class="hl opt">(</span>NSString<span class="hl opt">*</span> key <span class="hl kwa">in</span> props<span class="hl opt">) {</span>
+        <span class="hl kwd">NSLog</span><span class="hl opt">(</span>&#64;<span class="hl str">&quot;%&#64; - %&#64;&quot;</span><span class="hl opt">,</span> key<span class="hl opt">, [</span>props objectForKey<span class="hl opt">:</span>key<span class="hl opt">]);</span>
+    <span class="hl opt">}</span>
+
+<span class="hl ppc">#ifndef TESTING</span>
+    <span class="hl opt">[</span>batchNumberTextField setText<span class="hl opt">:[</span>props objectForKey<span class="hl opt">:</span>&#64;<span class="hl str">&quot;batchNumberTextField&quot;</span><span class="hl opt">]];</span>
+    <span class="hl opt">[</span>statusTextView setText<span class="hl opt">:[</span>props objectForKey<span class="hl opt">:</span>&#64;<span class="hl str">&quot;statusTextView&quot;</span><span class="hl opt">]];</span>
+    <span class="hl opt">[</span>lastUpdatedLabel setText<span class="hl opt">:[</span>props objectForKey<span class="hl opt">:</span>&#64;<span class="hl str">&quot;lastUpdatedLabel&quot;</span><span class="hl opt">]];</span>
+<span class="hl ppc">#endif</span>
+    <span class="hl opt">[</span>props release<span class="hl opt">];</span>
+<span class="hl opt">}</span>
+
+<span class="hl opt">- (</span>IBAction<span class="hl opt">)</span>textFieldReturn<span class="hl opt">:(</span><span class="hl kwa">id</span><span class="hl opt">)</span>sender <span class="hl opt">{</span>
+<span class="hl ppc">#ifndef TESTING</span>
+    <span class="hl opt">[</span>sender resignFirstResponder<span class="hl opt">];</span>
+<span class="hl ppc">#endif</span>
+<span class="hl opt">}</span>
+
+<span class="hl opt">-(</span>IBAction<span class="hl opt">)</span>backgroundTouched<span class="hl opt">:(</span><span class="hl kwa">id</span><span class="hl opt">)</span>sender <span class="hl opt">{</span>
+<span class="hl ppc">#ifndef TESTING</span>
+    <span class="hl opt">[</span>batchNumberTextField resignFirstResponder<span class="hl opt">];</span>
+<span class="hl ppc">#endif</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwc">&#64;end</span>
+</pre>
+
+<p>Все! Мы рассмотрели все основные файлы. Приложение полностью готово. Можно собирать и заливать в аппарат (не забыв купить у Apple лицензию разработчика).</p>
+
+<p>Я выложил полный проект на GitHub &ndash; <a href="https://github.com/begoon/usvisa-app/">usvisa-app</a>. Замечания и мысли принимаются.</p>
+
+<p>Можно заценить видео:</p>
+
+<p><a href="http://www.youtube.com/watch?v=fxKlXDsDANU">http://www.youtube.com/watch?v=fxKlXDsDANU</a></p>
+
+<iframe width="560" height="315" src="http://www.youtube.com/embed/fxKlXDsDANU" frameborder="0" allowfullscreen></iframe>
+
+<h2>И еще!</h2>
+
+<p>Если вы подумываете о том, чтобы ваше приложение было распродано миллионным тиражом, стоит начать с красивой иконки. Для приложения обычно надо их несколько: 57x57 и 114x114 для непосредственно приложения, и 512x512 и 1024x1024 для публикации в AppStore.</p>
+
+<p>Мы поступим проще и возьмем иконку из открытых источников &ndash; <a href="http://en.wikipedia.org/wiki/Great_Seal_of_the_United_States">The Great Seal of the United States</a>.</p>
+
+<p><img src="http://demin.ws/images/blog/usvisa/app/usvisa-icon-114x114.png" alt="" />
+</p>
+
+<h2>P.S.</h2>
+
+<p>Я решил написать пост про это приложение после того, как цензоры AppStore его «завернули», сославшись на пункт в правилах, где говорится, что приложения с минимальной функциональной нагрузкой, которые можно реализовать через HTML5, не будут допущены. Видимо, они более не хотят видеть пукающих или просто отображающих статическую картинку приложений. Можно было бы поспорить с цензорами на тему минимальной функциональной нагрузки или реализации через HTML5, но я забил. Во-первых, лично мне нравится, что Apple старается не пропускать бесполезные и некачественные приложения, и во-вторых &ndash; я и так получил массу удовольствия от освоения Objective-C, и на данный момент работаю еще над двумя приложениями.</p>
+
+<h2>P.P.S.</h2>
+
+<p>Скоро будет еще статейка про разработку приложений для iOS для новичков, что так <a href="http://demin.ws/">следите за анонсами</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Первый "взлом" моего девиза]]></title>
