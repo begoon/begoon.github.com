@@ -934,7 +934,7 @@ http://www.youtube.com/watch?v=fxKlXDsDANU
 
 Мы поступим проще и возьмем иконку из открытых источников -- [The Great Seal of the United States][].
 
-![](/images/blog/usvisa/app/usvisa-icon-114x114.png)
+![](/images/blog/usvisa/app/USVisa-icon-114x114.png)
 
 [The Great Seal of the United States]: http://en.wikipedia.org/wiki/Great_Seal_of_the_United_States
 
