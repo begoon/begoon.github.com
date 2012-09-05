@@ -5,13 +5,29 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-04T22:12:00Z</updated>
+  <updated>2012-09-05T19:33:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[A first hack of my motto]]></title>
+    <link href="http://demin.ws/blog/english/2012/09/05/first-hack-of-motto/"/>
+    <updated>2012-09-05T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/09/05/first-hack-of-motto/</id>
+    <content type="html"><![CDATA[<p>Today I&rsquo;ve got an email with the motto which is encoded on my &ldquo;<a href="http://demin.ws/english/about/">About</a>&ldquo;
+page. An early bird.</p>
+
+<p>By the way, there is no prize for solving this problem except the honour
+and a link which I can put with the solver&rsquo;s name.</p>
+
+<p>Please, don&rsquo;t post the solution anywhere in comments letting others to try
+solving it independently.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Levels for Sokoban]]></title>
