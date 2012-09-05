@@ -11,6 +11,7 @@ I live, I love and I do programming.
 
 * Twitter [begoon][]
 * [Google+][]
+* [Linkedin][]
 
 ### Disclaimer
 
@@ -18,6 +19,7 @@ I live, I love and I do programming.
 
 [begoon]: http://twitter.com/begoon
 [Google+]: https://plus.google.com/114157100952261261794?rel=author
+[Linkedin]: http://www.linkedin.com/in/alexanderdemin
 
 ### Motto
 
@@ -26,3 +28,5 @@ I live, I love and I do programming.
     20 66 68 63 72 65 70 3F 5F 63 68 67 72 65 66 **
 
 If you figure out what it means, please, let me know.
+
+*At the moment there is only one person in the list: Sergei Kolzun // 05.09.2012.*

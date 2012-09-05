@@ -15,9 +15,11 @@ title: "Я"
 
 * Twitter [begoon][]
 * [Google+][]
+* [Linkedin][]
 
 [begoon]: http://twitter.com/begoon
 [Google+]: https://plus.google.com/114157100952261261794?rel=author
+[Linkedin]: http://www.linkedin.com/in/alexanderdemin
 
 ### Motto
 
@@ -26,3 +28,5 @@ title: "Я"
     20 66 68 63 72 65 70 3F 5F 63 68 67 72 65 66 **
 
 Если вы догадаетесь, что это значит -- сообщите, пожалуйста.
+
+*Пока в списке только один человек: Сергей Кользун // 05.09.2012.*
