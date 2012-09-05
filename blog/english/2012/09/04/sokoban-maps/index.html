@@ -95,7 +95,7 @@ of variable length. Each level has the following structure:</p>
 <li>map size Y (1 byte)</li>
 <li>X*Y bytes of the map represented as a sequence of pairs &lt;COUNTER&gt;&lt;CODE&gt;.
 &lt;COUNTER&gt; is either a single 0 bit which means one repetition,
-or four bits <code>0 D3 D2 D1</code>, where the number of repetitions
+or four bits <code>1 D3 D2 D1</code>, where the number of repetitions
 <code>N = 2 + D3*4 + D2*2 + D1</code> (values 2 to 9). &lt;CODE&gt; has five different
 values: 00 - an empty space, 01 - a wall, 10 - a barrel, 101 - a place
 for the barrel, 111 - a barrel already in place.</li>

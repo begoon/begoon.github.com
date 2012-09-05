@@ -64,7 +64,7 @@ of variable length. Each level has the following structure:
 * map size Y (1 byte)
 * X*Y bytes of the map represented as a sequence of pairs \<COUNTER>\<CODE>.
   \<COUNTER> is either a single 0 bit which means one repetition,
-  or four bits `0 D3 D2 D1`, where the number of repetitions
+  or four bits `1 D3 D2 D1`, where the number of repetitions
   `N = 2 + D3*4 + D2*2 + D1` (values 2 to 9). \<CODE> has five different 
   values: 00 - an empty space, 01 - a wall, 10 - a barrel, 101 - a place
   for the barrel, 111 - a barrel already in place.
