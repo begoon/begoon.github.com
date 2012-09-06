@@ -5,11 +5,7 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-<<<<<<< HEAD
-  <updated>2012-09-06T13:58:00Z</updated>
-=======
   <updated>2012-09-06T23:35:00Z</updated>
->>>>>>> Post about Matrix project.
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
@@ -18,31 +14,6 @@
 
   
   <entry>
-<<<<<<< HEAD
-    <title type="html"><![CDATA[Почтовые синонимы в Gmail]]></title>
-    <link href="http://demin.ws/blog/russian/2012/09/06/gmail-aliases/"/>
-    <updated>2012-09-06T00:00:00+00:00</updated>
-    <id>http://demin.ws/blog/russian/2012/09/06/gmail-aliases/</id>
-    <content type="html"><![CDATA[<p>Оказывается, что если, допустим, у вас есть адрес на Gmail&rsquo;е, например,
-<code>comrade@gmail.com</code>. Письма, отправленные на адрес <code>com.rade@gmail.com</code> также
-придут на исходный адрес. Более того, аналогично для <code>c.o.m.r.a.d.e@gmail.com</code>.</p>
-
-<p>Но это мало полезно. Есть возможность интереснее. Письма, отправленные
-на:</p>
-
-<ul>
-<li><code>comrade+fred@gmail.com</code></li>
-<li><code>comrade+john@gmail.com</code></li>
-<li><code>comrade+peter@gmail.com</code>
-&hellip;</li>
-</ul>
-
-<p>также будут доставлены на <code>comrade@gmail.com</code>. Это удобно, так как можно будет
-настроить фильтр на этом ящике, и в зависимости от суффикса после знака <code>+</code>
-переадресовывать письма кому-то.</p>
-
-<p>Получается эдакая легкая пародия на собственный почтовый домен на Gmail.</p>
-=======
     <title type="html"><![CDATA[Один из моих старых институтских проектов - Матрицы]]></title>
     <link href="http://demin.ws/blog/russian/2012/09/06/matrix-project-mai/"/>
     <updated>2012-09-06T00:00:00+00:00</updated>
@@ -69,7 +40,33 @@
 <p>И текстовая версия:</p>
 
 <iframe width="640" height="360" src="http://www.youtube.com/embed/mG4gIixIm90" frameborder="0" allowfullscreen></iframe>
->>>>>>> Post about Matrix project.
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Почтовые синонимы в Gmail]]></title>
+    <link href="http://demin.ws/blog/russian/2012/09/06/gmail-aliases/"/>
+    <updated>2012-09-06T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/09/06/gmail-aliases/</id>
+    <content type="html"><![CDATA[<p>Оказывается, что если, допустим, у вас есть адрес на Gmail&rsquo;е, например,
+<code>comrade@gmail.com</code>. Письма, отправленные на адрес <code>com.rade@gmail.com</code> также
+придут на исходный адрес. Более того, аналогично для <code>c.o.m.r.a.d.e@gmail.com</code>.</p>
+
+<p>Но это мало полезно. Есть возможность интереснее. Письма, отправленные
+на:</p>
+
+<ul>
+<li><code>comrade+fred@gmail.com</code></li>
+<li><code>comrade+john@gmail.com</code></li>
+<li><code>comrade+peter@gmail.com</code>
+&hellip;</li>
+</ul>
+
+<p>также будут доставлены на <code>comrade@gmail.com</code>. Это удобно, так как можно будет
+настроить фильтр на этом ящике, и в зависимости от суффикса после знака <code>+</code>
+переадресовывать письма кому-то.</p>
+
+<p>Получается эдакая легкая пародия на собственный почтовый домен на Gmail.</p>
 ]]></content>
   </entry>
   
