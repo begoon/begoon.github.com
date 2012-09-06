@@ -29,4 +29,7 @@ I live, I love and I do programming.
 
 If you figure out what it means, please, let me know.
 
-*At the moment there is only one person in the list: Sergei Kolzun // 05.09.2012.*
+*At the moment there two people in the list:*
+
+* *Sergei Kolzun // 05.09.2012*
+* *Cyril Margorin // 06.09.2012*
