@@ -33,3 +33,4 @@ If you figure out what it means, please, let me know.
 
 * *Sergei Kolzun // 05.09.2012*
 * *Cyril Margorin // 06.09.2012*
+* *Rinat Ibragimov // 06.09.2012*
