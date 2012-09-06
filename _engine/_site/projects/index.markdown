@@ -66,4 +66,4 @@ title: "Проекты"
 [go-tcpspy]: https://github.com/begoon/go-tcpspy
 
 [Яйца всмятку, сэр!]: http://english-eggs.blogspot.com
-[Программирование - это просто!]: http://easy-coding.blogspot.com
+[Программирование - это просто!]: http://easy-coding.blogspot.com/
