@@ -5,7 +5,11 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
+<<<<<<< HEAD
   <updated>2012-09-06T13:58:00Z</updated>
+=======
+  <updated>2012-09-06T23:35:00Z</updated>
+>>>>>>> Post about Matrix project.
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
@@ -14,6 +18,7 @@
 
   
   <entry>
+<<<<<<< HEAD
     <title type="html"><![CDATA[Почтовые синонимы в Gmail]]></title>
     <link href="http://demin.ws/blog/russian/2012/09/06/gmail-aliases/"/>
     <updated>2012-09-06T00:00:00+00:00</updated>
@@ -37,6 +42,34 @@
 переадресовывать письма кому-то.</p>
 
 <p>Получается эдакая легкая пародия на собственный почтовый домен на Gmail.</p>
+=======
+    <title type="html"><![CDATA[Один из моих старых институтских проектов - Матрицы]]></title>
+    <link href="http://demin.ws/blog/russian/2012/09/06/matrix-project-mai/"/>
+    <updated>2012-09-06T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/09/06/matrix-project-mai/</id>
+    <content type="html"><![CDATA[<p>Наткнулся тут случайно на исходники проекта времен второго курса института.
+Это была программа, демонстрирующая различные операции с матрицами. Почему-то
+я тогда сделал две версии - графическую и текстовую.</p>
+
+<p><img src="http://demin.ws/images/blog/institute/matrix/matrix1.png" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/institute/matrix/matrix2.png" alt="" />
+</p>
+
+<p>Заглянув в <a href="https://github.com/begoon/institute/">исходники</a>, я даже растрогался. Я сам себя удивил подробностью
+комментариев и обилием приятного, хотя и мучительного в поддержке,
+форматирования. Все ручками: графика, окна, мышка.</p>
+
+<p>Для завершения путешествия в прошлое я даже записал два
+небольших видео.</p>
+
+<iframe width="480" height="360" src="http://www.youtube.com/embed/J4Sr_dTQmYo" frameborder="0" allowfullscreen></iframe>
+
+<p>И текстовая версия:</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/mG4gIixIm90" frameborder="0" allowfullscreen></iframe>
+>>>>>>> Post about Matrix project.
 ]]></content>
   </entry>
   
