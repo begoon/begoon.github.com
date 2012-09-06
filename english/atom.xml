@@ -5,13 +5,41 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-05T21:00:00Z</updated>
+  <updated>2012-09-06T13:58:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Aliases in Gmail]]></title>
+    <link href="http://demin.ws/blog/english/2012/09/06/gmail-aliases/"/>
+    <updated>2012-09-06T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/09/06/gmail-aliases/</id>
+    <content type="html"><![CDATA[<p>It turns out that, if, for instance, your Gmail address is <code>comrade@gmail.com</code>,
+e-mails addressed to <code>com.rade@gmail.com</code> or even to <code>c.o.m.r.a.d.e@gmail.com</code>
+will be delivered to the first address.</p>
+
+<p>It&rsquo;s cool but quite useless. There is another interesting feature. E-mails sent
+to the addresses below:</p>
+
+<ul>
+<li><code>comrade+fred@gmail.com</code></li>
+<li><code>comrade+john@gmail.com</code></li>
+<li><code>comrade+peter@gmail.com</code>
+&hellip;</li>
+<li><code>comrade+a_somebodies_name@gmail.com</code></li>
+</ul>
+
+<p>will be also delivered to <code>comrade@gmail.com</code>. Then it is possible to set
+some filtering rules in Gmail redirecting these e-mails to appropriate people
+depending on that extra bit in the &ldquo;From:&rdquo; address between <code>+</code> and <code>@</code> symbols.</p>
+
+<p>This may help organizing a free &ldquo;pseudo&rdquo; mail server with Gmail.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[US Visa: My First iPhone App]]></title>

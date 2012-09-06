@@ -5,13 +5,40 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-05T21:00:00Z</updated>
+  <updated>2012-09-06T13:58:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Почтовые синонимы в Gmail]]></title>
+    <link href="http://demin.ws/blog/russian/2012/09/06/gmail-aliases/"/>
+    <updated>2012-09-06T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/09/06/gmail-aliases/</id>
+    <content type="html"><![CDATA[<p>Оказывается, что если, допустим, у вас есть адрес на Gmail&rsquo;е, например,
+<code>comrade@gmail.com</code>. Письма, отправленные на адрес <code>com.rade@gmail.com</code> также
+придут на исходный адрес. Более того, аналогично для <code>c.o.m.r.a.d.e@gmail.com</code>.</p>
+
+<p>Но это мало полезно. Есть возможность интереснее. Письма, отправленные
+на:</p>
+
+<ul>
+<li><code>comrade+fred@gmail.com</code></li>
+<li><code>comrade+john@gmail.com</code></li>
+<li><code>comrade+peter@gmail.com</code>
+&hellip;</li>
+</ul>
+
+<p>также будут доставлены на <code>comrade@gmail.com</code>. Это удобно, так как можно будет
+настроить фильтр на этом ящике, и в зависимости от суффикса после знака <code>+</code>
+переадресовывать письма кому-то.</p>
+
+<p>Получается эдакая легкая пародия на собственный почтовый домен на Gmail.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[US Visa: Мое первое приложение для iPhone]]></title>
