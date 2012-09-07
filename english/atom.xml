@@ -1897,7 +1897,7 @@ architecture and instruction set (english)</li>
 <li><p>Replications</p>
 
 <ul>
-<li><a href="http://code.google.com/p/avr-gmc-4/">avr-gmc-4</a> (AVR)</li>
+<li><a href="http://code.google.com/p/avr-gmc-4/">avr-gmc-4</a> (AVR) (<a href="http://demin.ws/gmc4/replica/avr-gmc-4/avr-gmc-4-v0.1.zip">sources</a>)</li>
 <li><a href="http://akkera102.sakura.ne.jp/gbadev/index.php?NO.102%20gmc4">devkitARM</a> (ARM)
 (<a href="http://demin.ws/gmc4/replica/devkitARM/102_gmc4.png">screenshot</a>,
 <a href="http://demin.ws/gmc4/replica/devkitARM/102_gmc4.zip">sources</a>)</li>

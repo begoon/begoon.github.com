@@ -94,7 +94,7 @@ Links to various resources about GMC-4
 
 * Replications
 
-  - [avr-gmc-4](http://code.google.com/p/avr-gmc-4/) (AVR)
+  - [avr-gmc-4](http://code.google.com/p/avr-gmc-4/) (AVR) ([sources](/gmc4/replica/avr-gmc-4/avr-gmc-4-v0.1.zip))
   - [devkitARM](http://akkera102.sakura.ne.jp/gbadev/index.php?NO.102%20gmc4) (ARM)
     ([screenshot](/gmc4/replica/devkitARM/102_gmc4.png), 
      [sources](/gmc4/replica/devkitARM/102_gmc4.zip))
