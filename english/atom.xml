@@ -5,13 +5,131 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-06T13:58:00Z</updated>
+  <updated>2012-09-07T22:02:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The Saleae Logic digital circuit analyzer]]></title>
+    <link href="http://demin.ws/blog/english/2012/09/07/saleae-logic/"/>
+    <updated>2012-09-07T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/09/07/saleae-logic/</id>
+    <content type="html"><![CDATA[<p>When playing with the <a href="http://demin.ws/blog/english/2012/07/04/gmc-4/">GMC-4 microcomputer</a> and thinking about
+<a href="http://demin.ws/blog/english/2012/07/25/gmc4-loader-assembled/">an automated loader</a> for it, I realised that
+having an oscilloscope would be a nice idea because I wouldn&rsquo;t figure
+out how the GMC-4 keyboard works only with a simple tester. It didn&rsquo;t happen
+to buy a <em>proper</em> oscilloscope like Rigol, for instance, but
+<a href="http://sensi.org/~svo/">Viacheslav Slavinsky</a> suggested to take a look at an interesting option:
+<a href="http://www.saleae.com/logic/">Saleae Logic</a>. Of course, this is <strong>not</strong> a regular oscilloscope, but a
+simple digital channel analyzer capable to capture 8 or 16 channels
+simultaneously and decode protocol like UART, SPI, I2C or others. Exactly
+what I wanted.</p>
+
+<p>It costs 128€ + 25.80€ VAT for the 8 channel model. They have stock in
+the UK, so delivery was free, fast and no customs involved.</p>
+
+<p>At the beginning I had a cunning plan to buy, play for a while and then
+return. They provide an option for full money back within a month <strong>without
+explaining anything</strong>. This is very good. Frankly, if there was no such
+option, I would never buy it.</p>
+
+<p><img src="http://demin.ws/images/blog/saleae-logic/IMG_0530.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/saleae-logic/IMG_0531.JPG" alt="" />
+</p>
+
+<p>It turned out to be a match box size thing in the solid metal case.</p>
+
+<p><img src="http://demin.ws/images/blog/saleae-logic/IMG_0532.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/saleae-logic/IMG_0534.JPG" alt="" />
+</p>
+
+<p>The complete set.</p>
+
+<p><img src="http://demin.ws/images/blog/saleae-logic/IMG_0535.JPG" alt="" />
+</p>
+
+<p>Connecting&hellip;</p>
+
+<p><img src="http://demin.ws/images/blog/saleae-logic/IMG_0536.JPG" alt="" />
+</p>
+
+<p>To begin with I connected it to a serial port on Raspberry Pi, which
+I was using as a telnet console.</p>
+
+<p><img src="http://demin.ws/images/blog/saleae-logic/IMG_0537.JPG" alt="" />
+</p>
+
+<p>Here is a screen shot of the capture. We see that the <code>ls</code> command is flying
+to one direction and being echoed back from the second one.</p>
+
+<p><img src="http://demin.ws/images/blog/saleae-logic/saleae-logic-analyser-ls-command.jpg" alt="" />
+</p>
+
+<p>Now the GMC-4 keyboard. This is a <a href="http://www.learningaboutelectronics.com/Articles/How-does-a-matrix-keyboard-scanning-algorithm-work">scanned keyboard</a> where one (out) port is
+used to set a &ldquo;flying&rdquo; pin selecting the current row (or column) of
+buttons, and the second (in) port represents the state of buttons in the
+selected row.</p>
+
+<p><img src="http://demin.ws/images/blog/saleae-logic/gmc4-schematic.jpg" alt="" />
+</p>
+
+<p>I planned to simulate the keyboard, so I needed timings of the scanning
+signal. I connected all four scanning lines to four channels, and got the
+following:</p>
+
+<p><img src="http://demin.ws/images/blog/saleae-logic/saleae-logic-analyser-gmc4-keyboard.jpg" alt="" />
+</p>
+
+<p>Now it is crystal clear what&rsquo;s going on. It allows to measure a variety of
+parameters of the signal, scale it and compare against previous runs. There
+is <a href="http://www.saleae.com/logic/videos">a good quality video</a> available on the official website showing
+some use cases in details. My status in electronics is a layman, so I was
+simply impressed by the ease of use. The guy, Viacheslav, who recommended me
+this device, says that for debugging a complicated digital circuit design it
+is crucial to be able to capture much more than one to two channels
+simultaneously.</p>
+
+<p>As you have probably realised, I didn&rsquo;t return the device, but I had a
+complaint though. I wasn&rsquo;t able to capture on the highest frequency
+of 24MHz. The Logic software complained about lack of USB bandwidth when
+transferring data from the Logic to the computer. The Support suggested
+an issue with my particular USB hub, but I tried different setups and the
+problem still stands. But they were ready to take the device back and
+refund anytime. Regardless, I liked the device and kept it. It perfectly
+solves all my current needs.</p>
+
+<h2>The conclusion</h2>
+
+<h3>Pros</h3>
+
+<ul>
+<li>Extremely simple is use.</li>
+<li>Configurable triggers to initiate capturing (by level, by front, etc.).</li>
+<li>8 or 16 channels depending on the model for simultaneous capture.</li>
+<li>100% money back within a month if you&rsquo;re uncertain.</li>
+</ul>
+
+<h3>Cons</h3>
+
+<ul>
+<li>No online mode. You capture first, then view, analyse etc. So, don&rsquo;t
+expect &ldquo;regular oscilloscope experience&rdquo;.</li>
+<li>My Mac Air wasn&rsquo;t able to capture on the maximal frequence of 24MHz.</li>
+</ul>
+
+<h3>One liner</h3>
+
+<p>Recommended.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Aliases in Gmail]]></title>
