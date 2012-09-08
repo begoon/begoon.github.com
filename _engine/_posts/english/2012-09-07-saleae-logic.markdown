@@ -83,7 +83,7 @@ is [a good quality video][Videos] available on the official website showing
 some use cases in details. My status in electronics is a layman, so I was 
 simply impressed by the ease of use. The guy, Viacheslav, who recommended me 
 this device, says that for debugging a complicated digital circuit design it 
-is crucial to be able to capture much more than one to two channels
+is crucial to be able to capture much more than one or two channels
 simultaneously.
 
 [Videos]: http://www.saleae.com/logic/videos
