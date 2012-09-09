@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Сокобан для Радио-86РК</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/interview/">интервью</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Сокобан для Радио-86РК</h1>
+<div id="post">
+  <p>Все-таки я не удержался и решил воспользоваться уровнями для Сокобана,
+<a href="/blog/russian/2012/09/04/sokoban-maps/">выуженными из досовской программы &ldquo;pusher.exe&rdquo;</a>.
+Сокобан было решено написать на ассемблере Intel 8080 и запустить на
+Радио-86РК.</p>
+
+<p>Знаю-знаю, зачем откапывать стюардессу, да еще и по второму разу и все такое,
+но все же.</p>
+
+<p>Тут все по-взрослому. Уровни лежат запакованные, и распаковываются на лету.</p>
+
+<p>Конечно, исходник писался и компилировался не на РК, а туда заливался только
+готовый бинарь. Это сильно упростило задачу. Хотя для полной аутентичности
+надо было писать и ассемблировать на самом же РК. Как-нибудь в другой
+раз.</p>
+
+<p>Я, если честно, давно не писал на ассемблере что-то длиннее пары десятков
+строк, поэтому сначала было странное ощущение. Потом вспомнилось, что
+лучше в подпрограммах всегда сохранять регистры, не гнаться чрезмерной
+компактностью кода (по крайней мере сначала), и все пошло на лад.</p>
+
+<p>Ассемблер, особенно старый, где нет разных свистелок типа деления, заставляет
+подумать о том, что реально требуется, и отбросить обобщения типа &ldquo;мне это
+пригодится потом&rdquo;. Например, подпрограмма вывода аккумулятора в десятичном
+виде. Так как значения могут быть только от 0 до 59 (00-3B), номер уровня,
+я решил сделать кондово: посчитать сколько раз удастся вычесть 10 &ndash; это будет первая цифра, а результат перед последним вычитанием будет второй цифрой.</p>
+
+<pre class="hl">
+<span class="hl kwc">print_dec:</span>
+  <span class="hl kwa">push</span> psw
+  <span class="hl kwa">push</span> b
+  mvi b<span class="hl opt">,</span> <span class="hl num">0</span>ffh
+<span class="hl kwc">print_dec_loop:</span>
+  inr b
+  sui <span class="hl num">10</span>
+  <span class="hl kwa">jp</span> print_dec_loop
+  adi <span class="hl num">10</span>
+  <span class="hl kwa">push</span> psw
+  mvi a<span class="hl opt">,</span> <span class="hl str">'0'</span>
+  <span class="hl kwa">add</span> b
+  <span class="hl kwa">mov</span> c<span class="hl opt">,</span> a
+  <span class="hl kwa">call</span> monitor_putchar
+  <span class="hl kwa">pop</span> psw
+  adi <span class="hl str">'0'</span>
+  <span class="hl kwa">mov</span> c<span class="hl opt">,</span> a
+  <span class="hl kwa">call</span> monitor_putchar
+  <span class="hl kwa">pop</span> b
+  <span class="hl kwa">pop</span> psw
+  <span class="hl kwa">ret</span>
+</pre>
+
+<p><a href="https://github.com/begoon/rk86-maximite/blob/master/programs/sokoban/sokoban.asm">Исходник</a> лежит в составе проекта
+&ldquo;<a href="https://github.com/begoon/rk86-maximite/">Эмулятор Радио-86РК на Maximite</a>&rdquo;. На нем же я записал небольшой видос.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/VmIIt0_A6Vo" frameborder="0" allowfullscreen></iframe>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/09/09/sokoban-for-radio86rk/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/09/09/sokoban-for-radio86rk/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

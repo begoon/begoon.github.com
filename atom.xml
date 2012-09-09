@@ -5,13 +5,75 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-07T22:02:00Z</updated>
+  <updated>2012-09-09T23:08:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Сокобан для Радио-86РК]]></title>
+    <link href="http://demin.ws/blog/russian/2012/09/09/sokoban-for-radio86rk/"/>
+    <updated>2012-09-09T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/09/09/sokoban-for-radio86rk/</id>
+    <content type="html"><![CDATA[<p>Все-таки я не удержался и решил воспользоваться уровнями для Сокобана,
+<a href="http://demin.ws/blog/russian/2012/09/04/sokoban-maps/">выуженными из досовской программы &ldquo;pusher.exe&rdquo;</a>.
+Сокобан было решено написать на ассемблере Intel 8080 и запустить на
+Радио-86РК.</p>
+
+<p>Знаю-знаю, зачем откапывать стюардессу, да еще и по второму разу и все такое,
+но все же.</p>
+
+<p>Тут все по-взрослому. Уровни лежат запакованные, и распаковываются на лету.</p>
+
+<p>Конечно, исходник писался и компилировался не на РК, а туда заливался только
+готовый бинарь. Это сильно упростило задачу. Хотя для полной аутентичности
+надо было писать и ассемблировать на самом же РК. Как-нибудь в другой
+раз.</p>
+
+<p>Я, если честно, давно не писал на ассемблере что-то длиннее пары десятков
+строк, поэтому сначала было странное ощущение. Потом вспомнилось, что
+лучше в подпрограммах всегда сохранять регистры, не гнаться чрезмерной
+компактностью кода (по крайней мере сначала), и все пошло на лад.</p>
+
+<p>Ассемблер, особенно старый, где нет разных свистелок типа деления, заставляет
+подумать о том, что реально требуется, и отбросить обобщения типа &ldquo;мне это
+пригодится потом&rdquo;. Например, подпрограмма вывода аккумулятора в десятичном
+виде. Так как значения могут быть только от 0 до 59 (00-3B), номер уровня,
+я решил сделать кондово: посчитать сколько раз удастся вычесть 10 &ndash; это будет первая цифра, а результат перед последним вычитанием будет второй цифрой.</p>
+
+<pre class="hl">
+<span class="hl kwc">print_dec:</span>
+  <span class="hl kwa">push</span> psw
+  <span class="hl kwa">push</span> b
+  mvi b<span class="hl opt">,</span> <span class="hl num">0</span>ffh
+<span class="hl kwc">print_dec_loop:</span>
+  inr b
+  sui <span class="hl num">10</span>
+  <span class="hl kwa">jp</span> print_dec_loop
+  adi <span class="hl num">10</span>
+  <span class="hl kwa">push</span> psw
+  mvi a<span class="hl opt">,</span> <span class="hl str">'0'</span>
+  <span class="hl kwa">add</span> b
+  <span class="hl kwa">mov</span> c<span class="hl opt">,</span> a
+  <span class="hl kwa">call</span> monitor_putchar
+  <span class="hl kwa">pop</span> psw
+  adi <span class="hl str">'0'</span>
+  <span class="hl kwa">mov</span> c<span class="hl opt">,</span> a
+  <span class="hl kwa">call</span> monitor_putchar
+  <span class="hl kwa">pop</span> b
+  <span class="hl kwa">pop</span> psw
+  <span class="hl kwa">ret</span>
+</pre>
+
+<p><a href="https://github.com/begoon/rk86-maximite/blob/master/programs/sokoban/sokoban.asm">Исходник</a> лежит в составе проекта
+&ldquo;<a href="https://github.com/begoon/rk86-maximite/">Эмулятор Радио-86РК на Maximite</a>&rdquo;. На нем же я записал небольшой видос.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/VmIIt0_A6Vo" frameborder="0" allowfullscreen></iframe>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Анализатор цифровых сигналов Saleae Logic]]></title>
