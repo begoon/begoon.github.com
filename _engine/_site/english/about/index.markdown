@@ -35,4 +35,5 @@ If you figure out what it means, please, let me know.
 * *Cyril Margorin // 06.09.2012*
 * *Rinat Ibragimov // 06.09.2012*
 * *Oleksiy Vasylyev // 10.09.2012*
-* **Would you like to be there?** *(only one place left)*
+* *[Yaşar Arabacı](http://yasararabaci.tumblr.com) // 10.09.2012*
+* *[Igor Kalnitsky](http://www.kalnitsky.org/) // 10.09.2012*
