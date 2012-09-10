@@ -29,8 +29,10 @@ I live, I love and I do programming.
 
 If you figure out what it means, please, let me know.
 
-*At the moment there two people in the list:*
+*Who has solved the puzzle so far:*
 
 * *Sergei Kolzun // 05.09.2012*
 * *Cyril Margorin // 06.09.2012*
 * *Rinat Ibragimov // 06.09.2012*
+* *Oleksiy Vasylyev // 10.09.2012*
+* **Would you like to be there?** *(only one place left)*
