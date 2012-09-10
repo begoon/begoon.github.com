@@ -5,13 +5,65 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-10T00:56:00Z</updated>
+  <updated>2012-09-10T23:58:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Классическая игра "BOLO"]]></title>
+    <link href="http://demin.ws/blog/russian/2012/09/10/bolo/"/>
+    <updated>2012-09-10T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/09/10/bolo/</id>
+    <content type="html"><![CDATA[<p>Если вы никогда не играли в BOLO, вам стоит это сделать. Рожденная для
+Apple II, она, видимо, никогда не умрет. Вы управляете танком, ездите по
+лабиринту и уничтожаете базы. Можно скачать эмулятор AppleWin, затем погуглить
+файл &ldquo;bolo.dsk.gz&rdquo; и поиграть почти в оригинал.</p>
+
+<p><img src="http://demin.ws/images/blog/bolo/bolo-screenshot-applewin.png" alt="" />
+</p>
+
+<p><a href="http://demin.ws/images/blog/bolo/BOLO.COM">Досовская реализация</a>, сделанная какими-то энтузиастами и являющаяся очень
+точной репликой, прекрасно работает в DOSBox&rsquo;е:</p>
+
+<pre><code>dosbox -exit BOLO.COM
+</code></pre>
+
+<p><img src="http://demin.ws/images/blog/bolo/bolo-screenshot.png" alt="" />
+</p>
+
+<p>Еще давно я сделал небольшой <a href="http://demin.ws/images/blog/bolo/BOLO.XCK">патч</a>, чтобы узнать, что будет в конце игры:</p>
+
+<pre><code>Unlimited lives
+BOLO.COM
+00000174: 4F 00
+00000178: DF 4A
+00000179: FE FF
+
+Unlimited fuel
+BOLO.COM
+00000A38: 06 04
+
+Immortality &amp; pass through the walls
+BOLO.COM
+00000C61: 01 00
+0000172D: 01 00
+00001817: 01 00
+</code></pre>
+
+<p>Теперь можно играть вот так:</p>
+
+<iframe width="480" height="360" src="http://www.youtube.com/embed/pcqygeYP4qs" frameborder="0" allowfullscreen></iframe>
+
+<p>Увы, исходников игры, видимо нет и не будет, поэтому остается только ее
+постепенно реверсить, благо, она написана на ассемблере, но все равно,
+перенос игры на, например, SDL, нетривиален. Я знаю, есть много
+переделок BOLO под Windows, но это все неоригинальные версии.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Демки из прошлого - United Crackers League (UCL)]]></title>

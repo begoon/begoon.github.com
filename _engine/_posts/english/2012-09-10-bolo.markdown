@@ -1,0 +1,54 @@
+---
+layout: post
+title: 'A vintage Apple's game "BOLO"'
+language: english
+date: 2012-09-10 23:58
+comments: true
+categories: 
+- english
+---
+If you have never played BOLO, it's worth doing it. It was originally written
+for Apple II. You control the tank in the maze and have to find and destroy
+bases. You can download the AppleWin emulator, then google for "bolo.dsk.gz"
+file and play almost the original game.
+
+![](/images/blog/bolo/bolo-screenshot-applewin.png)
+
+Its [DOS implementation][] is a quite precise replica perfectly working on
+modern systems in DOSBox:
+
+    dosbox -exit BOLO.COM
+
+![](/images/blog/bolo/bolo-screenshot.png)
+
+[DOS implementation]: /images/blog/bolo/BOLO.COM
+
+Years ago I created a [patch][] to know what happens at the end:
+
+    Unlimited lives
+    BOLO.COM
+    00000174: 4F 00
+    00000178: DF 4A
+    00000179: FE FF
+
+    Unlimited fuel
+    BOLO.COM
+    00000A38: 06 04
+
+    Immortality & pass through the walls
+    BOLO.COM
+    00000C61: 01 00
+    0000172D: 01 00
+    00001817: 01 00
+
+With this patch you can play like this:
+
+<iframe width="480" height="360" src="http://www.youtube.com/embed/pcqygeYP4qs" frameborder="0" allowfullscreen></iframe>
+
+[patch]: /images/blog/bolo/BOLO.XCK
+
+Unfortunately, there are no sources of the original BOLO available, so
+porting to SDL, for instance, is fully about reverse engineering of the
+original binaries (either of the Apple II version or the DOS clone), which
+is not that easy. I know there are some other BOLO clones for Windows are
+available, but they are physically different games, not original BOLO.

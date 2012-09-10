@@ -5,13 +5,66 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-07T22:02:00Z</updated>
+  <updated>2012-09-10T23:58:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[A vintage Apple&#39;s game &#34;BOLO&#34;]]></title>
+    <link href="http://demin.ws/blog/english/2012/09/10/bolo/"/>
+    <updated>2012-09-10T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/09/10/bolo/</id>
+    <content type="html"><![CDATA[<p>If you have never played BOLO, it&rsquo;s worth doing it. It was originally written
+for Apple II. You control the tank in the maze and have to find and destroy
+bases. You can download the AppleWin emulator, then google for &ldquo;bolo.dsk.gz&rdquo;
+file and play almost the original game.</p>
+
+<p><img src="http://demin.ws/images/blog/bolo/bolo-screenshot-applewin.png" alt="" />
+</p>
+
+<p>Its <a href="http://demin.ws/images/blog/bolo/BOLO.COM">DOS implementation</a> is a quite precise replica perfectly working on
+modern systems in DOSBox:</p>
+
+<pre><code>dosbox -exit BOLO.COM
+</code></pre>
+
+<p><img src="http://demin.ws/images/blog/bolo/bolo-screenshot.png" alt="" />
+</p>
+
+<p>Years ago I created a <a href="http://demin.ws/images/blog/bolo/BOLO.XCK">patch</a> to know what happens at the end:</p>
+
+<pre><code>Unlimited lives
+BOLO.COM
+00000174: 4F 00
+00000178: DF 4A
+00000179: FE FF
+
+Unlimited fuel
+BOLO.COM
+00000A38: 06 04
+
+Immortality &amp; pass through the walls
+BOLO.COM
+00000C61: 01 00
+0000172D: 01 00
+00001817: 01 00
+</code></pre>
+
+<p>With this patch you can play like this:</p>
+
+<iframe width="480" height="360" src="http://www.youtube.com/embed/pcqygeYP4qs" frameborder="0" allowfullscreen></iframe>
+
+<p>Unfortunately, there are no sources of the original BOLO available, so
+porting to SDL, for instance, is fully about reverse engineering of the
+original binaries (either of the Apple II version or the DOS clone), which
+is not that easy. I know there are some other BOLO clones for Windows are
+available, but they are physically different games, not original BOLO.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The Saleae Logic digital circuit analyzer]]></title>

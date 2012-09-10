@@ -1,0 +1,28 @@
+[BeginXCK]
+* Description   : BOLO
+* Used packer   : None
+* Used unpacker : None
+* Comments      : Pretty nice AGAT's game ;)
+* Crack made    : 11 Jan 1997  01:47:05
+[BeginCRK]------------------------------------
+
+BOLO -- cracked by WiseGuy
+
+Unlimited lives (by WiseGuy)
+BOLO.COM
+00000174: 4F 00
+00000178: DF 4A
+00000179: FE FF
+
+Unlimited fuel (by WiseGuy)
+BOLO.COM
+00000A38: 06 04
+
+Immortality & pass through the walls (by WiseGuy)
+BOLO.COM
+00000C61: 01 00
+0000172D: 01 00
+00001817: 01 00
+
+[EndCRK]--------------------------------------
+[EndXCK]

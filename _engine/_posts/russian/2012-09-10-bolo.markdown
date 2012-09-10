@@ -1,0 +1,54 @@
+---
+layout: post
+title: 'Классическая игра "BOLO"'
+language: russian
+date: 2012-09-10 23:58
+comments: true
+categories: 
+- russian
+- bolo
+---
+Если вы никогда не играли в BOLO, вам стоит это сделать. Рожденная для
+Apple II, она, видимо, никогда не умрет. Вы управляете танком, ездите по
+лабиринту и уничтожаете базы. Можно скачать эмулятор AppleWin, затем погуглить 
+файл "bolo.dsk.gz" и поиграть почти в оригинал.
+
+![](/images/blog/bolo/bolo-screenshot-applewin.png)
+
+[Досовская реализация][], сделанная какими-то энтузиастами и являющаяся очень
+точной репликой, прекрасно работает в DOSBox'е:
+
+    dosbox -exit BOLO.COM
+
+![](/images/blog/bolo/bolo-screenshot.png)
+
+[Досовская реализация]: /images/blog/bolo/BOLO.COM
+
+Еще давно я сделал небольшой [патч][], чтобы узнать, что будет в конце игры:
+
+    Unlimited lives
+    BOLO.COM
+    00000174: 4F 00
+    00000178: DF 4A
+    00000179: FE FF
+
+    Unlimited fuel
+    BOLO.COM
+    00000A38: 06 04
+
+    Immortality & pass through the walls
+    BOLO.COM
+    00000C61: 01 00
+    0000172D: 01 00
+    00001817: 01 00
+
+Теперь можно играть вот так:
+
+<iframe width="480" height="360" src="http://www.youtube.com/embed/pcqygeYP4qs" frameborder="0" allowfullscreen></iframe>
+
+[патч]: /images/blog/bolo/BOLO.XCK
+
+Увы, исходников игры, видимо нет и не будет, поэтому остается только ее
+постепенно реверсить, благо, она написана на ассемблере, но все равно,
+перенос игры на, например, SDL, нетривиален. Я знаю, есть много
+переделок BOLO под Windows, но это все неоригинальные версии.
