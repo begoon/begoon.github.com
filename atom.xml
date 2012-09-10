@@ -5,13 +5,42 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-09T23:08:00Z</updated>
+  <updated>2012-09-10T00:56:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Демки из прошлого - United Crackers League (UCL)]]></title>
+    <link href="http://demin.ws/blog/russian/2012/09/10/united-crackers-league/"/>
+    <updated>2012-09-10T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/09/10/united-crackers-league/</id>
+    <content type="html"><![CDATA[<p>Во времена расцвета сети Фидо, одной из многочисленных виртуальных групп была
+так называемая United Craсkers League или UCL.</p>
+
+<p>В сети как-то немного информации, разве что небольшое
+<a href="http://bugtraq.ru/library/underground/ucl.html">интервью-рассказ</a>. Но сейчас немного о другом. Многие группы создавали
+(и продолжают создавать) демо. Не все ж в дизассемблере сидеть, можно и
+по программировать иногда.</p>
+
+<p>У UCL тоже было несколько демок. У меня <a href="https://github.com/begoon/ucl-demos/">несколько сохранилось</a>. Прекрасно запускаются под dosbox&rsquo;ом.</p>
+
+<p>Вот видео одной, на мой взгляд самой красивой. Произведения человека под
+псевдонимом SkullC0Der.</p>
+
+<iframe width="480" height="360" src="http://www.youtube.com/embed/n-egdB0lR-A" frameborder="0" allowfullscreen></iframe>
+
+<p>Есть вопрос к спецам в компьютерной графике &ndash; объясните, пожалуйста, математическую модель преобразований для развивающихся флагом трех букв &ldquo;UCL&rdquo;?</p>
+
+<p>Вроде каждый пиксель там как бы ездит по оси Z (уходящую внутрь экрана)
+вперед и назад, а по отношению к соседним точкам там какой-то гармонический
+закон. Но, увы, это только догадки, поэтому будут очень признателен
+совет эксперта.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Сокобан для Радио-86РК]]></title>
