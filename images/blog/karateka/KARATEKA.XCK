@@ -1,0 +1,49 @@
+[BeginXCK]
+* Description   : Karateka -- cracked by WiseGuy
+* Used packer   : None
+* Used unpacker : None
+* Comments      : Вы все еще сможете умереть, если:
+*                   - свалитесь в пропасть
+*                   - попадете под решетку
+*                   - огребете удар не в стойке без Steel breast
+*                 При включенном Steel breast прикольно смотреть,
+*                 как принцесса мочит вас ногой -- тщетно - хе..хе.. ;)
+* Crack made    : 31 Jan 1997  22:37:57
+[BeginCRK]------------------------------------
+
+Karateka -- cracked by WiseGuy
+
+Immortality
+KARATEKA.EXE
+00003066: 48 90
+00003D7E: 48 90
+
+Steel breast
+KARATEKA.EXE
+0000306E: 83 C6
+0000306F: 3E 06
+00003072: 3F 01
+00003073: 7E 75
+
+Flying kick for humans
+KARATEKA.EXE
+00002F30: 7E 00
+
+Flying kick for bird
+KARATEKA.EXE
+00002E2F: 7F 00
+00002E30: 01 00
+00002E34: 3D 25
+00002E35: 04 00
+00002E44: 06 00
+
+Kill bird by first kick
+KARATEKA.EXE
+000031BA: 85 33
+
+Kill humans by first kick
+KARATEKA.EXE
+00002F3A: 85 33
+
+[EndCRK]--------------------------------------
+[EndXCK]

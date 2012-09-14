@@ -1,0 +1,67 @@
+---
+layout: post
+title: 'Классическая игра "Karateka"'
+language: russian
+date: 2012-09-15 00:10
+comments: true
+categories: 
+- russian
+- game
+- karateka
+---
+Риторическое начало: если вы никогда не играли в Каратеку, стоит это сделать.
+Можно погуглить файл `karateka.dsk.gz` и загрузить его в эмулятор AppleWin.
+
+![](/images/blog/karateka/karateka-screenshot-applewin.png)
+
+Есть досовская версия. Увы, в ней геймплей искажен. Например, в эпловской
+версии бойцы внутри дома сами не подходят, поэтому для атаки на них был
+прием "шажок вперед и два назад". В досовской же версии можно просто мочить
+лоукиком, когда они приближаются.
+
+![](/images/blog/karateka/karateka-screenshot.png)
+
+Зато для досовской версии существует мой [пачт][], еще со времен Фидо:
+
+[пачт]: /images/blog/karateka/KARATEKA.XCK
+
+    Immortality
+    KARATEKA.EXE
+    00003066: 48 90
+    00003D7E: 48 90
+
+    Steel breast
+    KARATEKA.EXE
+    0000306E: 83 C6
+    0000306F: 3E 06
+    00003072: 3F 01
+    00003073: 7E 75
+
+    Flying kick for humans
+    KARATEKA.EXE
+    00002F30: 7E 00
+
+    Flying kick for bird
+    KARATEKA.EXE
+    00002E2F: 7F 00
+    00002E30: 01 00
+    00002E34: 3D 25
+    00002E35: 04 00
+    00002E44: 06 00
+
+    Kill bird by first kick
+    KARATEKA.EXE
+    000031BA: 85 33
+
+    Kill humans by first kick
+    KARATEKA.EXE
+    00002F3A: 85 33
+
+С ним можно рубиться, например, так:
+
+<iframe width="480" height="360" src="http://www.youtube.com/embed/HjeuB6pxMzI" frameborder="0" allowfullscreen></iframe>
+
+Зацените, как в конце принцесса нещадно, но тщетно мочит вас ногой.
+
+P.S. Увы и ах, исходников этой игры вроде бы нет, а жаль. Непонятно мне,
+почему уже через столько нет нельзя их открыть.

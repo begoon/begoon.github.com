@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>A vintage game "Karateka"</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/interview/">interview</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>A vintage game &#34;Karateka&#34;</h1>
+<div id="post">
+  <p>A rhetorical question: if you have never played Karateka it&rsquo;s worth doing it.
+You can google for the <code>karateka.dsk.gz</code> file and load it into the AppleWin
+emulator.</p>
+
+<p><img src="/images/blog/karateka/karateka-screenshot-applewin.png" alt="" />
+</p>
+
+<p>There is a DOS version, but, unfortunately, the gameplay was slightly changed.
+In the Apple&rsquo;s version the opponents inside the house never approach you
+first. There was a trick: a little step towards and immediately step back.
+This was the only way to force them to attack you. Then you can low-kick them.
+In the DOS version they always attack first, so just low-kick.</p>
+
+<p><img src="/images/blog/karateka/karateka-screenshot.png" alt="" />
+</p>
+
+<p>But for the DOS version there is a magic <a href="/images/blog/karateka/KARATEKA.XCK">patch</a> allowing to speedrun
+the game.</p>
+
+<pre><code>Immortality
+KARATEKA.EXE
+00003066: 48 90
+00003D7E: 48 90
+
+Steel breast
+KARATEKA.EXE
+0000306E: 83 C6
+0000306F: 3E 06
+00003072: 3F 01
+00003073: 7E 75
+
+Flying kick for humans
+KARATEKA.EXE
+00002F30: 7E 00
+
+Flying kick for bird
+KARATEKA.EXE
+00002E2F: 7F 00
+00002E30: 01 00
+00002E34: 3D 25
+00002E35: 04 00
+00002E44: 06 00
+
+Kill bird by first kick
+KARATEKA.EXE
+000031BA: 85 33
+
+Kill humans by first kick
+KARATEKA.EXE
+00002F3A: 85 33
+</code></pre>
+
+<p>For example:</p>
+
+<iframe width="480" height="360" src="http://www.youtube.com/embed/HjeuB6pxMzI" frameborder="0" allowfullscreen></iframe>
+
+<p>Don&rsquo;t miss at the end when the princess hopelessly kicks you when you
+approach in the stance.</p>
+
+<p>P.S. Unfortunately, the sources of this spectacular game are still closed.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/09/15/karateka/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/09/15/karateka/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

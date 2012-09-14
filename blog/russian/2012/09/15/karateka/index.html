@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Классическая игра "Karateka"</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/interview/">интервью</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Классическая игра &#34;Karateka&#34;</h1>
+<div id="post">
+  <p>Риторическое начало: если вы никогда не играли в Каратеку, стоит это сделать.
+Можно погуглить файл <code>karateka.dsk.gz</code> и загрузить его в эмулятор AppleWin.</p>
+
+<p><img src="/images/blog/karateka/karateka-screenshot-applewin.png" alt="" />
+</p>
+
+<p>Есть досовская версия. Увы, в ней геймплей искажен. Например, в эпловской
+версии бойцы внутри дома сами не подходят, поэтому для атаки на них был
+прием &ldquo;шажок вперед и два назад&rdquo;. В досовской же версии можно просто мочить
+лоукиком, когда они приближаются.</p>
+
+<p><img src="/images/blog/karateka/karateka-screenshot.png" alt="" />
+</p>
+
+<p>Зато для досовской версии существует мой <a href="/images/blog/karateka/KARATEKA.XCK">пачт</a>, еще со времен Фидо:</p>
+
+<pre><code>Immortality
+KARATEKA.EXE
+00003066: 48 90
+00003D7E: 48 90
+
+Steel breast
+KARATEKA.EXE
+0000306E: 83 C6
+0000306F: 3E 06
+00003072: 3F 01
+00003073: 7E 75
+
+Flying kick for humans
+KARATEKA.EXE
+00002F30: 7E 00
+
+Flying kick for bird
+KARATEKA.EXE
+00002E2F: 7F 00
+00002E30: 01 00
+00002E34: 3D 25
+00002E35: 04 00
+00002E44: 06 00
+
+Kill bird by first kick
+KARATEKA.EXE
+000031BA: 85 33
+
+Kill humans by first kick
+KARATEKA.EXE
+00002F3A: 85 33
+</code></pre>
+
+<p>С ним можно рубиться, например, так:</p>
+
+<iframe width="480" height="360" src="http://www.youtube.com/embed/HjeuB6pxMzI" frameborder="0" allowfullscreen></iframe>
+
+<p>Зацените, как в конце принцесса нещадно, но тщетно мочит вас ногой.</p>
+
+<p>P.S. Увы и ах, исходников этой игры вроде бы нет, а жаль. Непонятно мне,
+почему уже через столько нет нельзя их открыть.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/09/15/karateka/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/09/15/karateka/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
