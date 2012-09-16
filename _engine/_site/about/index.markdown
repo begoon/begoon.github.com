@@ -13,10 +13,12 @@ title: "Я"
 
 {% include russian/disclaimer.html %}
 
+* [GitHub][]
 * Twitter [begoon][]
 * [Google+][]
 * [Linkedin][]
 
+[GitHub]: http://github.com/begoon/
 [begoon]: http://twitter.com/begoon
 [Google+]: https://plus.google.com/114157100952261261794?rel=author
 [Linkedin]: http://www.linkedin.com/in/alexanderdemin

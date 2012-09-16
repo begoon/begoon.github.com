@@ -12,6 +12,10 @@ title: Projects
 
 # Projects
 
+Most of my projects are available at [GitHub][]. The projects listed below are hosted somewhere else, or which the most insterested for me.
+
+[GitHub]: http://github.com/begoon/
+
 * Radio-86RK classic 8-bit microcomputer emulator on the Maximite (PIC32) ([video][Radio-86RK on Maximite video])
 * [i8080-core] - Intel 8080 (KR580VM80A) microprocessor emulator
 * [gmc4-loader][] - [USB loader for the GMC-4 microcomputer][]

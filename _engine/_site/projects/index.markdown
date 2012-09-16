@@ -12,6 +12,10 @@ title: "Проекты"
 
 # Проекты
 
+Большинство моих проектов находится на [GitHub][]'e. Ниже перечислены некоторые, либо расположенные в иных местах, либо которые мне наиболее интересны.
+
+[GitHub]: http://github.com/begoon/
+
 * [gmc4-loader][] - [Загрузчик через USB для микрокомпьютера GMC-4][]
 * [nxtbtrc][] - [Управление Lego NXT через bluetooth][]
 * [J2ME апплет для управления NXT через bluetooth][NXT Brick remote control over Bluetooth]
