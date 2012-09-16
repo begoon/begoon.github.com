@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Buy Round: My second iPhone app</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/interview/">interview</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Buy Round: My second iPhone app</h1>
+<div id="post">
+  <p>The good half of this post in Russian was about explaining the great UK
+pub culture and the concept of the round at the pub. This is quite pointless
+information for English speaking readers, so I just jump straight to the
+technical part.</p>
+
+<p>I wanted a simple and quick app helping me to remember a list of drink in
+the round. Plus, I wanted to write something for iOS in general. Eventually, I ended up with this:</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/0ba2Oacm8Dg" frameborder="0" allowfullscreen></iframe>
+
+<p>Quick and dirty, but it solves the problem in 100%. I personally use this
+app all the time. Unfortunately, AppStore has rejected it as the app having
+too limited functionality. Well, bad for them, good for me. I have learned
+a lot developing this app.</p>
+
+<p>I had to learn the following classes:</p>
+
+<ul>
+<li>UITabBarController to manage two tab views.</li>
+<li>UIViewController to work with tables via UITableViewDataSource and
+UITableViewDelegate delegates.</li>
+<li>Object serialization via NSKeyArchiver to save the list of drink to a file.</li>
+</ul>
+
+<p>The full project is available at GitHub - <a href="https://github.com/begoon/buyround">https://github.com/begoon/buyround</a>. Please, feel free to checkout and build
+it.</p>
+
+<p>As I wrote previously about my first iPhone app - <a href="/blog/english/2012/09/05/usvisa-my-first-iphone-app/">US Visa</a>, the
+quality of the artwork, especially, icons, plays the crucial role in the
+success of a mobile application. I&rsquo;ve googled one (below) but it is much
+better to design your own one.</p>
+
+<p><img src="/images/blog/buyround/beer-114x114.png" alt="" />
+</p>
+
+<p>P.S. For the sake of making this post complete I&rsquo;ve decided to attach a photo
+of absolutely inhuman conditions of creating it.</p>
+
+<p><img src="/images/blog/buyround/about-buyround.jpg" alt="" />
+</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/09/16/buyround-app/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/09/16/buyround-app/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

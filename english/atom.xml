@@ -5,13 +5,61 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-15T00:10:00Z</updated>
+  <updated>2012-09-16T20:20:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Buy Round: My second iPhone app]]></title>
+    <link href="http://demin.ws/blog/english/2012/09/16/buyround-app/"/>
+    <updated>2012-09-16T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/09/16/buyround-app/</id>
+    <content type="html"><![CDATA[<p>The good half of this post in Russian was about explaining the great UK
+pub culture and the concept of the round at the pub. This is quite pointless
+information for English speaking readers, so I just jump straight to the
+technical part.</p>
+
+<p>I wanted a simple and quick app helping me to remember a list of drink in
+the round. Plus, I wanted to write something for iOS in general. Eventually, I ended up with this:</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/0ba2Oacm8Dg" frameborder="0" allowfullscreen></iframe>
+
+<p>Quick and dirty, but it solves the problem in 100%. I personally use this
+app all the time. Unfortunately, AppStore has rejected it as the app having
+too limited functionality. Well, bad for them, good for me. I have learned
+a lot developing this app.</p>
+
+<p>I had to learn the following classes:</p>
+
+<ul>
+<li>UITabBarController to manage two tab views.</li>
+<li>UIViewController to work with tables via UITableViewDataSource and
+UITableViewDelegate delegates.</li>
+<li>Object serialization via NSKeyArchiver to save the list of drink to a file.</li>
+</ul>
+
+<p>The full project is available at GitHub - <a href="https://github.com/begoon/buyround">https://github.com/begoon/buyround</a>. Please, feel free to checkout and build
+it.</p>
+
+<p>As I wrote previously about my first iPhone app - <a href="http://demin.ws/blog/english/2012/09/05/usvisa-my-first-iphone-app/">US Visa</a>, the
+quality of the artwork, especially, icons, plays the crucial role in the
+success of a mobile application. I&rsquo;ve googled one (below) but it is much
+better to design your own one.</p>
+
+<p><img src="http://demin.ws/images/blog/buyround/beer-114x114.png" alt="" />
+</p>
+
+<p>P.S. For the sake of making this post complete I&rsquo;ve decided to attach a photo
+of absolutely inhuman conditions of creating it.</p>
+
+<p><img src="http://demin.ws/images/blog/buyround/about-buyround.jpg" alt="" />
+</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[A vintage game &#34;Karateka&#34;]]></title>

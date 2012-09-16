@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Buy Round: Мое второе приложение для iPhone</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/interview/">интервью</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Buy Round: Мое второе приложение для iPhone</h1>
+<div id="post">
+  <p>В Англии есть замечательная культура пабов. Не стоит путать паб с бездушным
+американским баром. В отличие от бара, в пабе нет вышибал на входе и туда
+можно ходить с семьей как в обычный ресторан с домашней едой. В пабе не бывает
+тыц-тыц и стриптиза, хотя бывает очень шумно, особенно вечерами. В пабы
+обычно ходят в местные, в пабах часто стоят камины и все помещение разделено
+на уютные закутки.</p>
+
+<p>Внимание! Беспрецедентный случай &ndash; даю несколько тематических ссылок из
+своего нетехнического блога.</p>
+
+<ul>
+<li><a href="http://english-eggs.blogspot.co.uk/2010/09/pub-walk.html">Pub walk</a></li>
+<li><a href="http://english-eggs.blogspot.co.uk/2010/08/blog-post_5624.html">Сидр</a></li>
+<li><a href="http://english-eggs.blogspot.co.uk/2010/09/pub-time.html">Pub time</a></li>
+</ul>
+
+<p>В Англии при коллективном посещении пабов есть культура так называемых
+раундов. Раунд - это когда один человек платит за напитки всей компании.
+Посещение паба группой - это череда раундов. Самый массивный - это, конечно,
+первый раунд. Каждый новый раунд обычно имеет нового владельца. Традиционно,
+когда ты допил и хочешь еще &ndash; ты встаешь и спрашиваешь кто и чего будет.</p>
+
+<p>Вот тут наступает момент, когда народ тебе начинает называть напитки.
+У меня буфера хватает на 2-3 элемента, затем по схеме FIFO старые данные
+теряются. Поэтому возникла идея приложения, в котором можно было бы
+иметь список напитков, которые можно быстро объединять в группу.</p>
+
+<p>Знаю, что есть мириады приложений, делающих что-то подобное. Но тут два
+момента: приложение должно быть максимально быстрым и максимально простым.
+К тому же мне хотелось написать ну хоть какой-то апп для айфона.</p>
+
+<p>У меня родилось вот такое:</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/a4FnVG1qUwc" frameborder="0" allowfullscreen></iframe>
+
+<p>Просто и кондово, зато решает задачу на 100%. Лично сам регулярно пользуюсь.
+Увы, Apple Store &ldquo;завернул&rdquo; приложение как &ldquo;не имеющее достаточно
+функциональности&rdquo;. Ну и ладно.</p>
+
+<p>В процессе написания пришлось освоить следующие классы:</p>
+
+<ul>
+<li>UITabBarController для переключения между двумя табами.</li>
+<li>UIViewController для работы с таблицами через делегаты
+UITableViewDataSource и UITableViewDelegate</li>
+<li>Сериализация объектов через NSKeyedArchiver для записи списка напитков
+в файл (вещь!).</li>
+</ul>
+
+<p>Полностью собираемый проект лежит на GitHub&rsquo;е - <a href="https://github.com/begoon/buyround">https://github.com/begoon/buyround</a>.
+Предлагается как учебный материал.</p>
+
+<p>Да, как уже писал в рассказе про свое первое приложение <a href="/blog/russian/2012/09/05/usvisa-my-first-iphone-app/">US Visa</a>,
+для успеха мобильного приложения громадное значение имеет красивая
+иконка. Я &ldquo;нашел&rdquo; вот такую, хотя по-хорошему надо рисовать свои.</p>
+
+<p><img src="/images/blog/buyround/beer-114x114.png" alt="" />
+</p>
+
+<p>P.S. Сейчас вот вообще отойду от нормы и приложу картинку, на которой видно,
+в каких нечеловеческих условиях писался этот пост:</p>
+
+<p><img src="/images/blog/buyround/about-buyround.jpg" alt="" />
+</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/09/16/buyround-app/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/09/16/buyround-app/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
