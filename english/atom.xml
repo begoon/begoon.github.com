@@ -5,13 +5,64 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-16T20:20:00Z</updated>
+  <updated>2012-09-18T20:17:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Embedded compression libraries - miniz and minilzo]]></title>
+    <link href="http://demin.ws/blog/english/2012/09/18/miniz-minilzo/"/>
+    <updated>2012-09-18T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/09/18/miniz-minilzo/</id>
+    <content type="html"><![CDATA[<p>For <a href="https://github.com/begoon/rk86-maximite">my emulator of the classic 8-bit computer called Radio-86RK</a>
+running on the Maximite microcomputer I needed a compression library.
+The emulator has a virtual ROM drive, but the overall amount of files
+I wanted to put there was more than 1M, and the capacity of the PIC32
+flash was only 512K. So, a cunning plan was to compress the data and then
+decompress them on-the-fly inside the PIC.</p>
+
+<p>Two compression libraries were discovered:</p>
+
+<ul>
+<li><a href="http://code.google.com/p/miniz/">miniz</a> (zlib and deflate algorithms)</li>
+<li><a href="http://www.oberhumer.com/opensource/lzo/#minilzo">minilzo</a> (LZO algorithm)</li>
+</ul>
+
+<p>The selection criteria were:</p>
+
+<ul>
+<li>a single source library without any dependecies</li>
+<li>scrict ANSI C (I used the Microchip XC32 compiler)</li>
+<li>in-memory decompression</li>
+<li>a small static amount of temporary memory for decompression
+(no malloc/calloc) (ideally, it should use the output decompression
+buffer only)</li>
+</ul>
+
+<p>The both libraries compiled and worked for PIC32 without any issues.</p>
+
+<p>On my data miniz provided the 0.78 compression ratio and minilzo - 0.71.
+So, both didn&rsquo;t squeeze my data into the 512KB flash of PIC32.</p>
+
+<h3>Overall impression</h3>
+
+<ul>
+<li>miniz is slightly easier to use and more powerfull from the API perspective</li>
+<li>minilzo provides better compression</li>
+</ul>
+
+<p>Also miniz uses <strong>only</strong> the output buffer for decompression, but minilzo
+requries at least 16K static buffer.</p>
+
+<p>P.S. I also tried <a href="http://tukaani.org/xz/embedded.html">XZ Embedded</a> (LZMA2).  It looked that it compressed
+much better but it requires malloc/free API, so I didn&rsquo;t manage to build
+it on PIC32 without extra development.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Buy Round: My second iPhone app]]></title>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Embedded compression libraries - miniz and minilzo</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/interview/">interview</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Embedded compression libraries - miniz and minilzo</h1>
+<div id="post">
+  <p>For <a href="https://github.com/begoon/rk86-maximite">my emulator of the classic 8-bit computer called Radio-86RK</a>
+running on the Maximite microcomputer I needed a compression library.
+The emulator has a virtual ROM drive, but the overall amount of files
+I wanted to put there was more than 1M, and the capacity of the PIC32
+flash was only 512K. So, a cunning plan was to compress the data and then
+decompress them on-the-fly inside the PIC.</p>
+
+<p>Two compression libraries were discovered:</p>
+
+<ul>
+<li><a href="http://code.google.com/p/miniz/">miniz</a> (zlib and deflate algorithms)</li>
+<li><a href="http://www.oberhumer.com/opensource/lzo/#minilzo">minilzo</a> (LZO algorithm)</li>
+</ul>
+
+<p>The selection criteria were:</p>
+
+<ul>
+<li>a single source library without any dependecies</li>
+<li>scrict ANSI C (I used the Microchip XC32 compiler)</li>
+<li>in-memory decompression</li>
+<li>a small static amount of temporary memory for decompression
+(no malloc/calloc) (ideally, it should use the output decompression
+buffer only)</li>
+</ul>
+
+<p>The both libraries compiled and worked for PIC32 without any issues.</p>
+
+<p>On my data miniz provided the 0.78 compression ratio and minilzo - 0.71.
+So, both didn&rsquo;t squeeze my data into the 512KB flash of PIC32.</p>
+
+<h3>Overall impression</h3>
+
+<ul>
+<li>miniz is slightly easier to use and more powerfull from the API perspective</li>
+<li>minilzo provides better compression</li>
+</ul>
+
+<p>Also miniz uses <strong>only</strong> the output buffer for decompression, but minilzo
+requries at least 16K static buffer.</p>
+
+<p>P.S. I also tried <a href="http://tukaani.org/xz/embedded.html">XZ Embedded</a> (LZMA2).  It looked that it compressed
+much better but it requires malloc/free API, so I didn&rsquo;t manage to build
+it on PIC32 without extra development.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/09/18/miniz-minilzo/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/09/18/miniz-minilzo/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

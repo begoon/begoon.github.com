@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Миниатюрные библиотеки для компрессии - miniz и minilzo</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/interview/">интервью</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Миниатюрные библиотеки для компрессии - miniz и minilzo</h1>
+<div id="post">
+  <p>Для <a href="/blog/russian/2012/08/23/radio86-on-maximite/">эмулятора Радио-86РК на Maximite</a> мне потребовалась
+библиотека для сжатия.  У меня там есть виртуальный ROM-диск, а так как
+файлов порядочно, около мегабайта в сумме, и так как у PIC32 только
+512Кб флэша, я решил попробовать сжать данные в процессе сборки бинаря
+и разжимать их налету уже внутри PIC&rsquo;а.</p>
+
+<p>Итак, требования к библиотеке:</p>
+
+<ul>
+<li>одиночный исходник без зависимостей</li>
+<li>использование для декомпрессии только статической памяти небольшого и
+фиксированного размера (никаких глупостей типа malloc/calloc)</li>
+<li>ANSI C (надо собирать микрочиповским компилятором XC32)</li>
+</ul>
+
+<p>Нашлось два кандидата:</p>
+
+<ul>
+<li><a href="http://code.google.com/p/miniz/">miniz</a> (реализует алгоритмы zlib и deflate)</li>
+<li><a href="http://www.oberhumer.com/opensource/lzo/#minilzo">minilzo</a> (реализует алгоритм LZO)</li>
+</ul>
+
+<p>Обе библиотеки собрались без сучка и задоринки.  miniz дает на моих данных
+0.78 сжатия, minilzo - 0.71.  Оба не дают вместить все в 512К.</p>
+
+<p>В целом мне miniz понравился больше с точки зрения функциональности.  К тому
+же эта библиотека вообще не требует дополнительной памяти для декомпрессии,
+а использует только выходной буфер.  Для minilzo требуется статический
+буфер на 16Кб.</p>
+
+<p>P.S. Попробовал я еще <a href="http://tukaani.org/xz/embedded.html">XZ Embedded</a> (LZMA2).  Там, вроде по экспериментам
+получалось сжать гораздо сильнее, но там требуется интерфейс malloc/free,
+поэтому сходу собрать под PIC32 не получилось.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/09/18/miniz-minilzo/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/09/18/miniz-minilzo/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

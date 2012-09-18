@@ -5,13 +5,54 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-16T20:20:00Z</updated>
+  <updated>2012-09-18T20:17:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Миниатюрные библиотеки для компрессии - miniz и minilzo]]></title>
+    <link href="http://demin.ws/blog/russian/2012/09/18/miniz-minilzo/"/>
+    <updated>2012-09-18T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/09/18/miniz-minilzo/</id>
+    <content type="html"><![CDATA[<p>Для <a href="http://demin.ws/blog/russian/2012/08/23/radio86-on-maximite/">эмулятора Радио-86РК на Maximite</a> мне потребовалась
+библиотека для сжатия.  У меня там есть виртуальный ROM-диск, а так как
+файлов порядочно, около мегабайта в сумме, и так как у PIC32 только
+512Кб флэша, я решил попробовать сжать данные в процессе сборки бинаря
+и разжимать их налету уже внутри PIC&rsquo;а.</p>
+
+<p>Итак, требования к библиотеке:</p>
+
+<ul>
+<li>одиночный исходник без зависимостей</li>
+<li>использование для декомпрессии только статической памяти небольшого и
+фиксированного размера (никаких глупостей типа malloc/calloc)</li>
+<li>ANSI C (надо собирать микрочиповским компилятором XC32)</li>
+</ul>
+
+<p>Нашлось два кандидата:</p>
+
+<ul>
+<li><a href="http://code.google.com/p/miniz/">miniz</a> (реализует алгоритмы zlib и deflate)</li>
+<li><a href="http://www.oberhumer.com/opensource/lzo/#minilzo">minilzo</a> (реализует алгоритм LZO)</li>
+</ul>
+
+<p>Обе библиотеки собрались без сучка и задоринки.  miniz дает на моих данных
+0.78 сжатия, minilzo - 0.71.  Оба не дают вместить все в 512К.</p>
+
+<p>В целом мне miniz понравился больше с точки зрения функциональности.  К тому
+же эта библиотека вообще не требует дополнительной памяти для декомпрессии,
+а использует только выходной буфер.  Для minilzo требуется статический
+буфер на 16Кб.</p>
+
+<p>P.S. Попробовал я еще <a href="http://tukaani.org/xz/embedded.html">XZ Embedded</a> (LZMA2).  Там, вроде по экспериментам
+получалось сжать гораздо сильнее, но там требуется интерфейс malloc/free,
+поэтому сходу собрать под PIC32 не получилось.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Buy Round: Мое второе приложение для iPhone]]></title>
