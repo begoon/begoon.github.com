@@ -1,0 +1,16 @@
+table {
+    border-collapse: collapse;
+}
+
+table td {
+	border: 1px solid #3366CC;
+}
+	
+.border1 {
+	border-bottom: 1px solid #003792;
+}
+.border2 {
+
+	border-bottom: 1px solid #003792;
+	border-right: 1px solid #003792;
+}

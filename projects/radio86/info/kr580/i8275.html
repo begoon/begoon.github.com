@@ -1,0 +1,4091 @@
+<link rel="stylesheet" href="default.css" type="text/css" />
+
+<h1>Контроллер алфавитно-цифрового дисплея КР580ВГ75</h1>
+<a href="http://www.computer-museum.ru/technlgy/i8275.htm">Оригинал статьи</a>.
+<h3>(Отечественный аналог Intel i8275)</h3>
+<p>Вадим Кудрявцев</p>
+<p>В первых компьютерах применялись алфавитно-цифровые дисплеи. В них использовался метод отображения информации, при котором каждому символу соответствовал один байт (код символа) или два байта (код символа и атрибуты) в видеопамяти, что позволяло обойтись всего лишь несколькими килобайтами видеопамяти. Разумеется, полноценные графики на таких компьютерах построить было невозможно, однако для расчетов и написания текстов программ этого было более чем достаточно.</p>
+<p>В серии К580 выпускался контроллер алфавитно-цифрового дисплея КР580ВГ75.</p>
+<p>Этот контроллер позволял кроме отображения черного и белого цветов выделять символы повышенной яркостью, подчеркиванием, генерировать некоторые символы псевдографики.</p>
+<p>Основные возможности контроллера алфавитно-цифрового дисплея КР580ВГ75 таковы:</p>
+<ul>
+<li>программируемый экранный и строчный формат;</li>
+<li>11 графических символов;</li>
+<li>4 возможных вида курсора;</li>
+<li>распознавание и запоминание положения светового пера;</li>
+<li>2 символьных буфера;</li>
+<li>программируемый режим прямого доступа к памяти (ПДП);</li>
+<li>40-выводной DIP-корпус.</li>
+</ul>
+
+<div align="center"><IMG SRC="i8275.gif" width=545 height=767 BORDER=0 alt="Рис. 1. Структура микросхемы КР580ВГ75"><p><strong>Рис. 1. Структура микросхемы КР580ВГ75</strong></p>
+
+</div>
+
+<h2>Назначение выводов контроллера</h2>
+
+<table cellspacing="0" >
+<tr>
+<td valign="top">
+LC0-LC3
+</td>
+<td valign="top">
+Выходы
+</td>
+<td valign="top">
+Line Count (счетчик строк). Этот выход используется для адресации номера строки отображаемого символа в знакогенераторе
+</td>
+</tr>
+<tr>
+<td valign="top">
+DRQ
+</td>
+<td valign="top">
+Выход
+</td>
+<td valign="top">
+DMA Request (Запрос ПДП)
+</td>
+</tr>
+<tr>
+<td valign="top">
+/DACK
+</td>
+<td valign="top">
+Вход
+</td>
+<td valign="top">
+DMA Acknowledge (Подтверждение ПДП)
+</td>
+</tr>
+<tr>
+<td valign="top">
+HRTC
+</td>
+<td valign="top">
+Выход
+</td>
+<td valign="top">
+Horizontal Retrace (обратный ход по строкам) Выходной сигнал, который является активным во время запрограммированного обратного хода по строкам. В это время VSP=1 и LTEN=0
+</td>
+</tr>
+<tr>
+<td valign="top">
+VRTC
+</td>
+<td valign="top">
+Выход
+</td>
+<td valign="top">
+Vertical Retrace (обратный ход по кадрам) Выходной сигнал, который является активным во время запрограммированного обратного хода по кадрам. В это время VSP=1 и LTEN=0
+</td>
+</tr>
+<tr>
+<td valign="top">
+/RD
+</td>
+<td valign="top">
+Вход
+</td>
+<td valign="top">
+Read (Читать). Управляющий сигнал, позволяющий прочитать регистры
+</td>
+</tr>
+<tr>
+<td valign="top">
+/WR
+</td>
+<td valign="top">
+Вход
+</td>
+<td valign="top">
+Write (Запись). Этот управляющий сигнал показывает запись команды в регистр управления или запись данных в счетчик строк во время цикла ПДП
+</td>
+</tr>
+<tr>
+<td valign="top">
+LPEN
+</td>
+<td valign="top">
+Выход
+</td>
+<td valign="top">
+Light Pen (Световое перо). Входной сигнал системы управления экраном, позволяющий распознать световое перо
+</td>
+</tr>
+<tr>
+<td valign="top">
+DB0-DB7
+</td>
+<td valign="top">
+Входы/выходы
+</td>
+<td valign="top">
+Двунаправленная шина данных с тремя состояниями
+</td>
+</tr>
+<tr>
+<td valign="top">
+LA0,LA1
+</td>
+<td valign="top">
+Выходы
+</td>
+<td valign="top">
+Line Attributes Codes (Коды атрибутов строк). Эти коды могут быть декодированы при помощи внешней логики и использованы для отображения символов псевдографики
+</td>
+</tr>
+<tr>
+<td valign="top">
+LTEN
+</td>
+<td valign="top">
+Выход
+</td>
+<td valign="top">
+Light Enable (Разрешение выхода видеосигнала). Выходной сигнал для разрешения видеосигнала
+</td>
+</tr>
+<tr>
+<td valign="top">
+RVV
+</td>
+<td valign="top">
+Выход
+</td>
+<td valign="top">
+Reverse Video (Инвертирование видеосигнала)
+</td>
+</tr>
+<tr>
+<td valign="top">
+VSP
+</td>
+<td valign="top">
+Выход
+</td>
+<td valign="top">
+Video Suppression (Видеоподчеркивание) Выходной сигнал для коммутации видеосигнала. Этот сигнал является активным:<br>
+- во время обратного хода по строкам и кадрам;<br>
+- во время строк сверху и снизу символа, если такие запрограммированы;<br>
+- если распознаны конец строки или экрана;<br>
+- если происходит процесс ПДП;<br>
+- регулярно (1/16 частоты кадров для курсора, 1/32 частоты кадров для управления символами и полями)
+</td>
+</tr>
+<tr>
+<td valign="top">
+GPA1, GPA2
+</td>
+<td valign="top">
+Выход
+</td>
+<td valign="top">
+General Purpose Attribute Codes (Коды атрибутов общего назначения)
+</td>
+</tr>
+<tr>
+<td valign="top">
+HLGT
+</td>
+<td valign="top">
+Выход
+</td>
+<td valign="top">
+Highlight (Повышенная яркость) Выходной сигнал для увеличения яркости отдельных символов
+</td>
+</tr>
+<tr>
+<td valign="top">
+IRQ
+</td>
+<td valign="top">
+Выход
+</td>
+<td valign="top">
+Interrupt Request (Запрос прерывания)
+</td>
+</tr>
+<tr>
+<td valign="top">
+CCLK
+</td>
+<td valign="top">
+Вход
+</td>
+<td valign="top">
+Character Clock (Тактовые импульсы). Эти тактовые импульсы образуются с помощью внешней логики
+</td>
+</tr>
+<tr>
+<td valign="top">
+CC0-CC6
+</td>
+<td valign="top">
+Вход
+</td>
+<td valign="top">
+Chip Select (Выбор микросхемы)
+</td>
+</tr>
+<tr>
+<td valign="top">
+A0
+</td>
+<td valign="top">
+Вход
+</td>
+<td valign="top">
+Port Address (Адрес порта) A0=0 выбирает регистр параметров, A0=1 выбирает регистр статуса или команд
+</td>
+</tr>
+</table>
+<br>
+<h2>Программирование</h2>
+<p>В КР580ВГ75 имеются два программируемых регистра: регистр команд (CREG) и регистр параметров (PREG), а также регистр статуса (SREG). Регистр команд доступен только по записи, регистр статуса - только по чтению. Указанные регистры адресуются следующим образом:</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+A0
+</th>
+<th valign="top">
+Операция
+</th>
+<th valign="top">
+Регистр
+</th>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+Чт
+</td>
+<td valign="top">
+PREG
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+PREG
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+Чт
+</td>
+<td valign="top">
+SREG
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+CREG
+</td>
+</tr>
+</table>
+<p>Контроллер ожидает приема команды и следующей за ней последовательности от 0 до 4 параметров в зависимости от команды. Если к приему следующей команды не были приняты все параметры, устанавливается флаг статуса, который указывает на некорректную команду.</p>
+<h3>Список команд</h3>
+<p>Набор команд контроллера состоит из восьми команд:</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+Команда
+</th>
+<th valign="top">
+Число байтов-параметров
+</th>
+</tr>
+<tr>
+<td valign="top">
+1. Сброс
+</td>
+<td valign="top">
+4
+</td>
+</tr>
+<tr>
+<td valign="top">
+2. Старт дисплей
+</td>
+<td valign="top">
+0
+</td>
+</tr>
+<tr>
+<td valign="top">
+3. Стоп дисплей
+</td>
+<td valign="top">
+0
+</td>
+</tr>
+<tr>
+<td valign="top">
+4. Читать световое перо
+</td>
+<td valign="top">
+2
+</td>
+</tr>
+<tr>
+<td valign="top">
+5. Загрузить курсор
+</td>
+<td valign="top">
+2
+</td>
+</tr>
+<tr>
+<td valign="top">
+6. Разрешить прерывание
+</td>
+<td valign="top">
+0
+</td>
+</tr>
+<tr>
+<td valign="top">
+7. Запретить прерывание
+</td>
+<td valign="top">
+0
+</td>
+</tr>
+<tr>
+<td valign="top">
+8. Установить счетчик
+</td>
+<td valign="top">
+0
+</td>
+</tr>
+</table>
+<p>1. Сброс</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">
+Операция
+</th>
+<th valign="top">
+A0
+</th>
+<th colspan="8" valign="top">
+Данные
+</th>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Ст. б.
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Мл. б.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Команда
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+</tr>
+<tr>
+<td valign="top">
+Параметры
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+S
+</td>
+<td valign="top">
+H
+</td>
+<td valign="top">
+H
+</td>
+<td valign="top">
+H
+</td>
+<td valign="top">
+H
+</td>
+<td valign="top">
+H
+</td>
+<td valign="top">
+H
+</td>
+<td valign="top">
+H
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+V
+</td>
+<td valign="top">
+V
+</td>
+<td valign="top">
+R
+</td>
+<td valign="top">
+R
+</td>
+<td valign="top">
+R
+</td>
+<td valign="top">
+R
+</td>
+<td valign="top">
+R
+</td>
+<td valign="top">
+R
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+U
+</td>
+<td valign="top">
+U
+</td>
+<td valign="top">
+U
+</td>
+<td valign="top">
+U
+</td>
+<td valign="top">
+L
+</td>
+<td valign="top">
+L
+</td>
+<td valign="top">
+L
+</td>
+<td valign="top">
+L
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+M
+</td>
+<td valign="top">
+F
+</td>
+<td valign="top">
+C
+</td>
+<td valign="top">
+C
+</td>
+<td valign="top">
+Z
+</td>
+<td valign="top">
+Z
+</td>
+<td valign="top">
+Z
+</td>
+<td valign="top">
+Z
+</td>
+</tr>
+</table>
+<p>Параметры:</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+S
+</th>
+<th valign="top">
+Функция
+</th>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+Нормальные символы
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+Недоступные (закрытые) символы
+</td>
+</tr>
+</table>
+
+<br>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+H
+</th>
+<th valign="top">
+H
+</th>
+<th valign="top">
+H
+</th>
+<th valign="top">
+H
+</th>
+<th valign="top">
+H
+</th>
+<th valign="top">
+H
+</th>
+<th valign="top">
+H
+</th>
+<th valign="top">
+H
+</th>
+<th valign="top">
+Число символов в строке
+</th>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+2
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+3
+</td>
+</tr>
+<tr>
+<td valign="top">
+.
+</td>
+<td valign="top">
+.
+</td>
+<td valign="top">
+.
+</td>
+<td valign="top">
+.
+</td>
+<td valign="top">
+.
+</td>
+<td valign="top">
+.
+</td>
+<td valign="top">
+.
+</td>
+<td valign="top">
+.
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+80
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+.
+</td>
+<td valign="top">
+.
+</td>
+<td valign="top">
+.
+</td>
+<td valign="top">
+.
+</td>
+<td valign="top">
+.
+</td>
+<td valign="top">
+.
+</td>
+<td valign="top">
+.
+</td>
+<td valign="top">
+.
+</td>
+<td valign="top">
+Не определено
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+</table>
+<br>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+V
+</th>
+<th valign="top">
+V
+</th>
+<th valign="top">
+Число строк в кадровом синхроимпульсе
+</th>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+2
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+3
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+4
+</td>
+</tr>
+</table>
+<br>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+R
+</th>
+<th valign="top">
+R
+</th>
+<th valign="top">
+R
+</th>
+<th valign="top">
+R
+</th>
+<th valign="top">
+R
+</th>
+<th valign="top">
+R
+</th>
+<th valign="top">
+Число строк на экране
+</th>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+2
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+3
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+:
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+64
+</td>
+</tr>
+</table>
+<br>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+U
+</th>
+<th valign="top">
+U
+</th>
+<th valign="top">
+U
+</th>
+<th valign="top">
+U
+</th>
+<th valign="top">
+Высота линии подчеркивания
+</th>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+2
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+3
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+:
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+16
+</td>
+</tr>
+</table>
+<br>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+L
+</th>
+<th valign="top">
+L
+</th>
+<th valign="top">
+L
+</th>
+<th valign="top">
+L
+</th>
+<th valign="top">
+Число горизонтальных линий в строке (высота символа в пикселах)
+</th>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+2
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+3
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+:
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+16
+</td>
+</tr>
+</table>
+<br>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+C
+</th>
+<th valign="top">
+C
+</th>
+<th valign="top">
+Формат курсора
+</th>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+Мигающий блок-символ*
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+Мигающий штрих под символом
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+Немигающий блок-символ*
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+Немигающий штрих под символом
+</td>
+</tr>
+</table>
+<p><em>(*) Если экран темный и символы светлые, то в позиции курсора экран светлый и символы темные</em></p>
+
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+Z
+</th>
+<th valign="top">
+Z
+</th>
+<th valign="top">
+Z
+</th>
+<th valign="top">
+Z
+</th>
+<th valign="top">
+Число символов в строчном синхроимпульсе
+</th>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+2
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+4
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+6
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+:
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+32
+</td>
+</tr>
+</table>
+
+<p>2. Старт дисплей (начать отображение)</p>
+
+<table cellspacing="0">
+<tr>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">
+Операция
+</th>
+<th valign="top">
+A0
+</th>
+<th colspan="8" valign="top">
+Данные
+</th>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Ст. б.
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Мл. б.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Команда
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+S
+</td>
+<td valign="top">
+S
+</td>
+<td valign="top">
+S
+</td>
+<td valign="top">
+B
+</td>
+<td valign="top">
+B
+</td>
+</tr>
+</table>
+<br>
+
+<table cellspacing="0">
+<tr>
+<th valign="top">
+S
+</th>
+<th valign="top">
+S
+</th>
+<th valign="top">
+S
+</th>
+<th valign="top">
+Число тактов между запросами ПДП
+</th>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+7
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+15
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+23
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+31
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+39
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+47
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+55
+</td>
+</tr>
+</table>
+<br>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+B
+</th>
+<th valign="top">
+B
+</th>
+<th valign="top">
+Число циклов ПДП в течение одного сеанса
+</th>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+2
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+4
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+8
+</td>
+</tr>
+</table>
+<p><em>Если разрешены прерывания со стороны контроллера, то начинаются запросы ПДП; если разрешен видеосигнал, то устанавливаются флаги разрешения прерывания и разрешения видео в регистре статуса.</em></p>
+<p>3. Стоп дисплей (запретить отображение)</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">
+Операция
+</th>
+<th valign="top">
+A0
+</th>
+<th colspan="8" valign="top">
+Данные
+</th>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Ст. б.
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Мл. б.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Команда
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+</tr>
+</table>
+<p><em>Видеосигнал запрещен. Строчные и кадровые импульсы присутствуют, сбрасывается флаг разрешения видео в регистре статуса. Требуется ввести команду начала отображения для возобновления отображения на экране.</em></p>
+<p>4. Читать световое перо</p>
+
+<table cellspacing="0">
+<tr>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">
+Операция
+</th>
+<th valign="top">
+A0
+</th>
+<th colspan="8" valign="top">
+Данные
+</th>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Ст. б.
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Мл. б.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Команда
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+</tr>
+<tr>
+<td valign="top">
+Параметры
+</td>
+<td valign="top">
+Чт
+</td>
+<td valign="top">
+0
+</td>
+<td colspan="8" valign="top">
+Позиция символа в строке
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Чт
+</td>
+<td valign="top">
+0
+</td>
+<td  colspan="8" valign="top">
+Номер строки
+</td>
+</tr>
+</table>
+<p><em>Контроллер определяет положение светового пера в следующих двух циклах чтения регистра параметров. Флаги регистра статуса не изменяются.</em></p>
+<p>5. Загрузить курсор</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">
+Операция
+</th>
+<th valign="top">
+A0
+</th>
+<th colspan="8" valign="top">
+Данные
+</th>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Ст. б.
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Мл. б.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Команда
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+</tr>
+<tr>
+<td valign="top">
+Параметры
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+0
+</td>
+<td colspan="8" valign="top">
+Позиция курсора в строке
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+0
+</td>
+<td colspan="8" valign="top">
+Номер строки
+</td>
+</tr>
+</table>
+<p><em>Контроллер загружает два байта-параметра в регистр положения курсора. Флаги регистра статуса не изменяются.</em></p>
+<p>6. Разрешить прерывания</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">
+Операция
+</th>
+<th valign="top">
+A0
+</th>
+<th colspan="8" valign="top">
+Данные
+</th>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Ст. б.
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Мл. б.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Команда
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+</tr>
+</table>
+<p><em>Устанавливается флаг разрешения прерывания регистра статуса. Прерывания разрешены.</em></p>
+<p>7. Запретить прерывание</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">
+Операция
+</th>
+<th valign="top">
+A0
+</th>
+<th colspan="8" valign="top">
+Данные
+</th>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Ст. б.
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Мл. б.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Команда
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+</tr>
+</table>
+<p><em>Сбрасывается флаг разрешения прерывания регистра статуса. Прерывания невозможны.</em></p>
+<p>8. Установить счетчик</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">
+Операция
+</th>
+<th valign="top">
+A0
+</th>
+<th colspan="8" valign="top">
+Данные
+</th>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Ст. б.
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Мл. б.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Команда
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+</tr>
+</table>
+<p><em>Устанавливается внутренний счетчик в соответствии с положением курсора в верхнем левом углу. Для этой операции зарезервированы два тактовых импульса.</em></p>
+<p>Построение регистра статуса</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">
+Операция
+</th>
+<th valign="top">
+A0
+</th>
+<th colspan="8" valign="top">
+Данные
+</th>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Ст. б.
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Мл. б.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Команда
+</td>
+<td valign="top">
+Чт
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+IE
+</td>
+<td valign="top">
+IR
+</td>
+<td valign="top">
+LP
+</td>
+<td valign="top">
+IC
+</td>
+<td valign="top">
+VE
+</td>
+<td valign="top">
+DU
+</td>
+<td valign="top">
+FO
+</td>
+</tr>
+</table>
+<p><strong>IE (Interrupt Enable)</strong> - устанавливается и сбрасывается после команд разрешения и запрета прерываний. Также устанавливается после команды разрешения отображения и сбрасывается после команды сброс.</p>
+<p><strong>IR (Interrupt Request)</strong> - этот флаг устанавливается в начале последней строки на экране при условии, что установлен флаг разрешения прерывания. Сбрасывается после чтения регистра статуса.</p>
+<p><strong>LP</strong> - этот флаг устанавливается, если на входе светового пера присутствует активный уровень и загружен регистр светового пера. Сбрасывается после чтения регистра статуса.</p>
+<p><strong>IC (Improper Command)</strong> - этот флаг устанавливается, если количество параметров для команды велико или мало. Сбрасывается после чтения регистра статуса.</p>
+<p><strong>VE (Video Enable)</strong> - этот флаг показывает, что видеооперации с экраном разрешены. Устанавливается после команды разрешения отображения и сбрасывается после команды сброс.</p>
+<p><strong>DU (DMA Underrun)</strong> - этот флаг устанавливается при потере данных во время процесса ПДП. В этом случае процесс ПДП прерывается и экран затемняется после кадрового синхроимпульса. Сбрасывается после чтения регистра статуса.</p>
+<p><strong>FO (FIFO Overrun)</strong> - этот флаг устанавливается при переполнении буфера FIFO. Сбрасывается после чтения регистра статуса.</p>
+<h3>Функционирование</h3>
+<p>Управляющие символы из видеопамяти поступают в контроллер в виде восьмибитных символов. Однако отображаемый символ определяется только младшими семью битами. Это позволяет иметь знакогенератор только со 128-ю символами. Старший бит имеет специальную функцию: он определяет режим отображения - нормальное отображение (ст. б.=0); псевдографика или специальные коды (ст. б.=1). Существует два типа кодов управления символами: символьные атрибуты и атрибуты поля.</p>
+<p>Под управлением выходных сигналов LA0, LA1, VSP и LTEN с помощью символьных атрибутов могут быть отображены псевдографические символы. Эти символы могут при помощи программирования (аналогично курсору) мигать или иметь повышенную яркость свечения. Частота мигания равна частоте кадров, деленной на 32. Повышенная яркость свечения активируется сигналом логической 1 на выходе HGLT контроллера.</p>
+<p>Структура символьного атрибута</p>
+
+<table cellspacing="0">
+<tr>
+<th valign="top">
+Ст. б.
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">
+Мл. б.
+</th>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+C
+</td>
+<td valign="top">
+C
+</td>
+<td valign="top">
+C
+</td>
+<td valign="top">
+C
+</td>
+<td valign="top">
+B
+</td>
+<td valign="top">
+H
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+мигание
+</td>
+<td colspan="4" valign="top">
+Повышенная яркость
+</td>
+</tr>
+</table>
+<br>
+<p>Символы псевдографики</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+Код символа CCCC
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th colspan="4" valign="top">
+Выходы
+</th>
+<th valign="top">
+Символ
+</th>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+LA1
+</td>
+<td valign="top">
+LA0
+</td>
+<td valign="top">
+VSP
+</td>
+<td valign="top">
+LTEN
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+0000
+</td>
+<td valign="top">
+-1-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
++
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-2-
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-3-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+верхний левый угол
+</td>
+</tr>
+<tr>
+<td valign="top">
+0001
+</td>
+<td valign="top">
+-1-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
++
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-2-
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-3-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+верхний правый угол
+</td>
+</tr>
+<tr>
+<td valign="top">
+0010
+</td>
+<td valign="top">
+-1-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
++
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-2-
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-3-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+нижний левый угол
+</td>
+</tr>
+<tr>
+<td valign="top">
+0011
+</td>
+<td valign="top">
+-1-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
++
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-2-
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-3-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+нижний правый угол
+</td>
+</tr>
+<tr>
+<td valign="top">
+0100
+</td>
+<td valign="top">
+-1-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+-
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-2-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-3-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+верхнее ответвление
+</td>
+</tr>
+<tr>
+<td valign="top">
+0101
+</td>
+<td valign="top">
+-1-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+¦
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-2-
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-3-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+правое ответвление
+</td>
+</tr>
+<tr>
+<td valign="top">
+0110
+</td>
+<td valign="top">
+-1-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
++
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-2-
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-3-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+левое ответвление
+</td>
+</tr>
+<tr>
+<td valign="top">
+0111
+</td>
+<td valign="top">
+-1-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+-
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-2-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-3-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+нижнее ответвление
+</td>
+</tr>
+<tr>
+<td valign="top">
+1000
+</td>
+<td valign="top">
+-1-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+-
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-2-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-3-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+горизонтальная линия
+</td>
+</tr>
+<tr>
+<td valign="top">
+1001
+</td>
+<td valign="top">
+-1-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+¦
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-2-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-3-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+вертикальная линия
+</td>
+</tr>
+<tr>
+<td valign="top">
+1010
+</td>
+<td valign="top">
+-1-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
++
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-2-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-3-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+пересечение
+</td>
+</tr>
+<tr>
+<td valign="top">
+1011
+</td>
+<td valign="top">
+-1-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+не определено
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-2-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-3-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+1100
+</td>
+<td valign="top">
+-1-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+специальный код
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-2-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+<tr>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+-3-
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">&nbsp;
+
+</td>
+</tr>
+</table>
+<p>Коды 1101, 1110 и 1111 запрещены.</p>
+<p>Мигание активно при B=1, повышенная яркость - при H=1.</p>
+<p>Указание относительного положения символа:</p>
+<p>-1- над линией подчеркивания</p>
+<p>-2- на линии подчеркивания</p>
+<p>-3- под линией подчеркивания</p>
+<p>Специальные коды</p>
+<p>Специальные коды применяются для уменьшения затрат на память программ или на управление процессом ПДП.</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+Ст.б.
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">
+Мл.б.
+</th>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+S
+</td>
+<td valign="top">
+S
+</td>
+</tr>
+</table>
+<br>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+S
+</th>
+<th valign="top">
+S
+</th>
+<th valign="top">
+Функция
+</th>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+Конец строки
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+Конец строки, стоп ПДП
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+Конец экрана
+</td>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+1
+</td>
+<td valign="top">
+Конец экрана, стоп ПДП
+</td>
+</tr>
+</table>
+<br>
+<p>Структура "атрибута поля"</p>
+
+<table cellspacing="0">
+<tr>
+<th valign="top">
+Ст.б.
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">&nbsp;
+
+</th>
+<th valign="top">
+Мл.б.
+</th>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+0
+</td>
+<td valign="top">
+U
+</td>
+<td valign="top">
+R
+</td>
+<td valign="top">
+G
+</td>
+<td valign="top">
+G
+</td>
+<td valign="top">
+B
+</td>
+<td valign="top">
+H
+</td>
+</tr>
+</table>
+<br>
+<p>H=1 повышенная яркость</p>
+<p>B=1 мигание</p>
+<p>U=1 инверсия видео</p>
+<p>GG - GPA1, GPA0</p>
+<p>Формат экрана</p>
+<p>КР580ВГ75 может быть запрограммирован в режиме от 1 до 80 символов в строке и от 1 до 64 строк в кадре. Контроллер позволяет организовать чересстрочное отображение информации, при котором отображаются 1, 3 и т. д. строки, при этом 2, 4, и т. д. строки затемняются.</p>
+<p>Формат символа</p>
+<p>Высота символа программируется от 1 до 16. Счетчик строк может быть запрограммирован в двух режимах. В первом режиме (MODE 0) содержимое счетчика соответствует номеру строки, во втором (MODE 1) - всегда на единицу меньше. Режим MODE 0 используется со знакогенераторами, в которых адрес начинается с единицы и заканчивается нулем; режим MODE 1 - со знакогенераторами, в которых адрес начинается с нуля.</p>
+<p>Положение линии подчеркивания также программируется (по высоте от 0 до 15). Если линия подчеркивания в строке установлена выше 7 (ст. б.=1), верхняя и нижняя строки затемняются. Если линия подчеркивания установлена выше высоты символа, она не видна.</p>
+<h3>Пример программирования</h3>
+<p>В одноплатном компьютере "Радио-86РК", описанном в журнале "Радио", контроллер программируется следующим образом.</p>
+<p>1. Команда сброс.</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+A0
+</th>
+<th valign="top">
+Операция
+</th>
+<th valign="top">
+Регистр
+</th>
+<th valign="top">
+Данные
+</th>
+<th valign="top">
+Комментарий
+</th>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+CREG
+</td>
+<td valign="top">
+00000000 (00H)
+</td>
+<td valign="top">
+Команда сброс
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+PREG
+</td>
+<td valign="top">
+01001101 (4DH)
+</td>
+<td valign="top">
+1-й параметр: нормальные символы, 80 символов в строке
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+PREG
+</td>
+<td valign="top">
+00011101 (1DH)
+</td>
+<td valign="top">
+2-й параметр: 1 строка в кадровом синхроимпульсе, 30 строк на экране
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+PREG
+</td>
+<td valign="top">
+10011001 (99H)
+</td>
+<td valign="top">
+3-й параметр: высота линии подчеркивания - 10, высота символа - 10
+</td>
+</tr>
+<tr>
+<td valign="top">
+0
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+PREG
+</td>
+<td valign="top">
+10010011 (93H)
+</td>
+<td valign="top">
+4-й параметр: режим MODE1, формат курсора -мигающий штрих под символом, 8 символов в строчном синхроимпульсе
+</td>
+</tr>
+</table>
+<br>
+<p>2. Команда запуска изображения на экране.</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+A0
+</th>
+<th valign="top">
+Операция
+</th>
+<th valign="top">
+Регистр
+</th>
+<th valign="top">
+Данные
+</th>
+<th valign="top">
+Комментарий
+</th>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+Зп
+</td>
+<td valign="top">
+CREG
+</td>
+<td valign="top">
+00100111 (27H)
+</td>
+<td valign="top">
+Команда начать отображение: 7 тактов между запросами ПДП, 8 циклов ПДП за один сеанс
+</td>
+</tr>
+</table>
+<br>
+<p>3. Теперь постоянно читаем регистр статуса и ждем, когда флаг IR, означающий начало последней строки, установится в 1.</p>
+
+<table cellspacing="0" >
+<tr>
+<th valign="top">
+A0
+</th>
+<th valign="top">
+Операция
+</th>
+<th valign="top">
+Регистр
+</th>
+<th valign="top">
+Данные
+</th>
+<th valign="top">
+Комментарий
+</th>
+</tr>
+<tr>
+<td valign="top">
+1
+</td>
+<td valign="top">
+Чт
+</td>
+<td valign="top">
+SREG
+</td>
+<td valign="top">&nbsp;
+
+</td>
+<td valign="top">
+Читаем регистр статуса в цикле и выходим из него по условию IR=1
+</td>
+</tr>
+</table>
+<br>
+<p>4. Теперь за время хода последней строки надо успеть настроить контроллер ПДП, но это уже другая история.</p>
