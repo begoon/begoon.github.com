@@ -5,13 +5,76 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-18T20:17:00Z</updated>
+  <updated>2012-09-22T17:42:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iPhone 5]]></title>
+    <link href="http://demin.ws/blog/russian/2012/09/22/iphone5/"/>
+    <updated>2012-09-22T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/09/22/iphone5/</id>
+    <content type="html"><![CDATA[<p>Побывал сегодня в Apple Store. Так, как всегда, тусовка. Все прилипли к
+iPhone 5.</p>
+
+<p>Легче, тоньше, воздушнее, быстрее.</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0986.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0992.JPG" alt="" />
+</p>
+
+<p>Новый разъем, и наушники теперь снизу.</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0993.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0995.JPG" alt="" />
+</p>
+
+<p>Новый разъем (папа).</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0996.JPG" alt="" />
+</p>
+
+<p>Народ прилип к столам с айфоном.</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0997.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0998.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0999.JPG" alt="" />
+</p>
+
+<p>Кстати, новые 3D-карты в iOS6 &ndash; супер! Увы, на мой iPhone 4 (не S),
+это не распространяется.</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0985.JPG" alt="" />
+</p>
+
+<p>Ну и традиционная проверка на правильном сайте.</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0984.JPG" alt="" />
+</p>
+
+<p>Пара слов.</p>
+
+<p>Я хоть и сижу плотно на продуктах Apple, считаю себя все еще имеющим остатки
+здравого смысла. Если какие-то вещи от Apple неудачные или совсем говно
+(например, Magic Mouse), я радостно это признаю. Но братья! iPhone 5 &ndash; это
+реальное инженерное и дизайнерское чудо. Можно ненавидеть Apple за их пафос
+и понты, можно с ними судиться и даже выигрывать. Но! (например, Самсунг)
+Пожалуйста! Произведите что-то хотя бы близкое, а не ваши лопатные
+андроидофоны. И вы&hellip; займете место Apple!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Миниатюрные библиотеки для компрессии - miniz и minilzo]]></title>

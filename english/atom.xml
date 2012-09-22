@@ -5,13 +5,76 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-18T20:17:00Z</updated>
+  <updated>2012-09-22T17:42:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[iPhone 5]]></title>
+    <link href="http://demin.ws/blog/english/2012/09/22/iphone5/"/>
+    <updated>2012-09-22T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/09/22/iphone5/</id>
+    <content type="html"><![CDATA[<p>I visited the Apple Store today at Covent Garden to checkout the iPhone 5.</p>
+
+<p>Lighter, thinner, faster.</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0986.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0992.JPG" alt="" />
+</p>
+
+<p>The new connector, plus the headset is at the bottom now.</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0993.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0995.JPG" alt="" />
+</p>
+
+<p>The new connector (male).</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0996.JPG" alt="" />
+</p>
+
+<p>People are seriously stuck to desks with the iPhone 5.</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0997.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0998.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0999.JPG" alt="" />
+</p>
+
+<p>By they way, the new 3D-maps in iOS6 are fantastic! Unfortunately, not
+available for my iPhone 4 (not S).</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0985.JPG" alt="" />
+</p>
+
+<p>The traditional sound check on the right website.</p>
+
+<p><img src="http://demin.ws/images/blog/iphone5/IMG_0984.JPG" alt="" />
+</p>
+
+<p>A little followup.</p>
+
+<p>Regardless that I&rsquo;m fully on Apple products, I believe that I still have
+at least a little bit of common sense. If some Apple products are bad or
+even shit (like Magic Mouse, for instance) I joyfully state that.
+But brothers! The iPhone 5 is an amazing product of design and engineering.
+God bless Apple&rsquo;s designers and engineers. You may hate Apple for their
+pathos and show off, you may try suing them and even win. But! (Samsung,
+for example) Please! Create something even close to the iPhone 5. And
+all Apple&rsquo;s money and glory will be yours.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Embedded compression libraries - miniz and minilzo]]></title>
