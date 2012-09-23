@@ -1,0 +1,230 @@
+<html>
+<head>
+
+<script src="md5.js"></script>
+<script src="font.js"></script>
+<script src="banner.js"></script>
+
+<script type="application/x-javascript">
+
+var ctx;
+var canvas;
+
+var font = new Image()
+
+var char_width = 6
+var char_height = 8
+var char_height_gap = 2
+
+var scale_x = 2
+var scale_y = 2
+
+var screen_width = 78
+var screen_height = 30
+
+// Screen
+
+function screen_draw_char(x, y, ch) {
+   ctx.drawImage(font, 
+      2, char_height * ch, char_width, char_height,
+      x * char_width * scale_x, y * (char_height + 2) * scale_y, 
+      char_width * scale_x, char_height * scale_y
+   );
+}
+
+function screen_set_geometry() {
+   canvas.width = screen_width * char_width * scale_x
+   canvas.height = screen_height * (char_height + char_height_gap) * scale_y
+
+   ctx = canvas.getContext("2d");
+
+   ctx.fillStyle = "rgb(0,0,0)";
+   ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function rk86_screen_init() {
+  canvas = document.getElementById("canvas")
+  if (!canvas.getContext) {
+    alert("Tag <canvas> is not support is the browser")
+    return;
+  }
+
+  font.src = font_image;
+  screen_set_geometry();
+}
+
+function draw_plain_banner() {
+  for (var y = 0; y < screen_height; ++y) 
+    for (var x = 0; x < screen_width; ++x) 
+      screen_draw_char(x, y, banner[y].charCodeAt(x));
+  for (y = 0; y < screen_height; ++y) {
+    screen_draw_char(0, y, 127);
+    screen_draw_char(77, y, 127);
+  }
+  for (x = 0; x < screen_width; ++x) {
+    screen_draw_char(x, 0, 127);
+    screen_draw_char(x, 29, 127);
+  }
+}
+
+var sin_table = [];
+
+// The number of values of the "digitized" sine function. They are 
+// proportional to the full period of sine: [0; 360) or [0; 2*PI).
+var sin_table_scale = 128;
+
+// This is the size of the first quarter of sine value. Others quarters are
+// calculated by the symmetry.
+var sin_table_quarter = sin_table_scale / 4;
+
+// We round up PI to just 3. It seems working okay because our
+// resolution is very low (78x30).
+var TWO_PI = 6;
+var PI = 3;
+
+// We use 16-bit integers to represent floating point numbers
+// in the following way:
+//
+// AABB, which stands for AA.BB in floating point. Also the fraction
+// part "BB" is 256-based. Basically, we simply multiply a floating
+// point number on 256.
+
+// The values in the sine table are in RADIANS and MULTIPLIED by 256.
+function init_sin_table_() {
+  for (var x = 0; x < sin_table_quarter + 1; ++x) {
+    sin_table[x] = Math.round(Math.sin(TWO_PI * x / sin_table_scale) * 256);
+  }
+  console.log(sin_table);
+} 
+
+function init_sin_table() {
+  sin_table = [
+    0, 12, 24, 36, 48, 59, 71, 83, 94, 105, 116, 126, 137, 147, 156, 166, 174,
+    183, 191, 199, 206, 213, 220, 226, 231, 236, 240, 244, 248, 250, 253, 254,
+    255
+  ];
+}
+
+function lookup_sin(x) {
+  if (x < 0) alert("x = " + x);
+
+// The original formula:
+//   x = Math.floor(x*(sin_table_scale/256) / (TWO_PI)) % sin_table_scale;
+
+  x = Math.floor(x/12) % 128;
+
+  var y = x % sin_table_quarter;
+  var r = sin_table_scale*2;
+  if (x < sin_table_quarter)          r += sin_table[   y];
+  else if (x < sin_table_quarter * 2) r += sin_table[sin_table_quarter-y];
+  else if (x < sin_table_quarter * 3) r -= sin_table[   y];
+  else if (x < sin_table_quarter * 4) r -= sin_table[sin_table_quarter-y];
+  return r;
+}
+
+function sin_(a) {
+  var r = lookup_sin(a);
+  return r;
+}
+
+function z_offset(x, y, time) {
+// This original formula:
+//   return sin_(sin_(time + PI/2*256) + x*2) +
+//          sin_(sin_(time) + y*2 + PI/2*256);
+
+  return sin_(sin_(time + 384) + x*2) + sin_(sin_(time) + y*2 + 384);
+}
+
+var time = 0;
+var frames = 0;
+
+width = screen_width
+height = screen_height
+
+screens = []
+
+function play() {
+
+  var content = ""
+
+  for (iy = 15; iy < 45; iy++) {
+    var y = 512 + (iy < 30 ?
+        - Math.floor(17*(30-iy)) :
+        + Math.floor(17*(iy-30)));
+
+    for (ix = 39; ix < 117; ix++) {
+      var x = 512 + (ix < 78 ?
+          - Math.floor(7*(78-ix)) :
+          + Math.floor(7*(ix-78)));
+
+      z_ofs = sin_(sin_(time + 384) + x*2) + sin_(sin_(time) + y*2 + 384);
+
+      var z = Math.floor(z_ofs / 2);
+
+      var zdiv = Math.floor(61440/(384 + z));
+
+      if (x >= 512) {
+        u = (x-512)*zdiv;
+        iu = 39 + Math.floor(u/439);
+      } else {
+        u = (512-x)*zdiv;
+        iu = 39 - Math.floor(u/439);
+      }
+      iu += 2;
+
+      if (y >= 512) {
+        v = (y-512)*zdiv;
+        iv = 15 + Math.floor(v/(256*6));
+      } else {
+        v = (512-y)*zdiv;
+        iv = 15 - Math.floor(v/(256*6));
+      }
+      iv += 1;
+
+      var pixel = 0;
+      if (iu >= 0 && iu < width && iv >= 0 && iv < height) {
+        pixel = banner[iv].charAt(iu);
+      }
+      if (ix == 0+39 || ix == width-1+39 || iy == 0+15 || iy == height-1+15)
+        pixel = '.';
+      screen_draw_char(ix-39, iy-15, pixel == ' ' ? 0 : 127);
+      content += pixel;
+    }
+  }
+
+  screens[frames] = hex_md5(content);
+  frames += 1;
+  if ((frames & 1) == 0) {
+    var match = true;
+    for (var i = 0; match && i < Math.floor(frames/2); ++i) {
+      var j = i + Math.floor(frames/2);
+      if (screens[i] != screens[j]) match = false;
+    }
+    if (match)
+      console.log("Match! " + frames);
+  }
+
+  time = time + 8;
+  if (time >= 256*256) {
+    time = 0;
+  }
+  document.getElementById("frames").innerHTML = screens.length;
+  setTimeout(play, 1)
+}
+
+function init() {
+  // This can be used for testing purpuses to display the plain banner.
+  // draw_plain_banner();
+
+  init_sin_table();
+}
+
+</script>
+
+</head>
+<body onload="rk86_screen_init(); init(); play()" bgcolor="#000000" text="#ffffff">
+<canvas id="canvas" width="0" height="0"></canvas>
+<br />
+<p id="frames"></p>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Псевдо 3D-демо для Радио-86РК</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/interview/">интервью</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Псевдо 3D-демо для Радио-86РК</h1>
+<div id="post">
+  <p>Писав пост про досовскую демку команды UCL, я надеялся, что мне подскажут
+ее алгоритм. Увы, сначала были только &ldquo;буу&rdquo; на Хабре, но вот
+<a href="http://sensi.org/~svo/">Вячеслав Славинский</a> подогнал не просто алгоритм, а уже готовое решение.</p>
+
+<p>Основные моменты <a href="https://github.com/begoon/rk86-3d-demo/blob/master/svo/wfloat.pde">реализации</a>:</p>
+
+<ul>
+<li>Формула &ldquo;волны&rdquo; (функция <a href="https://github.com/begoon/rk86-3d-demo/blob/63a4734c1bde9ea5ec93d90d9240303f70397751/svo/wfloat.pde#L32">z_offset</a>), по которой вычисляется координата Z.</li>
+<li>Формула перспективы <a href="https://github.com/begoon/rk86-3d-demo/blob/63a4734c1bde9ea5ec93d90d9240303f70397751/svo/wfloat.pde#L58">zdiv</a> для перевода (X, Y, Z) в плоские координаты
+экрана.</li>
+<li>Пример работы с библиотекой <a href="http://processingjs.org/">Processing.js</a> для удобного моделирования 3D.
+Если посмотреть <a href="https://github.com/begoon/rk86-3d-demo/blob/master/svo/wfloat.pde">исходник</a>, то это не совсем
+JavaScript. В это типа Java c типами и отсутствием вольностей типа
+опционального &ldquo;;&rdquo;.</li>
+</ul>
+
+<p>А вот <a href="/projects/radio86/demo/svo/">демка в действии</a>.</p>
+
+<p>Изучив ее вдоль и поперек, у меня возник план перенести ее на Радио-86РК.
+Напомню: 1.78MHz, 32Кб памяти, символьный экран 78x30 или 156x60 через
+псевдографику.</p>
+
+<p>Для начала было интересно посмотреть, как могло бы выглядеть изображения
+на экране РК. Например, <a href="/projects/radio86/demo/static/">вот так</a> (не могу понять
+почему, но надо нажать CTRL-R или F5 после перехода по ссылке, а иначе
+только черный экран).</p>
+
+<p><img src="/images/blog/rk86/demo/rk86-demo-static.png" alt="" />
+</p>
+
+<p>В принципе, красиво, я решил продолжить. Взяв за основу исходник Вячеслава,
+я добавил туда вывод в стиле РК символами псевдографики - 178x60.
+<a href="/projects/radio86/demo/156x60/java/index-float.html">Выглядит неплохо</a>.</p>
+
+<p>Итак, идея работает. Надо думать, как это все потенциально писать на
+8-битном ассемблере Intel 8080, где даже деления нет. Надо переводить все
+в целые числа, а синус брать по таблице.
+<a href="https://github.com/begoon/rk86-3d-demo/blob/master/156x60/java/wfloat-float.pde">Реализация с вещественными числами</a> немного поменялась, стала использовать
+<a href="https://github.com/begoon/rk86-3d-demo/blob/master/156x60/java/wfloat.pde">табличный синус</a>. Несмотря на использование
+только 128 целых значений синуса на всем интервале от 0 до 2*PI, к тому же
+теперь домноженных на 256 и округленных в целое,
+<a href="/projects/radio86/demo/156x60/java/">выглядело тоже неплохо</a>
+(случайно вышел забавный эффект в начале демки, когда буквы приезжают сзади).</p>
+
+<p>Дальше надо было уже убирать библиотеку Processing.js, все переводить на
+целые и желательно положительные числа. Для целочисленности я все домножил
+на 256, а для положительности ввел смещение.
+<a href="https://github.com/begoon/rk86-3d-demo/blob/master/156x60/js/index.html">Исходник</a>
+уже становился все хуже и хуже, но все еще
+<a href="/projects/radio86/demo/156x60/js/">работал</a>.
+Я везде по возможности упрощал константы и вставил проверки на
+положительность переменных.</p>
+
+<p>И вот родилась <a href="https://github.com/begoon/rk86-3d-demo/blob/master/156x60/i8080/rk86demo.asm">первая версия на ассемблере</a>, где можно было считать синус.
+В качестве эксперимента я попробовал рисовать <a href="/projects/radio86/demo/156x60/i8080/">синусоиду</a>.</p>
+
+<p>Очевидно, что с такой производительностью полный кадр 156x60 она будет
+считать полгода. Первый облом.</p>
+
+<p>Решил я перейти в разрешение 78x30, просто символы, без псевдографики.
+Сам исходник на JavaScript <a href="https://github.com/begoon/rk86-3d-demo/blob/master/78x30/js/demo.html">несильно поменялся</a>,
+разве что константы. <a href="/projects/radio86/demo/78x30/js/">Выглядело</a> тоже сносно.</p>
+
+<p>Уже эту версию <a href="https://github.com/begoon/rk86-3d-demo/blob/master/78x30/i8080/pure/rk86demo.asm">я полностью реализовал на ассемблере 8080</a>.
+Получился монструозный опус почти на тысячу строк.
+А работал он <a href="http://localhost/projects/radio86/demo/78x30/i8080/pure/">вот так</a>&hellip; Второй облом.</p>
+
+<p>Он отступать уж совсем поздно было, и я предпринял последнюю, хоть уже
+немного &ldquo;нечистую&rdquo; попытку. С помощью <a href="https://github.com/begoon/rk86-3d-demo/blob/master/78x30/i8080/generator/demo.c">генератора на С</a>
+я <a href="https://raw.github.com/begoon/rk86-3d-demo/master/78x30/i8080/frames/frames.log">записал все кадры</a> вместе с
+<a href="https://github.com/begoon/rk86-3d-demo/blob/master/78x30/i8080/frames/frames.asm">разницей между соседними</a>. Сам же
+<a href="https://github.com/begoon/rk86-3d-demo/blob/master/78x30/i8080/rk86demo.asm">плеер этого самопального MPEG&rsquo;а</a> был очень короткий.</p>
+
+<p>В итоге - ОНО! (<a href="/projects/radio86/demo/78x30/i8080/">на эмуляторе в браузере</a>)</p>
+
+<p>И теперь уже на настоящем РК (почти настоящем):</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/kVNvI8KrrnM" frameborder="0" allowfullscreen></iframe>
+
+<h2>Мораль</h2>
+
+<p>Уметь найти в себе силы признавать бесперспективность той или иной
+затей и вовремя остановиться.</p>
+
+<h2>P.S.</h2>
+
+<p>Исходники все этого мучения доступны - <a href="https://github.com/begoon/rk86-3d-demo/">https://github.com/begoon/rk86-3d-demo/</a></p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/09/23/pseudo-3d-demo-on-rk86/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/09/23/pseudo-3d-demo-on-rk86/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

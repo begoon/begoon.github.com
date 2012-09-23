@@ -1,0 +1,279 @@
+<!--
+/*
+ * Radio-86RK Demo in JavaScript.
+ *
+ * Copyright (C) 2009,2012 Alexander Demin <alexander@demin.ws>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+-->
+<html>
+<head>
+
+<script src="font.js"></script>
+<script src="banner.js"></script>
+
+<script type="application/x-javascript">
+
+var ctx;
+var canvas;
+
+var font = new Image()
+
+var char_width = 6
+var char_height = 8
+var char_height_gap = 2
+
+var scale_x = 2
+var scale_y = 2
+
+var screen_width = 78
+var screen_height = 30
+
+// Screen
+
+function screen_draw_char(x, y, ch) {
+   ctx.drawImage(font, 
+      2, char_height * ch, char_width, char_height,
+      x * char_width * scale_x, y * (char_height + 2) * scale_y, 
+      char_width * scale_x, char_height * scale_y
+   );
+}
+
+function screen_set_geometry() {
+   canvas.width = screen_width * char_width * scale_x
+   canvas.height = screen_height * (char_height + char_height_gap) * scale_y
+
+   ctx = canvas.getContext("2d");
+
+   ctx.fillStyle = "rgb(0,0,0)";
+   ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+var screen = [];
+
+var gfx = [
+  0x00, // 0000
+  0x04, // 0001
+  0x10, // 0010
+  0x14, // 0011
+  0x02, // 0100
+  0x06, // 0101
+  0x12, // 0110
+  0x16, // 0111
+  0x01, // 1000
+  0x05, // 1001
+  0x11, // 1010
+  0x15, // 1011
+  0x03, // 1100
+  0x07, // 1101
+  0x13, // 1110
+  0x17, // 1111
+];
+
+function rk86_draw_bitmap() {
+    for (var i = 0; i < screen.length;) {
+        c = '?'
+        var a1 = screen[i];
+        var a2 = screen[i + 1];
+        var a3 = screen[i + screen_width * 2];
+        var a4 = screen[i + screen_width * 2 + 1];
+        var c = gfx[(a1 << 3) | (a2 << 2) | (a3 << 1) | a4];
+        var x = (i >> 1) % (screen_width * 2);
+        var y = Math.floor((i >> 1) / (screen_width * 2));
+        screen_draw_char(x, y, c);
+        i += 2;
+        if ((i % (screen_width * 2)) == 0)
+            i += screen_width * 2;
+    }
+}
+
+function rk86_pixel(x, y, c) {
+    screen[y * screen_width * 2 + x] = c
+}
+
+function rk86_screen_init() {
+  canvas = document.getElementById("canvas")
+  if (!canvas.getContext) {
+    alert("Tag <canvas> is not support is the browser")
+    return;
+  }
+
+  font.src = font_image
+  screen_set_geometry()
+}
+
+function plain() {
+  for (var i = 0; i < screen_height * screen_width * 4; ++i) 
+    screen[i] = banner[i];
+  for (y = 0; y < screen_height*2; ++y) {
+    rk86_pixel(0, y, 1);
+    rk86_pixel(screen_width*2 - 1, y, 1);
+  }
+  for (x = 0; x < screen_width*2; ++x) {
+    rk86_pixel(x, 0, 1);
+    rk86_pixel(x, screen_height*2 - 1, 1);
+  }
+}
+
+var sin_table = [];
+
+// The number of values of the "digitized" sine function. They are 
+// proportional to the full period of sine: [0; 360) or [0; 2*PI).
+var sin_table_scale = 128;
+
+// This is the size of the first quater of sine value. Others quaters are
+// calculated by the symmetry.
+var sin_table_quater = sin_table_scale / 4;
+
+var TWO_PI = 6;
+var PI = 3;
+
+// The values in the sine table are in RADIANS and MULTIPLIED by 256.
+function init_sin_table_() {
+  for (var x = 0; x < sin_table_quater + 1; ++x) {
+    sin_table[x] = Math.round(Math.sin(TWO_PI * x / sin_table_scale) * 256);
+  }
+  console.log(sin_table);
+  alert(sin_table)
+} 
+
+function init_sin_table() {
+  sin_table = [
+  0, 12, 24, 36, 48, 59, 71, 83, 94, 105, 116, 126, 137, 147, 156, 166, 174,
+  183, 191, 199, 206, 213, 220, 226, 231, 236, 240, 244, 248, 250, 253, 254,
+  255
+  ];
+}
+
+function lookup_sin(x) {
+  if (x < 0) alert("x = " + x);
+  // The original formula:
+  // x = Math.floor(x*(sin_table_scale/256) / (TWO_PI)) % sin_table_scale;
+  x = Math.floor(x/12) % 128;
+
+  var y = x % sin_table_quater;
+  var r = sin_table_scale*2;
+  if (x < sin_table_quater)          r += sin_table[   y];
+  else if (x < sin_table_quater * 2) r += sin_table[sin_table_quater-y];
+  else if (x < sin_table_quater * 3) r -= sin_table[   y];
+  else if (x < sin_table_quater * 4) r -= sin_table[sin_table_quater-y];
+  return r;
+}
+
+function sin_(a) {
+  var r = lookup_sin(a);
+  return r;
+}
+
+function z_offset(x, y, time) {
+  // The original formula:
+  //  x = 2*x; y = 2*y;
+  //  return sin_(sin_(time + PI/2*256) + x) + 
+  //         sin_(sin_(time) + y + PI/2*256);
+  return sin_(sin_(time + 384) + x*2) + 
+         sin_(sin_(time) + y*2 + 384);
+}
+
+var frameCount = 0;
+
+width = screen_width*2
+height = screen_height*2
+
+function play() {
+
+  var time = Math.floor(frameCount * 26) % (256*256);
+  var zmax = height;
+
+  for (iy = height/2; iy < height+height/2; iy++) {
+    // The original formula with negative numbers.
+    // var y = 512 + Math.floor((2.0*(iy - height/2.0)/height)*256);
+    var y;
+    if (iy < 60)  // = height/2*2
+      y = 512 - Math.floor(512*(height-iy)/height);
+    else
+      y = 512 + Math.floor(512*(iy-height)/height);
+    if (y < 0 || y > 65535) alert("y = " + y);
+
+    for (ix = width/2; ix < width+width/2; ix++) {
+      var x;
+      if (ix < 156)  // = width/2*2
+        x = 512 - Math.floor(512*(width-ix)/width);
+      else
+        x = 512 + Math.floor(512*(ix-width)/width);
+      if (x < 0 || x > 65535) alert("x = " + x);
+
+      var z = Math.floor(/*0.4 */ z_offset(x, y, time/3 /* *0.3 */) / 3);
+      if (z < 0 || z > 65535) alert("z = " + z);
+
+      // if (first && time < 3*256) {
+      //   z -= 100* Math.floor(256*1-(time)/3);
+      // } else
+      //   first = false; 
+
+//    var zdiv = Math.floor(60*256*4/(256*1 + sin_table_scale + z));
+      var zdiv = Math.floor(61440/(384 + z));
+      if (zdiv < 0 || zdiv > 65535) alert("zdiv = " + zdiv);
+      if (zdiv > 255) alert("zdiv = " + zdiv);
+
+      if (x >= 512) {
+        u = (x-512)*zdiv;
+//      iu = width/2 + Math.floor((0.6*u*width/2)/(256*60));
+        iu = 78 + Math.floor(47*u/(256*60));
+      } else {
+        u = (512-x)*zdiv;
+//      iu = width/2 - Math.floor((0.6*u*width/2)/(256*60));
+        iu = 78 - Math.floor(47*u/(256*60));
+      }
+      iu += 5;
+
+      if (y >= 512) {
+        v = (y-512)*zdiv;
+//      iv = height/2 + Math.floor((0.7*v*height/2)/(256*60));
+        iv = 30 + Math.floor(21*v/(256*60));
+      } else {
+        v = (512-y)*zdiv;
+//      iv = height/2 - Math.floor((0.7*v*height/2)/(256*60));
+        iv = 30 - Math.floor(21*v/(256*60));
+      }
+
+      var pixel = 0;
+      if (iu >= 0 && iu < width && iv >= 0 && iv < height) {
+        pixel = banner[iu + (iv)*width];
+      }
+      if (iy == 0+height/2 || iy == height-1+height/2 ||
+          ix == 0+width/2 || ix == width-1+width/2)
+        pixel = 1;
+      rk86_pixel(ix-width/2, iy-height/2, pixel);
+    }
+  }
+
+  frameCount += 1;
+  rk86_draw_bitmap();
+  setTimeout(play, 1)
+}
+
+function init() {
+  // plain();
+  init_sin_table();
+}
+
+</script>
+
+</head>
+<body onload="rk86_screen_init(); init(); play()" bgcolor="#000000" text="#ffffff">
+<canvas id="canvas" width="0" height="0"></canvas>
+</body>
+</html>

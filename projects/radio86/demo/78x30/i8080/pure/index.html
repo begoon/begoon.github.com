@@ -1,0 +1,2508 @@
+<!--
+/*
+ * Radio-86RK in JavaScript.
+ *
+ * Copyright (C) 2009 Alexander Demin <alexander@demin.ws>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+-->
+<html>
+<head>
+
+<script src="font.js"></script>
+<script>
+files = [];
+</script>
+<script src="files.js"></script>
+
+<script type="application/x-javascript">
+
+var games;
+
+var speed = 70000;
+
+var start_image = "mon32.bin";
+
+var ctx;
+var canvas;
+
+var screen_update_rate = 25;
+
+var font = new Image()
+
+var char_width = 6
+var char_height = 8
+var char_height_gap = 2
+
+var scale_x = 2
+var scale_y = 2
+
+var screen_width = 78
+var screen_height = 30
+
+var cursor_width = char_width
+var cursor_height = 1
+var cursor_offset_white = 27
+
+var cursor_state = true
+var cursor_x = 20
+var cursor_y = 20
+
+var video_memory_base = 0
+var video_memory_size = 0
+
+var memory = []
+var video_memory_cache = []
+
+function init_video_memory_cache(sz) {
+  for (var i = 0; i < sz; ++i) {
+    video_memory_cache[i] = true;
+  }
+}
+
+function init_memory() {
+   for (var i = 0x0000; i < 0xf800; i++) {
+      memory[i] = 0;
+   }
+
+   if (files[start_image] == null) {
+     alert("Starting file '" + start_image + "' not found. " + 
+           "Emulator may not start properly.");
+     return;
+   }
+
+   load_file(start_image);
+   window.setTimeout("run('rk86demo.bin')", 200);
+}
+
+function disassembler_available() {
+  return window.frames.disassembler_frame.loaded;
+}
+
+function load_file(name) {
+  if (files[name] == null) return;
+  var end = files[name].start + files[name].image.length - 1;
+  for (var i = files[name].start; i <= end; ++i)
+    memory[i] = files[name].image.charCodeAt(i - files[name].start);
+
+  if (disassembler_available()) 
+    window.frames.disassembler_frame.i8080disasm.refresh(memory);
+}
+
+var SS = 0x20;
+var US = 0x40;
+var RL = 0x80;
+
+var keyboard_modifiers = 0xff;
+var keyboard_state = [ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff ];
+
+function init_keyboard() {
+  keyboard_modifiers = 0xff;
+  keyboard_state = [ 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff ];
+}
+
+function memory_read_byte(addr) {
+  if (addr == 0x8002) {
+     return keyboard_modifiers;
+  }
+
+  if (addr == 0x8001) {
+    var ch = 0xff;
+    for (var i = 0; i < 8; i++)
+      if (1 << i & ~memory[ 0x8000 ])
+        ch &= keyboard_state[i];
+    return ch;
+  }
+
+  if (addr == 0xC001)
+    return 0xff;
+
+  return memory[addr & 0xffff];
+}
+
+keyboard_rus_lat = 0
+
+var vg75_video_memory_base = 0xf800
+var vg75_video_memory_size = 0
+
+var vg75_cursor_cmd = 0
+var vg75_cursor_x = 0
+var vg75_cursor_y = 0
+
+var vg75_mode_cmd = 0
+var vg75_screen_size_x = 0
+var vg75_screen_size_y = 0
+
+var vg75_settings_cmd = 0
+var tape_8002_as_output = 0
+
+var memory_write_byte_last = -1
+
+function memory_write_byte(addr, ch) {
+  addr &= 0xffff
+  if (addr >= 0xf800) return;
+
+  // РУС/ЛАТ
+  if ((addr & 0xefff) == 0x8003) {
+    if (ch == memory_write_byte_last) return
+      keyboard_rus_lat = ch & 0x01
+      return;
+  }
+
+  // Управление курсором.
+  if ((addr & 0xefff) == 0xc001 && ch == 0x80) {
+    vg75_cursor_cmd = 1
+    return;
+  }
+
+  if ((addr & 0xefff) == 0xc000 && vg75_cursor_cmd == 1) {
+    vg75_cursor_cmd++
+    vg75_cursor_x = ch + 1
+    return;
+  }
+
+  if ((addr & 0xefff) == 0xc000 && vg75_cursor_cmd == 2) {
+    vg75_cursor_y = ch + 1
+    draw_cursor(cursor_x, cursor_y, false)
+    cursor_x = vg75_cursor_x - 1
+    cursor_y = vg75_cursor_y - 1
+    vg75_cursor_cmd = 0
+    return;
+  }
+
+  // Команда установки параметров экрана.
+  if ((addr & 0xefff) == 0xc001 && ch == 0) {
+    vg75_mode_cmd = 1;
+    return;
+  }
+
+  if ((addr & 0xefff) == 0xc000 && vg75_mode_cmd == 1) {
+    vg75_screen_size_x = (ch & 0x7f) + 1;
+    vg75_mode_cmd++;
+    return;
+   }
+
+  if ((addr & 0xefff) == 0xc000 && vg75_mode_cmd == 2) {
+    vg75_screen_size_y = (ch & 0x3f) + 1
+    vg75_mode_cmd = 0
+  }
+
+  if ((addr & 0xefff) == 0xe008 && ch == 0x80) {
+    vg75_settings_cmd = 1
+    tape_8002_as_output = true
+    return;
+  }
+
+  if ((addr & 0xefff) == 0xe004 && vg75_settings_cmd == 1) {
+    vg75_video_memory_base = ch
+    vg75_settings_cmd++
+    return;
+  }
+
+  if ((addr & 0xefff) == 0xe004 && vg75_settings_cmd == 2) {
+    vg75_video_memory_base |= ch << 8;
+    vg75_settings_cmd++;
+    return;
+  }
+
+  if ((addr & 0xefff) == 0xe005 && vg75_settings_cmd == 3) {
+    vg75_video_memory_size = ch;
+    vg75_settings_cmd++;
+    return;
+  }
+
+  if ((addr & 0xefff) == 0xe005 && vg75_settings_cmd == 4) {
+    vg75_video_memory_size = ((vg75_video_memory_size | ch << 8) & 0x3fff) + 1
+    vg75_settings_cmd = 0
+  }
+
+  // Установки экрана вступают в силу только после команды
+  // запуска канала DMA.
+  if ((addr & 0xefff) == 0xe008 && ch == 0xa4) {
+    if (vg75_screen_size_x && vg75_screen_size_y) {
+      video_memory_base = vg75_video_memory_base
+      video_memory_size = vg75_screen_size_x * vg75_screen_size_y
+      screen_width = vg75_screen_size_x
+      screen_height = vg75_screen_size_y
+      screen_set_geometry()
+      tape_8002_as_output = false
+      return
+    }
+  }
+
+  if (addr == 0x8002) {
+    // Not impelemented!
+    // tape_write_bit( ch & 0x01 );
+  }
+
+  memory[ addr ] = ch;
+
+  if (addr >= video_memory_base && 
+      addr < video_memory_base + video_memory_size) {
+    video_memory_cache[addr - video_memory_base] = true;
+  }
+}
+
+function memory_read_word(addr) {
+  return memory_read_byte(addr) | (memory_read_byte(addr + 1) << 8)
+}
+
+function memory_write_word(addr, word) {
+  memory_write_byte(addr, word & 0xff)
+  memory_write_byte(addr + 1, word >> 8)
+}
+
+function in_byte(port) {
+  return 0;
+}
+
+function out_byte(port, value) {
+  return;
+}
+
+// KEYS: BEGIN
+
+var keyboard_map = {
+     36: { row: 0, mask: 0x01 }, //  \\ 
+     33: { row: 0, mask: 0x02 }, // CTP 
+     35: { row: 0, mask: 0x04 }, // AP2 
+      0: { row: 0, mask: 0x08 }, //  Ф1 
+    113: { row: 0, mask: 0x10 }, //  Ф2 
+    114: { row: 0, mask: 0x20 }, //  Ф3 
+    115: { row: 0, mask: 0x40 }, //  Ф4 
+                                         
+      9: { row: 1, mask: 0x01 }, // TAB 
+    123: { row: 1, mask: 0x02 }, //  ПС 
+     13: { row: 1, mask: 0x04 }, //  BK 
+      8: { row: 1, mask: 0x08 }, //  ЗБ 
+     37: { row: 1, mask: 0x10 }, //  <- 
+     38: { row: 1, mask: 0x20 }, //  UP
+     39: { row: 1, mask: 0x40 }, //  -> 
+     40: { row: 1, mask: 0x80 }, //  DOWN
+                                         
+     48: { row: 2, mask: 0x01 }, //   0 
+     49: { row: 2, mask: 0x02 }, //   1 
+     50: { row: 2, mask: 0x04 }, //   2 
+     51: { row: 2, mask: 0x08 }, //   3 
+     52: { row: 2, mask: 0x10 }, //   4 
+     53: { row: 2, mask: 0x20 }, //   5 
+     54: { row: 2, mask: 0x40 }, //   6 
+     55: { row: 2, mask: 0x80 }, //   7 
+                                         
+     56: { row: 3, mask: 0x01 }, //   8 
+     57: { row: 3, mask: 0x02 }, //   9 
+    220: { row: 3, mask: 0x04 }, //   * 
+    186: { row: 3, mask: 0x08 }, //   ; 
+    188: { row: 3, mask: 0x10 }, //   , 
+    189: { row: 3, mask: 0x20 }, //   - 
+    190: { row: 3, mask: 0x40 }, //   . 
+    191: { row: 3, mask: 0x80 }, //   / 
+                                         
+    222: { row: 4, mask: 0x01 }, //   @   
+     65: { row: 4, mask: 0x02 }, //   A 
+     66: { row: 4, mask: 0x04 }, //   B 
+     67: { row: 4, mask: 0x08 }, //   C 
+     68: { row: 4, mask: 0x10 }, //   D 
+     69: { row: 4, mask: 0x20 }, //   E 
+     70: { row: 4, mask: 0x40 }, //   F 
+     71: { row: 4, mask: 0x80 }, //   G 
+                                         
+     72: { row: 5, mask: 0x01 }, //   H 
+     73: { row: 5, mask: 0x02 }, //   I 
+     74: { row: 5, mask: 0x04 }, //   J 
+     75: { row: 5, mask: 0x08 }, //   K 
+     76: { row: 5, mask: 0x10 }, //   L 
+     77: { row: 5, mask: 0x20 }, //   M 
+     78: { row: 5, mask: 0x40 }, //   N 
+     79: { row: 5, mask: 0x80 }, //   O 
+                                         
+     80: { row: 6, mask: 0x01 }, //   P 
+     81: { row: 6, mask: 0x02 }, //   Q 
+     82: { row: 6, mask: 0x04 }, //   R 
+     83: { row: 6, mask: 0x08 }, //   S 
+     84: { row: 6, mask: 0x10 }, //   T 
+     85: { row: 6, mask: 0x20 }, //   U 
+     86: { row: 6, mask: 0x40 }, //   V 
+     87: { row: 6, mask: 0x80 }, //   W 
+                                         
+     88: { row: 7, mask: 0x01 }, //   X 
+     89: { row: 7, mask: 0x02 }, //   Y 
+     90: { row: 7, mask: 0x04 }, //   Z 
+    219: { row: 7, mask: 0x08 }, //   [ 
+    226: { row: 7, mask: 0x10 }, //   \ 
+    221: { row: 7, mask: 0x20 }, //   ] 
+    192: { row: 7, mask: 0x40 }, //   ^   
+     32: { row: 7, mask: 0x80 }, // SPC 
+};
+
+// KEYS: END
+
+function key_down(evt) {
+  var key_code = evt.keyCode;
+  
+  // DEBUG
+  // document.getElementById('key').value = key_code;
+
+  if (key_code == 16) keyboard_modifiers &= ~SS;
+  if (key_code == 17) keyboard_modifiers &= ~US;
+  if (key_code == 18) keyboard_modifiers &= ~RL;
+
+  var key_code = keyboard_map[key_code];
+  if (key_code != null) {
+    keyboard_state[key_code.row] &= ~key_code.mask;
+  }
+
+  // DEBUG
+  // document.getElementById('keyboard').value = keyboard_modifiers + ": " + keyboard_state;
+}
+
+function key_up(evt) {
+  var key_code = evt.keyCode;
+
+  // DEBUG
+  // document.getElementById('key').value = -key_code;
+
+  if (key_code == 16) keyboard_modifiers |= SS;
+  if (key_code == 17) keyboard_modifiers |= US;
+  if (key_code == 18) keyboard_modifiers |= RL;
+
+  var key_code = keyboard_map[key_code];
+  if (key_code != null) {
+    keyboard_state[key_code.row] |= key_code.mask;
+  }
+
+  // DEBUG
+  // document.getElementById('keyboard').value = keyboard_modifiers + ": " + keyboard_state;
+}
+
+// Screen
+
+function screen_draw_char(x, y, ch) {
+   ctx.drawImage(font, 
+      2, char_height * ch, char_width, char_height,
+      x * char_width * scale_x, y * (char_height + 2) * scale_y, 
+      char_width * scale_x, char_height * scale_y
+   );
+}
+
+function draw_cursor(x, y, visible) {
+   ctx.drawImage(font, 
+      2, cursor_offset_white + (visible ? 0 : 1), char_width, 1,
+      x * char_width * scale_x, 
+      (y * (char_height + char_height_gap) + char_height) * scale_y, 
+      char_width * scale_x, 1 * scale_y
+   )
+}
+
+var cursor_x_last = cursor_y_last = -1;
+
+function flip_cursor() {
+   draw_cursor(cursor_x, cursor_y, cursor_state)
+   cursor_state = !cursor_state
+   window.setTimeout("flip_cursor()", 500);
+}
+
+function screen_set_geometry() {
+   canvas.width = screen_width * char_width * scale_x
+   canvas.height = screen_height * (char_height + char_height_gap) * scale_y
+
+   back = document.getElementById("back")
+   back.style.width = canvas.width + 4
+   back.height = canvas.height + 4
+
+   ctx = canvas.getContext("2d");
+
+   ctx.fillStyle = "rgb(0,0,0)";
+   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+   init_video_memory_cache(video_memory_size);
+}
+
+function draw_screen() {
+   var p = video_memory_base
+   for (var y = 0; y < screen_height; ++y) {
+      for (var x = 0; x < screen_width; ++x) {
+         if (video_memory_cache[p - video_memory_base]) {
+           screen_draw_char(x, y, memory[p])
+           video_memory_cache[p - video_memory_base] = false;
+         }
+         ++p;
+      }
+   }
+   i8080_do_opcodes(speed);
+   window.setTimeout("draw_screen()", screen_update_rate);
+}
+
+function resize_screen() {
+   screen_width = document.getElementById('screen_width').value
+   screen_height = document.getElementById('screen_height').value
+   scale_x = document.getElementById('scale_x').value
+   scale_y = document.getElementById('scale_y').value
+   screen_set_geometry()
+}
+
+function reset() {
+  init_keyboard();
+  i8080_init();
+  i8080_reset(0xf800);
+
+  screen_set_geometry()
+}
+
+function main() {
+  canvas = document.getElementById("canvas")
+  if (!canvas.getContext) {
+    alert("Tag <canvas> is not support is the browser")
+    return;
+  }
+
+  if (navigator.userAgent.toLowerCase().indexOf('chrome') < 0) {;
+    document.getElementById('assembler_frame').style.width = (window.innerWidth - 32) + "px";
+    document.getElementById('assembler_frame').style.height = (window.innerHeight - 50) + "px";
+  }
+
+  console = document.getElementById('console');
+  games = document.getElementById('games');
+
+  for (var name in files) {
+    games.add(new Option(name, name), null)
+  }
+
+  font.src = font_image
+
+  document.onkeydown = key_down
+  document.onkeyup = key_up
+
+  init_memory();
+
+  reset();
+
+  window.setTimeout("flip_cursor()", 500)
+  window.setTimeout("draw_screen()", screen_update_rate)
+}
+
+// CPU: BEGIN
+
+// --- I8080 ------------------------------------------------------------------
+
+var halfcarry_add_table = [ 0, 0x10, 0x10, 0x10, 0, 0, 0, 0x10 ];
+var halfcarry_sub_table = [ 0, 0, 0x10, 0, 0x10, 0, 0x10, 0x10 ];
+
+var overflow_add_table = [ 0, 0, 0, 0x04, 0x04, 0, 0, 0 ];
+var overflow_sub_table = [ 0, 0x04, 0, 0, 0, 0, 0x04, 0 ];
+
+var sz53_table = []; 
+var parity_table = []; 
+var sz53p_table = []; 
+
+var i8080 = {
+  a:0, f:0, b:0, c:0, d:0, e:0, h:0, l:0,
+  sp:0, pc:0,
+  iff:0, halted:false,
+  tstates:0
+}
+
+function i8080_init() {
+  i8080_init_tables();
+}
+
+function i8080_init_tables() {
+  var i, j, k;
+  var parity;
+
+  for (i = 0; i < 0x100; i++) {
+    sz53_table[i] = i & (0x08 | 0x20 | 0x80);
+    j = i; parity = 0;
+    for (k = 0; k < 8; k++) { parity ^= j & 1; j >>=1; }
+    parity_table[i] = parity ? 0 : 0x04;
+    sz53p_table[i] = sz53_table[i] | parity_table[i];
+  }
+
+  sz53_table[0]  |= 0x40;
+  sz53p_table[0] |= 0x40;
+}
+
+function i8080_reset(addr) {
+  i8080.a = i8080.f = 
+  i8080.b = i8080.c =
+  i8080.d = i8080.e =
+  i8080.h = i8080.l = 0;
+  i8080.sp = 0;
+  i8080.iff = 0;
+  i8080.halted = 0;
+  i8080.tstates = 0;
+  i8080.pc = addr;
+}
+
+function i8080_interrupt() {
+  if (i8080.iff) {
+    if (i8080.halted) { i8080.pc++; i8080.pc &= 0xffff; i8080.halted = false; }
+    i8080.iff = 0;
+    i8080.sp = (i8080.sp - 1) & 0xffff;
+    memory_write_byte(i8080.sp, i8080.pc >> 8);
+    i8080.sp = (i8080.sp - 1) & 0xffff;
+    memory_write_byte(i8080.sp, i8080.pc & 0xff);
+  }
+}
+
+function invalid_opcode(opcode) {
+  alert("Invalid opcode " + opcode.toString(16).toUpperCase() + 
+        " at " + i8080.pc.toString(16).toUpperCase());
+  i8080.pc++; i8080.pc &= 0xffff;
+}
+
+function i8080_do_opcodes(nb_cycles) {
+  i8080.tstates = 0;
+
+  while (i8080.tstates < nb_cycles) {
+    var opcode;
+
+    // DEBUG
+    // document.getElementById('i8080_pc').value = i8080.pc.toString(16);
+
+    opcode = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+
+    switch(opcode) {
+
+    case 0x00:  // nop
+    case 0x08:  // undocumented "nop"
+    case 0x10:  // undocumented "nop"
+    case 0x18:  // undocumented "nop"
+    case 0x20:  // undocumented "nop"
+    case 0x28:  // undocumented "nop"
+    case 0x30:  // undocumented "nop"
+    case 0x38:  // undocumented "nop"
+      i8080.tstates += 4;
+      break;
+
+    case 0x01:  // lxi bc, data16
+      i8080.tstates += 10;
+      i8080.c = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      i8080.b = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      break;
+
+    case 0x02:  // stax b
+      i8080.tstates += 7;
+      memory_write_byte(i8080.c | (i8080.b << 8), i8080.a);
+      break;
+
+    case 0x03:  // inx b
+      i8080.tstates += 5;
+      var wordtemp = ((i8080.c | (i8080.b << 8)) + 1) & 0xffff;
+      i8080.b = wordtemp >> 8;
+      i8080.c = wordtemp & 0xff;
+      break;
+
+    case 0x04:  // inr b
+      i8080.tstates += 5;
+      i8080.b = (i8080.b + 1) & 0xff;
+      i8080.f = (i8080.f & 0x01) | (i8080.b & 0x0f ? 0 : 0x10) | sz53p_table[i8080.b]
+      break;
+
+    case 0x05:  // dcr b
+      i8080.tstates += 5;
+      i8080.f = (i8080.f & 0x01) | (i8080.b & 0x0f ? 0 : 0x10) | 0x02;
+      i8080.b = (i8080.b - 1) & 0xff;
+      i8080.f |= sz53p_table[i8080.b];
+      break;
+
+    case 0x06:  // mvi b, data8
+      i8080.tstates += 3
+      i8080.b = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      break;
+
+    case 0x07:  // rlc
+      i8080.tstates += 4
+      i8080.a = ((i8080.a & 0x7f) << 1) | (i8080.a >> 7);
+      i8080.f = (i8080.f & (0x04 | 0x40 | 0x80)) | (i8080.a & (0x01 | 0x08 | 0x20));
+      break;
+
+    case 0x09:  // dad b
+      i8080.tstates += 10;
+      var add16temp = (i8080.l | (i8080.h << 8)) + (i8080.c | (i8080.b << 8));
+      var lookup = (((i8080.l | (i8080.h << 8)) & 0x0800) >> 11) | 
+                   (((i8080.c | (i8080.b << 8)) & 0x0800) >> 10) |
+                   ((add16temp & 0x0800) >> 9);
+      i8080.h = (add16temp >> 8) & 0xff; 
+      i8080.l = add16temp & 0xff;  
+      i8080.f = (i8080.f & 0xfe) | (add16temp & 0x10000 ? 0x01 : 0);
+      break;
+
+    case 0x0a:  // ldax b
+      i8080.tstates += 7;
+      i8080.a = memory_read_byte(i8080.c | (i8080.b << 8));
+      break;
+
+    case 0x0b:  // dcx b
+      i8080.tstates += 5;
+      var wordtemp = ((i8080.c | (i8080.b << 8)) - 1) & 0xffff;
+      i8080.b = wordtemp >> 8;
+      i8080.c = wordtemp & 0xff;
+      break;
+
+    case 0x0c:  // inr c
+      i8080.tstates += 5;
+      i8080.c = (i8080.c + 1) & 0xff;
+      i8080.f = (i8080.f & 0x01) | (i8080.c & 0x0f ? 0 : 0x10) | sz53p_table[i8080.c];
+      break;
+
+    case 0x0d:  // dcr c
+      i8080.tstates += 5;
+      i8080.f = (i8080.f & 0x01) | (i8080.c & 0x0f ? 0 : 0x10) | 0x02;
+      i8080.c = (i8080.c - 1) & 0xff;
+      i8080.f |= sz53p_table[i8080.c];
+      break;
+
+    case 0x0e:  // mvi c, data8
+      i8080.tstates += 3;
+      i8080.c = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      break;
+
+    case 0x0f:  // rrc
+      i8080.tstates += 4;
+      i8080.f = (i8080.f & (0x04 | 0x40 | 0x80)) | (i8080.a & 0x01);
+      i8080.a = (i8080.a >> 1) | ((i8080.a & 0x01) << 7);
+      i8080.f |= i8080.a & (0x08 | 0x20);
+      break;
+
+    case 0x11:  // lxi de, data16
+      i8080.tstates += 10;
+      i8080.e = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      i8080.d = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      break;
+
+    case 0x12:  // stax d
+      i8080.tstates += 7;
+      memory_write_byte(i8080.e | (i8080.d << 8), i8080.a);
+      break;
+
+    case 0x13:  // inx d
+      i8080.tstates += 5;
+      var wordtemp = ((i8080.e | (i8080.d << 8)) + 1) & 0xffff;
+      i8080.d = wordtemp >> 8;
+      i8080.e = wordtemp & 0xff;
+      break;
+
+    case 0x14:  // inr d
+      i8080.tstates += 5;
+      i8080.d = (i8080.d + 1) & 0xff;
+      i8080.f = (i8080.f & 0x01) | (i8080.d & 0x0f ? 0 : 0x10) | sz53p_table[i8080.d];
+      break;
+
+    case 0x15:  // dcr d
+      i8080.tstates += 5;
+      i8080.f = (i8080.f & 0x01) | (i8080.d & 0x0f ? 0 : 0x10) | 0x02;
+      i8080.d = (i8080.d - 1) & 0xff;
+      i8080.f |= sz53p_table[i8080.d];
+      break;
+
+    case 0x16:  // mvi d, data8
+      i8080.tstates += 7;
+      i8080.d = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      break;
+
+    case 0x17:  // ral
+      i8080.tstates += 4;
+      var bytetemp = i8080.a;
+      i8080.a = ((i8080.a & 0x7f) << 1) | (i8080.f & 0x01);
+      i8080.f = (i8080.f & (0x04 | 0x40 | 0x80)) |
+                (i8080.a & (0x08 | 0x20)) | (bytetemp >> 7);
+      break;
+
+    case 0x19:  // dad d
+      i8080.tstates += 10;
+      var add16temp = (i8080.l | (i8080.h << 8)) + (i8080.e | (i8080.d << 8));
+      var lookup = (((i8080.l | (i8080.h << 8)) & 0x0800) >> 11) |
+                   (((i8080.e | (i8080.d << 8)) & 0x0800) >> 10) |
+                   ((add16temp & 0x0800) >>  9);
+      i8080.h = (add16temp >> 8) & 0xff;
+      i8080.l = add16temp & 0xff;
+      i8080.f = (i8080.f & 0xfe) | (add16temp & 0x10000 ? 0x01 : 0);
+      break;
+
+    case 0x1a:  // ldax d
+      i8080.tstates += 5;
+      i8080.a = memory_read_byte(i8080.e | (i8080.d << 8));
+      break;
+
+    case 0x1b:  // dcx d
+      i8080.tstates += 5;
+      var wordtemp = ((i8080.e | (i8080.d << 8)) - 1) & 0xffff;
+      i8080.d = wordtemp >> 8;
+      i8080.e = wordtemp & 0xff;
+      break;
+
+    case 0x1c: // inr e
+      i8080.tstates += 5;
+      i8080.e = (i8080.e + 1) & 0xff;
+      i8080.f = (i8080.f & 0x01) | (i8080.d & 0x0f ? 0 : 0x10) | sz53p_table[i8080.e];
+      break;
+
+    case 0x1d:  // dcr e
+      i8080.tstates += 5;
+      i8080.f = (i8080.f & 0x01) | (i8080.e & 0x0f ? 0 : 0x10) | 0x02;
+      i8080.e = (i8080.e - 1) & 0xff;
+      i8080.f |= sz53p_table[i8080.e];
+      break;
+
+    case 0x1e:  // mvi e, data8
+      i8080.tstates += 3;
+      i8080.e = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      break;
+
+    case 0x1f:  // rar
+      i8080.tstates += 4;
+      var bytetemp = i8080.a;
+      i8080.a = (i8080.a >> 1) | ((i8080.f & 0x01) << 7);
+      i8080.f = (i8080.f & (0x04 | 0x40 | 0x80 )) | (i8080.a & (0x08 | 0x20)) | (bytetemp & 0x01);
+      break;
+
+    case 0x21:  // lxi hl, data16	
+      i8080.tstates += 10;
+      i8080.l = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      i8080.h = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      break;
+
+    case 0x22:  // shld addr
+      i8080.tstates += 16
+      var ldtemp = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff; 
+      ldtemp |= memory_read_byte(i8080.pc++) << 8; i8080.pc &= 0xffff; 
+      memory_write_byte(ldtemp++, i8080.l); ldtemp &= 0xffff;
+      memory_write_byte(ldtemp, i8080.h);
+      break;
+
+    case 0x23:  // inx h
+      i8080.tstates += 5;
+      var wordtemp = ((i8080.l | (i8080.h << 8)) + 1) & 0xffff;
+      i8080.h = wordtemp >> 8;
+      i8080.l = wordtemp & 0xff;
+      break;
+
+    case 0x24:  // inr h
+      i8080.tstates += 5;
+      i8080.h = (i8080.h + 1) & 0xff;
+      i8080.f = (i8080.f & 0x01) | (i8080.d & 0x0f ? 0 : 0x10) | sz53p_table[i8080.h];
+      break;
+
+    case 0x25:  // dcr h
+      i8080.tstates += 5;
+      i8080.f = (i8080.f & 0x01) | (i8080.h & 0x0f ? 0 : 0x10) | 0x02;
+      i8080.h = (i8080.h - 1) & 0xff;
+      i8080.f |= sz53p_table[i8080.h];
+      break;
+
+    case 0x26:  // mvi h, data8
+      i8080.tstates += 7;
+      i8080.h = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      break;
+
+    case 0x27:  // daa
+      var add = 0;
+      var carry = i8080.f & 0x01;
+      if ((i8080.f & 0x10) || ((i8080.a & 0x0f) > 9)) add = 6;
+      if (carry || (i8080.a > 0x99)) add |= 0x60;
+      if (i8080.a > 0x99) carry = 0x01;
+      if (i8080.f & 0x02) {
+        var subtemp = i8080.a - add;
+        var lookup = ((i8080.a & 0x88) >> 3) | ((add & 0x88) >> 2) | ((subtemp & 0x88) >> 1);
+        i8080.a = subtemp & 0xff;
+        i8080.f = (subtemp & 0x100 ? 0x01 : 0) | 0x02 | 
+                  halfcarry_sub_table[lookup & 0x07] | 
+                  overflow_sub_table[lookup >> 4] | 
+                  sz53_table[i8080.a];
+      } else {
+        var addtemp = i8080.a + add;
+        var lookup = ((i8080.a & 0x88) >> 3) | ((add & 0x88) >> 2) | ((addtemp & 0x88) >> 1);
+        i8080.a = addtemp & 0xff;
+        i8080.f = (addtemp & 0x100 ? 0x01 : 0) | 
+                  halfcarry_add_table[lookup & 0x07] | 
+                  overflow_add_table[lookup >> 4] | 
+                  sz53_table[i8080.a];
+      }
+      break;
+
+    case 0x29:  // dad hl
+      i8080.tstates += 10;
+      var add16temp = (i8080.l | (i8080.h << 8)) + (i8080.l | (i8080.h << 8));
+      var lookup = (((i8080.l | (i8080.h << 8)) & 0x0800) >> 11) | 
+                   (((i8080.l | (i8080.h << 8)) & 0x0800) >> 10) |
+                   ((add16temp & 0x0800) >> 9);
+      i8080.h = (add16temp >> 8) & 0xff; 
+      i8080.l = add16temp & 0xff;  
+      i8080.f = (i8080.f & 0xfe) | (add16temp & 0x10000 ? 0x01 : 0);
+      break;
+
+    case 0x2a:  // ldhl addr
+      i8080.tstates += 16;
+      var ldtemp = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      ldtemp |= memory_read_byte(i8080.pc++) << 8; i8080.pc &= 0xffff; 
+      i8080.l = memory_read_byte(ldtemp++); ldtemp &= 0xffff; 
+      i8080.h =memory_read_byte(ldtemp);
+      break;
+
+    case 0x2b:  // dcx h
+      i8080.tstates += 5;
+      var wordtemp = ((i8080.l | (i8080.h << 8)) - 1) & 0xffff;
+      i8080.h = wordtemp >> 8;
+      i8080.l = wordtemp & 0xff;
+      break;
+
+    case 0x2c:  // inr l
+      i8080.tstates += 5;
+      i8080.l = (i8080.l + 1) & 0xff;
+      i8080.f = (i8080.f & 0x01) | (i8080.d & 0x0f ? 0 : 0x10) | sz53p_table[i8080.l];
+      break;
+
+    case 0x2d:  // dcr l
+      i8080.tstates += 5;
+      i8080.f = (i8080.f & 0x01) | (i8080.l & 0x0f ? 0 : 0x10) | 0x02;
+      i8080.l = (i8080.l - 1) & 0xff;
+      i8080.f |= sz53p_table[i8080.l];
+      break;
+
+    case 0x2e:  // mvi l, data8
+      i8080.tstates += 7; 
+      i8080.l = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      break;
+
+    case 0x2f:  // cma
+      i8080.tstates += 4;
+      i8080.a ^= 0xff;
+      i8080.f = (i8080.f & (0x01 | 0x04 | 0x40 | 0x80)) | (i8080.a & (0x08 | 0x20)) | (0x02 | 0x10);
+      break;
+
+    case 0x31:  // lxi sp, data16
+      i8080.tstates += 10;
+      var splow = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      var sphigh=memory_read_byte(i8080.pc++); i8080.sp = splow | (sphigh << 8);
+      i8080.pc &= 0xffff;
+      break;
+
+    case 0x32:  // sta addr
+      i8080.tstates += 13;
+      var wordtemp = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      wordtemp |= memory_read_byte(i8080.pc++) << 8; i8080.pc &= 0xffff;
+      memory_write_byte(wordtemp, i8080.a);
+      break;
+
+    case 0x33:  // inx sp
+      i8080.tstates += 5;
+      i8080.sp = (i8080.sp + 1) & 0xffff;
+      break;
+
+    case 0x34:  // inr m
+      i8080.tstates += 10;
+      var bytetemp = memory_read_byte(i8080.l | (i8080.h << 8));
+      bytetemp = (bytetemp + 1) & 0xff;
+      i8080.f = (i8080.f & 0x01) | (bytetemp & 0x0f ? 0 : 0x10) | sz53p_table[bytetemp];
+      memory_write_byte((i8080.l | (i8080.h << 8)), bytetemp);
+      break;
+
+    case 0x35:  // dcr m
+      i8080.tstates += 10;
+      var bytetemp = memory_read_byte(i8080.l | (i8080.h << 8));
+      i8080.f = (i8080.f & 0x01) | (bytetemp & 0x0f ? 0 : 0x10) | 0x02;
+      bytetemp = (bytetemp - 1) & 0xff;
+      i8080.f |= sz53p_table[bytetemp];
+      memory_write_byte((i8080.l | (i8080.h << 8)), bytetemp);
+      break;
+
+    case 0x36:  // mvi m, data8
+      i8080.tstates += 10;
+      memory_write_byte((i8080.l | (i8080.h << 8)), memory_read_byte(i8080.pc++));
+      i8080.pc &= 0xffff;
+      break;
+
+    case 0x37:  // stc
+      i8080.tstates += 4;
+      i8080.f = (i8080.f & (0x04 | 0x40 | 0x80)) | (i8080.a & (0x08 | 0x20)) | 0x01;
+      break;
+
+    case 0x39:  // dad sp
+      i8080.tstates += 10;
+      var add16temp = (i8080.l | (i8080.h << 8)) + i8080.sp; 
+      var lookup = (((i8080.l | (i8080.h << 8)) & 0x0800) >> 11) | 
+                   ((i8080.sp & 0x0800) >> 10) | ((add16temp & 0x0800) >> 9);
+      i8080.h = (add16temp >> 8) & 0xff;
+      i8080.l = add16temp & 0xff;
+      i8080.f = (i8080.f & 0xfe) | (add16temp & 0x10000 ? 0x01 : 0);
+      break;
+
+    case 0x3a:  // lda addr
+      i8080.tstates += 13;
+      var wordtemp = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      wordtemp |= memory_read_byte(i8080.pc++) << 8; i8080.pc &= 0xffff;
+      i8080.a = memory_read_byte(wordtemp);
+      break;
+
+    case 0x3b:  // dcx sp
+      i8080.tstates += 5;
+      i8080.sp = (i8080.sp - 1) & 0xffff;
+      break;
+
+    case 0x3c:  // inr a
+      i8080.tstates += 5;
+      i8080.a = (i8080.a + 1) & 0xff;
+      i8080.f = (i8080.f & 0x01) | (i8080.a & 0x0f ? 0 : 0x10) | sz53p_table[i8080.a];
+      break;
+
+    case 0x3d:  // dcr a
+      i8080.tstates += 5;
+      i8080.f = (i8080.f & 0x01) | (i8080.a & 0x0f ? 0 : 0x10) | 0x02;
+      i8080.a = (i8080.a - 1) & 0xff;
+      i8080.f |= sz53p_table[i8080.a];
+      break;
+
+    case 0x3e:  // mvi a, data8
+      i8080.tstates += 7;
+      i8080.a = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      break;
+
+    case 0x3f:  // cmc
+      i8080.tstates += 4;
+      i8080.f = (i8080.f & (0x04 | 0x40 | 0x80)) |
+                ((i8080.f & 0x01) ? 0x10 : 0x01) | (i8080.a & (0x08 | 0x20));
+      break;
+
+    case 0x40:  // mov b, b
+      i8080.tstates += 5;
+      break;
+
+    case 0x41:  // mov b, c
+      i8080.tstates += 5;
+      i8080.b = i8080.c;
+      break;
+
+    case 0x42:  // mov b, d
+      i8080.tstates += 5;
+      i8080.b = i8080.d;
+      break;
+
+    case 0x43: // mov b, e
+      i8080.tstates += 5;
+      i8080.b = i8080.e;
+      break;
+
+    case 0x44:  // mov b, h
+      i8080.tstates += 5;
+      i8080.b = i8080.h;
+      break;
+
+    case 0x45:  // mov b, l
+      i8080.tstates += 5;
+      i8080.b = i8080.l;
+      break;
+
+    case 0x46:  // mov b, m
+      i8080.tstates += 7;
+      i8080.b = memory_read_byte(i8080.l | (i8080.h << 8));
+      break;
+
+    case 0x47:  // mov b, a
+      i8080.tstates += 5;
+      i8080.b=i8080.a;
+      break;
+
+    case 0x48:  // mov c, b
+      i8080.tstates += 5;
+      i8080.c = i8080.b;
+      break;
+
+    case 0x49:  // mov c, c
+      i8080.tstates += 5;
+      break;
+
+    case 0x4a:  // mov c, d
+      i8080.tstates += 5;
+      i8080.c = i8080.d;
+      break;
+
+    case 0x4b:  // mov c, e
+      i8080.tstates += 5;
+      i8080.c = i8080.e;
+      break;
+
+    case 0x4c:  // mov c, h
+      i8080.tstates += 5;
+      i8080.c = i8080.h;
+      break;
+
+    case 0x4d:  // mov c, l
+      i8080.tstates += 5;
+      i8080.c = i8080.l;
+      break;
+
+    case 0x4e:  // mov c, m
+      i8080.tstates += 7;
+      i8080.c = memory_read_byte(i8080.l | (i8080.h << 8));
+      break;
+
+    case 0x4f:  // mov c, a
+      i8080.tstates += 5;
+      i8080.c=i8080.a;
+      break;
+
+    case 0x50:  // mov d, b	
+      i8080.tstates += 5;
+      i8080.d = i8080.b;
+      break;
+
+    case 0x51:  // mov d, c
+      i8080.tstates += 5;
+      i8080.d = i8080.c;
+      break;
+
+    case 0x52:  // mov d, d
+      i8080.tstates += 5;
+      break;
+
+    case 0x53:  // mov d, e
+      i8080.tstates += 5;
+      i8080.d = i8080.e;
+      break;
+
+    case 0x54:  // mov d, h
+      i8080.tstates += 5;
+      i8080.d = i8080.h;
+      break;
+
+    case 0x55:  // mov d, l
+      i8080.tstates += 5;
+      i8080.d = i8080.l;
+      break;
+
+    case 0x56:  // mov d, m
+      i8080.tstates += 7;
+      i8080.d = memory_read_byte(i8080.l | (i8080.h << 8));
+      break;
+
+    case 0x57:  // mov d, a
+      i8080.tstates += 5;
+      i8080.d = i8080.a;
+      break;
+
+    case 0x58:  // mov e, d
+      i8080.tstates += 5;
+      i8080.e = i8080.b;
+      break;
+
+    case 0x59:  // mov e, c
+      i8080.tstates += 5;
+      i8080.e = i8080.c;
+      break;
+
+    case 0x5a:  // mov e, d
+      i8080.tstates += 5;
+      i8080.e=i8080.d;
+      break;
+
+    case 0x5b:  // mov e, e
+      i8080.tstates += 5;
+      break;
+
+    case 0x5c:  // mov e, h
+      i8080.tstates += 5;
+      i8080.e = i8080.h;
+      break;
+
+    case 0x5d:  // mov e, l
+      i8080.tstates += 5;
+      i8080.e = i8080.l;
+      break;
+
+    case 0x5e:  // mov e, m
+      i8080.tstates += 7;
+      i8080.e = memory_read_byte(i8080.l | (i8080.h << 8));
+      break;
+
+    case 0x5f:  // mov e, a
+      i8080.tstates += 5;
+      i8080.e = i8080.a;
+      break;
+
+    case 0x60:  // mov h, b
+      i8080.tstates += 5;
+      i8080.h = i8080.b;
+      break;
+
+    case 0x61:  // mov h, c
+      i8080.tstates += 5;
+      i8080.h = i8080.c;
+      break;
+
+    case 0x62:  // mov h, d
+      i8080.tstates += 5;
+      i8080.h = i8080.d;
+      break;
+
+    case 0x63:  // mov h, e
+      i8080.h = i8080.e;
+      i8080.tstates += 5;
+      break;
+
+    case 0x64:  // mov h, h
+      i8080.tstates += 5;
+      break;
+
+    case 0x65:  // mov h, l
+      i8080.tstates += 5;
+      i8080.h = i8080.l;
+      break;
+
+    case 0x66:  // mov h, m
+      i8080.tstates += 7;
+      i8080.h = memory_read_byte(i8080.l | (i8080.h << 8));
+      break;
+
+    case 0x67:  // mov h, a
+      i8080.tstates += 5;
+      i8080.h = i8080.a;
+      break;
+
+    case 0x68:  // mov l, b
+      i8080.tstates += 5;
+      i8080.l = i8080.b;
+      break;
+
+    case 0x69:  // mov l, c
+      i8080.tstates += 5;
+      i8080.l = i8080.c;
+      break;
+
+    case 0x6a:  // mov l, d
+      i8080.tstates += 5;
+      i8080.l = i8080.d;
+      break;
+
+    case 0x6b:  // mov l, e
+      i8080.tstates += 5;
+      i8080.l = i8080.e;
+      break;
+
+    case 0x6c:  // mov l, h
+      i8080.tstates += 5;
+      i8080.l = i8080.h;
+      break;
+
+    case 0x6d:  // mov l, l
+      i8080.tstates += 5;
+      break;
+
+    case 0x6e:  // mov l, m
+      i8080.tstates += 7;
+      i8080.l = memory_read_byte(i8080.l | (i8080.h << 8));
+      break;
+
+    case 0x6f:  // mov l, a
+      i8080.tstates += 5;
+      i8080.l=i8080.a;
+      break;
+
+    case 0x70:  // mov m, b
+      i8080.tstates += 7;
+      memory_write_byte((i8080.l | (i8080.h << 8)),i8080.b);
+      break;
+
+    case 0x71:  // mov m, c
+      i8080.tstates += 7;
+      memory_write_byte((i8080.l | (i8080.h << 8)),i8080.c);
+      break;
+
+    case 0x72:  // mov m, d
+      i8080.tstates += 7;
+      memory_write_byte((i8080.l | (i8080.h << 8)),i8080.d);
+      break;
+
+    case 0x73:  // mov m, e
+      i8080.tstates += 7;
+      memory_write_byte((i8080.l | (i8080.h << 8)),i8080.e);
+      break;
+
+    case 0x74:  // mov m, h
+      i8080.tstates += 7;
+      memory_write_byte((i8080.l | (i8080.h << 8)),i8080.h);
+      break;
+
+    case 0x75:  // mov m, l
+      i8080.tstates += 7;
+      memory_write_byte((i8080.l | (i8080.h << 8)),i8080.l);
+      break;
+
+    case 0x76:  // hlt
+      i8080.tstates += 4;
+      i8080.halted = 1;
+      i8080.pc--; i8080.pc &= 0xffff;
+      break;
+
+    case 0x77:  // mov m, a
+      i8080.tstates += 7;
+      memory_write_byte((i8080.l | (i8080.h << 8)),i8080.a);
+      break;
+
+    case 0x78:  // mov a, b
+      i8080.tstates += 5;
+      i8080.a = i8080.b;
+      break;
+
+    case 0x79:  // mov a, c
+      i8080.tstates += 5;
+      i8080.a = i8080.c;
+      break;
+
+    case 0x7a:  // mov a, d
+      i8080.tstates += 5;
+      i8080.a = i8080.d;
+      break;
+
+    case 0x7b:  // mov a, e
+      i8080.tstates += 5;
+      i8080.a = i8080.e;
+      break;
+
+    case 0x7c:  // mov a, h
+      i8080.tstates += 5;
+      i8080.a = i8080.h;
+      break;
+
+    case 0x7d:  // mov a, l
+      i8080.tstates += 5;
+      i8080.a = i8080.l;
+      break;
+
+    case 0x7e:  // mov a, m
+      i8080.tstates += 7;
+      i8080.a=memory_read_byte((i8080.l | (i8080.h << 8)));
+      break;
+
+    case 0x7f:  // mov m, m
+      i8080.tstates += 7;
+      break;
+
+    case 0x80:  // adc b
+      i8080.tstates += 4;
+      var addtemp = i8080.a + i8080.b;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.b & 0x88) >> 2) | ((addtemp & 0x88) >> 1);
+      i8080.a = addtemp & 0xff;
+      i8080.f = (addtemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x81:  // add c
+      i8080.tstates += 4;
+      var addtemp = i8080.a + i8080.c;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.c & 0x88) >> 2) | ((addtemp & 0x88) >> 1);
+      i8080.a = addtemp & 0xff;
+      i8080.f = (addtemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x82:  // add d
+      i8080.tstates += 4;
+      var addtemp = i8080.a + i8080.d;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.d & 0x88) >> 2) | ((addtemp & 0x88) >> 1);
+      i8080.a = addtemp & 0xff;
+      i8080.f = (addtemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x83:  // add e
+      i8080.tstates += 4;
+      var addtemp = i8080.a + i8080.e;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.e & 0x88) >> 2) | ((addtemp & 0x88) >> 1);
+      i8080.a = addtemp & 0xff;
+      i8080.f = (addtemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x84:  // add h
+      i8080.tstates += 4;
+      var addtemp = i8080.a + i8080.h;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.h & 0x88) >> 2) | ((addtemp & 0x88) >> 1);
+      i8080.a = addtemp & 0xff;
+      i8080.f = (addtemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x85:  // add l
+      i8080.tstates += 4;
+      var addtemp = i8080.a + i8080.l;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.l & 0x88) >> 2) | ((addtemp & 0x88) >> 1);
+      i8080.a = addtemp & 0xff;
+      i8080.f = (addtemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x86:  // add m
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte(i8080.l | (i8080.h << 8));
+      var addtemp = i8080.a + bytetemp;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((bytetemp & 0x88) >> 2) | ((addtemp & 0x88) >> 1);
+      i8080.a = addtemp & 0xff;
+      i8080.f = (addtemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x87:  // add a
+      i8080.tstates += 4;
+      var addtemp = i8080.a + i8080.a;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.a & 0x88) >> 2) | ((addtemp & 0x88) >> 1);
+      i8080.a = addtemp & 0xff;
+      i8080.f = (addtemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x88:  // adc b
+      i8080.tstates += 4;
+      var adctemp = i8080.a + i8080.b + (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.b & 0x88) >> 2) | ((adctemp & 0x88) >> 1);
+      i8080.a = adctemp & 0xff;
+      i8080.f = (adctemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x89:  // adc c
+      i8080.tstates += 4;
+      var adctemp = i8080.a + i8080.c + (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.c & 0x88) >> 2) | ((adctemp & 0x88) >> 1);
+      i8080.a = adctemp & 0xff;
+      i8080.f = (adctemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x8a:  // adc d
+      i8080.tstates += 4;
+      var adctemp = i8080.a + i8080.d + (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.d & 0x88) >> 2) | ((adctemp & 0x88) >> 1);
+      i8080.a = adctemp & 0xff;
+      i8080.f = (adctemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x8b:  // adc e
+      i8080.tstates += 4;
+      var adctemp = i8080.a + i8080.e + (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.e & 0x88) >> 2) | ((adctemp & 0x88) >> 1);
+      i8080.a = adctemp & 0xff;
+      i8080.f = (adctemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x8c:  // adc h
+      i8080.tstates += 4;
+      var adctemp = i8080.a + i8080.h + (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.h & 0x88) >> 2) | ((adctemp & 0x88) >> 1);
+      i8080.a = adctemp & 0xff;
+      i8080.f = (adctemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x8d:  // adc l
+      i8080.tstates += 4;
+      var adctemp = i8080.a + i8080.l + (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.l & 0x88) >> 2) | ((adctemp & 0x88) >> 1);
+      i8080.a = adctemp & 0xff;
+      i8080.f = (adctemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x8e:  // adc m
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte(i8080.l | (i8080.h << 8));
+      var adctemp = i8080.a + bytetemp + (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((bytetemp & 0x88) >> 2) | ((adctemp & 0x88) >> 1);
+      i8080.a = adctemp & 0xff;
+      i8080.f = (adctemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x8f:  // adc a
+      i8080.tstates += 4;
+      var adctemp = i8080.a + i8080.a + (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.a & 0x88) >> 2) | ((adctemp & 0x88) >> 1);
+      i8080.a = adctemp & 0xff;
+      i8080.f = (adctemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x90:  // sub b
+      i8080.tstates += 4;
+      var subtemp = i8080.a - i8080.b;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.b & 0x88) >> 2) | ((subtemp & 0x88) >> 1);
+      i8080.a = subtemp & 0xff;
+      i8080.f = (subtemp & 0x100 ? 0x01 : 0 ) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x91:  // sub c
+      i8080.tstates += 4;
+      var subtemp = i8080.a - i8080.c;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.c & 0x88) >> 2) | ((subtemp & 0x88) >> 1);
+      i8080.a = subtemp & 0xff;
+      i8080.f = (subtemp & 0x100 ? 0x01 : 0 ) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x92:  // sub d
+      i8080.tstates += 4;
+      var subtemp = i8080.a - i8080.d;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.d & 0x88) >> 2) | ((subtemp & 0x88) >> 1);
+      i8080.a = subtemp & 0xff;
+      i8080.f = (subtemp & 0x100 ? 0x01 : 0 ) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x93: // sub e
+      i8080.tstates += 4;
+      var subtemp = i8080.a - i8080.e;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.e & 0x88) >> 2) | ((subtemp & 0x88) >> 1);
+      i8080.a = subtemp & 0xff;
+      i8080.f = (subtemp & 0x100 ? 0x01 : 0 ) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x94:  // sub h
+      i8080.tstates += 4;
+      var subtemp = i8080.a - i8080.h;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.h & 0x88) >> 2) | ((subtemp & 0x88) >> 1);
+      i8080.a = subtemp & 0xff;
+      i8080.f = (subtemp & 0x100 ? 0x01 : 0 ) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x95:  // sub l
+      i8080.tstates += 4;
+      var subtemp = i8080.a - i8080.l;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.l & 0x88) >> 2) | ((subtemp & 0x88) >> 1);
+      i8080.a = subtemp & 0xff;
+      i8080.f = (subtemp & 0x100 ? 0x01 : 0 ) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x96:  // sub m
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte(i8080.l | (i8080.h << 8));
+      var subtemp = i8080.a - bytetemp;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((bytetemp & 0x88) >> 2) | ((subtemp & 0x88) >> 1);
+      i8080.a = subtemp & 0xff;
+      i8080.f = (subtemp & 0x100 ? 0x01 : 0) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x97:  // sub a, a
+      i8080.tstates += 4;
+      var subtemp = i8080.a - i8080.a;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.a & 0x88) >> 2) | ((subtemp & 0x88) >> 1);
+      i8080.a = subtemp & 0xff;
+      i8080.f = (subtemp & 0x100 ? 0x01 : 0 ) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0x98:  // sbb b
+      i8080.tstates += 4;
+      var sbctemp = i8080.a - i8080.b - (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.b & 0x88) >> 2) | ((sbctemp & 0x88) >> 1);
+      i8080.a = sbctemp & 0xff;
+      i8080.f = (sbctemp & 0x100 ? 0x01 : 0) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] |  sz53_table[i8080.a];
+      break;
+
+    case 0x99:  // sbb c
+      i8080.tstates += 4;
+      var sbctemp = i8080.a - i8080.c - (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.c & 0x88) >> 2) | ((sbctemp & 0x88) >> 1);
+      i8080.a = sbctemp & 0xff;
+      i8080.f = (sbctemp & 0x100 ? 0x01 : 0) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] |  sz53_table[i8080.a];
+      break;
+
+    case 0x9a:  // sbb d
+      i8080.tstates += 4;
+      var sbctemp = i8080.a - i8080.d - (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.d & 0x88) >> 2) | ((sbctemp & 0x88) >> 1);
+      i8080.a = sbctemp & 0xff;
+      i8080.f = (sbctemp & 0x100 ? 0x01 : 0) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] |  sz53_table[i8080.a];
+      break;
+
+    case 0x9b:  // sbb e
+      i8080.tstates += 4;
+      var sbctemp = i8080.a - i8080.e - (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.e & 0x88) >> 2) | ((sbctemp & 0x88) >> 1);
+      i8080.a = sbctemp & 0xff;
+      i8080.f = (sbctemp & 0x100 ? 0x01 : 0) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] |  sz53_table[i8080.a];
+      break;
+
+    case 0x9c:  // sbb h
+      i8080.tstates += 4;
+      var sbctemp = i8080.a - i8080.h - (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.h & 0x88) >> 2) | ((sbctemp & 0x88) >> 1);
+      i8080.a = sbctemp & 0xff;
+      i8080.f = (sbctemp & 0x100 ? 0x01 : 0) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] |  sz53_table[i8080.a];
+      break;
+
+    case 0x9d:  // sbb l
+      i8080.tstates += 4;
+      var sbctemp = i8080.a - i8080.l - (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.l & 0x88) >> 2) | ((sbctemp & 0x88) >> 1);
+      i8080.a = sbctemp & 0xff;
+      i8080.f = (sbctemp & 0x100 ? 0x01 : 0) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] |  sz53_table[i8080.a];
+      break;
+
+    case 0x9e:  // sbb m
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte((i8080.l | (i8080.h << 8)));
+      var sbctemp = i8080.a - bytetemp - (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3 ) | ((bytetemp & 0x88) >> 2) | ((sbctemp & 0x88) >> 1);
+      i8080.a = sbctemp & 0xff;  
+      i8080.f = (sbctemp & 0x100 ? 0x01 : 0) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] |  sz53_table[i8080.a];
+      break;
+
+    case 0x9f:  // sbb a
+      i8080.tstates += 4;
+      var sbctemp = i8080.a - i8080.a - (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.a & 0x88) >> 2) | ((sbctemp & 0x88) >> 1);
+      i8080.a = sbctemp & 0xff;
+      i8080.f = (sbctemp & 0x100 ? 0x01 : 0) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] |  sz53_table[i8080.a];
+      break;
+
+    case 0xa0:  // ana b
+      i8080.tstates += 4;
+      i8080.a &= i8080.b;
+      i8080.f = 0x10 | sz53p_table[i8080.a];
+      break;
+
+    case 0xa1:  // ana c
+      i8080.tstates += 4;
+      i8080.a &= i8080.c;
+      i8080.f = 0x10 | sz53p_table[i8080.a];
+      break;
+
+    case 0xa2:  // ana d
+      i8080.tstates += 4;
+      i8080.a &= i8080.d;
+      i8080.f = 0x10 | sz53p_table[i8080.a];
+      break;
+
+    case 0xa3:  // ana e
+      i8080.tstates += 4;
+      i8080.a &= i8080.e;
+      i8080.f = 0x10 | sz53p_table[i8080.a];
+      break;
+
+    case 0xa4:  // ana h
+      i8080.tstates += 4;
+      i8080.a &= i8080.h;
+      i8080.f = 0x10 | sz53p_table[i8080.a];
+      break;
+
+    case 0xa5:  // ana l
+      i8080.tstates += 4;
+      i8080.a &= i8080.l;
+      i8080.f = 0x10 | sz53p_table[i8080.a];
+      break;
+
+    case 0xa6: // ana m
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte((i8080.l | (i8080.h << 8)));
+      i8080.a &= bytetemp;
+      i8080.f = 0x10 | sz53p_table[i8080.a];
+      break;
+
+    case 0xa7:  // ana a
+      i8080.tstates += 4;
+      i8080.a &= i8080.a;
+      i8080.f = 0x10 | sz53p_table[i8080.a];
+      break;
+      break;
+
+    case 0xa8:  // xra b
+      i8080.tstates += 4;
+      i8080.a ^= i8080.b;
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xa9:  // xra c
+      i8080.tstates += 4;
+      i8080.a ^= i8080.c;
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xaa:  // xra d
+      i8080.tstates += 4;
+      i8080.a ^= i8080.d;
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xab:  // xra e
+      i8080.tstates += 4;
+      i8080.a ^= i8080.e;
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xac:  // xra h
+      i8080.tstates += 4;
+      i8080.a ^= i8080.h;
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xad:  // xra l
+      i8080.tstates += 4;
+      i8080.a ^= i8080.l;
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xae:  // xra m
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte(i8080.l | (i8080.h << 8));
+      i8080.a ^= bytetemp;
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xaf:  // xra a
+      i8080.tstates += 4;
+      i8080.a ^= i8080.a;
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xb0: // ora b
+      i8080.tstates += 4;
+      i8080.a |= i8080.b; 
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xb1: // ora c
+      i8080.tstates += 4;
+      i8080.a |= i8080.c; 
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xb2: // ora d
+      i8080.tstates += 4;
+      i8080.a |= i8080.d; 
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xb3: // ora e
+      i8080.tstates += 4;
+      i8080.a |= i8080.e; 
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xb4: // ora h
+      i8080.tstates += 4;
+      i8080.a |= i8080.h; 
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xb5: // ora l
+      i8080.tstates += 4;
+      i8080.a |= i8080.l; 
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xb6: // ora m
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte(i8080.l | (i8080.h << 8));
+      i8080.a |= bytetemp;
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xb7:  // ora a
+      i8080.tstates += 4;
+      i8080.a |= i8080.a; 
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xb8:  // cmp b
+      i8080.tstates += 4;
+      var cptemp = i8080.a - i8080.b;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.b & 0x88) >> 2) | ((cptemp & 0x88) >> 1);
+      i8080.f = (cptemp & 0x100 ? 0x01 : (cptemp ? 0 : 0x40)) | 0x02 | 
+                halfcarry_sub_table[lookup & 0x07] | overflow_sub_table[lookup >> 4] | 
+                (i8080.b & (0x08 | 0x20)) | (cptemp & 0x80);
+      break;
+
+    case 0xb9:  // cmp c
+      i8080.tstates += 4;
+      var cptemp = i8080.a - i8080.c;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.c & 0x88) >> 2) | ((cptemp & 0x88) >> 1);
+      i8080.f = (cptemp & 0x100 ? 0x01 : (cptemp ? 0 : 0x40)) | 0x02 | 
+                halfcarry_sub_table[lookup & 0x07] | overflow_sub_table[lookup >> 4] | 
+                (i8080.b & (0x08 | 0x20)) | (cptemp & 0x80);
+      break;
+
+    case 0xba:  // cmp d
+      i8080.tstates += 4;
+      var cptemp = i8080.a - i8080.d;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.d & 0x88) >> 2) | ((cptemp & 0x88) >> 1);
+      i8080.f = (cptemp & 0x100 ? 0x01 : (cptemp ? 0 : 0x40)) | 0x02 | 
+                halfcarry_sub_table[lookup & 0x07] | overflow_sub_table[lookup >> 4] | 
+                (i8080.b & (0x08 | 0x20)) | (cptemp & 0x80);
+      break;
+
+    case 0xbb:  // cmp e
+      i8080.tstates += 4;
+      var cptemp = i8080.a - i8080.e;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.e & 0x88) >> 2) | ((cptemp & 0x88) >> 1);
+      i8080.f = (cptemp & 0x100 ? 0x01 : (cptemp ? 0 : 0x40)) | 0x02 | 
+                halfcarry_sub_table[lookup & 0x07] | overflow_sub_table[lookup >> 4] | 
+                (i8080.b & (0x08 | 0x20)) | (cptemp & 0x80);
+      break;
+
+    case 0xbc:  // cmp h
+      i8080.tstates += 4;
+      var cptemp = i8080.a - i8080.h;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.h & 0x88) >> 2) | ((cptemp & 0x88) >> 1);
+      i8080.f = (cptemp & 0x100 ? 0x01 : (cptemp ? 0 : 0x40)) | 0x02 | 
+                halfcarry_sub_table[lookup & 0x07] | overflow_sub_table[lookup >> 4] | 
+                (i8080.b & (0x08 | 0x20)) | (cptemp & 0x80);
+      break;
+
+    case 0xbd:  // cmp l
+      i8080.tstates += 4;
+      var cptemp = i8080.a - i8080.l;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.l & 0x88) >> 2) | ((cptemp & 0x88) >> 1);
+      i8080.f = (cptemp & 0x100 ? 0x01 : (cptemp ? 0 : 0x40)) | 0x02 | 
+                halfcarry_sub_table[lookup & 0x07] | overflow_sub_table[lookup >> 4] | 
+                (i8080.b & (0x08 | 0x20)) | (cptemp & 0x80);
+      break;
+
+    case 0xbe:  // cmp m
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte(i8080.l | (i8080.h << 8));
+      var cptemp = i8080.a - bytetemp;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((bytetemp & 0x88) >> 2) | ((cptemp & 0x88) >> 1);
+      i8080.f = (cptemp & 0x100 ? 0x01 : ( cptemp ? 0 : 0x40)) | 0x02 | 
+                halfcarry_sub_table[lookup & 0x07] | overflow_sub_table[lookup >> 4] | 
+                (bytetemp & (0x08 | 0x20)) | (cptemp & 0x80);
+      break;
+
+    case 0xbf:  // cmp a
+      i8080.tstates += 4;
+      var cptemp = i8080.a - i8080.a;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((i8080.a & 0x88) >> 2) | ((cptemp & 0x88) >> 1);
+      i8080.f = (cptemp & 0x100 ? 0x01 : (cptemp ? 0 : 0x40)) | 0x02 | 
+                halfcarry_sub_table[lookup & 0x07] | overflow_sub_table[lookup >> 4] | 
+                (i8080.b & (0x08 | 0x20)) | (cptemp & 0x80);
+      break;
+
+    case 0xc0:  // rnz
+      i8080.tstates += 5;
+      if (!(i8080.f & 0x40)) { 
+        i8080.tstates += 11;
+        var lowbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+        var highbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff; 
+        i8080.pc = lowbyte | (highbyte << 8);
+      }
+      break;
+
+    case 0xc1:  // pop b
+      i8080.tstates += 11;
+      i8080.c = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff; 
+      i8080.b = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+      break;
+
+    case 0xc2:  // jnz addr
+      i8080.tstates += 10;
+      if (!(i8080.f & 0x40)) { 
+        var jptemp = i8080.pc;
+        var pcl = memory_read_byte(jptemp++); jptemp &= 0xffff;
+        var pch = memory_read_byte(jptemp);  
+        i8080.pc = pcl | (pch << 8);
+      } else {
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xc3:  // jmp addr
+    case 0xcb:  // undocumented "jmp addr"
+      i8080.tstates += 10;
+      var jptemp = i8080.pc;
+      var pcl = memory_read_byte(jptemp++); jptemp &= 0xffff;
+      var pch = memory_read_byte(jptemp);
+      i8080.pc = pcl | (pch << 8);
+      break;
+
+    case 0xc4:  // cnz addr
+      i8080.tstates += 11;
+      if (!(i8080.f & 0x40)) { 
+        i8080.tstates += 6;
+        var calltempl = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;  
+        var calltemph = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+        i8080.sp--; i8080.sp &= 0xffff; 
+        memory_write_byte(i8080.sp, i8080.pc >> 8);
+        i8080.sp--; i8080.sp &= 0xffff; 
+        memory_write_byte(i8080.sp, i8080.pc & 0xff);
+        var pcl = calltempl;
+        var pch = calltemph;
+        i8080.pc = pcl | (pch << 8);
+      } else {
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xc5:  // push b
+      i8080.tstates += 11;
+      i8080.sp--; i8080.sp &= 0xffff; 
+      memory_write_byte(i8080.sp, i8080.b);
+      i8080.sp--; i8080.sp &= 0xffff;
+      memory_write_byte(i8080.sp, i8080.c);
+      break;
+
+    case 0xc6:  // adi data8
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff; 
+      var addtemp = i8080.a + bytetemp;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((bytetemp & 0x88 ) >> 2) | ((addtemp & 0x88) >> 1);
+      i8080.a = addtemp & 0xff;
+      i8080.f = (addtemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53p_table[i8080.a];
+      break;
+
+    case 0xc7:  // rst 0
+      i8080.tstates += 11;
+      i8080.sp--; i8080.sp &= 0xffff; 
+      memory_write_byte(i8080.sp, i8080.pc >> 8);
+      i8080.sp--; i8080.sp &= 0xffff; 
+      memory_write_byte(i8080.sp, i8080.pc & 0xff);
+      i8080.pc = 0x00;
+      break;
+
+    case 0xc8:  // rz
+      i8080.tstates += 5;
+      if( i8080.f & 0x40 ) { 
+        i8080.tstates += 11;
+        var lowbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+        var highbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+        i8080.pc = lowbyte | (highbyte << 8);
+      }
+      break;
+
+    case 0xc9:  // ret
+    case 0xd9:  // undocumented "ret"
+      i8080.tstates += 10;
+      var lowbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff; 
+      var highbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff; 
+      i8080.pc = lowbyte | (highbyte << 8);
+      break;
+
+    case 0xca:  // jz addr
+      i8080.tstates += 10;
+      if (i8080.f & 0x40) { 
+        var jptemp = i8080.pc;
+        var pcl = memory_read_byte(jptemp++); jptemp &= 0xffff;
+        var pch = memory_read_byte(jptemp); 
+        i8080.pc = pcl | (pch << 8);
+      } else {
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xcc:  // cz addr
+      i8080.tstates += 11;
+      if (i8080.f & 0x40) {
+        i8080.tstates += 6;
+        var calltempl = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+        var calltemph = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+        i8080.sp--; i8080.sp &= 0xffff;
+        memory_write_byte(i8080.sp, i8080.pc >> 8);
+        i8080.sp--; i8080.sp &= 0xffff; 
+        memory_write_byte(i8080.sp, i8080.pc & 0xff);
+        var pcl = calltempl; 
+        var pch = calltemph;
+        i8080.pc = pcl | (pch << 8);
+      } else {
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xcd:  // call addr
+    case 0xdd:  // undocumented "call addr"
+    case 0xed:  // undocumented "call addr"
+    case 0xfd:  // undocumented "call addr"
+      i8080.tstates += 17;
+      var calltempl = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;  
+      var calltemph = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;  
+      i8080.sp--; i8080.sp &= 0xffff; 
+      memory_write_byte(i8080.sp, i8080.pc >> 8);
+      i8080.sp--; i8080.sp &= 0xffff; 
+      memory_write_byte(i8080.sp, i8080.pc & 0xff);
+      var pcl = calltempl;
+      var pch = calltemph;
+      i8080.pc = pcl | (pch << 8);
+      break;
+
+    case 0xce:  // aci data8
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      var adctemp = i8080.a + bytetemp + (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((bytetemp & 0x88) >> 2) | ((adctemp & 0x88) >> 1);
+      i8080.a = adctemp & 0xff;
+      i8080.f = (adctemp & 0x100 ? 0x01 : 0) | halfcarry_add_table[lookup & 0x07] | 
+                overflow_add_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0xcf:  // rst 1
+      i8080.tstates += 11;
+      i8080.sp--; i8080.sp &= 0xffff; 
+      memory_write_byte(i8080.sp, i8080.pc >> 8);
+      i8080.sp--; i8080.sp &= 0xffff; 
+      memory_write_byte(i8080.sp, i8080.pc & 0xff);
+      i8080.pc = 0x08;
+      break;
+
+    case 0xd0:  // rnc
+      i8080.tstates += 5;
+      if (!(i8080.f & 0x01)) { 
+        i8080.tstates += 11; 
+        var lowbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+        var highbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+        i8080.pc = lowbyte | (highbyte << 8);
+      }
+      break;
+
+    case 0xd1:  // pop d
+      i8080.tstates += 11;
+      i8080.e = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+      i8080.d = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+      break;
+
+    case 0xd2:  // jnc addr
+      i8080.tstates += 10;
+      if (!(i8080.f & 0x01)) {
+        var jptemp = i8080.pc;
+        var pcl = memory_read_byte(jptemp++); jptemp &= 0xffff;
+        var pch = memory_read_byte(jptemp); 
+        i8080.pc = pcl | (pch << 8);
+      } else {
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xd3:  // out port8
+      i8080.tstates += 10;
+      var outtemp = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      out_port(outtemp, i8080.a);
+      break;
+
+    case 0xd4:  // cnc addr
+      i8080.tstates += 11;
+      if (!(i8080.f & 0x01)) {
+        i8080.tstates += 6;
+        var calltempl = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+        var calltemph = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+        i8080.sp--; i8080.sp &= 0xffff;
+        memory_write_byte(i8080.sp, i8080.pc >> 8);
+        i8080.sp--; i8080.sp &= 0xffff;
+        memory_write_byte(i8080.sp, i8080.pc & 0xff);
+        var pcl = calltempl; 
+        var pch = calltemph;
+        i8080.pc = pcl | (pch << 8);
+      } else {
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xd5:  // push d
+      i8080.tstates += 11;
+      i8080.sp--; i8080.sp &= 0xffff;
+      memory_write_byte(i8080.sp, i8080.d);
+      i8080.sp--; i8080.sp &= 0xffff;
+      memory_write_byte(i8080.sp, i8080.e);
+      break;
+
+    case 0xd6:  // sui data8
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      var subtemp = i8080.a - bytetemp;
+      var lookup = ((i8080.a & 0x88 ) >> 3 ) | ((bytetemp & 0x88) >> 2) | ((subtemp & 0x88 ) >> 1);
+      i8080.a = subtemp & 0xff;
+      i8080.f = (subtemp & 0x100 ? 0x01 : 0) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0xd7:  // rst 2
+      i8080.tstates += 11;
+      i8080.sp--; i8080.sp &= 0xffff;
+      memory_write_byte(i8080.sp, i8080.pc >> 8);
+      i8080.sp--; i8080.sp &= 0xffff;
+      memory_write_byte(i8080.sp, i8080.pc & 0xff);
+      i8080.pc = 0x10;
+      break;
+
+    case 0xd8:  // rc
+      i8080.tstates += 5;
+      if (i8080.f & 0x01) { 
+        i8080.tstates += 11;
+        var lowbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+        var highbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+        i8080.pc = lowbyte | (highbyte << 8);
+      }
+      break;
+
+    case 0xda:  // jc addr
+      i8080.tstates += 10;
+      if (i8080.f & 0x01) {
+        var jptemp = i8080.pc;
+        var pcl = memory_read_byte(jptemp++); jptemp &= 0xffff;
+        var pch = memory_read_byte(jptemp);
+        i8080.pc = pcl | (pch << 8);
+      } else { 
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xdb:  // in port8
+      i8080.tstates += 10;
+      intemp = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      i8080.a = in_port(intemp);
+      break;
+
+    case 0xdc:  // cc addr
+      i8080.tstates += 11;
+      if (i8080.f & 0x01) {
+        i8080.tstates += 6;
+        var calltempl = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+        var calltemph = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+        i8080.sp--; i8080.sp &= 0xffff;
+        memory_write_byte(i8080.sp, i8080.pc >> 8);
+        i8080.sp--; i8080.sp &= 0xffff;
+        memory_write_byte(i8080.sp, i8080.pc & 0xff);
+        var pcl = calltempl;
+        var pch = calltemph;
+        i8080.pc = pcl | (pch << 8);
+      } else {
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xde:  // sbi data8
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      var sbctemp = i8080.a - bytetemp - (i8080.f & 0x01);
+      var lookup = ((i8080.a & 0x88) >> 3) | ((bytetemp & 0x88 ) >> 2) | ((sbctemp & 0x88) >> 1);
+      i8080.a = sbctemp & 0xff;
+      i8080.f = (sbctemp & 0x100 ? 0x01 : 0) | 0x02 | halfcarry_sub_table[lookup & 0x07] | 
+                overflow_sub_table[lookup >> 4] | sz53_table[i8080.a];
+      break;
+
+    case 0xdf:  // rst 3
+      i8080.tstates += 11;
+      i8080.sp--; i8080.sp &= 0xffff;
+      memory_write_byte(i8080.sp, i8080.pc >> 8);
+      i8080.sp--; i8080.sp &= 0xffff;
+      memory_write_byte(i8080.sp, i8080.pc & 0xff);
+      i8080.pc = 0x18;
+      break;
+
+    case 0xe0:  // rpo
+      i8080.tstates += 5;
+      if (!(i8080.f & 0x04)) {
+        i8080.tstates += 11;
+        var lowbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+        var highbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+        i8080.pc = lowbyte | (highbyte << 8);
+      }
+      break;
+
+    case 0xe1:  // pop h
+      i8080.tstates += 11;
+      i8080.l = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+      i8080.h = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+      break;
+
+    case 0xe2:  // jpo addr
+      i8080.tstates += 10;
+      if (!(i8080.f & 0x04)) {
+        var jptemp = i8080.pc;
+        var pcl = memory_read_byte(jptemp++); jptemp &= 0xffff;  
+        var pch = memory_read_byte(jptemp);
+        i8080.pc = pcl | (pch << 8);
+      } else {
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xe3:  // xthl
+      i8080.tstates += 18;
+      var bytetempl = memory_read_byte(i8080.sp);
+      var bytetemph = memory_read_byte((i8080.sp + 1) & 0xffff);
+      memory_write_byte((i8080.sp + 1) & 0xffff, i8080.h);
+      memory_write_byte(i8080.sp, i8080.l);
+      i8080.l = bytetempl;
+      i8080.h = bytetemph;
+      break;
+
+    case 0xe4:  // cpo addr
+      i8080.tstates += 11;
+      if (!(i8080.f & 0x04)) { 
+        i8080.tstates += 6;
+        var calltempl = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+        var calltemph = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+        i8080.sp--; i8080.sp &= 0xffff;
+        memory_write_byte(i8080.sp, i8080.pc >> 8);
+        i8080.sp--; i8080.sp &= 0xffff;
+        memory_write_byte(i8080.sp, i8080.pc & 0xff);
+        var pcl = calltempl;
+        var pch = calltemph;
+        i8080.pc = pcl | (pch << 8);
+      } else {
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xe5:  // push h
+      i8080.tstates += 11;
+      i8080.sp--; i8080.sp &= 0xffff;
+      memory_write_byte(i8080.sp, i8080.h);
+      i8080.sp--; i8080.sp &= 0xffff;
+      memory_write_byte(i8080.sp, i8080.l);
+      break;
+
+    case 0xe6:  // ani data8
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      i8080.a &= bytetemp;
+      i8080.f = 0x10 | sz53p_table[i8080.a];
+      break;
+
+    case 0xe7:  // rst 4
+      i8080.tstates += 11;
+      i8080.sp--; i8080.sp &= 0xffff;
+      memory_write_byte(i8080.sp, i8080.pc >> 8);
+      i8080.sp--; i8080.sp &= 0xffff;
+      memory_write_byte(i8080.sp, i8080.pc & 0xff);
+      i8080.pc = 0x20;
+      break;
+
+    case 0xe8:  // rpe
+      i8080.tstates += 5;
+      if (i8080.f & 0x04) { 
+        i8080.tstates += 11;
+        var lowbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+        var highbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+        i8080.pc = lowbyte | (highbyte << 8);
+      }
+      break;
+
+    case 0xe9:  // pchl
+      i8080.tstates += 5;
+      i8080.pc = i8080.l | (i8080.h << 8);
+      break;
+
+    case 0xea:  // jpe addr
+      i8080.tstates += 10;
+      if (i8080.f & 0x04) { 
+        var jptemp = i8080.pc;
+        var pcl = memory_read_byte(jptemp++); jptemp &= 0xffff;
+        var pch = memory_read_byte(jptemp);
+        i8080.pc = pcl | (pch << 8);
+      } else {
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xeb:  // xchg
+      i8080.tstates += 4;
+      var bytetemp;
+      bytetemp = i8080.d; i8080.d = i8080.h; i8080.h = bytetemp;
+      bytetemp = i8080.e; i8080.e = i8080.l; i8080.l = bytetemp;
+      break;
+
+    case 0xec:  // cpe addr
+      i8080.tstates += 11;
+      if (i8080.f & 0x04) {
+        i8080.tstates += 6;
+        var calltempl = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+        var calltemph = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+        i8080.sp--; i8080.sp &= 0xffff;
+        memory_write_byte(i8080.sp, i8080.pc >> 8);
+        i8080.sp--; i8080.sp &= 0xffff;
+        memory_write_byte(i8080.sp, i8080.pc & 0xff);
+        var pcl = calltempl;
+        var pch=calltemph;
+        i8080.pc = pcl | (pch << 8);
+      } else {
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xee:  // xri data8
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      i8080.a ^= bytetemp;
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xef:  // rst 5
+      i8080.tstates += 11;
+      i8080.sp--; i8080.sp &= 0xffff;
+      memory_write_byte(i8080.sp, i8080.pc >> 8); 
+      i8080.sp--; i8080.sp &= 0xffff; 
+      memory_write_byte(i8080.sp, i8080.pc & 0xff);
+      i8080.pc = 0x28;
+      break;
+
+    case 0xf0:  // rp
+      i8080.tstates += 5;
+      if (!(i8080.f & 0x80)) {
+        i8080.tstates += 11;
+        var lowbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;  
+        var highbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff; 
+        i8080.pc = lowbyte | (highbyte << 8);
+      }
+      break;
+
+    case 0xf1:  // pop psw
+      i8080.tstates += 10;
+      i8080.f = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;  
+      i8080.a = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+      break;
+
+    case 0xf2: // jp addr
+      i8080.tstates += 10;
+      if (!(i8080.f & 0x80)) {
+        var jptemp = i8080.pc;
+        var pcl = memory_read_byte(jptemp++); jptemp &= 0xffff;
+        var pch = memory_read_byte(jptemp);
+        i8080.pc = pcl | (pch << 8);
+      } else {
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xf3:  // di
+      i8080.tstates += 4;
+      i8080.iff = 0;
+      break;
+
+    case 0xf4:  // cp addr
+      i8080.tstates += 11;
+      if (!(i8080.f & 0x80)) { 
+        i8080.tstates += 6;
+        var calltempl = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+        var calltemph = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff; 
+        i8080.sp--; i8080.sp &= 0xffff; 
+        memory_write_byte(i8080.sp, i8080.pc >> 8);
+        i8080.sp--; i8080.sp &= 0xffff; 
+        memory_write_byte(i8080.sp, i8080.pc & 0xff);
+        var pcl = calltempl; 
+        var pch = calltemph;
+        i8080.pc = pcl | (pch << 8);
+      } else { 
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xf5:  // push psw
+      i8080.tstates += 6;
+      i8080.sp--; i8080.sp &= 0xffff; 
+      memory_write_byte(i8080.sp, i8080.a)
+      i8080.sp--; i8080.sp &= 0xffff; 
+      memory_write_byte(i8080.sp, i8080.f);
+      break;
+
+    case 0xf6:  // ori data8
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte(i8080.pc++);
+      i8080.a |= bytetemp;
+      i8080.f = sz53p_table[i8080.a];
+      break;
+
+    case 0xf7:  // rst 6
+      i8080.tstates += 11;
+      i8080.sp--; i8080.sp &= 0xffff; 
+      memory_write_byte(i8080.sp, i8080.pc >> 8);
+      i8080.sp--; i8080.sp &= 0xffff;
+      memory_write_byte(i8080.sp, i8080.pc & 0xff);
+      i8080.pc = 0x30;
+      break;
+
+    case 0xf8:  // rm
+      i8080.tstates += 5;
+      if (i8080.f & 0x80) {
+        i8080.tstates += 11;
+        var lowbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+        var highbyte = memory_read_byte(i8080.sp++); i8080.sp &= 0xffff;
+        i8080.pc = lowbyte | (highbyte << 8);
+      }
+      break;
+
+    case 0xf9:  // sphl
+      i8080.tstates += 5;
+      i8080.sp = i8080.l | (i8080.h << 8);
+      break;
+
+    case 0xfa:  // jm addr
+      i8080.tstates += 10;
+      if (i8080.f & 0x80) { 
+        var jptemp = i8080.pc;
+        var pcl = memory_read_byte(jptemp++); jptemp &= 0xffff;
+        var pch = memory_read_byte(jptemp);
+        i8080.pc = pcl | (pch << 8);
+      } else {
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xfb:  // ei
+      i8080.tstates += 4;
+      i8080.iff = 1;
+      break;
+
+    case 0xfc:  // cm addr
+      i8080.tstates += 11;
+      if (i8080.f & 0x80) {
+        i8080.tstates += 6;
+        var calltempl = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+        var calltemph = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+        i8080.sp--; i8080.sp &= 0xffff;
+        memory_write_byte(i8080.sp, i8080.pc >> 8);
+        i8080.sp--; i8080.sp &= 0xffff;
+        memory_write_byte(i8080.sp, i8080.pc & 0xff);
+        var pcl = calltempl; 
+        var pch = calltemph;
+        i8080.pc = pcl | (pch << 8);
+      } else {
+        i8080.pc += 2;
+      }
+      break;
+
+    case 0xfe:  // cpi data8
+      i8080.tstates += 7;
+      var bytetemp = memory_read_byte(i8080.pc++); i8080.pc &= 0xffff;
+      var cptemp = i8080.a - bytetemp;
+      var lookup = ((i8080.a & 0x88) >> 3) | ((bytetemp & 0x88) >> 2) | ((cptemp & 0x88) >> 1);
+      i8080.f = (cptemp & 0x100 ? 0x01 : (cptemp ? 0 : 0x40)) | 0x02 | 
+                halfcarry_sub_table[lookup & 0x07] | overflow_sub_table[lookup >> 4] |
+                (bytetemp & (0x08 | 0x20)) | (cptemp & 0x80);
+      break;
+
+    case 0xff:  // rst 7
+      i8080.tstates += 11;
+      i8080.sp--; i8080.sp &= 0xffff; 
+      memory_write_byte(i8080.sp, i8080.pc >> 8);
+      i8080.sp--; i8080.sp &= 0xffff; 
+      memory_write_byte(i8080.sp, i8080.pc & 0xff);
+      i8080.pc = 0x38;
+      break;
+    }
+  }
+}
+
+// CPU: END
+
+function run(name) {
+  if (files[name] == null) return;
+  load_file(name);
+  i8080.pc = files[name].entry;
+}
+
+function run_selected() {
+  run(games.options[games.selectedIndex].value);
+}
+
+function load(name) {
+  if (files[name] == null) return;
+  load_file(name);
+  alert("Loaded: " + name + 
+        "(" + files[name].start.toString(16) + "-" +
+        (files[name].start + files[name].image.length - 1).toString(16) + 
+        "), " +
+        "Run by 'G" + files[name].entry.toString(16) + "'");
+}
+
+function load_selected() {
+  load(games.options[games.selectedIndex].value);
+}
+
+function update_speed() {
+  speed = document.getElementById('speed').value;
+}
+
+function switch_panel(name) {
+  document.getElementById("emulator_panel").style.display = 
+    name == "emulator" ? "block" : "none";
+  document.getElementById("assembler_panel").style.display = 
+    name == "assembler" ? "block" : "none";
+  document.getElementById("emulator_button").disabled = name == "emulator";
+  document.getElementById("assembler_button").disabled = name == "assembler";
+}
+
+function toggle_panel(name) {
+  if (name == "disassembler" && !disassembler_available()) {
+    alert("Disassembler is not available.");
+    return;
+  }
+  var name = name + "_panel";
+  document.getElementById(name).style.display = 
+    document.getElementById(name).style.display == "block" ? "none" : "block";
+}
+
+</script>
+
+</head>
+<body onload="main();" bgcolor="#000000" text="#ffffff">
+  <button id="emulator_button" onclick="switch_panel('emulator')"
+    disabled="disabled"
+  >Emulator</button>
+  <button id="assembler_button" onclick="switch_panel('assembler')">Assembler</button>
+  <button id="disassembler_button" onclick="toggle_panel('disassembler')"
+  >Disassembler</button>
+  <div id="emulator_panel">
+    <div style="float: left">
+      <div id="back" style="background: #000; padding: 1px; width: 0px; border: 1px solid #ccc">
+        <canvas id="canvas" width="0" height="0"></canvas>
+      </div>
+      Version 0.6 |
+      <div style="display: none">
+      Screen: <input id="screen_width" value="78" style="width: 2em"> 
+      x       <input id="screen_height" value="30" style="width: 2em">
+      </div>
+      Scale:  <input id="scale_x" value="2" style="width: 2em"> 
+      x       <input id="scale_y" value="2" style="width: 2em">
+      <button onclick="resize_screen()">Resize</button>
+      <button onclick="reset()">Reset</button>
+
+      Speed:  <input id="speed" value="70000" style="width: 4em">
+      <button onclick="update_speed()">Set</button>
+
+      Games: <select id="games"></select>
+      <button onclick="run_selected()">Run</button>
+      <button onclick="load_selected()">Load</button>
+      <!-- // DEBUG
+      <input id="key" value="" style="width: 5em">
+      <input id="keyboard" value="" style="width: 25em">
+      -->
+    </div>
+    <div style="float: left">
+      <div id="disassembler_panel" 
+        style="display: none; background: #000; padding: 1px;  border: 1px solid #ccc"
+      >
+        <iframe name="disassembler_frame" src="i8080disasm.html" width="400" height="600" frameborder="0"></iframe>
+      </div>
+    </div>
+  </div>
+  <table id="assembler_panel" style="display: none" width="100%" height="95%"><tr><td>
+    <iframe id="assembler_frame" src="i8080asm.html" width="100%" height="100%" frameborder="0"></iframe>
+  </tr></td></table>
+</body>
+</html>
