@@ -469,11 +469,6 @@ function main() {
     return;
   }
 
-  if (navigator.userAgent.toLowerCase().indexOf('chrome') < 0) {;
-    document.getElementById('assembler_frame').style.width = (window.innerWidth - 32) + "px";
-    document.getElementById('assembler_frame').style.height = (window.innerHeight - 50) + "px";
-  }
-
   console = document.getElementById('console');
   games = document.getElementById('games');
 
@@ -2461,12 +2456,6 @@ function toggle_panel(name) {
 
 </head>
 <body onload="main();" bgcolor="#000000" text="#ffffff">
-  <button id="emulator_button" onclick="switch_panel('emulator')"
-    disabled="disabled"
-  >Emulator</button>
-  <button id="assembler_button" onclick="switch_panel('assembler')">Assembler</button>
-  <button id="disassembler_button" onclick="toggle_panel('disassembler')"
-  >Disassembler</button>
   <div id="emulator_panel">
     <div style="float: left">
       <div id="back" style="background: #000; padding: 1px; width: 0px; border: 1px solid #ccc">
