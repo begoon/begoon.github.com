@@ -18,8 +18,8 @@
     <link href="http://demin.ws/blog/russian/2012/09/23/pseudo-3d-demo-on-rk86/"/>
     <updated>2012-09-23T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/russian/2012/09/23/pseudo-3d-demo-on-rk86/</id>
-    <content type="html"><![CDATA[<p>Писав пост про досовскую демку команды UCL, я надеялся, что мне подскажут
-ее алгоритм. Увы, сначала были только &ldquo;буу&rdquo; на Хабре, но вот
+    <content type="html"><![CDATA[<p>Писав <a href="http://demin.ws/blog/russian/2012/09/10/united-crackers-league/">пост про досовскую демку команды UCL</a>, я надеялся, что мне подскажут ее алгоритм. Увы,
+сначала были только &ldquo;буу&rdquo; на Хабре, но вот
 <a href="http://sensi.org/~svo/">Вячеслав Славинский</a> подогнал не просто алгоритм, а уже готовое решение.</p>
 
 <p>Основные моменты <a href="https://github.com/begoon/rk86-3d-demo/blob/master/svo/wfloat.pde">реализации</a>:</p>
