@@ -1,0 +1,282 @@
+---
+layout: post
+title: "Реализация простого ядра Forth"
+language: russian
+date: 2012-09-27 21:37
+comments: true
+categories: 
+- fcode
+- forth
+- project
+- russian
+---
+Будучи по натуре, как говорится, a low-level guy, я не мог пропустить Форт по
+жизни. Этот язык занимает интересную нишу: с одной стороны это вроде 
+высокоуровнего ассемблера, позволяющего писать практически на ассемблере, 
+а с другой стороны позволяет быстро строить из примитивов весьма 
+высокоуровневые интерактивные системы, даже с интроспекцией, при этом 
+оставаясь на адекватном уровне эффективности.
+
+Знаю, что С - это начало всех начал, и при правильном использовании можно
+писать очень близко по эффективности к ассемблеру. Но, все же есть еще
+системы, где компилятору С сложно развернуться. Например, захотел я подыскать
+компилятор С для Intel 8080, чтобы замутить небанальную программу для 
+Радио-86РК. Из реально собираемого я нашел только пару наследников 
+знаменитого [Small-C][] -- [smallc-85][] и [smallc-scc3][].
+ 
+Увы, для простейшей программы типа:
+
+    main() {
+      static char a;
+      for (a = 1; a < 10; ++a) {
+         ++a;
+      }
+    }
+
+Генерируется адъ типа:
+
+    ;main() {
+    main:
+    ;  static char a;
+        dseg
+    ?2:	ds	1
+        cseg
+    ;  for (a = 1; a < 10; ++a) {
+        lxi	h,?2
+        push	h
+        lxi	h,1
+        pop	d
+        call	?pchar
+    ?3:
+        lxi	h,?2
+        call	?gchar
+        push	h
+        lxi	h,10
+        pop	d
+        call	?lt
+        mov	a,h
+        ora	l
+        jnz	?5
+        jmp	?6
+    ?4:
+        lxi	h,?2
+        push	h
+        call	?gchar
+        inx	h
+        pop	d
+        call	?pchar
+        jmp	?3
+    ?5:
+    ;     ++a;
+        lxi	h,?2
+        push	h
+        call	?gchar
+        inx	h
+        pop	d
+        call	?pchar
+    ;  }
+        jmp	?4
+    ?6:
+    ;}
+    ?1:
+        ret
+
+[smallc-85]: https://github.com/begoon/smallc-85
+[smallc-scc3]: https://github.com/begoon/smallc-scc3
+[Small-C]: http://en.wikipedia.org/wiki/Small-C
+
+Понятно, что много вопросов к компилятору, но в целом, Intel 8080 не очень
+удобен для компилятора С: деления/умножения нет, косвенной адресации через
+стек тоже нет и т.д.
+
+Ладно, вернемся к Форту. В процессе обдумывания применения Форта для I8080
+я написал удобный макро-ассемблер (но об этом будет отдельный пост) и попутно
+вспомнил об одном своем старом проекте времен Фидо: F-CODE. В качестве
+приема запутывания кода для защиты от отладчика я реализовывал мини-ядро Форта
+с [прямым шитым кодом][Прямой шитый код].
+
+[Прямой шитый код]: http://ru.wikipedia.org/wiki/%D0%A8%D0%B8%D1%82%D1%8B%D0%B9_%D0%BA%D0%BE%D0%B4
+
+"Реализовывал мини-ядро", конечно, звучит, круто, но в реальности 
+интерпретатор шитого кода просто тривиален:
+
+    ; F-Code Address Interpreter
+
+    GetNext$:       cld
+                    mov     si, IP$
+                    lodsw
+                    mov     IP$, si
+                    retn
+
+    CALLR$:         add     RP$, 2
+                    mov     bp, RP$
+                    mov     ax, IP$
+                    mov     [bp], ax
+                    pop     word ptr IP$
+                    next
+
+    RETR$:          mov     bp, RP$
+                    mov     ax, [bp]
+                    mov     IP$, ax
+                    sub     RP$, 2
+                    next
+
+    NEXT$:          call    GetNext$
+                    jmp     ax
+
+    osPush$:        call    GetNext$
+                    push    ax
+                    next
+
+    NEXT            MACRO
+                    jmp     NEXT$
+                    ENDM
+
+Плюс несколько примитивов, реализованных также на ассемблере:
+
+    ; Adc  ( a b -> c isCarry )
+    ; if a+b>FFFF isCarry = FFFF else isCarry=0
+
+    osAdc$:         pop     ax  dx          ; -> a b
+                    add     ax, dx
+                    sbb     dx, dx
+                    push    ax  dx          ; c isCarry ->
+                    NEXT
+
+    ; osSwap ( a b -> b a )
+
+    osSwap$:        pop      ax bx
+                    push     ax bx
+                    NEXT
+
+    ; osRot ( a b c -> b c a )
+
+    osRot$:         pop      ax bx cx
+                    push     bx ax cx
+                    NEXT
+
+    osPut$:         add     RP$, 2
+                    mov     bp, RP$
+                    pop     word ptr [bp]
+                    NEXT
+
+    osGet$:         mov     bp, RP$
+                    push    word ptr [bp]
+                    sub     RP$, 2
+                    NEXT
+
+    osDrop$:        add     sp, 2
+                    NEXT
+
+    ; osNor ( a b -> a NOR b )
+
+    osNor$:         pop     ax bx
+                    or      ax, bx
+                    not     ax
+                    push    ax
+                    NEXT
+
+    osTrap$:        int     3
+                    NEXT
+
+    ; osPeek ( addr -> value )
+
+    osPeek$:        pop     bx
+                    push    word ptr [bx]
+                    NEXT
+
+    ; osPoke ( Value Addr -> )
+
+    osPoke$:        pop     bx              ; -> Value Addr
+                    pop     word ptr [bx]   ; ->
+                    NEXT
+
+И мы имеем полноценную стековую машину, на которой можно программировать.
+Конечно, когда начинаешь диассемблировать шитный код или трассировать, то
+надо думать, а иначе будут видны только бесконечные переходы туда-сюда.
+Желающие могут попробовать поковыряться в файле [fcode.com][]. Правда, это 
+досовский бинарь, и запускать его надо, например, под DOSBox. Программа
+предлагает угадать пароль.
+
+[fcode.com]: https://github.com/begoon/fcode/blob/master/FCODE.COM
+
+Вот, например, код для вычисления CRC на данной стековой машине:
+
+    CalcCRC:        CALLR                 ; ->
+                    ofPush  0             ; CRC
+                    ofPush  0             ; CRC 0
+                    ofPeekb Buffer+1      ; CRC 0 Size
+                    $For                  ; CRC
+                        osI                   ; CRC i
+                        ofPush  Buffer+2      ; CRC i Buffer+2
+                        osAdd                 ; CRC Addr
+                        osPeekb               ; CRC Value
+                        osExch                ; CRC Value*256
+                        $For    0, 8          ; CRC Value
+                            osShl                 ; CRC Value*2 isCarry
+                            osRot                 ; Value*2 isCarry CRC
+                            osSwap                ; Value*2 CRC isCarry
+                            osRcl                 ; Value*2 CRC*2 isCarry
+                            $If <>0               ; Value*2 CRC*2
+                                ofXor 8408h           ; Value*2 CRC*2^Const
+                            $Endif
+                            osSwap                ; CRC*2 Value*2
+                        $Loop                   ; CRC Value*2
+                        osDrop                ; CRC
+                    $Loop                 ; CRC
+                    RETR
+
+Красиво?
+
+В процессе работы над F-CODE родился примитивный препроцессор для ассемблера,
+позволявший писать код типа:
+
+     lea dx, msg2
+     cmp bh, 3
+     $if <>0
+       lea dx, msg1
+     $else
+       hlt
+     $endif
+ 
+     cmp dx, 0C0DEh
+     $if =0
+       lea dx, msg2
+     $endif
+
+     mov cx, 2
+     $Do
+       $Do
+       cmp ax, 1
+       $EndDo =
+       dec cx
+     $EndDo Loop
+
+     Store ds, si, ax
+         $Do
+           cmp al, 1
+           $if <>0
+             $ExitDo
+           $endif
+           Store ax, bx, cx, es, bp
+             ...
+           Restore
+           $ContDo
+         $EndDo Loop
+     Restore
+
+Как и все утилиты во времена ДОС, препроцессор был написан на старом добром
+Турбо Паскале.
+
+Понятно, что проект имеет чисто исторический интерес, хотя ничто не мешает
+реализовать интерпретатор Форта хоть на JavaScript'е, и использовать все
+уже готовые примитивы как есть.
+
+Весь проект F-CODE лежит на GitHub'е -- https://github.com/begoon/fcode.
+Для сборки нужны TASM/TLINK и Турбо Паскаль для препроцессора. Очевидно, что
+надо все делать в ДОСе.
+
+P.S. При всей низкоуровневости, народ пишет на Форте весьма кучерявые 
+программы. Например, [nnbackup][], написан на Форте.
+
+[nnbackup]: http://www.nncron.ru/

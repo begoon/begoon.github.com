@@ -1,0 +1,282 @@
+---
+layout: post
+title: "A micro Forth interpreter"
+language: english
+date: 2012-09-27 21:37
+comments: true
+categories: 
+- english
+- fcode
+- forth
+- project
+---
+Being "a low-level guy" by nature, I couldn't miss the Forth language in life.
+Forth occupies an interesting niche: on one hand it is a high-level assembler,
+allowing to write almost on the assembly language, and on the other hand it
+allows to quickly build sophisticated high-level interactive systems, even
+with introspection but also staying at an adequate level of performance.
+
+I know that C is THE low-level assembler, and when it is used properly
+it generates code very close to the assembly. But nevertheless there are some
+systems still where the C compiler is difficult to implement efficiently.
+For example, I wanted a C compiler for Intel 8080 to write a program for 
+Radio-86RK. So far, I have found only a couple derivatives of the famous 
+[Small-C][] -- [smallc-85][] and [smallc-scc3][] which compile and work.
+
+Unfortunately, even for trivial code:
+ 
+    main() {
+      static char a;
+      for (a = 1; a < 10; ++a) {
+         ++a;
+      }
+    }
+
+It generates the following rubbish:
+
+    ;main() {
+    main:
+    ;  static char a;
+        dseg
+    ?2:	ds	1
+        cseg
+    ;  for (a = 1; a < 10; ++a) {
+        lxi	h,?2
+        push	h
+        lxi	h,1
+        pop	d
+        call	?pchar
+    ?3:
+        lxi	h,?2
+        call	?gchar
+        push	h
+        lxi	h,10
+        pop	d
+        call	?lt
+        mov	a,h
+        ora	l
+        jnz	?5
+        jmp	?6
+    ?4:
+        lxi	h,?2
+        push	h
+        call	?gchar
+        inx	h
+        pop	d
+        call	?pchar
+        jmp	?3
+    ?5:
+    ;     ++a;
+        lxi	h,?2
+        push	h
+        call	?gchar
+        inx	h
+        pop	d
+        call	?pchar
+    ;  }
+        jmp	?4
+    ?6:
+    ;}
+    ?1:
+        ret
+
+[smallc-85]: https://github.com/begoon/smallc-85
+[smallc-scc3]: https://github.com/begoon/smallc-scc3
+[Small-C]: http://en.wikipedia.org/wiki/Small-C
+
+Agreed, there are a lot of questions to the compiler, but in general Intel
+8080 isn't quite friendly for the C compiler: no multiplication and division,
+no indirect addressing on the stack, etc.
+
+Okay, back to Forth. When thinking about Forth for I8080 I wrote a handy 
+macro assembler (it'll be a separate blog post) and along the way remembered
+about my old project back to FidoNet times: F-CODE. To obfuscate the code
+against tracing and disassembling I implemented a micro Forth kernel with
+[direct threading][].
+
+[direct threading]: http://en.wikipedia.org/wiki/Threaded_code
+
+"Implemented a micro Forth kernel" sounds "cool" but in reality the direct
+threading code interpreter is almost trivial:
+
+    ; F-Code Address Interpreter
+
+    GetNext$:       cld
+                    mov     si, IP$
+                    lodsw
+                    mov     IP$, si
+                    retn
+
+    CALLR$:         add     RP$, 2
+                    mov     bp, RP$
+                    mov     ax, IP$
+                    mov     [bp], ax
+                    pop     word ptr IP$
+                    next
+
+    RETR$:          mov     bp, RP$
+                    mov     ax, [bp]
+                    mov     IP$, ax
+                    sub     RP$, 2
+                    next
+
+    NEXT$:          call    GetNext$
+                    jmp     ax
+
+    osPush$:        call    GetNext$
+                    push    ax
+                    next
+
+    NEXT            MACRO
+                    jmp     NEXT$
+                    ENDM
+
+Plus, a few extra primitives implemented in assembly:
+
+    ; Adc  ( a b -> c isCarry )
+    ; if a+b>FFFF isCarry = FFFF else isCarry=0
+
+    osAdc$:         pop     ax  dx          ; -> a b
+                    add     ax, dx
+                    sbb     dx, dx
+                    push    ax  dx          ; c isCarry ->
+                    NEXT
+
+    ; osSwap ( a b -> b a )
+
+    osSwap$:        pop      ax bx
+                    push     ax bx
+                    NEXT
+
+    ; osRot ( a b c -> b c a )
+
+    osRot$:         pop      ax bx cx
+                    push     bx ax cx
+                    NEXT
+
+    osPut$:         add     RP$, 2
+                    mov     bp, RP$
+                    pop     word ptr [bp]
+                    NEXT
+
+    osGet$:         mov     bp, RP$
+                    push    word ptr [bp]
+                    sub     RP$, 2
+                    NEXT
+
+    osDrop$:        add     sp, 2
+                    NEXT
+
+    ; osNor ( a b -> a NOR b )
+
+    osNor$:         pop     ax bx
+                    or      ax, bx
+                    not     ax
+                    push    ax
+                    NEXT
+
+    osTrap$:        int     3
+                    NEXT
+
+    ; osPeek ( addr -> value )
+
+    osPeek$:        pop     bx
+                    push    word ptr [bx]
+                    NEXT
+
+    ; osPoke ( Value Addr -> )
+
+    osPoke$:        pop     bx              ; -> Value Addr
+                    pop     word ptr [bx]   ; ->
+                    NEXT
+
+Now we have a complete stack machine which we can program. Obviously,
+when tracing or disassembling the threaded code there are only jumps back and
+fourth making it very difficult for reverse engineering (the purpose of the
+obfuscation). If you're curious you may try digging into [fcode.com][]. This
+little program asks a password which you need to guest/crack/patch/etc.
+Note that this is a DOS binary, so it needs, for instance, DOSBox to run.
+
+[fcode.com]: https://github.com/begoon/fcode/blob/master/FCODE.COM
+
+For example, code to compute CRC on this stack machine:
+
+    CalcCRC:        CALLR                 ; ->
+                    ofPush  0             ; CRC
+                    ofPush  0             ; CRC 0
+                    ofPeekb Buffer+1      ; CRC 0 Size
+                    $For                  ; CRC
+                        osI                   ; CRC i
+                        ofPush  Buffer+2      ; CRC i Buffer+2
+                        osAdd                 ; CRC Addr
+                        osPeekb               ; CRC Value
+                        osExch                ; CRC Value*256
+                        $For    0, 8          ; CRC Value
+                            osShl                 ; CRC Value*2 isCarry
+                            osRot                 ; Value*2 isCarry CRC
+                            osSwap                ; Value*2 CRC isCarry
+                            osRcl                 ; Value*2 CRC*2 isCarry
+                            $If <>0               ; Value*2 CRC*2
+                                ofXor 8408h           ; Value*2 CRC*2^Const
+                            $Endif
+                            osSwap                ; CRC*2 Value*2
+                        $Loop                   ; CRC Value*2
+                        osDrop                ; CRC
+                    $Loop                 ; CRC
+                    RETR
+
+Awesome, right?
+
+When working on F-CODE a simple preprocessor for the assembler language was
+born allowing to write code like this:
+
+     lea dx, msg2
+     cmp bh, 3
+     $if <>0
+       lea dx, msg1
+     $else
+       hlt
+     $endif
+ 
+     cmp dx, 0C0DEh
+     $if =0
+       lea dx, msg2
+     $endif
+
+     mov cx, 2
+     $Do
+       $Do
+       cmp ax, 1
+       $EndDo =
+       dec cx
+     $EndDo Loop
+
+     Store ds, si, ax
+         $Do
+           cmp al, 1
+           $if <>0
+             $ExitDo
+           $endif
+           Store ax, bx, cx, es, bp
+             ...
+           Restore
+           $ContDo
+         $EndDo Loop
+     Restore
+
+Similar to other projects back in DOS times I wrote the preprocessor in Turbo
+Pascal.
+
+Of course the F-CODE project now has predominantly historical value, although 
+nothing stops to implement the interpreter, for instance, in JavaScript and
+then re-use existing primitives without any changes.  
+
+The F-CODE project is available at GitHub -- https://github.com/begoon/fcode. 
+
+It requires TASM/TLINK and Turbo Pascal 5.+ to build. Obviously, it also
+requires DOS to run.
+
+P.S. By the way, people develop quite sophisticated software in Forth.
+For example, [nnbackup][] is fully written in Forth.
+
+[nnbackup]: http://www.nncron.ru/

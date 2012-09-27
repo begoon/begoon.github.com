@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Реализация простого ядра Forth</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/interview/">интервью</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Реализация простого ядра Forth</h1>
+<div id="post">
+  <p>Будучи по натуре, как говорится, a low-level guy, я не мог пропустить Форт по
+жизни. Этот язык занимает интересную нишу: с одной стороны это вроде
+высокоуровнего ассемблера, позволяющего писать практически на ассемблере,
+а с другой стороны позволяет быстро строить из примитивов весьма
+высокоуровневые интерактивные системы, даже с интроспекцией, при этом
+оставаясь на адекватном уровне эффективности.</p>
+
+<p>Знаю, что С - это начало всех начал, и при правильном использовании можно
+писать очень близко по эффективности к ассемблеру. Но, все же есть еще
+системы, где компилятору С сложно развернуться. Например, захотел я подыскать
+компилятор С для Intel 8080, чтобы замутить небанальную программу для
+Радио-86РК. Из реально собираемого я нашел только пару наследников
+знаменитого <a href="http://en.wikipedia.org/wiki/Small-C">Small-C</a> &ndash; <a href="https://github.com/begoon/smallc-85">smallc-85</a> и <a href="https://github.com/begoon/smallc-scc3">smallc-scc3</a>.</p>
+
+<p>Увы, для простейшей программы типа:</p>
+
+<pre><code>main() {
+  static char a;
+  for (a = 1; a &lt; 10; ++a) {
+     ++a;
+  }
+}
+</code></pre>
+
+<p>Генерируется адъ типа:</p>
+
+<pre><code>;main() {
+main:
+;  static char a;
+    dseg
+?2: ds  1
+    cseg
+;  for (a = 1; a &lt; 10; ++a) {
+    lxi h,?2
+    push    h
+    lxi h,1
+    pop d
+    call    ?pchar
+?3:
+    lxi h,?2
+    call    ?gchar
+    push    h
+    lxi h,10
+    pop d
+    call    ?lt
+    mov a,h
+    ora l
+    jnz ?5
+    jmp ?6
+?4:
+    lxi h,?2
+    push    h
+    call    ?gchar
+    inx h
+    pop d
+    call    ?pchar
+    jmp ?3
+?5:
+;     ++a;
+    lxi h,?2
+    push    h
+    call    ?gchar
+    inx h
+    pop d
+    call    ?pchar
+;  }
+    jmp ?4
+?6:
+;}
+?1:
+    ret
+</code></pre>
+
+<p>Понятно, что много вопросов к компилятору, но в целом, Intel 8080 не очень
+удобен для компилятора С: деления/умножения нет, косвенной адресации через
+стек тоже нет и т.д.</p>
+
+<p>Ладно, вернемся к Форту. В процессе обдумывания применения Форта для I8080
+я написал удобный макро-ассемблер (но об этом будет отдельный пост) и попутно
+вспомнил об одном своем старом проекте времен Фидо: F-CODE. В качестве
+приема запутывания кода для защиты от отладчика я реализовывал мини-ядро Форта
+с <a href="http://ru.wikipedia.org/wiki/%D0%A8%D0%B8%D1%82%D1%8B%D0%B9_%D0%BA%D0%BE%D0%B4">прямым шитым кодом</a>.</p>
+
+<p>&ldquo;Реализовывал мини-ядро&rdquo;, конечно, звучит, круто, но в реальности
+интерпретатор шитого кода просто тривиален:</p>
+
+<pre><code>; F-Code Address Interpreter
+
+GetNext$:       cld
+                mov     si, IP$
+                lodsw
+                mov     IP$, si
+                retn
+
+CALLR$:         add     RP$, 2
+                mov     bp, RP$
+                mov     ax, IP$
+                mov     [bp], ax
+                pop     word ptr IP$
+                next
+
+RETR$:          mov     bp, RP$
+                mov     ax, [bp]
+                mov     IP$, ax
+                sub     RP$, 2
+                next
+
+NEXT$:          call    GetNext$
+                jmp     ax
+
+osPush$:        call    GetNext$
+                push    ax
+                next
+
+NEXT            MACRO
+                jmp     NEXT$
+                ENDM
+</code></pre>
+
+<p>Плюс несколько примитивов, реализованных также на ассемблере:</p>
+
+<pre><code>; Adc  ( a b -&gt; c isCarry )
+; if a+b&gt;FFFF isCarry = FFFF else isCarry=0
+
+osAdc$:         pop     ax  dx          ; -&gt; a b
+                add     ax, dx
+                sbb     dx, dx
+                push    ax  dx          ; c isCarry -&gt;
+                NEXT
+
+; osSwap ( a b -&gt; b a )
+
+osSwap$:        pop      ax bx
+                push     ax bx
+                NEXT
+
+; osRot ( a b c -&gt; b c a )
+
+osRot$:         pop      ax bx cx
+                push     bx ax cx
+                NEXT
+
+osPut$:         add     RP$, 2
+                mov     bp, RP$
+                pop     word ptr [bp]
+                NEXT
+
+osGet$:         mov     bp, RP$
+                push    word ptr [bp]
+                sub     RP$, 2
+                NEXT
+
+osDrop$:        add     sp, 2
+                NEXT
+
+; osNor ( a b -&gt; a NOR b )
+
+osNor$:         pop     ax bx
+                or      ax, bx
+                not     ax
+                push    ax
+                NEXT
+
+osTrap$:        int     3
+                NEXT
+
+; osPeek ( addr -&gt; value )
+
+osPeek$:        pop     bx
+                push    word ptr [bx]
+                NEXT
+
+; osPoke ( Value Addr -&gt; )
+
+osPoke$:        pop     bx              ; -&gt; Value Addr
+                pop     word ptr [bx]   ; -&gt;
+                NEXT
+</code></pre>
+
+<p>И мы имеем полноценную стековую машину, на которой можно программировать.
+Конечно, когда начинаешь диассемблировать шитный код или трассировать, то
+надо думать, а иначе будут видны только бесконечные переходы туда-сюда.
+Желающие могут попробовать поковыряться в файле <a href="https://github.com/begoon/fcode/blob/master/FCODE.COM">fcode.com</a>. Правда, это
+досовский бинарь, и запускать его надо, например, под DOSBox. Программа
+предлагает угадать пароль.</p>
+
+<p>Вот, например, код для вычисления CRC на данной стековой машине:</p>
+
+<pre><code>CalcCRC:        CALLR                 ; -&gt;
+                ofPush  0             ; CRC
+                ofPush  0             ; CRC 0
+                ofPeekb Buffer+1      ; CRC 0 Size
+                $For                  ; CRC
+                    osI                   ; CRC i
+                    ofPush  Buffer+2      ; CRC i Buffer+2
+                    osAdd                 ; CRC Addr
+                    osPeekb               ; CRC Value
+                    osExch                ; CRC Value*256
+                    $For    0, 8          ; CRC Value
+                        osShl                 ; CRC Value*2 isCarry
+                        osRot                 ; Value*2 isCarry CRC
+                        osSwap                ; Value*2 CRC isCarry
+                        osRcl                 ; Value*2 CRC*2 isCarry
+                        $If &lt;&gt;0               ; Value*2 CRC*2
+                            ofXor 8408h           ; Value*2 CRC*2^Const
+                        $Endif
+                        osSwap                ; CRC*2 Value*2
+                    $Loop                   ; CRC Value*2
+                    osDrop                ; CRC
+                $Loop                 ; CRC
+                RETR
+</code></pre>
+
+<p>Красиво?</p>
+
+<p>В процессе работы над F-CODE родился примитивный препроцессор для ассемблера,
+позволявший писать код типа:</p>
+
+<pre><code> lea dx, msg2
+ cmp bh, 3
+ $if &lt;&gt;0
+   lea dx, msg1
+ $else
+   hlt
+ $endif
+
+ cmp dx, 0C0DEh
+ $if =0
+   lea dx, msg2
+ $endif
+
+ mov cx, 2
+ $Do
+   $Do
+   cmp ax, 1
+   $EndDo =
+   dec cx
+ $EndDo Loop
+
+ Store ds, si, ax
+     $Do
+       cmp al, 1
+       $if &lt;&gt;0
+         $ExitDo
+       $endif
+       Store ax, bx, cx, es, bp
+         ...
+       Restore
+       $ContDo
+     $EndDo Loop
+ Restore
+</code></pre>
+
+<p>Как и все утилиты во времена ДОС, препроцессор был написан на старом добром
+Турбо Паскале.</p>
+
+<p>Понятно, что проект имеет чисто исторический интерес, хотя ничто не мешает
+реализовать интерпретатор Форта хоть на JavaScript&rsquo;е, и использовать все
+уже готовые примитивы как есть.</p>
+
+<p>Весь проект F-CODE лежит на GitHub&rsquo;е &ndash; <a href="https://github.com/begoon/fcode">https://github.com/begoon/fcode</a>.
+Для сборки нужны TASM/TLINK и Турбо Паскаль для препроцессора. Очевидно, что
+надо все делать в ДОСе.</p>
+
+<p>P.S. При всей низкоуровневости, народ пишет на Форте весьма кучерявые
+программы. Например, <a href="http://www.nncron.ru/">nnbackup</a>, написан на Форте.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/09/27/fcode/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/09/27/fcode/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

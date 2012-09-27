@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>A micro Forth interpreter</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/interview/">interview</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>A micro Forth interpreter</h1>
+<div id="post">
+  <p>Being &ldquo;a low-level guy&rdquo; by nature, I couldn&rsquo;t miss the Forth language in life.
+Forth occupies an interesting niche: on one hand it is a high-level assembler,
+allowing to write almost on the assembly language, and on the other hand it
+allows to quickly build sophisticated high-level interactive systems, even
+with introspection but also staying at an adequate level of performance.</p>
+
+<p>I know that C is THE low-level assembler, and when it is used properly
+it generates code very close to the assembly. But nevertheless there are some
+systems still where the C compiler is difficult to implement efficiently.
+For example, I wanted a C compiler for Intel 8080 to write a program for
+Radio-86RK. So far, I have found only a couple derivatives of the famous
+<a href="http://en.wikipedia.org/wiki/Small-C">Small-C</a> &ndash; <a href="https://github.com/begoon/smallc-85">smallc-85</a> and <a href="https://github.com/begoon/smallc-scc3">smallc-scc3</a> which compile and work.</p>
+
+<p>Unfortunately, even for trivial code:</p>
+
+<pre><code>main() {
+  static char a;
+  for (a = 1; a &lt; 10; ++a) {
+     ++a;
+  }
+}
+</code></pre>
+
+<p>It generates the following rubbish:</p>
+
+<pre><code>;main() {
+main:
+;  static char a;
+    dseg
+?2: ds  1
+    cseg
+;  for (a = 1; a &lt; 10; ++a) {
+    lxi h,?2
+    push    h
+    lxi h,1
+    pop d
+    call    ?pchar
+?3:
+    lxi h,?2
+    call    ?gchar
+    push    h
+    lxi h,10
+    pop d
+    call    ?lt
+    mov a,h
+    ora l
+    jnz ?5
+    jmp ?6
+?4:
+    lxi h,?2
+    push    h
+    call    ?gchar
+    inx h
+    pop d
+    call    ?pchar
+    jmp ?3
+?5:
+;     ++a;
+    lxi h,?2
+    push    h
+    call    ?gchar
+    inx h
+    pop d
+    call    ?pchar
+;  }
+    jmp ?4
+?6:
+;}
+?1:
+    ret
+</code></pre>
+
+<p>Agreed, there are a lot of questions to the compiler, but in general Intel
+8080 isn&rsquo;t quite friendly for the C compiler: no multiplication and division,
+no indirect addressing on the stack, etc.</p>
+
+<p>Okay, back to Forth. When thinking about Forth for I8080 I wrote a handy
+macro assembler (it&rsquo;ll be a separate blog post) and along the way remembered
+about my old project back to FidoNet times: F-CODE. To obfuscate the code
+against tracing and disassembling I implemented a micro Forth kernel with
+<a href="http://en.wikipedia.org/wiki/Threaded_code">direct threading</a>.</p>
+
+<p>&ldquo;Implemented a micro Forth kernel&rdquo; sounds &ldquo;cool&rdquo; but in reality the direct
+threading code interpreter is almost trivial:</p>
+
+<pre><code>; F-Code Address Interpreter
+
+GetNext$:       cld
+                mov     si, IP$
+                lodsw
+                mov     IP$, si
+                retn
+
+CALLR$:         add     RP$, 2
+                mov     bp, RP$
+                mov     ax, IP$
+                mov     [bp], ax
+                pop     word ptr IP$
+                next
+
+RETR$:          mov     bp, RP$
+                mov     ax, [bp]
+                mov     IP$, ax
+                sub     RP$, 2
+                next
+
+NEXT$:          call    GetNext$
+                jmp     ax
+
+osPush$:        call    GetNext$
+                push    ax
+                next
+
+NEXT            MACRO
+                jmp     NEXT$
+                ENDM
+</code></pre>
+
+<p>Plus, a few extra primitives implemented in assembly:</p>
+
+<pre><code>; Adc  ( a b -&gt; c isCarry )
+; if a+b&gt;FFFF isCarry = FFFF else isCarry=0
+
+osAdc$:         pop     ax  dx          ; -&gt; a b
+                add     ax, dx
+                sbb     dx, dx
+                push    ax  dx          ; c isCarry -&gt;
+                NEXT
+
+; osSwap ( a b -&gt; b a )
+
+osSwap$:        pop      ax bx
+                push     ax bx
+                NEXT
+
+; osRot ( a b c -&gt; b c a )
+
+osRot$:         pop      ax bx cx
+                push     bx ax cx
+                NEXT
+
+osPut$:         add     RP$, 2
+                mov     bp, RP$
+                pop     word ptr [bp]
+                NEXT
+
+osGet$:         mov     bp, RP$
+                push    word ptr [bp]
+                sub     RP$, 2
+                NEXT
+
+osDrop$:        add     sp, 2
+                NEXT
+
+; osNor ( a b -&gt; a NOR b )
+
+osNor$:         pop     ax bx
+                or      ax, bx
+                not     ax
+                push    ax
+                NEXT
+
+osTrap$:        int     3
+                NEXT
+
+; osPeek ( addr -&gt; value )
+
+osPeek$:        pop     bx
+                push    word ptr [bx]
+                NEXT
+
+; osPoke ( Value Addr -&gt; )
+
+osPoke$:        pop     bx              ; -&gt; Value Addr
+                pop     word ptr [bx]   ; -&gt;
+                NEXT
+</code></pre>
+
+<p>Now we have a complete stack machine which we can program. Obviously,
+when tracing or disassembling the threaded code there are only jumps back and
+fourth making it very difficult for reverse engineering (the purpose of the
+obfuscation). If you&rsquo;re curious you may try digging into <a href="https://github.com/begoon/fcode/blob/master/FCODE.COM">fcode.com</a>. This
+little program asks a password which you need to guest/crack/patch/etc.
+Note that this is a DOS binary, so it needs, for instance, DOSBox to run.</p>
+
+<p>For example, code to compute CRC on this stack machine:</p>
+
+<pre><code>CalcCRC:        CALLR                 ; -&gt;
+                ofPush  0             ; CRC
+                ofPush  0             ; CRC 0
+                ofPeekb Buffer+1      ; CRC 0 Size
+                $For                  ; CRC
+                    osI                   ; CRC i
+                    ofPush  Buffer+2      ; CRC i Buffer+2
+                    osAdd                 ; CRC Addr
+                    osPeekb               ; CRC Value
+                    osExch                ; CRC Value*256
+                    $For    0, 8          ; CRC Value
+                        osShl                 ; CRC Value*2 isCarry
+                        osRot                 ; Value*2 isCarry CRC
+                        osSwap                ; Value*2 CRC isCarry
+                        osRcl                 ; Value*2 CRC*2 isCarry
+                        $If &lt;&gt;0               ; Value*2 CRC*2
+                            ofXor 8408h           ; Value*2 CRC*2^Const
+                        $Endif
+                        osSwap                ; CRC*2 Value*2
+                    $Loop                   ; CRC Value*2
+                    osDrop                ; CRC
+                $Loop                 ; CRC
+                RETR
+</code></pre>
+
+<p>Awesome, right?</p>
+
+<p>When working on F-CODE a simple preprocessor for the assembler language was
+born allowing to write code like this:</p>
+
+<pre><code> lea dx, msg2
+ cmp bh, 3
+ $if &lt;&gt;0
+   lea dx, msg1
+ $else
+   hlt
+ $endif
+
+ cmp dx, 0C0DEh
+ $if =0
+   lea dx, msg2
+ $endif
+
+ mov cx, 2
+ $Do
+   $Do
+   cmp ax, 1
+   $EndDo =
+   dec cx
+ $EndDo Loop
+
+ Store ds, si, ax
+     $Do
+       cmp al, 1
+       $if &lt;&gt;0
+         $ExitDo
+       $endif
+       Store ax, bx, cx, es, bp
+         ...
+       Restore
+       $ContDo
+     $EndDo Loop
+ Restore
+</code></pre>
+
+<p>Similar to other projects back in DOS times I wrote the preprocessor in Turbo
+Pascal.</p>
+
+<p>Of course the F-CODE project now has predominantly historical value, although
+nothing stops to implement the interpreter, for instance, in JavaScript and
+then re-use existing primitives without any changes.</p>
+
+<p>The F-CODE project is available at GitHub &ndash; <a href="https://github.com/begoon/fcode">https://github.com/begoon/fcode</a>.</p>
+
+<p>It requires TASM/TLINK and Turbo Pascal 5.+ to build. Obviously, it also
+requires DOS to run.</p>
+
+<p>P.S. By the way, people develop quite sophisticated software in Forth.
+For example, <a href="http://www.nncron.ru/">nnbackup</a> is fully written in Forth.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/09/27/fcode/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/09/27/fcode/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
