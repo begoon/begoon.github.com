@@ -5,13 +5,23 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-27T21:37:00Z</updated>
+  <updated>2012-09-29T22:30:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How to destroy a banking card properly]]></title>
+    <link href="http://demin.ws/blog/english/2012/09/29/how-to-destroy-banking-card-properly/"/>
+    <updated>2012-09-29T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/09/29/how-to-destroy-banking-card-properly/</id>
+    <content type="html"><![CDATA[<p><img src="http://demin.ws/images/blog/how-to-destroy-banking-card.jpg" alt="" />
+</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[A micro Forth interpreter]]></title>
