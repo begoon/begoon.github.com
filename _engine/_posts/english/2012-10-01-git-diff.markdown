@@ -1,0 +1,25 @@
+---
+layout: post
+title: "Getting code statistics"
+language: english
+date: 2012-10-01 08:28
+comments: true
+categories: 
+- diff
+- english
+- git
+---
+Problem: Get code statistics -- a number of added and deleted lines of code,
+for instance, across annual releases. Git does straightaway
+via [git diff][].
+
+[git diff]: http://www.kernel.org/pub/software/scm/git/docs/git-diff.html
+
+    git diff --shortstat rel-2010 rel-2011
+
+It prints something like this:
+
+    12 files changed, 2462 insertions(+), 488 deletions(-)
+
+If your project isn't in git, you can quickly import the branches you want
+to analyse in a temporary git repo.

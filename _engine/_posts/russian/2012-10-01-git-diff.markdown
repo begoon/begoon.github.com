@@ -1,0 +1,25 @@
+---
+layout: post
+title: "Статистика изменений кода"
+language: russian
+date: 2012-10-01 08:28
+comments: true
+categories: 
+- diff
+- git
+- russian
+---
+Задача: узнать статистику по количеству строк кода, количеству добавленных
+и удаленных срок, например, по годовым релизам. В git проблема решилась сразу
+через [git diff][].
+
+[git diff]: http://www.kernel.org/pub/software/scm/git/docs/git-diff.html
+
+    git diff --shortstat rel-2010 rel-2011
+
+Выдает типа:
+
+    12 files changed, 2462 insertions(+), 488 deletions(-)
+
+Если у вас проект не в git, то можно быстренько загрузить в него версии,
+требующие анализа.

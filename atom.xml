@@ -5,13 +5,35 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-09-29T22:30:00Z</updated>
+  <updated>2012-10-01T08:28:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Статистика изменений кода]]></title>
+    <link href="http://demin.ws/blog/russian/2012/10/01/git-diff/"/>
+    <updated>2012-10-01T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/10/01/git-diff/</id>
+    <content type="html"><![CDATA[<p>Задача: узнать статистику по количеству строк кода, количеству добавленных
+и удаленных срок, например, по годовым релизам. В git проблема решилась сразу
+через <a href="http://www.kernel.org/pub/software/scm/git/docs/git-diff.html">git diff</a>.</p>
+
+<pre><code>git diff --shortstat rel-2010 rel-2011
+</code></pre>
+
+<p>Выдает типа:</p>
+
+<pre><code>12 files changed, 2462 insertions(+), 488 deletions(-)
+</code></pre>
+
+<p>Если у вас проект не в git, то можно быстренько загрузить в него версии,
+требующие анализа.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Как правильно уничтожить банковскую карту]]></title>
