@@ -1,0 +1,84 @@
+<!--
+/*
+ * Radio-86RK in JavaScript based on I8080/JS
+ *
+ * Copyright (C) 2009, 2012 Alexander Demin <alexander@demin.ws>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+-->
+<html>
+<head>
+<script src="i8080.js" type="application/javascript"></script>
+<script src="rk86_tape_catalog.js" type="application/javascript"></script>
+<script src="rk86_font.js" type="application/javascript"></script>
+<script src="rk86_screen.js" type="application/javascript"></script>
+<script src="rk86_memory.js" type="application/javascript"></script>
+<script src="rk86_keyboard.js" type="application/javascript"></script>
+<script src="rk86_runner.js" type="application/javascript"></script>
+<script src="ui.js" type="application/javascript"></script>
+<script src="main.js" type="application/javascript"></script>
+</head>
+<body onload="main()" bgcolor="#000000" text="#ffffff">
+  <div id="loading">Loading...</div>
+  <div id="main_panel" style="display: none">
+    <button id="emulator_button" onclick="ui.switch_panel('emulator')"
+      disabled="disabled"
+    >Emulator</button>
+    <button id="assembler_button" onclick="ui.switch_panel('assembler')">Assembler</button>
+    <button id="disassembler_button" onclick="ui.toggle_panel('disassembler')"
+    >Disassembler</button>
+    <button id="keyboard_button" onclick="ui.switch_panel('keyboard')">Keyboard</button>
+    <div id="emulator_panel">
+      <div style="float: left">
+        <div id="back" style="background: #000; padding: 1px; border: 1px solid #ccc">
+          <canvas id="canvas" width="0" height="0"></canvas>
+        </div>
+        Version 1.0 |
+        <div style="display: none">
+        Screen: <input id="screen_width" value="78" style="width: 2em"> 
+        x       <input id="screen_height" value="30" style="width: 2em">
+        </div>
+        <div style="display: none">
+        Scale:  <input id="scale_x" value="2" style="width: 2em"> 
+        x       <input id="scale_y" value="2" style="width: 2em">
+        <button onclick="ui.resize_screen()">Resize</button>
+        </div>
+        <button onclick="ui.reset()">Reset</button>
+        <button onclick="ui.restart()">Restart</button>
+        <button onclick="ui.pause()">Pause</button>
+
+        Files: <select id="file_selector"></select>
+        <button onclick="ui.run_selected()">Run</button>
+        <button onclick="ui.load_selected()">Load</button>
+      </div>
+      <div style="float: left">
+        <div id="disassembler_panel" 
+          style="display: none; background: #000; padding: 1px;  border: 1px solid #ccc"
+        >
+          <iframe name="disassembler_frame" src="i8080disasm.html" width="400" height="600" frameborder="0"></iframe>
+        </div>
+      </div>
+    </div>
+    <table id="assembler_panel" style="display: none" width="100%" height="95%"><tr><td>
+      <iframe id="assembler_frame" src="i8080asm.html" width="100%" height="100%" frameborder="0"></iframe>
+    </tr></td></table>
+    <table id="keyboard_panel" style="display: none" width="100%" height="95%"><tr><td>
+      <iframe id="keyboard_frame" src="rk86_keyboard_layout.html" width="100%" height="100%" frameborder="0"></iframe>
+    </tr></td></table>
+  </table>
+  <img src="rk86_font.bmp" style="display: none" id="rk86_font" />
+</body>
+</html>
