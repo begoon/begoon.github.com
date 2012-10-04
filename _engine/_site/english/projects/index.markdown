@@ -12,12 +12,14 @@ title: Projects
 
 # Projects
 
-Most of my projects are available at [GitHub][]. The projects listed below are hosted somewhere else, or which the most insterested for me.
+Most of my projects are available at [GitHub][]. The projects listed below are hosted somewhere else, or which are the most insterested to me.
 
 [GitHub]: http://github.com/begoon/
 
-* Radio-86RK classic 8-bit microcomputer emulator on the Maximite (PIC32) ([video][Radio-86RK on Maximite video])
-* [i8080-core] - Intel 8080 (KR580VM80A) microprocessor emulator
+* [Radio-86RK classic 8-bit microcomputer emulator in JavaScript][]
+* Radio-86RK classic 8-bit microcomputer emulator on the Maximite (PIC32) ([video][Radio-86RK on Maximite video]) / 2012
+* [i8080-js] - Intel 8080 (KR580VM80A) microprocessor emulator in JavaScript / 2012
+* [i8080-core] - Intel 8080 (KR580VM80A) microprocessor emulator / 2012
 * [gmc4-loader][] - [USB loader for the GMC-4 microcomputer][]
 * [nxtbtrc][] - [Lego NXT remote control via bluetooth][]
 * [J2ME applet for NXT remote control][NXT Brick remote control over Bluetooth]
@@ -26,7 +28,9 @@ Most of my projects are available at [GitHub][]. The projects listed below are h
 * [p4patch][] - A utility to transfer Perforce change sets across machines
 * [Biometrical identification system Handscan][]
 
+[Radio-86RK classic 8-bit microcomputer emulator in JavaScript]: http://github.com/begoon/rk86-js/
 [Radio-86RK on Maximite video]: http://www.youtube.com/watch?v=JGuYyuCkJR8
+[i8080-js]: http://github.com/begoon/i8080-js/
 [i8080-core]: https://github.com/begoon/i8080-core/
 [gmc4-loader]: https://github.com/begoon/gmc4-loader/
 [USB loader for the GMC-4 microcomputer]: http://demin.ws/blog/english/2012/07/25/gmc4-loader-assembled/
