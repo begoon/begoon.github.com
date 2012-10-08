@@ -1,4 +1,10 @@
-﻿Микросхемы семейства КР580 (i8080)
+﻿<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+
+Микросхемы семейства КР580 (i8080)
 ==================================
 
 * [Программируемый таймер КР580ВИ53][]
@@ -14,3 +20,5 @@
 [Микропроцессор 8080]: i8080.html
 
 [Оригинал статьи](http://www.computer-museum.ru/technlgy/8bitproc.htm)
+</body>
+</html>
