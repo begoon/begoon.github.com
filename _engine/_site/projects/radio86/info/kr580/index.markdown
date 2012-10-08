@@ -1,9 +1,8 @@
-﻿<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-</head>
-<body>
-
+---
+layout: static
+language: russian
+title: "Микросхемы семейства КР580 (i8080)"
+---
 Микросхемы семейства КР580 (i8080)
 ==================================
 
@@ -20,5 +19,3 @@
 [Микропроцессор 8080]: i8080.html
 
 [Оригинал статьи](http://www.computer-museum.ru/technlgy/8bitproc.htm)
-</body>
-</html>
