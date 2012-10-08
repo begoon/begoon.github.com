@@ -5,13 +5,68 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-10-01T08:28:00Z</updated>
+  <updated>2012-10-08T21:03:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[&#34;Introduction to 8080/8085 assembly language programming&#34; by Judi Fernandez and Ruth Ashley]]></title>
+    <link href="http://demin.ws/blog/english/2012/10/08/introduction-to-8080-8085-assembly-language-programming/"/>
+    <updated>2012-10-08T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/10/08/introduction-to-8080-8085-assembly-language-programming/</id>
+    <content type="html"><![CDATA[<p>Just bought on Amazon an old book from the eighties about programming in the
+8080-8085 assembly language.</p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/0471080098/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=0471080098&amp;linkCode=as2&amp;tag=prodiy-21">Introduction to 8080-8085 Assembly Language Programming (Self-teaching Guides)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=0471080098" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p><img src="http://demin.ws/images/covers/english/introduction-to-8080-8085-assembly-language-programming.jpg" alt="" />
+</p>
+
+<p>A reasonable question &ldquo;why&rdquo;? Especially considering that in the last couple
+of months I have re-written from scratch two emulators of the Intel 8080
+microprocessor, in C and JavaScript. Do I still have any questions about
+8080 assembly? No.</p>
+
+<p>Frankly, I just heard about this book as a perfect example of the
+assembly textbook. Something similar to the famous Maurer&rsquo;s book on
+programming on 6502 assembly for Apple computers. I believe the digitized
+copies are available because the book was published years ago back in 1981,
+but I had come across a very cheap hardcopy (~6 pounds including delivery) at
+Amazon, second-hand, of course.</p>
+
+<p>Have no idea why but when holding such old books in hands I feel some
+unexplainable excitement from all these hand-made annotations, old-fashion
+fonts for code and punch card forms.</p>
+
+<p><img src="http://demin.ws/images/blog/book/introduction-to-8080-8085-assmebly-language-programming/IMG_1069.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/book/introduction-to-8080-8085-assmebly-language-programming/IMG_1070.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/book/introduction-to-8080-8085-assmebly-language-programming/IMG_1071.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/book/introduction-to-8080-8085-assmebly-language-programming/IMG_1072.JPG" alt="" />
+</p>
+
+<p>And in fact the book is great. If, just in some weird and unusual case you
+decide to learn the 8080 assembly language, but you have never heard about
+8080 and the assembly language in general, this book is the perfect option.</p>
+
+<p>It begins from the very beginning &ndash; dealing with binary, decimal and
+hexadecimal calculations; then it follows through groups of instructions
+with many examples &ndash; array indexing, multiplication and division,
+BCD representation, the concept of stack. Each chapter is concluded with
+exercises.</p>
+
+<p>The very good book. Recommended.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Getting code statistics]]></title>

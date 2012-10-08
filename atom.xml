@@ -5,13 +5,65 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-10-07T02:17:00Z</updated>
+  <updated>2012-10-08T21:03:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA["Introduction to 8080/8085 assembly language programming", Judi Fernandez, Ruth Ashley]]></title>
+    <link href="http://demin.ws/blog/russian/2012/10/08/introduction-to-8080-8085-assembly-language-programming/"/>
+    <updated>2012-10-08T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/10/08/introduction-to-8080-8085-assembly-language-programming/</id>
+    <content type="html"><![CDATA[<p>Купил очень дешево на Амазоне старую книгу про программирование на ассемблере
+для 8080-8085.</p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/0471080098/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=0471080098&amp;linkCode=as2&amp;tag=prodiy-21">Introduction to 8080-8085 Assembly Language Programming (Self-teaching Guides)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=0471080098" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p><img src="http://demin.ws/images/covers/english/introduction-to-8080-8085-assembly-language-programming.jpg" alt="" />
+</p>
+
+<p>Резонный вопрос - для чего? Особенно в свете того, что за последний месяц
+я с нуля переписал два эмулятора Intel 8080, один на С, второй на JavaScript.
+Неужели у меня есть вопросы в понимании команд этого процессора?</p>
+
+<p>Если честно, про эту книгу я просто слышал просто как о классном примере
+учебника по ассемблеру, что-то в стиле нетленки Морера про ассемблер 6502 для
+компьютеров Эппл. Можно было бы просто найти скан, ибо книга аж 1981 года, но
+на Амазоне был ее бумажный вариант всего за 300р вместе с доставкой, Б/У,
+разумеется.</p>
+
+<p>Не знаю почему, но когда держу подобные книги в руках, то испытываю как-то
+детский восторг, особенно от трогательно подрисованных пояснений,<br />
+старомодных шрифтов набора кода и записей в форме перфокарт.</p>
+
+<p><img src="http://demin.ws/images/blog/book/introduction-to-8080-8085-assmebly-language-programming/IMG_1069.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/book/introduction-to-8080-8085-assmebly-language-programming/IMG_1070.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/book/introduction-to-8080-8085-assmebly-language-programming/IMG_1071.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/book/introduction-to-8080-8085-assmebly-language-programming/IMG_1072.JPG" alt="" />
+</p>
+
+<p>А по сути книга действительно классная. Если вдруг, почему-то, вам захочется
+изучить ассемблер 8080, но вы никогда о нем не слышали, да и о
+программировании на ассемблере в целом, то эта книга как раз для этого.</p>
+
+<p>Все начинается &ldquo;от печки&rdquo; в виде систем исчисления, и затем подробно
+рассматриваются группы команд процессора и примеры применения &ndash; индексирования массивов, умножения/деление, двоично-десятичное представление,
+концепция стека и т.д. В каждой главе есть набор мини-задачек и вопросов для
+самопроверки.</p>
+
+<p>Очень хорошая книга.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Современный Радио-86РК c 32КБ SRAM]]></title>
