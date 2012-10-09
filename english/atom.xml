@@ -5,13 +5,70 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-10-08T21:03:00Z</updated>
+  <updated>2012-10-09T10:13:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[How to rewrite a project from Pascal to C, or a macro-assembler for Intel 8080]]></title>
+    <link href="http://demin.ws/blog/english/2012/10/09/rewrite-of-as/"/>
+    <updated>2012-10-09T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/10/09/rewrite-of-as/</id>
+    <content type="html"><![CDATA[<p>Let&rsquo;s look at the code:</p>
+
+<pre><code>BEGIN
+   if (Hi(Code) == 0)
+    BEGIN
+     BAsmCode[0] = Lo(Code); CodeLen = 1;
+     return True;
+    END
+   else if (MomCPU &lt;= CPU1802)
+    BEGIN
+     WrError(1500);
+     return False;
+    END
+   else
+    BEGIN
+     BAsmCode[0] = Hi(Code); BAsmCode[1] = Lo(Code); CodeLen = 2;
+     return True;
+    END
+END
+</code></pre>
+
+<p>(grabbed from <a href="https://github.com/begoon/asl/blob/master/code1802.c#L46">code1802.c</a>).</p>
+
+<p>Frankly, it is not easy to recognize the language. Of course, this is C but
+initially it was Pascal, and then the author had converted in to C trying to
+minimize the amount of changes.</p>
+
+<p>The project is called &ldquo;<a href="http://john.ccac.rwth-aachen.de:8000/as/">Macro-assembler AS</a>&rdquo;, by Alfred Arnold. I use it
+as an Intel 8080 macro-assembler available on Mac, Linux and Windows.
+Frankly I haven&rsquo;t seen anything better so far.</p>
+
+<p>As the author <a href="http://john.ccac.rwth-aachen.de:8000/as/as_EN.html#sect_I_1_">explains</a>, the project was started in Turbo Pascal,
+but after Borland had abandoned the DOS version but free implementation of the
+modern Pascal didn&rsquo;t exist yet, he decided to convert the sources into C
+and continue development in C. Despite of overall doubtfulness of such
+approach, to me, the author had managed it very well. The project hadn&rsquo;t
+die as it usually happens with big projects after rewrite. But though I
+have cloned it for myself and started using successfully, I doubt
+that I want to contribute because it requires coding in this weird
+&ldquo;Pascal on C steroids&rdquo; dialect. Alas, this is inevitable due to that
+conversion, otherwise the project may turn into mess. If to surf amongst
+<a href="https://github.com/begoon/asl">the sources of AS</a> it is easy to find a lot of tricks like &ldquo;how
+to make C to be Pascal&rdquo;.</p>
+
+<p>Nevertheless, all the best to Alfred with his great project. Again, the
+project moves forward and becomes better.</p>
+
+<p>By the way, Alfred has a very cool collection of <a href="http://john.ccac.rwth-aachen.de:8000/alf/index.html#collection">old hardware</a> which makes
+me feel envy.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[&#34;Introduction to 8080/8085 assembly language programming&#34; by Judi Fernandez and Ruth Ashley]]></title>
@@ -61,8 +118,8 @@ decide to learn the 8080 assembly language, but you have never heard about
 <p>It begins from the very beginning &ndash; dealing with binary, decimal and
 hexadecimal calculations; then it follows through groups of instructions
 with many examples &ndash; array indexing, multiplication and division,
-BCD representation, the concept of stack. Each chapter is concluded with
-exercises.</p>
+BCD representation, the concept of stack and so on. Each chapter is concluded
+with exercises.</p>
 
 <p>The very good book. Recommended.</p>
 <hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>

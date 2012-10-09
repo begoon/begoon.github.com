@@ -103,7 +103,7 @@ categories:
 
 [78x30 на 8080]: https://github.com/begoon/rk86-3d-demo/blob/master/78x30/i8080/pure/rk86demo.asm
 
-[78x30 на 8080 в работе]: http://localhost/projects/radio86/demo/78x30/i8080/pure/
+[78x30 на 8080 в работе]: /projects/radio86/demo/78x30/i8080/pure/
 
 Он отступать уж совсем поздно было, и я предпринял последнюю, хоть уже
 немного "нечистую" попытку. С помощью [генератора на С][Генератор на C]

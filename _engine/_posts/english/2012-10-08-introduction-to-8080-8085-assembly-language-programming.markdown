@@ -46,7 +46,7 @@ decide to learn the 8080 assembly language, but you have never heard about
 It begins from the very beginning -- dealing with binary, decimal and
 hexadecimal calculations; then it follows through groups of instructions
 with many examples -- array indexing, multiplication and division,
-BCD representation, the concept of stack. Each chapter is concluded with
-exercises.  
+BCD representation, the concept of stack and so on. Each chapter is concluded 
+with exercises.  
 
 The very good book. Recommended.

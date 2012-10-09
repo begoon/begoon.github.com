@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Как писать на Паскале-Си или ассемблер для Intel 8080</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/interview/">интервью</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Как писать на Паскале-Си или ассемблер для Intel 8080</h1>
+<div id="post">
+  <p>Рассмотрим фрагмент кода:</p>
+
+<pre><code>BEGIN
+   if (Hi(Code) == 0)
+    BEGIN
+     BAsmCode[0] = Lo(Code); CodeLen = 1;
+     return True;
+    END
+   else if (MomCPU &lt;= CPU1802)
+    BEGIN
+     WrError(1500);
+     return False;
+    END
+   else
+    BEGIN
+     BAsmCode[0] = Hi(Code); BAsmCode[1] = Lo(Code); CodeLen = 2;
+     return True;
+    END
+END
+</code></pre>
+
+<p>(взято из <a href="https://github.com/begoon/asl/blob/master/code1802.c#L46">code1802.c</a>).</p>
+
+<p>Если честно, то сходу не совсем понятно, что это за язык. Это, конечно, С,
+но изначально исходник был на Паскале, потом автор решил перейти на С,
+оставив основную часть кода практически без изменений.</p>
+
+<p>Проект называется &ldquo;<a href="http://john.ccac.rwth-aachen.de:8000/as/">Macro-assembler AS</a>&rdquo;, автор Альфред Арнольд. Я его
+использую как макро-ассемблер для Intel 8080, который собирается на Маке,
+Линуксе и Windows. Лучшего я пока ничего не нашел.</p>
+
+<p>Как <a href="http://john.ccac.rwth-aachen.de:8000/as/as_EN.html#sect_I_1_">пишет</a> сам автор, изначально проект был на Турбо-Паскале,
+но потом автор был вынужден перейти на С, так как Борланд остановил развитие
+досовских версий, и нормального Паскаля для Линукса тогда еще тоже не было. В
+итоге автор сконвертировал исходники в С и продолжил развивать проект в
+нового ключе. Несмотря на всю сомнительность затеи, по мне, сделал он это
+весьма удачно, и проект не умер, как это часто бывает в случаях полного
+переписывания большого проекта. Но хотя я <a href="https://github.com/begoon/asl">склонировал проект для себя</a>,
+собрал на Маке и радостно использую, не испытываю жгучего желания что-либо
+контрибьютить, так как для соблюдения стиля надо писать на этом гремучем
+Паскале-Си. Увы, это неизбежное следствие конверсии, иначе проект превратится
+в помойку. Если поелозить по <a href="https://github.com/begoon/asl">исходникам</a>, можно найти много интересных
+трюков типа &ldquo;как сделать так, чтобы Си работал как Паскаль&rdquo;.</p>
+
+<p>Но, повторюсь, всяческих успехов автору, так как проект жив и развивается.
+Кстати, у автора есть отличная коллекция <a href="http://john.ccac.rwth-aachen.de:8000/alf/index.html#collection">различного железа</a>,
+которой можно реально позавидовать.</p>
+
+<h2>P.S.</h2>
+
+<p>У нас в компании была похожая ситуация. Часть нашего продукта - это
+бейсикоподобный язык (DSL), ориентированный на работу с базами данных. На нем
+пишется бизнес-логика банковского продукта.</p>
+
+<p>Язык был разработан не вчера и поэтому немного старомоден. Но на нем написаны
+мириады строк кода лидирующего на рынке продукта. Разные попытки &ldquo;заменить&rdquo;
+язык на что-то &ldquo;более новое и современное&rdquo; и затем сконвертировать основную
+кодовую базу, к счастью, не получили хода. Сейчас мы прекрасно компилируем
+наш язык в Си, Яву и даже .NET, и очень, очень постепенно вносим крайне
+взвешенные незначительные изменения в сам язык. И это работает удивительно
+хорошо.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/10/09/rewrite-of-as/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/10/09/rewrite-of-as/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
