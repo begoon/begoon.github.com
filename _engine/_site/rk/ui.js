@@ -25,6 +25,8 @@ function UI(tape_catalog, runner, memory) {
   this.canvas = document.getElementById("canvas");
   this.panel = document.getElementById("back");
 
+  this.screenshot_filename = "rk86-screen.png";
+
   if (!this.canvas.getContext) {
     alert("Tag <canvas> is not support is the browser")
     return;
@@ -119,6 +121,8 @@ function UI(tape_catalog, runner, memory) {
       return;
     }
 
+    this.screenshot_filename = file.name + ".png";
+
     if (this.load_mode == "load") {
       var sz = file.start + file.image.length - 1;
       alert("Loaded: " + file.name + 
@@ -155,6 +159,13 @@ function UI(tape_catalog, runner, memory) {
     return window.frames.disassembler_frame.loaded;
   }
 
+  this.save_screen = function() {
+    var save_screen_this = this;
+    this.canvas.toBlob(function(blob) {
+      saveAs(blob, save_screen_this.screenshot_filename);
+    });  
+  }
+  
   this.load_mode = "run";
   this.load_tape_file("mon32.bin");
 }

@@ -23,6 +23,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Радио-86РК</title>
+<script src="FileSaver.js" type="application/javascript"></script>
+<script src="canvas-toBlob.js" type="application/javascript"></script>
 <script src="i8080.js" type="application/javascript"></script>
 <script src="rk86_tape_catalog.js" type="application/javascript"></script>
 <script src="rk86_font.js" type="application/javascript"></script>
@@ -48,7 +50,7 @@
         <div id="back" style="background: #000; padding: 1px; border: 1px solid #ccc">
           <canvas id="canvas" width="0" height="0"></canvas>
         </div>
-        Version 1.0 |
+        Version 1.1 |
         <div style="display: none">
         Screen: <input id="screen_width" value="78" style="width: 2em"> 
         x       <input id="screen_height" value="30" style="width: 2em">
@@ -65,9 +67,10 @@
         Files: <select id="file_selector"></select>
         <button onclick="ui.run_selected()">Run</button>
         <button onclick="ui.load_selected()">Load</button>
+        <button onclick="ui.save_screen()">Save screen</button>
       </div>
       <div style="float: left">
-        <div id="disassembler_panel" 
+        <div id="disassembler_panel"
           style="display: none; background: #000; padding: 1px;  border: 1px solid #ccc"
         >
           <iframe name="disassembler_frame" src="i8080disasm.html" width="400" height="600" frameborder="0"></iframe>
