@@ -102,8 +102,7 @@ function Keyboard() {
 
   var keyboard_this = this;
 
-  document.onkeydown = function(evt) {
-    var code = evt.keyCode + (evt.altKey ? 256 : 0);
+  this.keydown = function(code) {
     // SHIFT
     if (code == 16) keyboard_this.modifiers &= ~SS;
     // CTRL
@@ -112,11 +111,9 @@ function Keyboard() {
     if (code == 27) keyboard_this.modifiers &= ~RL;
     var key = key_table[code];
     if (key) keyboard_this.state[key[0]] &= ~key[1];
-    return false;
   }
 
-  document.onkeyup = function(evt) {
-    var code = evt.keyCode + (evt.altKey ? 256 : 0);
+  this.keyup = function(code) {
     // SHIFT
     if (code == 16) keyboard_this.modifiers |= SS;
     // CTRL
@@ -125,6 +122,22 @@ function Keyboard() {
     if (code == 27) keyboard_this.modifiers |= RL;
     var key = key_table[code];
     if (key) keyboard_this.state[key[0]] |= key[1];
+  }
+
+  this.presskey = function(code) {
+    this.keydown(code);
+    window.setTimeout(function() { keyboard_this.keyup(code); }, 100 );
+  }
+
+  document.onkeydown = function(evt) {
+    var code = evt.keyCode + (evt.altKey ? 256 : 0);
+    keyboard_this.keydown(code);
+    return false;
+  }
+
+  document.onkeyup = function(evt) {
+    var code = evt.keyCode + (evt.altKey ? 256 : 0);
+    keyboard_this.keyup(code);
     return false;
   }
 

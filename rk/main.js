@@ -25,6 +25,12 @@ function IO() {
   this.interrupt = function(iff) {}
 }
 
+function Autoexec() {
+  var url = window.location.href;
+  this.file = (match = url.match(/file=([^&]+)/)) ? match[1] : null;
+  this.loadonly = (match = url.match(/loadonly=([^&]+)/)) ? match[1] : null;
+}
+
 function main() {
   var keyboard = new Keyboard();
   var memory = new Memory(keyboard);
@@ -33,7 +39,7 @@ function main() {
   var cpu = new I8080(memory, io);
   var runner = new Runner(cpu);
 
-  ui = new UI(tape_catalog(), runner, memory);
+  ui = new UI(tape_catalog(), runner, memory, new Autoexec());
   screen = new Screen(rk86_font_image(), ui, memory);
 
   document.getElementById("loading").style.display = "none";

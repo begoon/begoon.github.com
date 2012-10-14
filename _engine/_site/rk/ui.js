@@ -16,16 +16,18 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-function UI(tape_catalog, runner, memory) {
+function UI(tape_catalog, runner, memory, autoexec) {
 
   this.tape_catalog = tape_catalog;
   this.runner = runner;
   this.memory = memory;
+  this.autoexec = autoexec;
 
   this.canvas = document.getElementById("canvas");
   this.panel = document.getElementById("back");
 
-  this.screenshot_filename = "rk86-screen.png";
+  this.screenshot_name = "rk86-screen";
+  this.screenshot_count = 1;
 
   if (!this.canvas.getContext) {
     alert("Tag <canvas> is not support is the browser")
@@ -69,6 +71,8 @@ function UI(tape_catalog, runner, memory) {
   this.restart = function() {
     this.runner.cpu.memory.zero_ram();
     this.reset();
+    restart_this = this;
+    window.setTimeout(function() { restart_this.autorun(); }, 1000);
   }
 
   this.pause = function() {
@@ -78,16 +82,15 @@ function UI(tape_catalog, runner, memory) {
   }
 
   this.tape_file_name = function(name) {
-    return "tape/" + name + ".js";
+    return "files/" + name;
   }
 
   this.load_tape_file = function(name) {
-    var tape_name = this.tape_file_name(name);
-    var ref = document.createElement('script')
-    ref.setAttribute("type", "text/javascript");
-    ref.setAttribute("src", tape_name);
-    if (typeof ref != "undefined")
-      document.getElementsByTagName("head")[0].appendChild(ref);
+    var load_tape_file_this = this;
+    var callback = function(image) {
+      load_tape_file_this.file_loaded(name, image);
+    }
+    GetBinaryFile(this.tape_file_name(name), callback, true);
   }
 
   this.selected_file_name = function() {
@@ -108,8 +111,47 @@ function UI(tape_catalog, runner, memory) {
     return window.frames.disassembler_frame.loaded;
   }
 
-  this.file_loaded = function(file) {
-    if (file == null) return;
+  this.extract_rk86_word = function(v, i) {
+    return ((v.charCodeAt(i) & 0xff) << 8) | (v.charCodeAt(i + 1) & 0xff);
+  }
+
+  this.parse_rk86_binary = function(name, image) {
+    var file = {};
+    file.name = name;
+
+    var v = image.Content;
+
+    if (name.match(/\.bin$/)) {
+      file.size = v.length;
+      file.start = name.match(/^mon/) ? 0x10000 - file.size : 0;
+      file.end = file.start + file.size - 1;
+      file.image = v;
+    } else {
+      var i = 0;
+      if ((v.charCodeAt(i) & 0xff) == 0xe6) ++i;
+      file.start = this.extract_rk86_word(v, i);
+      file.end = this.extract_rk86_word(v, i + 2);
+      i += 4;
+      file.size = file.end - file.start + 1;
+      file.image = v.substr(i, file.size);
+    }
+    file.entry = (name == "PVO.GAM" ? 0x3400 : file.start);
+    return file;
+  }
+
+  this.autorun = function() {
+    if (this.autoexec.file) {
+      this.load_mode = this.autoexec.loadonly ? "load" : "run";
+      this.load_tape_file(this.autoexec.file);
+    }
+  }
+
+  this.file_loaded = function(name, binary) {
+    if (binary == null) {
+      alert("Error loading a file '" + name + "'");
+      return;
+    }
+    var file = this.parse_rk86_binary(name, binary);
     this.memory.load_file(file);
 
     if (this.disassembler_available()) 
@@ -118,10 +160,12 @@ function UI(tape_catalog, runner, memory) {
     if (/^mon.+\.bin$/.exec(file.name) && this.load_mode == "run") {
       this.runner.execute();
       console.log("Monitor started");
+      this.restart();
       return;
     }
 
-    this.screenshot_filename = file.name + ".png";
+    this.screenshot_name = file.name;
+    this.screenshot_count = 1;
 
     if (this.load_mode == "load") {
       var sz = file.start + file.image.length - 1;
@@ -129,7 +173,9 @@ function UI(tape_catalog, runner, memory) {
             "(" + file.start.toString(16) + "-" + sz.toString(16) + "), " +
             "Run by 'G" + file.entry.toString(16) + "'");
     } else {
-      this.runner.cpu.jump(file.start);
+      console.log("Started", file.name, "from", file.entry.toString(16));
+      screen.init_cache();
+      this.runner.cpu.jump(file.entry);
     }
   }
 
@@ -161,8 +207,11 @@ function UI(tape_catalog, runner, memory) {
 
   this.save_screen = function() {
     var save_screen_this = this;
+    var filename = save_screen_this.screenshot_name + "-" +
+                   save_screen_this.screenshot_count + ".png";
+    save_screen_this.screenshot_count += 1;
     this.canvas.toBlob(function(blob) {
-      saveAs(blob, save_screen_this.screenshot_filename);
+      saveAs(blob, filename);
     });  
   }
   
