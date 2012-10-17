@@ -5,13 +5,110 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-10-09T10:13:00Z</updated>
+  <updated>2012-10-17T22:38:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Pi Bow - самый веселый корпус для Raspberry Pi]]></title>
+    <link href="http://demin.ws/blog/russian/2012/10/17/pi-bow/"/>
+    <updated>2012-10-17T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/10/17/pi-bow/</id>
+    <content type="html"><![CDATA[<p>Я недавно <a href="https://twitter.com/begoon">твитил</a> по прикольный корпус для Raspberry Pi, который
+называется <a href="http://www.maplin.co.uk/pibow-colour-raspberry-pi-case-652812">Pibow</a>. Продает его Maplin. Увы, но я не смог сдержаться, и,
+несмотря я свое собственно нытье про дороговизну этого корпуса, купил его.</p>
+
+<p>Хотите оценить прикольность девайса?</p>
+
+<p>Итак, оно приехало:</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1130.JPG" alt="" />
+</p>
+
+<p>Детали конструкции:</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1102.JPG" alt="" />
+</p>
+
+<p>Начинаем послойное &ldquo;введение магнезии&rdquo;:</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1113.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1114.JPG" alt="" />
+</p>
+
+<p>После первых двух слоев пристраиваем плату RPi (помним, что ее конструкция
+не имеет даже дырок под стойки):</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1115.JPG" alt="" />
+</p>
+
+<p>Далее по слоям:</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1116.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1117.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1118.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1119.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1120.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1121.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1122.JPG" alt="" />
+</p>
+
+<p>Берем винты, гайки и ключ&hellip;</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1123.JPG" alt="" />
+</p>
+
+<p>Вуяля, девайс в сборе:</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1124.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1125.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1126.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1127.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1128.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1129.JPG" alt="" />
+</p>
+
+<p>Если честно &ndash; я обожаю Raspberry Pi. Сложно себе представить удобнее
+девайс для школ и даже институтов в качестве учебного пособия. С ним может
+тягаться разве что <a href="http://demin.ws/blog/russian/2012/01/19/maximite-kit/">Maximite</a>, если речь идет о более &ldquo;железячной&rdquo; работе.</p>
+
+<p>До этого мой &ldquo;корпус&rdquo; для RPi от <a href="http://www.skpang.co.uk/catalog/starter-kita-for-raspberry-pi-pi-not-include-p-1070.html">SK Pang</a> выглядел так:</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1103.JPG" alt="" />
+</p>
+
+<p>Офигительно удобная штука, когда нужно иметь быстрый доступ к порту
+общего назначения (GPIO), но Pibow бескомпромиссен как обычный корпус.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Как писать на Паскале-Си или ассемблер для Intel 8080]]></title>

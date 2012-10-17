@@ -1,0 +1,84 @@
+---
+layout: post
+title: "Pi Bow - the most funny case for Raspberry Pi"
+language: english
+date: 2012-10-17 22:38
+comments: true
+categories: 
+- english
+- raspberry-pi
+- rpi
+---
+I [tweeted][begoon] recently about a cool case for Raspberry Pi called 
+[Pibow][] from Maplin. Alas, despite of my moaning about costliness of this device I have bought it.
+
+[begoon]: https://twitter.com/begoon
+[Pibow]: http://www.maplin.co.uk/pibow-colour-raspberry-pi-case-652812
+
+How cool is that? Let's check it out. It has arrived:
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1130.JPG)
+
+The parts:
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1102.JPG)
+
+Let's begin its "by slice" composing:
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1113.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1114.JPG)
+
+After the first two slices let's put the RPi (remember that it's design
+doesn't have even holes for screws):
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1115.JPG)
+
+Slice by slice:
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1116.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1117.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1118.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1119.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1120.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1121.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1122.JPG)
+
+Now screws and nuts...
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1123.JPG)
+
+The device is ready!
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1124.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1125.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1126.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1127.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1128.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1129.JPG)
+
+Frankly I just love Raspberry Pi. It is difficult to imagine a better device
+for schools and universities for studying computers. Only [Maximite][] could
+compete if we need a bit more lower level, closer to hardware.
+
+[Maximite]: /blog/english/2012/01/19/maximite-kit/
+
+Before my RPi's "case" from [SK Pang][] looked like this:
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1103.JPG)
+
+Incredibly useful device if you need access to GPIO, but as a "normal" case
+Pibow is unbeatable.
+
+[SK Pang]: http://www.skpang.co.uk/catalog/starter-kita-for-raspberry-pi-pi-not-include-p-1070.html

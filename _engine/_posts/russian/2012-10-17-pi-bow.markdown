@@ -1,0 +1,87 @@
+---
+layout: post
+title: "Pi Bow - самый веселый корпус для Raspberry Pi"
+language: russian
+date: 2012-10-17 22:38
+comments: true
+categories: 
+- raspberry-pi
+- rpi
+- russian
+---
+Я недавно [твитил][begoon] по прикольный корпус для Raspberry Pi, который
+называется [Pibow][]. Продает его Maplin. Увы, но я не смог сдержаться, и,
+несмотря я свое собственно нытье про дороговизну этого корпуса, купил его.
+
+[begoon]: https://twitter.com/begoon
+[Pibow]: http://www.maplin.co.uk/pibow-colour-raspberry-pi-case-652812
+
+Хотите оценить прикольность девайса?
+
+Итак, оно приехало:
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1130.JPG)
+
+Детали конструкции:
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1102.JPG)
+
+Начинаем послойное "введение магнезии":
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1113.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1114.JPG)
+
+После первых двух слоев пристраиваем плату RPi (помним, что ее конструкция 
+не имеет даже дырок под стойки):
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1115.JPG)
+
+Далее по слоям:
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1116.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1117.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1118.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1119.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1120.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1121.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1122.JPG)
+
+Берем винты, гайки и ключ...
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1123.JPG)
+
+Вуяля, девайс в сборе:
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1124.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1125.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1126.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1127.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1128.JPG)
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1129.JPG)
+
+Если честно -- я обожаю Raspberry Pi. Сложно себе представить удобнее
+девайс для школ и даже институтов в качестве учебного пособия. С ним может
+тягаться разве что [Maximite][], если речь идет о более "железячной" работе.
+
+[Maximite]: /blog/russian/2012/01/19/maximite-kit/
+
+До этого мой "корпус" для RPi от [SK Pang][] выглядел так:
+
+![](/images/blog/raspberry-pi/pi-bow/IMG_1103.JPG)
+
+Офигительно удобная штука, когда нужно иметь быстрый доступ к порту
+общего назначения (GPIO), но Pibow бескомпромиссен как обычный корпус.
+
+[SK Pang]: http://www.skpang.co.uk/catalog/starter-kita-for-raspberry-pi-pi-not-include-p-1070.html

@@ -5,13 +5,107 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-10-09T10:13:00Z</updated>
+  <updated>2012-10-17T22:38:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Pi Bow - the most funny case for Raspberry Pi]]></title>
+    <link href="http://demin.ws/blog/english/2012/10/17/pi-bow/"/>
+    <updated>2012-10-17T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/10/17/pi-bow/</id>
+    <content type="html"><![CDATA[<p>I <a href="https://twitter.com/begoon">tweeted</a> recently about a cool case for Raspberry Pi called
+<a href="http://www.maplin.co.uk/pibow-colour-raspberry-pi-case-652812">Pibow</a> from Maplin. Alas, despite of my moaning about costliness of this device I have bought it.</p>
+
+<p>How cool is that? Let&rsquo;s check it out. It has arrived:</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1130.JPG" alt="" />
+</p>
+
+<p>The parts:</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1102.JPG" alt="" />
+</p>
+
+<p>Let&rsquo;s begin its &ldquo;by slice&rdquo; composing:</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1113.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1114.JPG" alt="" />
+</p>
+
+<p>After the first two slices let&rsquo;s put the RPi (remember that it&rsquo;s design
+doesn&rsquo;t have even holes for screws):</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1115.JPG" alt="" />
+</p>
+
+<p>Slice by slice:</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1116.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1117.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1118.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1119.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1120.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1121.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1122.JPG" alt="" />
+</p>
+
+<p>Now screws and nuts&hellip;</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1123.JPG" alt="" />
+</p>
+
+<p>The device is ready!</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1124.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1125.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1126.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1127.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1128.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1129.JPG" alt="" />
+</p>
+
+<p>Frankly I just love Raspberry Pi. It is difficult to imagine a better device
+for schools and universities for studying computers. Only <a href="http://demin.ws/blog/english/2012/01/19/maximite-kit/">Maximite</a> could
+compete if we need a bit more lower level, closer to hardware.</p>
+
+<p>Before my RPi&rsquo;s &ldquo;case&rdquo; from <a href="http://www.skpang.co.uk/catalog/starter-kita-for-raspberry-pi-pi-not-include-p-1070.html">SK Pang</a> looked like this:</p>
+
+<p><img src="http://demin.ws/images/blog/raspberry-pi/pi-bow/IMG_1103.JPG" alt="" />
+</p>
+
+<p>Incredibly useful device if you need access to GPIO, but as a &ldquo;normal&rdquo; case
+Pibow is unbeatable.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[How to rewrite a project from Pascal to C, or a macro-assembler for Intel 8080]]></title>
