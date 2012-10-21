@@ -1,1 +1,0 @@
-Программа Space Compressor
