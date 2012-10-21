@@ -57,6 +57,11 @@ function Memory(keyboard) {
 
   this.length = function() { return 0x10000; }
 
+  this.read_raw = function(addr) {
+    addr &= 0xffff;
+    return this.buf[addr] & 0xff;
+  }
+
   this.read = function(addr) {
     addr &= 0xffff;
 

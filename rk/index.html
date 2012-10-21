@@ -69,7 +69,7 @@
         <div id="back" style="background: #000; padding: 1px; border: 1px solid #ccc">
           <canvas id="canvas" width="0" height="0"></canvas>
         </div>
-        Version 1.2/C |
+        Version 1.3 |
         <div style="display: none">
         Screen: <input id="screen_width" value="78" style="width: 2em"> 
         x       <input id="screen_height" value="30" style="width: 2em">
@@ -81,13 +81,14 @@
         </div>
         <button onclick="ui.reset()">Reset</button>
         <button onclick="ui.restart()">Restart</button>
-        <button onclick="ui.pause()">Pause</button>
+        <button id="pause_button" onclick="ui.pause()">Pause</button>
 
         Files: <select id="file_selector"></select>
-        <button onclick="location.href='catalog/index.html'; return true">Catalog</button>
         <button onclick="ui.run_selected()">Run</button>
         <button onclick="ui.load_selected()">Load</button>
+        <button onclick="location.href='catalog/index.html'; return true">Catalog</button>
         <button onclick="ui.save_screen()">Save screen</button>
+        <button onclick="ui.console()">Console</button>
       </div>
       <div style="float: left">
         <div id="disassembler_panel"

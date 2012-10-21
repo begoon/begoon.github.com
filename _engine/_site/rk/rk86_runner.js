@@ -18,21 +18,34 @@
 
 function Runner(cpu) {
   this.cpu = cpu;
-  this.pause = false;
+  this.paused = false;
+  this.tracer = null;
 
-  const FREQ = 2000000;
+  const FREQ = 2100000;
   const TICK_PER_MS = FREQ / 100;
 
   this.cpu.jump(0xf800);
 
   this.execute = function() {
-    if (!this.pause) {
+    if (!this.paused) {
       var ticks = 0;
       while (ticks < TICK_PER_MS) {
+        if (this.tracer) { 
+          this.tracer(this)
+          if (this.paused) break;
+        }
         ticks += this.cpu.instruction();
       }
     }
     runner_self = this;
     window.setTimeout(function() { runner_self.execute(); }, 10);
+  }
+
+  this.pause = function() {
+    this.paused = true;
+  }
+
+  this.resume = function() {
+    this.paused = false;
   }
 }

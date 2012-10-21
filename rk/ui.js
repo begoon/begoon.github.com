@@ -75,10 +75,26 @@ function UI(tape_catalog, runner, memory, autoexec) {
     window.setTimeout(function() { restart_this.autorun(); }, 1000);
   }
 
+  this.update_pause_button = function(paused) {
+    var button = document.getElementById("pause_button")
+    
+    button.innerHTML = paused ? "Resume" : "Pause";
+    button.style.background = paused ? "red" : "";
+  }
+
   this.pause = function() {
-    if (!this.runner.pause)
-      console.log("Pause at " + this.runner.cpu.pc.toString(16));
-    this.runner.pause = !this.runner.pause;
+    if (this.runner.paused) {
+      this.runner.resume();
+      console.log("Resumed");
+      if (this.console_window)
+        this.console_window.console.resume_ui_callback();
+    } else {
+      this.runner.pause();
+      console.log("Paused at " + this.runner.cpu.pc.toString(16));
+      if (this.console_window)
+        this.console_window.console.pause_ui_callback();
+    }
+    this.update_pause_button(this.runner.paused);
   }
 
   this.tape_file_name = function(name) {
@@ -215,6 +231,12 @@ function UI(tape_catalog, runner, memory, autoexec) {
     });  
   }
   
+  this.console = function() {
+    this.console_window = window.open("console.html", '_blank',
+      'toolbar=yes, location=yes, status=no, menubar=yes, scrollbars=yes, ' +
+      'resizable=yes, width=700, height=600');
+  }
+
   this.load_mode = "run";
   this.load_tape_file("mon32.bin");
 }
