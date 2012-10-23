@@ -11,6 +11,7 @@ title: "Статьи"
 
 ### 2012
 
+* [Pi Bow — самый веселый корпус для Raspberry Pi][]
 * [Родной Sinclair ZX Spectrum][]
 * [Интервью с Чарльзом Уэзереллом][], автором книги "Этюды для программистов"
 * [Радио-86РК на железе Maximite][]
@@ -50,6 +51,7 @@ title: "Статьи"
 
 [Интервью проекту OpenQuality.ru]: http://experience.openquality.ru/alexander-demin-interview/
 
+[Pi Bow — самый веселый корпус для Raspberry Pi]: http://habrahabr.ru/post/155251/
 [Родной Sinclair ZX Spectrum]: http://habrahabr.ru/post/150684/
 [Интервью с Чарльзом Уэзереллом]: http://habrahabr.ru/post/150238/
 [Радио-86РК на железе Maximite]: http://habrahabr.ru/post/150080/
