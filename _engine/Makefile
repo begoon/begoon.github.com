@@ -22,14 +22,6 @@ updated-public:
 revert-updated-public:
 	$(MAKE) filter-updated cmd="git checkout"
 
-init: init-go init-ruby
-  
-init-go:
-	source ~/.gvm/scripts/gvm && gvm use weekly
-    
-init-ruby:
-	rvm_is_not_a_shell_function=0 rvm use 1.9.2
-
 code-css:
 	highlight --style-outfile=_site/css/highlight.css --print-style \
 	--font Menlo,Monaco,\"Andale\ Mono\",\"lucida\ console\",\"Courier\ New\",monospace
