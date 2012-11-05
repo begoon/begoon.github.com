@@ -59,7 +59,10 @@ var (
   no_syntax   *bool = flag.Bool("no-syntax", false, "no syntax highlighting")
 
   HeaderRE          = regexp.MustCompile("(?s)^(---\n(.+)\n---\n)")
+  HeaderREv2        = regexp.MustCompile("^(?s)(@.+?)\n\n")
   AttrsRE           = regexp.MustCompile("(?Um)^([^\\:]+?)\\: (.+)$")
+  AttrsREv2         = regexp.MustCompile("(?Um)^@([^\\:]+?)\\: (.+)$")
+  TitleREv2         = regexp.MustCompile("^(.+)\n?=+\n\n")
   CategoriesRE      = regexp.MustCompile("(?m)^- (.+)$")
   ImgRE             = regexp.MustCompile("{% img (\\S+?) %}")
   CodeblockRE       = regexp.MustCompile("(?smU)(^{% codeblock lang\\:([^ ]+) %}(.*){% endcodeblock %})")
@@ -70,7 +73,8 @@ var (
   IncludeRE         = regexp.MustCompile("(?sU){% include (\\S+?) %}")
   ImgReplaceRE      = regexp.MustCompile("(?s)(<img .*?src=[\"'])(/[^\"']+?)([\"'].*?\\/>)")
   HrefReplaceRE     = regexp.MustCompile("(?s)(<a .*?href=[\"'])(/[^\"']+?)([\"'].*?>)")
-  PostNameRE        = regexp.MustCompile("^.*((\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d))-([^ \\.]+)\\.markdown$")
+  PostNameRE        = regexp.MustCompile("^.*((\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d))-([^ \\./]+?)\\.markdown$")
+  PostNameREv2      = regexp.MustCompile("^.*((\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d))-([^ /]+?)/(index)\\.markdown$")
   BlogspotRE        = regexp.MustCompile("^http:\\/\\/(easy|meta)-coding\\.blogspot\\.com\\/\\d\\d\\d\\d\\/\\d\\d\\/.+\\.html$")
   BlogspotEnglishRE = regexp.MustCompile("-english(\\.html)$")
   UnprocessedTagsRE = regexp.MustCompile("(?Ums)^({%.*?}|```)")
@@ -184,8 +188,10 @@ func cut_surrounding_quotes(s string) string {
 func load_page(name string) Page {
   p := Page{}
   p["filename"] = name
-  p["content"] = *load_file(name)
-  if m := HeaderRE.FindStringSubmatch(p["content"]); m != nil {
+
+  // Process the "---"-type of the header.
+  content := *load_file(name)
+  if m := HeaderRE.FindStringSubmatch(content); m != nil {
     header := m[2]
     if m := AttrsRE.FindAllStringSubmatch(header, -1); m != nil {
       for _, pair := range m {
@@ -201,15 +207,48 @@ func load_page(name string) Page {
       }
       p["categories"] = strings.Join(categories, ", ")
     }
+    content = HeaderRE.ReplaceAllLiteralString(content, "")
   }
-  p["content"] = HeaderRE.ReplaceAllLiteralString(p["content"], "")
-  p["unprocessed"] = p["content"]
+  if len(content) > 0 && content[0] == '@' {
+    if m := HeaderREv2.FindStringSubmatch(content); m != nil {
+      header := m[0]
+      if m := AttrsREv2.FindAllStringSubmatch(header, -1); m != nil {
+        for _, pair := range m {
+          name, value := pair[1], pair[2]
+          p[name] = cut_surrounding_quotes(value)
+          if name == "tags" || name == "categories" {
+            tags := strings.Split(value, ",")
+            for i, v := range tags {
+              tags[i] = strings.TrimSpace(v)
+            }
+            p["categories"] = strings.Join(tags, ", ")
+          }
+        }
+        if _, ok := p["layout"]; !ok {
+          p["layout"] = "post"
+        }
+      } else {
+        die("Bad @ headers in [%#v]", header)
+      }
+    } else {
+      die("Bad @ header in [%s]", name)
+    }
+    content = HeaderREv2.ReplaceAllLiteralString(content, "")
+    if m := TitleREv2.FindStringSubmatch(content); m != nil {
+      content = TitleREv2.ReplaceAllLiteralString(content, "")
+      p["title"] = m[1]
+    } else {
+      die("Title not found in [%#v]", content)
+    }
+  }
+  p["unprocessed"] = content
   if len(p["layout"]) == 0 {
     p["layout"] = "none" // Make sure that "layout" always exists.
   }
   if len(p["language"]) == 0 {
     p["language"] = "russian" // Make sure that "language" always exists.
   }
+  p["content"] = content
   return p
 }
 
@@ -395,11 +434,20 @@ func precheck_post(s string) {
   }
 }
 
+func pause() string {
+  var s string
+  fmt.Scanf("%s", &s)
+  return s
+}
+
 func process_post(filename string) {
   trace("$ Processing post [%s]", filename)
   m := PostNameRE.FindStringSubmatch(filename)
   if m == nil {
-    die("Unable to split post name [%s]", filename)
+    m = PostNameREv2.FindStringSubmatch(filename)
+    if m == nil {
+      return
+    }
   }
 
   p := load_page(filename)
@@ -413,6 +461,10 @@ func process_post(filename string) {
   p["month"] = m[3]
   p["day"] = m[4]
   p["slug"] = m[5]
+
+  if len(m) >= 7 {
+    p["v2"] = "yes"
+  }
 
   p["url"] = "/" + strings.Join([]string{
     BlogPrefix, p["language"], p["year"], p["month"], p["day"], p["slug"],
@@ -488,8 +540,26 @@ func process_post(filename string) {
   if os.MkdirAll(dir, os.ModePerm) != nil {
     die("Unable to create directory [%s]", dir)
   }
+
+  if p["v2"] == "yes" {
+    callback := func(path string, info os.FileInfo, err error) error {
+      name := filepath.Base(path)
+      if info == nil || info.IsDir() || name == ".DS_Store" || name == "index.markdown" {
+        return err
+      }
+      target_file := filepath.Join(dir, name)
+      trace("+ Copy post file %s -> %s\n", path, target_file)
+      copy_file(path, target_file)
+      p["rss"] = strings.Replace(p["rss"], name, p["url"]+name, -1)
+      return err
+    }
+    if err := filepath.Walk(filepath.Dir(filename), callback); err != nil {
+      die("Walking through post file failed, error %#v", err)
+    }
+  }
+
   t := strings.Join([]string{dir, "index.html"}, "/")
-  if ioutil.WriteFile(t, []byte(p["content"]), os.ModePerm) != nil {
+  if ioutil.WriteFile(t, []byte(p["content"]), 0666) != nil {
     die("Unable to write file [%s]", t)
   }
   trace("= Written file [%s]", t)
