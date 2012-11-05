@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>"Assembly language for the PC" by Peter Norton and John Socha</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/interview/">interview</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>&#34;Assembly language for the PC&#34; by Peter Norton and John Socha</h1>
+<div id="post">
+  <p>I keep going reviewing books which influenced on me considerably at the time.
+Today it is a book by Peter Norton and John Socha about programming in the
+assembly language for the PC.</p>
+
+<p>A small lyrical digression.</p>
+
+<p>Does any know that Peter Norton didn&rsquo;t write the famous Norton Commander?
+The Norton Commander had been invented and then maintained by John Socha
+up to its &ldquo;canonical&rdquo; version 3. Socha used quite an unusual approach in those
+days mixing the assembly language with C when most of &ldquo;true&rdquo; developers
+programmed purely in assembly. It allowed developing sophisticated but still
+fast and efficient applications much quicker.</p>
+
+<p>Okay, go back to the book. It liked the idea of buying old books almost for
+nothing just for the sake of holding them in hands.</p>
+
+<p><img src="IMG_1171.jpg" alt="" />
+</p>
+
+<p>Wonderful. They sent me a decommissioned library copy carefully glued by the
+sticky tape.</p>
+
+<p><img src="IMG_1172.jpg" alt="" />
+</p>
+
+<p>I personally don&rsquo;t like when people write in books or fold page corners, but
+this looks very touching &ndash; somebody did drilled this stuff.</p>
+
+<p><img src="IMG_1173.jpg" alt="" />
+</p>
+
+<p>Is it still possible NOT to understand how EQU works?</p>
+
+<p><img src="IMG_1174.jpg" alt="" />
+</p>
+
+<p>Or DUP?</p>
+
+<p><img src="IMG_1175.jpg" alt="" />
+</p>
+
+<p>Or stack?</p>
+
+<p><img src="IMG_1176.jpg" alt="" />
+</p>
+
+<p>Or how to intercept interrupts in DOS?</p>
+
+<p><img src="IMG_1178.jpg" alt="" />
+</p>
+
+<p>By the way, it turned that I have got the third edition of the book having
+a couple of extra chapters about 286 and 386 comparing to its first
+edition which I read years ago in Russian.</p>
+
+<p><img src="IMG_1177.jpg" alt="" />
+</p>
+
+<p>The bottom line &ndash; this book was and still is fantastic.</p>
+
+<p><img src="IMG_1180.jpg" alt="" />
+</p>
+
+<p>Through the book they explain step by step a process of developing a program
+called &ldquo;dskpatch&rdquo;, a visual editor allowing viewing and modifying individual
+sectors on floppy or hard drives. In the end it turns into an advanced
+product split into modules and having dozens of generic routines easily
+re-usable in any program. Starting from the very beginning you have to learn
+the basics of 8086, then BIOS and DOS functions, the direct access to video
+memory and keyboard.</p>
+
+<p>But the main thing is that this book explains how to write really big projects
+in assembly. For example, my real opening was that if each subroutine always
+preserves the registers which are not to pass parameters and to return the
+result the amount of &ldquo;unpredictable side effects&rdquo; drops down substantially.
+Of course, today it sounds like information from a nursery level, but even in
+the nursery somebody has communicate it.</p>
+
+<p>In the appendix there is the full carefully commented listing of &ldquo;dskptach&rdquo;.</p>
+
+<p>Also, the third edition has a few chapters about mixing the assembler and
+high level languages like C and PASCAL. Passing function parameters to and from
+the assembler routines is explained in all details. As a bonus, there is a
+library with an unambiguous name &ndash; SOCHALIB congaing a lot of very useful
+routines for the screen, mouse and the keyboard. It was delightfully impressed
+that a routine putting a character on the screen used a pre-calculated
+lookup table to compute an address of the screen line base instead of
+multiplying Y times 80 directly. I suspect the code of the library resides
+somewhere inside the Norton Commander and Norton Utilities, and it explains
+why these products worked blazingly fast.</p>
+
+<p><img src="IMG_1183.jpg" alt="" />
+</p>
+
+<p>The conclusion: strongly recommended as an example of the perfect textbook.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/11/04/norton-assembly-language-book/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/11/04/norton-assembly-language-book/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

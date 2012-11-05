@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>"Язык ассемблера для IBM PC", Питер Нортон и Джон Соухэ</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/interview/">интервью</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>&#34;Язык ассемблера для IBM PC&#34;, Питер Нортон и Джон Соухэ</h1>
+<div id="post">
+  <p>Продолжаю обзор книг, которые так или иначе оказали на меня значительное
+влияние в свое время. Сегодня это книга Питера Нортона и Джона Соухэ про
+программирование на ассемблере.</p>
+
+<p>Небольшое лирическое отступление.</p>
+
+<p>Кстати, все знают, что Нортон Коммандер написал не Питер Нортон? Его в
+одиночку, по крайне мере до канонической версии 3 включительно, писал и
+поддерживал товарищ Соухэ, применяя, как он сам говорил, экстремальный на то
+время подход, смешивая С и ассемблер. Это позволяло быстро разрабатывать
+эффективные программы, тогда как &ldquo;тру&rdquo;-программисты того времени писали
+исключительно на ассемблере.</p>
+
+<p>Кстати, все знают, что &ldquo;за бугром&rdquo; синий текстовый экран с двумя панелями
+называют &ldquo;доисторической русской программой&rdquo;? Забавно, что
+проникновение Коммандера в умы компьютерщиков на территории бывшего СССР
+имеет несравнимые масштабы по отношение к тем местам, где Коммандер родился.</p>
+
+<p>Ладно, вернемся к книге. Мне понравилась тема покупки старых книг практически
+за бесценок, просто чтобы подержать их в руках.</p>
+
+<p><img src="IMG_1171.jpg" alt="" />
+</p>
+
+<p>Снова радость - списанный библиотечный экземпляр, проклеенный скотчем.</p>
+
+<p><img src="IMG_1172.jpg" alt="" />
+</p>
+
+<p>Я не люблю, когда пишут в книгах или загибают листы, но выглядит это
+трогательно. Кто-то это явно зубрил.</p>
+
+<p><img src="IMG_1173.jpg" alt="" />
+</p>
+
+<p>Ну как можно после такой иллюстрации не понять, как работает EQU?</p>
+
+<p><img src="IMG_1174.jpg" alt="" />
+</p>
+
+<p>Или DUP.</p>
+
+<p><img src="IMG_1175.jpg" alt="" />
+</p>
+
+<p>Или стек.</p>
+
+<p><img src="IMG_1176.jpg" alt="" />
+</p>
+
+<p>Или как перехватывать прерывания в ДОСе.</p>
+
+<p><img src="IMG_1178.jpg" alt="" />
+</p>
+
+<p>Кстати, это оказалось третье издание книги, в котором очень кратко описывался
+защищенный режим 286 и 386-х.</p>
+
+<p><img src="IMG_1177.jpg" alt="" />
+</p>
+
+<p>В общем, книга отличная.</p>
+
+<p><img src="IMG_1180.jpg" alt="" />
+</p>
+
+<p>На протяжении всей книги описывается процесс создания визуального посекторного
+редактора диска (дискеты или винчестера). В конце вы получаете весьма
+нетривиальную программу приличного размера. Начав с самых азов ассемблера,
+придется освоить арифметические операции, работу с прерываниями БИОС и ДОС,
+прямой доступ в экранную область, клавиатуру. Но самое главное, появляется
+понимание как писать действительно большие программы на ассемблере. Для меня,
+например, было реальным открытием, что если каждая подпрограмма будет
+по умолчанию сохранять регистры, кроме используемых для передачи и возврата
+данных, то писать становится разительно проще. Конечно, сейчас это знание
+для детского сада, но в детском саду должен быть кто-то, кто это донесет.</p>
+
+<p>В конце приводится полный откомментированный листинг этого редактора.</p>
+
+<p>Еще в третьем издании добавлена отличная глава про смешивание ассемблера
+с языками типа С или Паскаля. В деталях разжевывается передача параметров
+и использование ассемблерных вставок. На десерт в одном из приложений
+дается исходник библиотеки с недвусмысленным названием SOCHALIB. В ней
+много разных функций для работы с экраном, мышью, клавиатурой. А еще там
+есть некоторые функции с префиксом Fast в имени. Например, те, что работают
+с экраном естественно не используют БИОС, а работают напрямую с экранной
+областью. Я был приятно удивлен, когда функция вывода символа на экран
+вместо умножения Y*80 для вычисления базы строки использовала таблицу
+(pre-calc) с уже посчитанными значениями. Не удивлюсь, если код этой
+библиотеки живет где-то в коде Коммандера или Утилит Нортона.</p>
+
+<p><img src="IMG_1183.jpg" alt="" />
+</p>
+
+<p>Кстати, если кому интересно, вот русский перевод первого издания.</p>
+
+<p><a href="Norton-Assembly-language-for-the-PC.djvu">Нортон П., Язык ассемблера для IBM PC</a></p>
+
+<p><img src="norton-assembly-language-book-cover.png" alt="" />
+</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/11/04/norton-assembly-language-book/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/11/04/norton-assembly-language-book/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
