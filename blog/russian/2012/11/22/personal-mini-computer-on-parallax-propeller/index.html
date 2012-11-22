@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Мини-компьютер на базе микроконтроллера Parallax Propeller</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/interview/">интервью</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Мини-компьютер на базе микроконтроллера Parallax Propeller</h1>
+<div id="post">
+  <p>Микроконтроллер фирмы Parallax под названием <a href="http://www.parallax.com/propeller/">Propeller</a>, в сравнении с
+&ldquo;классикой&rdquo; жанра типа PIC или AVR занимает несколько странную нишу. Про
+первые два можно сказать, что это архитектуры общего назначения. Создатели
+же Пропеллера подошли к вопросу &ldquo;с фланга&rdquo;.</p>
+
+<p>Основные отличительные особенности Пропеллера:</p>
+
+<ul>
+<li>8 независимых ядер, работающих параллельно. Какое-либо разделение времени,
+необходимое для общих ресурсов типа памяти или портов ввода-вывода не
+контролируется программистом и &ldquo;вшито&rdquo; в кристалл. Это дает предсказуемость
+во времени выполнения кода. Каждое ядро (cog) имеет 4КБ собственной
+изолированной оперативной памяти. Также каждое ядро имеет встроенный
+аппаратный модуль для генерации (внимание!) ТВ или VGA видео-сигнала.</li>
+<li>Нет понятия прерываний. Вместо это предлагается запускать конкурирующие
+задачи разных ядрах (cog&rsquo;ах).</li>
+<li>Программировать можно либо на ассемблере, либо на особом высокоуровневом
+языке Spin, который сильно упрощает многоядерное и параллельное
+программирование. Интерпретатор Spin зашит в кристалл.</li>
+<li>Почти нет понятия программации или прошивки кристалла. Верхняя половина
+адресного (ROM) пространства размером в 32КБ прошита интерпретатором Spin
+и разными системными таблицами. В этом случае при каждом включении
+требуется загрузка программы извне (например, из среды разработки) в нижнюю
+область 32КБ (RAM). Но обычно в реальном использовании подключается внешняя
+I2C микросхема памяти EEPROM, содержимое которой автоматически копируется
+в RAM при включении кристалла.</li>
+<li>Процессор заявлен как 32-х битный, так как оперирует со данными этого
+размера, но адресное пространство 16-и битное (64КБ).</li>
+</ul>
+
+<p>Язык Spin разработан для удобного многопроцессорного программирования, и
+выглядит как нечто среднее между процедурным и объектно-ориентированным
+языком.</p>
+
+<p>Вот пример кода на Spin, запускающего функцию крутиться на нескольких
+ядрах. Код реально простой и понятный.</p>
+
+<pre><code>CON
+
+  _clkmode = xtal1 + pll16x         'Establish speed
+  _xinfreq = 5_000_000              '80Mhz
+
+OBJ
+
+  led: &quot;E555_LEDEngine.spin&quot;        'Include LED methods object
+
+VAR
+
+  byte Counter                      'Establish Counter Variable
+  long stack[90]                    'Establish working space
+
+PUB Main
+
+  cognew(Twinkle(16,clkfreq/50), @stack[0])    'start Twinkle cog 1
+  cognew(Twinkle(19,clkfreq/150), @stack[30])  'start Twinkle cog 2
+  cognew(Twinkle(22,clkfreq/100), @stack[60])  'start Twinkle cog 3
+
+PUB Twinkle(PIN,RATE)                  'Method declaration 
+
+  repeat                               'Initiate a master loop
+
+    repeat Counter from 0 to 100       'Repeat loop Counter
+      led.LEDBrightness(Counter, PIN)  'Adjust LED brightness 
+      waitcnt(RATE + cnt)              'Wait a moment
+
+    repeat Counter from 100 to 0       'Repeat loop Counter
+      led.LEDBrightness(Counter,PIN)   'Adjust LED brightness 
+      waitcnt(RATE + cnt)              'Wait a moment
+</code></pre>
+
+<p>Функция <code>cognew</code> запускает задачу на трех ядрах, параметризируя каждую
+своей частотой и стеком.</p>
+
+<p>Упрощенно Пропеллер устроен следующим образом:</p>
+
+<p><a href="propeller-block-large.jpg"><img src="propeller-block.jpg" alt="" />
+</a></p>
+
+<p>Название &ldquo;Пропеллер&rdquo; произошло от его модели передачи приоритета на доступ к
+разделяемым ресурсам. Модуль Hub, контролирующий разделение времени,
+делает это по кругу, типа крутящегося пропеллера.</p>
+
+<p>Я не хочу в этой статье углубляется в сам Пропеллер, ибо это большая тема.
+Для интересующихся в конце есть ссылки на книги, в которых можно получить
+исчерпывающую информацию об этом микроконтроллере.</p>
+
+<p>Но хочу рассказать об одном интересном проекте, который называется
+&ldquo;<a href="http://propellerpowered.wikispaces.com/Pocket+Mini+Computer">Pocket Mini Computer</a>&rdquo;. Это мини-компьютер на базе Пропеллера (P8X32A),
+использующий evaluation board &ldquo;P8X32A QuickStart&rdquo; как основу.</p>
+
+<p><img src="P8X32A-quick-start.jpg" alt="" />
+</p>
+
+<p>Выглядит это добро следующим образом (фотография с официального сайта):</p>
+
+<p><img src="pocket-mini-computer.jpg" alt="" />
+</p>
+
+<p>Фактически, автор <a href="http://propellerpowered.com/shop/?page_id=234">продает</a> evaluation board плюс плату расширения,
+на которой есть VGA, microSD, PS/2, звук и Wii Gameport. Опционально
+можно поставить микросхему оперативки SRAM на 32КБ.</p>
+
+<p>Фишка проекта в том, что автор разработал интерпретатор Бейсика,
+который превращает все это в микро-компьютер а-ля 80-е. Бейсик написан
+на Spin&rsquo;e (<a href="https://www.dropbox.com/sh/qwhixzvtlrvp1u1/y-JshwklWj/PropellerBASIC">исходники открыты</a>). Диалект весьма
+ограничен, например, нет массивов, строковых и вещественных переменных,
+имена переменных только однобуквенные и т.д. Но тем не менее, дается
+доступ ко всей периферии, включая SD-карту, и также позволяет запускать
+чисто двоичные файлы, которые могут быть написаны хоть на том же Spin&rsquo;e,
+хоть на С (Parallax имеет версию GCC для Пропеллера), хоть на ассемблере.</p>
+
+<p>Далее несколько фотографий конструктора, чтобы было понятно, что дается в
+наборе. Как я уже говорил, основа PMC - это готовая плата &ldquo;P8X32A
+QuickStart&rdquo;, поэтому спаять надо только плату расширения.</p>
+
+<p><img src="IMG_1192.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1193.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1194.JPG" alt="" />
+</p>
+
+<p>Почти все запаяно.</p>
+
+<p><img src="IMG_1195.JPG" alt="" />
+</p>
+
+<p>Бутерброд в сборе.</p>
+
+<p><img src="IMG_1196.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1197.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1198.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1199.JPG" alt="" />
+</p>
+
+<p>Вот небольшая демка, чтобы оценить графические возможности.</p>
+
+<iframe width="640" height="360" src="http://www.youtube.com/embed/capsFv1njUE" frameborder="0" allowfullscreen></iframe>
+
+<h2>Общие впечатления</h2>
+
+<h3>Пропеллер</h3>
+
+<p>Не получается назвать его процессором общего назначения. По моему
+субъективному мнению, для эффективного использования Пропеллера надо очень
+хорошо понимать свою прикладную задачу. Например, у Пропеллера нет ШИМ,
+ЦАП/АПЦ, встроенной флеш-памяти, триггеров, понятия прерываний, и создатели
+предлагают либо реализовывать необходимое программно, используя силу
+нескольких ядер, либо использовать специализированные внешние микросхемы.
+В книгах, приведенных в конце, описано множество примеров работы с
+дополнительными микросхемами.</p>
+
+<p>Интересно другое. Создатели Пропеллера не забоялись отойти от традиционного
+подхода и попытались вложить в кристалл конкретные прикладные возможности,
+почти готовые задачи. Может для каких-то проектов это придется очень кстати.
+Как я понял, Пропеллер очень удобен для создания разного
+рода игровых автоматов и приставок, например, из-за встроенной возможности
+генерировать качественный телевизионный и VGA сигнал.</p>
+
+<p><strong>Вывод</strong>: интересная архитектура, определенно заслуживающая внимания.</p>
+
+<h3>Конструктор PMC</h3>
+
+<p>Опять-таки, двоякое ощущение. Вроде работает, но ресурсов Бейсику явно
+не хватает, особенно памяти. Например, тот же <a href="/blog/russian/2012/01/19/maximite-kit/">Maximite</a> на базе PIC32 его
+на голову превосходит. На нем можно запустить хоть <a href="/blog/russian/2012/05/11/retrobsd-on-maximite/">RetroBSD</a>, хоть
+<a href="/blog/russian/2012/08/23/radio86-on-maximite/">Радио-86РК</a>. Да и встроенный MMBasic несравнимо мощнее.</p>
+
+<p>Хотя, за 39 долларов США - это отличная игрушка для тех, кто хочет пощупать
+Пропеллер, имея уже собранное устройство.</p>
+
+<h2>На закуску</h2>
+
+<p>Книги по Пропеллеру, которые я прочитал, что касаемо архитектуры, и проглядел
+(что касаемо проектов). Все рекомендую.</p>
+
+<hr />
+
+<p>Небольшая и очень понятная книга для начинающих. Описаны (с картинками)
+интересные проекты. Один из соавторов является конструктором PMC.</p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/B004X6U6II/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B004X6U6II&amp;linkCode=as2&amp;tag=prodiy-21">Getting Started With the Propeller</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B004X6U6II" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/B004X6U6II/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B004X6U6II&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B004X6U6II&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B004X6U6II" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<hr />
+
+<p>Крайне грамотная книга в плане архитектуры и понимания сути Пропеллера.
+В ней рассматривается только программирование на Spin, но с полным
+объяснением подходов и особенностей микроконтроллера. Прочитав первую главу,
+вы получите почти полное понимание архитектуры. Далее описаны несколько
+проектов (это можно пропустить).</p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/B003TQM9Y2/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B003TQM9Y2&amp;linkCode=as2&amp;tag=prodiy-21">Programming the Propeller with Spin : A Beginner&rsquo;s Guide to Parallel Processing (Tab Electronics)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B003TQM9Y2" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/B003TQM9Y2/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B003TQM9Y2&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B003TQM9Y2&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B003TQM9Y2" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<hr />
+
+<p>Сборник реальных проектов с использованием Пропеллера от его создателей.</p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/B003BZVIZC/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B003BZVIZC&amp;linkCode=as2&amp;tag=prodiy-21">Programming and Customizing the Multicore Propeller Microcontroller : The Official Guide</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B003BZVIZC" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/B003BZVIZC/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B003BZVIZC&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B003BZVIZC&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B003BZVIZC" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p>На момент написания этой статьи, первая книга доступна только в формате Киндл
+на Амазоне по цене в два доллара, а вот вторую и третью можно найти, если
+поискать.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/11/22/personal-mini-computer-on-parallax-propeller/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/11/22/personal-mini-computer-on-parallax-propeller/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
