@@ -29,7 +29,7 @@ Main distinctive features of Propeller:
   chip is connected and Propeller copies 32KB from that EEPROM (via I2C) to
   RAM.
 * Propeller is declared as 32-bit because it supports 32-bit operations,
-  but the address space in 16-bit (64KB).
+  but the address space is 16-bit (64KB).
 
 The Spin language was designed to make concurrent and multi-core programming
 easier. This language is a mixture of procedural and object-oriented
