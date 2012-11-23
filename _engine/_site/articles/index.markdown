@@ -11,6 +11,7 @@ title: "Статьи"
 
 ### 2012
 
+* [Мини-компьютер на базе микроконтроллера Parallax Propeller][]
 * [Pi Bow — самый веселый корпус для Raspberry Pi][]
 * [Родной Sinclair ZX Spectrum][]
 * [Интервью с Чарльзом Уэзереллом][], автором книги "Этюды для программистов"
@@ -51,6 +52,7 @@ title: "Статьи"
 
 [Интервью проекту OpenQuality.ru]: http://experience.openquality.ru/alexander-demin-interview/
 
+[Мини-компьютер на базе микроконтроллера Parallax Propeller]: http://habrahabr.ru/post/159847/
 [Pi Bow — самый веселый корпус для Raspberry Pi]: http://habrahabr.ru/post/155251/
 [Родной Sinclair ZX Spectrum]: http://habrahabr.ru/post/150684/
 [Интервью с Чарльзом Уэзереллом]: http://habrahabr.ru/post/150238/
