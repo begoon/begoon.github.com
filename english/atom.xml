@@ -5,13 +5,156 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-11-22T22:00:00Z</updated>
+  <updated>2012-11-25T22:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Creating a live progress bar using Splunk]]></title>
+    <link href="http://demin.ws/blog/english/2012/11/25/progress-indicator-using-splunk/"/>
+    <updated>2012-11-25T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/11/25/progress-indicator-using-splunk/</id>
+    <content type="html"><![CDATA[<p>Splunk is a tool for managing and analysing logs. In short, Splunk does the following: there is a Splunk server which stores, indexes and allows analysing log files, and there are client machines (application servers) generating logs and shipping them to the Splunk server. In turn, the Splunk server can be configured as a cluster of physical machines. Logs stored inside Splunk are split amongst these machines, and also Splunk uses MapReduce for querying. There are plenty of ways to deliver logs to the Splunk server (or cluster):</p>
+
+<ul>
+<li>a special log forwarder (from Splunk) which can efficiently send log updates to the server</li>
+<li>as regular files via NFS or SMB</li>
+<li>SNMP</li>
+<li>directly over TCP/IP (for example, instead of creating log files in the first place)</li>
+</ul>
+
+<p>On Windows Splunk can take information from Windows Events, Performance Counters or Registry.</p>
+
+<p>For Splunk logs are textual files split into lines. When indexing logs Splunk parses log lines into fields, for example, in the &ldquo;name=value&rdquo; format (which is also configurable though). Then using a special query language called SPL it allows manipulating with these fields: sorting, aggregation, computed fields, creating views and tables, external dictionary lookups (for instance, to RDBMS), and, of course, creating various graphic representations of data. Even though normally SPL operates with individual log lines, it supports multi-line queries, which can be useful, for example, to extract transactions or any other activities generating multiple log records.</p>
+
+<p>As Splunk creators state, all logs kept and indexed by Splunk despite of their age are equally available for querying. There is no concept of archiving. Of course, machines running Splunk should correspond to the volume of logs being processed.</p>
+
+<p>Also Splunk states itself as &ldquo;Google for logs&rdquo;, but let&rsquo;s leave it without comments.</p>
+
+<p>The UI of Splunk is web. It allows creating dashboards, which in turn can be presented as a Splunk app. Splunk has its own app store, where most of apps are free though. There are apps already developed, for example, for UNIX syslog, Apache logs, Microsoft Exchange, etc.</p>
+
+<p><a href="http://www.splunk.com/">Splunk</a> software is freely available on the official website. The licensing model is based on volumes of logs processed daily. Under some small threshold Splunk is free. This threshold is surely enough for evaluation.</p>
+
+<p>I would recommend a book called <a href="http://www.splunk.com/goto/book">Exploring Splunk</a> for those who want quickly dig into Splunk and figure out its main features. This book provides very solid overview of SPL and other concepts how Splunk works.</p>
+
+<p>In this article I would like to show a real example of using Splunk. This exercise can be repeated in half an hour. The only prerequisite is to download and install Splunk on your operating system. Then just follow my instructions.</p>
+
+<p>The example is a bit unusual though. Traditionally, logs are used for post factum analysis. But nothing really prevents from picking up updates on the fly and building &ldquo;live&rdquo; indicators based on logs. Agreed, my example may look a bit artificial, but I want to show how quickly to feed data into Splunk and formalize it, and finally create a dynamic UI with it.</p>
+
+<p>Let&rsquo;s begin with a simple script in Ruby. It generates log records containing a number representing its completion (from 0 to 100%).</p>
+
+<pre class="hl">
+    <span class="hl kwa">require</span> <span class="hl str">'date'</span>
+
+    duration <span class="hl opt">=</span> <span class="hl num">60</span><span class="hl opt">*</span><span class="hl num">1</span>
+    update_period <span class="hl opt">=</span> <span class="hl num">0.5</span>
+    i <span class="hl opt">=</span> <span class="hl num">0</span>
+    <span class="hl kwa">while</span> i <span class="hl opt">&lt;=</span> duration <span class="hl kwa">do</span>
+      progress <span class="hl opt">=</span> i <span class="hl opt">*</span> <span class="hl num">100.0</span> <span class="hl opt">/</span> duration
+      msg <span class="hl opt">=</span> <span class="hl str">&quot;%s progress=%05.2f\n&quot;</span> <span class="hl opt">% [</span>DateTime<span class="hl opt">.</span>now<span class="hl opt">,</span> progress<span class="hl opt">]</span>
+      puts msg
+      <span class="hl kwd">open</span><span class="hl opt">(</span><span class="hl str">&quot;logs/my.log&quot;</span><span class="hl opt">,</span> <span class="hl str">'a'</span>) <span class="hl esc">{ |f| f &lt;&lt; msg }</span>
+      i <span class="hl opt">=</span> i <span class="hl opt">+</span> update_period
+      sleep update_period
+    <span class="hl kwa">end</span>
+</pre>
+
+<p>The log records may look like:</p>
+
+<pre><code>2012-11-23T15:58:54+00:00 progress=45.00
+2012-11-23T15:58:55+00:00 progress=45.83
+2012-11-23T15:58:55+00:00 progress=46.67
+2012-11-23T15:58:56+00:00 progress=47.50
+2012-11-23T15:58:56+00:00 progress=48.33
+2012-11-23T15:58:57+00:00 progress=49.17
+2012-11-23T15:58:57+00:00 progress=50.00
+</code></pre>
+
+<p>We will develop a dashboard in Splunk, which displays the percentage in the form of a cool indicator taking updates from logs.</p>
+
+<p>For simplicity we run everything on a single machine, and Splunk will be taking log updates directly from a file.</p>
+
+<p>So, you have already installed Splunk, and if you open &ldquo;http://localhost:8080&rdquo; in your browser you should be able to login as the &ldquo;admin&rdquo; user.</p>
+
+<p>Then in menu follow to: &ldquo;Manager -&gt; Data Inputs -&gt; Add data -&gt; A file or directory or files&rdquo;. Here we specify the file and directory name with the logs (in our case just a single file).</p>
+
+<p><img src="http://demin.ws/blog/english/2012/11/25/progress-indicator-using-splunk/01-adding-log.png" alt="" />
+</p>
+
+<p>Confirm creating a source of logs (source type). As I said, logs can be delivered to Splunk in various ways. Each way can be named and addressed as a source type.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/11/25/progress-indicator-using-splunk/02-data-source-creation.png" alt="" />
+</p>
+
+<p>The log has been added. We see that Splunk has picked up the file and already parsed its lines into fields. Out of the box Splunk understands many date and time formats, but it is configurable.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/11/25/progress-indicator-using-splunk/03-data-source-check.png" alt="" />
+</p>
+
+<p>Now we give a name to our source type - &ldquo;test_logging&rdquo; and save the settings.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/11/25/progress-indicator-using-splunk/04-data-source-name.png" alt="" />
+</p>
+
+<p>Now we get back to the main page and type in our first SPL query in the search bar (in red):</p>
+
+<pre><code>sourcetype=&quot;test_logging&quot; | table progress as float
+</code></pre>
+
+<p>It says: take logs from the &ldquo;test_logging&rdquo; data source, create a table with one column called &ldquo;progress&rdquo; taking values from the corresponding field, set the type of &ldquo;progress&rdquo; to float. At the bottom (in blue) we see the result of the query (own log already has some data). SPL uses the concept of UNIX pipes (|) feeding output from one command to the next one.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/11/25/progress-indicator-using-splunk/05-radial-gauge-query.png" alt="" />
+</p>
+
+<p>So, we have the table. Now let&rsquo;s create a widget. Due to simplicity of our data (one single field) we can represent it as a speedometer gauge. Click on &ldquo;Formatting options&rdquo; (in blue) and set the chart type to &ldquo;radial gauge&rdquo; (in red). And here is our cool widget:</p>
+
+<p><img src="http://demin.ws/blog/english/2012/11/25/progress-indicator-using-splunk/06-radial-gauge-widget.png" alt="" />
+</p>
+
+<p>The first widget is ready. Now let&rsquo;s create an alternative one looking differently. It will also represent the value of the progress but in the form of a horizontal bar moving from left to right. This is the query:</p>
+
+<pre><code>sourcetype=&quot;test_logging&quot; | table _time progress | head 1
+</code></pre>
+
+<p>It says: using data from the &ldquo;test_logging&rdquo; source type create a table with two fields, &ldquo;_time&rdquo; and &ldquo;progress&rdquo;, and then take only the first line from it. Default sorting is descending by &ldquo;_time&rdquo;. At the bottom (in green) we see the result of the query.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/11/25/progress-indicator-using-splunk/07-bar-chart-query.png" alt="" />
+</p>
+
+<p>Now click on &ldquo;Formatting options&rdquo;, choose &ldquo;bar&rdquo; (in green), set the interval for the Y-axis from 0 to 100. For some reason, the X-axis is vertical here (this axis will represent &ldquo;_time&rdquo;), and the Y-axis is horizontal (this one will show &ldquo;progress&rdquo;). Because our query on the previous picture already shown &ldquo;100&rdquo;, the widget is fully filled.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/11/25/progress-indicator-using-splunk/08-chart-type-bar.png" alt="" />
+</p>
+
+<p>Describing the first widget I deliberately skipped how to save the query. We will do it now. We click on &ldquo;Create&rdquo; and then &ldquo;Dashboard panel&hellip;&rdquo; (in red) and save the settings. We name the first widget as &ldquo;Speedometer&rdquo; and the second - &ldquo;Progress bar&rdquo;.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/11/25/progress-indicator-using-splunk/09-create-dashboard-button.png" alt="" />
+</p>
+
+<p>Along with saving the first widget we will be asked to create a new panel, a dashboard. Let&rsquo;s call it &ldquo;Test logging&rdquo;. When saving the second widget we will add it to the already created one.</p>
+
+<p>Finally, we click on &ldquo;Dashboards &amp; View&rdquo;, select your dashboard and it will be shown like:</p>
+
+<p><img src="http://demin.ws/blog/english/2012/11/25/progress-indicator-using-splunk/10-dashboard-layout.png" alt="" />
+</p>
+
+<p>There is no data here, so the panels are empty. We see the name of the dashboard (in red), the names of the widgets (in yellow) and two &ldquo;Edit&rdquo; buttons (in blue) allowing updating queries and visual representation on the fly. Before starting our Ruby script, we need to click on the both &ldquo;Edit&rdquo; buttons and set the time interval from &ldquo;rt-1s&rdquo; to &ldquo;rt&rdquo;. Such interval means getting updates each second.</p>
+
+<p>Now let&rsquo;s click on &ldquo;On&rdquo; and kick off the script!</p>
+
+<p>A little video how it works:</p>
+
+<iframe width="480" height="360" src="http://www.youtube.com/embed/wPh7dm5brWg" frameborder="0" allowfullscreen></iframe>
+
+<p>That&rsquo;s it.</p>
+
+<p>The example, as I said, is very simple, but I hope it gives you as least initial understanding of Splunk.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The Pocket Mini Computer on Parallax Propeller microcontroller]]></title>

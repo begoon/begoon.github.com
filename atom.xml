@@ -5,13 +5,242 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-11-22T22:00:00Z</updated>
+  <updated>2012-11-25T22:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Пример использование Splunk для анализа логов]]></title>
+    <link href="http://demin.ws/blog/russian/2012/11/25/progress-indicator-using-splunk/"/>
+    <updated>2012-11-25T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/11/25/progress-indicator-using-splunk/</id>
+    <content type="html"><![CDATA[<p>Splunk - это система хранения и анализа логов. В двух словах принцип работы
+можно описать так: есть сервер Splunk, который хранит, индексирует и
+позволяет анализировать логи, и есть рабочие машины (сервера), которые эти
+логи создают и передают на сервер Splunk. Сервер Splunk в свою очередь
+может быть кластером из нескольких физических машин, между которыми
+распределяется хранение информации, и которые используются для ее обработки
+по технологии MapReduce. Способов передавать логи с рабочих машин очень
+много: через специальную программу forwarder, которая умеет быстро и
+эффективно отсылать изменения логов на сервер, через технологии типа NFS/SMB,
+или SNMP, можно самостоятельно отсылать данные в Splunk по TCP/IP (например,
+вместо того, чтобы писать в файл). Под Windows Splunk умеет брать данные из
+Windows Events, Performance Counters или Реестра. Это основные способы.</p>
+
+<p>Для Splunk логи - это текстовая информация, разбитая на строки. В процессе
+индексирования строки логов разбиваются на поля, например &ldquo;имя=значение&rdquo;,
+хотя это настраиваемо. Далее с помощью специального языка запросов SPL
+можно работать с этими полями: сортировать, агрегировать, создавать
+вычисляемые поля, формировать таблицы, обращаться ко внешним словарям,
+например, из SQL-базы, и, конечно, строить разнообразные графики. SPL
+работает не только с одиночными строками, но и позволяет группировать,
+&ldquo;сжимать&rdquo; логически в одну строку многострочные куски.</p>
+
+<p>Как заявляет сам Splunk, все логи, что хранятся в системе за любое время,
+являются доступными для запросов, то есть нет понятия архивирования.
+Конечно, машин (машины), где крутится Splunk должна сообразно отражать
+объем хранимой и обрабатываемой информации.</p>
+
+<p>Еще Splunk называет себя &ldquo;Google для логов&rdquo;, но оставим это высказывание
+без комментариев на их собственный откуп.</p>
+
+<p>Интерфейс Splunk - веб. Можно создавать панели (dashboard&rsquo;ы), из которых
+формировать свое собственное Splunk-приложение. У Splunk есть магазин
+приложений (хотя большинство из них бесплатны), где есть море уже
+готовых конфигураций для анализа популярных систем, например, UNIX syslog,
+логи Apache, Microsoft Exchange и т.д.</p>
+
+<p>Программный комплекс <a href="http://www.splunk.com/">Splunk</a> можно бесплатно скачать с официального сайта.
+Лицензирование происходит на основе дневного объема прокачиваемых через
+систему логов. Для ознакомления есть минимальный бесплатный объем, которого
+прекрасно хватает для освоения системы.</p>
+
+<p>Для быстрого ознакомления рекомендую книгу <a href="http://www.splunk.com/goto/book">Exploring Splunk</a> от создателей
+этого продукта. Пролистав ее, вы получите неплохое начальное понимание, что
+можно делать в Splunk, суть языка запросов SPL и т.д.</p>
+
+<p>В данной же статье я хочу показать реальный пример, который можно повторить
+в течение получаса. Для этого достаточно бесплатно скачать и установить
+Splunk под вашу операционную систему. Далее можно просто следовать моим
+инструкциям.</p>
+
+<p>Пример будет необычным. Традиционно, логи используются для анализа
+исторической информации. Но ничто не мешает извлекать ее по ходу появления
+и создавать &ldquo;живые&rdquo; индикаторы на ее основе. Соглашусь, мой пример
+немного искусственен, но я хочу показать, как быстро и просто можно
+&ldquo;накидывать&rdquo; данные в Спланк, формализовать их и строить на их основе
+динамический пользовательский интерфейс</p>
+
+<p>Вот простой скрипт, который в течение минуты будет записывать в лог
+сообщения, содержащие процентный показатель (от 0 до 100%).</p>
+
+<pre class="hl">
+    <span class="hl kwa">require</span> <span class="hl str">'date'</span>
+
+    duration <span class="hl opt">=</span> <span class="hl num">60</span><span class="hl opt">*</span><span class="hl num">1</span>
+    update_period <span class="hl opt">=</span> <span class="hl num">0.5</span>
+    i <span class="hl opt">=</span> <span class="hl num">0</span>
+    <span class="hl kwa">while</span> i <span class="hl opt">&lt;=</span> duration <span class="hl kwa">do</span>
+      progress <span class="hl opt">=</span> i <span class="hl opt">*</span> <span class="hl num">100.0</span> <span class="hl opt">/</span> duration
+      msg <span class="hl opt">=</span> <span class="hl str">&quot;%s progress=%05.2f\n&quot;</span> <span class="hl opt">% [</span>DateTime<span class="hl opt">.</span>now<span class="hl opt">,</span> progress<span class="hl opt">]</span>
+      puts msg
+      <span class="hl kwd">open</span><span class="hl opt">(</span><span class="hl str">&quot;logs/my.log&quot;</span><span class="hl opt">,</span> <span class="hl str">'a'</span>) <span class="hl esc">{ |f| f &lt;&lt; msg }</span>
+      i <span class="hl opt">=</span> i <span class="hl opt">+</span> update_period
+      sleep update_period
+    <span class="hl kwa">end</span>
+</pre>
+
+<p>Лог будет выглядеть примерно вот так:</p>
+
+<pre><code>2012-11-23T15:58:54+00:00 progress=45.00
+2012-11-23T15:58:55+00:00 progress=45.83
+2012-11-23T15:58:55+00:00 progress=46.67
+2012-11-23T15:58:56+00:00 progress=47.50
+2012-11-23T15:58:56+00:00 progress=48.33
+2012-11-23T15:58:57+00:00 progress=49.17
+2012-11-23T15:58:57+00:00 progress=50.00
+</code></pre>
+
+<p>Наша цель создать dashboard (панель просмотра) в Спланке, которая отображала
+бы процесс выполнения скрипта в форме красивого индикатора, беря при этом
+данные из лога.</p>
+
+<p>Для простоты мы будет все делать на одной машине, и Спланк будет брать лог
+просто из указанного файла.</p>
+
+<p>Итак, вы уже установили Спланк, и если зайти на &ldquo;http://localhost:8000&rdquo;, то
+вы увидите рабочую страницу Спланка, где можно залогиниться пользователем
+&ldquo;admin&rdquo;.</p>
+
+<p>Далее идем по меню: &ldquo;Manager -&gt; Data Inputs -&gt; Add data -&gt; A file or directory
+or files&rdquo;. Тут мы указывает имя файла или каталога, где лежат наши логи
+(в данном случае это будет одиночный файл).</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/11/25/progress-indicator-using-splunk/01-adding-log.png" alt="" />
+</p>
+
+<p>Подтверждаем создание так называемого источника логов (source type).
+Как я уже говорил, логи в Спланк могут поступать различными путями. Каждый
+такой источник логов именован и может обрабатываться независимо.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/11/25/progress-indicator-using-splunk/02-data-source-creation.png" alt="" />
+</p>
+
+<p>Итак, лог добавлен. Мы видим, что Спланк &ldquo;подцепил&rdquo; файл и уже разобрал
+строки на поля. Спланк понимает огромное количество форматов даты и времени,
+но и это настаиваемо.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/11/25/progress-indicator-using-splunk/03-data-source-check.png" alt="" />
+</p>
+
+<p>Далее мы даем имя нашему источнику логов - &ldquo;test_logging&rdquo;, и сохраняем
+настройки.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/11/25/progress-indicator-using-splunk/04-data-source-name.png" alt="" />
+</p>
+
+<p>Возвращаемся на главную страницу и строке Search вводим наш первый запрос
+на языке SPL (в красном):</p>
+
+<pre><code>sourcetype=&quot;test_logging&quot; | table progress as float
+</code></pre>
+
+<p>Перевожу: взять логи из источника &ldquo;test_logging&rdquo;, сформировать таблицу,
+в которую добавить колонку со значением из поля &ldquo;progress&rdquo;, попутно
+преобразовав его в тип float. Внизу (в синем) мы видим результат выполнения
+запроса (в логе уже есть данные). В SPL работает принцип UNIX pipes (|),
+когда результат одной операции передается на вход следующей.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/11/25/progress-indicator-using-splunk/05-radial-gauge-query.png" alt="" />
+</p>
+
+<p>Итак, таблица есть. Теперь сделаем ей графическое представление. Так как
+у нас всего одно поле, показывающее процент выполнения от 0 до 100, то,
+например, можно использовать вид спидометра, стрелка которого будет
+демонстрировать текущее значение. Кликаем на &ldquo;Formatting options&rdquo; (в синем)
+и выбираем тип элемента (Chart type) &ldquo;radial gauge&rdquo; (в красном). Появляется
+вот такой красивый спидометр.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/11/25/progress-indicator-using-splunk/06-radial-gauge-widget.png" alt="" />
+</p>
+
+<p>Первый виджет готов. Теперь ради эксперимента создадим еще один. Он тоже
+будет показывать значения поля progress, но в виде горизонтального
+индикатора (progress bar), двигаясь слева направо. Запрос в этом случае
+будет таким:</p>
+
+<pre><code>sourcetype=&quot;test_logging&quot; | table _time progress | head 1
+</code></pre>
+
+<p>Что значит: по данным из источника &ldquo;test_logging&rdquo; создать таблицу из
+двух полей, &ldquo;_time&rdquo; и &ldquo;progress&rdquo;, из которой брать только первую строку.
+Сортировка по умолчанию по полю &ldquo;_time&rdquo; по убыванию. Внизу (в зеленом)
+мы видим результат этого запроса.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/11/25/progress-indicator-using-splunk/07-bar-chart-query.png" alt="" />
+</p>
+
+<p>Далее кликаем на &ldquo;Formatting options&rdquo;, выбираем тип &ldquo;bar&rdquo; (в зеленом),
+для оси Y задаем интервал от 0 до 100. Почему-то тут ось X идет по
+вертикали (там будет отображаться поле &ldquo;_time&rdquo;), а ось Y по горизонтали
+(там будет отображаться поле &ldquo;progress&rdquo;). Так как запрос на предыдущей
+картинки показывал значение 100, то и наш горизонтальный индикатор
+полностью закрашен.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/11/25/progress-indicator-using-splunk/08-chart-type-bar.png" alt="" />
+</p>
+
+<p>Я пропустил это для первого виджета, спидометра, но отлаженный запрос
+и его визуальное представление можно сохранить в виде &ldquo;Dashboard panel&rdquo;.
+Для это кликаем на &ldquo;Create&rdquo; и &ldquo;Dashboard panel&hellip;&rdquo; (в красном) и сохраняем
+настройки. Назовем первый наш виджет &ldquo;Speedometer&rdquo;, и второй &ldquo;Progress bar&rdquo;.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/11/25/progress-indicator-using-splunk/09-create-dashboard-button.png" alt="" />
+</p>
+
+<p>При сохранение первого виджета будет предложено также создать панель
+(dashboard), назовем ее &ldquo;Test logging&rdquo;. При сохранении второго виджета
+добавим его уже созданную панель.</p>
+
+<p>После создания панели можно кликнуть на &ldquo;Dashboards &amp; Views&rdquo;, выбрать ее
+по имени &ldquo;Test logging&rdquo;. Внешний вид будет примерно таким:</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/11/25/progress-indicator-using-splunk/10-dashboard-layout.png" alt="" />
+</p>
+
+<p>Пока данных нет, поэтому панели пустые. Мы видим название панели (в
+красном), названия виджетов (в желтом), кнопку активации панели (в зеленом)
+и кнопки &ldquo;Edit&rdquo; (в синем), которой можно налету подправить запрос или
+визуальное представление. Перед запуском скрипта надо через кнопку
+&ldquo;Edit&rdquo; зайти в каждый из виджетов и указать интервал времени обновления
+в одну секунду: от &ldquo;rt-1s&rdquo; (real time - 1s), до &ldquo;rt&rdquo; (текущее время).</p>
+
+<p>Итак, все! Зажимаем на &ldquo;On&rdquo; и запускаем наш скрипт.</p>
+
+<p>Видео как это работает:</p>
+
+<iframe width="480" height="360" src="http://www.youtube.com/embed/wPh7dm5brWg" frameborder="0" allowfullscreen></iframe>
+
+<p>Все!</p>
+
+<h2>Заключение</h2>
+
+<p>Конечно, пример очень простой, но надеюсь, мне удалось передать хотя бы
+минимальное ощущение, как работает Спланк.</p>
+
+<p>Скажу, мы в компании недавно начали использовать этот продукт
+и пока довольны. В этом году я был на конференции SplunkLive, где выступали
+люди из весьма солидных контор типа British Telecom. С помощью Splunk
+они обрабатывают гигабайты логов ежедневно.</p>
+
+<p>Увы, даже у крупных контор не всегда есть желание разрабатывать подсистему
+для обработки логов, так что Спланк может прийтись очень кстати.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Мини-компьютер на базе микроконтроллера Parallax Propeller]]></title>
