@@ -155,7 +155,7 @@ such applications.
 
 **Conslusion**: the very interesting and worth considering architecture.
 
-### The PCM kit
+### The PMC kit
 
 This is a very interesting and entertaining project. Of course, it is
 obvious that BASIC is very limited in resources, for instance, RAM.
@@ -170,8 +170,8 @@ complete hardware.
 [RetroBSD]: /blog/english/2012/05/11/retrobsd-on-maximite/
 [Radio-86RK]: /blog/russian/2012/08/23/radio86-on-maximite/
 
-Desert
-------
+Dessert
+-------
 
 Here is a list of books I read (regarding the architecture) and skimmed
 (regarding projects). All are recommended.
