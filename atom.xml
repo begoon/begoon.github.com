@@ -5,13 +5,91 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-11-27T22:00:00Z</updated>
+  <updated>2012-11-30T22:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA["21st Century C: C Tips from the New School", автор Ben Klemens]]></title>
+    <link href="http://demin.ws/blog/russian/2012/11/30/21st-century-c/"/>
+    <updated>2012-11-30T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/11/30/21st-century-c/</id>
+    <content type="html"><![CDATA[<p><a href="http://www.amazon.co.uk/gp/product/1449327141/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=1449327141&amp;linkCode=as2&amp;tag=prodiy-21">21st Century C: C Tips from the New School</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=1449327141" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p><a href="http://www.amazon.co.uk/gp/product/1449327141/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=1449327141&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=1449327141&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=1449327141" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
+
+<p>Как следует из названия - это книга о &ldquo;новом&rdquo; C. Конкретно: С89, C99 и даже
+C11. Плюс, краткий обзор основных &ldquo;игроков&rdquo; типа gcc или clang.</p>
+
+<p>Скажу сразу, что это не учебник, а сборник советов автора на тему
+использования возможностей современного C.</p>
+
+<p>Зацените начало введения:</p>
+
+<p><em>C has only a handful of keywords and is a bit rough around the edges, and it rocks. You can do anything with it. Like the C, G and D chords of a guitar, you can learn the basic mechanics pretty quickly, and then spend the rest of your life getting better</em>.</p>
+
+<p>Мне понравилось. А когда я увидел главу под названием &ldquo;C syntax you can
+ignore&rdquo;, точно решил с книгой ознакомиться.</p>
+
+<p>Итак, сначала идет небольшой обзор стандартов. Затем пара глав про утилиты
+и средства разработки (gdb, autotools, makefiles, valgrind, git). Кратко,
+но для новичков это будет началом, где копнуть. Далее идет, собственно,
+про язык. Дается много полезных советов про указатели, структуры (понятно, что
+для &ldquo;нового&rdquo; С), приемчики объектно-ориентированного подхода, работа с
+Unicode. В конце обзор нескольких распространенных библиотек.</p>
+
+<p>Книга выглядит немного поверхностно, но на одно вечернее чтиво тянет
+спокойно.</p>
+
+<p>Например, что лично нового узнал для себя:</p>
+
+<ul>
+<li>ключевое слово &ldquo;restrict&rdquo;</li>
+<li>функция &ldquo;asprintf()&rdquo;, которая сама выделяет нужное место для буфера</li>
+<li>идея префикса &ldquo;private_&rdquo; для членов структур, доступ к которым надо
+ограничить (физической защиты не дает, конечно, но является удобной
+подсказкой)</li>
+</ul>
+
+<p>Также, например, если надо из функции вернуть несколько значений, можно
+просто использовать struct в качестве результата функции. Если размер
+структуры небольшой, то все будет и красиво и быстро. Не то, чтобы я этого
+не знал, но просто в С это не самый распространенный прием, и часто о нем
+забываешь.</p>
+
+<p>Как всегда бескомпромиссный совет использовать makefile вместо пачки скриптов.</p>
+
+<p>Но книга была бы пресной без &ldquo;ЧТО?! - НИКОГДА!!!&rdquo;.</p>
+
+<p>Например, автор поддерживает использование goto для экстренного выхода из
+функции, когда в ее конце есть код завершения, который надо обязательно
+выполнить. Лично я так никогда делать не буду, а постараюсь изолировать
+этот код, например, в отдельной функции, и вызывать ее на каждом подобном
+выходе.</p>
+
+<p>Также автор рекомендует не использовать switch в целом, объясняя это его
+ненаглядным синтаксисом и проблемой пропущенного break. Опять, лично я с
+этим не могу согласиться.</p>
+
+<p>Далее автор всячески рекомендует autotools (autoconf, automake, libtools).
+Лично до сих пор не могу до конца понять суть этих сложных и запутанных
+систем. Хорошо, когда скрипт &ldquo;configure&rdquo; уже кем-то написан, но делать
+его самому&hellip;</p>
+
+<p>Под занавес - doxygen. Крайне редко я видел проекты, где автоматическая
+документация реально хорошего качества. Увы, поддержание doxygen&rsquo;овских
+вставок в достойном состоянии - это отдельный фронт работы, на который
+обычно нет ни желания, ни времени, если, конечно, это документация не
+является коммерческой частью продукта.</p>
+
+<p><strong>Вывод</strong>: Можно купить книгу в офис, по очереди пролистать за вечером, и
+затем можно перетирать детали на офисной кухне с коллегами.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[CSS для удобного просмотра Хабра]]></title>
