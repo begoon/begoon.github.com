@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>The Colour Maximite microcomputer</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/interview/">interview</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>The Colour Maximite microcomputer</h1>
+<div id="post">
+  <p>At the moment, the <a href="http://geoffg.net/maximite.html">Maximite</a> project is my favorite one among modern
+homebrew microcomputers. Having assembled its previous,
+<a href="/blog/english/2012/01/19/maximite-kit/">black-and-white version</a>,
+I run <a href="/blog/english/2012/05/11/retrobsd-on-maximite/">RetroBSD</a> on it, and even ported my emulator of the classic
+8-bit microcomputer from the eightieth called <a href="http://www.youtube.com/watch?v=JGuYyuCkJR8">Radio-86RK</a>. To me, the
+main advantage of Maximite is its completeness as a project. In fact,
+design of Maximite is quite simple because PIC32, the heart of this
+microcomputer, does almost everything. But the Maximite project is not
+only a bare idea or schematic, it includes the board, the case, and, of
+course, software &ndash; MMBasic. This is an advanced dialect of BASIC giving
+access to all features of Maximite, all its peripherals.
+In <a href="/blog/english/2012/08/07/interview-with-geoff-graham/">the interview</a> the author of Maximite,
+Geoff Graham, tells how he was almost forced to get this project to such
+complete stage.</p>
+
+<p>Recently Geoff has released a new, updated colour version modification
+having a few extra features along with the colour (new and improved
+features are marked with the asterisk):</p>
+
+<ul>
+<li>PS/2 keyboard</li>
+<li>VGA output with eight colours (480x432 or 240x216) (*)</li>
+<li>monochrome Composite Video output</li>
+<li>synthesised music and sound effects (*)</li>
+<li>battery backed real time clock (*)</li>
+<li>20 external I/O lines on the back panel</li>
+<li>Arduino compatible connector (*)</li>
+<li>SD card for storing programs and files (up to 32GB)</li>
+<li>USB connectivity as a terminal or for file transfer</li>
+<li>protocols including Serial, I2C, SPI and 1-wire</li>
+<li>dual-channel PWM analog output (*)</li>
+<li>firmware upgrades via USB</li>
+<li>special commands for animated games</li>
+</ul>
+
+<p>MMBasic allows to take full advantage of all these features. It is even
+possible implementing the PIC32 timer interrupt routines directly in BASIC.</p>
+
+<p>As previously I have ordered the new Maximite Kit from
+<a href="http://www.altronics.com.au/index.asp?area=item&amp;id=K9555">Altronics</a>.</p>
+
+<p><img src="IMG_1221.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1223.JPG" alt="" />
+</p>
+
+<p>There are no on-surface planar elements which makes the life of soldering
+laymans like me much easier. There is only one planar capacitor (C10) for
+some reason. It is quite small, so proper soldering it took me some time
+to avoid shortening on the board.</p>
+
+<p><img src="IMG_1224.JPG" alt="" />
+</p>
+
+<p>All done.</p>
+
+<p><img src="IMG_1266.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1268.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1269.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1275.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1276.JPG" alt="" />
+</p>
+
+<p>The Original and Colour Maximite.</p>
+
+<p><img src="IMG_1270.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1277.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1278.JPG" alt="" />
+</p>
+
+<p>In general, the kit from Altronics is very high quality. Recommended.</p>
+
+<p>This is what MMBasic allows a user to do with colours.</p>
+
+<p><img src="IMG_1289.JPG" alt="" />
+</p>
+
+<p>Well, no colours though, but just classics.</p>
+
+<p><img src="IMG_1287.JPG" alt="" />
+</p>
+
+<p>As the author explains, generating colours requires the 100-pin version
+of PIC32 with three SPI channels. Obviously, it also requires three times much
+work processing the colour information. Because the crystal still works on the
+same frequency as previously, 80MHz, the colour Maximite works a bit slower
+than its black-and-white predecessor. But along with the firmware providing
+colours, there is a black-and-white version of MMBasic for the new Maximite
+having all new features except the colour video, so it works with the same
+speed as the original Maximite.</p>
+
+<p>Well, as previously I have a lot of fun using Maximite, and strongly
+recommend it if you are up building a nice powerful microcomputer in a few
+hours.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/12/04/colour-maximite/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/12/04/colour-maximite/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

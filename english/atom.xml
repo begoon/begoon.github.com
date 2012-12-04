@@ -5,13 +5,128 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-11-25T22:00:00Z</updated>
+  <updated>2012-12-04T22:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The Colour Maximite microcomputer]]></title>
+    <link href="http://demin.ws/blog/english/2012/12/04/colour-maximite/"/>
+    <updated>2012-12-04T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/12/04/colour-maximite/</id>
+    <content type="html"><![CDATA[<p>At the moment, the <a href="http://geoffg.net/maximite.html">Maximite</a> project is my favorite one among modern
+homebrew microcomputers. Having assembled its previous,
+<a href="http://demin.ws/blog/english/2012/01/19/maximite-kit/">black-and-white version</a>,
+I run <a href="http://demin.ws/blog/english/2012/05/11/retrobsd-on-maximite/">RetroBSD</a> on it, and even ported my emulator of the classic
+8-bit microcomputer from the eightieth called <a href="http://www.youtube.com/watch?v=JGuYyuCkJR8">Radio-86RK</a>. To me, the
+main advantage of Maximite is its completeness as a project. In fact,
+design of Maximite is quite simple because PIC32, the heart of this
+microcomputer, does almost everything. But the Maximite project is not
+only a bare idea or schematic, it includes the board, the case, and, of
+course, software &ndash; MMBasic. This is an advanced dialect of BASIC giving
+access to all features of Maximite, all its peripherals.
+In <a href="http://demin.ws/blog/english/2012/08/07/interview-with-geoff-graham/">the interview</a> the author of Maximite,
+Geoff Graham, tells how he was almost forced to get this project to such
+complete stage.</p>
+
+<p>Recently Geoff has released a new, updated colour version modification
+having a few extra features along with the colour (new and improved
+features are marked with the asterisk):</p>
+
+<ul>
+<li>PS/2 keyboard</li>
+<li>VGA output with eight colours (480x432 or 240x216) (*)</li>
+<li>monochrome Composite Video output</li>
+<li>synthesised music and sound effects (*)</li>
+<li>battery backed real time clock (*)</li>
+<li>20 external I/O lines on the back panel</li>
+<li>Arduino compatible connector (*)</li>
+<li>SD card for storing programs and files (up to 32GB)</li>
+<li>USB connectivity as a terminal or for file transfer</li>
+<li>protocols including Serial, I2C, SPI and 1-wire</li>
+<li>dual-channel PWM analog output (*)</li>
+<li>firmware upgrades via USB</li>
+<li>special commands for animated games</li>
+</ul>
+
+<p>MMBasic allows to take full advantage of all these features. It is even
+possible implementing the PIC32 timer interrupt routines directly in BASIC.</p>
+
+<p>As previously I have ordered the new Maximite Kit from
+<a href="http://www.altronics.com.au/index.asp?area=item&amp;id=K9555">Altronics</a>.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/04/colour-maximite/IMG_1221.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/04/colour-maximite/IMG_1223.JPG" alt="" />
+</p>
+
+<p>There are no on-surface planar elements which makes the life of soldering
+laymans like me much easier. There is only one planar capacitor (C10) for
+some reason. It is quite small, so proper soldering it took me some time
+to avoid shortening on the board.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/04/colour-maximite/IMG_1224.JPG" alt="" />
+</p>
+
+<p>All done.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/04/colour-maximite/IMG_1266.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/04/colour-maximite/IMG_1268.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/04/colour-maximite/IMG_1269.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/04/colour-maximite/IMG_1275.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/04/colour-maximite/IMG_1276.JPG" alt="" />
+</p>
+
+<p>The Original and Colour Maximite.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/04/colour-maximite/IMG_1270.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/04/colour-maximite/IMG_1277.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/04/colour-maximite/IMG_1278.JPG" alt="" />
+</p>
+
+<p>In general, the kit from Altronics is very high quality. Recommended.</p>
+
+<p>This is what MMBasic allows a user to do with colours.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/04/colour-maximite/IMG_1289.JPG" alt="" />
+</p>
+
+<p>Well, no colours though, but just classics.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/04/colour-maximite/IMG_1287.JPG" alt="" />
+</p>
+
+<p>As the author explains, generating colours requires the 100-pin version
+of PIC32 with three SPI channels. Obviously, it also requires three times much
+work processing the colour information. Because the crystal still works on the
+same frequency as previously, 80MHz, the colour Maximite works a bit slower
+than its black-and-white predecessor. But along with the firmware providing
+colours, there is a black-and-white version of MMBasic for the new Maximite
+having all new features except the colour video, so it works with the same
+speed as the original Maximite.</p>
+
+<p>Well, as previously I have a lot of fun using Maximite, and strongly
+recommend it if you are up building a nice powerful microcomputer in a few
+hours.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Creating a live progress bar using Splunk]]></title>
@@ -6479,7 +6594,7 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
 
 <p>The <a href="http://geoffg.net/maximite.html">project is open-sourced</a> (schematics, PCB artwork, sources).</p>
 
-<p>Even if quickly flip through the <a href="http://geoffg.net/maximite.html#Downloads">documentation</a>, no doubts - a list features is impressive. All peripherals are available directly from BASIC.</p>
+<p>Even if quickly flip through the <a href="http://mmbasic.com/downloads.html">documentation</a>, no doubts - a list features is impressive. All peripherals are available directly from BASIC.</p>
 
 <p>Programs and data can be stored on a SD card. If there is a &ldquo;AUTORUN.BAS&rdquo; file on the card, BASIC will run at the start.</p>
 

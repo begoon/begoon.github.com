@@ -5,13 +5,127 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-11-30T22:00:00Z</updated>
+  <updated>2012-12-04T22:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Цветной микрокомпьютер Maximite]]></title>
+    <link href="http://demin.ws/blog/russian/2012/12/04/colour-maximite/"/>
+    <updated>2012-12-04T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/12/04/colour-maximite/</id>
+    <content type="html"><![CDATA[<p>На сегодняшний момент проект <a href="http://geoffg.net/maximite.html">Maximite</a> является моим любимым в области
+рукодельных микрокомпьютеров.
+<a href="http://demin.ws/blog/russian/2012/01/19/maximite-kit/">Собрав его оригинальный черно-белый вариант</a>,
+я после <a href="http://demin.ws/blog/russian/2012/05/11/retrobsd-on-maximite/">запустил на нем RetroBSD</a>, затем даже свой
+эмулятор <a href="http://demin.ws/blog/russian/2012/08/23/radio86-on-maximite/">Радио-86РК</a>. Что подкупает в
+проекте, так это законченность. Конструктивно Maximite простой, PIC32 делает
+почти всю работу. Но Maximite - это не просто идея в виде схемы. Для Maximite
+разработана плата, корпус и, собственно, прошивка - MMBasic,
+продвинутый диалект Бейсика, дающий доступ ко всей периферии, а она
+у Maximite внушительна. В <a href="http://demin.ws/blog/russian/2012/08/07/interview-with-geoff-graham/">небольшом интервью</a>
+автор и разработчик Maximite, Джеф Грэхем, рассказал, почему ему
+фактически пришлось довести проект для столь законченного вида.</p>
+
+<p>Недавно автор выпустил новую, цветную версию, и данный обзор посвящен
+именно ей. Итак, возможности цветного Maximite (новые и улучшенные
+возможности отмечены звездочкой):</p>
+
+<ul>
+<li>PS/2 клавиатура</li>
+<li>VGA видео-сигнал (480x432 или 240x216), восемь цветов (*)</li>
+<li>черно-белый композитный видео-сигнал</li>
+<li>генерация стерео-звука (*)</li>
+<li>часы реального времени с независимой батарейкой (*)</li>
+<li>20 независимых пинов ввода-вывода</li>
+<li>разъем для подключения к Arduino (*)</li>
+<li>SD-карта (до 32ГБ)</li>
+<li>USB соединение для передачи файлов или терминала</li>
+<li>интерфейсы RS232, I2C, SPI, 1-wire</li>
+<li>двухканальный ШИМ (*)</li>
+<li>возможность обновления прошивки по USB</li>
+<li>возможность питания от USB</li>
+<li>встроенная в Бейсик система шрифтов</li>
+<li>команды работы со спрайтами в Бейсике для программирования игр (*)</li>
+</ul>
+
+<p>Встроенный Бейсик позволяет максимально полно использовать все эти
+возможности. Можно даже создавать обработчики прерываний таймера в виде
+подпрограмм.</p>
+
+<p>Я, конечно, приобрел конструктор цветного Maximite, как и в прошлый раз у
+<a href="http://www.altronics.com.au/index.asp?area=item&amp;id=K9555">Altronics</a>.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/04/colour-maximite/IMG_1221.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/04/colour-maximite/IMG_1223.JPG" alt="" />
+</p>
+
+<p>Все элементы с ножками, чтобы, видимо, дилетантам в пайке, типа меня,
+было проще. Только один конденсатор (C10) там планарный и довольно маленький.
+Хоть под него пятачки были уже с оловом, пришлось поерзать с пайкой, чтобы
+не закоротить.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/04/colour-maximite/IMG_1224.JPG" alt="" />
+</p>
+
+<p>В сборе.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/04/colour-maximite/IMG_1266.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/04/colour-maximite/IMG_1268.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/04/colour-maximite/IMG_1269.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/04/colour-maximite/IMG_1275.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/04/colour-maximite/IMG_1276.JPG" alt="" />
+</p>
+
+<p>Для сравнения старый и новый Maximite.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/04/colour-maximite/IMG_1270.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/04/colour-maximite/IMG_1277.JPG" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/04/colour-maximite/IMG_1278.JPG" alt="" />
+</p>
+
+<p>Вот, что можно делать с цветами на Бейсике.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/04/colour-maximite/IMG_1289.JPG" alt="" />
+</p>
+
+<p>А это хоть и не в цвете, что, все-таки, классика.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/04/colour-maximite/IMG_1287.JPG" alt="" />
+</p>
+
+<p>Как пишет автор, возможность генерировать цветной видео сигнал потребовала
+100-ногую модель PIC32, где есть три канала SPI. Понятно, что при этом
+требуется &ldquo;прогонять&rdquo; в три раза больше данных, а так так частота кристалла
+осталась той же, 80МГц, то объективно, цветная прошивка работает немного
+медленнее, чем оригинальная черно-белая. Поэтому для нового Maximite есть
+вариант чисто черно-белой прошивки, в которой аналогично добавлены все новые
+периферийные возможности, и которая работает по скорости аналогично
+предыдущему, черно-белому Maximite&rsquo;у.</p>
+
+<p>Конструктор от Альтроникс, как и в прошлый раз, отличного качества.</p>
+
+<p>В целом, рекомендую.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA["21st Century C: C Tips from the New School", автор Ben Klemens]]></title>
@@ -9106,7 +9220,7 @@ futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <spa
 
 <p><a href="http://geoffg.net/maximite.html">Проект полностью открытый</a>. Автор дает схемы, исходные коды прошивки и рекомендации по наладке.</p>
 
-<p>Если даже быстро пролистать <a href="http://geoffg.net/Downloads/Maximite/Maximite%20User%20Manual%20V3.0.pdf">документацию</a>, видно, возможностей прорва. Можно практически на коленке создавать различные мини-контроллеры чего угодно. Работа со всей выше перечисленной периферией ведется прямо из Бейсика.</p>
+<p>Если даже быстро пролистать <a href="http://mmbasic.com/downloads.html">документацию</a>, видно, возможностей прорва. Можно практически на коленке создавать различные мини-контроллеры чего угодно. Работа со всей выше перечисленной периферией ведется прямо из Бейсика.</p>
 
 <p>Программы и данные можно хранить на SD карточке. Если на карточке есть файл <code>AUTORUN.BAS</code>, то прошивка автоматически запускает его при старте.</p>
 

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Цветной микрокомпьютер Maximite</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/interview/">интервью</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Цветной микрокомпьютер Maximite</h1>
+<div id="post">
+  <p>На сегодняшний момент проект <a href="http://geoffg.net/maximite.html">Maximite</a> является моим любимым в области
+рукодельных микрокомпьютеров.
+<a href="/blog/russian/2012/01/19/maximite-kit/">Собрав его оригинальный черно-белый вариант</a>,
+я после <a href="/blog/russian/2012/05/11/retrobsd-on-maximite/">запустил на нем RetroBSD</a>, затем даже свой
+эмулятор <a href="/blog/russian/2012/08/23/radio86-on-maximite/">Радио-86РК</a>. Что подкупает в
+проекте, так это законченность. Конструктивно Maximite простой, PIC32 делает
+почти всю работу. Но Maximite - это не просто идея в виде схемы. Для Maximite
+разработана плата, корпус и, собственно, прошивка - MMBasic,
+продвинутый диалект Бейсика, дающий доступ ко всей периферии, а она
+у Maximite внушительна. В <a href="/blog/russian/2012/08/07/interview-with-geoff-graham/">небольшом интервью</a>
+автор и разработчик Maximite, Джеф Грэхем, рассказал, почему ему
+фактически пришлось довести проект для столь законченного вида.</p>
+
+<p>Недавно автор выпустил новую, цветную версию, и данный обзор посвящен
+именно ей. Итак, возможности цветного Maximite (новые и улучшенные
+возможности отмечены звездочкой):</p>
+
+<ul>
+<li>PS/2 клавиатура</li>
+<li>VGA видео-сигнал (480x432 или 240x216), восемь цветов (*)</li>
+<li>черно-белый композитный видео-сигнал</li>
+<li>генерация стерео-звука (*)</li>
+<li>часы реального времени с независимой батарейкой (*)</li>
+<li>20 независимых пинов ввода-вывода</li>
+<li>разъем для подключения к Arduino (*)</li>
+<li>SD-карта (до 32ГБ)</li>
+<li>USB соединение для передачи файлов или терминала</li>
+<li>интерфейсы RS232, I2C, SPI, 1-wire</li>
+<li>двухканальный ШИМ (*)</li>
+<li>возможность обновления прошивки по USB</li>
+<li>возможность питания от USB</li>
+<li>встроенная в Бейсик система шрифтов</li>
+<li>команды работы со спрайтами в Бейсике для программирования игр (*)</li>
+</ul>
+
+<p>Встроенный Бейсик позволяет максимально полно использовать все эти
+возможности. Можно даже создавать обработчики прерываний таймера в виде
+подпрограмм.</p>
+
+<p>Я, конечно, приобрел конструктор цветного Maximite, как и в прошлый раз у
+<a href="http://www.altronics.com.au/index.asp?area=item&amp;id=K9555">Altronics</a>.</p>
+
+<p><img src="IMG_1221.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1223.JPG" alt="" />
+</p>
+
+<p>Все элементы с ножками, чтобы, видимо, дилетантам в пайке, типа меня,
+было проще. Только один конденсатор (C10) там планарный и довольно маленький.
+Хоть под него пятачки были уже с оловом, пришлось поерзать с пайкой, чтобы
+не закоротить.</p>
+
+<p><img src="IMG_1224.JPG" alt="" />
+</p>
+
+<p>В сборе.</p>
+
+<p><img src="IMG_1266.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1268.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1269.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1275.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1276.JPG" alt="" />
+</p>
+
+<p>Для сравнения старый и новый Maximite.</p>
+
+<p><img src="IMG_1270.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1277.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1278.JPG" alt="" />
+</p>
+
+<p>Вот, что можно делать с цветами на Бейсике.</p>
+
+<p><img src="IMG_1289.JPG" alt="" />
+</p>
+
+<p>А это хоть и не в цвете, что, все-таки, классика.</p>
+
+<p><img src="IMG_1287.JPG" alt="" />
+</p>
+
+<p>Как пишет автор, возможность генерировать цветной видео сигнал потребовала
+100-ногую модель PIC32, где есть три канала SPI. Понятно, что при этом
+требуется &ldquo;прогонять&rdquo; в три раза больше данных, а так так частота кристалла
+осталась той же, 80МГц, то объективно, цветная прошивка работает немного
+медленнее, чем оригинальная черно-белая. Поэтому для нового Maximite есть
+вариант чисто черно-белой прошивки, в которой аналогично добавлены все новые
+периферийные возможности, и которая работает по скорости аналогично
+предыдущему, черно-белому Maximite&rsquo;у.</p>
+
+<p>Конструктор от Альтроникс, как и в прошлый раз, отличного качества.</p>
+
+<p>В целом, рекомендую.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/12/04/colour-maximite/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/12/04/colour-maximite/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
