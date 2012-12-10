@@ -1,5 +1,6 @@
 @language: english
 @date: 2012-12-10 22:00
+@tags: asciiio, ascii, snake, game
 
 The console Snake game
 ======================
