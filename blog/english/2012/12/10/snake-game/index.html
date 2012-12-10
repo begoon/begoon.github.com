@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>The console Snake game</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/interview/">interview</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>The console Snake game</h1>
+<div id="post">
+  <p>This code is not mine, I grabbed it from <a href="http://itblogs.org/c-konsolnaya-zmejka/">itblogs</a>. I cleaned up the code
+a little bit, removed switching the console background color and added code
+for Linux/OSX.</p>
+
+<p>Agreed, the game is trivial, but I just liked it. Also, I tried <a href="http://ascii.io/">ascii.io</a>
+recording an asciicast, so you can evaluate gameplay - <a href="http://ascii.io/a/1715">http://ascii.io/a/1715</a>.</p>
+
+<p><a href="https://github.com/begoon/stuff/tree/master/games/snake/c++">The source</a> is available at GitHub&rsquo;е, but you can simply grab it below.</p>
+
+<pre class="hl">
+<span class="hl slc">// Originally taken from http://itblogs.org/c-konsolnaya-zmejka/.</span>
+
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;cstdio&gt;</span>
+<span class="hl ppc">#include &lt;cstdlib&gt;</span>
+<span class="hl ppc">#include &lt;ctime&gt;</span>
+<span class="hl ppc">#ifdef WINDOWS</span>
+<span class="hl ppc">#include &lt;windows.h&gt;</span>
+<span class="hl ppc">#include &lt;conio.h&gt;</span>
+<span class="hl ppc">#else</span>
+<span class="hl ppc">#include &lt;unistd.h&gt;</span>
+<span class="hl ppc">#include &lt;termios.h&gt;</span>
+<span class="hl ppc">#include &lt;sys/select.h&gt;</span>
+
+<span class="hl ppc">#define STDIN_FILENO 0</span>
+<span class="hl ppc">#define NB_DISABLE 0</span>
+<span class="hl ppc">#define NB_ENABLE 1</span>
+
+<span class="hl ppc">#define Sleep(x) usleep(x*1000)</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">kbhit</span><span class="hl opt">() {</span>
+  <span class="hl kwb">struct</span> timeval tv<span class="hl opt">;</span>
+  fd_set fds<span class="hl opt">;</span>
+  tv<span class="hl opt">.</span>tv_sec <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  tv<span class="hl opt">.</span>tv_usec <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl kwd">FD_ZERO</span><span class="hl opt">(&amp;</span>fds<span class="hl opt">);</span>
+  <span class="hl kwd">FD_SET</span><span class="hl opt">(</span>STDIN_FILENO<span class="hl opt">, &amp;</span>fds<span class="hl opt">);</span>
+  <span class="hl kwd">select</span><span class="hl opt">(</span>STDIN_FILENO<span class="hl opt">+</span><span class="hl num">1</span><span class="hl opt">, &amp;</span>fds<span class="hl opt">,</span> NULL<span class="hl opt">,</span> NULL<span class="hl opt">, &amp;</span>tv<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">FD_ISSET</span><span class="hl opt">(</span>STDIN_FILENO<span class="hl opt">, &amp;</span>fds<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">nonblock</span><span class="hl opt">(</span><span class="hl kwb">int</span> state<span class="hl opt">) {</span>
+  <span class="hl kwb">struct</span> termios ttystate<span class="hl opt">;</span>
+
+  <span class="hl slc">// Get the terminal state.</span>
+  <span class="hl kwd">tcgetattr</span><span class="hl opt">(</span>STDIN_FILENO<span class="hl opt">, &amp;</span>ttystate<span class="hl opt">);</span>
+
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>state <span class="hl opt">==</span> NB_ENABLE<span class="hl opt">) {</span>
+    <span class="hl slc">// Turn off canonical mode.</span>
+    ttystate<span class="hl opt">.</span>c_lflag <span class="hl opt">&amp;= ~</span>ICANON<span class="hl opt">;</span>
+    <span class="hl slc">// Minimum of number input read.</span>
+    ttystate<span class="hl opt">.</span>c_cc<span class="hl opt">[</span>VMIN<span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span> <span class="hl kwa">else if</span> <span class="hl opt">(</span>state <span class="hl opt">==</span> NB_DISABLE<span class="hl opt">) {</span>
+    <span class="hl slc">// Turn on canonical mode.</span>
+    ttystate<span class="hl opt">.</span>c_lflag <span class="hl opt">|=</span> ICANON<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  <span class="hl slc">// Set the terminal attributes.</span>
+  <span class="hl kwd">tcsetattr</span><span class="hl opt">(</span>STDIN_FILENO<span class="hl opt">,</span> TCSANOW<span class="hl opt">, &amp;</span>ttystate<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">getch</span><span class="hl opt">() {</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">fgetc</span><span class="hl opt">(</span>stdin<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl ppc">#endif</span>
+
+<span class="hl kwb">int</span> snake_size<span class="hl opt">,</span> change_x<span class="hl opt">,</span> change_y<span class="hl opt">,</span> coordinates_x<span class="hl opt">[</span><span class="hl num">1000</span><span class="hl opt">],</span> coordinates_y<span class="hl opt">[</span><span class="hl num">1000</span><span class="hl opt">];</span>
+<span class="hl kwb">int</span> food_x <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">,</span> food_y <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">;</span>
+
+<span class="hl kwb">char</span> symbol<span class="hl opt">,</span> a<span class="hl opt">[</span><span class="hl num">1000</span><span class="hl opt">][</span><span class="hl num">1000</span><span class="hl opt">];</span>
+
+<span class="hl kwb">const int</span> N <span class="hl opt">=</span> <span class="hl num">13</span><span class="hl opt">,</span> M <span class="hl opt">=</span> <span class="hl num">17</span><span class="hl opt">,</span> INTERVAL <span class="hl opt">=</span> <span class="hl num">200</span><span class="hl opt">;</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">change_direction</span><span class="hl opt">() {</span>
+  symbol <span class="hl opt">=</span> <span class="hl kwd">getch</span><span class="hl opt">();</span>
+  <span class="hl kwa">switch</span> <span class="hl opt">(</span>symbol<span class="hl opt">) {</span>
+    <span class="hl kwa">case</span> <span class="hl str">'w'</span><span class="hl opt">:</span> <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">!=</span> <span class="hl num">1</span> <span class="hl opt">||</span> change_y <span class="hl opt">!=</span> <span class="hl num">0</span><span class="hl opt">) {</span>
+                change_x <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">;</span> change_y <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+              <span class="hl opt">}</span>
+              <span class="hl kwa">break</span><span class="hl opt">;</span>
+    <span class="hl kwa">case</span> <span class="hl str">'a'</span><span class="hl opt">:</span> <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">!=</span> <span class="hl num">0</span> <span class="hl opt">||</span> change_y <span class="hl opt">!=</span> <span class="hl num">1</span><span class="hl opt">) {</span>
+                change_x <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> change_y <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">;</span>
+              <span class="hl opt">}</span>
+              <span class="hl kwa">break</span><span class="hl opt">;</span>
+    <span class="hl kwa">case</span> <span class="hl str">'s'</span><span class="hl opt">:</span> <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">!= -</span><span class="hl num">1</span> <span class="hl opt">||</span> change_y <span class="hl opt">!=</span> <span class="hl num">0</span><span class="hl opt">) {</span>
+                change_x <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span> change_y <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+              <span class="hl opt">}</span>
+              <span class="hl kwa">break</span><span class="hl opt">;</span>
+    <span class="hl kwa">case</span> <span class="hl str">'d'</span><span class="hl opt">:</span> <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">!=</span> <span class="hl num">0</span> <span class="hl opt">||</span> change_y <span class="hl opt">!= -</span><span class="hl num">1</span><span class="hl opt">) {</span>
+                change_x <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> change_y <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+              <span class="hl opt">}</span>
+              <span class="hl kwa">break</span><span class="hl opt">;</span>
+<span class="hl ppc">#ifndef WINDOWS</span>
+    <span class="hl kwa">case</span> <span class="hl str">'q'</span><span class="hl opt">:</span> <span class="hl kwd">nonblock</span><span class="hl opt">(</span>NB_DISABLE<span class="hl opt">);</span> std<span class="hl opt">::</span><span class="hl kwd">exit</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">);</span>
+<span class="hl ppc">#endif</span>
+    <span class="hl kwa">default</span><span class="hl opt">:</span> <span class="hl kwa">break</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">show_table</span><span class="hl opt">() {</span>
+<span class="hl ppc">#ifdef WINDOWS</span>
+  <span class="hl kwd">system</span><span class="hl opt">(</span><span class="hl str">&quot;cls&quot;</span><span class="hl opt">);</span>
+<span class="hl ppc">#else</span>
+  <span class="hl kwd">system</span><span class="hl opt">(</span><span class="hl str">&quot;clear&quot;</span><span class="hl opt">);</span>
+<span class="hl ppc">#endif</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;=</span> N <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> j <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> j <span class="hl opt">&lt;=</span> M <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">; ++</span>j<span class="hl opt">)</span>
+      std<span class="hl opt">::</span>cout
+        <span class="hl opt">&lt;&lt; (</span>i <span class="hl opt">==</span> <span class="hl num">0</span> <span class="hl opt">||</span> j <span class="hl opt">==</span> <span class="hl num">0</span> <span class="hl opt">||</span> i <span class="hl opt">==</span> N <span class="hl opt">+</span> <span class="hl num">1</span> <span class="hl opt">||</span> j <span class="hl opt">==</span> M <span class="hl opt">+</span> <span class="hl num">1</span> ?
+           <span class="hl str">'#'</span> <span class="hl opt">:</span> a<span class="hl opt">[</span>i<span class="hl opt">][</span>j<span class="hl opt">])</span>
+        <span class="hl opt">&lt;&lt; (</span>j <span class="hl opt">&lt;=</span> M ? <span class="hl str">&quot;&quot;</span> <span class="hl opt">:</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">clear_snake_on_table</span><span class="hl opt">() {</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span> i <span class="hl opt">&lt;=</span> snake_size<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    a<span class="hl opt">[</span>coordinates_x<span class="hl opt">[</span>i<span class="hl opt">]][</span>coordinates_y<span class="hl opt">[</span>i<span class="hl opt">]] =</span> <span class="hl str">' '</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">show_snake_on_table</span><span class="hl opt">() {</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">==</span> <span class="hl num">1</span> <span class="hl opt">&amp;&amp;</span> change_y <span class="hl opt">==</span> <span class="hl num">0</span><span class="hl opt">)</span>
+    a<span class="hl opt">[</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]][</span>coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]] =</span> <span class="hl str">'v'</span><span class="hl opt">;</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">== -</span><span class="hl num">1</span> <span class="hl opt">&amp;&amp;</span> change_y <span class="hl opt">==</span> <span class="hl num">0</span><span class="hl opt">)</span>
+    a<span class="hl opt">[</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]][</span>coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]] =</span> <span class="hl str">'^'</span><span class="hl opt">;</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">==</span> <span class="hl num">0</span> <span class="hl opt">&amp;&amp;</span> change_y <span class="hl opt">==</span> <span class="hl num">1</span><span class="hl opt">)</span>
+    a<span class="hl opt">[</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]][</span>coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]] =</span> <span class="hl str">'&gt;'</span><span class="hl opt">;</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">==</span> <span class="hl num">0</span> <span class="hl opt">&amp;&amp;</span> change_y <span class="hl opt">== -</span><span class="hl num">1</span><span class="hl opt">)</span>
+    a<span class="hl opt">[</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]][</span>coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]] =</span> <span class="hl str">'&lt;'</span><span class="hl opt">;</span>
+
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;=</span> snake_size<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    a<span class="hl opt">[</span>coordinates_x<span class="hl opt">[</span>i<span class="hl opt">]][</span>coordinates_y<span class="hl opt">[</span>i<span class="hl opt">]] =</span> <span class="hl str">'&#64;'</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">bool</span> <span class="hl kwd">game_over</span><span class="hl opt">() {</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;=</span> snake_size<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] ==</span> coordinates_x<span class="hl opt">[</span>i<span class="hl opt">] &amp;&amp;</span>
+        coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] ==</span> coordinates_y<span class="hl opt">[</span>i<span class="hl opt">])</span>
+      <span class="hl kwa">return true</span><span class="hl opt">;</span>
+  <span class="hl kwa">return false</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">check_coordinates</span><span class="hl opt">() {</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] &gt;</span> N<span class="hl opt">)</span> coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] &lt;</span> <span class="hl num">1</span><span class="hl opt">)</span> coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> N<span class="hl opt">;</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] &gt;</span> M<span class="hl opt">)</span> coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] &lt;</span> <span class="hl num">1</span><span class="hl opt">)</span> coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> M<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">next_step</span><span class="hl opt">() {</span>
+  <span class="hl kwd">clear_snake_on_table</span><span class="hl opt">();</span>
+
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> snake_size<span class="hl opt">;</span> i <span class="hl opt">&gt;=</span> <span class="hl num">2</span><span class="hl opt">; --</span>i<span class="hl opt">) {</span>
+    coordinates_x<span class="hl opt">[</span>i<span class="hl opt">] =</span> coordinates_x<span class="hl opt">[</span>i <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">];</span>
+    coordinates_y<span class="hl opt">[</span>i<span class="hl opt">] =</span> coordinates_y<span class="hl opt">[</span>i <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">];</span>
+  <span class="hl opt">}</span>
+
+  coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] +=</span> change_x<span class="hl opt">;</span>
+  coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] +=</span> change_y<span class="hl opt">;</span>
+
+  <span class="hl kwd">check_coordinates</span><span class="hl opt">();</span>
+
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] ==</span> food_x <span class="hl opt">&amp;&amp;</span> coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] ==</span> food_y<span class="hl opt">) {</span>
+    snake_size<span class="hl opt">++;</span>
+    food_x <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">;</span>
+    food_y <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+
+  <span class="hl kwd">show_snake_on_table</span><span class="hl opt">();</span>
+
+  <span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwd">game_over</span><span class="hl opt">()) {</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;You're looser!</span> <span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
+<span class="hl ppc">#ifdef WINDOWS</span>
+    <span class="hl kwd">system</span><span class="hl opt">(</span><span class="hl str">&quot;pause&quot;</span><span class="hl opt">);</span>
+<span class="hl ppc">#endif</span>
+    std<span class="hl opt">::</span><span class="hl kwd">exit</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">);</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">bool</span> <span class="hl kwd">food_check</span><span class="hl opt">() {</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>food_x <span class="hl opt">== -</span><span class="hl num">1</span> <span class="hl opt">&amp;&amp;</span> food_y <span class="hl opt">== -</span><span class="hl num">1</span><span class="hl opt">)</span> <span class="hl kwa">return false</span><span class="hl opt">;</span>
+  <span class="hl kwa">return true</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">place_food</span><span class="hl opt">() {</span>
+  std<span class="hl opt">::</span><span class="hl kwd">srand</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span>NULL<span class="hl opt">));</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span> i <span class="hl opt">&lt;=</span> <span class="hl num">9</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    <span class="hl kwb">int</span> x <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">rand</span><span class="hl opt">(),</span> y <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">rand</span><span class="hl opt">();</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>x <span class="hl opt">&lt;</span> <span class="hl num">0</span><span class="hl opt">)</span> x <span class="hl opt">*= -</span><span class="hl num">1</span><span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>y <span class="hl opt">&lt;</span> <span class="hl num">0</span><span class="hl opt">)</span> y <span class="hl opt">*= -</span><span class="hl num">1</span><span class="hl opt">;</span>
+    x <span class="hl opt">%= (</span>N <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">);</span>
+    y <span class="hl opt">%= (</span>M <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">);</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>x <span class="hl opt">==</span> <span class="hl num">0</span><span class="hl opt">) ++</span>x<span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>y <span class="hl opt">==</span> <span class="hl num">0</span><span class="hl opt">) ++</span>y<span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>a<span class="hl opt">[</span>x<span class="hl opt">][</span>y<span class="hl opt">] !=</span> <span class="hl str">'&#64;'</span> <span class="hl opt">&amp;&amp;</span> a<span class="hl opt">[</span>x<span class="hl opt">][</span>y<span class="hl opt">] !=</span> <span class="hl str">'v'</span> <span class="hl opt">&amp;&amp;</span> a<span class="hl opt">[</span>x<span class="hl opt">][</span>y<span class="hl opt">] !=</span> <span class="hl str">'^'</span> <span class="hl opt">&amp;&amp;</span>
+        a<span class="hl opt">[</span>x<span class="hl opt">][</span>y<span class="hl opt">] !=</span> <span class="hl str">'&lt;'</span> <span class="hl opt">&amp;&amp;</span> a<span class="hl opt">[</span>x<span class="hl opt">][</span>y<span class="hl opt">] !=</span> <span class="hl str">'&gt;'</span><span class="hl opt">) {</span>
+      food_x <span class="hl opt">=</span> x<span class="hl opt">;</span>
+      food_y <span class="hl opt">=</span> y<span class="hl opt">;</span>
+      a<span class="hl opt">[</span>x<span class="hl opt">][</span>y<span class="hl opt">] =</span> <span class="hl str">'+'</span><span class="hl opt">;</span>
+      <span class="hl kwa">return</span><span class="hl opt">;</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">standart_settings</span><span class="hl opt">() {</span>
+  snake_size <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span>
+
+  coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> <span class="hl num">2</span><span class="hl opt">;</span>
+  coordinates_x<span class="hl opt">[</span><span class="hl num">2</span><span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  coordinates_y<span class="hl opt">[</span><span class="hl num">2</span><span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
+
+  change_x <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  change_y <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwd">standart_settings</span><span class="hl opt">();</span>
+
+<span class="hl ppc">#ifndef WINDOWS</span>
+  std<span class="hl opt">::</span><span class="hl kwd">memset</span><span class="hl opt">(</span>a<span class="hl opt">,</span> <span class="hl str">' '</span><span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>a<span class="hl opt">));</span>
+  <span class="hl kwd">nonblock</span><span class="hl opt">(</span>NB_ENABLE<span class="hl opt">);</span>
+<span class="hl ppc">#endif</span>
+
+  <span class="hl kwa">while</span> <span class="hl opt">(</span><span class="hl kwa">true</span><span class="hl opt">) {</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwd">kbhit</span><span class="hl opt">() !=</span> <span class="hl num">0</span><span class="hl opt">)</span>
+     <span class="hl kwd">change_direction</span><span class="hl opt">();</span>
+
+    <span class="hl kwd">next_step</span><span class="hl opt">();</span>
+
+    <span class="hl kwa">if</span> <span class="hl opt">(!</span><span class="hl kwd">food_check</span><span class="hl opt">())</span>
+      <span class="hl kwd">place_food</span><span class="hl opt">();</span>
+
+    <span class="hl kwd">show_table</span><span class="hl opt">();</span>
+
+    <span class="hl kwd">Sleep</span><span class="hl opt">(</span>INTERVAL<span class="hl opt">);</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">}</span>
+</pre>
+
+<h2>P.S.</h2>
+
+<p>By the way, if you have similar cool console stuff, please share.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/12/10/snake-game/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/12/10/snake-game/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

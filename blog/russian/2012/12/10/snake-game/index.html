@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Консольная игра "Змейка"</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/interview/">интервью</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Консольная игра &#34;Змейка&#34;</h1>
+<div id="post">
+  <p>Автор - не я, изначально взято с <a href="http://itblogs.org/c-konsolnaya-zmejka/">itblogs</a>. Я немного причесал код,
+убрал переключения цвета фона и добавил код для Linux/OSX.</p>
+
+<p>В игре, ясное дело, ничего особенного, просто понравилась она мне. К тому же
+попробовал <a href="http://ascii.io/">ascii.io</a> для записи asciicast&rsquo;a, так что геймплей можно
+заценить - <a href="http://ascii.io/a/1715">http://ascii.io/a/1715</a></p>
+
+<p><a href="https://github.com/begoon/stuff/tree/master/games/snake/c++">Исходник</a> есть на GitHub&rsquo;е, но можно просто скопировать снизу.</p>
+
+<pre class="hl">
+<span class="hl slc">// Originally taken from http://itblogs.org/c-konsolnaya-zmejka/.</span>
+
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;cstdio&gt;</span>
+<span class="hl ppc">#include &lt;cstdlib&gt;</span>
+<span class="hl ppc">#include &lt;ctime&gt;</span>
+<span class="hl ppc">#ifdef WINDOWS</span>
+<span class="hl slc">// Библиотека, нужна для использования функции Sleep().</span>
+<span class="hl ppc">#include &lt;windows.h&gt;</span>
+<span class="hl slc">// Библиотека, нужна для использования функций kbhit() и getch().</span>
+<span class="hl ppc">#include &lt;conio.h&gt;</span>
+<span class="hl ppc">#else</span>
+<span class="hl ppc">#include &lt;unistd.h&gt;</span>
+<span class="hl ppc">#include &lt;termios.h&gt;</span>
+<span class="hl ppc">#include &lt;sys/select.h&gt;</span>
+
+<span class="hl ppc">#define STDIN_FILENO 0</span>
+<span class="hl ppc">#define NB_DISABLE 0</span>
+<span class="hl ppc">#define NB_ENABLE 1</span>
+
+<span class="hl ppc">#define Sleep(x) usleep(x*1000)</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">kbhit</span><span class="hl opt">() {</span>
+  <span class="hl kwb">struct</span> timeval tv<span class="hl opt">;</span>
+  fd_set fds<span class="hl opt">;</span>
+  tv<span class="hl opt">.</span>tv_sec <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  tv<span class="hl opt">.</span>tv_usec <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl kwd">FD_ZERO</span><span class="hl opt">(&amp;</span>fds<span class="hl opt">);</span>
+  <span class="hl kwd">FD_SET</span><span class="hl opt">(</span>STDIN_FILENO<span class="hl opt">, &amp;</span>fds<span class="hl opt">);</span>
+  <span class="hl kwd">select</span><span class="hl opt">(</span>STDIN_FILENO<span class="hl opt">+</span><span class="hl num">1</span><span class="hl opt">, &amp;</span>fds<span class="hl opt">,</span> NULL<span class="hl opt">,</span> NULL<span class="hl opt">, &amp;</span>tv<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">FD_ISSET</span><span class="hl opt">(</span>STDIN_FILENO<span class="hl opt">, &amp;</span>fds<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">nonblock</span><span class="hl opt">(</span><span class="hl kwb">int</span> state<span class="hl opt">) {</span>
+  <span class="hl kwb">struct</span> termios ttystate<span class="hl opt">;</span>
+
+  <span class="hl slc">// Get the terminal state.</span>
+  <span class="hl kwd">tcgetattr</span><span class="hl opt">(</span>STDIN_FILENO<span class="hl opt">, &amp;</span>ttystate<span class="hl opt">);</span>
+
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>state <span class="hl opt">==</span> NB_ENABLE<span class="hl opt">) {</span>
+    <span class="hl slc">// Turn off canonical mode.</span>
+    ttystate<span class="hl opt">.</span>c_lflag <span class="hl opt">&amp;= ~</span>ICANON<span class="hl opt">;</span>
+    <span class="hl slc">// Minimum of number input read.</span>
+    ttystate<span class="hl opt">.</span>c_cc<span class="hl opt">[</span>VMIN<span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span> <span class="hl kwa">else if</span> <span class="hl opt">(</span>state <span class="hl opt">==</span> NB_DISABLE<span class="hl opt">) {</span>
+    <span class="hl slc">// Turn on canonical mode.</span>
+    ttystate<span class="hl opt">.</span>c_lflag <span class="hl opt">|=</span> ICANON<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+  <span class="hl slc">// Set the terminal attributes.</span>
+  <span class="hl kwd">tcsetattr</span><span class="hl opt">(</span>STDIN_FILENO<span class="hl opt">,</span> TCSANOW<span class="hl opt">, &amp;</span>ttystate<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">getch</span><span class="hl opt">() {</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">fgetc</span><span class="hl opt">(</span>stdin<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl ppc">#endif</span>
+
+<span class="hl slc">// snake_size - размер змейки.</span>
+<span class="hl slc">// change_x, change_y - в какую сторону движется змейка.</span>
+<span class="hl slc">// coordinates_x[1000], coordinates_y[1000] - массивы, хранящие координаты</span>
+<span class="hl slc">//                                            частей тела змейки.</span>
+<span class="hl slc">// Kоординаты головы змейки хранятся в coordinates_x[1], coordinates_y[1].</span>
+<span class="hl slc">// food_x, food_y - координаты еды.</span>
+
+<span class="hl kwb">int</span> snake_size<span class="hl opt">,</span> change_x<span class="hl opt">,</span> change_y<span class="hl opt">,</span> coordinates_x<span class="hl opt">[</span><span class="hl num">1000</span><span class="hl opt">],</span> coordinates_y<span class="hl opt">[</span><span class="hl num">1000</span><span class="hl opt">];</span>
+<span class="hl kwb">int</span> food_x <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">,</span> food_y <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">;</span>
+
+<span class="hl slc">// symbol - хранит в себе ASCII код нажатой клавиши.</span>
+<span class="hl slc">// a[1000][1000] - наша таблица, в которой происходит вся игра.</span>
+<span class="hl kwb">char</span> symbol<span class="hl opt">,</span> a<span class="hl opt">[</span><span class="hl num">1000</span><span class="hl opt">][</span><span class="hl num">1000</span><span class="hl opt">];</span>
+
+<span class="hl slc">// Константы:</span>
+<span class="hl slc">// N - размер таблицы, а именно высота.</span>
+<span class="hl slc">// M - ширина таблицы.</span>
+<span class="hl slc">// INTERVAL - интервал в миллисекундах, через каждый этот промежуток</span>
+<span class="hl slc">//            времени змейка будет передвигаться.</span>
+<span class="hl kwb">const int</span> N <span class="hl opt">=</span> <span class="hl num">13</span><span class="hl opt">,</span> M <span class="hl opt">=</span> <span class="hl num">17</span><span class="hl opt">,</span> INTERVAL <span class="hl opt">=</span> <span class="hl num">200</span><span class="hl opt">;</span>
+
+<span class="hl slc">// функция, считывающая нажатую клавишу.</span>
+<span class="hl kwb">void</span> <span class="hl kwd">change_direction</span><span class="hl opt">() {</span>
+  <span class="hl slc">// Cчитываем нажатую клавишу с помощью функции getch().</span>
+  symbol <span class="hl opt">=</span> <span class="hl kwd">getch</span><span class="hl opt">();</span>
+  <span class="hl kwa">switch</span> <span class="hl opt">(</span>symbol<span class="hl opt">) {</span>
+    <span class="hl slc">// Управление змейкой у нас через wasd.</span>
+    <span class="hl kwa">case</span> <span class="hl str">'w'</span><span class="hl opt">:</span> <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">!=</span> <span class="hl num">1</span> <span class="hl opt">||</span> change_y <span class="hl opt">!=</span> <span class="hl num">0</span><span class="hl opt">) {</span>
+                change_x <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">;</span> change_y <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+              <span class="hl opt">}</span>
+              <span class="hl kwa">break</span><span class="hl opt">;</span>
+    <span class="hl kwa">case</span> <span class="hl str">'a'</span><span class="hl opt">:</span> <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">!=</span> <span class="hl num">0</span> <span class="hl opt">||</span> change_y <span class="hl opt">!=</span> <span class="hl num">1</span><span class="hl opt">) {</span>
+                change_x <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> change_y <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">;</span>
+              <span class="hl opt">}</span>
+              <span class="hl kwa">break</span><span class="hl opt">;</span>
+    <span class="hl kwa">case</span> <span class="hl str">'s'</span><span class="hl opt">:</span> <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">!= -</span><span class="hl num">1</span> <span class="hl opt">||</span> change_y <span class="hl opt">!=</span> <span class="hl num">0</span><span class="hl opt">) {</span>
+                change_x <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span> change_y <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+              <span class="hl opt">}</span>
+              <span class="hl kwa">break</span><span class="hl opt">;</span>
+    <span class="hl kwa">case</span> <span class="hl str">'d'</span><span class="hl opt">:</span> <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">!=</span> <span class="hl num">0</span> <span class="hl opt">||</span> change_y <span class="hl opt">!= -</span><span class="hl num">1</span><span class="hl opt">) {</span>
+                change_x <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> change_y <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+              <span class="hl opt">}</span>
+              <span class="hl kwa">break</span><span class="hl opt">;</span>
+<span class="hl ppc">#ifndef WINDOWS</span>
+    <span class="hl kwa">case</span> <span class="hl str">'q'</span><span class="hl opt">:</span> <span class="hl kwd">nonblock</span><span class="hl opt">(</span>NB_DISABLE<span class="hl opt">);</span> std<span class="hl opt">::</span><span class="hl kwd">exit</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">);</span>
+<span class="hl ppc">#endif</span>
+    <span class="hl kwa">default</span><span class="hl opt">:</span> <span class="hl kwa">break</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// функция для вывода таблицы</span>
+<span class="hl kwb">void</span> <span class="hl kwd">show_table</span><span class="hl opt">() {</span>
+  <span class="hl slc">// Очищаем консоль.</span>
+<span class="hl ppc">#ifdef WINDOWS</span>
+  <span class="hl kwd">system</span><span class="hl opt">(</span><span class="hl str">&quot;cls&quot;</span><span class="hl opt">);</span>
+<span class="hl ppc">#else</span>
+  <span class="hl kwd">system</span><span class="hl opt">(</span><span class="hl str">&quot;clear&quot;</span><span class="hl opt">);</span>
+<span class="hl ppc">#endif</span>
+
+  <span class="hl slc">// Выводим таблицу и края.</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;=</span> N <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> j <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> j <span class="hl opt">&lt;=</span> M <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">; ++</span>j<span class="hl opt">)</span>
+      std<span class="hl opt">::</span>cout
+        <span class="hl opt">&lt;&lt; (</span>i <span class="hl opt">==</span> <span class="hl num">0</span> <span class="hl opt">||</span> j <span class="hl opt">==</span> <span class="hl num">0</span> <span class="hl opt">||</span> i <span class="hl opt">==</span> N <span class="hl opt">+</span> <span class="hl num">1</span> <span class="hl opt">||</span> j <span class="hl opt">==</span> M <span class="hl opt">+</span> <span class="hl num">1</span> ?
+           <span class="hl str">'#'</span> <span class="hl opt">:</span> a<span class="hl opt">[</span>i<span class="hl opt">][</span>j<span class="hl opt">])</span>
+        <span class="hl opt">&lt;&lt; (</span>j <span class="hl opt">&lt;=</span> M ? <span class="hl str">&quot;&quot;</span> <span class="hl opt">:</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// Очищаем координаты, в которых располагалась змейка.</span>
+<span class="hl kwb">void</span> <span class="hl kwd">clear_snake_on_table</span><span class="hl opt">() {</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span> i <span class="hl opt">&lt;=</span> snake_size<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    a<span class="hl opt">[</span>coordinates_x<span class="hl opt">[</span>i<span class="hl opt">]][</span>coordinates_y<span class="hl opt">[</span>i<span class="hl opt">]] =</span> <span class="hl str">' '</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// Красим координаты змейки.</span>
+<span class="hl kwb">void</span> <span class="hl kwd">show_snake_on_table</span><span class="hl opt">() {</span>
+  <span class="hl slc">// Изменяем тип головы.</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">==</span> <span class="hl num">1</span> <span class="hl opt">&amp;&amp;</span> change_y <span class="hl opt">==</span> <span class="hl num">0</span><span class="hl opt">)</span>
+    a<span class="hl opt">[</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]][</span>coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]] =</span> <span class="hl str">'v'</span><span class="hl opt">;</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">== -</span><span class="hl num">1</span> <span class="hl opt">&amp;&amp;</span> change_y <span class="hl opt">==</span> <span class="hl num">0</span><span class="hl opt">)</span>
+    a<span class="hl opt">[</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]][</span>coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]] =</span> <span class="hl str">'^'</span><span class="hl opt">;</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">==</span> <span class="hl num">0</span> <span class="hl opt">&amp;&amp;</span> change_y <span class="hl opt">==</span> <span class="hl num">1</span><span class="hl opt">)</span>
+    a<span class="hl opt">[</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]][</span>coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]] =</span> <span class="hl str">'&gt;'</span><span class="hl opt">;</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>change_x <span class="hl opt">==</span> <span class="hl num">0</span> <span class="hl opt">&amp;&amp;</span> change_y <span class="hl opt">== -</span><span class="hl num">1</span><span class="hl opt">)</span>
+    a<span class="hl opt">[</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]][</span>coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]] =</span> <span class="hl str">'&lt;'</span><span class="hl opt">;</span>
+
+  <span class="hl slc">// Красим змейку.</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;=</span> snake_size<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    a<span class="hl opt">[</span>coordinates_x<span class="hl opt">[</span>i<span class="hl opt">]][</span>coordinates_y<span class="hl opt">[</span>i<span class="hl opt">]] =</span> <span class="hl str">'&#64;'</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// Проверяем, съела ли змейка саму себя.</span>
+<span class="hl kwb">bool</span> <span class="hl kwd">game_over</span><span class="hl opt">() {</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;=</span> snake_size<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
+    <span class="hl slc">// Eсли координаты головы змейки равны координате какой-либо части тела</span>
+    <span class="hl slc">// змейки, то змейка съела саму себя.</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] ==</span> coordinates_x<span class="hl opt">[</span>i<span class="hl opt">] &amp;&amp;</span>
+        coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] ==</span> coordinates_y<span class="hl opt">[</span>i<span class="hl opt">])</span>
+      <span class="hl kwa">return true</span><span class="hl opt">;</span>
+  <span class="hl slc">// Если все координаты различны, то все в порядке - играем дальше.</span>
+  <span class="hl kwa">return false</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// Проверяем, не вышла ли змейка за поле, если да то возвращаем ее обратно.</span>
+<span class="hl kwb">void</span> <span class="hl kwd">check_coordinates</span><span class="hl opt">() {</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] &gt;</span> N<span class="hl opt">)</span> coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] &lt;</span> <span class="hl num">1</span><span class="hl opt">)</span> coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> N<span class="hl opt">;</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] &gt;</span> M<span class="hl opt">)</span> coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] &lt;</span> <span class="hl num">1</span><span class="hl opt">)</span> coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> M<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// функция следующего хода, в которой наша змейка сдвигается в сторону</span>
+<span class="hl slc">// на 1 ячейку.</span>
+<span class="hl kwb">void</span> <span class="hl kwd">next_step</span><span class="hl opt">() {</span>
+  <span class="hl slc">// Чистим таблицу от змейки.</span>
+  <span class="hl kwd">clear_snake_on_table</span><span class="hl opt">();</span>
+
+  <span class="hl slc">// Передвигаем тело змейки.</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> snake_size<span class="hl opt">;</span> i <span class="hl opt">&gt;=</span> <span class="hl num">2</span><span class="hl opt">; --</span>i<span class="hl opt">) {</span>
+    coordinates_x<span class="hl opt">[</span>i<span class="hl opt">] =</span> coordinates_x<span class="hl opt">[</span>i <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">];</span>
+    coordinates_y<span class="hl opt">[</span>i<span class="hl opt">] =</span> coordinates_y<span class="hl opt">[</span>i <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">];</span>
+  <span class="hl opt">}</span>
+
+  <span class="hl slc">// Передвигаем голову змейки.</span>
+  coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] +=</span> change_x<span class="hl opt">;</span>
+  coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] +=</span> change_y<span class="hl opt">;</span>
+
+  <span class="hl slc">// Проверяем в порядке ли координаты.</span>
+  <span class="hl kwd">check_coordinates</span><span class="hl opt">();</span>
+
+  <span class="hl slc">// Если голова змейки там же где и еда, то увеличиваем размер змейки</span>
+  <span class="hl slc">// и очищаем координаты змейки.</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] ==</span> food_x <span class="hl opt">&amp;&amp;</span> coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] ==</span> food_y<span class="hl opt">) {</span>
+    snake_size<span class="hl opt">++;</span>
+    food_x <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">;</span>
+    food_y <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+
+  <span class="hl slc">// Рисуем змейку.</span>
+  <span class="hl kwd">show_snake_on_table</span><span class="hl opt">();</span>
+
+  <span class="hl slc">// Если змея укусила себя.</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwd">game_over</span><span class="hl opt">()) {</span>
+    <span class="hl slc">// Cообщаем всю правду о игроке.</span>
+    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;You're looser!</span> <span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
+    <span class="hl slc">// Приостанавливаем игру.</span>
+<span class="hl ppc">#ifdef WINDOWS</span>
+    <span class="hl kwd">system</span><span class="hl opt">(</span><span class="hl str">&quot;pause&quot;</span><span class="hl opt">);</span>
+<span class="hl ppc">#endif</span>
+    <span class="hl slc">// Завершаем программу.</span>
+    std<span class="hl opt">::</span><span class="hl kwd">exit</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">);</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// функция проверки на наличие еды на карте.</span>
+<span class="hl kwb">bool</span> <span class="hl kwd">food_check</span><span class="hl opt">() {</span>
+  <span class="hl slc">// Если координаты еды неопределенны, то возвращаем true.</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>food_x <span class="hl opt">== -</span><span class="hl num">1</span> <span class="hl opt">&amp;&amp;</span> food_y <span class="hl opt">== -</span><span class="hl num">1</span><span class="hl opt">)</span> <span class="hl kwa">return false</span><span class="hl opt">;</span>
+  <span class="hl slc">// В остальных случаях false.</span>
+  <span class="hl kwa">return true</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// функция добавления еды на карту.</span>
+<span class="hl kwb">void</span> <span class="hl kwd">place_food</span><span class="hl opt">() {</span>
+  std<span class="hl opt">::</span><span class="hl kwd">srand</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span>NULL<span class="hl opt">));</span>
+  <span class="hl slc">// Cтавим в рандомное место еду.</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span> i <span class="hl opt">&lt;=</span> <span class="hl num">9</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
+    <span class="hl kwb">int</span> x <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">rand</span><span class="hl opt">(),</span> y <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">rand</span><span class="hl opt">();</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>x <span class="hl opt">&lt;</span> <span class="hl num">0</span><span class="hl opt">)</span> x <span class="hl opt">*= -</span><span class="hl num">1</span><span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>y <span class="hl opt">&lt;</span> <span class="hl num">0</span><span class="hl opt">)</span> y <span class="hl opt">*= -</span><span class="hl num">1</span><span class="hl opt">;</span>
+    x <span class="hl opt">%= (</span>N <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">);</span>
+    y <span class="hl opt">%= (</span>M <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">);</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>x <span class="hl opt">==</span> <span class="hl num">0</span><span class="hl opt">) ++</span>x<span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>y <span class="hl opt">==</span> <span class="hl num">0</span><span class="hl opt">) ++</span>y<span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>a<span class="hl opt">[</span>x<span class="hl opt">][</span>y<span class="hl opt">] !=</span> <span class="hl str">'&#64;'</span> <span class="hl opt">&amp;&amp;</span> a<span class="hl opt">[</span>x<span class="hl opt">][</span>y<span class="hl opt">] !=</span> <span class="hl str">'v'</span> <span class="hl opt">&amp;&amp;</span> a<span class="hl opt">[</span>x<span class="hl opt">][</span>y<span class="hl opt">] !=</span> <span class="hl str">'^'</span> <span class="hl opt">&amp;&amp;</span>
+        a<span class="hl opt">[</span>x<span class="hl opt">][</span>y<span class="hl opt">] !=</span> <span class="hl str">'&lt;'</span> <span class="hl opt">&amp;&amp;</span> a<span class="hl opt">[</span>x<span class="hl opt">][</span>y<span class="hl opt">] !=</span> <span class="hl str">'&gt;'</span><span class="hl opt">) {</span>
+      food_x <span class="hl opt">=</span> x<span class="hl opt">;</span>
+      food_y <span class="hl opt">=</span> y<span class="hl opt">;</span>
+      a<span class="hl opt">[</span>x<span class="hl opt">][</span>y<span class="hl opt">] =</span> <span class="hl str">'+'</span><span class="hl opt">;</span>
+      <span class="hl kwa">return</span><span class="hl opt">;</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">}</span>
+
+<span class="hl slc">// Начальные установки.</span>
+<span class="hl kwb">void</span> <span class="hl kwd">standart_settings</span><span class="hl opt">() {</span>
+  <span class="hl slc">// Размер змеи - 2.</span>
+  snake_size <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span>
+
+  <span class="hl slc">// Змейка занимает две клетки вправо от координаты {1,1}.</span>
+  coordinates_x<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  coordinates_y<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> <span class="hl num">2</span><span class="hl opt">;</span>
+  coordinates_x<span class="hl opt">[</span><span class="hl num">2</span><span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  coordinates_y<span class="hl opt">[</span><span class="hl num">2</span><span class="hl opt">] =</span> <span class="hl num">1</span><span class="hl opt">;</span>
+
+  <span class="hl slc">// Змейка движется вправо.</span>
+  change_x <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  change_y <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl slc">// Задаем стандартные настройки.</span>
+  <span class="hl kwd">standart_settings</span><span class="hl opt">();</span>
+
+<span class="hl ppc">#ifndef WINDOWS</span>
+  std<span class="hl opt">::</span><span class="hl kwd">memset</span><span class="hl opt">(</span>a<span class="hl opt">,</span> <span class="hl str">' '</span><span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>a<span class="hl opt">));</span>
+  <span class="hl kwd">nonblock</span><span class="hl opt">(</span>NB_ENABLE<span class="hl opt">);</span>
+<span class="hl ppc">#endif</span>
+
+  <span class="hl slc">// Бесконечный цикл.</span>
+  <span class="hl kwa">while</span> <span class="hl opt">(</span><span class="hl kwa">true</span><span class="hl opt">) {</span>
+    <span class="hl slc">// Если нажата клавиша, обрабатываем нажатую клавишу.</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwd">kbhit</span><span class="hl opt">() !=</span> <span class="hl num">0</span><span class="hl opt">)</span>
+     <span class="hl kwd">change_direction</span><span class="hl opt">();</span>
+
+    <span class="hl slc">// Двигаем змейку.</span>
+    <span class="hl kwd">next_step</span><span class="hl opt">();</span>
+
+    <span class="hl slc">// Если нет еды, то ставим ее.</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(!</span><span class="hl kwd">food_check</span><span class="hl opt">())</span>
+      <span class="hl kwd">place_food</span><span class="hl opt">();</span>
+
+    <span class="hl slc">// Рисуем змейку.</span>
+    <span class="hl kwd">show_table</span><span class="hl opt">();</span>
+
+    <span class="hl slc">// &quot;Усыпляем&quot; программу на заданный интервал.</span>
+    <span class="hl kwd">Sleep</span><span class="hl opt">(</span>INTERVAL<span class="hl opt">);</span>
+  <span class="hl opt">}</span>
+<span class="hl opt">}</span>
+</pre>
+
+<h2>P.S.</h2>
+
+<p>Если у кого есть всякие консольные примочки типа этой - делитесь, не
+стесняйтесь.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2012/12/10/snake-game/';
+  var disqus_url = 'http://demin.ws/blog/russian/2012/12/10/snake-game/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
