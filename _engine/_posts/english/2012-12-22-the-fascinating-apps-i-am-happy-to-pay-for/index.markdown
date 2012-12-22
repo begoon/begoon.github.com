@@ -11,7 +11,7 @@ bloody know that it cannot cost that figure!!!". Obviously, the question is
 a bit more complex than that visible tiny tip of the iceberg, even for the
 experienced eye of the software developer.
 
-And you know what, after joining the "dark side" army Apple users,
+And you know what, after joining the "dark side" army of Apple users,
 particularly with Macbook Air, I become much more tolerant paying for
 software. And the main reason is, you guess?, the **easiness** of a purchase.
 With AppStore you just "click-click", and an application jumps into your
@@ -21,7 +21,7 @@ Wallet.
 
 Moving even further, I listed some apps which I am *happy* to pay for.
 
-* [MacKeeper](http://mackeeper.zeobit.com/). In my view this the number one
+* [MacKeeper](http://mackeeper.zeobit.com/). In my view this is the number one
   app for OSX.
 * [iStat](http://bjango.com/mac/istatmenus/). This is the "must have" number
   two.
