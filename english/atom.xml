@@ -5,13 +5,77 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-12-10T22:00:00Z</updated>
+  <updated>2012-12-22T22:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[The fascinating apps I am happy to pay for]]></title>
+    <link href="http://demin.ws/blog/english/2012/12/22/the-fascinating-apps-i-am-happy-to-pay-for/"/>
+    <updated>2012-12-22T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/12/22/the-fascinating-apps-i-am-happy-to-pay-for/</id>
+    <content type="html"><![CDATA[<p>Being a software developer sometimes plays against you as a regular user. When
+you understand the software development &ldquo;kitchen&rdquo; from inside you become very
+biased evaluating prices for software. Why $35? Why £120? Why 1800RUB? &ldquo;I
+bloody know that it cannot cost that figure!!!&ldquo;. Obviously, the question is
+a bit more complex than that visible tiny tip of the iceberg, even for the
+experienced eye of the software developer.</p>
+
+<p>And you know what, after joining the &ldquo;dark side&rdquo; army Apple users,
+particularly with Macbook Air, I become much more tolerant paying for
+software. And the main reason is, you guess?, the <strong>easiness</strong> of a purchase.
+With AppStore you just &ldquo;click-click&rdquo;, and an application jumps into your
+Applications in a few seconds. Purchasing directly on web sites is usually
+simple and smooth as well, especially if you pay using PayPal or Google
+Wallet.</p>
+
+<p>Moving even further, I listed some apps which I am <em>happy</em> to pay for.</p>
+
+<ul>
+<li><a href="http://mackeeper.zeobit.com/">MacKeeper</a>. In my view this the number one
+app for OSX.</li>
+<li><a href="http://bjango.com/mac/istatmenus/">iStat</a>. This is the &ldquo;must have&rdquo; number
+two.</li>
+<li><a href="http://www.sublimetext.com/">Sublime</a>. You are a programmer and looking for
+a text editor? This is the option you won&rsquo;t regret about.</li>
+<li><a href="http://www.hopperapp.com/">Hopper Disassembler</a>. By nature I&rsquo;m a lower
+level hacker, so this is the tool I need. I had fallen in love with this
+app because of the unprecedented feature/price ratio comparing to IDA, its
+&ldquo;big brother&rdquo;.</li>
+</ul>
+
+<p>Now a couple of apps which I also pay for but only because there are no
+adequate alternatives. I&rsquo;m more or less happy with functionality but I don&rsquo;t
+like their pricing (in short &ndash; too much in my view).</p>
+
+<ul>
+<li><a href="http://www.parallels.com/">Parallels</a>. Of course, I use VirtualBox
+as well, but Parallels is so bloody good on OSX.</li>
+<li><a href="http://www.orfo.ru/">ORFO</a>. I&rsquo;m Russian and always will, so I need a
+spell and grammar checker integrated into the OS, and ORFO does it pretty
+well.</li>
+</ul>
+
+<p>However, there is an app, which I&rsquo;m not willing to pay. Its price is
+ridiculous. This is the Microsoft Office. Fortunately, the company
+I work for provided me a license for this product, so I can work with
+working documents on Mac. When it gets stopped I&rsquo;ll switch to the Apple
+alternatives (Pages, Numbers and Keynotes).</p>
+
+<p>And finally, there is an app called <a href="http://radare.org/y/">Radare</a>. It is free
+and opensource, and I donated some amount to support this great project (I
+hope not last time).</p>
+
+<h2>P.S.</h2>
+
+<p>Of course, there are tons of other free apps (iTerm, 7z, muCommander, Skype,
+VirtualBox, GitHub, DOSBox, KeePassX, etc.), which I also use but this is a different story.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The console Snake game]]></title>
