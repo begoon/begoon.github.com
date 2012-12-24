@@ -5,13 +5,185 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-12-10T22:00:00Z</updated>
+  <updated>2012-12-24T22:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Моя коллекция микропроцессоров Intel 8080]]></title>
+    <link href="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/"/>
+    <updated>2012-12-24T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/</id>
+    <content type="html"><![CDATA[<p>Я начал программировать лет двадцать назад, и пришлось мне это делать
+прямо в машинных кодах Intel 8080. Этот эпохальный микропроцессор
+стал для билетом в мир создания программного обеспечения. Годы спустя,
+работая над эмуляторами i8080 и разбираясь с недокументированными или
+плохо документированными его особенностями, возникла идея собрать несколько
+экземпляров реальных i8080, желательно, от разных производителей, а не
+только Intel, и протестировать их в программе <a href="http://www.idb.me.uk/sunhillow/8080.html">8080 CPU Exerciser</a>.</p>
+
+<p>На данный момент я собрал 20 чипов (Intel, AMD, National Semiconductor, NEC,
+Samsung, Texas Instruments, и также в произведенных Советском Союзе и
+Чехословакии). Среди тех, что имеют даты выпуска на корпусе, самый старый
+1974 года, а самый новый - 1980. Все чипы, за исключением одного, прекрасно
+работают. Тестировал я их в <a href="http://demin.ws/blog/russian/2012/10/07/rk86-sram/">Радио-86РК</a>.</p>
+
+<p>Проверка показала, что все чипы, кроме произведенных AMD, совершенно одинаковы
+по показаниям <a href="http://www.idb.me.uk/sunhillow/8080.html">8080 CPU Exerciser</a>. Кристаллы же AMD, AM8080 and AM9080A,
+имеют одно небольшое отличие в команде битовой операции AND (инструкции ANA и
+ANI). Следуя оригинальному поведению процессоров i8080 от Intel, флаг
+дополнительного переноса AC должен вычисляться как третий (A3) бит результата
+операции OR между аккумулятором и аргументом команд ANA или ANI. Процессоры же
+AMD просто обнуляют флаг AC в инструкциях ANA и ANI. Сложно представить,
+почему Intel придумал столь странную логику для флага AC в операциях AND (в
+других битовых операциях флаг AC просто обнуляется аналогично логике от AMD).</p>
+
+<h1>Итак, моя коллекция</h1>
+
+<p><em>Двойным кликом можно переключать верх и низ чипов.</em></p>
+
+<h2>AMD</h2>
+
+<p>Интересно, что изначально AMD начала производить клоны i8080, используя,
+дословно, украденные у Intel чертежи. Так что война Intel vs AMD началась
+именно тогда.</p>
+
+<h3>8080A, 1977</h3>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/AM8080A-8507DMA-1977-AMD-PHILIPPINES-top.jpg" alt="" />
+</p>
+
+<h3>AM9080, 1977</h3>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/AM9080ACC-D8080A-8015HP-1977-AMD-top.jpg" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/AM9080ADCB-D8080AB-8102WP-1977-AMD-top.jpg" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/AM9080APC-P8080A-790EP-1977-AMD-top.jpg" alt="" />
+</p>
+
+<h2>National Semiconductor</h2>
+
+<h3>INS8080AN</h3>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/INS8080AN-P8080A-1927-P4798-CB-FAULTY-top.jpg" alt="" />
+</p>
+
+<p><em>Этот чип, увы, не работает.</em></p>
+
+<h3>INS8080AN</h3>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/INS8080AN-P8080A-B8436-4798D-3062-top.jpg" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/INS8080AN-P8080A-B8436A-4798D-3133-top.jpg" alt="" />
+</p>
+
+<h2>Intel</h2>
+
+<h3>1974</h3>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/INTEL-P8080A-S2701-3626D-INTEL-74-MALAYSIA-7943-top.jpg" alt="" />
+</p>
+
+<h3>1977</h3>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/INTEL-P8080A-2-L1307000-1977-8134-PHILIPPINES-top.jpg" alt="" />
+</p>
+
+<h3>1979</h3>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/INTEL-P8080A-1-U3120121-INTEL-79-8311DT-PHILIPPINES-top.jpg" alt="" />
+</p>
+
+<h3>1980</h3>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/INTEL-P8080A-L4480180E-INTEL-1980-top.jpg" alt="" />
+</p>
+
+<h2>Россия</h2>
+
+<h3>КР580ИК80A</h3>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/KR580IK80A-8608-top.jpg" alt="" />
+</p>
+
+<h3>КР580ВМ80A</h3>
+
+<p>Родной вкладыш, с которым продавался ВМ80:
+<a href="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/KR580VM80A-passport-1.jpg">страница 1</a> и <a href="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/KR580VM80A-passport-2.jpg">страница 2</a>.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/KR580VM80-8941-top.jpg" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/KR580VM80A-911-615-top.jpg" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/KR580VM80A-9102-top.jpg" alt="" />
+</p>
+
+<h2>NEC</h2>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/NEC-JAPAN-D8080AFC-1-X05020-020-top.jpg" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/NEC-JAPAN-D8080AFC-P77236-top.jpg" alt="" />
+</p>
+
+<h2>Samsung</h2>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/SAB-8080-A-P-8036-top.jpg" alt="" />
+</p>
+
+<h2>Telsa (Чехословакия)</h2>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/TESLAU4M-MHB8080A-top.jpg" alt="" />
+</p>
+
+<h2>Texas Instruments</h2>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/TMS8080ANL-BP7718-H8080A-SINGAPORE-top.jpg" alt="" />
+</p>
+
+<hr />
+
+<p>ВСЕ! (пока).</p>
+
+<p>А вот как я все это фотографировал при помощи айфона и двух Raspberry Pi&rsquo;ев.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/24/my-i8080-collection/taking-pictures-using-iphone-and-rpi.jpg" alt="" />
+</p>
+
+<script>
+var images = document.getElementsByTagName("img");
+for (var i = 0; i < images.length; ++i) {
+  var img = images[i];
+  img.ondblclick = function() {
+    var url = this.src;
+    if (url.indexOf("-top") != -1)
+      this.src = url.replace("-top", "-bottom");
+    else
+      this.src = url.replace("-bottom", "-top");
+  }
+}
+</script>
+
+<h2>P.S.</h2>
+
+<p>Хочу надеяться, что коллекция будет расти. Увы, пока я у меня только один
+чип в белой керамике. И если вы знаете о существовании еще каких-то клонов
+i8080 от еще каких-то фирм, буду признателен за информацию.</p>
+
+<p>Также с удовольствием приму в подарок любой i8080 (даже не обязательно
+рабочий) и могу поставить ссылку на подарившего.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Консольная игра "Змейка"]]></title>

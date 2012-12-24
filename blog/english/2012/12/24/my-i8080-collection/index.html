@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>My collection of Intel 8080 microprocessors</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/interview/">interview</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>My collection of Intel 8080 microprocessors</h1>
+<div id="post">
+  <p>I started programming twenty year ago coding in machine codes for Intel 8080.
+This microprocessor was my lucky pass to the fascinating world of bits and
+bytes. Years later developing various emulators of i8080 and tackling with
+undocumented and partially documented features of this processor I decided to
+collect real chips from different manufacturers and examine them using the
+<a href="http://www.idb.me.uk/sunhillow/8080.html">8080 CPU Exerciser</a>.</p>
+
+<p>At the moment I have 20 processors (from Intel, AMD, National Semiconductor,
+NEC, Samsung, Texas Instruments, and also manufactured in the Soviet Union and
+Czechoslovakia). Amongst chips having a year on the label the earliest is
+dated back to 1974 and the latest is 1980. All CPUs except one are fully
+functional. I tested them on my <a href="/blog/russian/2012/10/07/rk86-sram/">Радио-86РК</a>.</p>
+
+<p>Testing revealed that all processors are identical according to the CPU
+Exerciser except clones from AMD. The AMD processors, AM8080 and AM9080A,
+behave differently performing bitwise AND operation (ANA and ANI instruction).
+Original Intel CPUs and non-AMD clones set the AC (half-carry) flag to the
+value of the 3rd bit (A3) from the bitwise OR between the accumulator and the
+argument of ANA or ANI. The AMD clones always zero the AC flag in the ANA and
+ANI instructions. I don&rsquo;t know why the original Intel CPU calculates the AC
+flag in such a weird way.</p>
+
+<h1>My i8080 chips</h1>
+
+<p><em>The double click on the pictures flips the top and the bottom views</em>.</p>
+
+<h2>AMD</h2>
+
+<p>Interestingly, AMD i8080-compatible chips were reverse-engineered from
+schematics literally stolen from Intel. So, the Intel vs AMD war began from
+8080.</p>
+
+<h3>8080A, 1977</h3>
+
+<p><img src="AM8080A-8507DMA-1977-AMD-PHILIPPINES-top.jpg" alt="" />
+</p>
+
+<h3>AM9080, 1977</h3>
+
+<p><img src="AM9080ACC-D8080A-8015HP-1977-AMD-top.jpg" alt="" />
+</p>
+
+<p><img src="AM9080ADCB-D8080AB-8102WP-1977-AMD-top.jpg" alt="" />
+</p>
+
+<p><img src="AM9080APC-P8080A-790EP-1977-AMD-top.jpg" alt="" />
+</p>
+
+<h2>National Semiconductor</h2>
+
+<h3>INS8080AN</h3>
+
+<p><img src="INS8080AN-P8080A-1927-P4798-CB-FAULTY-top.jpg" alt="" />
+</p>
+
+<p><em>This chip is faulty.</em></p>
+
+<h3>INS8080AN</h3>
+
+<p><img src="INS8080AN-P8080A-B8436-4798D-3062-top.jpg" alt="" />
+</p>
+
+<p><img src="INS8080AN-P8080A-B8436A-4798D-3133-top.jpg" alt="" />
+</p>
+
+<h2>Intel</h2>
+
+<h3>1974</h3>
+
+<p><img src="INTEL-P8080A-S2701-3626D-INTEL-74-MALAYSIA-7943-top.jpg" alt="" />
+</p>
+
+<h3>1977</h3>
+
+<p><img src="INTEL-P8080A-2-L1307000-1977-8134-PHILIPPINES-top.jpg" alt="" />
+</p>
+
+<h3>1979</h3>
+
+<p><img src="INTEL-P8080A-1-U3120121-INTEL-79-8311DT-PHILIPPINES-top.jpg" alt="" />
+</p>
+
+<h3>1980</h3>
+
+<p><img src="INTEL-P8080A-L4480180E-INTEL-1980-top.jpg" alt="" />
+</p>
+
+<h2>Russia</h2>
+
+<h3>KR580IK80A (КР580ИК80A)</h3>
+
+<p><img src="KR580IK80A-8608-top.jpg" alt="" />
+</p>
+
+<h3>KR580VM80A (КР580ВМ80A)</h3>
+
+<p>There is the original mini-datasheet in Russian:
+<a href="KR580VM80A-passport-1.jpg">page 1</a> and <a href="KR580VM80A-passport-2.jpg">page 2</a>.</p>
+
+<p><img src="KR580VM80-8941-top.jpg" alt="" />
+</p>
+
+<p><img src="KR580VM80A-911-615-top.jpg" alt="" />
+</p>
+
+<p><img src="KR580VM80A-9102-top.jpg" alt="" />
+</p>
+
+<h2>NEC</h2>
+
+<p><img src="NEC-JAPAN-D8080AFC-1-X05020-020-top.jpg" alt="" />
+</p>
+
+<p><img src="NEC-JAPAN-D8080AFC-P77236-top.jpg" alt="" />
+</p>
+
+<h2>Samsung</h2>
+
+<p><img src="SAB-8080-A-P-8036-top.jpg" alt="" />
+</p>
+
+<h2>Telsa (Czechoslovakia)</h2>
+
+<p><img src="TESLAU4M-MHB8080A-top.jpg" alt="" />
+</p>
+
+<h2>Texas Instruments</h2>
+
+<p><img src="TMS8080ANL-BP7718-H8080A-SINGAPORE-top.jpg" alt="" />
+</p>
+
+<hr />
+
+<p>This is how I took pictures of all these chips in a quite technological way
+using one iPhone and two Raspberry Pi:</p>
+
+<p><img src="taking-pictures-using-iphone-and-rpi.jpg" alt="" />
+</p>
+
+<script>
+var images = document.getElementsByTagName("img");
+for (var i = 0; i < images.length; ++i) {
+  var img = images[i];
+  img.ondblclick = function() {
+    var url = this.src;
+    if (url.indexOf("-top") != -1)
+      this.src = url.replace("-top", "-bottom");
+    else
+      this.src = url.replace("-bottom", "-top");
+  }
+}
+</script>
+
+<h2>P.S.</h2>
+
+<p>I hope the collection will grow. I still have only one chip in white
+ceramic packaging (KR580VM80). If you know i8080 clones from other
+manufacturers, which a not listed here, I&rsquo;d appreciate if you let me know.</p>
+
+<p>If you would like to donate any i8080 chip I&rsquo;ll
+be happy putting a reference to you next to the image of the chip.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2012/12/24/my-i8080-collection/';
+  var disqus_url = 'http://demin.ws/blog/english/2012/12/24/my-i8080-collection/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
