@@ -39,3 +39,4 @@ If you figure out what it means, please, let me know.
 * *Oleksiy Vasylyev // 10.09.2012*
 * *[Yaşar Arabacı](http://yasararabaci.tumblr.com) // 10.09.2012*
 * *[Igor Kalnitsky](http://www.kalnitsky.org/) // 10.09.2012*
+* *[Leandro De Leite](https://twitter.com/LeandroDeLeite) // 25.12.2012*
