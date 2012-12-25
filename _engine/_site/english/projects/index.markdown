@@ -16,6 +16,7 @@ Most of my projects are available at [GitHub][]. The projects listed below are h
 
 [GitHub]: http://github.com/begoon/
 
+* [My collection of Intel 8080 microprocessors][] / 2012
 * [Radio-86RK classic 8-bit microcomputer emulator in JavaScript][]
 * Radio-86RK classic 8-bit microcomputer emulator on the Maximite (PIC32) ([video][Radio-86RK on Maximite video]) / 2012
 * [i8080-js] - Intel 8080 (KR580VM80A) microprocessor emulator in JavaScript / 2012
@@ -28,6 +29,8 @@ Most of my projects are available at [GitHub][]. The projects listed below are h
 * [p4patch][] - A utility to transfer Perforce change sets across machines
 * [Biometrical identification system Handscan][]
 
+[My collection of Intel 8080 microprocessors]:
+/blog/english/2012/12/24/my-i8080-collection/
 [Radio-86RK classic 8-bit microcomputer emulator in JavaScript]: http://github.com/begoon/rk86-js/
 [Radio-86RK on Maximite video]: http://www.youtube.com/watch?v=JGuYyuCkJR8
 [i8080-js]: http://github.com/begoon/i8080-js/
