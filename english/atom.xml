@@ -5,13 +5,46 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-12-24T22:00:00Z</updated>
+  <updated>2012-12-26T22:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[A Serial VGA adapter]]></title>
+    <link href="http://demin.ws/blog/english/2012/12/26/serial-vga/"/>
+    <updated>2012-12-26T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2012/12/26/serial-vga/</id>
+    <content type="html"><![CDATA[<p>I have tested a quite interesting breakout board &ndash; <a href="http://www.hobbytronics.co.uk/serial-vga">Serial VGA</a>. It
+allows to organize multi-windows textual output via RS-232 (TTL) on a VGA
+monitor.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/26/serial-vga/IMG_1284.jpg" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/26/serial-vga/IMG_1284.jpg" alt="" />
+</p>
+
+<p>The maximum window size is 100x50 with 64 colours. It supports up to 9
+windows simultaneously. Each window is controlled independently via
+special escape (<code>^[</code>) sequences.</p>
+
+<p><img src="http://demin.ws/blog/english/2012/12/26/serial-vga/serial-vga-5.jpg" alt="" />
+</p>
+
+<p>In general &ndash; very useful for small projects on microcontrollers if you don&rsquo;t
+bother doing VGA output by yourself (RS-232 output can be implemented even
+manually if your microcontroller doesn&rsquo;t support it for some reason). I also
+tested Serial VGA with Raspberry Pi. The only recommendation is to support the
+CTS signal line on baud rates faster than 9600. Otherwise the device can loose
+some characters.</p>
+
+<p><a href="http://demin.ws/blog/english/2012/12/26/serial-vga/SerialVGA-1.0.pdf">The Serial VGA datasheet</a>.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[My collection of Intel 8080 microprocessors]]></title>

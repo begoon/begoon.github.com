@@ -5,13 +5,45 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2012-12-25T22:00:00Z</updated>
+  <updated>2012-12-26T22:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Адаптер Serial VGA]]></title>
+    <link href="http://demin.ws/blog/russian/2012/12/26/serial-vga/"/>
+    <updated>2012-12-26T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2012/12/26/serial-vga/</id>
+    <content type="html"><![CDATA[<p>Пощупал интересную платку &ndash; <a href="http://www.hobbytronics.co.uk/serial-vga">Serial VGA</a>. Позволяет через RS-232 (TTL)
+на VGA экране (800x600) организовать многооконный текстовый вывод.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/26/serial-vga/IMG_1284.jpg" alt="" />
+</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/26/serial-vga/IMG_1284.jpg" alt="" />
+</p>
+
+<p>Максимальный размер одного окна 100x50 символов при 64 цветах, и можно
+одновременно создавать до 9 окон. Информация в каждое окно выводится
+независимо. Управляющие команды передаются через специальные
+<code>^[</code>-последовательности.</p>
+
+<p><img src="http://demin.ws/blog/russian/2012/12/26/serial-vga/serial-vga-5.jpg" alt="" />
+</p>
+
+<p>В целом &ndash; очень удобно для проектов на микроконтроллерах, когда лень возиться
+с выводом VGA самостоятельно, а вывод в формате RS-232 можно написать на
+коленке. Я также подключал это к Raspberry Pi. Единственное, могу сказать, что
+на скорости более 9600 лучше поддержать сигнал CTS, иначе символы могут
+пропадать, так как девайс не успевает.</p>
+
+<p><a href="http://demin.ws/blog/russian/2012/12/26/serial-vga/SerialVGA-1.0.pdf">Полное описание в формате PDF</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Рабочее место в Блумберге]]></title>
