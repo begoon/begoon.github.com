@@ -66,12 +66,12 @@ functional. I tested them on my <a href="http://demin.ws/blog/russian/2012/10/07
 
 <p>Testing revealed that all processors are identical according to the CPU
 Exerciser except clones from AMD. The AMD processors, AM8080 and AM9080A,
-behave differently performing bitwise AND operation (ANA and ANI instruction).
-Original Intel CPUs and non-AMD clones set the AC (half-carry) flag to the
-value of the 3rd bit (A3) from the bitwise OR between the accumulator and the
-argument of ANA or ANI. The AMD clones always zero the AC flag in the ANA and
-ANI instructions. I don&rsquo;t know why the original Intel CPU calculates the AC
-flag in such a weird way.</p>
+behave differently performing the bitwise AND operation (ANA and ANI
+instruction). The original Intel CPUs and non-AMD clones set the AC
+(half-carry) flag to the value of the 3rd bit (A3) from the bitwise OR between
+the accumulator and the argument of ANA or ANI. The AMD clones always zero the
+AC flag in the ANA and ANI instructions. I don&rsquo;t know why the original Intel
+CPU calculates the AC flag in such a weird way.</p>
 
 <h1>My i8080 chips</h1>
 
@@ -208,10 +208,10 @@ for (var i = 0; i < images.length; ++i) {
 
 <p>I hope the collection will grow. I still have only one chip in white
 ceramic packaging (KR580VM80). If you know i8080 clones from other
-manufacturers, which a not listed here, I&rsquo;d appreciate if you let me know.</p>
+manufacturers, which are not listed here, I&rsquo;d appreciate if you let me know.</p>
 
-<p>If you would like to donate any i8080 chip I&rsquo;ll
-be happy putting a reference to you next to the image of the chip.</p>
+<p>If you would like to donate any i8080 chip I&rsquo;ll be happy putting a reference
+to you next to the image of the chip.</p>
 <hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   

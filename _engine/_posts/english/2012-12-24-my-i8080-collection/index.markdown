@@ -24,12 +24,12 @@ functional. I tested them on my [Радио-86РК][].
 
 Testing revealed that all processors are identical according to the CPU
 Exerciser except clones from AMD. The AMD processors, AM8080 and AM9080A,
-behave differently performing bitwise AND operation (ANA and ANI instruction).
-Original Intel CPUs and non-AMD clones set the AC (half-carry) flag to the
-value of the 3rd bit (A3) from the bitwise OR between the accumulator and the
-argument of ANA or ANI. The AMD clones always zero the AC flag in the ANA and
-ANI instructions. I don't know why the original Intel CPU calculates the AC
-flag in such a weird way.
+behave differently performing the bitwise AND operation (ANA and ANI
+instruction). The original Intel CPUs and non-AMD clones set the AC
+(half-carry) flag to the value of the 3rd bit (A3) from the bitwise OR between
+the accumulator and the argument of ANA or ANI. The AMD clones always zero the
+AC flag in the ANA and ANI instructions. I don't know why the original Intel
+CPU calculates the AC flag in such a weird way.
 
 My i8080 chips
 ==============
@@ -158,7 +158,7 @@ P.S.
 
 I hope the collection will grow. I still have only one chip in white
 ceramic packaging (KR580VM80). If you know i8080 clones from other
-manufacturers, which a not listed here, I'd appreciate if you let me know.
+manufacturers, which are not listed here, I'd appreciate if you let me know.
 
-If you would like to donate any i8080 chip I'll
-be happy putting a reference to you next to the image of the chip.
+If you would like to donate any i8080 chip I'll be happy putting a reference
+to you next to the image of the chip.
