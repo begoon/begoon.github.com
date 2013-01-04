@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>The OMNI-395 payment terminal inside</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/interview/">interview</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>The OMNI-395 payment terminal inside</h1>
+<div id="post">
+  <p>First time I encountered specialized mini- and micro- computers was at the beginning
+of 2000 when I got a job in the plastic card processing department of a bank.
+I started developing software for Point Of Sale (POS) terminals.
+POS is a standalone mini-computer, usually with a screen, keyboard,
+magnetic stripe reader, and often a printer, plus nowadays with a chip and
+pin reader.</p>
+
+<p>My first POS was VeriFone OMNI-395. It was based on Zilog Z180, up to 1M
+non-volatile memory (for transaction logs, for instance), a Hayes compatible
+modem (up to 2400BPS), 12 volts RS232 ports for a PIN pad, a serial printer
+and other devices (alas, not all RS232 ports had all standard line causing
+inventing a handmade wheel for the flow control.), and an LCD-screen with
+loadable fonts.</p>
+
+<p><img src="IMG_1621.JPG" alt="" />
+</p>
+
+<p>The architecture was pretty interesting. The user code was executed inside
+a VM running on top of native Z180 code. It allowed dealing with larger
+amounts of memory which Z180 can address directly, and implementing dynamically
+loadable user modules (R-modules). Unfortunately it affected overall
+performance, and, for example, even table-driven CRC16 on 5-10KB of data
+took a few seconds. Also, the stack size in the C language was quite limited,
+and sometimes it was worth implementing, for example, the &ldquo;sprintf&rdquo; function
+manually to avoid random crashes due to stack overflows.</p>
+
+<p><img src="IMG_1622.JPG" alt="" />
+</p>
+
+<p>But, frankly speaking, comparing to terminal from other vendors back those
+days (Injenico, Nurit, etc.) where you had to deal with using raw memory
+blocks, switching pages manually, etc., VeriFone (TXO) provided almost
+standard C library. In TXO C you dealt with persistent files, serial ports, LCD
+and other peripherals with read/write/ioctl functions.</p>
+
+<p>The TXO C compiler supported support also loadable modules (R-modules).
+Such modules can be loaded on the fly from the user code (similar to overlays
+or CHAIN in the classic BASIC).</p>
+
+<p>A few days ago The Frost Father presented me an old good OMNI-395. Do you
+want to see it inside? Indeed!</p>
+
+<p>Turn it on, and, (surprise!) it still runs my firmware.</p>
+
+<p><img src="IMG_1623.JPG" alt="" />
+</p>
+
+<p>Inside.</p>
+
+<p><img src="IMG_1624.JPG" alt="" />
+</p>
+
+<p>The top board, under the keypad, and the bottom one, with connectors.</p>
+
+<p><img src="IMG_1635.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1636.JPG" alt="" />
+</p>
+
+<p>If I find the compiler and loader I&rsquo;ll try to write a little demo.</p>
+
+<p>Alas, there is no official documentation about OMNI-395 hardware, but the
+programmer manuals only cover the standard library and the VM a little bit.</p>
+
+<p>Of course, OMNI-395 can be used as a generic controller. It can communicate via
+the standard RS232, plus DTR/RTS can be digital output and CTS/DSR &ndash; inputs.</p>
+
+<p>Ideally, it is possible to disassemble the ROM (only 64K of Z180 code), and
+then reverse engineer the architecture. It will allow programming OMNI-395
+directly in Z180 assembly.</p>
+
+<h1>P.S.</h1>
+
+<p>Despite of changing the hardware platform a few times after OMNI-395, VeriFone
+also provides very good backward compatibility in the programmer&rsquo;s API. So,
+porting to newer models is quite simple. After OMNI-395 I ported our POS
+software to OMNI-3350, 3750, VX510, VX610.</p>
+
+<p>An finally, by the <a href="https://twitter.com/search?q=%23cardpayments&amp;src=hash">#cardpayments</a> tag at Twitter I post pictures of POS,
+PIN pads, ATM and other plastic card payment machines I come across. Please,
+join.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2013/01/04/omni395/';
+  var disqus_url = 'http://demin.ws/blog/english/2013/01/04/omni395/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

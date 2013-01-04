@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Платежный терминал OMNI-395 изнутри</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/interview/">интервью</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Платежный терминал OMNI-395 изнутри</h1>
+<div id="post">
+  <p>Мое реальное знакомство с &ldquo;недо&rdquo; PC случилось (случайно) в начале 2000-х, когда
+я устроился в отдел процессинга пластиковых карточек одного банка. А конкретнее,
+в разработку софта для платежных терминалов, POS-ов. ПОС для приема платежей
+пластиковыми карточками - это обычно законченный девайс, мини- или микро-
+компьютер, с экраном, клавиатурой, с читалкой магнитной полосы с карты,
+часто с принтером, а сейчас еще и ридером для чиповых карт.</p>
+
+<p>Я начал с OMNI-395. Построен на Zilog Z180, имеет до 1М non-volatile памяти
+для хранения данных (журналов операций, например), AT-модем на 2400 (даже
+с какой-то коррекцией), двенадцати-вольтовые порты RS232 для PIN-клавиатуры,
+принтера и просто порт общего назначения (мы его использовали для
+подключения к мультипортовому шлюзу в TCP/IP) (увы, не все порты имеют полный
+набор линий RS232, что вынуждает изобретать программные велосипеды), ну и LCD
+экран.</p>
+
+<p><img src="IMG_1621.JPG" alt="" />
+</p>
+
+<p>Архитектура, кстати, интересная. Для выполнения пользовательского кода
+применялась виртуальная машина (видимо, так обходились ограничения в адресации,
+страницы и прочее). Это позволяло использовать для данных много памяти, но вот
+размер и скорость кода была весьма скромная. Приходилось, например, не
+использовать родной sprintf, а писать свой, чтобы не избежать переполнение
+локального стека и т.д. Расчет табличного CRC по 5-10КБ данных работал видимые
+секунды.</p>
+
+<p><img src="IMG_1622.JPG" alt="" />
+</p>
+
+<p>Хотя, положа руку на сердце, по сравнению с терминалами других фирм
+в то время (Injenico, Nurit и т.д.), где часто надо было заниматься ерундой типа
+ручного переключения страниц памяти и там хранить журналы, среда VeriFone (TXO)
+давала почти стандартную библиотеку C, где с портами и файлами можно было
+работать через read/write/ioctl и т.д. А то, что шаловливые умы разработчиков
+обычно хотят запихнуть с несчастный девайс слона - и вызывало проблемы.
+Когда со временем ограничения были более менее освоены, разработка стала почти
+беспроблемной.</p>
+
+<p>Компилятор С поддерживал почти всю стандартную библиотеку и раздельную
+компиляцию модулей. Загрузочные же модули (R-модули), можно было динамически
+запускать прямо из пользователького кода (типа механизма оверлеев или CHAIN
+в классических бейсиках).</p>
+
+<p>И тут дед мороз принес списанный старенький OMNI-395, и радости моей не было
+предела. Откупоривать будем? Конечно!</p>
+
+<p>Включаем, на всякий случай, и, о чудо, там еще загружена одна из моих прошивок.</p>
+
+<p><img src="IMG_1623.JPG" alt="" />
+</p>
+
+<p>Итак, вид изнутри.</p>
+
+<p><img src="IMG_1624.JPG" alt="" />
+</p>
+
+<p>Два платы - верхняя, под клавиатурой, и нижняя, с разъемам.</p>
+
+<p><img src="IMG_1635.JPG" alt="" />
+</p>
+
+<p><img src="IMG_1636.JPG" alt="" />
+</p>
+
+<p>Раскопаю компилятор и загрузчик в сусеках, попробую написать что-нибудь.</p>
+
+<p>Увы, описания деталей аппаратной части я не нашел, а официальная документация
+описывает только стандартную библиотеку и немного виртуальную машину, в коды
+которой компилируется пользовательский код.</p>
+
+<p>Конечно, OMNI-395 можно спокойно использовать в качестве НЕДО-PC как он есть.
+Например, как контроллер чего-либо. Если нужны порты общего назначения, то
+подходит RS-232 (DTR/RTS &ndash; вывод, CTS/DSR &ndash; ввод).</p>
+
+<p>А идеале можно диассемблировать прошивку (там всего 64КБ), и поняв архитектуру,
+уже писать чисто на Z80, и тогда работать будет гораздо быстрее.</p>
+
+<h1>P.S.</h1>
+
+<p>Надо сказать, что, несмотря на смену аппаратной платформы и компилятора
+(не один раз), у VefiFone отличная приемственность интерфейса библиотек,
+что позволяет портировать прошивка на последующие модели, с минимальным
+изменениями. После 395-го я еще поработал с OMNI-3350, 3750, VX510, VX610.</p>
+
+<p>Кстати, по тэгу <a href="https://twitter.com/search?q=%23cardpayments&amp;src=hash">#cardpayments</a> в Твиттере я выкладываю фотографии ПОСов,
+пинпадов и прочих устройств приема банковских карточек, если кому интересно.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2013/01/04/omni395/';
+  var disqus_url = 'http://demin.ws/blog/russian/2013/01/04/omni395/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2012
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
