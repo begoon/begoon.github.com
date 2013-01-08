@@ -9,8 +9,14 @@ title: "Статьи"
 
 **Хабр**
 
+### 2013
+
+* [Платежный терминал OMNI-395 изнутри][]
+
 ### 2012
 
+* [Цветной микрокомпьютер Maximite на базе PIC32][]
+* [Пример использование Splunk для анализа логов][]
 * [Мини-компьютер на базе микроконтроллера Parallax Propeller][]
 * [Pi Bow — самый веселый корпус для Raspberry Pi][]
 * [Родной Sinclair ZX Spectrum][]
@@ -52,6 +58,9 @@ title: "Статьи"
 
 [Интервью проекту OpenQuality.ru]: http://experience.openquality.ru/alexander-demin-interview/
 
+[Платежный терминал OMNI-395 изнутри]: http://habrahabr.ru/post/164693/
+[Цветной микрокомпьютер Maximite на базе PIC32]: http://habrahabr.ru/post/161405/
+[Пример использование Splunk для анализа логов]: http://habrahabr.ru/post/160197/
 [Мини-компьютер на базе микроконтроллера Parallax Propeller]: http://habrahabr.ru/post/159847/
 [Pi Bow — самый веселый корпус для Raspberry Pi]: http://habrahabr.ru/post/155251/
 [Родной Sinclair ZX Spectrum]: http://habrahabr.ru/post/150684/
