@@ -5,13 +5,312 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2013-01-04T22:00:00Z</updated>
+  <updated>2013-01-12T22:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Класс EnvironmentVariablesManager для переменных окружения]]></title>
+    <link href="http://demin.ws/blog/russian/2013/01/12/environment-variables-manager/"/>
+    <updated>2013-01-12T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2013/01/12/environment-variables-manager/</id>
+    <content type="html"><![CDATA[<p>Давненько не публиковал я кода. Возвращаемся к истокам.</p>
+
+<p>У функции <code>putenv()</code>, которая создает (или удаляет) переменную окружения
+есть одно неприятное свойство: она не создает копию аргумента, а использует
+его напрямую по указателю. Более того, ее аргумент является неконстантным
+указателем. Тут и автоматические объекты нельзя использовать, да и даже
+строковую константу надо передавать, снимая <code>const</code>, что и не очень правильно.
+Тут и начинаются всякие несуразности типа <code>malloc</code> или <code>strdup</code>.</p>
+
+<p>Итак, класс <code>EnvironmentVariablesManager</code>, который является небольшой
+надстройкой над <code>putenv()</code> и <code>getenv()</code>. Для <code>putenv()</code> класс сохраняет
+копию переменной (пары &ldquo;имя=значение&rdquo;) во внутреннем хранилище.</p>
+
+<p>Класс разрабатывался как универсальный под ряд платформ: Linux, AIX, HP-UX,
+Solaris и Windows.</p>
+
+<p>Файл EnvironmentVariablesManager.h:</p>
+
+<pre class="hl">
+<span class="hl ppc">#ifndef ENVIRONMENT_VARIABLE_MANAGER_H</span>
+<span class="hl ppc">#define ENVIRONMENT_VARIABLE_MANAGER_H</span>
+
+<span class="hl ppc">#include &lt;string&gt;</span>
+<span class="hl ppc">#include &lt;vector&gt;</span>
+<span class="hl ppc">#include &lt;map&gt;</span>
+
+<span class="hl kwc">class</span> EnvironmentVariablesManager <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwc">typedef</span> std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;</span> VariableContainer<span class="hl opt">;</span>
+  <span class="hl kwc">typedef</span> std<span class="hl opt">::</span>map<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>string<span class="hl opt">,</span> VariableContainer<span class="hl opt">&gt;</span> Variables<span class="hl opt">;</span>
+
+  <span class="hl kwd">EnvironmentVariablesManager</span><span class="hl opt">() {}</span>
+
+  <span class="hl kwb">void</span> <span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">);</span>
+  std<span class="hl opt">::</span>string <span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">)</span> <span class="hl kwb">const</span><span class="hl opt">;</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">del</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">);</span>
+
+  <span class="hl kwb">static void</span> <span class="hl kwd">PutOSVariable</span><span class="hl opt">(</span><span class="hl kwb">char</span><span class="hl opt">*</span> value<span class="hl opt">);</span>
+  <span class="hl kwb">static</span> std<span class="hl opt">::</span>string <span class="hl kwd">GetOSVariable</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> name<span class="hl opt">);</span>
+  <span class="hl kwb">static bool</span> <span class="hl kwd">IsOSVariableSet</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> name<span class="hl opt">);</span>
+
+ <span class="hl kwc">private</span><span class="hl opt">:</span>
+  VariableContainer <span class="hl kwd">PairToContainer</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">,</span>
+                                    <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">)</span> <span class="hl kwb">const</span><span class="hl opt">;</span>
+  Variables vars_<span class="hl opt">;</span>
+
+  <span class="hl slc">// This class is not copiable.</span>
+  <span class="hl kwd">EnvironmentVariablesManager</span><span class="hl opt">(</span><span class="hl kwb">const</span> EnvironmentVariablesManager<span class="hl opt">&amp;);</span>
+  <span class="hl kwb">void</span> <span class="hl kwc">operator</span><span class="hl opt">=(</span><span class="hl kwb">const</span> EnvironmentVariablesManager<span class="hl opt">&amp;);</span>
+<span class="hl opt">};</span>
+
+<span class="hl ppc">#endif</span>
+</pre>
+
+<p>Файл EnvironmentVariablesManager.cpp:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;EnvironmentVariablesManager.h&quot;</span><span class="hl ppc"></span>
+
+<span class="hl ppc">#ifdef WINDOWS</span>
+<span class="hl ppc">#include &lt;windows.h&gt;</span>
+<span class="hl ppc">#else</span>
+<span class="hl ppc">#include &lt;unistd.h&gt;</span>
+<span class="hl ppc">#endif</span>
+
+<span class="hl ppc">#include &lt;vector&gt;</span>
+<span class="hl ppc">#include &lt;map&gt;</span>
+<span class="hl ppc">#include &lt;string&gt;</span>
+<span class="hl ppc">#include &lt;iterator&gt;</span>
+<span class="hl ppc">#include &lt;algorithm&gt;</span>
+
+<span class="hl ppc">#include &lt;cassert&gt;</span>
+
+<span class="hl kwb">void</span> EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">,</span>
+                                      <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span>
+  <span class="hl kwb">const</span> VariableContainer pair <span class="hl opt">=</span> <span class="hl kwd">PairToContainer</span><span class="hl opt">(</span>name<span class="hl opt">,</span> value<span class="hl opt">);</span>
+  <span class="hl kwb">const</span> std<span class="hl opt">::</span>pair<span class="hl opt">&lt;</span>Variables<span class="hl opt">::</span>iterator<span class="hl opt">,</span> <span class="hl kwb">bool</span><span class="hl opt">&gt;</span> inserted <span class="hl opt">=</span>
+    vars_<span class="hl opt">.</span><span class="hl kwd">insert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">make_pair</span><span class="hl opt">(</span>name<span class="hl opt">,</span> pair<span class="hl opt">));</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(!</span>inserted<span class="hl opt">.</span>second<span class="hl opt">)</span>
+    inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second <span class="hl opt">=</span> pair<span class="hl opt">;</span>
+  <span class="hl kwb">char</span><span class="hl opt">*</span> data <span class="hl opt">= &amp;(</span>inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]);</span>
+  <span class="hl kwd">PutOSVariable</span><span class="hl opt">(</span>data<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+std<span class="hl opt">::</span>string EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">)</span> <span class="hl kwb">const</span> <span class="hl opt">{</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">GetOSVariable</span><span class="hl opt">(</span>name<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">());</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">del</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">) {</span>
+  <span class="hl kwd">put</span><span class="hl opt">(</span>name<span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">PutOSVariable</span><span class="hl opt">(</span><span class="hl kwb">char</span><span class="hl opt">*</span> value<span class="hl opt">) {</span>
+  <span class="hl opt">::</span><span class="hl kwd">putenv</span><span class="hl opt">(</span>value<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+std<span class="hl opt">::</span>string EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">GetOSVariable</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> name<span class="hl opt">) {</span>
+<span class="hl ppc">#ifdef WINDOWS</span>
+  <span class="hl kwb">size_t</span> sz <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span><span class="hl kwd">getenv_s</span><span class="hl opt">(&amp;</span>sz<span class="hl opt">,</span> NULL<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span> name<span class="hl opt">) ==</span> <span class="hl num">0</span><span class="hl opt">);</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>sz <span class="hl opt">==</span> <span class="hl num">0</span><span class="hl opt">)</span> <span class="hl kwa">return</span> std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">();</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;</span> <span class="hl kwd">value</span><span class="hl opt">(</span>sz <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span><span class="hl kwd">getenv_s</span><span class="hl opt">(&amp;</span>sz<span class="hl opt">, &amp;</span>value<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">],</span> sz<span class="hl opt">,</span> name<span class="hl opt">) ==</span> <span class="hl num">0</span><span class="hl opt">);</span>
+  <span class="hl kwa">return</span> std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(&amp;</span>value<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">],</span> sz <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">);</span>
+<span class="hl ppc">#else</span>
+  <span class="hl kwb">const char</span><span class="hl opt">*</span> <span class="hl kwb">const</span> value <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">getenv</span><span class="hl opt">(</span>name<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> value ? value <span class="hl opt">:</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">;</span>
+<span class="hl ppc">#endif</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">bool</span> EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">IsOSVariableSet</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> name<span class="hl opt">) {</span>
+<span class="hl ppc">#ifdef WINDOWS</span>
+  <span class="hl kwb">size_t</span> sz <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span><span class="hl kwd">getenv_s</span><span class="hl opt">(&amp;</span>sz<span class="hl opt">,</span> NULL<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span> name<span class="hl opt">) ==</span> <span class="hl num">0</span><span class="hl opt">);</span>
+  <span class="hl kwa">return</span> sz <span class="hl opt">&gt;</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl ppc">#else</span>
+  <span class="hl kwb">const char</span><span class="hl opt">*</span> value <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">getenv</span><span class="hl opt">(</span>name<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> value <span class="hl opt">!=</span> NULL <span class="hl opt">&amp;&amp; *</span>value <span class="hl opt">!=</span> <span class="hl str">'\0'</span><span class="hl opt">;</span>
+<span class="hl ppc">#endif</span>
+<span class="hl opt">}</span>
+
+EnvironmentVariablesManager<span class="hl opt">::</span>VariableContainer 
+EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">PairToContainer</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">,</span>
+                                             <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">)</span> <span class="hl kwb">const</span> <span class="hl opt">{</span>
+  VariableContainer pair<span class="hl opt">;</span>                                            
+  std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>name<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> name<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> std<span class="hl opt">::</span><span class="hl kwd">back_inserter</span><span class="hl opt">(</span>pair<span class="hl opt">));</span>
+  pair<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl str">'='</span><span class="hl opt">);</span>
+  std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>value<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> value<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> std<span class="hl opt">::</span><span class="hl kwd">back_inserter</span><span class="hl opt">(</span>pair<span class="hl opt">));</span>
+  pair<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl str">'\0'</span><span class="hl opt">);</span>
+  <span class="hl kwa">return</span> pair<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Тесты через обычный assert.</p>
+
+<p>Файл EnvironmentVariablesManager_unittest.cpp:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;iostream&gt;</span>
+<span class="hl ppc">#include &lt;string&gt;</span>
+<span class="hl ppc">#include &lt;vector&gt;</span>
+<span class="hl ppc">#include &lt;cstdlib&gt;</span>
+<span class="hl ppc">#include &lt;cstring&gt;</span>
+<span class="hl ppc">#include &lt;cassert&gt;</span>
+
+<span class="hl ppc">#ifdef WINDOWS</span>
+<span class="hl ppc">#include &lt;windows.h&gt;</span>
+<span class="hl ppc">#else</span>
+<span class="hl ppc">#include &lt;stdlib.h&gt;</span>
+<span class="hl ppc">#include &lt;stdio.h&gt;</span>
+<span class="hl ppc">#include &lt;unistd.h&gt;</span>
+<span class="hl ppc">#endif</span>
+
+<span class="hl ppc">#include</span> <span class="hl pps">&quot;EnvironmentVariablesManager.h&quot;</span><span class="hl ppc"></span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">Test_EnvironmentVariablesManager_get_put</span><span class="hl opt">() {</span>
+  EnvironmentVariablesManager env<span class="hl opt">;</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;&quot;</span><span class="hl opt">) ==</span> env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;_a_unique_variable_&quot;</span><span class="hl opt">));</span>
+  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;_a_unique_variable_&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;b&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;b&quot;</span><span class="hl opt">) ==</span> env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;_a_unique_variable_&quot;</span><span class="hl opt">));</span>
+  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;_a_unique_variable_&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;abc&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;abc&quot;</span><span class="hl opt">) ==</span> env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;_a_unique_variable_&quot;</span><span class="hl opt">));</span>
+  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;_a_unique_variable_&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;&quot;</span><span class="hl opt">) ==</span> env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;_a_unique_variable_&quot;</span><span class="hl opt">));</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwa">namespace</span> <span class="hl opt">{</span>
+std<span class="hl opt">::</span>string <span class="hl kwd">ReadEnvironmentVariableViaShell</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">) {</span>
+<span class="hl ppc">#ifdef WINDOWS</span>
+  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string shell <span class="hl opt">=</span>
+    EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">GetOSVariable</span><span class="hl opt">(</span><span class="hl str">&quot;ComSpec&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(!</span>shell<span class="hl opt">.</span><span class="hl kwd">empty</span><span class="hl opt">());</span>
+  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string cmd <span class="hl opt">=</span> shell <span class="hl opt">+</span> <span class="hl str">&quot; /c echo %&quot;</span> <span class="hl opt">+</span> name <span class="hl opt">+</span> <span class="hl str">&quot;%&quot;</span><span class="hl opt">;</span>
+  <span class="hl kwb">FILE</span><span class="hl opt">*</span> <span class="hl kwb">const</span> f <span class="hl opt">=</span> <span class="hl kwd">_popen</span><span class="hl opt">(</span>cmd<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">(),</span> <span class="hl str">&quot;rb&quot;</span><span class="hl opt">);</span>
+<span class="hl ppc">#else</span>
+  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string cmd <span class="hl opt">=</span> <span class="hl str">&quot;echo $&quot;</span> <span class="hl opt">+</span> name<span class="hl opt">;</span>
+  <span class="hl kwb">FILE</span><span class="hl opt">*</span> <span class="hl kwb">const</span> f <span class="hl opt">=</span> <span class="hl kwd">popen</span><span class="hl opt">(</span>cmd<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">(),</span> <span class="hl str">&quot;r&quot;</span><span class="hl opt">);</span>
+<span class="hl ppc">#endif</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>f <span class="hl opt">!=</span> NULL<span class="hl opt">);</span>
+  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;</span> <span class="hl kwd">line</span><span class="hl opt">(</span><span class="hl num">1024</span><span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">);</span>
+  <span class="hl kwb">size_t</span> read <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  <span class="hl kwa">while</span> <span class="hl opt">(!::</span><span class="hl kwd">feof</span><span class="hl opt">(</span>f<span class="hl opt">) &amp;&amp;</span> read <span class="hl opt">&lt;</span> line<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">()) {</span>
+    <span class="hl kwb">const size_t</span> sz <span class="hl opt">= ::</span><span class="hl kwd">fread</span><span class="hl opt">(&amp;</span>line<span class="hl opt">[</span>read<span class="hl opt">],</span> <span class="hl num">1</span><span class="hl opt">,</span> line<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">() -</span> read<span class="hl opt">,</span> f<span class="hl opt">);</span>
+    read <span class="hl opt">+=</span> sz<span class="hl opt">;</span>
+  <span class="hl opt">}</span>
+<span class="hl ppc">#ifdef WINDOWS</span>
+  <span class="hl opt">::</span><span class="hl kwd">_pclose</span><span class="hl opt">(</span>f<span class="hl opt">);</span>
+<span class="hl ppc">#else</span>
+  <span class="hl opt">::</span><span class="hl kwd">pclose</span><span class="hl opt">(</span>f<span class="hl opt">);</span>
+<span class="hl ppc">#endif</span>
+  line<span class="hl opt">.</span><span class="hl kwd">resize</span><span class="hl opt">(</span>read<span class="hl opt">);</span>
+  std<span class="hl opt">::</span>string <span class="hl kwd">trimmed</span><span class="hl opt">(</span>read<span class="hl opt">,</span> <span class="hl str">'\0'</span><span class="hl opt">);</span>
+  std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>line<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> line<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> trimmed<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">());</span>
+  <span class="hl kwa">return</span> trimmed<span class="hl opt">.</span><span class="hl kwd">substr</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">,</span> trimmed<span class="hl opt">.</span><span class="hl kwd">find_last_not_of</span><span class="hl opt">(</span><span class="hl str">&quot;</span><span class="hl esc">\r\n</span><span class="hl str">&quot;</span><span class="hl opt">) +</span> <span class="hl num">1</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">Test_EnvironmentVariablesManager_put_is_propagated_to_child_process</span><span class="hl opt">() {</span>
+  EnvironmentVariablesManager env<span class="hl opt">;</span>
+<span class="hl ppc">#ifdef WINDOWS</span>
+  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string empty <span class="hl opt">=</span> <span class="hl str">&quot;%__unique_%&quot;</span><span class="hl opt">;</span>
+<span class="hl ppc">#else</span>
+  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string empty <span class="hl opt">=</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">;</span>
+<span class="hl ppc">#endif</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>empty <span class="hl opt">==</span> <span class="hl kwd">ReadEnvironmentVariableViaShell</span><span class="hl opt">(</span><span class="hl str">&quot;__unique_&quot;</span><span class="hl opt">));</span>
+  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;__unique_&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;b&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;b&quot;</span><span class="hl opt">) ==</span> <span class="hl kwd">ReadEnvironmentVariableViaShell</span><span class="hl opt">(</span><span class="hl str">&quot;__unique_&quot;</span><span class="hl opt">));</span>
+  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;__unique_&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>empty <span class="hl opt">==</span> <span class="hl kwd">ReadEnvironmentVariableViaShell</span><span class="hl opt">(</span><span class="hl str">&quot;__unique_&quot;</span><span class="hl opt">));</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">Test_EnvironmentVariablesManager_must_take_a_copy</span><span class="hl opt">() {</span>
+  EnvironmentVariablesManager env<span class="hl opt">;</span>
+  <span class="hl kwb">char</span> var<span class="hl opt">[] =</span> <span class="hl str">&quot;12345678&quot;</span><span class="hl opt">;</span>
+  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;var&quot;</span><span class="hl opt">,</span> var<span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;var&quot;</span><span class="hl opt">) ==</span> std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;12345678&quot;</span><span class="hl opt">));</span>
+  std<span class="hl opt">::</span><span class="hl kwd">strcpy</span><span class="hl opt">(</span>var<span class="hl opt">,</span> <span class="hl str">&quot;abc&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;var&quot;</span><span class="hl opt">) ==</span> std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;12345678&quot;</span><span class="hl opt">));</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">Test_EnvironmentVariablesManager_del</span><span class="hl opt">() {</span>
+  EnvironmentVariablesManager env<span class="hl opt">;</span>
+  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;variable_to_delete&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;123&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;123&quot;</span><span class="hl opt">) ==</span> env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;variable_to_delete&quot;</span><span class="hl opt">));</span>
+  env<span class="hl opt">.</span><span class="hl kwd">del</span><span class="hl opt">(</span><span class="hl str">&quot;variable_to_delete&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;variable_to_delete&quot;</span><span class="hl opt">).</span><span class="hl kwd">empty</span><span class="hl opt">() ==</span> <span class="hl kwa">true</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">Test_EnvironmentVariablesManager_IsOSVariableSet_set_and_unset</span><span class="hl opt">() {</span>
+  EnvironmentVariablesManager env<span class="hl opt">;</span>
+  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;a&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;value&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">IsOSVariableSet</span><span class="hl opt">(</span><span class="hl str">&quot;a&quot;</span><span class="hl opt">) ==</span> <span class="hl kwa">true</span><span class="hl opt">);</span>
+  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;a&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">IsOSVariableSet</span><span class="hl opt">(</span><span class="hl str">&quot;a&quot;</span><span class="hl opt">) ==</span> <span class="hl kwa">false</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">Test_EnvironmentVariablesManager_GetOSVariable</span><span class="hl opt">() {</span>
+  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string unique_name <span class="hl opt">=</span> <span class="hl str">&quot;EnvironmentVariablesManager_GetOSVariable&quot;</span><span class="hl opt">;</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">GetOSVariable</span><span class="hl opt">(</span>unique_name<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">())</span>
+                                                    <span class="hl opt">.</span><span class="hl kwd">empty</span><span class="hl opt">());</span>
+  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string unique_name_pair <span class="hl opt">=</span> unique_name <span class="hl opt">+</span> <span class="hl str">&quot;=12345678&quot;</span><span class="hl opt">;</span>
+  <span class="hl kwb">char</span> var<span class="hl opt">[</span><span class="hl num">1024</span><span class="hl opt">];</span>
+  unique_name_pair<span class="hl opt">.</span><span class="hl kwd">copy</span><span class="hl opt">(</span>var<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>var<span class="hl opt">));</span>
+  var<span class="hl opt">[</span>unique_name_pair<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">()] =</span> <span class="hl str">'\0'</span><span class="hl opt">;</span>
+  <span class="hl opt">::</span><span class="hl kwd">putenv</span><span class="hl opt">(</span>var<span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">GetOSVariable</span><span class="hl opt">(</span>unique_name<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">())</span>
+                                                    <span class="hl opt">==</span> <span class="hl str">&quot;12345678&quot;</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">void</span> <span class="hl kwd">Test_EnvironmentVariablesManager_PutOSVariable</span><span class="hl opt">() {</span>
+  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string unique_name <span class="hl opt">=</span> <span class="hl str">&quot;EnvironmentVariablesManager_PutOSVariable&quot;</span><span class="hl opt">;</span>
+  <span class="hl kwb">const char</span><span class="hl opt">*</span> before <span class="hl opt">= ::</span><span class="hl kwd">getenv</span><span class="hl opt">(</span>unique_name<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">());</span>
+  <span class="hl kwa">if</span> <span class="hl opt">(</span>before <span class="hl opt">!=</span> NULL<span class="hl opt">)</span>
+    <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span>before<span class="hl opt">).</span><span class="hl kwd">empty</span><span class="hl opt">());</span>
+
+  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string unique_name_pair <span class="hl opt">=</span> unique_name <span class="hl opt">+</span> <span class="hl str">&quot;=12345678&quot;</span><span class="hl opt">;</span>
+  <span class="hl kwb">char</span> var<span class="hl opt">[</span><span class="hl num">1024</span><span class="hl opt">];</span>
+  unique_name_pair<span class="hl opt">.</span><span class="hl kwd">copy</span><span class="hl opt">(</span>var<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>var<span class="hl opt">));</span>
+  var<span class="hl opt">[</span>unique_name_pair<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">()] =</span> <span class="hl str">'\0'</span><span class="hl opt">;</span>
+
+  EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">PutOSVariable</span><span class="hl opt">(</span>var<span class="hl opt">);</span>
+  <span class="hl kwb">const char</span><span class="hl opt">*</span> after <span class="hl opt">= ::</span><span class="hl kwd">getenv</span><span class="hl opt">(</span>unique_name<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">());</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>after <span class="hl opt">!=</span> NULL<span class="hl opt">);</span>
+  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span>after<span class="hl opt">) ==</span> <span class="hl str">&quot;12345678&quot;</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">run_tests</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> <span class="hl kwb">const</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwd">Test_EnvironmentVariablesManager_GetOSVariable</span><span class="hl opt">();</span>
+  <span class="hl kwd">Test_EnvironmentVariablesManager_PutOSVariable</span><span class="hl opt">();</span>
+  <span class="hl kwd">Test_EnvironmentVariablesManager_get_put</span><span class="hl opt">();</span>
+  <span class="hl kwd">Test_EnvironmentVariablesManager_put_is_propagated_to_child_process</span><span class="hl opt">();</span>
+  <span class="hl kwd">Test_EnvironmentVariablesManager_must_take_a_copy</span><span class="hl opt">();</span>
+  <span class="hl kwd">Test_EnvironmentVariablesManager_del</span><span class="hl opt">();</span>
+  <span class="hl kwd">Test_EnvironmentVariablesManager_IsOSVariableSet_set_and_unset</span><span class="hl opt">();</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> <span class="hl kwb">const</span> argv<span class="hl opt">[]) {</span>
+  <span class="hl kwd">run_tests</span><span class="hl opt">(</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
+  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;All tests pass.&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Ничего особо замысловатого, но удобно.</p>
+
+<p>Посты по теме:</p>
+
+<ul>
+<li><a href="http://demin.ws/blog/russian/2011/11/16/subtleties-of-using-getenv-and-putenv/">Тонкости использования getenv() и putenv()</a></li>
+<li><a href="http://demin.ws/blog/russian/2009/02/01/static-argument-of-putenv/">Статический аргумент функции putenv</a></li>
+</ul>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Платежный терминал OMNI-395 изнутри]]></title>
