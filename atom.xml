@@ -5,13 +5,131 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2013-01-12T22:00:00Z</updated>
+  <updated>2013-01-18T22:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Пример того, почему удобно жить с unit-тестами]]></title>
+    <link href="http://demin.ws/blog/russian/2013/01/18/unit-test-necessity/"/>
+    <updated>2013-01-18T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2013/01/18/unit-test-necessity/</id>
+    <content type="html"><![CDATA[<p>Нужна мне была функция, которая бы при низкоуровневой отладочной печати
+умела распечатать строку, заменив непечатаемые коды (меньше 32 и больше 126)
+кодами. Все крайне тривиально.</p>
+
+<p>Имеем:</p>
+
+<pre><code>1234\x04\x1fooo\xff
+</code></pre>
+
+<p>Печататься должно:</p>
+
+<pre><code>1234&lt;04&gt;&lt;1f&gt;ooo&lt;ff&gt;
+</code></pre>
+
+<p>Рождается функция:</p>
+
+<pre class="hl">
+<span class="hl slc">// This function converts all non-ASCII characters (with codes less than 32</span>
+<span class="hl slc">// and greater than 126) into the &lt;xx&gt; form where &quot;xx&quot; is a hexadecimal code</span>
+<span class="hl slc">// of the character.</span>
+<span class="hl kwb">void</span> <span class="hl kwd">MakeAllPrintable</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> from<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> to<span class="hl opt">,</span> <span class="hl kwb">int</span> to_capacity<span class="hl opt">) {</span>
+  <span class="hl kwb">const static char</span> hex<span class="hl opt">[] =</span> <span class="hl str">&quot;0123456789abcdef&quot;</span><span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(; *</span>from <span class="hl opt">&amp;&amp;</span> to_capacity <span class="hl opt">&gt;</span> <span class="hl num">1</span><span class="hl opt">; ++</span>from<span class="hl opt">) {</span>
+    <span class="hl kwb">const unsigned char</span> c <span class="hl opt">= *</span>from<span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>c <span class="hl opt">&lt;</span> <span class="hl num">32</span> <span class="hl opt">||</span> c <span class="hl opt">&gt;</span> <span class="hl num">126</span><span class="hl opt">) {</span>
+      <span class="hl kwa">if</span> <span class="hl opt">(</span>to_capacity <span class="hl opt">&lt;</span> <span class="hl num">4</span> <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">)</span>
+        <span class="hl kwa">break</span><span class="hl opt">;</span>
+      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> <span class="hl str">'&lt;'</span><span class="hl opt">;</span>
+      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> hex<span class="hl opt">[(</span>c <span class="hl opt">&gt;&gt;</span> <span class="hl num">4</span><span class="hl opt">) &amp;</span> <span class="hl num">0xf</span><span class="hl opt">];</span>
+      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> hex<span class="hl opt">[</span>c <span class="hl opt">&amp;</span> <span class="hl num">0xf</span><span class="hl opt">];</span>
+      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> <span class="hl str">'&gt;'</span><span class="hl opt">;</span>
+    <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
+      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> c<span class="hl opt">;</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span>
+  <span class="hl opt">*</span>to <span class="hl opt">=</span> <span class="hl str">'\0'</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Увы, это С, а наша системы сборки частей на С, хоть и имеет cmockery, но
+добавление тестов всегда связано с ручным прописываением имен фунцкий, а это
+будет означать пересборку еще и makefile&rsquo;ов, а это будет означать проверку
+этой пересборки на всех типах ОС, и в этоге на подготовку уйдет час или больше.
+А если потихоньку просто добавить функцию без теста, то 5 минут, так как
+изменится только один исходник. Мои мысли: &ldquo;Ну я, типа, такой катаный
+колобок, врядли налажаю в столь простой функции. Так что можно без тестов.&ldquo;.
+И, конечно, налажал. Код выше имеет конкретный косяк. Он бы, естественно,
+всплыл, может даже на code review, но в итоге я отогнал все ренегатские
+мысли, сделал всю рутину и сел за тесты, хотя по уму, я их должен быть
+писать до.</p>
+
+<p>Очевидно, что вполне логичный (предпоследний) тест, там, где последний параметр
+5, сразу показал, что я забыл проверку максимальной длины буфера (эдакая
+назадача!):</p>
+
+<pre class="hl">
+<span class="hl kwb">void</span> <span class="hl kwd">test_MakeAllPrintable</span><span class="hl opt">(</span><span class="hl kwb">void</span> <span class="hl opt">**</span>state<span class="hl opt">) {</span>
+  <span class="hl kwb">char</span> buf<span class="hl opt">[</span><span class="hl num">16</span> <span class="hl opt">*</span> <span class="hl num">1024</span><span class="hl opt">];</span>
+
+  <span class="hl kwd">MakeAllPrintable</span><span class="hl opt">(</span><span class="hl str">&quot;&quot;</span><span class="hl opt">,</span> buf<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>buf<span class="hl opt">));</span>
+  <span class="hl kwd">assert_int_equal</span><span class="hl opt">(</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>buf<span class="hl opt">),</span> <span class="hl num">0</span><span class="hl opt">);</span>
+
+  <span class="hl kwd">MakeAllPrintable</span><span class="hl opt">(</span><span class="hl str">&quot;abc&quot;</span><span class="hl opt">,</span> buf<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>buf<span class="hl opt">));</span>
+  <span class="hl kwd">assert_string_equal</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> <span class="hl str">&quot;abc&quot;</span><span class="hl opt">);</span>
+
+  <span class="hl slc">// This check verifies that the function always cleans the buffer at start.</span>
+  <span class="hl kwd">MakeAllPrintable</span><span class="hl opt">(</span><span class="hl str">&quot;&quot;</span><span class="hl opt">,</span> buf<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>buf<span class="hl opt">));</span>
+  <span class="hl kwd">assert_int_equal</span><span class="hl opt">(</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>buf<span class="hl opt">),</span> <span class="hl num">0</span><span class="hl opt">);</span>
+
+  <span class="hl slc">// This check verifies that the function doesn't overwrite the given buffer</span>
+  <span class="hl slc">// and always reserves the last byte for '\0'.</span>
+  <span class="hl kwd">MakeAllPrintable</span><span class="hl opt">(</span><span class="hl str">&quot;12345678&quot;</span><span class="hl opt">,</span> buf<span class="hl opt">,</span> <span class="hl num">5</span><span class="hl opt">);</span>
+  <span class="hl kwd">assert_string_equal</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> <span class="hl str">&quot;1234&quot;</span><span class="hl opt">);</span>$
+  <span class="hl kwd">MakeAllPrintable</span><span class="hl opt">(</span><span class="hl str">&quot;1</span><span class="hl esc">\x01\r\n\t\x1f</span> <span class="hl str">2</span><span class="hl esc">\x7e\x7f\x80\xff</span><span class="hl str">&quot;</span><span class="hl opt">,</span> buf<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>buf<span class="hl opt">));</span>
+  <span class="hl kwd">assert_string_equal</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> <span class="hl str">&quot;1&lt;01&gt;&lt;0d&gt;&lt;0a&gt;&lt;09&gt;&lt;1f&gt; 2~&lt;7f&gt;&lt;80&gt;&lt;ff&gt;&quot;</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>А вот как код должен был выглядеть:</p>
+
+<pre class="hl">
+<span class="hl slc">// This function converts all non-ASCII characters (with codes less than 32</span>
+<span class="hl slc">// and greater than 126) into the &lt;xx&gt; form where &quot;xx&quot; is a hexadecimal code</span>
+<span class="hl slc">// of the character.</span>
+<span class="hl kwb">void</span> <span class="hl kwd">MakeAllPrintable</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> from<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> to<span class="hl opt">,</span> <span class="hl kwb">int</span> to_capacity<span class="hl opt">) {</span>
+  <span class="hl kwb">const static char</span> hex<span class="hl opt">[] =</span> <span class="hl str">&quot;0123456789abcdef&quot;</span><span class="hl opt">;</span>
+  <span class="hl kwa">for</span> <span class="hl opt">(; *</span>from <span class="hl opt">&amp;&amp;</span> to_capacity <span class="hl opt">&gt;</span> <span class="hl num">1</span><span class="hl opt">; ++</span>from<span class="hl opt">) {</span>
+    <span class="hl kwb">const unsigned char</span> c <span class="hl opt">= *</span>from<span class="hl opt">;</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(</span>c <span class="hl opt">&lt;</span> <span class="hl num">32</span> <span class="hl opt">||</span> c <span class="hl opt">&gt;</span> <span class="hl num">126</span><span class="hl opt">) {</span>
+      <span class="hl kwa">if</span> <span class="hl opt">(</span>to_capacity <span class="hl opt">&lt;</span> <span class="hl num">4</span> <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">)</span>
+        <span class="hl kwa">break</span><span class="hl opt">;</span>
+      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> <span class="hl str">'&lt;'</span><span class="hl opt">;</span>
+      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> hex<span class="hl opt">[(</span>c <span class="hl opt">&gt;&gt;</span> <span class="hl num">4</span><span class="hl opt">) &amp;</span> <span class="hl num">0xf</span><span class="hl opt">];</span>
+      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> hex<span class="hl opt">[</span>c <span class="hl opt">&amp;</span> <span class="hl num">0xf</span><span class="hl opt">];</span>
+      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> <span class="hl str">'&gt;'</span><span class="hl opt">;</span>
+      to_capacity <span class="hl opt">-=</span> <span class="hl num">4</span><span class="hl opt">;</span>   <span class="hl slc">// (!!!)</span>
+    <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
+      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> c<span class="hl opt">;</span>
+      <span class="hl opt">--</span>to_capacity<span class="hl opt">;</span>      <span class="hl slc">// (!!!)</span>
+    <span class="hl opt">}</span>
+  <span class="hl opt">}</span>
+  <span class="hl opt">*</span>to <span class="hl opt">=</span> <span class="hl str">'\0'</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Пример, безусловно, примитивный, но очень показательный. Принцип простой:
+&ldquo;нет тестов, нет кода&rdquo;. Когда жизненный цикл проекта более нескольких дней,
+тесты обязаны быть частью кода, и по мне, не должно быть разделения на
+production code и test code по большому счету, так как первое без второго
+не существует.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Класс EnvironmentVariablesManager для переменных окружения]]></title>
