@@ -5,13 +5,67 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2013-01-18T23:00:00Z</updated>
+  <updated>2013-01-19T22:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Потоки в С++ для удобного тестирования]]></title>
+    <link href="http://demin.ws/blog/russian/2013/01/19/use-streams-for-unittesting/"/>
+    <updated>2013-01-19T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2013/01/19/use-streams-for-unittesting/</id>
+    <content type="html"><![CDATA[<p>Лично у меня прием, описанный ниже, даже уже набил оскомину, но от этого
+не сделался ни на каплю хуже.</p>
+
+<p>Итак, функция, которая что-то делает с файлом:</p>
+
+<pre class="hl">
+std<span class="hl opt">::</span>string <span class="hl kwd">DoSomethingWithFile</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span>name<span class="hl opt">);</span>
+  <span class="hl slc">// ...</span>
+  <span class="hl kwa">return</span> a_value<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Что плохого в этой функции? Для ее тестирования нужен реальный файл на
+файловой системе. В принципе, это не смертельно для unit-тестов, но как-то
+коряво, особенно если логика требует большого количества тестов.</p>
+
+<p>Лично я взял себе за правило всегда разделять работу с файлом и его
+открытие:</p>
+
+<pre class="hl">
+std<span class="hl opt">::</span>string <span class="hl kwd">DoSomethingWithStream</span><span class="hl opt">(</span>std<span class="hl opt">::</span>istream<span class="hl opt">*</span> is<span class="hl opt">) {</span>
+  <span class="hl slc">// ...</span>
+  <span class="hl kwa">return</span> a_value<span class="hl opt">;</span>
+<span class="hl opt">}</span>
+
+std<span class="hl opt">::</span>string <span class="hl kwd">DoSomethingWithFile</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">) {</span>
+  std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span>name<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl kwd">DoSomethingWithStream</span><span class="hl opt">(&amp;</span>is<span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Тогда первую функцию можно в хвост и в гриву оттестировать, подсунув ей
+std::istringstream в тесте. А вторую, прикрыв глаза рукой, можно не
+тестировать или тестировать примитивно на одном реальном файле просто на
+предмет того, что она может его открыть.</p>
+
+<h2>Бонус</h2>
+
+<p>Еще одно мое собственное правило: в принципе стараться не использовать
+стандартные потоки std::cin/cout/cerr напрямую, а всегда передавать их как
+параметр. Например, есть фукнция <code>usage()</code>, которая выводит справку о
+программе. Если <code>cout/cerr</code> передать через параметр, то можно будет
+делать тесты на наличие определенных строк в выводе этой функции. Добавил
+новый функционал и наряду с прочими тестами добавил тест для проверки, что
+<code>usage()</code> что-то там выводит про этот новый функционал.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Спасибо, тебе Эппл]]></title>
