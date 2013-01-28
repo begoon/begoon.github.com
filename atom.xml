@@ -5,13 +5,235 @@
   <title><![CDATA[Программирование - это просто!]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2013-01-19T22:00:00Z</updated>
+  <updated>2013-01-28T22:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Александр Дëмин]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Как работает snprintf() разных платформах]]></title>
+    <link href="http://demin.ws/blog/russian/2013/01/28/use-snprintf-on-different-platforms/"/>
+    <updated>2013-01-28T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/russian/2013/01/28/use-snprintf-on-different-platforms/</id>
+    <content type="html"><![CDATA[<p>Считается, что функция <code>snprintf()</code> является &ldquo;правильным&rdquo; способом форматного
+преобразования в С, так как есть возможность контролировать длину рождаемых
+данных. Но как у остальных функций подобного рода, типа <code>strcpy()</code>, у нее есть
+мутный момент в плане нуля на конце, если буфер кончился раньше времени.
+Мне хотелость определенности в этом вопросе, поэтому программа:</p>
+
+<pre><code>#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#ifdef WINDOWS
+#define snprintf _snprintf
+#endif
+void test(const int capacity) {
+  char buf[1024];
+  int n;
+  strcpy(buf, &quot;abcdefghijk&quot;);
+  n = snprintf(buf, capacity, &quot;%d&quot;, 123);
+  printf(&quot;capacity=%d, n=%d, buf=[%s] (length %d)\n&quot;,
+         capacity, n, buf, (int)strlen(buf));
+}
+
+int main() {
+  test(0);
+  test(1);
+  test(2);
+  test(3);
+  test(4);
+  test(5);
+  return 0;
+}
+</code></pre>
+
+<p>Данный код проверяет, как именно <code>snprintf()</code> использует предоставленный
+буфер, если результат полностью не вмещается, и добавляется ли ноль в конце.</p>
+
+<p>Запускать будем на разных системах и компиляторах.</p>
+
+<h2>Solaris SunOS 5.10 SPARC, Sun C 5.8</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Solaris SunOS 5.10 SPARC, Sun C 5.12</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Solaris SunOS 5.10 Intel x86, Sun C 5.12</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Solaris SunOS 5.11 Intel x86, Sun C 5.12</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Linux 2.6.18 x64, gcc 4.1.2</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Linux 2.6.32 x64, gcc 4.4.6</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>HP-UX B.11.31 Itanium 64, HP C/aC++ B3910B A.06.22</h2>
+
+<pre><code>capacity=0, n=0, buf=[abcdefghijk] (length 11)
+capacity=1, n=-1, buf=[] (length 0)
+capacity=2, n=-1, buf=[1] (length 1)
+capacity=3, n=-1, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>AIX 5.3 (PowerPC), IBM XL C/C++ 8.0.0.20</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>AIX 6.1 (PowerPC), IBM XL C/C++ 9.0.0.0</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>AIX 6.1 (PowerPC), IBM XL C/C++ 9.0.0.15</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>AIX 7.1 (PowerPC), IBM XL C/C++ 11.1.0.0</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Windows 7, Visual Studio 12 (17.00.50727.1), x86</h2>
+
+<pre><code>capacity=0, n=-1, buf=[abcdefghijk] (length 11)
+capacity=1, n=-1, buf=[1bcdefghijk] (length 11)
+capacity=2, n=-1, buf=[12cdefghijk] (length 11)
+capacity=3, n=3, buf=[123defghijk] (length 11)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Windows 7, Visual Studio 12 (17.00.50727.1), x64</h2>
+
+<pre><code>capacity=0, n=-1, buf=[abcdefghijk] (length 11)
+capacity=1, n=-1, buf=[1bcdefghijk] (length 11)
+capacity=2, n=-1, buf=[12cdefghijk] (length 11)
+capacity=3, n=3, buf=[123defghijk] (length 11)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>OSX 10.7.5, Apple clang 4.1</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>OSX 10.7.5, Apple gcc/llmv 4.2.1</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h1>Выводы</h1>
+
+<p>На всех UNIX&rsquo;ах (SunOS, Linux, AIX, OSX), кроме HP-UX, буфер не
+трогается, если его длина 0, завершающий <code>\0</code> учитывается в длине рождаемых
+данных (то есть, если буфер длиной 1, то туда влезет только один символ конца
+строки), и фукнция всегда возващает длину данных (без учета нуля в конце),
+которые могли бы быть записаны, если б хватило буфера. Это число можно
+использовать для выделения буфера достаточной длины при повторном вызове
+функции.</p>
+
+<p>Увы, на HP-UX, если буфер маловат, то возвращается -1. В этом случае не понятно,
+как определить длину требуемого буфера. Методом дихотомии? Странно.</p>
+
+<p>В Windows ситуация еще хуже. Мало того, что функция не возвращает длину
+требуемого буфера, так еще не учитывает ноль в расчете его длины. То есть
+когда размера буфера не достаточно, то ноль в конце не добавляется.
+Но Microsoft говорит, что не стоит использоваться <code>snprintf()</code> вообще,
+а переключиться на <code>_snrpintf_s()</code>.</p>
+
+<p>Теперь понятно, почему интернет полон темами типа &ldquo;a portable snprintf
+implementation&rdquo;.</p>
+
+<h1>Бонус</h1>
+
+<p>Для моей конкретной задачи неплохо подошла бы функция <a href="http://linux.die.net/man/3/asprintf">asprintf</a>, так как
+меня не пугает malloc на каждом вызове, но увы, функция нестандартная, и то же
+HP-UX ее не имеет.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Потоки в С++ для удобного тестирования]]></title>

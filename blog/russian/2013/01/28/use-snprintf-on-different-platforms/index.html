@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Как работает snprintf() разных платформах</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/english">&laquo; english &raquo;</a>  
+    <a href="/">блог</a> |
+    <a href="/projects/">проекты</a> |
+    <a href="/interview/">интервью</a> |
+    <a href="/articles/">статьи</a> |
+    <a href="/about/">автор</a>
+  </div>
+
+  <div id="home">
+    <h1>Как работает snprintf() разных платформах</h1>
+<div id="post">
+  <p>Считается, что функция <code>snprintf()</code> является &ldquo;правильным&rdquo; способом форматного
+преобразования в С, так как есть возможность контролировать длину рождаемых
+данных. Но как у остальных функций подобного рода, типа <code>strcpy()</code>, у нее есть
+мутный момент в плане нуля на конце, если буфер кончился раньше времени.
+Мне хотелость определенности в этом вопросе, поэтому программа:</p>
+
+<pre><code>#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#ifdef WINDOWS
+#define snprintf _snprintf
+#endif
+void test(const int capacity) {
+  char buf[1024];
+  int n;
+  strcpy(buf, &quot;abcdefghijk&quot;);
+  n = snprintf(buf, capacity, &quot;%d&quot;, 123);
+  printf(&quot;capacity=%d, n=%d, buf=[%s] (length %d)\n&quot;,
+         capacity, n, buf, (int)strlen(buf));
+}
+
+int main() {
+  test(0);
+  test(1);
+  test(2);
+  test(3);
+  test(4);
+  test(5);
+  return 0;
+}
+</code></pre>
+
+<p>Данный код проверяет, как именно <code>snprintf()</code> использует предоставленный
+буфер, если результат полностью не вмещается, и добавляется ли ноль в конце.</p>
+
+<p>Запускать будем на разных системах и компиляторах.</p>
+
+<h2>Solaris SunOS 5.10 SPARC, Sun C 5.8</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Solaris SunOS 5.10 SPARC, Sun C 5.12</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Solaris SunOS 5.10 Intel x86, Sun C 5.12</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Solaris SunOS 5.11 Intel x86, Sun C 5.12</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Linux 2.6.18 x64, gcc 4.1.2</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Linux 2.6.32 x64, gcc 4.4.6</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>HP-UX B.11.31 Itanium 64, HP C/aC++ B3910B A.06.22</h2>
+
+<pre><code>capacity=0, n=0, buf=[abcdefghijk] (length 11)
+capacity=1, n=-1, buf=[] (length 0)
+capacity=2, n=-1, buf=[1] (length 1)
+capacity=3, n=-1, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>AIX 5.3 (PowerPC), IBM XL C/C++ 8.0.0.20</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>AIX 6.1 (PowerPC), IBM XL C/C++ 9.0.0.0</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>AIX 6.1 (PowerPC), IBM XL C/C++ 9.0.0.15</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>AIX 7.1 (PowerPC), IBM XL C/C++ 11.1.0.0</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Windows 7, Visual Studio 12 (17.00.50727.1), x86</h2>
+
+<pre><code>capacity=0, n=-1, buf=[abcdefghijk] (length 11)
+capacity=1, n=-1, buf=[1bcdefghijk] (length 11)
+capacity=2, n=-1, buf=[12cdefghijk] (length 11)
+capacity=3, n=3, buf=[123defghijk] (length 11)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Windows 7, Visual Studio 12 (17.00.50727.1), x64</h2>
+
+<pre><code>capacity=0, n=-1, buf=[abcdefghijk] (length 11)
+capacity=1, n=-1, buf=[1bcdefghijk] (length 11)
+capacity=2, n=-1, buf=[12cdefghijk] (length 11)
+capacity=3, n=3, buf=[123defghijk] (length 11)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>OSX 10.7.5, Apple clang 4.1</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>OSX 10.7.5, Apple gcc/llmv 4.2.1</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h1>Выводы</h1>
+
+<p>На всех UNIX&rsquo;ах (SunOS, Linux, AIX, OSX), кроме HP-UX, буфер не
+трогается, если его длина 0, завершающий <code>\0</code> учитывается в длине рождаемых
+данных (то есть, если буфер длиной 1, то туда влезет только один символ конца
+строки), и фукнция всегда возващает длину данных (без учета нуля в конце),
+которые могли бы быть записаны, если б хватило буфера. Это число можно
+использовать для выделения буфера достаточной длины при повторном вызове
+функции.</p>
+
+<p>Увы, на HP-UX, если буфер маловат, то возвращается -1. В этом случае не понятно,
+как определить длину требуемого буфера. Методом дихотомии? Странно.</p>
+
+<p>В Windows ситуация еще хуже. Мало того, что функция не возвращает длину
+требуемого буфера, так еще не учитывает ноль в расчете его длины. То есть
+когда размера буфера не достаточно, то ноль в конце не добавляется.
+Но Microsoft говорит, что не стоит использоваться <code>snprintf()</code> вообще,
+а переключиться на <code>_snrpintf_s()</code>.</p>
+
+<p>Теперь понятно, почему интернет полон темами типа &ldquo;a portable snprintf
+implementation&rdquo;.</p>
+
+<h1>Бонус</h1>
+
+<p>Для моей конкретной задачи неплохо подошла бы функция <a href="http://linux.die.net/man/3/asprintf">asprintf</a>, так как
+меня не пугает malloc на каждом вызове, но увы, функция нестандартная, и то же
+HP-UX ее не имеет.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/about/"><small>Disclaimer</small></a>
+
+<h1>Комментарии</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/russian/2013/01/28/use-snprintf-on-different-platforms/';
+  var disqus_url = 'http://demin.ws/blog/russian/2013/01/28/use-snprintf-on-different-platforms/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2009-2013
+      <a href="mailto:alexander@demin.ws">Александр Дëмин</a> |
+      <a href="/atom.xml" rel="subscribe-rss" title="Подписаться через RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

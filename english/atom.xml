@@ -5,13 +5,239 @@
   <title><![CDATA[Programming DIY]]></title>
   <link href="http://demin.ws/atom.xml" rel="self"/>
   <link href="http://demin.ws/"/>
-  <updated>2013-01-12T22:00:00Z</updated>
+  <updated>2013-01-28T22:00:00Z</updated>
   <id>http://demin.ws/</id>
   <author>
     <name><![CDATA[Alexander Demin]]></name>
     <email><![CDATA[alexander@demin.ws]]></email>
   </author>
 
+  
+  <entry>
+    <title type="html"><![CDATA[snprintf() on different platforms]]></title>
+    <link href="http://demin.ws/blog/english/2013/01/28/use-snprintf-on-different-platforms/"/>
+    <updated>2013-01-28T00:00:00+00:00</updated>
+    <id>http://demin.ws/blog/english/2013/01/28/use-snprintf-on-different-platforms/</id>
+    <content type="html"><![CDATA[<p>The <code>snprintf()</code> is considered to be &ldquo;good&rdquo; for formatting in C in terms of
+the buffer overrun problem. But similarly to other functions supporting the
+maximum buffer size there is a tricky moment &ndash; dealing with the trailing
+zero character if the buffer isn&rsquo;t big enough.</p>
+
+<p>I wanted some clarity in this question, so I wrote the following test
+program:</p>
+
+<pre><code>#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#ifdef WINDOWS
+#define snprintf _snprintf
+#endif
+void test(const int capacity) {
+  char buf[1024];
+  int n;
+  strcpy(buf, &quot;abcdefghijk&quot;);
+  n = snprintf(buf, capacity, &quot;%d&quot;, 123);
+  printf(&quot;capacity=%d, n=%d, buf=[%s] (length %d)\n&quot;,
+         capacity, n, buf, (int)strlen(buf));
+}
+
+int main() {
+  test(0);
+  test(1);
+  test(2);
+  test(3);
+  test(4);
+  test(5);
+  return 0;
+}
+</code></pre>
+
+<p>The program tests how <code>snprintf()</code> deals with the buffer when there is no
+room for the full result, and whether it adds the trailing <code>\0</code> in this case.</p>
+
+<p>I&rsquo;ll be testing on different systems and compilers.</p>
+
+<h2>Solaris SunOS 5.10 SPARC, Sun C 5.8</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Solaris SunOS 5.10 SPARC, Sun C 5.12</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Solaris SunOS 5.10 Intel x86, Sun C 5.12</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Solaris SunOS 5.11 Intel x86, Sun C 5.12</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Linux 2.6.18 x64, gcc 4.1.2</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Linux 2.6.32 x64, gcc 4.4.6</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>HP-UX B.11.31 Itanium 64, HP C/aC++ B3910B A.06.22</h2>
+
+<pre><code>capacity=0, n=0, buf=[abcdefghijk] (length 11)
+capacity=1, n=-1, buf=[] (length 0)
+capacity=2, n=-1, buf=[1] (length 1)
+capacity=3, n=-1, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>AIX 5.3 (PowerPC), IBM XL C/C++ 8.0.0.20</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>AIX 6.1 (PowerPC), IBM XL C/C++ 9.0.0.0</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>AIX 6.1 (PowerPC), IBM XL C/C++ 9.0.0.15</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>AIX 7.1 (PowerPC), IBM XL C/C++ 11.1.0.0</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Windows 7, Visual Studio 12 (17.00.50727.1), x86</h2>
+
+<pre><code>capacity=0, n=-1, buf=[abcdefghijk] (length 11)
+capacity=1, n=-1, buf=[1bcdefghijk] (length 11)
+capacity=2, n=-1, buf=[12cdefghijk] (length 11)
+capacity=3, n=3, buf=[123defghijk] (length 11)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>Windows 7, Visual Studio 12 (17.00.50727.1), x64</h2>
+
+<pre><code>capacity=0, n=-1, buf=[abcdefghijk] (length 11)
+capacity=1, n=-1, buf=[1bcdefghijk] (length 11)
+capacity=2, n=-1, buf=[12cdefghijk] (length 11)
+capacity=3, n=3, buf=[123defghijk] (length 11)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>OSX 10.7.5, Apple clang 4.1</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h2>OSX 10.7.5, Apple gcc/llmv 4.2.1</h2>
+
+<pre><code>capacity=0, n=3, buf=[abcdefghijk] (length 11)
+capacity=1, n=3, buf=[] (length 0)
+capacity=2, n=3, buf=[1] (length 1)
+capacity=3, n=3, buf=[12] (length 2)
+capacity=4, n=3, buf=[123] (length 3)
+capacity=5, n=3, buf=[123] (length 3)
+</code></pre>
+
+<h1>The conclusion</h1>
+
+<p>On all UNIX systems (SunOS, Linux, AIX, OSX), except HP-UX, the buffer is not
+touched if it is capacity is 0. Also, the trailing <code>\0</code> is counted in the
+length of the output (if the buffer size is 1 it can fit only one character,
+and this character is the trailing zero). Finally, the function returns the
+length of data which would be written if the buffer has enough room. This
+length can be used to allocate another, big enough buffer and call the function
+once again.</p>
+
+<p>Alas, on HP-UX, if the buffer cannot fit the result, the function returns -1.
+In this case it is not clear how to figure out the required length of the
+buffer. By the dichotomy method?</p>
+
+<p>On Windows the situation is even worse. First, the function returns -1 similar
+to HP-UX if the buffer is not big enough. Second, it does not count the trailing
+zero in the length of its output, which means it does not append the trailing
+zero at all in the situation of the small buffer. Though, Microsoft does not
+recommend using <code>snprintf()</code> at all as a non-thread safe function, and
+recommends <code>_snprintf_s()</code> instead.</p>
+
+<p>It is obvious now why there are so many &ldquo;a portable snprintf&rdquo; implementations
+in the internet.</p>
+
+<h1>Bonus</h1>
+
+<p>In my particular case I would be happy using <a href="http://linux.die.net/man/3/asprintf">asprintf</a> as an easy to use
+alternative, but this function is not standard, and, for instance, HP-UX
+does not support it.</p>
+<hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[An environment variables manager class]]></title>
