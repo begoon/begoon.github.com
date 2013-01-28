@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Как работает snprintf() разных платформах]]></title>
+    <title type="html"><![CDATA[Как работает snprintf() на разных платформах]]></title>
     <link href="http://demin.ws/blog/russian/2013/01/28/use-snprintf-on-different-platforms/"/>
     <updated>2013-01-28T00:00:00+00:00</updated>
     <id>http://demin.ws/blog/russian/2013/01/28/use-snprintf-on-different-platforms/</id>
