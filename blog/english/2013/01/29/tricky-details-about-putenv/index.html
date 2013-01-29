@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+ 
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <title>Tricky details about putenv()</title>
+   <link href="/favicon.png" rel="icon" />
+   <script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-3017739-19']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+   <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
+   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
+   <link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
+   <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
+</head>
+<body>
+
+<div class="site">
+
+  <div class="menu">
+    <a class="extra" href="/">&laquo; по-русски &raquo;</a>  
+    <a href="/english">blog</a> |
+    <a href="/english/projects/">projects</a> |
+    <a href="/english/interview/">interview</a> |
+    <a href="/english/articles/">articles</a> |
+    <a href="/english/about/">about</a>
+  </div>
+
+  <div id="home">
+    <h1>Tricky details about putenv()</h1>
+<div id="post">
+  <p>Previously I already talked about a class to deal with the
+OS environment variables. The purpose of that class was to store data of the
+variables passed into the <code>putenv()</code> function.</p>
+
+<p>We rolled out this class into QA, which works on various platforms (AIX,
+HP-UX, Solaris, Linux and Windows). Everything seemed to be okay, unit tests
+passed and the production code didn&rsquo;t crash. Alas, QA machines controlled by
+Hudson/Jenkins are usually overloaded, and quite often it causes very
+unexpected issues. After a week we discovered that sometimes the code crashed
+on AIX when calling <code>std::system()</code>. Even more, it crashed inside this
+function, that was for sure. In most cases any &ldquo;strange&rdquo; or &ldquo;magical&rdquo; behaviour
+is related to memory problems. <a href="http://pic.dhe.ibm.com/infocenter/aix/v6r1/index.jsp?topic=%2Fcom.ibm.aix.cmds%2Fdoc%2Faixcmds5%2Ftruss.htm">truss</a>, injected into command lines passed
+to <code>system()</code>, showed that some environment variables in the child process
+had corrupted values.</p>
+
+<p>We began investigating the new class, <code>EnvironmentVariablesManager</code>. Below
+is its simplified version but still containing a tricky bug. You may try
+finding the issue by yourself first, and then read further down.</p>
+
+<p>The simple <code>main()</code> function below easily reproduces the issue.</p>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;vector&gt;</span>
+<span class="hl ppc">#include &lt;map&gt;</span>
+<span class="hl ppc">#include &lt;string&gt;</span>
+
+<span class="hl ppc">#include &lt;unistd.h&gt;</span>
+
+<span class="hl kwc">class</span> EnvironmentVariablesManager <span class="hl opt">{</span>
+ <span class="hl kwc">public</span><span class="hl opt">:</span>
+  <span class="hl kwc">typedef</span> std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;</span> VariableContainer<span class="hl opt">;</span>
+  <span class="hl kwc">typedef</span> std<span class="hl opt">::</span>map<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>string<span class="hl opt">,</span> VariableContainer<span class="hl opt">&gt;</span> Variables<span class="hl opt">;</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span>
+    VariableContainer pair<span class="hl opt">;</span>
+    <span class="hl kwd">PairToContainer</span><span class="hl opt">(</span>name<span class="hl opt">,</span> value<span class="hl opt">, &amp;</span>pair<span class="hl opt">);</span>
+    <span class="hl kwb">const</span> std<span class="hl opt">::</span>pair<span class="hl opt">&lt;</span>Variables<span class="hl opt">::</span>iterator<span class="hl opt">,</span> <span class="hl kwb">bool</span><span class="hl opt">&gt;</span> inserted <span class="hl opt">=</span>
+      vars_<span class="hl opt">.</span><span class="hl kwd">insert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">make_pair</span><span class="hl opt">(</span>name<span class="hl opt">,</span> pair<span class="hl opt">));</span>
+    <span class="hl kwa">if</span> <span class="hl opt">(!</span>inserted<span class="hl opt">.</span>second<span class="hl opt">)</span>
+      inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second <span class="hl opt">=</span> pair<span class="hl opt">;</span>
+    <span class="hl kwd">putenv</span><span class="hl opt">(&amp;</span>inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]);</span>
+  <span class="hl opt">}</span>
+
+ <span class="hl kwc">private</span><span class="hl opt">:</span>
+  <span class="hl kwb">void</span> <span class="hl kwd">PairToContainer</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">,</span>
+                       VariableContainer<span class="hl opt">*</span> pair<span class="hl opt">)</span> <span class="hl kwb">const</span> <span class="hl opt">{</span>
+    pair<span class="hl opt">-&gt;</span><span class="hl kwd">clear</span><span class="hl opt">();</span>
+    std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>name<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> name<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> std<span class="hl opt">::</span><span class="hl kwd">back_inserter</span><span class="hl opt">(*</span>pair<span class="hl opt">));</span>
+    pair<span class="hl opt">-&gt;</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl str">'='</span><span class="hl opt">);</span>
+    std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>value<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> value<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> std<span class="hl opt">::</span><span class="hl kwd">back_inserter</span><span class="hl opt">(*</span>pair<span class="hl opt">));</span>
+    pair<span class="hl opt">-&gt;</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl str">'\0'</span><span class="hl opt">);</span>
+  <span class="hl opt">}</span>
+  Variables vars_<span class="hl opt">;</span>
+<span class="hl opt">};</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  EnvironmentVariablesManager env<span class="hl opt">;</span>
+  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;DB2_HOME&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;a&quot;</span><span class="hl opt">);</span>
+  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;DB2_HOME&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;12345678&quot;</span><span class="hl opt">);</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>Valgrind complains on this code saying that <code>putenv</code> tries reading some memory
+after freeing (this trace is from OSX).</p>
+
+<pre><code>clang++ -o putenv_check putenv_test.cpp &amp;&amp; valgrind ./putenv_check
+==1046== Memcheck, a memory error detector
+==1046== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==1046== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==1046== Command: ./putenv_check
+==1046==
+--1046-- ./putenv_check:
+--1046-- dSYM directory is missing; consider using --dsymutil=yes
+==1046== Invalid read of size 1
+==1046==    at 0x2A8A3B: __findenv (in /usr/lib/system/libsystem_c.dylib)
+==1046==    by 0x232C62: __setenv (in /usr/lib/system/libsystem_c.dylib)
+==1046==    by 0x216A7E: putenv (in /usr/lib/system/libsystem_c.dylib)
+==1046==    by 0x100001999: EnvironmentVariablesManager::put(std::string const&amp;, std::string const&amp;) (in ./putenv_check)
+==1046==    by 0x1000015DE: main (in ./putenv_check)
+==1046==  Address 0x100012560 is 0 bytes inside a block of size 11 free'd
+==1046==    at 0x563A: free (in /usr/local/Cellar/valgrind/3.8.1/lib/valgrind/vgpreload_memcheck-amd64-darwin.so)
+==1046==    by 0x10000208C: __gnu_cxx::new_allocator&lt;char&gt;::deallocate(char*, unsigned long) (in ./putenv_check)
+==1046==    by 0x10000201D: std::_Vector_base&lt;char, std::allocator&lt;char&gt; &gt;::_M_deallocate(char*, unsigned long) (in ./putenv_check)
+==1046==    by 0x100002483: std::vector&lt;char, std::allocator&lt;char&gt; &gt;::operator=(std::vector&lt;char, std::allocator&lt;char&gt; &gt; const&amp;) (in ./putenv_check)
+==1046==    by 0x1000018A8: EnvironmentVariablesManager::put(std::string const&amp;, std::string const&amp;) (in ./putenv_check)
+==1046==    by 0x1000015DE: main (in ./putenv_check)
+==1046==
+==1046==
+==1046== HEAP SUMMARY:
+==1046==     in use at exit: 2,425 bytes in 34 blocks
+==1046==   total heap usage: 58 allocs, 24 frees, 2,824 bytes allocated
+==1046==
+==1046== LEAK SUMMARY:
+==1046==    definitely lost: 18 bytes in 1 blocks
+==1046==    indirectly lost: 0 bytes in 0 blocks
+==1046==      possibly lost: 0 bytes in 0 blocks
+==1046==    still reachable: 2,407 bytes in 33 blocks
+==1046==         suppressed: 0 bytes in 0 blocks
+==1046== Rerun with --leak-check=full to see details of leaked memory
+==1046==
+==1046== For counts of detected and suppressed errors, rerun with: -v
+==1046== ERROR SUMMARY: 9 errors from 1 contexts (suppressed: 1 from 1)
+</code></pre>
+
+<p>To me it was not that obvious what was wrong. For example, if to remove the
+second call <code>env.put(&quot;DB2_HOME&quot;, &quot;12345678&quot;)</code>, the issue disappeared
+(valgrind didn&rsquo;t complain any more). So, we started to suspect the following
+lines of code:</p>
+
+<pre class="hl">
+    <span class="hl kwa">if</span> <span class="hl opt">(!</span>inserted<span class="hl opt">.</span>second<span class="hl opt">)</span>
+      inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second <span class="hl opt">=</span> pair<span class="hl opt">;</span>
+    <span class="hl kwd">putenv</span><span class="hl opt">(&amp;</span>inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]);</span>
+</pre>
+
+<p>If to change the code little bit (if fact, doing exactly the same operation
+but in a slightly different way):</p>
+
+<pre class="hl">
+    <span class="hl kwa">if</span> <span class="hl opt">(!</span>inserted<span class="hl opt">.</span>second<span class="hl opt">)</span>
+      inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second<span class="hl opt">.</span><span class="hl kwd">assign</span><span class="hl opt">(</span>pair<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> pair<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">());</span>
+</pre>
+
+<p>the error report changes:</p>
+
+<pre><code>--1087-- ./putenv_check:
+--1087-- dSYM directory is missing; consider using --dsymutil=yes
+==1087== Invalid read of size 1
+==1087==    at 0x2A8A3B: __findenv (in /usr/lib/system/libsystem_c.dylib)
+==1087==    by 0x232C62: __setenv (in /usr/lib/system/libsystem_c.dylib)
+==1087==    by 0x216A7E: putenv (in /usr/lib/system/libsystem_c.dylib)
+==1087==    by 0x1000016A9: EnvironmentVariablesManager::put(std::string const&amp;, std::string const&amp;) (in ./putenv_check)
+==1087==    by 0x10000129E: main (in ./putenv_check)
+==1087==  Address 0x100013560 is 0 bytes inside a block of size 11 free'd
+==1087==    at 0x563A: free (in /usr/local/Cellar/valgrind/3.8.1/lib/valgrind/vgpreload_memcheck-amd64-darwin.so)
+==1087==    by 0x100001D9C: __gnu_cxx::new_allocator&lt;char&gt;::deallocate(char*, unsigned long) (in ./putenv_check)
+==1087==    by 0x100001D2D: std::_Vector_base&lt;char, std::allocator&lt;char&gt; &gt;::_M_deallocate(char*, unsigned long) (in ./putenv_check)
+==1087==    by 0x1000022E9: void std::vector&lt;char, std::allocator&lt;char&gt; &gt;::_M_assign_aux&lt;__gnu_cxx::__normal_iterator&lt;char*, std::vector&lt;char, std::allocator&lt;char&gt; &gt; &gt; &gt;(__gnu_cxx::__normal_iterator&lt;char*, std::vector&lt;char, std::allocator&lt;char&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;char*, std::vector&lt;char, std::allocator&lt;char&gt; &gt; &gt;, std::forward_iterator_tag) (in ./putenv_check)
+==1087==    by 0x1000021C4: void std::vector&lt;char, std::allocator&lt;char&gt; &gt;::_M_assign_dispatch&lt;__gnu_cxx::__normal_iterator&lt;char*, std::vector&lt;char, std::allocator&lt;char&gt; &gt; &gt; &gt;(__gnu_cxx::__normal_iterator&lt;char*, std::vector&lt;char, std::allocator&lt;char&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;char*, std::vector&lt;char, std::allocator&lt;char&gt; &gt; &gt;, std::__false_type) (in ./putenv_check)
+==1087==    by 0x1000020A4: void std::vector&lt;char, std::allocator&lt;char&gt; &gt;::assign&lt;__gnu_cxx::__normal_iterator&lt;char*, std::vector&lt;char, std::allocator&lt;char&gt; &gt; &gt; &gt;(__gnu_cxx::__normal_iterator&lt;char*, std::vector&lt;char, std::allocator&lt;char&gt; &gt; &gt;, __gnu_cxx::__normal_iterator&lt;char*, std::vector&lt;char, std::allocator&lt;char&gt; &gt; &gt;) (in ./putenv_check)
+==1087==    by 0x1000015BF: EnvironmentVariablesManager::put(std::string const&amp;, std::string const&amp;) (in ./putenv_check)
+==1087==    by 0x10000129E: main (in ./putenv_check)
+</code></pre>
+
+<p>Now it is more or less clear what is going on. But let&rsquo;s consider a much more
+simple example first, purely in C:</p>
+
+<pre class="hl">
+<span class="hl ppc">#include &lt;unistd.h&gt;</span>
+<span class="hl ppc">#include &lt;stdlib.h&gt;</span>
+
+<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
+  <span class="hl kwb">char</span> <span class="hl opt">*</span>v1<span class="hl opt">, *</span>v2<span class="hl opt">;</span>
+  v1 <span class="hl opt">=</span> <span class="hl kwd">malloc</span><span class="hl opt">(</span><span class="hl num">10</span><span class="hl opt">);</span>
+  <span class="hl kwd">strcpy</span><span class="hl opt">(</span>v1<span class="hl opt">,</span> <span class="hl str">&quot;x=123&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwd">putenv</span><span class="hl opt">(</span>v1<span class="hl opt">);</span>
+  <span class="hl kwd">free</span><span class="hl opt">(</span>v1<span class="hl opt">);</span>
+
+  v2 <span class="hl opt">=</span> <span class="hl kwd">malloc</span><span class="hl opt">(</span><span class="hl num">10</span><span class="hl opt">);</span>
+  <span class="hl kwd">strcpy</span><span class="hl opt">(</span>v2<span class="hl opt">,</span> <span class="hl str">&quot;x=123&quot;</span><span class="hl opt">);</span>
+  <span class="hl kwd">putenv</span><span class="hl opt">(</span>v2<span class="hl opt">);</span>
+  <span class="hl kwd">free</span><span class="hl opt">(</span>v2<span class="hl opt">);</span>
+  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<span class="hl opt">}</span>
+</pre>
+
+<p>valgrind also reports about this code (this trace is from Linux):</p>
+
+<pre><code>==523== Memcheck, a memory error detector
+==523== Copyright (C) 2002-2010, and GNU GPL'd, by Julian Seward et al.
+==523== Using Valgrind-3.6.0 and LibVEX; rerun with -h for copyright info
+==523== Command: ./putenv_test
+==523==
+==523== Invalid read of size 1
+==523==    at 0x4A07CF9: __GI_strncmp (mc_replace_strmem.c:400)
+==523==    by 0x3E1C235649: __add_to_environ (in /lib64/libc-2.12.so)
+==523==    by 0x3E1C2353CD: putenv (in /lib64/libc-2.12.so)
+==523==    by 0x4A0952D: putenv (mc_replace_strmem.c:1165)
+==523==    by 0x400607: main (in /storage2/home3/ademin/test/env/t)
+==523==  Address 0x4c28040 is 0 bytes inside a block of size 10 free'd
+==523==    at 0x4A0595D: free (vg_replace_malloc.c:366)
+==523==    by 0x4005D7: main (in /storage2/home3/ademin/test/env/t)
+==523==
+==523== Invalid read of size 1
+==523==    at 0x4A07D14: __GI_strncmp (mc_replace_strmem.c:400)
+==523==    by 0x3E1C235649: __add_to_environ (in /lib64/libc-2.12.so)
+==523==    by 0x3E1C2353CD: putenv (in /lib64/libc-2.12.so)
+==523==    by 0x4A0952D: putenv (mc_replace_strmem.c:1165)
+==523==    by 0x400607: main (in /storage2/home3/ademin/test/env/t)
+==523==  Address 0x4c28040 is 0 bytes inside a block of size 10 free'd
+==523==    at 0x4A0595D: free (vg_replace_malloc.c:366)
+==523==    by 0x4005D7: main (in /storage2/home3/ademin/test/env/t)
+==523==
+==523== Invalid read of size 1
+==523==    at 0x3E1C235652: __add_to_environ (in /lib64/libc-2.12.so)
+==523==    by 0x3E1C2353CD: putenv (in /lib64/libc-2.12.so)
+==523==    by 0x4A0952D: putenv (mc_replace_strmem.c:1165)
+==523==    by 0x400607: main (in /storage2/home3/ademin/test/env/t)
+==523==  Address 0x4c28041 is 1 bytes inside a block of size 10 free'd
+==523==    at 0x4A0595D: free (vg_replace_malloc.c:366)
+==523==    by 0x4005D7: main (in /storage2/home3/ademin/test/env/t)
+==523==
+==523==
+==523== HEAP SUMMARY:
+==523==     in use at exit: 0 bytes in 0 blocks
+==523==   total heap usage: 3 allocs, 3 frees, 492 bytes allocated
+==523==
+==523== All heap blocks were freed -- no leaks are possible
+==523==
+==523== For counts of detected and suppressed errors, rerun with: -v
+==523== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 6 from 6)
+</code></pre>
+
+<p>But if to remove the first <code>free(v1);</code> or move it further down <strong>after</strong> the
+second <code>putenv</code>, the valgrind report becomes clean, nothing bad happens.</p>
+
+<h2>The conclusion</h2>
+
+<p>The <code>putenv</code> function requires that at the moment of setting the new value of
+a variable the previous value must still exist and be in valid memory
+(literally it cannot be freed or moved to another location).</p>
+
+<p>For some reason <code>putenv</code> tries reading the previous value when setting the new
+one.</p>
+
+<p>Now go back to C++. If the original code:</p>
+
+<pre class="hl">
+    <span class="hl kwa">if</span> <span class="hl opt">(!</span>inserted<span class="hl opt">.</span>second<span class="hl opt">)</span>
+      inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second <span class="hl opt">=</span> pair<span class="hl opt">;</span>
+</pre>
+
+<p>is replaced to:</p>
+
+<pre class="hl">
+    <span class="hl kwa">if</span> <span class="hl opt">(!</span>inserted<span class="hl opt">.</span>second<span class="hl opt">)</span>
+      inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second<span class="hl opt">.</span><span class="hl kwd">swap</span><span class="hl opt">(</span>pair<span class="hl opt">);</span>
+</pre>
+
+<p>the issue disappears (valgrind doesn&rsquo;t find anything suspecious anymore).</p>
+
+<p>Why? The first code destroys (frees, reallocates) the existing value when
+copying the value of <code>pair</code> into the map. That is why the subsequent call to
+<code>putenv</code> tries reading a freed memory location.</p>
+
+<p>The second code doing <code>swap</code> only moves the ownership of the data controlled
+by <code>pair</code> to the element of the map, and in turn the data owned by the
+element of the map (the existing value) is moved into the <code>pair</code> variable.
+The <code>pair</code> variable goes out of scope and frees its data only at the end
+of the function, clearly after calling <code>putenv</code>, so by postponing freeing
+memory of existing value we allow <code>putenv</code> to read it without any problems.</p>
+
+<p>This is it! End of story.</p>
+
+<p>Frankly, this is the most complicated bug in C++ memory management I came
+across recently.</p>
+
+<p>Be aware.</p>
+
+</div>
+
+<hr />
+
+
+
+<a href="/english/about/"><small>Disclaimer</small></a>
+
+<h1>Comments</h1>
+
+<div id="disqus_thread"></div>
+
+<script type="text/javascript">
+  var disqus_shortname = 'demin-ws';
+  var disqus_developer = 0;
+  var disqus_identifier = '/blog/english/2013/01/29/tricky-details-about-putenv/';
+  var disqus_url = 'http://demin.ws/blog/english/2013/01/29/tricky-details-about-putenv/';
+  var disqus_script = 'embed.js';
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+  </div>
+
+  <div class="footer">
+    <div class="contact">
+      &copy; 2009-2013
+      <a href="mailto:alexander@demin.ws">Alexander Demin</a> |
+      <a href="/english/atom.xml" rel="subscribe-rss" title="Subscribe via RSS">RSS</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
