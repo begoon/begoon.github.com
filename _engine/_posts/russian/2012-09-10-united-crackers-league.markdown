@@ -26,7 +26,7 @@ categories:
 Вот видео одной, на мой взгляд самой красивой. Произведения человека под
 псевдонимом SkullC0Der.
 
-<iframe width="480" height="360" src="http://www.youtube.com/embed/n-egdB0lR-A" frameborder="0" allowfullscreen></iframe>
+<iframe width="480" height="360" src="https://www.youtube.com/embed/n-egdB0lR-A" frameborder="0" allowfullscreen></iframe>
 
 Есть вопрос к спецам в компьютерной графике -- объясните, пожалуйста, математическую модель преобразований для развивающихся флагом трех букв "UCL"?
 

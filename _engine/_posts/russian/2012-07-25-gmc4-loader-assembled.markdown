@@ -27,7 +27,7 @@ categories:
 
 Сначала макет.
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/eg6OZMAI5mg" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/eg6OZMAI5mg" frameborder="0" allowfullscreen></iframe>
 
 Травить плату было лень, поэтому слепил на макетной. Выглядит неказисто, но работает.
 
@@ -43,7 +43,7 @@ categories:
 
 В работе.
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/F2tciUH0NFg" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/F2tciUH0NFg" frameborder="0" allowfullscreen></iframe>
 
 Все таки GMC-4 -- вещь!
 

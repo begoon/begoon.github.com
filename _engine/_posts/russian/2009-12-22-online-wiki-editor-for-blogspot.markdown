@@ -92,7 +92,7 @@ categories:
 
 **Видео**
 
-    [http://www.youtube.com/watch?v=FrufJFBSoQY]
+    [https://www.youtube.com/watch?v=FrufJFBSoQY]
 
 Посты по теме:
 

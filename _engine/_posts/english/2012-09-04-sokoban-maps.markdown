@@ -25,7 +25,7 @@ That was the first, simplest level, but how about this one?
 
 Lazy people can checkout a quick video instead:
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/3zi-ZuL6GKI" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/3zi-ZuL6GKI" frameborder="0" allowfullscreen></iframe>
 
 I was curious how 60 maps fitted into such a tiny executable. After a bit 
 of fiddling with IDA I wrote a simple program to extract the maps from the

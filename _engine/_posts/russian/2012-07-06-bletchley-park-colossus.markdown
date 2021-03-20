@@ -76,7 +76,7 @@ categories:
 
 Ее фрагмент в действии.
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/yzxyn5G6cno" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/yzxyn5G6cno" frameborder="0" allowfullscreen></iframe>
 
 В радиорубке.
 

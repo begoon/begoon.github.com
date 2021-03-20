@@ -123,7 +123,7 @@ categories:
 
 И теперь уже на настоящем РК (почти настоящем):
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/kVNvI8KrrnM" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/kVNvI8KrrnM" frameborder="0" allowfullscreen></iframe>
 
 Мораль
 ------

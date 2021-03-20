@@ -18,7 +18,7 @@ technical part.
 I wanted a simple and quick app helping me to remember a list of drink in
 the round. Plus, I wanted to write something for iOS in general. Eventually, I ended up with this:
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/0ba2Oacm8Dg" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/0ba2Oacm8Dg" frameborder="0" allowfullscreen></iframe>
 
 Quick and dirty, but it solves the problem in 100%. I personally use this
 app all the time. Unfortunately, AppStore has rejected it as the app having

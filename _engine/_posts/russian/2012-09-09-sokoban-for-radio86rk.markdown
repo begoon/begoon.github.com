@@ -64,7 +64,7 @@ print_dec_loop:
 [Исходник][sokoban.asm] лежит в составе проекта 
 "[Эмулятор Радио-86РК на Maximite][]". На нем же я записал небольшой видос.
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/VmIIt0_A6Vo" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/VmIIt0_A6Vo" frameborder="0" allowfullscreen></iframe>
 
 [sokoban.asm]: https://github.com/begoon/rk86-maximite/blob/master/programs/sokoban/sokoban.asm
 

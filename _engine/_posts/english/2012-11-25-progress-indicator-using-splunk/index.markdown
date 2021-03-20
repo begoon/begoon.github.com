@@ -124,7 +124,7 @@ Now let's click on "On" and kick off the script!
 
 A little video how it works:
 
-<iframe width="480" height="360" src="http://www.youtube.com/embed/wPh7dm5brWg" frameborder="0" allowfullscreen></iframe>
+<iframe width="480" height="360" src="https://www.youtube.com/embed/wPh7dm5brWg" frameborder="0" allowfullscreen></iframe>
 
 That's it.
 

@@ -43,7 +43,7 @@ Years ago I created a [patch][] to know what happens at the end:
 
 With this patch you can play like this:
 
-<iframe width="480" height="360" src="http://www.youtube.com/embed/pcqygeYP4qs" frameborder="0" allowfullscreen></iframe>
+<iframe width="480" height="360" src="https://www.youtube.com/embed/pcqygeYP4qs" frameborder="0" allowfullscreen></iframe>
 
 [patch]: /images/blog/bolo/BOLO.XCK
 

@@ -54,7 +54,7 @@ categories:
 
 Записал небольшой видос:
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/IP6sA-dAnmU" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/IP6sA-dAnmU" frameborder="0" allowfullscreen></iframe>
 
 Так как сейчас нет никакой возможности ничего залить на этот РК, обдумываю
 способы коммуникации. Например, можно сделать эмулятор магнитной ленты, чтобы

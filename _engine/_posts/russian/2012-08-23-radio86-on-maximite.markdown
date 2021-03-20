@@ -20,9 +20,9 @@ categories:
 
 Но мы возвращаемся к истокам, к железу. Итак, четвертая реинкарнация Радио-86РК в новом, на этот раз железом теле. Увы, для "пощупать" надо иметь это железо, поэтому для демонстрации ничего не оставалось, как только записать видео.
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/dIwQQYhqNQg" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/dIwQQYhqNQg" frameborder="0" allowfullscreen></iframe>
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/KSUZ2yjPuU0" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/KSUZ2yjPuU0" frameborder="0" allowfullscreen></iframe>
 
 К слову сказать, ядро эмуляции I8080 (КР580), которое было у меня аж в самом первом ДОСовском эмуляторе, используется на Maximite почти без изменений.
 

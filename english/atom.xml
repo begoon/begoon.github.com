@@ -1409,7 +1409,7 @@ recording an asciicast, so you can evaluate gameplay - <a href="http://ascii.io/
 homebrew microcomputers. Having assembled its previous,
 <a href="http://demin.ws/blog/english/2012/01/19/maximite-kit/">black-and-white version</a>,
 I run <a href="http://demin.ws/blog/english/2012/05/11/retrobsd-on-maximite/">RetroBSD</a> on it, and even ported my emulator of the classic
-8-bit microcomputer from the eightieth called <a href="http://www.youtube.com/watch?v=JGuYyuCkJR8">Radio-86RK</a>. To me, the
+8-bit microcomputer from the eightieth called <a href="https://www.youtube.com/watch?v=JGuYyuCkJR8">Radio-86RK</a>. To me, the
 main advantage of Maximite is its completeness as a project. In fact,
 design of Maximite is quite simple because PIC32, the heart of this
 microcomputer, does almost everything. But the Maximite project is not
@@ -1650,7 +1650,7 @@ hours.</p>
 
 <p>A little video how it works:</p>
 
-<iframe width="480" height="360" src="http://www.youtube.com/embed/wPh7dm5brWg" frameborder="0" allowfullscreen></iframe>
+<iframe width="480" height="360" src="https://www.youtube.com/embed/wPh7dm5brWg" frameborder="0" allowfullscreen></iframe>
 
 <p>That&rsquo;s it.</p>
 
@@ -1802,7 +1802,7 @@ extension board requires assembly (soldering).</p>
 
 <p>A small demo of graphics capabilities.</p>
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/capsFv1njUE" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/capsFv1njUE" frameborder="0" allowfullscreen></iframe>
 
 <h2>Overall impression</h2>
 
@@ -2609,7 +2609,7 @@ technical part.</p>
 <p>I wanted a simple and quick app helping me to remember a list of drink in
 the round. Plus, I wanted to write something for iOS in general. Eventually, I ended up with this:</p>
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/0ba2Oacm8Dg" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/0ba2Oacm8Dg" frameborder="0" allowfullscreen></iframe>
 
 <p>Quick and dirty, but it solves the problem in 100%. I personally use this
 app all the time. Unfortunately, AppStore has rejected it as the app having
@@ -2703,7 +2703,7 @@ KARATEKA.EXE
 
 <p>For example:</p>
 
-<iframe width="480" height="360" src="http://www.youtube.com/embed/HjeuB6pxMzI" frameborder="0" allowfullscreen></iframe>
+<iframe width="480" height="360" src="https://www.youtube.com/embed/HjeuB6pxMzI" frameborder="0" allowfullscreen></iframe>
 
 <p>Don&rsquo;t miss at the end when the princess hopelessly kicks you when you
 approach in the stance.</p>
@@ -2755,7 +2755,7 @@ BOLO.COM
 
 <p>With this patch you can play like this:</p>
 
-<iframe width="480" height="360" src="http://www.youtube.com/embed/pcqygeYP4qs" frameborder="0" allowfullscreen></iframe>
+<iframe width="480" height="360" src="https://www.youtube.com/embed/pcqygeYP4qs" frameborder="0" allowfullscreen></iframe>
 
 <p>Unfortunately, there are no sources of the original BOLO available, so
 porting to SDL, for instance, is fully about reverse engineering of the
@@ -2920,7 +2920,7 @@ depending on that extra bit in the &ldquo;From:&rdquo; address between <code>+</
 &ldquo;<a href="http://pragprog.com/magazines/2012-09/us-visa-my-first-iphone-app/">US Visa: My First iPhone App</a>&rdquo;. I don&rsquo;t want to duplicate it here, but
 I&rsquo;ve recorded an additional video for your convenience:</p>
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/m6pfXBHTyY4" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/m6pfXBHTyY4" frameborder="0" allowfullscreen></iframe>
 <hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
@@ -2960,7 +2960,7 @@ tiny executable (less than 10Kb) for DOS called <a href="http://demin.ws/files/p
 
 <p>Lazy people can checkout a quick video instead:</p>
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/3zi-ZuL6GKI" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/3zi-ZuL6GKI" frameborder="0" allowfullscreen></iframe>
 
 <p>I was curious how 60 maps fitted into such a tiny executable. After a bit
 of fiddling with IDA I wrote a simple program to extract the maps from the
@@ -3115,7 +3115,7 @@ interesting.</p>
 <p><img src="http://demin.ws/images/blog/sinclair-zx-spectrum/IMG_0808.JPG" alt="" />
 </p>
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/ODSrvOOc_xg" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/ODSrvOOc_xg" frameborder="0" allowfullscreen></iframe>
 <hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
@@ -4801,7 +4801,7 @@ architecture and instruction set (english)</li>
 
 <p>A prototype.</p>
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/eg6OZMAI5mg" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/eg6OZMAI5mg" frameborder="0" allowfullscreen></iframe>
 
 <p>I was lazy to etch the board, so soldered manually. Looks unsightly but works.</p>
 
@@ -4822,7 +4822,7 @@ architecture and instruction set (english)</li>
 
 <p>In action.</p>
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/F2tciUH0NFg" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/F2tciUH0NFg" frameborder="0" allowfullscreen></iframe>
 
 <p>After all, GMC-4 is THE thing!</p>
 
@@ -5397,7 +5397,7 @@ raspberrypi login:
 
 <p>In action.</p>
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/yzxyn5G6cno" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/yzxyn5G6cno" frameborder="0" allowfullscreen></iframe>
 
 <p>In a radio cabin.</p>
 
@@ -5545,7 +5545,7 @@ raspberrypi login:
 
 <p>To run: <code>RESET 1 RUN</code></p>
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/t-S86rICAPk" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/t-S86rICAPk" frameborder="0" allowfullscreen></iframe>
 
 <p>Interestingly, this device allows <strong>step-by-step trace</strong>. If to run the program via <code>RESET 6 RUN</code>, it will be stopping after each instruction and displaying the current address on the top LEDs in binary code. To continue, we need to press <code>INCR</code> and so on. By pressing <code>RESET</code> we can interrupt the program and check out the registers (they are regular cells in memory). This is simple but convenient debugging.</p>
 
@@ -5567,7 +5567,7 @@ raspberrypi login:
 
 <p>Code: <code>8 0 1 3 E 1 8 4 E C E 2 3 9 1 C 7 F 0 2 F 0 0</code></p>
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/bdEUUtv93r0" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/bdEUUtv93r0" frameborder="0" allowfullscreen></iframe>
 
 <h2>Development tools</h2>
 
@@ -5580,7 +5580,7 @@ raspberrypi login:
 
 <h3>The loader</h3>
 
-<iframe width="420" height="315" src="http://www.youtube.com/embed/lagnC5CpsUE" frameborder="0" allowfullscreen></iframe>
+<iframe width="420" height="315" src="https://www.youtube.com/embed/lagnC5CpsUE" frameborder="0" allowfullscreen></iframe>
 
 <h3>Programming languages</h3>
 
@@ -6082,15 +6082,15 @@ class std::deque&lt;int,class std::allocator&lt;int&gt; &gt;
 
 <p>#1</p>
 
-<iframe width="560" height="420" src="http://www.youtube.com/embed/1qCIff0N3Yw?color=white&theme=light"></iframe>
+<iframe width="560" height="420" src="https://www.youtube.com/embed/1qCIff0N3Yw?color=white&theme=light"></iframe>
 
 <p>#2</p>
 
-<iframe width="560" height="420" src="http://www.youtube.com/embed/iqDu7s7hSsg?color=white&theme=light"></iframe>
+<iframe width="560" height="420" src="https://www.youtube.com/embed/iqDu7s7hSsg?color=white&theme=light"></iframe>
 
 <p>#3</p>
 
-<iframe width="560" height="420" src="http://www.youtube.com/embed/HH8nFadt9SA?color=white&theme=light"></iframe>
+<iframe width="560" height="420" src="https://www.youtube.com/embed/HH8nFadt9SA?color=white&theme=light"></iframe>
 
 <p>Here is my subjective fifty cents:</p>
 
@@ -11010,7 +11010,7 @@ field_instance <span class="hl opt">=</span> foo<span class="hl opt">.</span><sp
     <id>http://demin.ws/blog/english/2010/10/20/chinese-method-of-multiplication-on-paper/</id>
     <content type="html"><![CDATA[<p>I don&rsquo;t claim that is more efficient rather the traditional method but looks very cool.</p>
 
-<iframe width="425" height="344" src="http://www.youtube.com/embed/EsgMzkUivKo?color=white&theme=light"></iframe>
+<iframe width="425" height="344" src="https://www.youtube.com/embed/EsgMzkUivKo?color=white&theme=light"></iframe>
 <hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
@@ -11728,7 +11728,7 @@ parse-log<span class="hl opt">:</span>
 
 <p>This is the very good introduction into Git from the community of Linux kernel developers and from Linux Torvalds in particular.</p>
 
-<iframe width="425" height="344" src="http://www.youtube.com/embed/4XpnKHJAok8?color=white&theme=light"></iframe>
+<iframe width="425" height="344" src="https://www.youtube.com/embed/4XpnKHJAok8?color=white&theme=light"></iframe>
 
 <p>I appreciate these books for primary involvement in the subject.</p>
 
@@ -11944,7 +11944,7 @@ Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl k
     <id>http://demin.ws/blog/english/2009/10/16/introduction-to-google-mock-video/</id>
     <content type="html"><![CDATA[<p>This is a great video about Google Mock from the authors.</p>
 
-<iframe width="425" height="344" src="http://www.youtube.com/embed/sYpCyLI47rM?color=white&theme=light"></iframe>
+<iframe width="425" height="344" src="https://www.youtube.com/embed/sYpCyLI47rM?color=white&theme=light"></iframe>
 <hr/><a href="http://demin.ws/english/about/">Disclaimer</a>]]></content>
   </entry>
   
@@ -11999,7 +11999,7 @@ Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl k
 
 <p>Here is the small video demonstrating its work:</p>
 
-<iframe width="425" height="344" src="http://www.youtube.com/embed/F0HW3Mth0Pw?color=white&theme=light"></iframe>
+<iframe width="425" height="344" src="https://www.youtube.com/embed/F0HW3Mth0Pw?color=white&theme=light"></iframe>
 
 <p>I have even bought the book for this case. By the way the book is quite nice. It tells about Bluetooth from the programmer&rsquo;s point of view in a simple and clean manner. A few stacks of different vendors are covered, their comparison is given and accompanied with examples on different languages and platforms.</p>
 

@@ -25,7 +25,7 @@ categories:
 
 Кому лень запускать можно посмотреть демку:
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/3zi-ZuL6GKI" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/3zi-ZuL6GKI" frameborder="0" allowfullscreen></iframe>
 
 И стало мне интересно, как шестьдесят уровней помещаются в столь небольшой
 бинарь. Поковырявшись немного IDA'ой, я написал программку, которая выдирает

@@ -32,7 +32,7 @@ Most of my projects are available at [GitHub][]. The projects listed below are h
 [My collection of Intel 8080 microprocessors]:
 /blog/english/2012/12/24/my-i8080-collection/
 [Radio-86RK classic 8-bit microcomputer emulator in JavaScript]: http://github.com/begoon/rk86-js/
-[Radio-86RK on Maximite video]: http://www.youtube.com/watch?v=JGuYyuCkJR8
+[Radio-86RK on Maximite video]: https://www.youtube.com/watch?v=JGuYyuCkJR8
 [i8080-js]: http://github.com/begoon/i8080-js/
 [i8080-core]: https://github.com/begoon/i8080-core/
 [gmc4-loader]: https://github.com/begoon/gmc4-loader/

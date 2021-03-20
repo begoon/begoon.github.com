@@ -26,8 +26,8 @@ categories:
 
 [исходники]: https://github.com/begoon/institute/
 
-<iframe width="480" height="360" src="http://www.youtube.com/embed/J4Sr_dTQmYo" frameborder="0" allowfullscreen></iframe>
+<iframe width="480" height="360" src="https://www.youtube.com/embed/J4Sr_dTQmYo" frameborder="0" allowfullscreen></iframe>
 
 И текстовая версия:
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/mG4gIixIm90" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/mG4gIixIm90" frameborder="0" allowfullscreen></iframe>

@@ -143,7 +143,7 @@ QuickStart", поэтому спаять надо только плату рас
 
 Вот небольшая демка, чтобы оценить графические возможности.
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/capsFv1njUE" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/capsFv1njUE" frameborder="0" allowfullscreen></iframe>
 
 Общие впечатления
 -----------------

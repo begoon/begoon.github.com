@@ -85,7 +85,7 @@ To enter the code: `RESET 0 INCR F INCR 0 INCR 0 INCR 1 INCR F INCR 0 INCR 0 INC
 
 To run: `RESET 1 RUN`
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/t-S86rICAPk" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/t-S86rICAPk" frameborder="0" allowfullscreen></iframe>
 
 Interestingly, this device allows **step-by-step trace**. If to run the program via `RESET 6 RUN`, it will be stopping after each instruction and displaying the current address on the top LEDs in binary code. To continue, we need to press `INCR` and so on. By pressing `RESET` we can interrupt the program and check out the registers (they are regular cells in memory). This is simple but convenient debugging.
 
@@ -106,7 +106,7 @@ Now slightly more complex example: a running light over the top LEDs displaying 
 
 Code: `8 0 1 3 E 1 8 4 E C E 2 3 9 1 C 7 F 0 2 F 0 0`
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/bdEUUtv93r0" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/bdEUUtv93r0" frameborder="0" allowfullscreen></iframe>
 
 ## Development tools
 
@@ -120,7 +120,7 @@ Everything is in Japanese, but Google Translate does an amazing job.
 
 ### The loader
 
-<iframe width="420" height="315" src="http://www.youtube.com/embed/lagnC5CpsUE" frameborder="0" allowfullscreen></iframe>
+<iframe width="420" height="315" src="https://www.youtube.com/embed/lagnC5CpsUE" frameborder="0" allowfullscreen></iframe>
 
 ### Programming languages
 

@@ -923,9 +923,9 @@ NSString *pathInDocumentDirectory(NSString *fileName) {
 
 Можно заценить видео:
 
-http://www.youtube.com/watch?v=fxKlXDsDANU
+https://www.youtube.com/watch?v=fxKlXDsDANU
 
-<iframe width="560" height="315" src="http://www.youtube.com/embed/fxKlXDsDANU" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/fxKlXDsDANU" frameborder="0" allowfullscreen></iframe>
 
 И еще!
 ------

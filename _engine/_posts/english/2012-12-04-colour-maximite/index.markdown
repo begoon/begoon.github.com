@@ -44,7 +44,7 @@ possible implementing the PIC32 timer interrupt routines directly in BASIC.
 [Maximite]: http://geoffg.net/maximite.html
 [Maximite - 8-bit nostalgia with a soldering iron]: /blog/english/2012/01/19/maximite-kit/
 [RetroBSD]: /blog/english/2012/05/11/retrobsd-on-maximite/
-[Radio-86RK]: http://www.youtube.com/watch?v=JGuYyuCkJR8
+[Radio-86RK]: https://www.youtube.com/watch?v=JGuYyuCkJR8
 [An interview with Geoff Graham]: /blog/english/2012/08/07/interview-with-geoff-graham/
 
 As previously I have ordered the new Maximite Kit from 

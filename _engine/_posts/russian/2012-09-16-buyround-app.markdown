@@ -41,7 +41,7 @@ categories:
 
 У меня родилось вот такое:
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/a4FnVG1qUwc" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/a4FnVG1qUwc" frameborder="0" allowfullscreen></iframe>
 
 Просто и кондово, зато решает задачу на 100%. Лично сам регулярно пользуюсь.
 Увы, Apple Store "завернул" приложение как "не имеющее достаточно

@@ -61,4 +61,4 @@ Unfortunately, this machine didn't boot up. It beeped and printed rubbish on the
 
 ![](/images/blog/sinclair-zx-spectrum/IMG_0808.JPG)
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/ODSrvOOc_xg" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/ODSrvOOc_xg" frameborder="0" allowfullscreen></iframe>

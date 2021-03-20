@@ -137,7 +137,7 @@ The sandwich is ready.
 
 A small demo of graphics capabilities.
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/capsFv1njUE" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/capsFv1njUE" frameborder="0" allowfullscreen></iframe>
 
 Overall impression
 ------------------

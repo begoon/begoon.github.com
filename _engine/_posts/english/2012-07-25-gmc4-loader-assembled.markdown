@@ -27,7 +27,7 @@ Schematic.
 
 A prototype.
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/eg6OZMAI5mg" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/eg6OZMAI5mg" frameborder="0" allowfullscreen></iframe>
 
 I was lazy to etch the board, so soldered manually. Looks unsightly but works.
 
@@ -43,7 +43,7 @@ I was lazy to etch the board, so soldered manually. Looks unsightly but works.
 
 In action.
 
-<iframe width="640" height="360" src="http://www.youtube.com/embed/F2tciUH0NFg" frameborder="0" allowfullscreen></iframe>
+<iframe width="640" height="360" src="https://www.youtube.com/embed/F2tciUH0NFg" frameborder="0" allowfullscreen></iframe>
 
 After all, GMC-4 is THE thing!
 
