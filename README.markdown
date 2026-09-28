@@ -17,6 +17,7 @@ and regenerates the published pages and assets in the repository root. Go downlo
 the pinned Markdown dependency on the first build.
 
 Run the code-block regression tests with `go test ./_engine/main.go ./_engine/main_test.go`.
+Run the search regression tests with `bun test ./_engine/search.test.ts` (requires Bun).
 
 # Syntax highlighting
 

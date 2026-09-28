@@ -6524,12 +6524,10 @@ var nb_posts = 139
 function show_post(i, visible) {
     var o = document.getElementById("post_" + i)
     if (o != null) o.style.display = visible ? "block" : "none"
-    filtered = !visible
 }
 
 function filter(s) {
-    var filtered = false
-    var words = s.split(" ")
+    var words = s.split(/\s+/)
     var search_words = []
     for (var i = 0; i < words.length; ++i) {
         var word = words[i]
@@ -6546,36 +6544,23 @@ function filter(s) {
                 if (i == 0 || visible[refs[j]] == i)
                     visible[refs[j]] = i + 1
             }
-            filtered = true
         }
     }
     for (var i = 1; i <= nb_posts; ++i) {
-        show_post(i, filtered ? (visible[i] == search_words.length) : true)
+        show_post(i, search_words.length ? (visible[i] == search_words.length) : true)
     }
 }
 
-var search_first = false
-
 function init_search(caption) {
   var search_obj = search_object()
-  if (search_obj.value == "" || search_obj.value == caption) {
-    search_obj.value = caption
-    search_first = true
-    filter("")
-  } else {
-    filter(search_obj.value)
-  }
+  search_obj.placeholder = caption
+  filter(search_obj.value)
   search_obj.style.visibility = "visible"
 }
 
 function search_object() {
   return document.getElementById("search")
 }
-
-function remove_search_caption() {
-  if (search_first) search_object().value = ''
-}
-
 
 
 init_search("search")
