@@ -11,7 +11,6 @@ I live, I love and I do programming.
 
 * [GitHub][]
 * Twitter [begoon][]
-* [Google+][]
 * [Linkedin][]
 
 ### Disclaimer
@@ -20,7 +19,6 @@ I live, I love and I do programming.
 
 [GitHub]: http://github.com/begoon/
 [begoon]: http://twitter.com/begoon
-[Google+]: https://plus.google.com/114157100952261261794?rel=author
 [Linkedin]: http://www.linkedin.com/in/alexanderdemin
 
 ### Motto
