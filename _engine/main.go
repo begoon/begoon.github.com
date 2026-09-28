@@ -5,11 +5,13 @@ package main
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/xml"
 	"flag"
 	"fmt"
 	"html"
 	"io"
 	"io/ioutil"
+	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -33,6 +35,8 @@ const (
 	BlogPrefix  = "blog"
 	PublicDir   = ".."
 	SiteHost    = "http://demin.ws"
+	FeedHost    = "https://demin.ws"
+	FeedLimit   = 50
 
 	// This format must use "magic" values (like 2006 for year, 01 for month etc.)
 	// http://golang.org/src/pkg/time/format.go?s=15402:15448#L58
@@ -72,8 +76,8 @@ var (
 	YoutubeRE         = regexp.MustCompile("(?sU){% youtube (\\S+?) %}")
 	YoutubeExtRE      = regexp.MustCompile("(?sU){% youtube (\\S+?) (\\d+) (\\d+) %}")
 	IncludeRE         = regexp.MustCompile("(?sU){% include (\\S+?) %}")
-	ImgReplaceRE      = regexp.MustCompile("(?s)(<img .*?src=[\"'])(/[^\"']+?)([\"'].*?\\/>)")
-	HrefReplaceRE     = regexp.MustCompile("(?s)(<a .*?href=[\"'])(/[^\"']+?)([\"'].*?>)")
+	FeedTagRE         = regexp.MustCompile(`(?is)<(?:a|img|iframe|audio|video|source|link)\b(?:[^"'<>]|"[^"]*"|'[^']*')*>`)
+	FeedAttrRE        = regexp.MustCompile(`(?is)(\s+)([a-z_:][a-z0-9_.:-]*)(\s*=\s*)(?:"([^"]*)"|'([^']*)'|([^\s>]+))`)
 	PostNameRE        = regexp.MustCompile("^.*((\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d))-([^ \\./]+?)\\.markdown$")
 	PostNameREv2      = regexp.MustCompile("^.*((\\d\\d\\d\\d)-(\\d\\d)-(\\d\\d))-([^ /]+?)/(index)\\.markdown$")
 	BlogspotRE        = regexp.MustCompile("^http:\\/\\/(easy|meta)-coding\\.blogspot\\.com\\/\\d\\d\\d\\d\\/\\d\\d\\/.+\\.html$")
@@ -307,6 +311,89 @@ func load_layout(filename string, current Page) Page {
 	return p
 }
 
+func set_feed_dates(p Page) error {
+	// Legacy dates have no timezone. Preserve the generator's UTC convention.
+	published, err := time.Parse(DateTimeFormat, p["date"])
+	if err != nil {
+		return fmt.Errorf("invalid publication date: %w", err)
+	}
+	updated := published
+	if value := p["updated"]; value != "" {
+		updated, err = time.Parse(time.RFC3339, value)
+		if err != nil {
+			updated, err = time.Parse(DateTimeFormat, value)
+		}
+		if err != nil {
+			return fmt.Errorf("invalid updated date: %w", err)
+		}
+		if updated.Before(published) {
+			return fmt.Errorf("updated date precedes publication date")
+		}
+	}
+	p["feed_published"] = published.UTC().Format(time.RFC3339)
+	p["feed_updated"] = updated.UTC().Format(time.RFC3339)
+	return nil
+}
+
+func feed_posts(language string) Posts {
+	entries := make(Posts, 0)
+	for _, p := range posts {
+		if (*p)["language"] == language {
+			entries = append(entries, p)
+		}
+	}
+	// Significant revisions bring older posts back into the subscription feed.
+	// Sort a copy so the site's chronological archive and search IDs stay intact.
+	sort.Slice(entries, func(i, j int) bool {
+		a, b := *entries[i], *entries[j]
+		if a["feed_updated"] != b["feed_updated"] {
+			return a["feed_updated"] > b["feed_updated"]
+		}
+		if a["feed_published"] != b["feed_published"] {
+			return a["feed_published"] > b["feed_published"]
+		}
+		return a["url"] < b["url"]
+	})
+	if len(entries) > FeedLimit {
+		entries = entries[:FeedLimit]
+	}
+	return entries
+}
+
+func escape_xml(s string) (string, error) {
+	var b bytes.Buffer
+	err := xml.EscapeText(&b, []byte(s))
+	return b.String(), err
+}
+
+func feed_content(content, postURL string) string {
+	base, err := url.Parse(FeedHost + postURL)
+	if err != nil {
+		die("Invalid feed entry URL [%s]: %v", postURL, err)
+	}
+	// Rewrite URL attributes only, never code samples or visible filenames.
+	return FeedTagRE.ReplaceAllStringFunc(content, func(tag string) string {
+		return FeedAttrRE.ReplaceAllStringFunc(tag, func(attribute string) string {
+			m := FeedAttrRE.FindStringSubmatch(attribute)
+			switch strings.ToLower(m[2]) {
+			case "href", "src", "poster":
+			default:
+				return attribute
+			}
+			value := m[4] + m[5] + m[6]
+			target, err := url.Parse(html.UnescapeString(value))
+			if err != nil {
+				return attribute
+			}
+			target = base.ResolveReference(target)
+			if target.Host == base.Host && target.Scheme == "http" {
+				target.Scheme = "https"
+			}
+			return m[1] + m[2] + m[3] + `"` + html.EscapeString(target.String()) + `"`
+		})
+	})
+}
+
 func render_page(p Page) string {
 	trace("> Render page [%s]\n", p["filename"])
 
@@ -317,23 +404,12 @@ func render_page(p Page) string {
 	}
 
 	last_update := func(language string) string {
-		for _, p := range posts {
-			if (*p)["language"] == language {
-				d, err := time.Parse(DateTimeFormat, (*p)["date"])
-				if err != nil {
-					die("Unable to parse the recent post [%s] date, error [%v]", (*p)["url"], err)
-				}
-				return d.Format(time.RFC3339)
-			}
+		entries := feed_posts(language)
+		if len(entries) > 0 {
+			return (*entries[0])["feed_updated"]
 		}
 		die("Unable to find the recent post for language [%s]", language)
 		return "<no value>"
-	}
-
-	replace_relative_urls := func(s string) string {
-		s = ImgReplaceRE.ReplaceAllString(s, "${1}"+SiteHost+"$2$3")
-		s = HrefReplaceRE.ReplaceAllString(s, "${1}"+SiteHost+"$2$3")
-		return s
 	}
 
 	search_version := func(language string) string {
@@ -344,16 +420,19 @@ func render_page(p Page) string {
 	}
 
 	funcs := template.FuncMap{
-		"include":               include,
-		"last_update":           last_update,
-		"replace_relative_urls": replace_relative_urls,
-		"search_version":        search_version,
+		"include":        include,
+		"last_update":    last_update,
+		"feed_posts":     feed_posts,
+		"feed_content":   feed_content,
+		"xml":            escape_xml,
+		"search_version": search_version,
 	}
 
 	type Data struct {
 		Page          Page
 		Posts         Posts
 		Host          string
+		FeedHost      string
 		ReversedIndex map[string]string
 		NumberOfPosts map[string]int
 	}
@@ -361,7 +440,7 @@ func render_page(p Page) string {
 	tpl := template.Must(template.New(p["filename"]).Funcs(funcs).Parse(p["content"]))
 
 	var b bytes.Buffer
-	if err := tpl.Execute(&b, Data{p, posts, SiteHost, index_js, number_of_posts}); err != nil {
+	if err := tpl.Execute(&b, Data{p, posts, SiteHost, FeedHost, index_js, number_of_posts}); err != nil {
 		die("Unable to execute template, error [%v]", err)
 	}
 
@@ -479,8 +558,8 @@ func process_post(filename string) {
 		die("Unable to parse the post date, error [%v]", err)
 	}
 
-	if _, err := time.Parse(DateTimeFormat, p["date"]); err != nil {
-		die("Unable to parse the post date and time, error [%v]", err)
+	if err := set_feed_dates(p); err != nil {
+		die("Invalid dates in [%s]: %v", filename, err)
 	}
 
 	// All posts before this date must have a blogspot id attribute.
@@ -550,7 +629,6 @@ func process_post(filename string) {
 			target_file := filepath.Join(dir, name)
 			trace("+ Copy post file %s -> %s\n", path, target_file)
 			copy_file(path, target_file)
-			p["rss"] = strings.Replace(p["rss"], name, p["url"]+name, -1)
 			return err
 		}
 		if err := filepath.Walk(filepath.Dir(filename), callback); err != nil {

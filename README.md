@@ -60,3 +60,26 @@ and rebuild the site when upgrading.
 Legacy language names are normalized by the generator. Io has no bundled grammar
 and uses plain text. Unlabelled blocks and unsupported languages are left unchanged
 rather than auto-detected.
+
+# Subscription feeds
+
+The RSS links serve Atom feeds at `/atom.xml` (Russian) and `/english/atom.xml`
+(English). Each contains the 50 most recently published or significantly updated
+posts, with full content. The website continues to list the complete archive.
+
+Publication times come from each post's `date`, including the time of day.
+Dates without an explicit timezone retain the generator's historical UTC
+interpretation. Feed links use HTTPS; existing entry IDs deliberately keep their
+original HTTP form so feed readers recognize previously delivered posts.
+
+When significantly revising a post, add or change its optional `updated` metadata:
+
+```text
+updated: 2026-09-28T11:30:00+01:00
+```
+
+For posts using `@` metadata, use `@updated: 2026-09-28T11:30:00+01:00`.
+The legacy `YYYY-MM-DD HH:MM` format is also accepted as UTC. The revision date
+must not precede publication. Without `updated`, the publication time is used.
+A revision brings the post back into the feed and advances the feed's `updated`
+time. Unchanged builds do not change feed timestamps or content.

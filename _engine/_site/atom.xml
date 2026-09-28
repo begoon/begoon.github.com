@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-
-  {{$host := .Host}}
-  <title><![CDATA[{{include "russian/title.html"}}]]></title>
-  <link href="{{$host}}/atom.xml" rel="self"/>
-  <link href="{{$host}}/"/>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ru">
+{{$host := .FeedHost}}{{$idhost := .Host}}
+  <title type="text">{{include "russian/title.html" | xml}}</title>
+  <link href="{{$host}}/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="{{$host}}/" rel="alternate" type="text/html"/>
   <updated>{{last_update "russian"}}</updated>
-  <id>{{$host}}/</id>
+  <id>{{$idhost}}/</id>
   <author>
-    <name><![CDATA[{{include "russian/author.html"}}]]></name>
-    <email><![CDATA[{{include "email.html"}}]]></email>
+    <name>{{include "russian/author.html" | xml}}</name>
+    <email>{{include "email.html" | xml}}</email>
   </author>
 
-  {{range .Posts}}{{if .russian}}
+{{range feed_posts "russian"}}
   <entry>
-    <title type="html"><![CDATA[{{.title}}]]></title>
-    <link href="{{$host}}{{.url}}"/>
-    <updated>{{.date_only}}T00:00:00+00:00</updated>
-    <id>{{$host}}{{.url}}</id>
-    <content type="html"><![CDATA[{{.rss | replace_relative_urls}}]]></content>
+    <title type="text">{{.title | xml}}</title>
+    <link href="{{$host}}{{.url | xml}}" rel="alternate" type="text/html"/>
+    <published>{{.feed_published}}</published>
+    <updated>{{.feed_updated}}</updated>
+    <id>{{$idhost}}{{.url | xml}}</id>
+    <content type="html">{{feed_content .rss .url | xml}}</content>
   </entry>
-  {{end}}{{end}}
-
+{{end}}
 </feed>
