@@ -9,8 +9,9 @@ This repository contains materials of the personal blog "[Программиро
 
 # Build
 
-Install Go (the version in `go.mod` or newer) and [just](https://github.com/casey/just).
-On macOS: `brew install go just`.
+Install Go (the version in `go.mod` or newer), [just](https://github.com/casey/just),
+and [uv](https://docs.astral.sh/uv/) for Python helpers.
+On macOS: `brew install go just uv`.
 
 Run `just build` from the repository root. This runs the generator from `_engine`
 and regenerates the published pages and assets in the repository root. Go downloads
@@ -18,6 +19,29 @@ the pinned Markdown dependency on the first build.
 
 Run the code-block regression tests with `go test ./_engine/main.go ./_engine/main_test.go`.
 Run the search regression tests with `bun test ./_engine/search.test.ts` (requires Bun).
+Run the new-post helper tests with `uv run --no-project python -B -m unittest discover -s _engine -p 'test_*.py'`.
+
+The root `Justfile` replaces `_engine/Makefile`:
+
+| Command | Purpose |
+| --- | --- |
+| `just build` | Regenerate the blog; optional generator flags follow the recipe name. |
+| `just format` | Format the Go engine and its tests. |
+| `just all` | Format, then build. |
+| `just serve` | Serve locally on port 9000; pass another port to override it. |
+| `just newpost` | Create a Markdown post interactively, optionally in both languages. |
+| `just updated-public` | List tracked files with unstaged changes outside `_engine`. |
+| `just revert-updated-public` | Discard unstaged changes outside `_engine`, including root configuration and documentation. |
+
+`just run` and `just server` are aliases for `build` and `serve`.
+The private `filter-updated` recipe runs a supplied command for each file listed
+by `updated-public`, preserving filenames containing spaces.
+
+The new-post helper uses Python's standard library through `uv run --no-project python`;
+Ruby is no longer required. It validates calendar dates and filename slugs, previews
+the post, and asks before overwriting an existing file. New posts go under
+`_engine/_posts`, regardless of the working directory. Optional editing uses
+`VISUAL`, then `EDITOR`, then `vi`.
 
 # Syntax highlighting
 
