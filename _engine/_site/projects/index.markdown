@@ -72,7 +72,7 @@ title: "Проекты"
 [Скрипты на Lua в С++]: /blog/russian/2009/06/12/lua-scripts-in-cpp/
 [luascript]: http://code.google.com/p/luascript
 [p4patch]: http://code.google.com/p/p4patch
-[Система биометрической идентификации Handscan]: http://handscan.ru/
+[Система биометрической идентификации Handscan]: https://demin.ws/handscan
 
 [py-tcpspy]: https://github.com/begoon/py-tcpspy
 [erl-tcpspy]: https://github.com/begoon/erl-tcpspy

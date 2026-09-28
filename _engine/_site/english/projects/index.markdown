@@ -54,7 +54,7 @@ Most of my projects are available at [GitHub][]. The projects listed below are h
 [lemonbind]: http://code.google.com/p/lemonbind/
 [luascript]: http://code.google.com/p/luascript
 [p4patch]: http://code.google.com/p/p4patch
-[Biometrical identification system Handscan]: http://handscan.ru/en/
+[Biometrical identification system Handscan]: https://demin.ws/handscan
 
 [Programming DIY]: http://meta-coding.blogspot.com
 
