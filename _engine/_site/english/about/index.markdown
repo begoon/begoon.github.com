@@ -35,7 +35,7 @@ If you figure out what it means, please, let me know.
 * *Cyril Margorin // 06.09.2012*
 * *Rinat Ibragimov // 06.09.2012*
 * *Oleksiy Vasylyev // 10.09.2012*
-* *[Yaşar Arabacı](http://yasararabaci.tumblr.com) // 10.09.2012*
-* *[Igor Kalnitsky](http://www.kalnitsky.org/) // 10.09.2012*
-* *[Leandro De Leite](https://twitter.com/LeandroDeLeite) // 25.12.2012*
+* *Yaşar Arabacı // 10.09.2012*
+* *Igor Kalnitsky // 10.09.2012*
+* *Leandro De Leite // 25.12.2012*
 * *Alexey Popov // 06.01.2013*
