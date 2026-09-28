@@ -22,11 +22,5 @@ updated-public:
 revert-updated-public:
 	$(MAKE) filter-updated cmd="git checkout"
 
-code-css:
-	highlight --style-outfile=_site/css/highlight.css --print-style \
-	--font Menlo,Monaco,\"Andale\ Mono\",\"lucida\ console\",\"Courier\ New\",monospace
-	cat _site/css/highlight.css
-
 newpost:
 	ruby newpost.rb
-

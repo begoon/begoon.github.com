@@ -6,10 +6,10 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"html"
 	"io"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -57,7 +57,6 @@ var (
 
 	no_binaries *bool = flag.Bool("no-binaries", false, "don't publish binaries")
 	logging     *bool = flag.Bool("logging", false, "log to 'trace.log'")
-	no_syntax   *bool = flag.Bool("no-syntax", false, "no syntax highlighting")
 
 	HeaderRE          = regexp.MustCompile("(?s)^(---\n(.+)\n---\n)")
 	HeaderREv2        = regexp.MustCompile("^(?s)(@.+?)\n\n")
@@ -267,15 +266,11 @@ func process_tags(post string) string {
 		}
 		language := m[0][2]
 		source := m[0][3]
-		return highlight(source, language)
+		return render_code(source, language)
 	}
 
 	// {% codeblock lang:xxx %} ... {% endcodeblock %}
-	if *no_syntax {
-		post = CodeblockRE.ReplaceAllString(post, "``` $2$3```")
-	} else {
-		post = CodeblockRE.ReplaceAllStringFunc(post, codeblock)
-	}
+	post = CodeblockRE.ReplaceAllStringFunc(post, codeblock)
 
 	// {% youtube id %}
 	post = YoutubeRE.ReplaceAllString(post,
@@ -626,6 +621,11 @@ func process_binary(name string) {
 }
 
 func process_file(name string) {
+	// Vendored JavaScript can contain Go template delimiters as literal text.
+	if strings.HasPrefix(name, filepath.Join(SiteDir, "common", "highlight")+slash) {
+		process_binary(name)
+		return
+	}
 	ext := filepath.Ext(name)
 	if ext == ".html" || ext == ".xml" || ext == ".markdown" || ext == ".js" {
 		process_parsable_file(name)
@@ -750,26 +750,21 @@ func build_index() {
 
 var (
 	language_table = map[string]string{
-		"makefile":    "make",
-		"nasm":        "asm",
-		"javascript":  "js",
-		"c#":          "cs",
-		"objective-c": "objc",
+		"c++":         "cpp",
+		"c#":          "csharp",
+		"objective-c": "objectivec",
+		"nasm":        "x86asm",
+		"bat":         "dos",
+		"io":          "plaintext",
 	}
 )
 
-func highlight(source, language string) string {
+func render_code(source, language string) string {
 	if shortcut, exist := language_table[language]; exist {
 		language = shortcut
 	}
-	cmd := exec.Command("highlight", "--syntax", language, "--fragment", "--encoding=utf-8", "--enclose-pre")
-	cmd.Stdin = strings.NewReader(source)
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	if err := cmd.Run(); err != nil {
-		die("Unable to colorize, %#v, %#v, %#v, [%s]", err, cmd.Path, cmd.Args, source)
-	}
-	return out.String()
+	return "<pre><code class=\"language-" + html.EscapeString(language) + "\">" +
+		html.EscapeString(strings.TrimPrefix(source, "\n")) + "</code></pre>\n"
 }
 
 func main() {

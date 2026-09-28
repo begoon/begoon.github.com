@@ -182,6 +182,7 @@ ul.posts span {
   border: 1px solid #ddd;
   background-color: #eef;
   padding: 0 .4em;
+  overflow-x: auto;
 }
 
 #post ul,
@@ -201,9 +202,10 @@ ul.posts span {
 #post pre code {
   border: none;
   padding: 0;
+  display: block;
+  background: transparent;
 }
 
 #post img {
   border: 0;
 }
-

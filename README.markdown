@@ -7,22 +7,31 @@ This repository contains materials of the personal blog "[Программиро
 
 [A blog post about Goblog](https://demin.ws/blog/english/2012/04/23/static-blog-engine-goblog/).
 
-# Step when installing the engine from scratch on Mac
+# Build
 
-- `brew install go`
+Install Go (the version in `go.mod` or newer) and [just](https://github.com/casey/just).
+On macOS: `brew install go just`.
 
-```
-go version
+Run `just build` from the repository root. This runs the generator from `_engine`
+and regenerates the published pages and assets in the repository root. Go downloads
+the pinned Markdown dependency on the first build.
 
-go version go1.15.2 darwin/amd64
-```
+Run the code-block regression tests with `go test ./_engine/main.go ./_engine/main_test.go`.
 
-- `go get github.com/russross/blackfriday`
+# Syntax highlighting
 
-- `brew install highlight`
-```
-highlight --version
+The generator emits escaped code blocks with explicit language classes. The browser
+highlights them using locally hosted Highlight.js 11.12.0; no `highlight` executable
+or JavaScript build tool is needed. Without JavaScript, code remains readable.
+Feed readers receive plain code blocks.
 
-highlight version 3.60
-Copyright (C) 2002-2020 Andre Simon <a dot simon at mailbox.org>
-```
+Vendored files in `_engine/_site/common/highlight/` come from
+[Highlight.js CDN release 11.12.0](https://github.com/highlightjs/cdn-release/tree/11.12.0):
+`build/highlight.min.js`, the `erlang`, `dos`, and `x86asm` grammars from
+`build/languages/`, and `LICENSE`. The theme in `_engine/_site/css/highlight.css`
+is `build/styles/github.min.css` from the same release. Update these files together
+and rebuild the site when upgrading.
+
+Legacy language names are normalized by the generator. Io has no bundled grammar
+and uses plain text. Unlabelled blocks and unsupported languages are left unchanged
+rather than auto-detected.
