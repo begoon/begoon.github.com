@@ -1,9 +1,9 @@
-(function(language) {
+(function(language, version) {
     function async_load(){
         var s = document.createElement('script');
         s.type = 'text/javascript';
         s.async = true;
-        s.src = '/js/' + language + '/search.js?2026-09-28T09:22:37+01:00';
+        s.src = '/js/' + language + '/search.js?' + version;
         var x = document.getElementsByTagName('script')[0];
         x.parentNode.insertBefore(s, x);
     }
@@ -12,6 +12,6 @@
     else
         window.addEventListener('load', async_load, false);
 })
-("english");
 
+("english", "20022a502ff63d7982ced8276471906bfb8896ac8438ffde77c989179c0eab87");
 

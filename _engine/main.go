@@ -4,6 +4,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"flag"
 	"fmt"
 	"html"
@@ -335,15 +336,18 @@ func render_page(p Page) string {
 		return s
 	}
 
-	now := func() string {
-		return time.Now().Format(time.RFC3339)
+	search_version := func(language string) string {
+		// Hash the complete rendered script, including the index and search logic.
+		// Render from source so the version does not depend on publication order.
+		page := load_page(filepath.Join(SiteDir, "js", language, "search.js"))
+		return fmt.Sprintf("%x", sha256.Sum256([]byte(render_page(page))))
 	}
 
 	funcs := template.FuncMap{
 		"include":               include,
 		"last_update":           last_update,
 		"replace_relative_urls": replace_relative_urls,
-		"now":                   now,
+		"search_version":        search_version,
 	}
 
 	type Data struct {

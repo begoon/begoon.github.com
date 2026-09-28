@@ -1,9 +1,67 @@
 package main
 
 import (
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 )
+
+func TestSearchLoaderVersion(t *testing.T) {
+	dir := t.TempDir()
+	for _, name := range []string{
+		"_site/js/english/search.js", "_site/js/english/search_loader.js",
+		"_includes/search.js", "_includes/search_loader.js",
+	} {
+		data, err := os.ReadFile(name)
+		if err != nil {
+			t.Fatal(err)
+		}
+		target := filepath.Join(dir, name)
+		if err := os.MkdirAll(filepath.Dir(target), 0755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(target, data, 0644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	t.Chdir(dir)
+	oldIndex, oldCounts, oldCache := index_js, number_of_posts, files_cache
+	t.Cleanup(func() {
+		index_js, number_of_posts, files_cache = oldIndex, oldCounts, oldCache
+	})
+	index_js = map[string]string{"english": `ri["hello"]=[1]`}
+	number_of_posts = map[string]int{"english": 1}
+	render := func() string {
+		// Each invocation models a fresh build, with no cached source files.
+		files_cache = make(map[string]*string)
+		return render_page(load_page("_site/js/english/search_loader.js"))
+	}
+	initial := render()
+	if got := render(); got != initial {
+		t.Fatal("unchanged search script changed the loader")
+	}
+	index_js["russian"] = `ri["other"]=[1]`
+	if got := render(); got != initial {
+		t.Fatal("another language's index changed the English loader")
+	}
+	index_js["english"] = `ri["hello"]=[1,2]`
+	changedIndex := render()
+	if changedIndex == initial {
+		t.Fatal("index change did not update the loader")
+	}
+	number_of_posts["english"] = 2
+	changedCount := render()
+	if changedCount == changedIndex {
+		t.Fatal("post count change did not update the loader")
+	}
+	if err := os.WriteFile("_includes/search.js", []byte("// Updated search implementation\n"), 0644); err != nil {
+		t.Fatal(err)
+	}
+	if render() == changedCount {
+		t.Fatal("search implementation change did not update the loader")
+	}
+}
 
 func TestCodeBlocks(t *testing.T) {
 	for _, opening := range []string{"{% codeblock lang:cpp %}", "``` cpp"} {

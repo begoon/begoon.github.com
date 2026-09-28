@@ -1,2 +1,2 @@
 {{include "search_loader.js"}}
-("russian");
+("russian", "{{search_version "russian"}}");
