@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
-{{$host := .FeedHost}}{{$idhost := .Host}}
+{{$host := .FeedHost}}{{$idhost := .SiteHostID}}
   <title type="text">{{include "english/title.html" | xml}}</title>
   <link href="{{$host}}/english/atom.xml" rel="self" type="application/atom+xml"/>
   <link href="{{$host}}/english/" rel="alternate" type="text/html"/>

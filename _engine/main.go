@@ -34,7 +34,7 @@ const (
 	IncludesDir = "_includes"
 	BlogPrefix  = "blog"
 	PublicDir   = ".."
-	SiteHost    = "http://demin.ws"
+	SiteHostID  = "http://demin.ws"
 	FeedHost    = "https://demin.ws"
 	FeedLimit   = 50
 
@@ -431,7 +431,7 @@ func render_page(p Page) string {
 	type Data struct {
 		Page          Page
 		Posts         Posts
-		Host          string
+		SiteHostID    string
 		FeedHost      string
 		ReversedIndex map[string]string
 		NumberOfPosts map[string]int
@@ -440,7 +440,7 @@ func render_page(p Page) string {
 	tpl := template.Must(template.New(p["filename"]).Funcs(funcs).Parse(p["content"]))
 
 	var b bytes.Buffer
-	if err := tpl.Execute(&b, Data{p, posts, SiteHost, FeedHost, index_js, number_of_posts}); err != nil {
+	if err := tpl.Execute(&b, Data{p, posts, SiteHostID, FeedHost, index_js, number_of_posts}); err != nil {
 		die("Unable to execute template, error [%v]", err)
 	}
 
@@ -468,7 +468,7 @@ func precheck_post(s string) {
 	s = CodeblockRemoveRE.ReplaceAllLiteralString(s, "")
 	s = QuoteCodeRemoveRE.ReplaceAllLiteralString(s, "")
 
-	host_prefix := SiteHost + "/"
+	host_prefix := SiteHostID + "/"
 
 	targets := map[string]string{}
 	if m := MarkdownTargetsRE.FindAllStringSubmatch(s, -1); m != nil {
@@ -571,7 +571,7 @@ func process_post(filename string) {
 
 	p["disqus_shortname"] = "demin-ws"
 	p["disqus_identifier"] = p["url"]
-	p["disqus_url"] = SiteHost + p["url"]
+	p["disqus_url"] = SiteHostID + p["url"]
 
 	if p["blogspot"] != "" {
 		if !BlogspotRE.MatchString(p["blogspot"]) {
@@ -740,8 +740,8 @@ func check_links_re(s *string, filename string, re *regexp.Regexp) {
 			trace("|| [%s]", l)
 			if strings.HasPrefix(l, "/") {
 				file_exist(PublicDir + l)
-			} else if strings.HasPrefix(l, SiteHost) {
-				file_exist(PublicDir + l[len(SiteHost):])
+			} else if strings.HasPrefix(l, SiteHostID) {
+				file_exist(PublicDir + l[len(SiteHostID):])
 			} else {
 				if !ExtLinkRE.MatchString(l) {
 					l = regexp.MustCompile("#.+$").ReplaceAllString(l, "")

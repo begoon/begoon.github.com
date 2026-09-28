@@ -111,13 +111,13 @@ func TestAtomFeeds(t *testing.T) {
 		if feed.XMLName.Space != "http://www.w3.org/2005/Atom" || len(feed.Entries) != FeedLimit {
 			t.Fatalf("invalid Atom namespace or entry count: %s, %d", feed.XMLName.Space, len(feed.Entries))
 		}
-		if feed.ID != SiteHost+"/"+prefix || len(feed.Links) != 2 ||
+		if feed.ID != SiteHostID+"/"+prefix || len(feed.Links) != 2 ||
 			feed.Links[0].Rel != "self" || feed.Links[0].Href != FeedHost+"/"+prefix+"atom.xml" ||
 			feed.Links[1].Href != FeedHost+"/"+prefix {
 			t.Fatalf("incorrect feed identity or links: %+v", feed)
 		}
 		entry := feed.Entries[0]
-		if entry.ID != SiteHost+"/blog/"+language+"/example-0/" ||
+		if entry.ID != SiteHostID+"/blog/"+language+"/example-0/" ||
 			entry.Published != "2013-01-01T10:30:00Z" || entry.Updated != "2026-09-28T10:30:00Z" ||
 			feed.Updated != entry.Updated {
 			t.Fatalf("revised post was not included with stable ID and correct dates: %+v", entry)
@@ -128,7 +128,7 @@ func TestAtomFeeds(t *testing.T) {
 			t.Fatalf("title or HTML content was corrupted: %+v", entry)
 		}
 		for _, entry := range feed.Entries {
-			if !strings.HasPrefix(entry.ID, SiteHost+"/blog/"+language+"/") {
+			if !strings.HasPrefix(entry.ID, SiteHostID+"/blog/"+language+"/") {
 				t.Fatalf("mixed languages or changed ID: %s", entry.ID)
 			}
 		}
