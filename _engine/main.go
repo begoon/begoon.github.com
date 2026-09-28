@@ -592,6 +592,9 @@ func process_post(filename string) {
 		p["disqus_url"] = p["blogspot_url"]
 	}
 
+	// Keep the existing thread identifier and forum; only upgrade the page URL.
+	p["disqus_url"] = strings.Replace(p["disqus_url"], "http://", "https://", 1)
+
 	if p["disqus"] != "" && p["blogspot"] != "" {
 		die("Disqus and Blogspot ids are given at the same time")
 	}
