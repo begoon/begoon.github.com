@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -47,16 +53,15 @@
 
 <p>To build a final HTML file from a bunch of tiny files I used a very simple program. Here is a bit of code from it:</p>
 
-<pre class="hl">
-<span class="hl opt">...</span>
-  <span class="hl kwa">while</span> <span class="hl opt">(!</span><span class="hl kwd">feof</span><span class="hl opt">(</span>f<span class="hl opt">)) {</span>
-    <span class="hl kwb">char</span> line<span class="hl opt">[</span><span class="hl num">1024</span><span class="hl opt">];</span>
-    <span class="hl opt">*</span>line <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-    <span class="hl kwd">fgets</span><span class="hl opt">(</span>line<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>line<span class="hl opt">),</span> f<span class="hl opt">);</span>
-    <span class="hl kwd">printf</span><span class="hl opt">(</span>line<span class="hl opt">);</span>
-  <span class="hl opt">}</span>
-<span class="hl opt">...</span>
-</pre>
+<pre><code class="language-cpp">...
+  while (!feof(f)) {
+    char line[1024];
+    *line = 0;
+    fgets(line, sizeof(line), f);
+    printf(line);
+  }
+...
+</code></pre>
 
 <p>Implied that this code should copy all lines from a file <code>f</code> to the standard output.</p>
 
@@ -76,15 +81,13 @@
 
 <p>So instead of:</p>
 
-<pre class="hl">
-<span class="hl kwd">printf</span><span class="hl opt">(</span>line<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">printf(line);
+</code></pre>
 
 <p>I had to write:</p>
 
-<pre class="hl">
-<span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%s&quot;</span><span class="hl opt">,</span> line<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">printf(&#34;%s&#34;, line);
+</code></pre>
 
 <p>Otherwise all percentage characters are treated as formatters because the first parameter of <code>printf()</code> is a format and all non-escaped <code>%</code> characters will be deleted. That is what was happening to me.</p>
 

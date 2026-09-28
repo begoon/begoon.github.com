@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -44,19 +50,16 @@
   <p>Пощупал интересную платку &ndash; <a href="http://www.hobbytronics.co.uk/serial-vga">Serial VGA</a>. Позволяет через RS-232 (TTL)
 на VGA экране (800x600) организовать многооконный текстовый вывод.</p>
 
-<p><img src="IMG_1284.jpg" alt="" />
-</p>
+<p><img src="IMG_1284.jpg" alt="" /></p>
 
-<p><img src="IMG_1284.jpg" alt="" />
-</p>
+<p><img src="IMG_1284.jpg" alt="" /></p>
 
 <p>Максимальный размер одного окна 100x50 символов при 64 цветах, и можно
 одновременно создавать до 9 окон. Информация в каждое окно выводится
 независимо. Управляющие команды передаются через специальные
 <code>^[</code>-последовательности.</p>
 
-<p><img src="serial-vga-5.jpg" alt="" />
-</p>
+<p><img src="serial-vga-5.jpg" alt="" /></p>
 
 <p>В целом &ndash; очень удобно для проектов на микроконтроллерах, когда лень возиться
 с выводом VGA самостоятельно, а вывод в формате RS-232 можно написать на

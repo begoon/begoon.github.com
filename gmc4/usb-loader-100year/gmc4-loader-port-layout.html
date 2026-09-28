@@ -3,14 +3,14 @@
 <table>
 <thead>
 <tr>
-<td>Key</td>
-<td>Code</td>
-<td>Port B: 43210</td>
-<td>IC2 PB3:PB2</td>
-<td>Row</td>
-<td>IC1 PB4:PB1:PB0</td>
-<td>Column</td>
-<td>Crossing</td>
+<th>Key</th>
+<th>Code</th>
+<th>Port B: 43210</th>
+<th>IC2 PB3:PB2</th>
+<th>Row</th>
+<th>IC1 PB4:PB1:PB0</th>
+<th>Column</th>
+<th>Crossing</th>
 </tr>
 </thead>
 
@@ -239,44 +239,43 @@
 
 <p>This is a simplified version of the original <code>gmc.c</code>.</p>
 
-<pre class="hl">
-<span class="hl ppc">#define GMC4_ADRSET 0x1C</span>  <span class="hl com">/* 00011100 */</span><span class="hl ppc"></span>
-<span class="hl ppc">#define GMC4_INCR   0x18</span>  <span class="hl com">/* 00011000 */</span><span class="hl ppc"></span>
-<span class="hl ppc">#define GMC4_RUN    0x14</span>  <span class="hl com">/* 00010100 */</span><span class="hl ppc"></span>
-<span class="hl ppc">#define GMC4_RESET  0x10</span>  <span class="hl com">/* 00010000 */</span><span class="hl ppc"></span>
+<pre><code class="language-c">#define GMC4_ADRSET 0x1C  /* 00011100 */
+#define GMC4_INCR   0x18  /* 00011000 */
+#define GMC4_RUN    0x14  /* 00010100 */
+#define GMC4_RESET  0x10  /* 00010000 */
 
-<span class="hl kwb">void</span> <span class="hl kwd">gmc4wait</span><span class="hl opt">(</span><span class="hl kwb">short</span> waittime<span class="hl opt">) {</span> <span class="hl kwa">do</span> <span class="hl opt">{}</span> <span class="hl kwa">while</span><span class="hl opt">(</span>waittime<span class="hl opt">-- &gt;</span> <span class="hl num">0</span><span class="hl opt">); }</span>
+void gmc4wait(short waittime) { do {} while(waittime-- &gt; 0); }
 
-<span class="hl kwb">void</span> <span class="hl kwd">gmc4init</span><span class="hl opt">() {</span>
-    DDRB <span class="hl opt">|=</span> <span class="hl num">0x1f</span><span class="hl opt">;</span>
-    DDRB <span class="hl opt">|=</span> <span class="hl num">1</span> <span class="hl opt">&lt;&lt;</span> <span class="hl num">6</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
+void gmc4init() {
+    DDRB |= 0x1f;
+    DDRB |= 1 &lt;&lt; 6;
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span><span class="hl kwb">unsigned char</span> key<span class="hl opt">) {</span>
-    PORTB <span class="hl opt">&amp;= ~</span><span class="hl num">0x1f</span><span class="hl opt">;</span>
-    PORTB <span class="hl opt">|=</span> <span class="hl num">0x1f</span> <span class="hl opt">&amp;</span> key<span class="hl opt">;</span>
+void gmc4_simulate_key(unsigned char key) {
+    PORTB &amp;= ~0x1f;
+    PORTB |= 0x1f &amp; key;
     
-    PORTB <span class="hl opt">&amp;= ~(</span><span class="hl num">1</span> <span class="hl opt">&lt;&lt;</span> <span class="hl num">6</span><span class="hl opt">);</span>
-    <span class="hl kwd">gmc4wait</span><span class="hl opt">(</span><span class="hl num">8000</span><span class="hl opt">);</span>
-    PORTB <span class="hl opt">|= ~(</span><span class="hl num">1</span> <span class="hl opt">&lt;&lt;</span> <span class="hl num">6</span><span class="hl opt">);</span>
-    <span class="hl kwd">gmc4wait</span><span class="hl opt">(</span><span class="hl num">8000</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+    PORTB &amp;= ~(1 &lt;&lt; 6);
+    gmc4wait(8000);
+    PORTB |= ~(1 &lt;&lt; 6);
+    gmc4wait(8000);
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">gmc4sendkey</span><span class="hl opt">(</span><span class="hl kwb">char</span> key<span class="hl opt">) {</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(</span>key <span class="hl opt">&gt;=</span> <span class="hl str">'0'</span> <span class="hl opt">&amp;&amp;</span> key <span class="hl opt">&lt;=</span> <span class="hl str">'9'</span><span class="hl opt">) {</span>
-        <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span>key <span class="hl opt">-</span> <span class="hl str">'0'</span><span class="hl opt">);</span>
-    <span class="hl opt">}</span> <span class="hl kwa">else if</span><span class="hl opt">(</span>key <span class="hl opt">&gt;=</span> <span class="hl str">'A'</span> <span class="hl opt">&amp;&amp;</span> key <span class="hl opt">&lt;=</span> <span class="hl str">'F'</span><span class="hl opt">) {</span>
-        <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span>key <span class="hl opt">-</span> <span class="hl str">'A'</span> <span class="hl opt">+</span> <span class="hl num">10</span><span class="hl opt">);</span>
-    <span class="hl opt">}</span> <span class="hl kwa">else if</span><span class="hl opt">(</span>key <span class="hl opt">&gt;=</span> <span class="hl str">'a'</span> <span class="hl opt">&amp;&amp;</span> key <span class="hl opt">&lt;=</span> <span class="hl str">'f'</span><span class="hl opt">) {</span>
-        <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span>key <span class="hl opt">-</span> <span class="hl str">'a'</span> <span class="hl opt">+</span> <span class="hl num">10</span><span class="hl opt">);</span>
-    <span class="hl opt">}</span> <span class="hl kwa">else if</span><span class="hl opt">(</span>key <span class="hl opt">==</span> <span class="hl str">'S'</span> <span class="hl opt">||</span> key <span class="hl opt">==</span> <span class="hl str">'s'</span><span class="hl opt">) {</span>
-        <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span>GMC4_ADRSET<span class="hl opt">);</span>
-    <span class="hl opt">}</span> <span class="hl kwa">else if</span><span class="hl opt">(</span>key <span class="hl opt">==</span> <span class="hl str">'I'</span> <span class="hl opt">||</span> key <span class="hl opt">==</span> <span class="hl str">'i'</span><span class="hl opt">) {</span>
-        <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span>GMC4_INCR<span class="hl opt">);</span>
-    <span class="hl opt">}</span> <span class="hl kwa">else if</span><span class="hl opt">(</span>key <span class="hl opt">==</span> <span class="hl str">'G'</span> <span class="hl opt">||</span> key <span class="hl opt">==</span> <span class="hl str">'g'</span><span class="hl opt">) {</span>
-        <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span>GMC4_RUN<span class="hl opt">);</span>
-    <span class="hl opt">}</span> <span class="hl kwa">else if</span><span class="hl opt">(</span>key <span class="hl opt">==</span> <span class="hl str">'R'</span> <span class="hl opt">||</span> key <span class="hl opt">==</span> <span class="hl str">'r'</span><span class="hl opt">) {</span>
-        <span class="hl kwd">gmc4_simulate_key</span><span class="hl opt">(</span>GMC4_RESET<span class="hl opt">);</span>
-    <span class="hl opt">}</span>
-<span class="hl opt">}</span>
-</pre>
+void gmc4sendkey(char key) {
+    if (key &gt;= &#39;0&#39; &amp;&amp; key &lt;= &#39;9&#39;) {
+        gmc4_simulate_key(key - &#39;0&#39;);
+    } else if(key &gt;= &#39;A&#39; &amp;&amp; key &lt;= &#39;F&#39;) {
+        gmc4_simulate_key(key - &#39;A&#39; + 10);
+    } else if(key &gt;= &#39;a&#39; &amp;&amp; key &lt;= &#39;f&#39;) {
+        gmc4_simulate_key(key - &#39;a&#39; + 10);
+    } else if(key == &#39;S&#39; || key == &#39;s&#39;) {
+        gmc4_simulate_key(GMC4_ADRSET);
+    } else if(key == &#39;I&#39; || key == &#39;i&#39;) {
+        gmc4_simulate_key(GMC4_INCR);
+    } else if(key == &#39;G&#39; || key == &#39;g&#39;) {
+        gmc4_simulate_key(GMC4_RUN);
+    } else if(key == &#39;R&#39; || key == &#39;r&#39;) {
+        gmc4_simulate_key(GMC4_RESET);
+    }
+}
+</code></pre>

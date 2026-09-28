@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,67 +49,59 @@
 <div id="post">
   <p>Я нашел таки для себя ответ на вопрос про &ldquo;лишние скобки&rdquo; вокруг параметра, задающего интервальный итератор (см. &ldquo;<a href="/blog/russian/2009/02/08/reading-file-via-stl-iterators/">Скоростное чтение файла в STL через итераторы</a>&rdquo;). Например:</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span><span class="hl str">&quot;testfile.txt&quot;</span><span class="hl opt">);</span>
-std<span class="hl opt">::</span>string <span class="hl kwd">val</span><span class="hl opt">(</span>
-  <span class="hl opt">(</span>std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>is<span class="hl opt">)),</span>
-  std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;()</span>
-<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">std::ifstream is(&#34;testfile.txt&#34;);
+std::string val(
+  (std::istream_iterator&lt;char&gt;(is)),
+  std::istream_iterator&lt;char&gt;()
+);
+</code></pre>
 
 <p>Скотт Мейерс в книге &ldquo;<a href="http://www.ozon.ru/context/detail/id/1253685/?partner=easy-coding">Эффективное использование STL. Библиотека программиста</a>&rdquo; в Совете 6 &ldquo;Остерегайтесь странностей лексического разбора C++&rdquo; (стр. 42, изд. &ldquo;Питер&rdquo; 2002) дает исчерпывающее объяснение этого &ldquo;феномена&rdquo;. Ответ крайне меня опечалил, так как вскрыл некоторую нелогичность и корявость в целом стройного и красивого языка С++ в данном вопросе. Очевидно, что причины этого в сохранения в С++ обратной совместимости с С, но от этого не легче.</p>
 
 <p>Итак, давайте разберемся по порядку (чтобы меня не обвинили в плагиате, сразу скажу, что я буду следовать примерному тексту Мейерса, так как он дал великолепное объяснение с примерами, и изобретать велосипед в данном случае было бы неразумно). Как мы предполагали, код <code>std::istream_iterator&lt;char&gt;(is)</code> создает экземпляр потокового итератора, привязанного к потоку <code>is</code>. И все бы ничего, если такая конструкция используется как самостоятельное объявление. Вся проблема в именно в использовании такого выражения в контексте вызова функции (в данном случае, конструктора), то есть в качестве параметра. Мейерс приводит следующий пример:</p>
 
-<pre class="hl">
-<span class="hl kwb">int</span> <span class="hl kwd">f</span><span class="hl opt">(</span><span class="hl kwb">double</span> d<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">int f(double d);
+</code></pre>
 
 <p>Это команда объявления функции <code>f</code>, которая получает <code>double</code> и возвращает <code>int</code>.</p>
 
 <p>Тоже самое происходит и в следующей строке. Круглые скобки вокруг имени параметра <code>d</code> не нужны, поэтому компилятор их игнорирует:</p>
 
-<pre class="hl">
-<span class="hl kwb">int</span> <span class="hl kwd">f</span><span class="hl opt">(</span><span class="hl kwb">double</span> <span class="hl opt">(</span>d<span class="hl opt">));</span>     <span class="hl slc">// То же; круглые скобки вокруг d игнорируются</span>
-</pre>
+<pre><code class="language-cpp">int f(double (d));     // То же; круглые скобки вокруг d игнорируются
+</code></pre>
 
 <p>Теперь третий вариант объявления той же функции. В нем имя параметра просто не указано:</p>
 
-<pre class="hl">
-<span class="hl kwb">int</span> <span class="hl kwd">f</span><span class="hl opt">(</span><span class="hl kwb">double</span><span class="hl opt">);</span>         <span class="hl slc">// То же; имя параметра не указано</span>
-</pre>
+<pre><code class="language-cpp">int f(double);         // То же; имя параметра не указано
+</code></pre>
 
 <p>Три такие формы объявления знакомы всем, хотя про возможность заключения параметра в скобки знают не все (может просто потому, что это очевидно лишние по логике вещей скобки).</p>
 
 <p>Теперь можно рассмотреть еще три объявления функции. В первом объявляется функция <code>g</code> с параметром — указателем на функцию, которая вызывается без параметров и возвращает <code>double</code>:</p>
 
-<pre class="hl">
-<span class="hl kwb">int</span> <span class="hl kwd">g</span><span class="hl opt">(</span><span class="hl kwb">double</span> <span class="hl opt">(*</span>pf<span class="hl opt">)());</span> <span class="hl slc">// Функции g передается указатель на функцию</span>
-</pre>
+<pre><code class="language-cpp">int g(double (*pf)()); // Функции g передается указатель на функцию
+</code></pre>
 
 <p>То же самое можно сформулировать иначе. Единственное различие заключается в том, что <code>pf</code> объявляется в синтаксисе без указателей (допустимом как в С, так и в С++):</p>
 
-<pre class="hl">
-<span class="hl kwb">int</span> <span class="hl kwd">g</span><span class="hl opt">(</span><span class="hl kwb">double</span> <span class="hl kwd">pf</span><span class="hl opt">());</span>    <span class="hl slc">// То же; pf неявно интерпретируется как указатель</span>
-</pre>
+<pre><code class="language-cpp">int g(double pf());    // То же; pf неявно интерпретируется как указатель
+</code></pre>
 
 <p>Как обычно, имена параметров могут опускаться, поэтому возможен и третий вариант объявления <code>g</code> без указания имени <code>pf</code>:</p>
 
-<pre class="hl">
-<span class="hl kwb">int</span> <span class="hl kwd">g</span><span class="hl opt">(</span><span class="hl kwb">double</span><span class="hl opt">());</span>       <span class="hl slc">// То же; имя параметра не указано</span>
-</pre>
+<pre><code class="language-cpp">int g(double());       // То же; имя параметра не указано
+</code></pre>
 
 <p>Обратите внимание на различия между круглыми скобками вокруг имени параметра (например, параметра <code>d</code> во втором объявлении <code>f</code>) и стоящими отдельно (как в этом примере). Круглые скобки, в которые заключено имя параметра, игнорируются, а стоящие отдельно, обозначают присутствие списка параметров; они сообщают о присутствии параметра, который является указателем на функцию.</p>
 
 <p>Теперь вернемся к оригинальному примеру:</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span><span class="hl str">&quot;testfile.txt&quot;</span><span class="hl opt">);</span>
-std<span class="hl opt">::</span>string <span class="hl kwd">val</span><span class="hl opt">(</span>
-  std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>is<span class="hl opt">),</span>
-  std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;()</span>
-<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">std::ifstream is(&#34;testfile.txt&#34;);
+std::string val(
+  std::istream_iterator&lt;char&gt;(is),
+  std::istream_iterator&lt;char&gt;()
+);
+</code></pre>
 
 <p>Сейчас я намеренно убрал таинственные &ldquo;лишние&rdquo; скобки вокруг первого параметра.</p>
 
@@ -111,7 +109,8 @@ std<span class="hl opt">::</span>string <span class="hl kwd">val</span><span cla
 
 <ul>
 <li>Первый параметр, <code>is</code>, относится к типу <code>istream_iterator&lt;char&gt;</code>. Лишние круглые скобки вокруг <code>is</code> игнорируются.</li>
-<li>Второй параметр не имеет имени. Он относится к типу указателя на функцию, которая вызывается без параметров и возвращает <code>istream_iterator&lt;char&gt;</code>.</li>
+<li>Второй параметр не имеет имени. Он относится к типу указателя на функцию, которая вызывается без параметров и возвращает <code>istream_iterator&lt;char&gt;</code>.
+<br /></li>
 </ul>
 
 <p>А мы то тут ожидали увидеть описание вызова конструктора, которому передаются два потоковых итератора. Такая интерпретация написанного диктуется одним из основных правил C++: все, что может интерпретироваться как указатель функцию, должно интерпретироваться именно так. Так гласит стандарт:</p>
@@ -120,13 +119,12 @@ std<span class="hl opt">::</span>string <span class="hl kwd">val</span><span cla
 
 <p>Так что же делают эти магические скобки вокруг первого параметра конструктора?</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span><span class="hl str">&quot;testfile.txt&quot;</span><span class="hl opt">);</span>
-std<span class="hl opt">::</span>string <span class="hl kwd">val</span><span class="hl opt">(</span>
-  <span class="hl opt">(</span>std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>is<span class="hl opt">)),</span>
-  std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;()</span>
-<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">std::ifstream is(&#34;testfile.txt&#34;);
+std::string val(
+  (std::istream_iterator&lt;char&gt;(is)),
+  std::istream_iterator&lt;char&gt;()
+);
+</code></pre>
 
 <p>А вот что — объявления формальных параметров не могут заключаться в круглые скобки, я вот заключить в круглые скобки аргумент при вызове функции можно. Вот эти круглые скобки и помогают компилятору решить неоднозначность в нужную нам сторону (а не как положено по стандарту по умолчанию) и точно указать, что перед нами именно использование параметра функции при ее вызове, а не при объявлении.</p>
 
@@ -134,12 +132,11 @@ std<span class="hl opt">::</span>string <span class="hl kwd">val</span><span cla
 
 <p>Как написал Герб Саттер в книге &ldquo;<a href="http://www.ozon.ru/context/detail/id/2342923/?partner=easy-coding">Новые сложные задачи на С++</a>&rdquo; (он тоже посвятил этому вопросу целую главу, “Задача 23. Инициализация ли это?”, стр. 192, изд. “Вильямс”), что такие моменты синтаксиса С++ являются его &ldquo;темными углами&rdquo;, и их стоит избегать. Рассмотренный пример можно упростить, объявив итератор отдельно, а не прямо в тексте вызова конструктора, тем самым не заходить в &ldquo;темный угол&rdquo;. Не так элегантно, зато просто и понятно:</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span><span class="hl str">&quot;testfile.txt&quot;</span><span class="hl opt">);</span>
-std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;</span> <span class="hl kwd">begin</span><span class="hl opt">(</span>is<span class="hl opt">);</span>
-std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;</span> end<span class="hl opt">;</span>
-std<span class="hl opt">::</span>string <span class="hl kwd">val</span><span class="hl opt">(</span>begin<span class="hl opt">,</span> end<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">std::ifstream is(&#34;testfile.txt&#34;);
+std::istream_iterator&lt;char&gt; begin(is);
+std::istream_iterator&lt;char&gt; end;
+std::string val(begin, end);
+</code></pre>
 
 <p>Читал я недавно, как <a href="http://lwn.net/Articles/249460/">Линус Торвальдс полоскал</a> С++ за неоправданную языковую сложность. &ldquo;C++ is a horrible language!&rdquo;, — сказал Линус. Может он и прав.</p>
 

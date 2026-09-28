@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -43,15 +49,14 @@
 <div id="post">
   <p>So often in code reviews I see something like this:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;string&gt;</span>
-<span class="hl ppc">#include &lt;cstdio&gt;</span>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;cstdio&gt;
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  std<span class="hl opt">::</span>string s <span class="hl opt">=</span> <span class="hl str">&quot;12345678&quot;</span><span class="hl opt">;</span>
-  std<span class="hl opt">::</span><span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;[%s]</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> s<span class="hl opt">);</span>
-<span class="hl opt">}</span>
-</pre>
+int main() {
+  std::string s = &#34;12345678&#34;;
+  std::printf(&#34;[%s]\n&#34;, s);
+}
+</code></pre>
 
 <p>This is an obvious typo of missing <code>s.c_str()</code> instead of just <code>s</code>. Weirdly, Visual Studio doesn&rsquo;t warn you even with <code>/Wall</code>. More over, the code works!. But <code>gcc</code> warns though:</p>
 

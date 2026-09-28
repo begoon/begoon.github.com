@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,7 +49,7 @@
 <div id="post">
   <p>По роду работы у меня на компьютере стоят сразу несколько версий Visual Studio: 2003, 2005 и 2008. В целом они легко уживаются на одной машине, и при работе в графической оболочке обычно не возникает каких-либо неудобств или конфликтов. Но вот при работе через командную строку обычно надо как-то понимать, какой именно компилятор хочется вызвать (ведь имя то у него одно - <code>cl.exe</code>, a версий три). В итоге я убрал из путей PATH все ссылки на каталоги разных версии студии, и сделал вот такие скрипты, помещенные в любой каталог, находящийся в списке путей PATH.</p>
 
-<p>Visual Studio 2003, файл: <code>cl2003.cmd</code>:</p>
+<p>Visual Studio 2003, файл: <code>cl2003.cmd</code>`:</p>
 
 <pre><code>@&quot;%VS71COMNTOOLS%\vsvars32.bat&quot;
 </code></pre>

@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -134,217 +140,216 @@
 
 <p>Теперь, собственно, исходник:</p>
 
-<pre class="hl">
-<span class="hl slc">#!/usr/bin/python</span>
+<pre><code class="language-python">#!/usr/bin/python
 
-<span class="hl kwa">import</span> socket<span class="hl opt">,</span> string<span class="hl opt">,</span> threading<span class="hl opt">,</span> os<span class="hl opt">,</span> select<span class="hl opt">,</span> sys<span class="hl opt">,</span> time<span class="hl opt">,</span> getopt
-<span class="hl kwa">from</span> sys <span class="hl kwa">import</span> argv
+import socket, string, threading, os, select, sys, time, getopt
+from sys import argv
 
-<span class="hl kwa">def</span> <span class="hl kwd">usage</span><span class="hl opt">():</span>
-   name <span class="hl opt">=</span> os<span class="hl opt">.</span>path<span class="hl opt">.</span><span class="hl kwd">basename</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">])</span>
-   <span class="hl kwa">print</span> <span class="hl str">&quot;usage:&quot;</span><span class="hl opt">,</span> name<span class="hl opt">,</span> <span class="hl str">&quot;-l listen_port -a host -p port [-L file] [-c] [-h?]&quot;</span>
-   <span class="hl kwa">print</span> <span class="hl str">&quot; -a host         - address/host to connect&quot;</span>
-   <span class="hl kwa">print</span> <span class="hl str">&quot; -p port         - remote port to connect&quot;</span>
-   <span class="hl kwa">print</span> <span class="hl str">&quot; -l listen_port  - local port to listen&quot;</span>
-   <span class="hl kwa">print</span> <span class="hl str">&quot; -L file         - log file&quot;</span>
-   <span class="hl kwa">print</span> <span class="hl str">&quot; -c              - supress console output&quot;</span>
-   <span class="hl kwa">print</span> <span class="hl str">&quot; -h or -?        - this help&quot;</span>
-   <span class="hl kwa">print</span> <span class="hl str">&quot; -v              - version&quot;</span>
-   sys<span class="hl opt">.</span><span class="hl kwd">exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>
+def usage():
+   name = os.path.basename(argv[0])
+   print &#34;usage:&#34;, name, &#34;-l listen_port -a host -p port [-L file] [-c] [-h?]&#34;
+   print &#34; -a host         - address/host to connect&#34;
+   print &#34; -p port         - remote port to connect&#34;
+   print &#34; -l listen_port  - local port to listen&#34;
+   print &#34; -L file         - log file&#34;
+   print &#34; -c              - supress console output&#34;
+   print &#34; -h or -?        - this help&#34;
+   print &#34; -v              - version&#34;
+   sys.exit(1)
 
-PORT <span class="hl opt">=</span> <span class="hl kwa">False</span>
-REMOTE_HOST <span class="hl opt">=</span> REMOTE_PORT <span class="hl opt">=</span> <span class="hl kwa">False</span>
+PORT = False
+REMOTE_HOST = REMOTE_PORT = False
 
-CONSOLE <span class="hl opt">=</span> <span class="hl kwa">True</span>
-LOGFILE <span class="hl opt">=</span> <span class="hl kwa">False</span>
+CONSOLE = True
+LOGFILE = False
 
-<span class="hl kwa">try</span><span class="hl opt">:</span>
-   opts<span class="hl opt">,</span> args <span class="hl opt">=</span> getopt<span class="hl opt">.</span><span class="hl kwd">getopt</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">:],</span> <span class="hl str">&quot;l:a:p:L:ch?v&quot;</span><span class="hl opt">)</span>
+try:
+   opts, args = getopt.getopt(argv[1:], &#34;l:a:p:L:ch?v&#34;)
 
-   <span class="hl kwa">for</span> opt <span class="hl kwa">in</span> opts<span class="hl opt">:</span>
-      opt<span class="hl opt">,</span> val <span class="hl opt">=</span> opt
-      <span class="hl kwa">if</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-l&quot;</span><span class="hl opt">:</span>
-         PORT <span class="hl opt">=</span> <span class="hl kwb">int</span><span class="hl opt">(</span>val<span class="hl opt">)</span>
-      <span class="hl kwa">elif</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-a&quot;</span><span class="hl opt">:</span>
-         REMOTE_HOST <span class="hl opt">=</span> val
-      <span class="hl kwa">elif</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-p&quot;</span><span class="hl opt">:</span>
-         REMOTE_PORT <span class="hl opt">=</span> <span class="hl kwb">int</span><span class="hl opt">(</span>val<span class="hl opt">)</span>
-      <span class="hl kwa">elif</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-L&quot;</span><span class="hl opt">:</span>
-         LOGFILE <span class="hl opt">=</span> val
-      <span class="hl kwa">elif</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-c&quot;</span><span class="hl opt">:</span>
-         CONSOLE <span class="hl opt">=</span> <span class="hl kwa">False</span>
-      <span class="hl kwa">elif</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-?&quot;</span> <span class="hl kwa">or</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-h&quot;</span><span class="hl opt">:</span>
-         <span class="hl kwd">usage</span><span class="hl opt">()</span>
-      <span class="hl kwa">elif</span> opt <span class="hl opt">==</span> <span class="hl str">&quot;-v&quot;</span><span class="hl opt">:</span>
-         <span class="hl kwa">print</span> <span class="hl str">&quot;Python TCP/IP Spy  Version 1.01  Copyright (c) 2009 by Alexander Demin&quot;</span>
-         sys<span class="hl opt">.</span><span class="hl kwd">exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>
-      <span class="hl kwa">else</span><span class="hl opt">:</span>
-         <span class="hl kwd">usage</span><span class="hl opt">()</span>
+   for opt in opts:
+      opt, val = opt
+      if opt == &#34;-l&#34;:
+         PORT = int(val)
+      elif opt == &#34;-a&#34;:
+         REMOTE_HOST = val
+      elif opt == &#34;-p&#34;:
+         REMOTE_PORT = int(val)
+      elif opt == &#34;-L&#34;:
+         LOGFILE = val
+      elif opt == &#34;-c&#34;:
+         CONSOLE = False
+      elif opt == &#34;-?&#34; or opt == &#34;-h&#34;:
+         usage()
+      elif opt == &#34;-v&#34;:
+         print &#34;Python TCP/IP Spy  Version 1.01  Copyright (c) 2009 by Alexander Demin&#34;
+         sys.exit(1)
+      else:
+         usage()
 
-   <span class="hl kwa">if not</span> PORT<span class="hl opt">:</span>
-      <span class="hl kwa">raise</span> <span class="hl kwc">StandardError</span><span class="hl opt">,</span> <span class="hl str">&quot;listen port is not given&quot;</span>
+   if not PORT:
+      raise StandardError, &#34;listen port is not given&#34;
 
-   <span class="hl kwa">if not</span> REMOTE_HOST<span class="hl opt">:</span>
-      <span class="hl kwa">raise</span> <span class="hl kwc">StandardError</span><span class="hl opt">,</span> <span class="hl str">&quot;remote host is not given&quot;</span>
+   if not REMOTE_HOST:
+      raise StandardError, &#34;remote host is not given&#34;
 
-   <span class="hl kwa">if not</span> REMOTE_PORT<span class="hl opt">:</span>
-      <span class="hl kwa">raise</span> <span class="hl kwc">StandardError</span><span class="hl opt">,</span> <span class="hl str">&quot;remote port is not given&quot;</span>
+   if not REMOTE_PORT:
+      raise StandardError, &#34;remote port is not given&#34;
 
-<span class="hl kwa">except</span> <span class="hl kwc">Exception</span><span class="hl opt">,</span> e<span class="hl opt">:</span>
-   <span class="hl kwa">print</span> <span class="hl str">&quot;error:&quot;</span><span class="hl opt">,</span> e<span class="hl opt">,</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span>
-   <span class="hl kwd">usage</span><span class="hl opt">()</span>
+except Exception, e:
+   print &#34;error:&#34;, e, &#34;\n&#34;
+   usage()
 
-<span class="hl slc"># Remote host</span>
-REMOTE <span class="hl opt">= (</span>REMOTE_HOST<span class="hl opt">,</span> REMOTE_PORT<span class="hl opt">)</span>
+# Remote host
+REMOTE = (REMOTE_HOST, REMOTE_PORT)
 
-<span class="hl slc"># Create logging contitional variable</span>
-log_cond <span class="hl opt">=</span> threading<span class="hl opt">.</span><span class="hl kwd">Condition</span><span class="hl opt">()</span>
+# Create logging contitional variable
+log_cond = threading.Condition()
 
-queue <span class="hl opt">= []</span>
+queue = []
 
-<span class="hl kwa">def</span> <span class="hl kwd">logger</span><span class="hl opt">():</span>
-   <span class="hl kwa">global</span> queue
-   <span class="hl kwa">while</span> <span class="hl num">1</span><span class="hl opt">:</span>
-      log_cond<span class="hl opt">.</span><span class="hl kwd">acquire</span><span class="hl opt">()</span>
+def logger():
+   global queue
+   while 1:
+      log_cond.acquire()
 
-      <span class="hl kwa">while</span> <span class="hl kwb">len</span><span class="hl opt">(</span>queue<span class="hl opt">) ==</span> <span class="hl num">0</span><span class="hl opt">:</span>
-         log_cond<span class="hl opt">.</span><span class="hl kwd">wait</span><span class="hl opt">()</span>
+      while len(queue) == 0:
+         log_cond.wait()
 
-      <span class="hl kwa">if</span> LOGFILE<span class="hl opt">:</span>
-         <span class="hl kwa">try</span><span class="hl opt">:</span>
-            logfile <span class="hl opt">=</span> <span class="hl kwb">open</span><span class="hl opt">(</span>LOGFILE<span class="hl opt">,</span> <span class="hl str">&quot;a+&quot;</span><span class="hl opt">)</span>
-            logfile<span class="hl opt">.</span><span class="hl kwd">writelines</span><span class="hl opt">(</span><span class="hl kwb">map</span><span class="hl opt">(</span><span class="hl kwa">lambda</span> x<span class="hl opt">:</span> x<span class="hl opt">+</span><span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> queue<span class="hl opt">))</span>
-            logfile<span class="hl opt">.</span><span class="hl kwd">close</span><span class="hl opt">()</span>
-         <span class="hl kwa">except</span><span class="hl opt">:</span> <span class="hl kwa">pass</span>
+      if LOGFILE:
+         try:
+            logfile = open(LOGFILE, &#34;a+&#34;)
+            logfile.writelines(map(lambda x: x+&#34;\n&#34;, queue))
+            logfile.close()
+         except: pass
      
-      <span class="hl kwa">if</span> CONSOLE<span class="hl opt">:</span>
-         <span class="hl kwa">for</span> line <span class="hl kwa">in</span> queue<span class="hl opt">:</span>
-            <span class="hl kwa">print</span> line
+      if CONSOLE:
+         for line in queue:
+            print line
       
-      queue <span class="hl opt">= []</span>
-      log_cond<span class="hl opt">.</span><span class="hl kwd">release</span><span class="hl opt">()</span>
+      queue = []
+      log_cond.release()
 
-<span class="hl slc"># Thread safe logger</span>
-<span class="hl kwa">def</span> <span class="hl kwd">log</span><span class="hl opt">(</span>thread<span class="hl opt">,</span> msg<span class="hl opt">):</span>
-   <span class="hl kwa">if</span> CONSOLE <span class="hl kwa">or</span> LOGFILE<span class="hl opt">:</span>
-      log_cond<span class="hl opt">.</span><span class="hl kwd">acquire</span><span class="hl opt">()</span>
-      queue<span class="hl opt">.</span><span class="hl kwd">append</span><span class="hl opt">(</span><span class="hl str">&quot;%04d: %s&quot;</span> <span class="hl opt">% (</span>thread<span class="hl opt">,</span> msg<span class="hl opt">))</span>
-      log_cond<span class="hl opt">.</span><span class="hl kwd">notify</span><span class="hl opt">()</span>
-      log_cond<span class="hl opt">.</span><span class="hl kwd">release</span><span class="hl opt">()</span>
+# Thread safe logger
+def log(thread, msg):
+   if CONSOLE or LOGFILE:
+      log_cond.acquire()
+      queue.append(&#34;%04d: %s&#34; % (thread, msg))
+      log_cond.notify()
+      log_cond.release()
 
-<span class="hl kwa">def</span> <span class="hl kwd">printable</span><span class="hl opt">(</span>ch<span class="hl opt">):</span>
-   <span class="hl kwa">return</span> <span class="hl opt">(</span><span class="hl kwb">int</span><span class="hl opt">(</span>ch <span class="hl opt">&lt;</span> <span class="hl num">32</span><span class="hl opt">)</span> <span class="hl kwa">and</span> <span class="hl str">'.'</span><span class="hl opt">)</span> <span class="hl kwa">or</span> <span class="hl opt">(</span><span class="hl kwb">int</span><span class="hl opt">(</span>ch <span class="hl opt">&gt;=</span> <span class="hl num">32</span><span class="hl opt">)</span> <span class="hl kwa">and</span> <span class="hl kwb">chr</span><span class="hl opt">(</span>ch<span class="hl opt">))</span>
+def printable(ch):
+   return (int(ch &lt; 32) and &#39;.&#39;) or (int(ch &gt;= 32) and chr(ch))
 
-<span class="hl slc"># Pre-build a printable characters map</span>
-printable_map <span class="hl opt">= [</span> <span class="hl kwd">printable</span><span class="hl opt">(</span>x<span class="hl opt">)</span> <span class="hl kwa">for</span> x <span class="hl kwa">in</span> <span class="hl kwb">range</span><span class="hl opt">(</span><span class="hl num">256</span><span class="hl opt">) ]</span>
+# Pre-build a printable characters map
+printable_map = [ printable(x) for x in range(256) ]
 
-<span class="hl slc"># Thread safe dumper</span>
-<span class="hl kwa">def</span> <span class="hl kwd">log_dump</span><span class="hl opt">(</span>thread<span class="hl opt">,</span> msg<span class="hl opt">):</span>
+# Thread safe dumper
+def log_dump(thread, msg):
 
-   <span class="hl kwa">if</span> CONSOLE <span class="hl kwa">or</span> LOGFILE<span class="hl opt">:</span>
-      log_cond<span class="hl opt">.</span><span class="hl kwd">acquire</span><span class="hl opt">()</span>
+   if CONSOLE or LOGFILE:
+      log_cond.acquire()
 
-      width <span class="hl opt">=</span> <span class="hl num">16</span>
+      width = 16
 
-      header <span class="hl opt">=</span> <span class="hl kwb">reduce</span><span class="hl opt">(</span><span class="hl kwa">lambda</span> x<span class="hl opt">,</span> y<span class="hl opt">:</span> x <span class="hl opt">+ (</span><span class="hl str">&quot;%02X-&quot;</span> <span class="hl opt">%</span> y<span class="hl opt">),</span> <span class="hl kwb">range</span><span class="hl opt">(</span>width<span class="hl opt">),</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">)[</span><span class="hl num">0</span><span class="hl opt">:-</span><span class="hl num">1</span><span class="hl opt">]</span>
-      queue<span class="hl opt">.</span><span class="hl kwd">append</span><span class="hl opt">(</span><span class="hl str">&quot;%04d: ----: %s&quot;</span> <span class="hl opt">% (</span>thread<span class="hl opt">,</span> header<span class="hl opt">))</span>
-      queue<span class="hl opt">.</span><span class="hl kwd">append</span><span class="hl opt">(</span><span class="hl str">&quot;%04d:       %s&quot;</span> <span class="hl opt">% (</span>thread<span class="hl opt">,</span> <span class="hl str">'-'</span> <span class="hl opt">*</span> width <span class="hl opt">*</span> <span class="hl num">3</span><span class="hl opt">))</span>
+      header = reduce(lambda x, y: x + (&#34;%02X-&#34; % y), range(width), &#34;&#34;)[0:-1]
+      queue.append(&#34;%04d: ----: %s&#34; % (thread, header))
+      queue.append(&#34;%04d:       %s&#34; % (thread, &#39;-&#39; * width * 3))
 
-      i <span class="hl opt">=</span> <span class="hl num">0</span>
-      <span class="hl kwa">while</span> <span class="hl num">1</span><span class="hl opt">:</span>
-         line <span class="hl opt">=</span> msg<span class="hl opt">[</span>i<span class="hl opt">:</span>i<span class="hl opt">+</span>width<span class="hl opt">]</span>
-         <span class="hl kwa">if</span> <span class="hl kwb">len</span><span class="hl opt">(</span>line<span class="hl opt">) ==</span> <span class="hl num">0</span><span class="hl opt">:</span> <span class="hl kwa">break</span>
-         dump <span class="hl opt">=</span> <span class="hl kwb">reduce</span><span class="hl opt">(</span><span class="hl kwa">lambda</span> x<span class="hl opt">,</span> y<span class="hl opt">:</span> x <span class="hl opt">+ (</span><span class="hl str">&quot;%02X &quot;</span> <span class="hl opt">%</span> <span class="hl kwb">ord</span><span class="hl opt">(</span>y<span class="hl opt">)),</span> line<span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">)</span>
-         char <span class="hl opt">=</span> <span class="hl kwb">reduce</span><span class="hl opt">(</span><span class="hl kwa">lambda</span> x<span class="hl opt">,</span> y<span class="hl opt">:</span> x <span class="hl opt">+</span> printable_map<span class="hl opt">[</span><span class="hl kwb">ord</span><span class="hl opt">(</span>y<span class="hl opt">)],</span> line<span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">)</span>
-         queue<span class="hl opt">.</span><span class="hl kwd">append</span><span class="hl opt">(</span><span class="hl str">&quot;%04X: %04X: %-*s| %-*s&quot;</span> <span class="hl opt">% (</span>thread<span class="hl opt">,</span> i<span class="hl opt">,</span> width<span class="hl opt">*</span><span class="hl num">3</span><span class="hl opt">,</span> dump<span class="hl opt">,</span> width<span class="hl opt">,</span> char<span class="hl opt">))</span>
-         i <span class="hl opt">=</span> i <span class="hl opt">+</span> width
+      i = 0
+      while 1:
+         line = msg[i:i+width]
+         if len(line) == 0: break
+         dump = reduce(lambda x, y: x + (&#34;%02X &#34; % ord(y)), line, &#34;&#34;)
+         char = reduce(lambda x, y: x + printable_map[ord(y)], line, &#34;&#34;)
+         queue.append(&#34;%04X: %04X: %-*s| %-*s&#34; % (thread, i, width*3, dump, width, char))
+         i = i + width
 
-      log_cond<span class="hl opt">.</span><span class="hl kwd">notify</span><span class="hl opt">()</span>
-      log_cond<span class="hl opt">.</span><span class="hl kwd">release</span><span class="hl opt">()</span>
+      log_cond.notify()
+      log_cond.release()
 
-<span class="hl slc"># Spy thread</span>
-<span class="hl kwa">def</span> <span class="hl kwd">spy_thread</span><span class="hl opt">(</span>local<span class="hl opt">,</span> addr<span class="hl opt">,</span> thread_id<span class="hl opt">):</span>
-   <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Thread started&quot;</span><span class="hl opt">)</span>
+# Spy thread
+def spy_thread(local, addr, thread_id):
+   log(thread_id, &#34;Thread started&#34;)
 
-   <span class="hl kwa">try</span><span class="hl opt">:</span>
-      <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Connecting to %s...&quot;</span> <span class="hl opt">%</span> <span class="hl kwb">str</span><span class="hl opt">(</span>REMOTE<span class="hl opt">))</span>
-      remote <span class="hl opt">=</span> socket<span class="hl opt">.</span><span class="hl kwd">socket</span><span class="hl opt">(</span>socket<span class="hl opt">.</span>AF_INET<span class="hl opt">,</span> socket<span class="hl opt">.</span>SOCK_STREAM<span class="hl opt">)</span>
-      remote<span class="hl opt">.</span><span class="hl kwd">connect</span><span class="hl opt">(</span>REMOTE<span class="hl opt">)</span>
-   <span class="hl kwa">except</span> <span class="hl kwc">Exception</span><span class="hl opt">,</span> e<span class="hl opt">:</span>
-      <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Unable connect to %s -&gt; %s&quot;</span> <span class="hl opt">% (</span>REMOTE<span class="hl opt">,</span> e<span class="hl opt">))</span>
-      local<span class="hl opt">.</span><span class="hl kwd">close</span><span class="hl opt">()</span>
-      <span class="hl kwa">return</span>
+   try:
+      log(thread_id, &#34;Connecting to %s...&#34; % str(REMOTE))
+      remote = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+      remote.connect(REMOTE)
+   except Exception, e:
+      log(thread_id, &#34;Unable connect to %s -&gt; %s&#34; % (REMOTE, e))
+      local.close()
+      return
 
-   LOCAL <span class="hl opt">=</span> <span class="hl kwb">str</span><span class="hl opt">(</span>addr<span class="hl opt">)</span>
+   LOCAL = str(addr)
 
-   <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Remote host: &quot;</span> <span class="hl opt">+</span> LOCAL<span class="hl opt">)</span>
+   log(thread_id, &#34;Remote host: &#34; + LOCAL)
 
-   <span class="hl kwa">try</span><span class="hl opt">:</span>
-      running <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
-      <span class="hl kwa">while</span> running <span class="hl opt">==</span> <span class="hl num">1</span><span class="hl opt">:</span> 
+   try:
+      running = 1;
+      while running == 1: 
 
-         rd<span class="hl opt">,</span> wr<span class="hl opt">,</span> er <span class="hl opt">=</span> select<span class="hl opt">.</span><span class="hl kwd">select</span><span class="hl opt">([</span>local<span class="hl opt">,</span> remote<span class="hl opt">], [], [</span>local<span class="hl opt">,</span> remote<span class="hl opt">],</span> <span class="hl num">3600</span><span class="hl opt">)</span>
+         rd, wr, er = select.select([local, remote], [], [local, remote], 3600)
 
-         <span class="hl kwa">for</span> sock <span class="hl kwa">in</span> er<span class="hl opt">:</span>
-            <span class="hl kwa">if</span> sock <span class="hl opt">==</span> local<span class="hl opt">:</span>
-               <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Connection error from &quot;</span> <span class="hl opt">+</span> LOCAL<span class="hl opt">)</span>
-               running <span class="hl opt">=</span> <span class="hl num">0</span>
-            <span class="hl kwa">if</span> sock <span class="hl opt">==</span> remote<span class="hl opt">:</span>
-               <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Connection error from &quot;</span> <span class="hl opt">+</span> REMOTE<span class="hl opt">)</span>
-               running <span class="hl opt">=</span> <span class="hl num">0</span>
+         for sock in er:
+            if sock == local:
+               log(thread_id, &#34;Connection error from &#34; + LOCAL)
+               running = 0
+            if sock == remote:
+               log(thread_id, &#34;Connection error from &#34; + REMOTE)
+               running = 0
 
-         <span class="hl kwa">for</span> sock <span class="hl kwa">in</span> rd<span class="hl opt">:</span>
-            <span class="hl kwa">if</span> sock <span class="hl opt">==</span> local<span class="hl opt">:</span>
-               val <span class="hl opt">=</span> local<span class="hl opt">.</span><span class="hl kwd">recv</span><span class="hl opt">(</span><span class="hl num">1024</span><span class="hl opt">)</span>
-               <span class="hl kwa">if</span> val<span class="hl opt">:</span> 
-                  <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Recevied from %s (%d)&quot;</span> <span class="hl opt">% (</span>LOCAL<span class="hl opt">,</span> <span class="hl kwb">len</span><span class="hl opt">(</span>val<span class="hl opt">)))</span>
-                  <span class="hl kwd">log_dump</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> val<span class="hl opt">)</span>
-                  remote<span class="hl opt">.</span><span class="hl kwd">send</span><span class="hl opt">(</span>val<span class="hl opt">)</span>
-                  <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Sent to %s (%d)&quot;</span> <span class="hl opt">% (</span>REMOTE<span class="hl opt">,</span> <span class="hl kwb">len</span><span class="hl opt">(</span>val<span class="hl opt">)))</span>
-               <span class="hl kwa">else</span><span class="hl opt">:</span>
-                  <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Connection reset by %s&quot;</span> <span class="hl opt">%</span> LOCAL<span class="hl opt">)</span>
-                  running <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+         for sock in rd:
+            if sock == local:
+               val = local.recv(1024)
+               if val: 
+                  log(thread_id, &#34;Recevied from %s (%d)&#34; % (LOCAL, len(val)))
+                  log_dump(thread_id, val)
+                  remote.send(val)
+                  log(thread_id, &#34;Sent to %s (%d)&#34; % (REMOTE, len(val)))
+               else:
+                  log(thread_id, &#34;Connection reset by %s&#34; % LOCAL)
+                  running = 0;
 
-            <span class="hl kwa">if</span> sock <span class="hl opt">==</span> remote<span class="hl opt">:</span>
-               val <span class="hl opt">=</span> remote<span class="hl opt">.</span><span class="hl kwd">recv</span><span class="hl opt">(</span><span class="hl num">1024</span><span class="hl opt">)</span>
-               <span class="hl kwa">if</span> val<span class="hl opt">:</span> 
-                  <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Recevied from %s (%d)&quot;</span> <span class="hl opt">% (</span>REMOTE<span class="hl opt">,</span> <span class="hl kwb">len</span><span class="hl opt">(</span>val<span class="hl opt">)))</span>
-                  <span class="hl kwd">log_dump</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> val<span class="hl opt">)</span>
-                  local<span class="hl opt">.</span><span class="hl kwd">send</span><span class="hl opt">(</span>val<span class="hl opt">)</span>
-                  <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Sent to %s (%d)&quot;</span> <span class="hl opt">% (</span>LOCAL<span class="hl opt">,</span> <span class="hl kwb">len</span><span class="hl opt">(</span>val<span class="hl opt">)))</span>
-               <span class="hl kwa">else</span><span class="hl opt">:</span>
-                  <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Connection reset by %s&quot;</span> <span class="hl opt">%</span> <span class="hl kwb">str</span><span class="hl opt">(</span>REMOTE<span class="hl opt">))</span>
-                  running <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+            if sock == remote:
+               val = remote.recv(1024)
+               if val: 
+                  log(thread_id, &#34;Recevied from %s (%d)&#34; % (REMOTE, len(val)))
+                  log_dump(thread_id, val)
+                  local.send(val)
+                  log(thread_id, &#34;Sent to %s (%d)&#34; % (LOCAL, len(val)))
+               else:
+                  log(thread_id, &#34;Connection reset by %s&#34; % str(REMOTE))
+                  running = 0;
 
-   <span class="hl kwa">except</span> <span class="hl kwc">Exception</span><span class="hl opt">,</span> e<span class="hl opt">:</span>
-      <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">, (</span><span class="hl str">&quot;Connection terminated: &quot;</span> <span class="hl opt">+</span> <span class="hl kwb">str</span><span class="hl opt">(</span>e<span class="hl opt">)))</span>
+   except Exception, e:
+      log(thread_id, (&#34;Connection terminated: &#34; + str(e)))
 
-   remote<span class="hl opt">.</span><span class="hl kwd">close</span><span class="hl opt">()</span>
-   local<span class="hl opt">.</span><span class="hl kwd">close</span><span class="hl opt">()</span>
+   remote.close()
+   local.close()
 
-   <span class="hl kwd">log</span><span class="hl opt">(</span>thread_id<span class="hl opt">,</span> <span class="hl str">&quot;Connection closed&quot;</span><span class="hl opt">)</span>
+   log(thread_id, &#34;Connection closed&#34;)
 
-<span class="hl kwa">try</span><span class="hl opt">:</span>
-   <span class="hl slc"># Server socket</span>
-   srv <span class="hl opt">=</span> socket<span class="hl opt">.</span><span class="hl kwd">socket</span><span class="hl opt">(</span>socket<span class="hl opt">.</span>AF_INET<span class="hl opt">,</span> socket<span class="hl opt">.</span>SOCK_STREAM<span class="hl opt">)</span> 
-   srv<span class="hl opt">.</span><span class="hl kwd">bind</span><span class="hl opt">((</span><span class="hl str">&quot;&quot;</span><span class="hl opt">,</span> PORT<span class="hl opt">))</span> 
-<span class="hl kwa">except</span> <span class="hl kwc">Exception</span><span class="hl opt">,</span> e<span class="hl opt">:</span>
-   <span class="hl kwa">print</span> <span class="hl str">&quot;error&quot;</span><span class="hl opt">,</span> e
-   sys<span class="hl opt">.</span><span class="hl kwd">exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>
+try:
+   # Server socket
+   srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
+   srv.bind((&#34;&#34;, PORT)) 
+except Exception, e:
+   print &#34;error&#34;, e
+   sys.exit(1)
 
-counter <span class="hl opt">=</span> <span class="hl num">1</span>
+counter = 1
 
-threading<span class="hl opt">.</span><span class="hl kwd">Thread</span><span class="hl opt">(</span>target<span class="hl opt">=</span>logger<span class="hl opt">,</span> args<span class="hl opt">=[]).</span><span class="hl kwd">start</span><span class="hl opt">()</span>
+threading.Thread(target=logger, args=[]).start()
 
-<span class="hl kwd">log</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">,</span> <span class="hl str">&quot;Listen at port %d, remote host %s&quot;</span> <span class="hl opt">% (</span>PORT<span class="hl opt">,</span> REMOTE<span class="hl opt">))</span>
+log(0, &#34;Listen at port %d, remote host %s&#34; % (PORT, REMOTE))
  
-<span class="hl kwa">while</span> <span class="hl num">1</span><span class="hl opt">:</span> 
-   srv<span class="hl opt">.</span><span class="hl kwd">listen</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>              
-   local<span class="hl opt">,</span> addr <span class="hl opt">=</span> srv<span class="hl opt">.</span><span class="hl kwd">accept</span><span class="hl opt">()</span>
-   <span class="hl kwd">log</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">,</span> <span class="hl str">&quot;Connection accepted from %s, thread %d launched&quot;</span> <span class="hl opt">% (</span>addr<span class="hl opt">,</span> counter<span class="hl opt">))</span>
-   threading<span class="hl opt">.</span><span class="hl kwd">Thread</span><span class="hl opt">(</span>target<span class="hl opt">=</span>spy_thread<span class="hl opt">,</span> args<span class="hl opt">=[</span>local<span class="hl opt">,</span> addr<span class="hl opt">,</span> counter<span class="hl opt">]).</span><span class="hl kwd">start</span><span class="hl opt">()</span>
-   counter <span class="hl opt">=</span> counter <span class="hl opt">+</span> <span class="hl num">1</span>
-</pre>
+while 1: 
+   srv.listen(1)              
+   local, addr = srv.accept()
+   log(0, &#34;Connection accepted from %s, thread %d launched&#34; % (addr, counter))
+   threading.Thread(target=spy_thread, args=[local, addr, counter]).start()
+   counter = counter + 1
+</code></pre>
 
 <p>Лично я постоянно использую этот скрипт на Windows, Linux и Solaris.</p>
 

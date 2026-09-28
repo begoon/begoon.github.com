@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -49,36 +55,35 @@
 
 <p>Вот пример &ldquo;не очень хорошей программы&rdquo;:</p>
 
-<pre class="hl">
-<span class="hl kwc">class</span> A <span class="hl opt">{</span>
-<span class="hl kwc">public</span><span class="hl opt">:</span>
- <span class="hl kwd">A</span><span class="hl opt">() {</span>
-  <span class="hl kwb">char</span><span class="hl opt">*</span> __p <span class="hl opt">=</span> <span class="hl kwa">new</span> <span class="hl kwb">char</span><span class="hl opt">[</span><span class="hl num">10</span><span class="hl opt">];</span>
-  __p <span class="hl opt">=</span> <span class="hl kwa">new</span> <span class="hl kwb">char</span><span class="hl opt">[</span><span class="hl num">10</span><span class="hl opt">];</span>
+<pre><code class="language-cpp">class A {
+public:
+ A() {
+  char* __p = new char[10];
+  __p = new char[10];
 
-  <span class="hl kwb">char</span><span class="hl opt">*</span> a <span class="hl opt">= (</span><span class="hl kwb">char</span> <span class="hl opt">*)</span><span class="hl num">0</span><span class="hl opt">;</span>
-  <span class="hl opt">*</span>a <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  char* a = (char *)0;
+  *a = 0;
 
-  <span class="hl kwb">char</span> c<span class="hl opt">[</span><span class="hl num">10</span><span class="hl opt">];</span>
-  c<span class="hl opt">[</span><span class="hl num">10</span><span class="hl opt">] =</span> <span class="hl num">0</span><span class="hl opt">;</span>
- <span class="hl opt">}</span>
- <span class="hl opt">~</span><span class="hl kwd">A</span><span class="hl opt">() {</span>
-  <span class="hl kwa">delete</span> __p<span class="hl opt">;</span>
+  char c[10];
+  c[10] = 0;
+ }
+ ~A() {
+  delete __p;
 
-  <span class="hl kwb">char</span><span class="hl opt">*</span> a <span class="hl opt">=</span> <span class="hl kwa">new</span> <span class="hl kwb">char</span><span class="hl opt">[</span><span class="hl num">100</span><span class="hl opt">];</span>
-  <span class="hl kwa">return</span><span class="hl opt">;</span>
+  char* a = new char[100];
+  return;
 
-  <span class="hl kwa">delete</span><span class="hl opt">[]</span> a<span class="hl opt">;</span>
-<span class="hl opt">}</span>
-<span class="hl kwc">private</span><span class="hl opt">:</span>
-  <span class="hl kwb">char</span><span class="hl opt">*</span> __p<span class="hl opt">;</span>
-<span class="hl opt">};</span>
+  delete[] a;
+}
+private:
+  char* __p;
+};
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  A a<span class="hl opt">;</span>  
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+int main() {
+  A a;  
+  return 0;
+}
+</code></pre>
 
 <p>Тут без микроскопа видно, что проблем полно:</p>
 

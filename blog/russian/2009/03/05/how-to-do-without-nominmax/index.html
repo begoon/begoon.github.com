@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,23 +51,21 @@
 
 <p>Если вместо, например, <code>std::max(a, b)</code> написать <code>(std::max)(a, b)</code>, то результат работы препроцессора выглядит так:</p>
 
-<pre class="hl">
-<span class="hl ppc">#line 3</span> <span class="hl pps">&quot;minmax.cpp&quot;</span><span class="hl ppc"></span>
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl kwb">int</span> a <span class="hl opt">= (</span>std<span class="hl opt">::</span>min<span class="hl opt">)(</span><span class="hl num">10</span><span class="hl opt">,</span> <span class="hl num">20</span><span class="hl opt">);</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">#line 3 &#34;minmax.cpp&#34;
+int main() {
+  int a = (std::min)(10, 20);
+  return 0;
+}
+</code></pre>
 
 <p>вместо:</p>
 
-<pre class="hl">
-<span class="hl ppc">#line 3</span> <span class="hl pps">&quot;minmax.cpp&quot;</span><span class="hl ppc"></span>
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl kwb">int</span> a <span class="hl opt">=</span> std<span class="hl opt">::(((</span><span class="hl num">10</span><span class="hl opt">) &lt; (</span><span class="hl num">20</span><span class="hl opt">))</span> ? <span class="hl opt">(</span><span class="hl num">10</span><span class="hl opt">) : (</span><span class="hl num">20</span><span class="hl opt">));</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">#line 3 &#34;minmax.cpp&#34;
+int main() {
+  int a = std::(((10) &lt; (20)) ? (10) : (20));
+  return 0;
+}
+</code></pre>
 
 <p>и конфликта не происходит. Все компилируется без проблем.</p>
 

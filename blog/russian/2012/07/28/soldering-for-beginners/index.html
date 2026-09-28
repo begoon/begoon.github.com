@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -58,21 +64,18 @@
 где просто втыкаешь детали в панель, без даже намека на пайку,
 как в конструкторе.</p>
 
-<p><img src="/images/blog/soldering/for-beginners/breadboard-counter-example.jpg" alt="" />
-</p>
+<p><img src="/images/blog/soldering/for-beginners/breadboard-counter-example.jpg" alt="" /></p>
 
 <p>Так можно собрать весьма кучерявое устройство.</p>
 
-<p><img src="/images/blog/soldering/for-beginners/breadboard-complex-example.jpg" alt="" />
-</p>
+<p><img src="/images/blog/soldering/for-beginners/breadboard-complex-example.jpg" alt="" /></p>
 
 <p>Но иногда хочется таки сделать законченное устройство. Опять-таки, не
 обязательно &ldquo;травить&rdquo; плату. Если деталей немного, то можно
 использовать монтажную плату без дорожек (я использовал такую для
 <a href="/blog/russian/2012/07/25/gmc4-loader-assembled/">загрузчика GMC-4</a>).</p>
 
-<p><img src="/images/blog/soldering/for-beginners/breadboard-solderless.png" alt="" />
-</p>
+<p><img src="/images/blog/soldering/for-beginners/breadboard-solderless.png" alt="" /></p>
 
 <p>Но вот паять таки придется. Вопрос как? Особенно, если вы этого никогда
 раньше не делали. Я, возможно, открою Америку, но буквально несколько
@@ -125,13 +128,11 @@
 пайки несложных компонент &ndash; это паяльник, самый обычный с жалом в
 виде шила:</p>
 
-<p><img src="/images/blog/soldering/for-beginners/soldering-iron.jpg" alt="" />
-</p>
+<p><img src="/images/blog/soldering/for-beginners/soldering-iron.jpg" alt="" /></p>
 
 <p>и припой <strong>c флюсом внутри</strong>:</p>
 
-<p><img src="/images/blog/soldering/for-beginners/solder-with-flux.jpg" alt="" />
-</p>
+<p><img src="/images/blog/soldering/for-beginners/solder-with-flux.jpg" alt="" /></p>
 
 <p>ВСЕ!</p>
 
@@ -158,8 +159,7 @@
 прямо на место пайки. А &ldquo;встроенный&rdquo; в припой флюс дает его необходимое
 минимальное количество, сводя засирание платы к минимуму.</p>
 
-<p><img src="/images/blog/soldering/for-beginners/soldering.jpg" alt="" />
-</p>
+<p><img src="/images/blog/soldering/for-beginners/soldering.jpg" alt="" /></p>
 
 <p>Ясное дело, что время ожидания на каждой фазе требует хотя бы
 минимальной практики, но не более того. Уверен, что любой новичок по
@@ -222,8 +222,7 @@
 &ldquo;погрузится&rdquo; в припой, нанесенный на стадии лужения. Далее процедура
 повторяется для всех ног. Если надо, можно подкапывать жидкого флюса.</p>
 
-<p><img src="/images/blog/soldering/for-beginners/smd-soldering.jpg" alt="" />
-</p>
+<p><img src="/images/blog/soldering/for-beginners/smd-soldering.jpg" alt="" /></p>
 
 <p>Когда будете покупать жидкий флюс, купите и жидкость для мытья плат.
 Увы, при жидком флюсе лучше плату помыть после пайки.</p>
@@ -244,31 +243,23 @@
 которые по сложности пайки такие же. Эти элементарно паяются по первой
 инструкции.</p>
 
-<p><img src="/images/blog/soldering/for-beginners/pdip.jpg" alt="" />
- <img src="/images/blog/soldering/for-beginners/spdip.jpg" alt="" />
-</p>
+<p><img src="/images/blog/soldering/for-beginners/pdip.jpg" alt="" /> <img src="/images/blog/soldering/for-beginners/spdip.jpg" alt="" /></p>
 
 <p>Следующие два уже сложнее. Тут уже надо паять по второй инструкции с
 аккуратным теплоотводом и жидким флюсом.</p>
 
-<p><img src="/images/blog/soldering/for-beginners/soic.jpg" alt="" />
- <img src="/images/blog/soldering/for-beginners/qsop.jpg" alt="" />
-</p>
+<p><img src="/images/blog/soldering/for-beginners/soic.jpg" alt="" /> <img src="/images/blog/soldering/for-beginners/qsop.jpg" alt="" /></p>
 
 <p>Элементарные планарные компоненты, типа резисторов ниже, весьма просто паяются:</p>
 
-<p><img src="/images/blog/soldering/for-beginners/smd-resistors.jpg" alt="" />
-</p>
+<p><img src="/images/blog/soldering/for-beginners/smd-resistors.jpg" alt="" /></p>
 
 <p>Но есть, конечно, предел. Вот это добро уже за пределами моих
 способностей.</p>
 
 <p><img src="/images/blog/soldering/for-beginners/pqfp.jpg" alt="" />
-
 <img src="/images/blog/soldering/for-beginners/ssop.jpg" alt="" />
-
-<img src="/images/blog/soldering/for-beginners/tsop.jpg" alt="" />
-</p>
+<img src="/images/blog/soldering/for-beginners/tsop.jpg" alt="" /></p>
 
 <p>Под занавес, пару дешевых, но очень полезных вещей, которые стоит
 купить в дополнение к паяльнику, припою, пинцету и кусачкам:</p>
@@ -282,8 +273,7 @@
 прекрасным образом спрыгивает в отсос.</li>
 </ul>
 
-<p><img src="/images/blog/soldering/for-beginners/solder-pump.jpg" alt="" />
-</p>
+<p><img src="/images/blog/soldering/for-beginners/solder-pump.jpg" alt="" /></p>
 
 <ul>
 <li>Очки. Когда имеешь дело с ножками и проводами, может случиться, что
@@ -291,8 +281,7 @@
 возможно, в глаз. С этим лучше не шутить.</li>
 </ul>
 
-<p><img src="/images/blog/soldering/for-beginners/soldering-safety-glasses.jpg" alt="" />
-</p>
+<p><img src="/images/blog/soldering/for-beginners/soldering-safety-glasses.jpg" alt="" /></p>
 
 <p>Успехов в пайке! Запах канифоли &ndash; это круто!</p>
 

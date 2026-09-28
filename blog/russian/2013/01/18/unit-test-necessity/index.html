@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -57,28 +63,27 @@
 
 <p>Рождается функция:</p>
 
-<pre class="hl">
-<span class="hl slc">// This function converts all non-ASCII characters (with codes less than 32</span>
-<span class="hl slc">// and greater than 126) into the &lt;xx&gt; form where &quot;xx&quot; is a hexadecimal code</span>
-<span class="hl slc">// of the character.</span>
-<span class="hl kwb">void</span> <span class="hl kwd">MakeAllPrintable</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> from<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> to<span class="hl opt">,</span> <span class="hl kwb">int</span> to_capacity<span class="hl opt">) {</span>
-  <span class="hl kwb">const static char</span> hex<span class="hl opt">[] =</span> <span class="hl str">&quot;0123456789abcdef&quot;</span><span class="hl opt">;</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(; *</span>from <span class="hl opt">&amp;&amp;</span> to_capacity <span class="hl opt">&gt;</span> <span class="hl num">1</span><span class="hl opt">; ++</span>from<span class="hl opt">) {</span>
-    <span class="hl kwb">const unsigned char</span> c <span class="hl opt">= *</span>from<span class="hl opt">;</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(</span>c <span class="hl opt">&lt;</span> <span class="hl num">32</span> <span class="hl opt">||</span> c <span class="hl opt">&gt;</span> <span class="hl num">126</span><span class="hl opt">) {</span>
-      <span class="hl kwa">if</span> <span class="hl opt">(</span>to_capacity <span class="hl opt">&lt;</span> <span class="hl num">4</span> <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">)</span>
-        <span class="hl kwa">break</span><span class="hl opt">;</span>
-      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> <span class="hl str">'&lt;'</span><span class="hl opt">;</span>
-      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> hex<span class="hl opt">[(</span>c <span class="hl opt">&gt;&gt;</span> <span class="hl num">4</span><span class="hl opt">) &amp;</span> <span class="hl num">0xf</span><span class="hl opt">];</span>
-      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> hex<span class="hl opt">[</span>c <span class="hl opt">&amp;</span> <span class="hl num">0xf</span><span class="hl opt">];</span>
-      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> <span class="hl str">'&gt;'</span><span class="hl opt">;</span>
-    <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
-      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> c<span class="hl opt">;</span>
-    <span class="hl opt">}</span>
-  <span class="hl opt">}</span>
-  <span class="hl opt">*</span>to <span class="hl opt">=</span> <span class="hl str">'\0'</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-c">// This function converts all non-ASCII characters (with codes less than 32
+// and greater than 126) into the &lt;xx&gt; form where &#34;xx&#34; is a hexadecimal code
+// of the character.
+void MakeAllPrintable(const char* from, char* to, int to_capacity) {
+  const static char hex[] = &#34;0123456789abcdef&#34;;
+  for (; *from &amp;&amp; to_capacity &gt; 1; ++from) {
+    const unsigned char c = *from;
+    if (c &lt; 32 || c &gt; 126) {
+      if (to_capacity &lt; 4 + 1)
+        break;
+      *to++ = &#39;&lt;&#39;;
+      *to++ = hex[(c &gt;&gt; 4) &amp; 0xf];
+      *to++ = hex[c &amp; 0xf];
+      *to++ = &#39;&gt;&#39;;
+    } else {
+      *to++ = c;
+    }
+  }
+  *to = &#39;\0&#39;;
+}
+</code></pre>
 
 <p>Увы, это С, а наша системы сборки частей на С, хоть и имеет cmockery, но
 добавление тестов всегда связано с ручным прописываением имен фунцкий, а это
@@ -96,55 +101,53 @@
 5, сразу показал, что я забыл проверку максимальной длины буфера (эдакая
 назадача!):</p>
 
-<pre class="hl">
-<span class="hl kwb">void</span> <span class="hl kwd">test_MakeAllPrintable</span><span class="hl opt">(</span><span class="hl kwb">void</span> <span class="hl opt">**</span>state<span class="hl opt">) {</span>
-  <span class="hl kwb">char</span> buf<span class="hl opt">[</span><span class="hl num">16</span> <span class="hl opt">*</span> <span class="hl num">1024</span><span class="hl opt">];</span>
+<pre><code class="language-c">void test_MakeAllPrintable(void **state) {
+  char buf[16 * 1024];
 
-  <span class="hl kwd">MakeAllPrintable</span><span class="hl opt">(</span><span class="hl str">&quot;&quot;</span><span class="hl opt">,</span> buf<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>buf<span class="hl opt">));</span>
-  <span class="hl kwd">assert_int_equal</span><span class="hl opt">(</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>buf<span class="hl opt">),</span> <span class="hl num">0</span><span class="hl opt">);</span>
+  MakeAllPrintable(&#34;&#34;, buf, sizeof(buf));
+  assert_int_equal(strlen(buf), 0);
 
-  <span class="hl kwd">MakeAllPrintable</span><span class="hl opt">(</span><span class="hl str">&quot;abc&quot;</span><span class="hl opt">,</span> buf<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>buf<span class="hl opt">));</span>
-  <span class="hl kwd">assert_string_equal</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> <span class="hl str">&quot;abc&quot;</span><span class="hl opt">);</span>
+  MakeAllPrintable(&#34;abc&#34;, buf, sizeof(buf));
+  assert_string_equal(buf, &#34;abc&#34;);
 
-  <span class="hl slc">// This check verifies that the function always cleans the buffer at start.</span>
-  <span class="hl kwd">MakeAllPrintable</span><span class="hl opt">(</span><span class="hl str">&quot;&quot;</span><span class="hl opt">,</span> buf<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>buf<span class="hl opt">));</span>
-  <span class="hl kwd">assert_int_equal</span><span class="hl opt">(</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>buf<span class="hl opt">),</span> <span class="hl num">0</span><span class="hl opt">);</span>
+  // This check verifies that the function always cleans the buffer at start.
+  MakeAllPrintable(&#34;&#34;, buf, sizeof(buf));
+  assert_int_equal(strlen(buf), 0);
 
-  <span class="hl slc">// This check verifies that the function doesn't overwrite the given buffer</span>
-  <span class="hl slc">// and always reserves the last byte for '\0'.</span>
-  <span class="hl kwd">MakeAllPrintable</span><span class="hl opt">(</span><span class="hl str">&quot;12345678&quot;</span><span class="hl opt">,</span> buf<span class="hl opt">,</span> <span class="hl num">5</span><span class="hl opt">);</span>
-  <span class="hl kwd">assert_string_equal</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> <span class="hl str">&quot;1234&quot;</span><span class="hl opt">);</span>$
-  <span class="hl kwd">MakeAllPrintable</span><span class="hl opt">(</span><span class="hl str">&quot;1</span><span class="hl esc">\x01\r\n\t\x1f</span> <span class="hl str">2</span><span class="hl esc">\x7e\x7f\x80\xff</span><span class="hl str">&quot;</span><span class="hl opt">,</span> buf<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>buf<span class="hl opt">));</span>
-  <span class="hl kwd">assert_string_equal</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> <span class="hl str">&quot;1&lt;01&gt;&lt;0d&gt;&lt;0a&gt;&lt;09&gt;&lt;1f&gt; 2~&lt;7f&gt;&lt;80&gt;&lt;ff&gt;&quot;</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
-</pre>
+  // This check verifies that the function doesn&#39;t overwrite the given buffer
+  // and always reserves the last byte for &#39;\0&#39;.
+  MakeAllPrintable(&#34;12345678&#34;, buf, 5);
+  assert_string_equal(buf, &#34;1234&#34;);$
+  MakeAllPrintable(&#34;1\x01\r\n\t\x1f 2\x7e\x7f\x80\xff&#34;, buf, sizeof(buf));
+  assert_string_equal(buf, &#34;1&lt;01&gt;&lt;0d&gt;&lt;0a&gt;&lt;09&gt;&lt;1f&gt; 2~&lt;7f&gt;&lt;80&gt;&lt;ff&gt;&#34;);
+}
+</code></pre>
 
 <p>А вот как код должен был выглядеть:</p>
 
-<pre class="hl">
-<span class="hl slc">// This function converts all non-ASCII characters (with codes less than 32</span>
-<span class="hl slc">// and greater than 126) into the &lt;xx&gt; form where &quot;xx&quot; is a hexadecimal code</span>
-<span class="hl slc">// of the character.</span>
-<span class="hl kwb">void</span> <span class="hl kwd">MakeAllPrintable</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> from<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> to<span class="hl opt">,</span> <span class="hl kwb">int</span> to_capacity<span class="hl opt">) {</span>
-  <span class="hl kwb">const static char</span> hex<span class="hl opt">[] =</span> <span class="hl str">&quot;0123456789abcdef&quot;</span><span class="hl opt">;</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(; *</span>from <span class="hl opt">&amp;&amp;</span> to_capacity <span class="hl opt">&gt;</span> <span class="hl num">1</span><span class="hl opt">; ++</span>from<span class="hl opt">) {</span>
-    <span class="hl kwb">const unsigned char</span> c <span class="hl opt">= *</span>from<span class="hl opt">;</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(</span>c <span class="hl opt">&lt;</span> <span class="hl num">32</span> <span class="hl opt">||</span> c <span class="hl opt">&gt;</span> <span class="hl num">126</span><span class="hl opt">) {</span>
-      <span class="hl kwa">if</span> <span class="hl opt">(</span>to_capacity <span class="hl opt">&lt;</span> <span class="hl num">4</span> <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">)</span>
-        <span class="hl kwa">break</span><span class="hl opt">;</span>
-      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> <span class="hl str">'&lt;'</span><span class="hl opt">;</span>
-      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> hex<span class="hl opt">[(</span>c <span class="hl opt">&gt;&gt;</span> <span class="hl num">4</span><span class="hl opt">) &amp;</span> <span class="hl num">0xf</span><span class="hl opt">];</span>
-      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> hex<span class="hl opt">[</span>c <span class="hl opt">&amp;</span> <span class="hl num">0xf</span><span class="hl opt">];</span>
-      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> <span class="hl str">'&gt;'</span><span class="hl opt">;</span>
-      to_capacity <span class="hl opt">-=</span> <span class="hl num">4</span><span class="hl opt">;</span>   <span class="hl slc">// (!!!)</span>
-    <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
-      <span class="hl opt">*</span>to<span class="hl opt">++ =</span> c<span class="hl opt">;</span>
-      <span class="hl opt">--</span>to_capacity<span class="hl opt">;</span>      <span class="hl slc">// (!!!)</span>
-    <span class="hl opt">}</span>
-  <span class="hl opt">}</span>
-  <span class="hl opt">*</span>to <span class="hl opt">=</span> <span class="hl str">'\0'</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-c">// This function converts all non-ASCII characters (with codes less than 32
+// and greater than 126) into the &lt;xx&gt; form where &#34;xx&#34; is a hexadecimal code
+// of the character.
+void MakeAllPrintable(const char* from, char* to, int to_capacity) {
+  const static char hex[] = &#34;0123456789abcdef&#34;;
+  for (; *from &amp;&amp; to_capacity &gt; 1; ++from) {
+    const unsigned char c = *from;
+    if (c &lt; 32 || c &gt; 126) {
+      if (to_capacity &lt; 4 + 1)
+        break;
+      *to++ = &#39;&lt;&#39;;
+      *to++ = hex[(c &gt;&gt; 4) &amp; 0xf];
+      *to++ = hex[c &amp; 0xf];
+      *to++ = &#39;&gt;&#39;;
+      to_capacity -= 4;   // (!!!)
+    } else {
+      *to++ = c;
+      --to_capacity;      // (!!!)
+    }
+  }
+  *to = &#39;\0&#39;;
+}
+</code></pre>
 
 <p>Пример, безусловно, примитивный, но очень показательный. Принцип простой:
 &ldquo;нет тестов, нет кода&rdquo;. Когда жизненный цикл проекта более нескольких дней,

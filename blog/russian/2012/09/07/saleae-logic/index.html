@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -58,42 +64,34 @@
 Вот это, кстати, правильный и современный подход, и не будь этого условия,
 я бы может и не купил бы.</p>
 
-<p><img src="/images/blog/saleae-logic/IMG_0530.JPG" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/IMG_0530.JPG" alt="" /></p>
 
-<p><img src="/images/blog/saleae-logic/IMG_0531.JPG" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/IMG_0531.JPG" alt="" /></p>
 
 <p>Оказалось, что это все на всего маленькая металлическая коробочка со
 спичечный коробок.</p>
 
-<p><img src="/images/blog/saleae-logic/IMG_0532.JPG" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/IMG_0532.JPG" alt="" /></p>
 
-<p><img src="/images/blog/saleae-logic/IMG_0534.JPG" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/IMG_0534.JPG" alt="" /></p>
 
 <p>Комплектация</p>
 
-<p><img src="/images/blog/saleae-logic/IMG_0535.JPG" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/IMG_0535.JPG" alt="" /></p>
 
 <p>Подключаем&hellip;</p>
 
-<p><img src="/images/blog/saleae-logic/IMG_0536.JPG" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/IMG_0536.JPG" alt="" /></p>
 
 <p>В качестве теста я подцепил на последовательный порт Raspberry Pi,
 по которому в данный момент телнетом сидел в консоли.</p>
 
-<p><img src="/images/blog/saleae-logic/IMG_0537.JPG" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/IMG_0537.JPG" alt="" /></p>
 
 <p>Фрагмент захвата, где видно, что пролетает командочка <code>ls</code> по одному
 проводу и эхом летит назад по другому.</p>
 
-<p><img src="/images/blog/saleae-logic/saleae-logic-analyser-ls-command.jpg" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/saleae-logic-analyser-ls-command.jpg" alt="" /></p>
 
 <p>Теперь клавиатура GMC-4. Она сделана по
 <a href="http://www.learningaboutelectronics.com/Articles/How-does-a-matrix-keyboard-scanning-algorithm-work">классической схеме</a>, когда
@@ -103,15 +101,13 @@
 значительно сократить количество отведенных под обслуживание
 клавиатуры ножек.</p>
 
-<p><img src="/images/blog/saleae-logic/gmc4-schematic.jpg" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/gmc4-schematic.jpg" alt="" /></p>
 
 <p>А так как я собирался имитировать клавиатуру, мне надо было понять
 временные параметры сканирующего сигнала. Подвесил я на анализ
 все четыре сканирующих выхода и вот:</p>
 
-<p><img src="/images/blog/saleae-logic/saleae-logic-analyser-gmc4-keyboard.jpg" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/saleae-logic-analyser-gmc4-keyboard.jpg" alt="" /></p>
 
 <p>Сразу видно, что к чему. При анализе можно измерять практически
 все параметры сигнала, менять масштаб, сравнивать с предыдущими

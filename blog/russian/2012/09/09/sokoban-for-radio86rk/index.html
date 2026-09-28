@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -67,29 +73,28 @@
 виде. Так как значения могут быть только от 0 до 59 (00-3B), номер уровня,
 я решил сделать кондово: посчитать сколько раз удастся вычесть 10 &ndash; это будет первая цифра, а результат перед последним вычитанием будет второй цифрой.</p>
 
-<pre class="hl">
-<span class="hl kwc">print_dec:</span>
-  <span class="hl kwa">push</span> psw
-  <span class="hl kwa">push</span> b
-  mvi b<span class="hl opt">,</span> <span class="hl num">0</span>ffh
-<span class="hl kwc">print_dec_loop:</span>
+<pre><code class="language-x86asm">print_dec:
+  push psw
+  push b
+  mvi b, 0ffh
+print_dec_loop:
   inr b
-  sui <span class="hl num">10</span>
-  <span class="hl kwa">jp</span> print_dec_loop
-  adi <span class="hl num">10</span>
-  <span class="hl kwa">push</span> psw
-  mvi a<span class="hl opt">,</span> <span class="hl str">'0'</span>
-  <span class="hl kwa">add</span> b
-  <span class="hl kwa">mov</span> c<span class="hl opt">,</span> a
-  <span class="hl kwa">call</span> monitor_putchar
-  <span class="hl kwa">pop</span> psw
-  adi <span class="hl str">'0'</span>
-  <span class="hl kwa">mov</span> c<span class="hl opt">,</span> a
-  <span class="hl kwa">call</span> monitor_putchar
-  <span class="hl kwa">pop</span> b
-  <span class="hl kwa">pop</span> psw
-  <span class="hl kwa">ret</span>
-</pre>
+  sui 10
+  jp print_dec_loop
+  adi 10
+  push psw
+  mvi a, &#39;0&#39;
+  add b
+  mov c, a
+  call monitor_putchar
+  pop psw
+  adi &#39;0&#39;
+  mov c, a
+  call monitor_putchar
+  pop b
+  pop psw
+  ret
+</code></pre>
 
 <p><a href="https://github.com/begoon/rk86-maximite/blob/master/programs/sokoban/sokoban.asm">Исходник</a> лежит в составе проекта
 &ldquo;<a href="https://github.com/begoon/rk86-maximite/">Эмулятор Радио-86РК на Maximite</a>&rdquo;. На нем же я записал небольшой видос.</p>

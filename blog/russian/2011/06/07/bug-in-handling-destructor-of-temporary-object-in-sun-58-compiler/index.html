@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,18 +49,17 @@
 <div id="post">
   <p>Рассмотрим код:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;iostream&gt;</span>
-<span class="hl kwb">int</span> ct <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
-<span class="hl kwb">struct</span> G <span class="hl opt">{</span>
-  <span class="hl opt">~</span><span class="hl kwd">G</span><span class="hl opt">() {</span> ct<span class="hl opt">--; }</span>
-<span class="hl opt">};</span>
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl opt">(</span><span class="hl kwd">G</span><span class="hl opt">());</span>  <span class="hl slc">// (1)</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> ct <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+int ct = 1;
+struct G {
+  ~G() { ct--; }
+};
+int main() {
+  (G());  // (1)
+  std::cout &lt;&lt; ct &lt;&lt; std::endl;
+  return 0;
+}
+</code></pre>
 
 <p>Как вы думаете - что напечатает данная программа?</p>
 
@@ -64,7 +69,7 @@
 
 <p>Я проверил на 6 разных компиляторах на разных платформах - везде печатается &ldquo;0&rdquo;, что соответствует стандарту.</p>
 
-<p>Но на отдельно выделенной версии Sun C++ 5.8 <sup>2005</sup>&frasl;<sub>10</sub>/13 данная программа печатает &ldquo;1&rdquo;!</p>
+<p>Но на отдельно выделенной версии Sun C++ 5.8 2005/10/13 данная программа печатает &ldquo;1&rdquo;!</p>
 
 <p>Мы провели с коллегой интересные пару часов, пытаясь в огромной программe локализовать этот коварный глюк.</p>
 

@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,112 +51,110 @@
 
 <p>Файл <code>trigger.h</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#ifndef _EXT_TRIGGER_H</span>
-<span class="hl ppc">#define _EXT_TRIGGER_H</span>
+<pre><code class="language-cpp">#ifndef _EXT_TRIGGER_H
+#define _EXT_TRIGGER_H
 
-<span class="hl ppc">#ifdef WIN32</span>
-  <span class="hl ppc">#include &lt;windows.h&gt;</span>
-<span class="hl ppc">#else</span>
-  <span class="hl ppc">#include &lt;pthread.h&gt;</span>
-<span class="hl ppc">#endif</span>
+#ifdef WIN32
+  #include &lt;windows.h&gt;
+#else
+  #include &lt;pthread.h&gt;
+#endif
 
-<span class="hl kwa">namespace</span> ext <span class="hl opt">{</span>
+namespace ext {
 
-<span class="hl kwc">class</span> Trigger <span class="hl opt">{</span>
-<span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwd">Trigger</span><span class="hl opt">();</span>
-  <span class="hl opt">~</span><span class="hl kwd">Trigger</span><span class="hl opt">();</span>
+class Trigger {
+public:
+  Trigger();
+  ~Trigger();
   
-  <span class="hl slc">// Функция посылки сигнала потоку, </span>
-  <span class="hl slc">// ждущему на функции Wait().</span>
-  <span class="hl kwb">void</span> <span class="hl kwd">Signal</span><span class="hl opt">();</span>
-  <span class="hl slc">// Функция ожидания сигнала.</span>
-  <span class="hl slc">// Вызов этой функции приводит к блокировке потока до</span>
-  <span class="hl slc">// получения сигнала от функции Signal().</span>
-  <span class="hl slc">// Внимание: функция Signal() не должна быть вызвана до</span>
-  <span class="hl slc">// того, как ждущий поток &quot;сядет&quot; на Wait(). Подобное </span>
-  <span class="hl slc">// использование ведет к неопределенному поведению.</span>
-  <span class="hl kwb">void</span> <span class="hl kwd">Wait</span><span class="hl opt">();</span>
+  // Функция посылки сигнала потоку, 
+  // ждущему на функции Wait().
+  void Signal();
+  // Функция ожидания сигнала.
+  // Вызов этой функции приводит к блокировке потока до
+  // получения сигнала от функции Signal().
+  // Внимание: функция Signal() не должна быть вызвана до
+  // того, как ждущий поток &#34;сядет&#34; на Wait(). Подобное 
+  // использование ведет к неопределенному поведению.
+  void Wait();
 
-<span class="hl kwc">private</span><span class="hl opt">:</span>
-<span class="hl ppc">#ifdef WIN32    </span>
-  HANDLE __handle<span class="hl opt">;</span>
-<span class="hl ppc">#else</span>
-  pthread_mutex_t __mutex<span class="hl opt">;</span>
-  pthread_cond_t __cv<span class="hl opt">;</span>
-<span class="hl ppc">#endif</span>
-  <span class="hl slc">// &quot;Защита&quot; от случайного копирования.</span>
-  <span class="hl kwd">Trigger</span><span class="hl opt">(</span><span class="hl kwb">const</span> Trigger<span class="hl opt">&amp;);</span>
-  <span class="hl kwb">void</span> <span class="hl kwc">operator</span><span class="hl opt">=(</span><span class="hl kwb">const</span> Trigger<span class="hl opt">&amp;);</span>
-<span class="hl opt">};</span>
+private:
+#ifdef WIN32    
+  HANDLE __handle;
+#else
+  pthread_mutex_t __mutex;
+  pthread_cond_t __cv;
+#endif
+  // &#34;Защита&#34; от случайного копирования.
+  Trigger(const Trigger&amp;);
+  void operator=(const Trigger&amp;);
+};
 
-<span class="hl opt">}</span> <span class="hl slc">// namespace ext</span>
+} // namespace ext
 
-<span class="hl ppc">#endif</span>
-</pre>
+#endif
+</code></pre>
 
 <p>Файл <code>trigger.cpp</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;Trigger.h&quot;</span><span class="hl ppc"></span>
+<pre><code class="language-cpp">#include &#34;Trigger.h&#34;
 
-<span class="hl kwa">namespace</span> ext <span class="hl opt">{</span>
+namespace ext {
 
-<span class="hl ppc">#ifdef WIN32</span>
+#ifdef WIN32
 
-Trigger<span class="hl opt">::</span><span class="hl kwd">Trigger</span><span class="hl opt">() {</span> 
-  __handle <span class="hl opt">=</span> <span class="hl kwd">CreateEvent</span><span class="hl opt">(</span>
-    NULL<span class="hl opt">,</span>               <span class="hl slc">// Атрибуты безопасности по умолчанию.</span>
-    TRUE<span class="hl opt">,</span>               <span class="hl slc">// Режим ручной активации события.</span>
-    FALSE<span class="hl opt">,</span>              <span class="hl slc">// Начальное состояния -- неактивное.</span>
-    NULL                <span class="hl slc">// Безымянное событие.</span>
-  <span class="hl opt">);</span> 
-<span class="hl opt">}</span>
+Trigger::Trigger() { 
+  __handle = CreateEvent(
+    NULL,               // Атрибуты безопасности по умолчанию.
+    TRUE,               // Режим ручной активации события.
+    FALSE,              // Начальное состояния -- неактивное.
+    NULL                // Безымянное событие.
+  ); 
+}
 
-Trigger<span class="hl opt">::~</span><span class="hl kwd">Trigger</span><span class="hl opt">() {</span> 
-  <span class="hl kwd">CloseHandle</span><span class="hl opt">(</span>__handle<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+Trigger::~Trigger() { 
+  CloseHandle(__handle);
+}
 
-<span class="hl kwb">void</span> Trigger<span class="hl opt">::</span><span class="hl kwd">Signal</span><span class="hl opt">() {</span>
-  <span class="hl kwd">SetEvent</span><span class="hl opt">(</span>__handle<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void Trigger::Signal() {
+  SetEvent(__handle);
+}
 
-<span class="hl kwb">void</span> Trigger<span class="hl opt">::</span><span class="hl kwd">Wait</span><span class="hl opt">() {</span>
-  <span class="hl slc">// Ждем наступление события.</span>
-  <span class="hl kwd">WaitForSingleObject</span><span class="hl opt">(</span>__handle<span class="hl opt">,</span> INFINITE<span class="hl opt">);</span>
-  <span class="hl slc">// &quot;Перезаряжаем&quot; событие.</span>
-  <span class="hl kwd">ResetEvent</span><span class="hl opt">(</span>__handle<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void Trigger::Wait() {
+  // Ждем наступление события.
+  WaitForSingleObject(__handle, INFINITE);
+  // &#34;Перезаряжаем&#34; событие.
+  ResetEvent(__handle);
+}
 
-<span class="hl ppc">#else</span> <span class="hl slc">// WIN32</span>
-<span class="hl ppc"></span>
-Trigger<span class="hl opt">::</span><span class="hl kwd">Trigger</span><span class="hl opt">() {</span> 
-  <span class="hl kwd">pthread_mutex_init</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">,</span> NULL<span class="hl opt">);</span> 
-  <span class="hl kwd">pthread_cond_init</span><span class="hl opt">(&amp;</span>__cv<span class="hl opt">,</span> NULL<span class="hl opt">);</span> 
-<span class="hl opt">}</span>
+#else // WIN32
 
-Trigger<span class="hl opt">::~</span><span class="hl kwd">Trigger</span><span class="hl opt">() {</span> 
-  <span class="hl kwd">pthread_cond_destroy</span><span class="hl opt">(&amp;</span>__cv<span class="hl opt">);</span> 
-  <span class="hl kwd">pthread_mutex_destroy</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">);</span> 
-<span class="hl opt">}</span>
+Trigger::Trigger() { 
+  pthread_mutex_init(&amp;__mutex, NULL); 
+  pthread_cond_init(&amp;__cv, NULL); 
+}
 
-<span class="hl kwb">void</span> Trigger<span class="hl opt">::</span><span class="hl kwd">Signal</span><span class="hl opt">() {</span>
-  <span class="hl kwd">pthread_mutex_lock</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">);</span>
-  <span class="hl kwd">pthread_cond_signal</span><span class="hl opt">(&amp;</span>__cv<span class="hl opt">);</span>
-  <span class="hl kwd">pthread_mutex_unlock</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+Trigger::~Trigger() { 
+  pthread_cond_destroy(&amp;__cv); 
+  pthread_mutex_destroy(&amp;__mutex); 
+}
 
-<span class="hl kwb">void</span> Trigger<span class="hl opt">::</span><span class="hl kwd">Wait</span><span class="hl opt">() {</span>
-  <span class="hl kwd">pthread_mutex_lock</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">);</span>
-  <span class="hl kwd">pthread_cond_wait</span><span class="hl opt">(&amp;</span>__cv<span class="hl opt">, &amp;</span>__mutex<span class="hl opt">);</span>
-  <span class="hl kwd">pthread_mutex_unlock</span><span class="hl opt">(&amp;</span>__mutex<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void Trigger::Signal() {
+  pthread_mutex_lock(&amp;__mutex);
+  pthread_cond_signal(&amp;__cv);
+  pthread_mutex_unlock(&amp;__mutex);
+}
 
-<span class="hl ppc">#endif</span> <span class="hl slc">// WIN32</span>
-<span class="hl ppc"></span>
-<span class="hl opt">}</span> <span class="hl slc">// namespace ext</span>
-</pre>
+void Trigger::Wait() {
+  pthread_mutex_lock(&amp;__mutex);
+  pthread_cond_wait(&amp;__cv, &amp;__mutex);
+  pthread_mutex_unlock(&amp;__mutex);
+}
+
+#endif // WIN32
+
+} // namespace ext
+</code></pre>
 
 <p>Пространство имен, как обычно, ext, так что меняете по вкусу.</p>
 
@@ -162,74 +166,73 @@ Trigger<span class="hl opt">::~</span><span class="hl kwd">Trigger</span><span c
 
 <p>Файл <code>trigger_unittest.cpp</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;gtest/gtest.h&gt;</span>
+<pre><code class="language-cpp">#include &lt;gtest/gtest.h&gt;
 
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;trigger.h&quot;</span><span class="hl ppc"></span>
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;thread.h&quot;</span><span class="hl ppc"></span>
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;pretimer.h&quot;</span><span class="hl ppc"></span>
+#include &#34;trigger.h&#34;
+#include &#34;thread.h&#34;
+#include &#34;pretimer.h&#34;
 
-<span class="hl slc">// Тестовый поток, который будет &quot;скакать&quot; по указанным ключевым</span>
-<span class="hl slc">// точкам, увеличивая значение счетчика.</span>
-<span class="hl kwc">class</span> TriggerThread<span class="hl opt">:</span> <span class="hl kwc">public</span> ext<span class="hl opt">::</span>Thread <span class="hl opt">{</span>
-<span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwd">TriggerThread</span><span class="hl opt">(</span><span class="hl kwc">volatile</span> <span class="hl kwb">int</span><span class="hl opt">&amp;</span> flag<span class="hl opt">,</span> ext<span class="hl opt">::</span>Trigger<span class="hl opt">&amp;</span> trigger<span class="hl opt">) :</span>
-    <span class="hl kwd">__flag</span><span class="hl opt">(</span>flag<span class="hl opt">),</span> <span class="hl kwd">__trigger</span><span class="hl opt">(</span>trigger<span class="hl opt">)</span>
-  <span class="hl opt">{}</span>
+// Тестовый поток, который будет &#34;скакать&#34; по указанным ключевым
+// точкам, увеличивая значение счетчика.
+class TriggerThread: public ext::Thread {
+public:
+  TriggerThread(volatile int&amp; flag, ext::Trigger&amp; trigger) :
+    __flag(flag), __trigger(trigger)
+  {}
 
-  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">Execute</span><span class="hl opt">() {</span>
-    <span class="hl slc">// Ждем первого сигнала.</span>
-    __trigger<span class="hl opt">.</span><span class="hl kwd">Wait</span><span class="hl opt">();</span>
-    __flag <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
-    <span class="hl slc">// Ждем второго сигнала.</span>
-    __trigger<span class="hl opt">.</span><span class="hl kwd">Wait</span><span class="hl opt">();</span>
-    __flag <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span>
-    <span class="hl slc">// Ждем третьего сигнала.</span>
-    __trigger<span class="hl opt">.</span><span class="hl kwd">Wait</span><span class="hl opt">();</span>
-    __flag <span class="hl opt">=</span> <span class="hl num">3</span><span class="hl opt">;</span>
-  <span class="hl opt">}</span>
+  virtual void Execute() {
+    // Ждем первого сигнала.
+    __trigger.Wait();
+    __flag = 1;
+    // Ждем второго сигнала.
+    __trigger.Wait();
+    __flag = 2;
+    // Ждем третьего сигнала.
+    __trigger.Wait();
+    __flag = 3;
+  }
 
-<span class="hl kwc">private</span><span class="hl opt">:</span>
-  <span class="hl kwc">volatile</span> <span class="hl kwb">int</span><span class="hl opt">&amp;</span> __flag<span class="hl opt">;</span>
-  ext<span class="hl opt">::</span>Trigger<span class="hl opt">&amp;</span> __trigger<span class="hl opt">;</span>
-<span class="hl opt">};</span>
+private:
+  volatile int&amp; __flag;
+  ext::Trigger&amp; __trigger;
+};
 
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>Trigger<span class="hl opt">,</span> Generic<span class="hl opt">) {</span>
-  <span class="hl kwc">volatile</span> <span class="hl kwb">int</span> flag <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-  ext<span class="hl opt">::</span>Trigger trigger<span class="hl opt">;</span>
+TEST(Trigger, Generic) {
+  volatile int flag = 0;
+  ext::Trigger trigger;
 
-  <span class="hl slc">// Создаем поток и запускаем егою</span>
-  TriggerThread <span class="hl kwd">a</span><span class="hl opt">(</span>flag<span class="hl opt">,</span> trigger<span class="hl opt">);</span>
-  a<span class="hl opt">.</span><span class="hl kwd">Start</span><span class="hl opt">();</span>
+  // Создаем поток и запускаем егою
+  TriggerThread a(flag, trigger);
+  a.Start();
 
-  <span class="hl slc">// Подождем, чтобы поток &quot;сел&quot; на Wait().</span>
-  ext<span class="hl opt">::</span>PreciseTimer<span class="hl opt">::</span><span class="hl kwd">sleepMs</span><span class="hl opt">(</span><span class="hl num">10</span><span class="hl opt">);</span>
-  <span class="hl slc">// Флаг не должен стать 1, так как поток</span>
-  <span class="hl slc">// должен ждать на Wait().</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">, (</span><span class="hl kwb">int</span><span class="hl opt">)</span>flag<span class="hl opt">);</span>
+  // Подождем, чтобы поток &#34;сел&#34; на Wait().
+  ext::PreciseTimer::sleepMs(10);
+  // Флаг не должен стать 1, так как поток
+  // должен ждать на Wait().
+  EXPECT_EQ(0, (int)flag);
    
-  <span class="hl slc">// Информируем поток о событии.</span>
-  trigger<span class="hl opt">.</span><span class="hl kwd">Signal</span><span class="hl opt">();</span>
-  <span class="hl slc">// Подождем, чтобы поток успел изменить флаг на 1.</span>
-  ext<span class="hl opt">::</span>PreciseTimer<span class="hl opt">::</span><span class="hl kwd">sleepMs</span><span class="hl opt">(</span><span class="hl num">10</span><span class="hl opt">);</span>
-  <span class="hl slc">// Проверим, как он это сделал.</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">, (</span><span class="hl kwb">int</span><span class="hl opt">)</span>flag<span class="hl opt">);</span>
+  // Информируем поток о событии.
+  trigger.Signal();
+  // Подождем, чтобы поток успел изменить флаг на 1.
+  ext::PreciseTimer::sleepMs(10);
+  // Проверим, как он это сделал.
+  EXPECT_EQ(1, (int)flag);
 
-  <span class="hl slc">// Далее проверка повторяется еще пару раз, чтобы проверить,</span>
-  <span class="hl slc">// что синхронизирующий объект правильно &quot;взводится&quot; после</span>
-  <span class="hl slc">// срабатывания.</span>
+  // Далее проверка повторяется еще пару раз, чтобы проверить,
+  // что синхронизирующий объект правильно &#34;взводится&#34; после
+  // срабатывания.
 
-  trigger<span class="hl opt">.</span><span class="hl kwd">Signal</span><span class="hl opt">();</span>
-  ext<span class="hl opt">::</span>PreciseTimer<span class="hl opt">::</span><span class="hl kwd">sleepMs</span><span class="hl opt">(</span><span class="hl num">10</span><span class="hl opt">);</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">2</span><span class="hl opt">, (</span><span class="hl kwb">int</span><span class="hl opt">)</span>flag<span class="hl opt">);</span>
+  trigger.Signal();
+  ext::PreciseTimer::sleepMs(10);
+  EXPECT_EQ(2, (int)flag);
 
-  trigger<span class="hl opt">.</span><span class="hl kwd">Signal</span><span class="hl opt">();</span>
-  a<span class="hl opt">.</span><span class="hl kwd">Join</span><span class="hl opt">();</span>
-  <span class="hl slc">// Последняя проверка не требует ожидания, так как мы присоединись</span>
-  <span class="hl slc">// к потоку, и он точно уже завершился.</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">3</span><span class="hl opt">, (</span><span class="hl kwb">int</span><span class="hl opt">)</span>flag<span class="hl opt">);</span>
-<span class="hl opt">}</span>
-</pre>
+  trigger.Signal();
+  a.Join();
+  // Последняя проверка не требует ожидания, так как мы присоединись
+  // к потоку, и он точно уже завершился.
+  EXPECT_EQ(3, (int)flag);
+}
+</code></pre>
 
 <p>Компилируем для Windows в Visual Studio:</p>
 

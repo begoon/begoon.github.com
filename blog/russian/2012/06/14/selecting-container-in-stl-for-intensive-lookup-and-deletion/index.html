@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,52 +51,51 @@
 
 <p>Итак:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;future&gt;</span>
-<span class="hl ppc">#include &lt;vector&gt;</span>
-<span class="hl ppc">#include &lt;deque&gt;</span>
-<span class="hl ppc">#include &lt;list&gt;</span>
-<span class="hl ppc">#include &lt;forward_list&gt;</span>
-<span class="hl ppc">#include &lt;typeinfo&gt;</span>
-<span class="hl ppc">#include &lt;iterator&gt;</span>
-<span class="hl ppc">#include &lt;iostream&gt;</span>
+<pre><code class="language-cpp">#include &lt;future&gt;
+#include &lt;vector&gt;
+#include &lt;deque&gt;
+#include &lt;list&gt;
+#include &lt;forward_list&gt;
+#include &lt;typeinfo&gt;
+#include &lt;iterator&gt;
+#include &lt;iostream&gt;
 
-<span class="hl kwc">template</span> <span class="hl opt">&lt;</span>typename T<span class="hl opt">&gt;</span>
-<span class="hl kwb">void</span> <span class="hl kwd">go</span><span class="hl opt">(</span>T f<span class="hl opt">) {</span>
-  <span class="hl kwc">auto</span> start <span class="hl opt">=</span> std<span class="hl opt">::</span>chrono<span class="hl opt">::</span>high_resolution_clock<span class="hl opt">::</span><span class="hl kwd">now</span><span class="hl opt">();</span>
-  <span class="hl kwd">f</span><span class="hl opt">();</span>
-  <span class="hl kwc">auto</span> stop <span class="hl opt">=</span> std<span class="hl opt">::</span>chrono<span class="hl opt">::</span>high_resolution_clock<span class="hl opt">::</span><span class="hl kwd">now</span><span class="hl opt">();</span>
-  <span class="hl kwc">auto</span> duration <span class="hl opt">=</span> std<span class="hl opt">::</span>chrono<span class="hl opt">::</span>duration<span class="hl opt">&lt;</span><span class="hl kwb">double</span><span class="hl opt">&gt;(</span>stop <span class="hl opt">-</span> start<span class="hl opt">).</span><span class="hl kwd">count</span><span class="hl opt">();</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> duration <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
+template &lt;typename T&gt;
+void go(T f) {
+  auto start = std::chrono::high_resolution_clock::now();
+  f();
+  auto stop = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration&lt;double&gt;(stop - start).count();
+  std::cout &lt;&lt; duration &lt;&lt; &#34;\n&#34;;
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">erase</span><span class="hl opt">(</span>std<span class="hl opt">::</span>forward_list<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;&amp;</span> c<span class="hl opt">,</span> std<span class="hl opt">::</span>forward_list<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;::</span>iterator i<span class="hl opt">) {</span>
-  c<span class="hl opt">.</span><span class="hl kwd">erase_after</span><span class="hl opt">(</span>i<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void erase(std::forward_list&lt;int&gt;&amp; c, std::forward_list&lt;int&gt;::iterator i) {
+  c.erase_after(i);
+}
 
-<span class="hl kwc">template</span> <span class="hl opt">&lt;</span>typename T<span class="hl opt">&gt;</span> <span class="hl kwb">void</span> <span class="hl kwd">erase</span><span class="hl opt">(</span>T<span class="hl opt">&amp;</span> c<span class="hl opt">,</span> typename T<span class="hl opt">::</span>iterator i<span class="hl opt">) {</span>
-  c<span class="hl opt">.</span><span class="hl kwd">erase</span><span class="hl opt">(</span>i<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+template &lt;typename T&gt; void erase(T&amp; c, typename T::iterator i) {
+  c.erase(i);
+}
 
-<span class="hl kwc">template</span> <span class="hl opt">&lt;</span>typename T<span class="hl opt">&gt;</span> <span class="hl kwb">void</span> <span class="hl kwd">test</span><span class="hl opt">() {</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl kwc">typeid</span><span class="hl opt">(</span>T<span class="hl opt">).</span><span class="hl kwd">name</span><span class="hl opt">() &lt;&lt;</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
-  <span class="hl kwb">size_t const</span> N <span class="hl opt">=</span> <span class="hl num">100000</span><span class="hl opt">;</span>
-  T <span class="hl kwd">v</span><span class="hl opt">(</span>N<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">);</span>
-  std<span class="hl opt">::</span><span class="hl kwd">srand</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">);</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwc">auto</span> t <span class="hl opt">=</span> N<span class="hl opt">;</span> t <span class="hl opt">&gt;</span> <span class="hl num">0</span><span class="hl opt">; --</span>t<span class="hl opt">) {</span>
-    <span class="hl kwc">auto</span> i <span class="hl opt">=</span> v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">();</span>
-    std<span class="hl opt">::</span><span class="hl kwd">advance</span><span class="hl opt">(</span>i<span class="hl opt">,</span> std<span class="hl opt">::</span><span class="hl kwd">rand</span><span class="hl opt">() %</span> t<span class="hl opt">);</span>
-    <span class="hl kwd">erase</span><span class="hl opt">(</span>v<span class="hl opt">,</span> i<span class="hl opt">);</span>
-  <span class="hl opt">}</span>
-<span class="hl opt">}</span>
+template &lt;typename T&gt; void test() {
+  std::cout &lt;&lt; typeid(T).name() &lt;&lt; &#34;\n&#34;;
+  size_t const N = 100000;
+  T v(N, 0);
+  std::srand(0);
+  for (auto t = N; t &gt; 0; --t) {
+    auto i = v.begin();
+    std::advance(i, std::rand() % t);
+    erase(v, i);
+  }
+}
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl kwd">go</span> <span class="hl opt">(</span>test<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;&gt;);</span>
-  <span class="hl kwd">go</span> <span class="hl opt">(</span>test<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>list<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;&gt;);</span>
-  <span class="hl kwd">go</span> <span class="hl opt">(</span>test<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>forward_list<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;&gt;);</span>
-  <span class="hl kwd">go</span> <span class="hl opt">(</span>test<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>deque<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;&gt;);</span>
-<span class="hl opt">}</span>
-</pre>
+int main() {
+  go (test&lt;std::vector&lt;int&gt;&gt;);
+  go (test&lt;std::list&lt;int&gt;&gt;);
+  go (test&lt;std::forward_list&lt;int&gt;&gt;);
+  go (test&lt;std::deque&lt;int&gt;&gt;);
+}
+</code></pre>
 
 <p>Перегруженная функция <code>erase</code> сделана для единоообразия функции <code>test</code>.</p>
 

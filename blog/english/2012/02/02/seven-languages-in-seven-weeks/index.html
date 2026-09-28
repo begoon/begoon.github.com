@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -77,14 +83,13 @@
 
 <p>An example from the book:</p>
 
-<pre class="hl">
-<span class="hl opt">//</span> Fire up the future<span class="hl opt">.</span>
-futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <span class="hl kwd">with</span><span class="hl opt">(</span><span class="hl str">&quot;http://google.com/&quot;</span><span class="hl opt">) &#64;</span>fetch
-<span class="hl kwd">writeln</span><span class="hl opt">(</span><span class="hl str">&quot;Continue immediately when future is running in background.&quot;</span><span class="hl opt">)</span>
-<span class="hl opt">//</span> This line will be executed immediately after spawning the future<span class="hl opt">.</span>
-<span class="hl kwd">writeln</span><span class="hl opt">(</span><span class="hl str">&quot;fetched &quot;</span><span class="hl opt">,</span> futureResult size<span class="hl opt">,</span> <span class="hl str">&quot; bytes&quot;</span><span class="hl opt">)</span>
-<span class="hl opt">//</span> But this line will be blocked until the future returns<span class="hl opt">.</span>
-</pre>
+<pre><code class="language-plaintext">// Fire up the future.
+futureResult := URL with(&#34;http://google.com/&#34;) @fetch
+writeln(&#34;Continue immediately when future is running in background.&#34;)
+// This line will be executed immediately after spawning the future.
+writeln(&#34;fetched &#34;, futureResult size, &#34; bytes&#34;)
+// But this line will be blocked until the future returns.
+</code></pre>
 
 <p><strong>Prolog</strong></p>
 

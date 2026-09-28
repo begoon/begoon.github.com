@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,13 +49,11 @@
 <div id="post">
   <p>Нашел я тут пакетик с USB флешками разных лет использования. Как обычно, в работе только две самые последние и самых больших размеров. Остальные &ndash; тут.</p>
 
-<p><img src="/images/blog/usb-stick-raid/bunch-of-usb-stricks.jpg" alt="" />
-</p>
+<p><img src="/images/blog/usb-stick-raid/bunch-of-usb-stricks.jpg" alt="" /></p>
 
 <p>Размеры от 64 мегов до 32 гигов.</p>
 
-<p><img src="/images/blog/usb-stick-raid/usb-stricks-sorted.jpg" alt="" />
-</p>
+<p><img src="/images/blog/usb-stick-raid/usb-stricks-sorted.jpg" alt="" /></p>
 
 <p>И возникла идея сделать из них RAID, например, просто &ldquo;concatenated disk&rdquo;, ибо в OSX это делается очень просто. Идеи тут минимум, но было интересно попробовать.</p>
 
@@ -57,43 +61,35 @@
 
 <p><a href="http://www.amazon.co.uk/gp/product/B0051PGX2I/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B0051PGX2I&amp;linkCode=as2&amp;tag=prodiy-21">Satechi 12 Port USB Hub with Power Adapter &amp; 2 Control Switches</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B0051PGX2I" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
 
-<p><img src="/images/blog/usb-stick-raid/satechi-12-usb-port-extender.jpg" alt="" />
-</p>
+<p><img src="/images/blog/usb-stick-raid/satechi-12-usb-port-extender.jpg" alt="" /></p>
 
 <p>Втыкаем&hellip;</p>
 
-<p><img src="/images/blog/usb-stick-raid/usb-stricks-raid-assembled.jpg" alt="" />
-</p>
+<p><img src="/images/blog/usb-stick-raid/usb-stricks-raid-assembled.jpg" alt="" /></p>
 
 <p>И запускаем Disk Utility. Все флешки, вроде, видятся.</p>
 
-<p><img src="/images/blog/usb-stick-raid/disk-utility-disks-connected.png" alt="" />
-</p>
+<p><img src="/images/blog/usb-stick-raid/disk-utility-disks-connected.png" alt="" /></p>
 
 <p>Создаем диск типа &ldquo;concatenated disk&rdquo; с именем &ldquo;Crazy RAID&rdquo; и добавляем туда флешки, предварительно их отформатировав в HPFS+ для единообразия.</p>
 
-<p><img src="/images/blog/usb-stick-raid/disk-utility-crazy-raid-created.png" alt="" />
-</p>
+<p><img src="/images/blog/usb-stick-raid/disk-utility-crazy-raid-created.png" alt="" /></p>
 
 <p>Подтверждаем&hellip;</p>
 
-<p><img src="/images/blog/usb-stick-raid/disk-utility-crazy-raid-confirmation.png" alt="" />
-</p>
+<p><img src="/images/blog/usb-stick-raid/disk-utility-crazy-raid-confirmation.png" alt="" /></p>
 
 <p>Ждем минут пять и готово.</p>
 
-<p><img src="/images/blog/usb-stick-raid/disk-utility-crazy-raid-completed.png" alt="" />
-</p>
+<p><img src="/images/blog/usb-stick-raid/disk-utility-crazy-raid-completed.png" alt="" /></p>
 
 <p>В системе видится.</p>
 
-<p><img src="/images/blog/usb-stick-raid/df-crazy-raid.png" alt="" />
-</p>
+<p><img src="/images/blog/usb-stick-raid/df-crazy-raid.png" alt="" /></p>
 
 <p>Можно теперь чего-нибудь туда скопировать.</p>
 
-<p><img src="/images/blog/usb-stick-raid/mc-crazy-raid-copying.png" alt="" />
-</p>
+<p><img src="/images/blog/usb-stick-raid/mc-crazy-raid-copying.png" alt="" /></p>
 
 <p>Конечно, конструктивного применения тут реально ноль, ибо все флешки разные и кроме их объединения в один диск сложно что-то еще сделать в плане RAID. Скорость записи будет определяться той флешкой, на которую идет запись в данный момент. При параллельном чтении, возможно, будет ускорение.</p>
 

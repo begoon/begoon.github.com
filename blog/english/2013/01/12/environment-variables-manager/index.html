@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -58,270 +64,267 @@ for the values passed to <code>putenv()</code> (in the form of &ldquo;name=value
 
 <p>EnvironmentVariablesManager.h file:</p>
 
-<pre class="hl">
-<span class="hl ppc">#ifndef ENVIRONMENT_VARIABLE_MANAGER_H</span>
-<span class="hl ppc">#define ENVIRONMENT_VARIABLE_MANAGER_H</span>
+<pre><code class="language-cpp">#ifndef ENVIRONMENT_VARIABLE_MANAGER_H
+#define ENVIRONMENT_VARIABLE_MANAGER_H
 
-<span class="hl ppc">#include &lt;string&gt;</span>
-<span class="hl ppc">#include &lt;vector&gt;</span>
-<span class="hl ppc">#include &lt;map&gt;</span>
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;map&gt;
 
-<span class="hl kwc">class</span> EnvironmentVariablesManager <span class="hl opt">{</span>
- <span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwc">typedef</span> std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;</span> VariableContainer<span class="hl opt">;</span>
-  <span class="hl kwc">typedef</span> std<span class="hl opt">::</span>map<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>string<span class="hl opt">,</span> VariableContainer<span class="hl opt">&gt;</span> Variables<span class="hl opt">;</span>
+class EnvironmentVariablesManager {
+ public:
+  typedef std::vector&lt;char&gt; VariableContainer;
+  typedef std::map&lt;std::string, VariableContainer&gt; Variables;
 
-  <span class="hl kwd">EnvironmentVariablesManager</span><span class="hl opt">() {}</span>
+  EnvironmentVariablesManager() {}
 
-  <span class="hl kwb">void</span> <span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">);</span>
-  std<span class="hl opt">::</span>string <span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">)</span> <span class="hl kwb">const</span><span class="hl opt">;</span>
-  <span class="hl kwb">void</span> <span class="hl kwd">del</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">);</span>
+  void put(const std::string&amp; name, const std::string&amp; value);
+  std::string get(const std::string&amp; name) const;
+  void del(const std::string&amp; name);
 
-  <span class="hl kwb">static void</span> <span class="hl kwd">PutOSVariable</span><span class="hl opt">(</span><span class="hl kwb">char</span><span class="hl opt">*</span> value<span class="hl opt">);</span>
-  <span class="hl kwb">static</span> std<span class="hl opt">::</span>string <span class="hl kwd">GetOSVariable</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> name<span class="hl opt">);</span>
-  <span class="hl kwb">static bool</span> <span class="hl kwd">IsOSVariableSet</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> name<span class="hl opt">);</span>
+  static void PutOSVariable(char* value);
+  static std::string GetOSVariable(const char* name);
+  static bool IsOSVariableSet(const char* name);
 
- <span class="hl kwc">private</span><span class="hl opt">:</span>
-  VariableContainer <span class="hl kwd">PairToContainer</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">,</span>
-                                    <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">)</span> <span class="hl kwb">const</span><span class="hl opt">;</span>
-  Variables vars_<span class="hl opt">;</span>
+ private:
+  VariableContainer PairToContainer(const std::string&amp; name,
+                                    const std::string&amp; value) const;
+  Variables vars_;
 
-  <span class="hl slc">// This class is not copiable.</span>
-  <span class="hl kwd">EnvironmentVariablesManager</span><span class="hl opt">(</span><span class="hl kwb">const</span> EnvironmentVariablesManager<span class="hl opt">&amp;);</span>
-  <span class="hl kwb">void</span> <span class="hl kwc">operator</span><span class="hl opt">=(</span><span class="hl kwb">const</span> EnvironmentVariablesManager<span class="hl opt">&amp;);</span>
-<span class="hl opt">};</span>
+  // This class is not copiable.
+  EnvironmentVariablesManager(const EnvironmentVariablesManager&amp;);
+  void operator=(const EnvironmentVariablesManager&amp;);
+};
 
-<span class="hl ppc">#endif</span>
-</pre>
+#endif
+</code></pre>
 
 <p>EnvironmentVariablesManager.cpp file:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;EnvironmentVariablesManager.h&quot;</span><span class="hl ppc"></span>
+<pre><code class="language-cpp">#include &#34;EnvironmentVariablesManager.h&#34;
 
-<span class="hl ppc">#ifdef WINDOWS</span>
-<span class="hl ppc">#include &lt;windows.h&gt;</span>
-<span class="hl ppc">#else</span>
-<span class="hl ppc">#include &lt;unistd.h&gt;</span>
-<span class="hl ppc">#endif</span>
+#ifdef WINDOWS
+#include &lt;windows.h&gt;
+#else
+#include &lt;unistd.h&gt;
+#endif
 
-<span class="hl ppc">#include &lt;vector&gt;</span>
-<span class="hl ppc">#include &lt;map&gt;</span>
-<span class="hl ppc">#include &lt;string&gt;</span>
-<span class="hl ppc">#include &lt;iterator&gt;</span>
-<span class="hl ppc">#include &lt;algorithm&gt;</span>
+#include &lt;vector&gt;
+#include &lt;map&gt;
+#include &lt;string&gt;
+#include &lt;iterator&gt;
+#include &lt;algorithm&gt;
 
-<span class="hl ppc">#include &lt;cassert&gt;</span>
+#include &lt;cassert&gt;
 
-<span class="hl kwb">void</span> EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">,</span>
-                                      <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span>
-  <span class="hl kwb">const</span> VariableContainer pair <span class="hl opt">=</span> <span class="hl kwd">PairToContainer</span><span class="hl opt">(</span>name<span class="hl opt">,</span> value<span class="hl opt">);</span>
-  <span class="hl kwb">const</span> std<span class="hl opt">::</span>pair<span class="hl opt">&lt;</span>Variables<span class="hl opt">::</span>iterator<span class="hl opt">,</span> <span class="hl kwb">bool</span><span class="hl opt">&gt;</span> inserted <span class="hl opt">=</span>
-    vars_<span class="hl opt">.</span><span class="hl kwd">insert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">make_pair</span><span class="hl opt">(</span>name<span class="hl opt">,</span> pair<span class="hl opt">));</span>
-  <span class="hl kwa">if</span> <span class="hl opt">(!</span>inserted<span class="hl opt">.</span>second<span class="hl opt">)</span>
-    inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second <span class="hl opt">=</span> pair<span class="hl opt">;</span>
-  <span class="hl kwb">char</span><span class="hl opt">*</span> data <span class="hl opt">= &amp;(</span>inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]);</span>
-  <span class="hl kwd">PutOSVariable</span><span class="hl opt">(</span>data<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void EnvironmentVariablesManager::put(const std::string&amp; name,
+                                      const std::string&amp; value) {
+  const VariableContainer pair = PairToContainer(name, value);
+  const std::pair&lt;Variables::iterator, bool&gt; inserted =
+    vars_.insert(std::make_pair(name, pair));
+  if (!inserted.second)
+    inserted.first-&gt;second = pair;
+  char* data = &amp;(inserted.first-&gt;second[0]);
+  PutOSVariable(data);
+}
 
-std<span class="hl opt">::</span>string EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">)</span> <span class="hl kwb">const</span> <span class="hl opt">{</span>
-  <span class="hl kwa">return</span> <span class="hl kwd">GetOSVariable</span><span class="hl opt">(</span>name<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">());</span>
-<span class="hl opt">}</span>
+std::string EnvironmentVariablesManager::get(const std::string&amp; name) const {
+  return GetOSVariable(name.c_str());
+}
 
-<span class="hl kwb">void</span> EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">del</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">) {</span>
-  <span class="hl kwd">put</span><span class="hl opt">(</span>name<span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void EnvironmentVariablesManager::del(const std::string&amp; name) {
+  put(name, &#34;&#34;);
+}
 
-<span class="hl kwb">void</span> EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">PutOSVariable</span><span class="hl opt">(</span><span class="hl kwb">char</span><span class="hl opt">*</span> value<span class="hl opt">) {</span>
-  <span class="hl opt">::</span><span class="hl kwd">putenv</span><span class="hl opt">(</span>value<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void EnvironmentVariablesManager::PutOSVariable(char* value) {
+  ::putenv(value);
+}
 
-std<span class="hl opt">::</span>string EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">GetOSVariable</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> name<span class="hl opt">) {</span>
-<span class="hl ppc">#ifdef WINDOWS</span>
-  <span class="hl kwb">size_t</span> sz <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span><span class="hl kwd">getenv_s</span><span class="hl opt">(&amp;</span>sz<span class="hl opt">,</span> NULL<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span> name<span class="hl opt">) ==</span> <span class="hl num">0</span><span class="hl opt">);</span>
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>sz <span class="hl opt">==</span> <span class="hl num">0</span><span class="hl opt">)</span> <span class="hl kwa">return</span> std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">();</span>
-  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;</span> <span class="hl kwd">value</span><span class="hl opt">(</span>sz <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span><span class="hl kwd">getenv_s</span><span class="hl opt">(&amp;</span>sz<span class="hl opt">, &amp;</span>value<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">],</span> sz<span class="hl opt">,</span> name<span class="hl opt">) ==</span> <span class="hl num">0</span><span class="hl opt">);</span>
-  <span class="hl kwa">return</span> std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(&amp;</span>value<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">],</span> sz <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">);</span>
-<span class="hl ppc">#else</span>
-  <span class="hl kwb">const char</span><span class="hl opt">*</span> <span class="hl kwb">const</span> value <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">getenv</span><span class="hl opt">(</span>name<span class="hl opt">);</span>
-  <span class="hl kwa">return</span> value ? value <span class="hl opt">:</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">;</span>
-<span class="hl ppc">#endif</span>
-<span class="hl opt">}</span>
+std::string EnvironmentVariablesManager::GetOSVariable(const char* name) {
+#ifdef WINDOWS
+  size_t sz = 0;
+  assert(getenv_s(&amp;sz, NULL, 0, name) == 0);
+  if (sz == 0) return std::string();
+  std::vector&lt;char&gt; value(sz + 1);
+  assert(getenv_s(&amp;sz, &amp;value[0], sz, name) == 0);
+  return std::string(&amp;value[0], sz - 1);
+#else
+  const char* const value = std::getenv(name);
+  return value ? value : &#34;&#34;;
+#endif
+}
 
-<span class="hl kwb">bool</span> EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">IsOSVariableSet</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> name<span class="hl opt">) {</span>
-<span class="hl ppc">#ifdef WINDOWS</span>
-  <span class="hl kwb">size_t</span> sz <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span><span class="hl kwd">getenv_s</span><span class="hl opt">(&amp;</span>sz<span class="hl opt">,</span> NULL<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span> name<span class="hl opt">) ==</span> <span class="hl num">0</span><span class="hl opt">);</span>
-  <span class="hl kwa">return</span> sz <span class="hl opt">&gt;</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl ppc">#else</span>
-  <span class="hl kwb">const char</span><span class="hl opt">*</span> value <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">getenv</span><span class="hl opt">(</span>name<span class="hl opt">);</span>
-  <span class="hl kwa">return</span> value <span class="hl opt">!=</span> NULL <span class="hl opt">&amp;&amp; *</span>value <span class="hl opt">!=</span> <span class="hl str">'\0'</span><span class="hl opt">;</span>
-<span class="hl ppc">#endif</span>
-<span class="hl opt">}</span>
+bool EnvironmentVariablesManager::IsOSVariableSet(const char* name) {
+#ifdef WINDOWS
+  size_t sz = 0;
+  assert(getenv_s(&amp;sz, NULL, 0, name) == 0);
+  return sz &gt; 0;
+#else
+  const char* value = std::getenv(name);
+  return value != NULL &amp;&amp; *value != &#39;\0&#39;;
+#endif
+}
 
-EnvironmentVariablesManager<span class="hl opt">::</span>VariableContainer 
-EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">PairToContainer</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">,</span>
-                                             <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">)</span> <span class="hl kwb">const</span> <span class="hl opt">{</span>
-  VariableContainer pair<span class="hl opt">;</span>                                            
-  std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>name<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> name<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> std<span class="hl opt">::</span><span class="hl kwd">back_inserter</span><span class="hl opt">(</span>pair<span class="hl opt">));</span>
-  pair<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl str">'='</span><span class="hl opt">);</span>
-  std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>value<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> value<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> std<span class="hl opt">::</span><span class="hl kwd">back_inserter</span><span class="hl opt">(</span>pair<span class="hl opt">));</span>
-  pair<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl str">'\0'</span><span class="hl opt">);</span>
-  <span class="hl kwa">return</span> pair<span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+EnvironmentVariablesManager::VariableContainer 
+EnvironmentVariablesManager::PairToContainer(const std::string&amp; name,
+                                             const std::string&amp; value) const {
+  VariableContainer pair;                                            
+  std::copy(name.begin(), name.end(), std::back_inserter(pair));
+  pair.push_back(&#39;=&#39;);
+  std::copy(value.begin(), value.end(), std::back_inserter(pair));
+  pair.push_back(&#39;\0&#39;);
+  return pair;
+}
+</code></pre>
 
 <p>Unit-tests using <code>std::assert</code>.</p>
 
 <p>EnvironmentVariablesManager_unittest.cpp file:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;iostream&gt;</span>
-<span class="hl ppc">#include &lt;string&gt;</span>
-<span class="hl ppc">#include &lt;vector&gt;</span>
-<span class="hl ppc">#include &lt;cstdlib&gt;</span>
-<span class="hl ppc">#include &lt;cstring&gt;</span>
-<span class="hl ppc">#include &lt;cassert&gt;</span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;cstdlib&gt;
+#include &lt;cstring&gt;
+#include &lt;cassert&gt;
 
-<span class="hl ppc">#ifdef WINDOWS</span>
-<span class="hl ppc">#include &lt;windows.h&gt;</span>
-<span class="hl ppc">#else</span>
-<span class="hl ppc">#include &lt;stdlib.h&gt;</span>
-<span class="hl ppc">#include &lt;stdio.h&gt;</span>
-<span class="hl ppc">#include &lt;unistd.h&gt;</span>
-<span class="hl ppc">#endif</span>
+#ifdef WINDOWS
+#include &lt;windows.h&gt;
+#else
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#endif
 
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;EnvironmentVariablesManager.h&quot;</span><span class="hl ppc"></span>
+#include &#34;EnvironmentVariablesManager.h&#34;
 
-<span class="hl kwb">void</span> <span class="hl kwd">Test_EnvironmentVariablesManager_get_put</span><span class="hl opt">() {</span>
-  EnvironmentVariablesManager env<span class="hl opt">;</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;&quot;</span><span class="hl opt">) ==</span> env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;_a_unique_variable_&quot;</span><span class="hl opt">));</span>
-  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;_a_unique_variable_&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;b&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;b&quot;</span><span class="hl opt">) ==</span> env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;_a_unique_variable_&quot;</span><span class="hl opt">));</span>
-  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;_a_unique_variable_&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;abc&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;abc&quot;</span><span class="hl opt">) ==</span> env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;_a_unique_variable_&quot;</span><span class="hl opt">));</span>
-  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;_a_unique_variable_&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;&quot;</span><span class="hl opt">) ==</span> env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;_a_unique_variable_&quot;</span><span class="hl opt">));</span>
-<span class="hl opt">}</span>
+void Test_EnvironmentVariablesManager_get_put() {
+  EnvironmentVariablesManager env;
+  assert(std::string(&#34;&#34;) == env.get(&#34;_a_unique_variable_&#34;));
+  env.put(&#34;_a_unique_variable_&#34;, &#34;b&#34;);
+  assert(std::string(&#34;b&#34;) == env.get(&#34;_a_unique_variable_&#34;));
+  env.put(&#34;_a_unique_variable_&#34;, &#34;abc&#34;);
+  assert(std::string(&#34;abc&#34;) == env.get(&#34;_a_unique_variable_&#34;));
+  env.put(&#34;_a_unique_variable_&#34;, &#34;&#34;);
+  assert(std::string(&#34;&#34;) == env.get(&#34;_a_unique_variable_&#34;));
+}
 
-<span class="hl kwa">namespace</span> <span class="hl opt">{</span>
-std<span class="hl opt">::</span>string <span class="hl kwd">ReadEnvironmentVariableViaShell</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">) {</span>
-<span class="hl ppc">#ifdef WINDOWS</span>
-  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string shell <span class="hl opt">=</span>
-    EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">GetOSVariable</span><span class="hl opt">(</span><span class="hl str">&quot;ComSpec&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(!</span>shell<span class="hl opt">.</span><span class="hl kwd">empty</span><span class="hl opt">());</span>
-  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string cmd <span class="hl opt">=</span> shell <span class="hl opt">+</span> <span class="hl str">&quot; /c echo %&quot;</span> <span class="hl opt">+</span> name <span class="hl opt">+</span> <span class="hl str">&quot;%&quot;</span><span class="hl opt">;</span>
-  <span class="hl kwb">FILE</span><span class="hl opt">*</span> <span class="hl kwb">const</span> f <span class="hl opt">=</span> <span class="hl kwd">_popen</span><span class="hl opt">(</span>cmd<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">(),</span> <span class="hl str">&quot;rb&quot;</span><span class="hl opt">);</span>
-<span class="hl ppc">#else</span>
-  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string cmd <span class="hl opt">=</span> <span class="hl str">&quot;echo $&quot;</span> <span class="hl opt">+</span> name<span class="hl opt">;</span>
-  <span class="hl kwb">FILE</span><span class="hl opt">*</span> <span class="hl kwb">const</span> f <span class="hl opt">=</span> <span class="hl kwd">popen</span><span class="hl opt">(</span>cmd<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">(),</span> <span class="hl str">&quot;r&quot;</span><span class="hl opt">);</span>
-<span class="hl ppc">#endif</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>f <span class="hl opt">!=</span> NULL<span class="hl opt">);</span>
-  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;</span> <span class="hl kwd">line</span><span class="hl opt">(</span><span class="hl num">1024</span><span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">);</span>
-  <span class="hl kwb">size_t</span> read <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-  <span class="hl kwa">while</span> <span class="hl opt">(!::</span><span class="hl kwd">feof</span><span class="hl opt">(</span>f<span class="hl opt">) &amp;&amp;</span> read <span class="hl opt">&lt;</span> line<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">()) {</span>
-    <span class="hl kwb">const size_t</span> sz <span class="hl opt">= ::</span><span class="hl kwd">fread</span><span class="hl opt">(&amp;</span>line<span class="hl opt">[</span>read<span class="hl opt">],</span> <span class="hl num">1</span><span class="hl opt">,</span> line<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">() -</span> read<span class="hl opt">,</span> f<span class="hl opt">);</span>
-    read <span class="hl opt">+=</span> sz<span class="hl opt">;</span>
-  <span class="hl opt">}</span>
-<span class="hl ppc">#ifdef WINDOWS</span>
-  <span class="hl opt">::</span><span class="hl kwd">_pclose</span><span class="hl opt">(</span>f<span class="hl opt">);</span>
-<span class="hl ppc">#else</span>
-  <span class="hl opt">::</span><span class="hl kwd">pclose</span><span class="hl opt">(</span>f<span class="hl opt">);</span>
-<span class="hl ppc">#endif</span>
-  line<span class="hl opt">.</span><span class="hl kwd">resize</span><span class="hl opt">(</span>read<span class="hl opt">);</span>
-  std<span class="hl opt">::</span>string <span class="hl kwd">trimmed</span><span class="hl opt">(</span>read<span class="hl opt">,</span> <span class="hl str">'\0'</span><span class="hl opt">);</span>
-  std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>line<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> line<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> trimmed<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">());</span>
-  <span class="hl kwa">return</span> trimmed<span class="hl opt">.</span><span class="hl kwd">substr</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">,</span> trimmed<span class="hl opt">.</span><span class="hl kwd">find_last_not_of</span><span class="hl opt">(</span><span class="hl str">&quot;</span><span class="hl esc">\r\n</span><span class="hl str">&quot;</span><span class="hl opt">) +</span> <span class="hl num">1</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
-<span class="hl opt">}</span>
+namespace {
+std::string ReadEnvironmentVariableViaShell(const std::string&amp; name) {
+#ifdef WINDOWS
+  const std::string shell =
+    EnvironmentVariablesManager::GetOSVariable(&#34;ComSpec&#34;);
+  assert(!shell.empty());
+  const std::string cmd = shell + &#34; /c echo %&#34; + name + &#34;%&#34;;
+  FILE* const f = _popen(cmd.c_str(), &#34;rb&#34;);
+#else
+  const std::string cmd = &#34;echo $&#34; + name;
+  FILE* const f = popen(cmd.c_str(), &#34;r&#34;);
+#endif
+  assert(f != NULL);
+  std::vector&lt;char&gt; line(1024, 0);
+  size_t read = 0;
+  while (!::feof(f) &amp;&amp; read &lt; line.size()) {
+    const size_t sz = ::fread(&amp;line[read], 1, line.size() - read, f);
+    read += sz;
+  }
+#ifdef WINDOWS
+  ::_pclose(f);
+#else
+  ::pclose(f);
+#endif
+  line.resize(read);
+  std::string trimmed(read, &#39;\0&#39;);
+  std::copy(line.begin(), line.end(), trimmed.begin());
+  return trimmed.substr(0, trimmed.find_last_not_of(&#34;\r\n&#34;) + 1);
+}
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">Test_EnvironmentVariablesManager_put_is_propagated_to_child_process</span><span class="hl opt">() {</span>
-  EnvironmentVariablesManager env<span class="hl opt">;</span>
-<span class="hl ppc">#ifdef WINDOWS</span>
-  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string empty <span class="hl opt">=</span> <span class="hl str">&quot;%__unique_%&quot;</span><span class="hl opt">;</span>
-<span class="hl ppc">#else</span>
-  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string empty <span class="hl opt">=</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">;</span>
-<span class="hl ppc">#endif</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>empty <span class="hl opt">==</span> <span class="hl kwd">ReadEnvironmentVariableViaShell</span><span class="hl opt">(</span><span class="hl str">&quot;__unique_&quot;</span><span class="hl opt">));</span>
-  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;__unique_&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;b&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;b&quot;</span><span class="hl opt">) ==</span> <span class="hl kwd">ReadEnvironmentVariableViaShell</span><span class="hl opt">(</span><span class="hl str">&quot;__unique_&quot;</span><span class="hl opt">));</span>
-  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;__unique_&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>empty <span class="hl opt">==</span> <span class="hl kwd">ReadEnvironmentVariableViaShell</span><span class="hl opt">(</span><span class="hl str">&quot;__unique_&quot;</span><span class="hl opt">));</span>
-<span class="hl opt">}</span>
+void Test_EnvironmentVariablesManager_put_is_propagated_to_child_process() {
+  EnvironmentVariablesManager env;
+#ifdef WINDOWS
+  const std::string empty = &#34;%__unique_%&#34;;
+#else
+  const std::string empty = &#34;&#34;;
+#endif
+  assert(empty == ReadEnvironmentVariableViaShell(&#34;__unique_&#34;));
+  env.put(&#34;__unique_&#34;, &#34;b&#34;);
+  assert(std::string(&#34;b&#34;) == ReadEnvironmentVariableViaShell(&#34;__unique_&#34;));
+  env.put(&#34;__unique_&#34;, &#34;&#34;);
+  assert(empty == ReadEnvironmentVariableViaShell(&#34;__unique_&#34;));
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">Test_EnvironmentVariablesManager_must_take_a_copy</span><span class="hl opt">() {</span>
-  EnvironmentVariablesManager env<span class="hl opt">;</span>
-  <span class="hl kwb">char</span> var<span class="hl opt">[] =</span> <span class="hl str">&quot;12345678&quot;</span><span class="hl opt">;</span>
-  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;var&quot;</span><span class="hl opt">,</span> var<span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;var&quot;</span><span class="hl opt">) ==</span> std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;12345678&quot;</span><span class="hl opt">));</span>
-  std<span class="hl opt">::</span><span class="hl kwd">strcpy</span><span class="hl opt">(</span>var<span class="hl opt">,</span> <span class="hl str">&quot;abc&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;var&quot;</span><span class="hl opt">) ==</span> std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;12345678&quot;</span><span class="hl opt">));</span>
-<span class="hl opt">}</span>
+void Test_EnvironmentVariablesManager_must_take_a_copy() {
+  EnvironmentVariablesManager env;
+  char var[] = &#34;12345678&#34;;
+  env.put(&#34;var&#34;, var);
+  assert(env.get(&#34;var&#34;) == std::string(&#34;12345678&#34;));
+  std::strcpy(var, &#34;abc&#34;);
+  assert(env.get(&#34;var&#34;) == std::string(&#34;12345678&#34;));
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">Test_EnvironmentVariablesManager_del</span><span class="hl opt">() {</span>
-  EnvironmentVariablesManager env<span class="hl opt">;</span>
-  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;variable_to_delete&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;123&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;123&quot;</span><span class="hl opt">) ==</span> env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;variable_to_delete&quot;</span><span class="hl opt">));</span>
-  env<span class="hl opt">.</span><span class="hl kwd">del</span><span class="hl opt">(</span><span class="hl str">&quot;variable_to_delete&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>env<span class="hl opt">.</span><span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl str">&quot;variable_to_delete&quot;</span><span class="hl opt">).</span><span class="hl kwd">empty</span><span class="hl opt">() ==</span> <span class="hl kwa">true</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void Test_EnvironmentVariablesManager_del() {
+  EnvironmentVariablesManager env;
+  env.put(&#34;variable_to_delete&#34;, &#34;123&#34;);
+  assert(std::string(&#34;123&#34;) == env.get(&#34;variable_to_delete&#34;));
+  env.del(&#34;variable_to_delete&#34;);
+  assert(env.get(&#34;variable_to_delete&#34;).empty() == true);
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">Test_EnvironmentVariablesManager_IsOSVariableSet_set_and_unset</span><span class="hl opt">() {</span>
-  EnvironmentVariablesManager env<span class="hl opt">;</span>
-  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;a&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;value&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">IsOSVariableSet</span><span class="hl opt">(</span><span class="hl str">&quot;a&quot;</span><span class="hl opt">) ==</span> <span class="hl kwa">true</span><span class="hl opt">);</span>
-  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;a&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">IsOSVariableSet</span><span class="hl opt">(</span><span class="hl str">&quot;a&quot;</span><span class="hl opt">) ==</span> <span class="hl kwa">false</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void Test_EnvironmentVariablesManager_IsOSVariableSet_set_and_unset() {
+  EnvironmentVariablesManager env;
+  env.put(&#34;a&#34;, &#34;value&#34;);
+  assert(EnvironmentVariablesManager::IsOSVariableSet(&#34;a&#34;) == true);
+  env.put(&#34;a&#34;, &#34;&#34;);
+  assert(EnvironmentVariablesManager::IsOSVariableSet(&#34;a&#34;) == false);
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">Test_EnvironmentVariablesManager_GetOSVariable</span><span class="hl opt">() {</span>
-  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string unique_name <span class="hl opt">=</span> <span class="hl str">&quot;EnvironmentVariablesManager_GetOSVariable&quot;</span><span class="hl opt">;</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">GetOSVariable</span><span class="hl opt">(</span>unique_name<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">())</span>
-                                                    <span class="hl opt">.</span><span class="hl kwd">empty</span><span class="hl opt">());</span>
-  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string unique_name_pair <span class="hl opt">=</span> unique_name <span class="hl opt">+</span> <span class="hl str">&quot;=12345678&quot;</span><span class="hl opt">;</span>
-  <span class="hl kwb">char</span> var<span class="hl opt">[</span><span class="hl num">1024</span><span class="hl opt">];</span>
-  unique_name_pair<span class="hl opt">.</span><span class="hl kwd">copy</span><span class="hl opt">(</span>var<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>var<span class="hl opt">));</span>
-  var<span class="hl opt">[</span>unique_name_pair<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">()] =</span> <span class="hl str">'\0'</span><span class="hl opt">;</span>
-  <span class="hl opt">::</span><span class="hl kwd">putenv</span><span class="hl opt">(</span>var<span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">GetOSVariable</span><span class="hl opt">(</span>unique_name<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">())</span>
-                                                    <span class="hl opt">==</span> <span class="hl str">&quot;12345678&quot;</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void Test_EnvironmentVariablesManager_GetOSVariable() {
+  const std::string unique_name = &#34;EnvironmentVariablesManager_GetOSVariable&#34;;
+  assert(EnvironmentVariablesManager::GetOSVariable(unique_name.c_str())
+                                                    .empty());
+  const std::string unique_name_pair = unique_name + &#34;=12345678&#34;;
+  char var[1024];
+  unique_name_pair.copy(var, sizeof(var));
+  var[unique_name_pair.length()] = &#39;\0&#39;;
+  ::putenv(var);
+  assert(EnvironmentVariablesManager::GetOSVariable(unique_name.c_str())
+                                                    == &#34;12345678&#34;);
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">Test_EnvironmentVariablesManager_PutOSVariable</span><span class="hl opt">() {</span>
-  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string unique_name <span class="hl opt">=</span> <span class="hl str">&quot;EnvironmentVariablesManager_PutOSVariable&quot;</span><span class="hl opt">;</span>
-  <span class="hl kwb">const char</span><span class="hl opt">*</span> before <span class="hl opt">= ::</span><span class="hl kwd">getenv</span><span class="hl opt">(</span>unique_name<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">());</span>
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>before <span class="hl opt">!=</span> NULL<span class="hl opt">)</span>
-    <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span>before<span class="hl opt">).</span><span class="hl kwd">empty</span><span class="hl opt">());</span>
+void Test_EnvironmentVariablesManager_PutOSVariable() {
+  const std::string unique_name = &#34;EnvironmentVariablesManager_PutOSVariable&#34;;
+  const char* before = ::getenv(unique_name.c_str());
+  if (before != NULL)
+    assert(std::string(before).empty());
 
-  <span class="hl kwb">const</span> std<span class="hl opt">::</span>string unique_name_pair <span class="hl opt">=</span> unique_name <span class="hl opt">+</span> <span class="hl str">&quot;=12345678&quot;</span><span class="hl opt">;</span>
-  <span class="hl kwb">char</span> var<span class="hl opt">[</span><span class="hl num">1024</span><span class="hl opt">];</span>
-  unique_name_pair<span class="hl opt">.</span><span class="hl kwd">copy</span><span class="hl opt">(</span>var<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>var<span class="hl opt">));</span>
-  var<span class="hl opt">[</span>unique_name_pair<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">()] =</span> <span class="hl str">'\0'</span><span class="hl opt">;</span>
+  const std::string unique_name_pair = unique_name + &#34;=12345678&#34;;
+  char var[1024];
+  unique_name_pair.copy(var, sizeof(var));
+  var[unique_name_pair.length()] = &#39;\0&#39;;
 
-  EnvironmentVariablesManager<span class="hl opt">::</span><span class="hl kwd">PutOSVariable</span><span class="hl opt">(</span>var<span class="hl opt">);</span>
-  <span class="hl kwb">const char</span><span class="hl opt">*</span> after <span class="hl opt">= ::</span><span class="hl kwd">getenv</span><span class="hl opt">(</span>unique_name<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">());</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>after <span class="hl opt">!=</span> NULL<span class="hl opt">);</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span>after<span class="hl opt">) ==</span> <span class="hl str">&quot;12345678&quot;</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+  EnvironmentVariablesManager::PutOSVariable(var);
+  const char* after = ::getenv(unique_name.c_str());
+  assert(after != NULL);
+  assert(std::string(after) == &#34;12345678&#34;);
+}
 
-<span class="hl kwb">int</span> <span class="hl kwd">run_tests</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> <span class="hl kwb">const</span> argv<span class="hl opt">[]) {</span>
-  <span class="hl kwd">Test_EnvironmentVariablesManager_GetOSVariable</span><span class="hl opt">();</span>
-  <span class="hl kwd">Test_EnvironmentVariablesManager_PutOSVariable</span><span class="hl opt">();</span>
-  <span class="hl kwd">Test_EnvironmentVariablesManager_get_put</span><span class="hl opt">();</span>
-  <span class="hl kwd">Test_EnvironmentVariablesManager_put_is_propagated_to_child_process</span><span class="hl opt">();</span>
-  <span class="hl kwd">Test_EnvironmentVariablesManager_must_take_a_copy</span><span class="hl opt">();</span>
-  <span class="hl kwd">Test_EnvironmentVariablesManager_del</span><span class="hl opt">();</span>
-  <span class="hl kwd">Test_EnvironmentVariablesManager_IsOSVariableSet_set_and_unset</span><span class="hl opt">();</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
+int run_tests(int argc, const char* const argv[]) {
+  Test_EnvironmentVariablesManager_GetOSVariable();
+  Test_EnvironmentVariablesManager_PutOSVariable();
+  Test_EnvironmentVariablesManager_get_put();
+  Test_EnvironmentVariablesManager_put_is_propagated_to_child_process();
+  Test_EnvironmentVariablesManager_must_take_a_copy();
+  Test_EnvironmentVariablesManager_del();
+  Test_EnvironmentVariablesManager_IsOSVariableSet_set_and_unset();
+  return 0;
+}
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> <span class="hl kwb">const</span> argv<span class="hl opt">[]) {</span>
-  <span class="hl kwd">run_tests</span><span class="hl opt">(</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;All tests pass.&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+int main(int argc, const char* const argv[]) {
+  run_tests(argc, argv);
+  std::cout &lt;&lt; &#34;All tests pass.&#34; &lt;&lt; std::endl;
+}
+</code></pre>
 
 <p>Overall, nothing really intricate but quite handy.</p>
 

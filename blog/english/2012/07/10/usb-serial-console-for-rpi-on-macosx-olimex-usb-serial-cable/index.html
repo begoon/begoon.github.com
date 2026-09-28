@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -47,15 +53,13 @@
 
 <p>This cable provides 3.3V output levels which are strongly recommended for RPi (not 5V), and its 3 wires with female plugs can be directly connected to the RPi GPIO P1 header.</p>
 
-<p><img src="/images/blog/olimex-cable/olimex-usb-serial-cable-olinuxino-console-cable.png" alt="" />
-</p>
+<p><img src="/images/blog/olimex-cable/olimex-usb-serial-cable-olinuxino-console-cable.png" alt="" /></p>
 
 <p>Unfortunately, at a time of this writing, there were no drivers for Mac OSX available on the <a href="https://www.olimex.com/dev/usb-serial-cable.html">official website</a>, and OSX Lion (10.7.4) didn&rsquo;t recognize this device. It was an unpleasant surprise because before I saw that Lion perfectly recognized other USB-RS232 hardware based on different chipsets (Microchip, for example).</p>
 
 <p>I checked the Product ID and Manufacturer on the Olimex cable. When the cable is connected, click on &ldquo;About This Mac &gt; More Info… &gt; System Report… &gt; USB&rdquo;.</p>
 
-<p><img src="/images/blog/olimex-cable/pl2303-serial-usb-on-lion.png" alt="" />
-</p>
+<p><img src="/images/blog/olimex-cable/pl2303-serial-usb-on-lion.png" alt="" /></p>
 
 <p>Googling for a Prolific driver for Mac brought me to a great blog post, called &ldquo;<a href="http://xbsd.nl/2011/07/pl2303-serial-usb-on-osx-lion.html">PL2303 Serial-USB on OSX Lion</a>&rdquo;. Following the instructions I installed the driver and connected to Raspberry Pi.</p>
 
@@ -114,9 +118,9 @@ kextcache -system-cache
 <table>
 <thead>
 <tr>
-<td><strong>Wire</strong></td>
-<td><strong>Desc</strong></td>
-<td><strong>Rip GPIO</strong></td>
+<th><strong>Wire</strong></th>
+<th><strong>Desc</strong></th>
+<th><strong>Rip GPIO</strong></th>
 </tr>
 </thead>
 
@@ -143,8 +147,7 @@ kextcache -system-cache
 
 <p>An example of the connection:</p>
 
-<p><img src="/images/blog/olimex-cable/pl2303-serial-usb-on-lion-connected.jpg" alt="" />
-</p>
+<p><img src="/images/blog/olimex-cable/pl2303-serial-usb-on-lion-connected.jpg" alt="" /></p>
 
 <p>When all three wires are attached, you can connect the cable back to USB. Now any terminal emulator software can talk to RPi via the <code>/dev/cu.PL2303-00002006</code> device. I used Minicom:</p>
 

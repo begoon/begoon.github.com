@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,74 +51,72 @@
 
 <p>Например, вот вариант, который я написал где-то за полчаса:</p>
 
-<pre class="hl">
-<span class="hl opt">-</span><span class="hl kwd">module</span><span class="hl opt">(</span>queens_classic<span class="hl opt">).</span>
-<span class="hl opt">-</span><span class="hl kwd">export</span><span class="hl opt">([</span>solve<span class="hl opt">/</span><span class="hl num">0</span><span class="hl opt">]).</span>
+<pre><code class="language-erlang">-module(queens_classic).
+-export([solve/0]).
 
-<span class="hl kwd">solve</span><span class="hl opt">() -&gt;</span>
-    <span class="hl kwd">solve</span><span class="hl opt">(</span><span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">seq</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">8</span><span class="hl opt">),</span> <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">seq</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">15</span> <span class="hl opt">+</span> <span class="hl num">15</span><span class="hl opt">),</span> <span class="hl num">1</span><span class="hl opt">, []).</span>
+solve() -&gt;
+    solve(lists:seq(1, 8), lists:seq(1, 15 + 15), 1, []).
 
-<span class="hl kwd">print_board</span><span class="hl opt">([]) -&gt;</span> <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~n&quot;</span><span class="hl opt">, []);</span>
-<span class="hl kwd">print_board</span><span class="hl opt">([</span>H|T<span class="hl opt">]) -&gt;</span>
-    Line <span class="hl opt">= [</span><span class="hl kwc">string</span><span class="hl opt">:</span><span class="hl kwd">copies</span><span class="hl opt">(</span><span class="hl str">&quot;. &quot;</span><span class="hl opt">,</span> H <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">),</span> <span class="hl str">&quot;&#64; &quot;</span><span class="hl opt">,</span> <span class="hl kwc">string</span><span class="hl opt">:</span><span class="hl kwd">copies</span><span class="hl opt">(</span><span class="hl str">&quot;. &quot;</span><span class="hl opt">,</span> <span class="hl num">8</span> <span class="hl opt">-</span> H<span class="hl opt">)],</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~s~n&quot;</span><span class="hl opt">, [</span>Line<span class="hl opt">]),</span>
-    <span class="hl kwd">print_board</span><span class="hl opt">(</span>T<span class="hl opt">).</span>
+print_board([]) -&gt; io:format(&#34;~n&#34;, []);
+print_board([H|T]) -&gt;
+    Line = [string:copies(&#34;. &#34;, H - 1), &#34;@ &#34;, string:copies(&#34;. &#34;, 8 - H)],
+    io:format(&#34;~s~n&#34;, [Line]),
+    print_board(T).
 
-<span class="hl kwd">solve</span><span class="hl opt">(</span>_<span class="hl opt">,</span> _<span class="hl opt">,</span> Cols<span class="hl opt">,</span> Result<span class="hl opt">)</span> <span class="hl kwa">when</span> Cols <span class="hl opt">&gt;</span> <span class="hl num">8</span> <span class="hl opt">-&gt;</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~p~n&quot;</span><span class="hl opt">, [</span>Result<span class="hl opt">]),</span>
-    <span class="hl kwd">print_board</span><span class="hl opt">(</span>Result<span class="hl opt">);</span>
+solve(_, _, Cols, Result) when Cols &gt; 8 -&gt;
+    io:format(&#34;~p~n&#34;, [Result]),
+    print_board(Result);
 
-<span class="hl kwd">solve</span><span class="hl opt">(</span>Rows<span class="hl opt">,</span> Diags<span class="hl opt">,</span> Col<span class="hl opt">,</span> Result<span class="hl opt">) -&gt;</span>
-    <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">foreach</span><span class="hl opt">(</span><span class="hl kwa">fun</span><span class="hl opt">(</span>Row<span class="hl opt">) -&gt;</span>
-                     D1 <span class="hl opt">=</span> Row <span class="hl opt">+</span> Col<span class="hl opt">,</span>
-                     D2 <span class="hl opt">=</span> Row <span class="hl opt">-</span> Col <span class="hl opt">+</span> <span class="hl num">8</span> <span class="hl opt">+</span> <span class="hl num">15</span><span class="hl opt">,</span>
-                     T <span class="hl opt">=</span> <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">member</span><span class="hl opt">(</span>Row<span class="hl opt">,</span> Rows<span class="hl opt">)</span> andalso
-                         <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">member</span><span class="hl opt">(</span>D1<span class="hl opt">,</span> Diags<span class="hl opt">)</span> andalso
-                         <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">member</span><span class="hl opt">(</span>D2<span class="hl opt">,</span> Diags<span class="hl opt">),</span>
-                     <span class="hl kwa">if</span> T <span class="hl opt">-&gt;</span>
-                         Rows1 <span class="hl opt">=</span> Rows <span class="hl opt">-- [</span>Row<span class="hl opt">],</span>
-                         Diags1 <span class="hl opt">=</span> Diags <span class="hl opt">-- [</span>D1<span class="hl opt">,</span> D2<span class="hl opt">],</span>
-                         <span class="hl kwd">solve</span><span class="hl opt">(</span>Rows1<span class="hl opt">,</span> Diags1<span class="hl opt">,</span> Col <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">, [</span>Row | Result<span class="hl opt">]);</span>
-                        true <span class="hl opt">-&gt;</span> void
-                     <span class="hl kwa">end</span>
-                  <span class="hl kwa">end</span><span class="hl opt">,</span> Rows<span class="hl opt">).</span>
-</pre>
+solve(Rows, Diags, Col, Result) -&gt;
+    lists:foreach(fun(Row) -&gt;
+                     D1 = Row + Col,
+                     D2 = Row - Col + 8 + 15,
+                     T = lists:member(Row, Rows) andalso
+                         lists:member(D1, Diags) andalso
+                         lists:member(D2, Diags),
+                     if T -&gt;
+                         Rows1 = Rows -- [Row],
+                         Diags1 = Diags -- [D1, D2],
+                         solve(Rows1, Diags1, Col + 1, [Row | Result]);
+                        true -&gt; void
+                     end
+                  end, Rows).
+</code></pre>
 
 <p>Выглядит ужасно, и стиль однозначно понятно какой: C/Python на стероидах (циклы, if&rsquo;ы).</p>
 
 <p>А вот над этим вариантом я провозился несколько часов:</p>
 
-<pre class="hl">
-<span class="hl opt">-</span><span class="hl kwd">module</span><span class="hl opt">(</span>queens<span class="hl opt">).</span>
-<span class="hl opt">-</span><span class="hl kwd">export</span><span class="hl opt">([</span>solve<span class="hl opt">/</span><span class="hl num">0</span><span class="hl opt">]).</span>
+<pre><code class="language-erlang">-module(queens).
+-export([solve/0]).
 
-<span class="hl kwd">solve</span><span class="hl opt">() -&gt;</span>
-    <span class="hl kwd">solve</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">, []).</span>
+solve() -&gt;
+    solve(1, []).
 
-<span class="hl kwd">print_board</span><span class="hl opt">([]) -&gt;</span> <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~n&quot;</span><span class="hl opt">, []);</span>
-<span class="hl kwd">print_board</span><span class="hl opt">([{</span>_X<span class="hl opt">,</span> Y<span class="hl opt">}</span>|T<span class="hl opt">]) -&gt;</span>
-    Line <span class="hl opt">= [</span><span class="hl kwc">string</span><span class="hl opt">:</span><span class="hl kwd">copies</span><span class="hl opt">(</span><span class="hl str">&quot;. &quot;</span><span class="hl opt">,</span> Y <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">),</span> <span class="hl str">&quot;&#64; &quot;</span><span class="hl opt">,</span> <span class="hl kwc">string</span><span class="hl opt">:</span><span class="hl kwd">copies</span><span class="hl opt">(</span><span class="hl str">&quot;. &quot;</span><span class="hl opt">,</span> <span class="hl num">8</span> <span class="hl opt">-</span> Y<span class="hl opt">)],</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~s~n&quot;</span><span class="hl opt">, [</span>Line<span class="hl opt">]),</span>
-    <span class="hl kwd">print_board</span><span class="hl opt">(</span>T<span class="hl opt">).</span>
+print_board([]) -&gt; io:format(&#34;~n&#34;, []);
+print_board([{_X, Y}|T]) -&gt;
+    Line = [string:copies(&#34;. &#34;, Y - 1), &#34;@ &#34;, string:copies(&#34;. &#34;, 8 - Y)],
+    io:format(&#34;~s~n&#34;, [Line]),
+    print_board(T).
 
-<span class="hl kwd">solve</span><span class="hl opt">(</span>X<span class="hl opt">,</span> Taken<span class="hl opt">)</span> <span class="hl kwa">when</span> X <span class="hl opt">&gt;</span> <span class="hl num">8</span> <span class="hl opt">-&gt;</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~p~n&quot;</span><span class="hl opt">, [</span>Taken<span class="hl opt">]),</span>
-    <span class="hl kwd">print_board</span><span class="hl opt">(</span>Taken<span class="hl opt">);</span>
+solve(X, Taken) when X &gt; 8 -&gt;
+    io:format(&#34;~p~n&#34;, [Taken]),
+    print_board(Taken);
 
-<span class="hl kwd">solve</span><span class="hl opt">(</span>X<span class="hl opt">,</span> Taken<span class="hl opt">) -&gt;</span>
-    L <span class="hl opt">= [{</span>X<span class="hl opt">,</span> Y<span class="hl opt">}</span> || Y <span class="hl opt">&lt;-</span> <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">seq</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">8</span><span class="hl opt">),</span> not <span class="hl kwd">under_attack</span><span class="hl opt">({</span>X<span class="hl opt">,</span> Y<span class="hl opt">},</span> Taken<span class="hl opt">)],</span>
-    <span class="hl kwd">row</span><span class="hl opt">(</span>L<span class="hl opt">,</span> Taken<span class="hl opt">).</span>
+solve(X, Taken) -&gt;
+    L = [{X, Y} || Y &lt;- lists:seq(1, 8), not under_attack({X, Y}, Taken)],
+    row(L, Taken).
 
-<span class="hl kwd">row</span><span class="hl opt">([],</span> _<span class="hl opt">) -&gt; [];</span>
-<span class="hl kwd">row</span><span class="hl opt">([{</span>X<span class="hl opt">,</span> Y<span class="hl opt">}</span>|L<span class="hl opt">],</span> Taken<span class="hl opt">) -&gt;</span>
-    <span class="hl kwd">solve</span><span class="hl opt">(</span>X <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">, [{</span>X<span class="hl opt">,</span> Y<span class="hl opt">}</span> | Taken<span class="hl opt">]),</span>
-    <span class="hl kwd">row</span><span class="hl opt">(</span>L<span class="hl opt">,</span> Taken<span class="hl opt">).</span>
+row([], _) -&gt; [];
+row([{X, Y}|L], Taken) -&gt;
+    solve(X + 1, [{X, Y} | Taken]),
+    row(L, Taken).
 
-<span class="hl kwd">under_attack</span><span class="hl opt">(</span>_<span class="hl opt">, []) -&gt;</span> false<span class="hl opt">;</span>
-<span class="hl kwd">under_attack</span><span class="hl opt">({</span>X<span class="hl opt">,</span> Y<span class="hl opt">}, [{</span>Xt<span class="hl opt">,</span> Yt<span class="hl opt">}</span>|L<span class="hl opt">]) -&gt;</span>
-    Y <span class="hl opt">==</span> Yt orelse <span class="hl kwb">abs</span><span class="hl opt">(</span>Y <span class="hl opt">-</span> Yt<span class="hl opt">) ==</span> <span class="hl kwb">abs</span><span class="hl opt">(</span>X <span class="hl opt">-</span> Xt<span class="hl opt">)</span> orelse
-    <span class="hl kwd">under_attack</span><span class="hl opt">({</span>X<span class="hl opt">,</span> Y<span class="hl opt">},</span> L<span class="hl opt">).</span>
-</pre>
+under_attack(_, []) -&gt; false;
+under_attack({X, Y}, [{Xt, Yt}|L]) -&gt;
+    Y == Yt orelse abs(Y - Yt) == abs(X - Xt) orelse
+    under_attack({X, Y}, L).
+</code></pre>
 
 <p>Вся работа со списками вручную без циклоподобных конструкций.</p>
 
@@ -145,20 +149,19 @@
 
 <p>На всякий случай Makefile для обоих вариантов:</p>
 
-<pre class="hl">
-target <span class="hl opt">=</span> queens
+<pre><code class="language-makefile">target = queens
 
-<span class="hl kwa">all</span><span class="hl opt">:</span>
-    erlc <span class="hl opt">$(</span>target<span class="hl opt">)</span>.erl
-    erl <span class="hl opt">-</span>noshell <span class="hl opt">-</span>s <span class="hl opt">$(</span>target<span class="hl opt">)</span> solve <span class="hl opt">-</span>s init stop
+all:
+    erlc $(target).erl
+    erl -noshell -s $(target) solve -s init stop
 
-classic<span class="hl opt">:</span>
-    erlc <span class="hl opt">$(</span>target<span class="hl opt">)</span>_classic.erl
-    erl <span class="hl opt">-</span>noshell <span class="hl opt">-</span>s <span class="hl opt">$(</span>target<span class="hl opt">)</span>_classic solve <span class="hl opt">-</span>s init stop
+classic:
+    erlc $(target)_classic.erl
+    erl -noshell -s $(target)_classic solve -s init stop
 
-<span class="hl kwa">clean</span><span class="hl opt">:</span>
-    <span class="hl opt">-</span><span class="hl kwa">rm</span> <span class="hl opt">*</span>.beam <span class="hl opt">*</span>.dump
-</pre>
+clean:
+    -rm *.beam *.dump
+</code></pre>
 
 </div>
 

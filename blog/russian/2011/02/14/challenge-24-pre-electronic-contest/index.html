@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -47,41 +53,40 @@
 
 <p>Я по-пенсионерски попросился решать <a href="http://ch24.org/preec/html/R.html">R</a>. В итоге написал какой-то невообразимый велосипед на С++, которым таки получилось сделать играемый wav, прослушать сообщения и сдать задачу, и только потом, немного успокоившись, на питоне получилась короткая программа, делающая чистые 16-битные wav&rsquo;ы.</p>
 
-<pre class="hl">
-<span class="hl kwa">import</span> wave<span class="hl opt">,</span> struct
+<pre><code class="language-python">import wave, struct
 
-<span class="hl kwa">def</span> <span class="hl kwd">make_soundfile</span><span class="hl opt">(</span>sample<span class="hl opt">,</span> freq<span class="hl opt">,</span> fname<span class="hl opt">):</span>
-    frate <span class="hl opt">=</span> <span class="hl num">7000</span>
+def make_soundfile(sample, freq, fname):
+    frate = 7000
 
-    data_size <span class="hl opt">=</span> <span class="hl kwb">len</span><span class="hl opt">(</span>sample<span class="hl opt">)</span>
+    data_size = len(sample)
 
-    sine_list <span class="hl opt">= []</span>
-    <span class="hl kwa">for</span> x <span class="hl kwa">in</span> sample<span class="hl opt">:</span>
-        sine_list<span class="hl opt">.</span><span class="hl kwd">append</span><span class="hl opt">(</span><span class="hl kwb">float</span><span class="hl opt">(</span>x<span class="hl opt">) /</span> <span class="hl num">2</span> <span class="hl opt">*</span> <span class="hl num">32768</span><span class="hl opt">)</span>
+    sine_list = []
+    for x in sample:
+        sine_list.append(float(x) / 2 * 32768)
 
-    wav_file <span class="hl opt">=</span> wave<span class="hl opt">.</span><span class="hl kwb">open</span><span class="hl opt">(</span>fname <span class="hl opt">+</span> <span class="hl str">&quot;.wav&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;w&quot;</span><span class="hl opt">)</span>
+    wav_file = wave.open(fname + &#34;.wav&#34;, &#34;w&#34;)
 
-    nchannels <span class="hl opt">=</span> <span class="hl num">1</span>
-    sampwidth <span class="hl opt">=</span> <span class="hl num">2</span>
-    framerate <span class="hl opt">=</span> <span class="hl kwb">int</span><span class="hl opt">(</span>frate<span class="hl opt">)</span>
-    nframes <span class="hl opt">=</span> data_size
-    comptype <span class="hl opt">=</span> <span class="hl str">&quot;NONE&quot;</span>
-    compname <span class="hl opt">=</span> <span class="hl str">&quot;not compressed&quot;</span>
+    nchannels = 1
+    sampwidth = 2
+    framerate = int(frate)
+    nframes = data_size
+    comptype = &#34;NONE&#34;
+    compname = &#34;not compressed&#34;
 
-    wav_file<span class="hl opt">.</span><span class="hl kwd">setparams</span><span class="hl opt">((</span>nchannels<span class="hl opt">,</span> sampwidth<span class="hl opt">,</span> framerate<span class="hl opt">,</span> nframes<span class="hl opt">,</span> comptype<span class="hl opt">,</span> compname<span class="hl opt">))</span>
-    <span class="hl kwa">for</span> s <span class="hl kwa">in</span> sine_list<span class="hl opt">:</span>
-        wav_file<span class="hl opt">.</span><span class="hl kwd">writeframes</span><span class="hl opt">(</span>struct<span class="hl opt">.</span><span class="hl kwd">pack</span><span class="hl opt">(</span><span class="hl str">'h'</span><span class="hl opt">,</span> <span class="hl kwb">int</span><span class="hl opt">(</span>s<span class="hl opt">)))</span>
-    wav_file<span class="hl opt">.</span><span class="hl kwd">close</span><span class="hl opt">()</span>
+    wav_file.setparams((nchannels, sampwidth, framerate, nframes, comptype, compname))
+    for s in sine_list:
+        wav_file.writeframes(struct.pack(&#39;h&#39;, int(s)))
+    wav_file.close()
 
- <span class="hl kwa">for</span> n <span class="hl kwa">in</span> <span class="hl kwb">range</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">11</span><span class="hl opt">):</span>
-    fname <span class="hl opt">=</span> <span class="hl str">&quot;test-%02d.tst&quot;</span> <span class="hl opt">%</span> n
-    <span class="hl kwa">print</span> fname
-    sample <span class="hl opt">=</span> <span class="hl kwb">open</span><span class="hl opt">(</span>fname<span class="hl opt">).</span><span class="hl kwd">readlines</span><span class="hl opt">()</span>
-    sample <span class="hl opt">=</span> sample<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">:]</span>
-    freq <span class="hl opt">=</span> <span class="hl kwb">len</span><span class="hl opt">(</span>sample<span class="hl opt">)</span>
-    <span class="hl kwd">make_soundfile</span><span class="hl opt">(</span>sample<span class="hl opt">,</span> freq<span class="hl opt">,</span> fname<span class="hl opt">)</span>
+ for n in range(1, 11):
+    fname = &#34;test-%02d.tst&#34; % n
+    print fname
+    sample = open(fname).readlines()
+    sample = sample[1:]
+    freq = len(sample)
+    make_soundfile(sample, freq, fname)
 
-</pre>
+</code></pre>
 
 <p>Конечно, авторское решение было еще проще.</p>
 

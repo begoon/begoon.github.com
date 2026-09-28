@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -60,56 +66,46 @@ return. They provide an option for full money back within a month <strong>withou
 explaining anything</strong>. This is very good. Frankly, if there was no such
 option, I would never buy it.</p>
 
-<p><img src="/images/blog/saleae-logic/IMG_0530.JPG" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/IMG_0530.JPG" alt="" /></p>
 
-<p><img src="/images/blog/saleae-logic/IMG_0531.JPG" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/IMG_0531.JPG" alt="" /></p>
 
 <p>It turned out to be a match box size thing in the solid metal case.</p>
 
-<p><img src="/images/blog/saleae-logic/IMG_0532.JPG" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/IMG_0532.JPG" alt="" /></p>
 
-<p><img src="/images/blog/saleae-logic/IMG_0534.JPG" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/IMG_0534.JPG" alt="" /></p>
 
 <p>The complete set.</p>
 
-<p><img src="/images/blog/saleae-logic/IMG_0535.JPG" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/IMG_0535.JPG" alt="" /></p>
 
 <p>Connecting&hellip;</p>
 
-<p><img src="/images/blog/saleae-logic/IMG_0536.JPG" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/IMG_0536.JPG" alt="" /></p>
 
 <p>To begin with I connected it to a serial port on Raspberry Pi, which
 I was using as a telnet console.</p>
 
-<p><img src="/images/blog/saleae-logic/IMG_0537.JPG" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/IMG_0537.JPG" alt="" /></p>
 
 <p>Here is a screen shot of the capture. We see that the <code>ls</code> command is flying
 to one direction and being echoed back from the second one.</p>
 
-<p><img src="/images/blog/saleae-logic/saleae-logic-analyser-ls-command.jpg" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/saleae-logic-analyser-ls-command.jpg" alt="" /></p>
 
 <p>Now the GMC-4 keyboard. This is a <a href="http://www.learningaboutelectronics.com/Articles/How-does-a-matrix-keyboard-scanning-algorithm-work">scanned keyboard</a> where one (out) port is
 used to set a &ldquo;flying&rdquo; pin selecting the current row (or column) of
 buttons, and the second (in) port represents the state of buttons in the
 selected row.</p>
 
-<p><img src="/images/blog/saleae-logic/gmc4-schematic.jpg" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/gmc4-schematic.jpg" alt="" /></p>
 
 <p>I planned to simulate the keyboard, so I needed timings of the scanning
 signal. I connected all four scanning lines to four channels, and got the
 following:</p>
 
-<p><img src="/images/blog/saleae-logic/saleae-logic-analyser-gmc4-keyboard.jpg" alt="" />
-</p>
+<p><img src="/images/blog/saleae-logic/saleae-logic-analyser-gmc4-keyboard.jpg" alt="" /></p>
 
 <p>Now it is crystal clear what&rsquo;s going on. It allows to measure a variety of
 parameters of the signal, scale it and compare against previous runs. There

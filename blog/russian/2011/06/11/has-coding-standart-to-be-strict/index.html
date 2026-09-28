@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,30 +49,29 @@
 <div id="post">
   <p>Например, вот такой кусок кода:</p>
 
-<pre class="hl">
-<span class="hl kwb">void</span> <span class="hl kwd">f</span> <span class="hl opt">(</span>  <span class="hl kwb">int</span> a <span class="hl opt">,</span> <span class="hl kwb">char</span> <span class="hl opt">*</span>p  <span class="hl opt">)</span>
-<span class="hl opt">{</span>
-   <span class="hl kwb">int</span>   whattodo <span class="hl opt">;</span>
+<pre><code class="language-cpp">void f (  int a , char *p  )
+{
+   int   whattodo ;
 
-   whattodo <span class="hl opt">=</span> a <span class="hl opt">&lt;</span> <span class="hl num">1</span> ? <span class="hl num">2</span> <span class="hl opt">:</span> <span class="hl num">0</span><span class="hl opt">;</span>
+   whattodo = a &lt; 1 ? 2 : 0;
 
-   <span class="hl kwa">switch</span> <span class="hl opt">(</span> whattodo <span class="hl opt">)</span>
-   <span class="hl opt">{</span>
-   <span class="hl kwa">case</span> <span class="hl num">2</span><span class="hl opt">:</span>
-             <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;THIS</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">);</span> <span class="hl kwa">break</span><span class="hl opt">;</span>
-   <span class="hl kwa">case</span> <span class="hl num">1</span><span class="hl opt">:</span>
-             <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;THAT</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">);</span>
-             <span class="hl kwa">break</span><span class="hl opt">;</span>
-   <span class="hl opt">}</span>
-   <span class="hl kwa">if</span> <span class="hl opt">(</span> a <span class="hl opt">!=  *</span> p  <span class="hl opt">) {</span>
-             a <span class="hl opt">=</span> <span class="hl num">1111111</span> <span class="hl opt">;</span>
+   switch ( whattodo )
+   {
+   case 2:
+             printf(&#34;THIS\n&#34;); break;
+   case 1:
+             printf(&#34;THAT\n&#34;);
+             break;
+   }
+   if ( a !=  * p  ) {
+             a = 1111111 ;
 
-   <span class="hl opt">}</span> <span class="hl kwa">else</span>
-             a <span class="hl opt">=</span> <span class="hl num">2222222</span><span class="hl opt">;</span>
+   } else
+             a = 2222222;
 
 
-<span class="hl opt">}</span>
-</pre>
+}
+</code></pre>
 
 <p>Удивительно, но во многих компаниях, где я работал, подобный код спокойно подошел бы по принятому стандарту кодирования. И такой код вполне реален, так как он обычно создается за долгое время разными людьми. В целом код читаем и даже более менее понятен.</p>
 

@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,27 +49,26 @@
 <div id="post">
   <p>Имеем следующий код:</p>
 
-<pre class="hl">
-<span class="hl ppc">#define T 2</span>
+<pre><code class="language-cpp">#define T 2
 
-<span class="hl kwc">class</span> A <span class="hl opt">{</span>
-  <span class="hl kwc">public</span><span class="hl opt">:</span>
-    <span class="hl kwc">virtual</span> <span class="hl opt">~</span><span class="hl kwd">A</span><span class="hl opt">() {</span> 
-      p <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-    <span class="hl opt">}</span>
-    <span class="hl kwb">int</span> p<span class="hl opt">;</span>
-<span class="hl opt">};</span>
+class A {
+  public:
+    virtual ~A() { 
+      p = 0;
+    }
+    int p;
+};
 
-<span class="hl kwc">class</span> B<span class="hl opt">:</span> <span class="hl kwc">public</span> A <span class="hl opt">{</span>
-  <span class="hl kwb">int</span> a<span class="hl opt">;</span>
-<span class="hl opt">};</span>
+class B: public A {
+  int a;
+};
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  A<span class="hl opt">*</span> a <span class="hl opt">=</span> <span class="hl kwa">new</span> B<span class="hl opt">[</span>T<span class="hl opt">];</span>
-  <span class="hl kwa">delete</span><span class="hl opt">[]</span> a<span class="hl opt">;</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+int main() {
+  A* a = new B[T];
+  delete[] a;
+  return 0;
+}
+</code></pre>
 
 <p>У меня эта программа однозначно падает с <code>Segmentation fault</code> на строке <code>delete[] a</code>. Проверено на Sun C++ на Солярисе, GCC на Линуксе и на FreeBSD. Вот, например, что происходит на BSD:</p>
 

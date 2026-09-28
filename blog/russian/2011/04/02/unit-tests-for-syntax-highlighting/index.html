@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -49,32 +55,31 @@
 
 <p>Например:</p>
 
-<pre class="hl">
-<span class="hl kwb">void</span> <span class="hl kwd">test_Ticket_dd6a19efa5_DATE</span><span class="hl opt">(</span><span class="hl kwb">void</span> <span class="hl opt">**</span>state<span class="hl opt">) {</span>
-  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0029  ENTRIES&lt;1, AB.CDE.VALUE.DATE&gt;    = TODAY&quot;</span><span class="hl opt">,</span>
-            <span class="hl str">&quot;..............a........................b......&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0036  ENTRIES&lt;1, AB.CDE.BOOKING.DATE&gt;  = TODAY&quot;</span><span class="hl opt">,</span>
-            <span class="hl str">&quot;..............a........................b......&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0036  ENTRIES&lt;1, AB.CDE.TOOKING DATE&gt;  = TODAY&quot;</span><span class="hl opt">,</span>
-            <span class="hl str">&quot;..............a.................bbbb...c......&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0036 DATE = TODAY&quot;</span><span class="hl opt">,</span>
-            <span class="hl str">&quot;.....aaaa.b......&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0036  DATE = TODAY&quot;</span><span class="hl opt">,</span>
-            <span class="hl str">&quot;......aaaa.b......&quot;</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+<pre><code class="language-cpp">void test_Ticket_dd6a19efa5_DATE(void **state) {
+  string_eq(&#34;0029  ENTRIES&lt;1, AB.CDE.VALUE.DATE&gt;    = TODAY&#34;,
+            &#34;..............a........................b......&#34;);
+  string_eq(&#34;0036  ENTRIES&lt;1, AB.CDE.BOOKING.DATE&gt;  = TODAY&#34;,
+            &#34;..............a........................b......&#34;);
+  string_eq(&#34;0036  ENTRIES&lt;1, AB.CDE.TOOKING DATE&gt;  = TODAY&#34;,
+            &#34;..............a.................bbbb...c......&#34;);
+  string_eq(&#34;0036 DATE = TODAY&#34;,
+            &#34;.....aaaa.b......&#34;);
+  string_eq(&#34;0036  DATE = TODAY&#34;,
+            &#34;......aaaa.b......&#34;);
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">test_Ticket_e8e02762a0_V_TIME</span><span class="hl opt">(</span><span class="hl kwb">void</span> <span class="hl opt">**</span>state<span class="hl opt">) {</span>
-  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0017     V.TIME = 'x'&quot;</span><span class="hl opt">,</span>
-            <span class="hl str">&quot;................a.bbb&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0034     V.DELTA = TIME() - TIME1&quot;</span><span class="hl opt">,</span>
-            <span class="hl str">&quot;.................a.bbbb...c......&quot;</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void test_Ticket_e8e02762a0_V_TIME(void **state) {
+  string_eq(&#34;0017     V.TIME = &#39;x&#39;&#34;,
+            &#34;................a.bbb&#34;);
+  string_eq(&#34;0034     V.DELTA = TIME() - TIME1&#34;,
+            &#34;.................a.bbbb...c......&#34;);
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">test_Ticket_0bcfac1fb6_READNEXT_FROM</span><span class="hl opt">(</span><span class="hl kwb">void</span> <span class="hl opt">**</span>state<span class="hl opt">) {</span>
-  <span class="hl kwd">string_eq</span><span class="hl opt">(</span><span class="hl str">&quot;0167     READNEXT ID FROM 9 ELSE DONE = 1 &quot;</span><span class="hl opt">,</span>
-            <span class="hl str">&quot;.........aaaaaaaa....bbbb.c.dddd......e.f.&quot;</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
-</pre>
+void test_Ticket_0bcfac1fb6_READNEXT_FROM(void **state) {
+  string_eq(&#34;0167     READNEXT ID FROM 9 ELSE DONE = 1 &#34;,
+            &#34;.........aaaaaaaa....bbbb.c.dddd......e.f.&#34;);
+}
+</code></pre>
 
 <p>И таких тестов сотни.</p>
 

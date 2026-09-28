@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -53,143 +59,141 @@
 
 <p><code>thread.h</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#ifndef _EXT_THREAD_H</span>
-<span class="hl ppc">#define _EXT_THREAD_H</span>
+<pre><code class="language-cpp">#ifndef _EXT_THREAD_H
+#define _EXT_THREAD_H
 
-<span class="hl ppc">#ifdef WIN32</span>
-<span class="hl ppc">#include &lt;windows.h&gt;</span>
-<span class="hl ppc">#else</span>
-<span class="hl ppc">#include &lt;pthread.h&gt;</span>
-<span class="hl ppc">#include &lt;signal.h&gt;</span>
-<span class="hl ppc">#endif</span>
+#ifdef WIN32
+#include &lt;windows.h&gt;
+#else
+#include &lt;pthread.h&gt;
+#include &lt;signal.h&gt;
+#endif
 
-<span class="hl kwa">namespace</span> ext <span class="hl opt">{</span>
+namespace ext {
 
-<span class="hl ppc">#ifdef WIN32</span>
-<span class="hl kwc">typedef</span> HANDLE ThreadType<span class="hl opt">;</span>
-<span class="hl ppc">#else</span>
-<span class="hl kwc">typedef</span> pthread_t ThreadType<span class="hl opt">;</span>
-<span class="hl ppc">#endif</span>
+#ifdef WIN32
+typedef HANDLE ThreadType;
+#else
+typedef pthread_t ThreadType;
+#endif
 
-<span class="hl kwc">class</span> Thread <span class="hl opt">{</span>
-<span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwd">Thread</span><span class="hl opt">() {}</span>
-  <span class="hl kwc">virtual</span> <span class="hl opt">~</span><span class="hl kwd">Thread</span><span class="hl opt">();</span>
+class Thread {
+public:
+  Thread() {}
+  virtual ~Thread();
 
-  <span class="hl slc">// Функция запуска потока. Ее нельзя совместить с конструктором</span>
-  <span class="hl slc">// класса, так как может случиться, что поток запустится до того,</span>
-  <span class="hl slc">// как объект будет полностью сформирован. А это может спокойно </span>
-  <span class="hl slc">// произойти, если вызвать pthread_create или CreateThread в</span>
-  <span class="hl slc">// в конструкторе. А вызов виртуальной функции в конструкторе, </span>
-  <span class="hl slc">// да еще и в конструкторе недосформированного объекта, </span>
-  <span class="hl slc">// в лучшем случае приведет к фатальной ошибке вызова чисто </span>
-  <span class="hl slc">// виртуальной функции, либо в худшем случае падению программы </span>
-  <span class="hl slc">// с нарушением защиты памяти. Запуск же потока после работы</span>
-  <span class="hl slc">// конструктора избавляет от этих проблем. </span>
-  <span class="hl kwb">void</span> <span class="hl kwd">Start</span><span class="hl opt">();</span>
+  // Функция запуска потока. Ее нельзя совместить с конструктором
+  // класса, так как может случиться, что поток запустится до того,
+  // как объект будет полностью сформирован. А это может спокойно 
+  // произойти, если вызвать pthread_create или CreateThread в
+  // в конструкторе. А вызов виртуальной функции в конструкторе, 
+  // да еще и в конструкторе недосформированного объекта, 
+  // в лучшем случае приведет к фатальной ошибке вызова чисто 
+  // виртуальной функции, либо в худшем случае падению программы 
+  // с нарушением защиты памяти. Запуск же потока после работы
+  // конструктора избавляет от этих проблем. 
+  void Start();
 
-  <span class="hl slc">// Главная функция потока, реализующая работу потока.</span>
-  <span class="hl slc">// Поток завершается, когда эта функция заканчивает работу.</span>
-  <span class="hl slc">// Крайне рекомендуется ловить ВСЕ исключения в данной функции</span>
-  <span class="hl slc">// через try-catch(...). Возникновение неловимого никем </span>
-  <span class="hl slc">// исключения приведет к молчаливому падению программы без</span>
-  <span class="hl slc">// возможности объяснить причину.</span>
-  <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">Execute</span><span class="hl opt">() =</span> <span class="hl num">0</span><span class="hl opt">;</span>
+  // Главная функция потока, реализующая работу потока.
+  // Поток завершается, когда эта функция заканчивает работу.
+  // Крайне рекомендуется ловить ВСЕ исключения в данной функции
+  // через try-catch(...). Возникновение неловимого никем 
+  // исключения приведет к молчаливому падению программы без
+  // возможности объяснить причину.
+  virtual void Execute() = 0;
 
-  <span class="hl slc">// Присоединение к потоку.</span>
-  <span class="hl slc">// Данная функция вернет управление только когда поток</span>
-  <span class="hl slc">// завершит работу. Применяется при синхронизации потоков,</span>
-  <span class="hl slc">// если надо отследить завершение потока.</span>
-  <span class="hl kwb">void</span> <span class="hl kwd">Join</span><span class="hl opt">();</span>
+  // Присоединение к потоку.
+  // Данная функция вернет управление только когда поток
+  // завершит работу. Применяется при синхронизации потоков,
+  // если надо отследить завершение потока.
+  void Join();
 
-  <span class="hl slc">// Уничтожение потока.</span>
-  <span class="hl slc">// Принудительно уничтожает поток извне. Данный способ</span>
-  <span class="hl slc">// завершения потока является крайне нерекомендуемым.</span>
-  <span class="hl slc">// Правильнее завершать поток логически, предусмотрев</span>
-  <span class="hl slc">// в функции Execute() условие для выхода, так самым</span>
-  <span class="hl slc">// обеспечив потоку нормальное завершение.</span>
-  <span class="hl kwb">void</span> <span class="hl kwd">Kill</span><span class="hl opt">();</span>
+  // Уничтожение потока.
+  // Принудительно уничтожает поток извне. Данный способ
+  // завершения потока является крайне нерекомендуемым.
+  // Правильнее завершать поток логически, предусмотрев
+  // в функции Execute() условие для выхода, так самым
+  // обеспечив потоку нормальное завершение.
+  void Kill();
 
-<span class="hl kwc">private</span><span class="hl opt">:</span>
-  ThreadType __handle<span class="hl opt">;</span>
+private:
+  ThreadType __handle;
 
-  <span class="hl slc">// Защита от случайного копирования объекта в C++</span>
-  <span class="hl kwd">Thread</span><span class="hl opt">(</span><span class="hl kwb">const</span> Thread<span class="hl opt">&amp;);</span>
-  <span class="hl kwb">void</span> <span class="hl kwc">operator</span><span class="hl opt">=(</span><span class="hl kwb">const</span> Thread<span class="hl opt">&amp;);</span>
-<span class="hl opt">};</span>
+  // Защита от случайного копирования объекта в C++
+  Thread(const Thread&amp;);
+  void operator=(const Thread&amp;);
+};
 
-<span class="hl opt">}</span> <span class="hl slc">// ext</span>
+} // ext
 
-<span class="hl ppc">#endif</span>
-</pre>
+#endif
+</code></pre>
 
 <p><code>thread.cpp</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;thread.h&quot;</span><span class="hl ppc"></span>
+<pre><code class="language-cpp">#include &#34;thread.h&#34;
 
-<span class="hl kwa">namespace</span> ext <span class="hl opt">{</span>
+namespace ext {
 
-<span class="hl kwb">static void</span> <span class="hl kwd">ThreadCallback</span><span class="hl opt">(</span>Thread<span class="hl opt">*</span> who<span class="hl opt">) {</span>
-<span class="hl ppc">#ifndef WIN32</span>
-  <span class="hl slc">// Далаем поток &quot;убиваемым&quot; через pthread_cancel.</span>
-  <span class="hl kwb">int</span> old_thread_type<span class="hl opt">;</span>
-  <span class="hl kwd">pthread_setcanceltype</span><span class="hl opt">(</span>PTHREAD_CANCEL_ASYNCHRONOUS<span class="hl opt">, &amp;</span>old_thread_type<span class="hl opt">);</span>
-<span class="hl ppc">#endif</span>
-  who<span class="hl opt">-&gt;</span><span class="hl kwd">Execute</span><span class="hl opt">();</span> 
-<span class="hl opt">}</span>
+static void ThreadCallback(Thread* who) {
+#ifndef WIN32
+  // Далаем поток &#34;убиваемым&#34; через pthread_cancel.
+  int old_thread_type;
+  pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, &amp;old_thread_type);
+#endif
+  who-&gt;Execute(); 
+}
 
-<span class="hl ppc">#ifdef WIN32</span>
+#ifdef WIN32
 
-Thread<span class="hl opt">::~</span><span class="hl kwd">Thread</span><span class="hl opt">() {</span>
-  <span class="hl kwd">CloseHandle</span><span class="hl opt">(</span>__handle<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+Thread::~Thread() {
+  CloseHandle(__handle);
+}
 
-<span class="hl kwb">void</span> Thread<span class="hl opt">::</span><span class="hl kwd">Start</span><span class="hl opt">() {</span>
-  __handle <span class="hl opt">=</span> <span class="hl kwd">CreateThread</span><span class="hl opt">(</span>
-    <span class="hl num">0</span><span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span> 
-    <span class="hl kwa">reinterpret_cast</span><span class="hl opt">&lt;</span>LPTHREAD_START_ROUTINE<span class="hl opt">&gt;(</span>ThreadCallback<span class="hl opt">),</span> <span class="hl kwa">this</span><span class="hl opt">,</span>
-    <span class="hl num">0</span><span class="hl opt">,</span> <span class="hl num">0</span>
-  <span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void Thread::Start() {
+  __handle = CreateThread(
+    0, 0, 
+    reinterpret_cast&lt;LPTHREAD_START_ROUTINE&gt;(ThreadCallback), this,
+    0, 0
+  );
+}
 
-<span class="hl kwb">void</span> Thread<span class="hl opt">::</span><span class="hl kwd">Join</span><span class="hl opt">() {</span>
-  <span class="hl kwd">WaitForSingleObject</span><span class="hl opt">(</span>__handle<span class="hl opt">,</span>  INFINITE<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void Thread::Join() {
+  WaitForSingleObject(__handle,  INFINITE);
+}
 
-<span class="hl kwb">void</span> Thread<span class="hl opt">::</span><span class="hl kwd">Kill</span><span class="hl opt">() {</span>
-  <span class="hl kwd">TerminateThread</span><span class="hl opt">(</span>__handle<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void Thread::Kill() {
+  TerminateThread(__handle, 0);
+}
 
-<span class="hl ppc">#else</span>
+#else
 
-Thread<span class="hl opt">::~</span><span class="hl kwd">Thread</span><span class="hl opt">() {</span>
-<span class="hl opt">}</span>
+Thread::~Thread() {
+}
 
-<span class="hl kwc">extern</span> <span class="hl str">&quot;C&quot;</span>
-<span class="hl kwc">typedef</span> <span class="hl kwb">void</span> <span class="hl opt">*(*</span>pthread_callback<span class="hl opt">)(</span><span class="hl kwb">void</span> <span class="hl opt">*);</span>
+extern &#34;C&#34;
+typedef void *(*pthread_callback)(void *);
 
-<span class="hl kwb">void</span> Thread<span class="hl opt">::</span><span class="hl kwd">Start</span><span class="hl opt">() {</span>
-  <span class="hl kwd">pthread_create</span><span class="hl opt">(</span>
-    <span class="hl opt">&amp;</span>__handle<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span> 
-    <span class="hl kwa">reinterpret_cast</span><span class="hl opt">&lt;</span>pthread_callback<span class="hl opt">&gt;(</span>ThreadCallback<span class="hl opt">),</span> 
-    <span class="hl kwa">this</span>
-  <span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void Thread::Start() {
+  pthread_create(
+    &amp;__handle, 0, 
+    reinterpret_cast&lt;pthread_callback&gt;(ThreadCallback), 
+    this
+  );
+}
 
-<span class="hl kwb">void</span> Thread<span class="hl opt">::</span><span class="hl kwd">Join</span><span class="hl opt">() {</span>
-  <span class="hl kwd">pthread_join</span><span class="hl opt">(</span>__handle<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void Thread::Join() {
+  pthread_join(__handle, 0);
+}
 
-<span class="hl kwb">void</span> Thread<span class="hl opt">::</span><span class="hl kwd">Kill</span><span class="hl opt">() {</span>
-  <span class="hl kwd">pthread_cancel</span><span class="hl opt">(</span>__handle<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void Thread::Kill() {
+  pthread_cancel(__handle);
+}
 
-<span class="hl ppc">#endif</span>
+#endif
 
-<span class="hl opt">}</span> <span class="hl slc">// ext</span>
-</pre>
+} // ext
+</code></pre>
 
 <p>Возникает резонный вопрос — я почему ни один из вызовов функций не проверяет код ошибки. Вдруг что? Я могу сказать, что я встретил только один случай возврата ошибки от pthread_create.</p>
 

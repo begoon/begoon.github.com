@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,34 +51,33 @@
 
 <p>Вот мой наивный велосипед:</p>
 
-<pre class="hl">
-<span class="hl kwb">int</span> <span class="hl kwd">naive_quick_sort</span><span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;::</span>iterator begin<span class="hl opt">,</span> std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;::</span>iterator end<span class="hl opt">) {</span>
-  <span class="hl kwc">auto</span> <span class="hl kwb">const</span> sz <span class="hl opt">=</span> end <span class="hl opt">-</span> begin<span class="hl opt">;</span>
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>sz <span class="hl opt">&lt;=</span> <span class="hl num">1</span><span class="hl opt">)</span> <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+<pre><code class="language-cpp">int naive_quick_sort(std::vector&lt;Type&gt;::iterator begin, std::vector&lt;Type&gt;::iterator end) {
+  auto const sz = end - begin;
+  if (sz &lt;= 1) return 0;
 
-  <span class="hl kwc">auto</span> pivot <span class="hl opt">=</span> begin <span class="hl opt">+</span> sz<span class="hl opt">/</span><span class="hl num">2</span><span class="hl opt">;</span>
-  <span class="hl kwc">auto</span> <span class="hl kwb">const</span> pivot_v <span class="hl opt">= *</span>pivot<span class="hl opt">;</span>
+  auto pivot = begin + sz/2;
+  auto const pivot_v = *pivot;
 
-  std<span class="hl opt">::</span><span class="hl kwd">swap</span><span class="hl opt">(*</span>pivot<span class="hl opt">, *(</span>end <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">));</span>
-  <span class="hl kwc">auto</span> p <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">partition</span><span class="hl opt">(</span>begin<span class="hl opt">,</span> end<span class="hl opt">, [&amp;](</span><span class="hl kwb">const</span> Type<span class="hl opt">&amp;</span> a<span class="hl opt">) {</span> <span class="hl kwa">return</span> a <span class="hl opt">&lt;</span> pivot_v<span class="hl opt">; } );</span>
-  std<span class="hl opt">::</span><span class="hl kwd">swap</span><span class="hl opt">(*</span>p<span class="hl opt">, *(</span>end <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">));</span>
+  std::swap(*pivot, *(end - 1));
+  auto p = std::partition(begin, end, [&amp;](const Type&amp; a) { return a &lt; pivot_v; } );
+  std::swap(*p, *(end - 1));
 
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>sz <span class="hl opt">&gt;</span> <span class="hl num">4096</span><span class="hl opt">) {</span>
-    <span class="hl kwc">auto</span> left <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">async</span><span class="hl opt">(</span>std<span class="hl opt">::</span>launch<span class="hl opt">::</span>async<span class="hl opt">, [&amp;]() {</span>
-      <span class="hl kwa">return</span> <span class="hl kwd">naive_quick_sort</span><span class="hl opt">(</span>begin<span class="hl opt">,</span> p<span class="hl opt">);</span>
-    <span class="hl opt">});</span>
-    <span class="hl kwd">naive_quick_sort</span><span class="hl opt">(</span>p <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">,</span> end<span class="hl opt">);</span>
-  <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
-    <span class="hl kwd">naive_quick_sort</span><span class="hl opt">(</span>begin<span class="hl opt">,</span> p<span class="hl opt">);</span>
-    <span class="hl kwd">naive_quick_sort</span><span class="hl opt">(</span>p <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">,</span> end<span class="hl opt">);</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
+  if (sz &gt; 4096) {
+    auto left = std::async(std::launch::async, [&amp;]() {
+      return naive_quick_sort(begin, p);
+    });
+    naive_quick_sort(p + 1, end);
+  } else {
+    naive_quick_sort(begin, p);
+    naive_quick_sort(p + 1, end);
+  }
+  return 0;
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">quick_sort</span><span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;&amp;</span> arr<span class="hl opt">) {</span>
-  <span class="hl kwd">naive_quick_sort</span><span class="hl opt">(</span>arr<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> arr<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">());</span>
-<span class="hl opt">}</span>
-</pre>
+void quick_sort(std::vector&lt;Type&gt;&amp; arr) {
+  naive_quick_sort(arr.begin(), arr.end());
+}
+</code></pre>
 
 <p>Реализация крайне простая, но стоит отметить несколько моментов. Есть некая константа <code>4096</code>, которая определяет порог, когда отключается параллельное выполнение. Почему именно такое значение? Не знаю. Взято из воздуха с минимальным чувством здравого смысла. Когда же параллельность активна, то сортировка левого массива запускается через <code>async</code> в другом потоке, а правый сортируется как и раньше в текущем потоке. При выходе из контекста функции гарантируется, что задача, запущенная через <code>async</code>, будет завершена (ее завершения будут ждать).</p>
 
@@ -86,16 +91,15 @@
 
 <p>Сортируется массив из 50000000 элементов типа <code>int64</code> (со знаком). Делается 10 экспериментов, и считается среднее. Значения генерируются случайно:</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>tr1<span class="hl opt">::</span>uniform_int<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;</span> <span class="hl kwd">uniform</span><span class="hl opt">(</span>
-  std<span class="hl opt">::</span>numeric_limits<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;::</span><span class="hl kwd">min</span><span class="hl opt">(),</span>
-  std<span class="hl opt">::</span>numeric_limits<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;::</span><span class="hl kwd">max</span><span class="hl opt">());</span>
-std<span class="hl opt">::</span>mt19937_64 engine<span class="hl opt">;</span>
+<pre><code class="language-cpp">std::tr1::uniform_int&lt;Type&gt; uniform(
+  std::numeric_limits&lt;Type&gt;::min(),
+  std::numeric_limits&lt;Type&gt;::max());
+std::mt19937_64 engine;
 
-<span class="hl kwb">void</span> <span class="hl kwd">generate</span><span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;&amp;</span> v<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">for_each</span><span class="hl opt">(</span>v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(), [](</span>Type<span class="hl opt">&amp;</span> i<span class="hl opt">) {</span> i <span class="hl opt">=</span> <span class="hl kwd">uniform</span><span class="hl opt">(</span>engine<span class="hl opt">); });</span>
-<span class="hl opt">}</span>
-</pre>
+void generate(std::vector&lt;Type&gt;&amp; v) {
+  std::for_each(v.begin(), v.end(), [](Type&amp; i) { i = uniform(engine); });
+}
+</code></pre>
 
 <p>Не спрашивайте, почему тут делается перегон из big endian туда и обратно. Это было сделано для сравнения с другой программой, на Java. При замерах времени учитывается только &ldquo;чистое время&rdquo;.</p>
 
@@ -143,172 +147,171 @@ sort_async
 
 <p>Файл <code>sort_async.cpp</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;vector&gt;                      </span>
-<span class="hl ppc">#include &lt;iostream&gt;</span>
-<span class="hl ppc">#include &lt;fstream&gt;</span>
-<span class="hl ppc">#include &lt;sstream&gt;</span>
-<span class="hl ppc">#include &lt;algorithm&gt;</span>
-<span class="hl ppc">#include &lt;iomanip&gt;</span>
-<span class="hl ppc">#include &lt;future&gt;</span>
-<span class="hl ppc">#include &lt;random&gt;</span>
-<span class="hl ppc">#include &lt;chrono&gt;</span>
-<span class="hl ppc">#include &lt;cstdlib&gt;</span>
+<pre><code class="language-cpp">#include &lt;vector&gt;                      
+#include &lt;iostream&gt;
+#include &lt;fstream&gt;
+#include &lt;sstream&gt;
+#include &lt;algorithm&gt;
+#include &lt;iomanip&gt;
+#include &lt;future&gt;
+#include &lt;random&gt;
+#include &lt;chrono&gt;
+#include &lt;cstdlib&gt;
 
-<span class="hl kwb">const int</span> ITERATIONS_NUM <span class="hl opt">=</span> <span class="hl num">10</span><span class="hl opt">;</span>
-<span class="hl kwb">const int</span> DATA_SIZE <span class="hl opt">=</span> <span class="hl num">50000000</span><span class="hl opt">;</span>
+const int ITERATIONS_NUM = 10;
+const int DATA_SIZE = 50000000;
 
-<span class="hl kwc">typedef</span> __int64 Type<span class="hl opt">;</span>
+typedef __int64 Type;
 
-<span class="hl kwc">inline</span> <span class="hl kwb">void</span> <span class="hl kwd">endian_swap</span><span class="hl opt">(</span>Type<span class="hl opt">&amp;</span> x<span class="hl opt">) {</span>
-  x <span class="hl opt">=</span>
-    <span class="hl opt">(</span><span class="hl num">0x00000000000000FF</span> <span class="hl opt">&amp; (</span>x <span class="hl opt">&gt;&gt;</span> <span class="hl num">56</span><span class="hl opt">))</span>
-  <span class="hl opt">| (</span><span class="hl num">0x000000000000FF00</span> <span class="hl opt">&amp; (</span>x <span class="hl opt">&gt;&gt;</span> <span class="hl num">40</span><span class="hl opt">))</span>
-  <span class="hl opt">| (</span><span class="hl num">0x0000000000FF0000</span> <span class="hl opt">&amp; (</span>x <span class="hl opt">&gt;&gt;</span> <span class="hl num">24</span><span class="hl opt">))</span>
-  <span class="hl opt">| (</span><span class="hl num">0x00000000FF000000</span> <span class="hl opt">&amp; (</span>x <span class="hl opt">&gt;&gt;</span>  <span class="hl num">8</span><span class="hl opt">))</span>
-  <span class="hl opt">| (</span><span class="hl num">0x000000FF00000000</span> <span class="hl opt">&amp; (</span>x <span class="hl opt">&lt;&lt;</span>  <span class="hl num">8</span><span class="hl opt">))</span>
-  <span class="hl opt">| (</span><span class="hl num">0x0000FF0000000000</span> <span class="hl opt">&amp; (</span>x <span class="hl opt">&lt;&lt;</span> <span class="hl num">24</span><span class="hl opt">))</span>
-  <span class="hl opt">| (</span><span class="hl num">0x00FF000000000000</span> <span class="hl opt">&amp; (</span>x <span class="hl opt">&lt;&lt;</span> <span class="hl num">40</span><span class="hl opt">))</span>
-  <span class="hl opt">| (</span><span class="hl num">0xFF00000000000000</span> <span class="hl opt">&amp; (</span>x <span class="hl opt">&lt;&lt;</span> <span class="hl num">56</span><span class="hl opt">));</span>
-<span class="hl opt">}</span>
+inline void endian_swap(Type&amp; x) {
+  x =
+    (0x00000000000000FF &amp; (x &gt;&gt; 56))
+  | (0x000000000000FF00 &amp; (x &gt;&gt; 40))
+  | (0x0000000000FF0000 &amp; (x &gt;&gt; 24))
+  | (0x00000000FF000000 &amp; (x &gt;&gt;  8))
+  | (0x000000FF00000000 &amp; (x &lt;&lt;  8))
+  | (0x0000FF0000000000 &amp; (x &lt;&lt; 24))
+  | (0x00FF000000000000 &amp; (x &lt;&lt; 40))
+  | (0xFF00000000000000 &amp; (x &lt;&lt; 56));
+}
 
-std<span class="hl opt">::</span>tr1<span class="hl opt">::</span>uniform_int<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;</span> <span class="hl kwd">uniform</span><span class="hl opt">(</span>
-  std<span class="hl opt">::</span>numeric_limits<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;::</span><span class="hl kwd">min</span><span class="hl opt">(),</span>
-  std<span class="hl opt">::</span>numeric_limits<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;::</span><span class="hl kwd">max</span><span class="hl opt">());</span>
-std<span class="hl opt">::</span>mt19937_64 engine<span class="hl opt">;</span>
+std::tr1::uniform_int&lt;Type&gt; uniform(
+  std::numeric_limits&lt;Type&gt;::min(),
+  std::numeric_limits&lt;Type&gt;::max());
+std::mt19937_64 engine;
 
-<span class="hl kwb">void</span> <span class="hl kwd">generate</span><span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;&amp;</span> v<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">for_each</span><span class="hl opt">(</span>v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(), [](</span>Type<span class="hl opt">&amp;</span> i<span class="hl opt">) {</span> i <span class="hl opt">=</span> <span class="hl kwd">uniform</span><span class="hl opt">(</span>engine<span class="hl opt">); });</span>
-<span class="hl opt">}</span>
+void generate(std::vector&lt;Type&gt;&amp; v) {
+  std::for_each(v.begin(), v.end(), [](Type&amp; i) { i = uniform(engine); });
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">check_sorted</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;&amp;</span> v<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> msg<span class="hl opt">) {</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwc">auto</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> v<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">() -</span> <span class="hl num">1</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(</span>v<span class="hl opt">[</span>i<span class="hl opt">] &gt;</span> v<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">]) {</span>
-      std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">Unsorted: &quot;</span> <span class="hl opt">&lt;&lt;</span> msg <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
-      std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span> <span class="hl opt">&lt;&lt;</span> i <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
-      std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> v<span class="hl opt">[</span>i<span class="hl opt">] &lt;&lt;</span> <span class="hl str">&quot; &quot;</span> <span class="hl opt">&lt;&lt;</span> v<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">] &lt;&lt;</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
-      std<span class="hl opt">::</span><span class="hl kwd">exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">);</span>
-    <span class="hl opt">}</span>
-  <span class="hl opt">}</span>
-<span class="hl opt">}</span>
+void check_sorted(const std::vector&lt;Type&gt;&amp; v, const std::string&amp; msg) {
+  for (auto i = 0; i &lt; v.size() - 1; ++i) {
+    if (v[i] &gt; v[i + 1]) {
+      std::cout &lt;&lt; &#34;\nUnsorted: &#34; &lt;&lt; msg &lt;&lt; &#34;\n&#34;;
+      std::cout &lt;&lt; &#34;\n&#34; &lt;&lt; i &lt;&lt; &#34;\n&#34;;
+      std::cout &lt;&lt; v[i] &lt;&lt; &#34; &#34; &lt;&lt; v[i + 1] &lt;&lt; &#34;\n&#34;;
+      std::exit(1);
+    }
+  }
+}
 
-std<span class="hl opt">::</span>string <span class="hl kwd">data_file_name</span><span class="hl opt">(</span><span class="hl kwb">const int</span> i<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> suffix<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span>ostringstream fmt<span class="hl opt">;</span>
-  fmt <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;trash_for_sort_&quot;</span> <span class="hl opt">&lt;&lt;</span> i <span class="hl opt">&lt;&lt;</span> suffix <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;.bin&quot;</span><span class="hl opt">;</span>
-  <span class="hl kwa">return</span> fmt<span class="hl opt">.</span><span class="hl kwd">str</span><span class="hl opt">();</span>
-<span class="hl opt">}</span>
+std::string data_file_name(const int i, const std::string&amp; suffix) {
+  std::ostringstream fmt;
+  fmt &lt;&lt; &#34;trash_for_sort_&#34; &lt;&lt; i &lt;&lt; suffix &lt;&lt; &#34;.bin&#34;;
+  return fmt.str();
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">save_file</span><span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;</span> array<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">for_each</span><span class="hl opt">(</span>array<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> array<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(), [](</span>Type<span class="hl opt">&amp;</span> i<span class="hl opt">) {</span> <span class="hl kwd">endian_swap</span><span class="hl opt">(</span>i<span class="hl opt">); });</span>
-  std<span class="hl opt">::</span>ofstream <span class="hl kwd">os</span><span class="hl opt">(</span>name<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">(),</span> std<span class="hl opt">::</span>ios<span class="hl opt">::</span>binary<span class="hl opt">|</span>std<span class="hl opt">::</span>ios<span class="hl opt">::</span>out<span class="hl opt">);</span>
-  <span class="hl kwc">auto</span> <span class="hl kwb">const</span> bytes_to_write <span class="hl opt">=</span> array<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">() *</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>array<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]);</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Saving &quot;</span> <span class="hl opt">&lt;&lt;</span> array<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">() &lt;&lt;</span> <span class="hl str">&quot; bytes to &quot;</span> <span class="hl opt">&lt;&lt;</span> name <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
-  os<span class="hl opt">.</span><span class="hl kwd">write</span><span class="hl opt">((</span><span class="hl kwb">char</span> <span class="hl opt">*)&amp;</span>array<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">],</span> bytes_to_write<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+void save_file(std::vector&lt;Type&gt; array, const std::string&amp; name) {
+  std::for_each(array.begin(), array.end(), [](Type&amp; i) { endian_swap(i); });
+  std::ofstream os(name.c_str(), std::ios::binary|std::ios::out);
+  auto const bytes_to_write = array.size() * sizeof(array[0]);
+  std::cout &lt;&lt; &#34;Saving &#34; &lt;&lt; array.size() &lt;&lt; &#34; bytes to &#34; &lt;&lt; name &lt;&lt; &#34;\n&#34;;
+  os.write((char *)&amp;array[0], bytes_to_write);
+}
 
-<span class="hl kwb">int</span> <span class="hl kwd">main_generate</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Generation</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwc">auto</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> ITERATIONS_NUM<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-    std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;</span> <span class="hl kwd">unsorted</span><span class="hl opt">(</span>DATA_SIZE<span class="hl opt">);</span>
-    <span class="hl kwd">generate</span><span class="hl opt">(</span>unsorted<span class="hl opt">);</span>
-    <span class="hl kwd">save_file</span><span class="hl opt">(</span>unsorted<span class="hl opt">,</span> <span class="hl kwd">data_file_name</span><span class="hl opt">(</span>i<span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">));</span>
-    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Sorting...</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
-    std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>unsorted<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> unsorted<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">());</span>
-    <span class="hl kwd">check_sorted</span><span class="hl opt">(</span>unsorted<span class="hl opt">,</span> <span class="hl str">&quot;check sorted array&quot;</span><span class="hl opt">);</span>
-    <span class="hl kwd">save_file</span><span class="hl opt">(</span>unsorted<span class="hl opt">,</span> <span class="hl kwd">data_file_name</span><span class="hl opt">(</span>i<span class="hl opt">,</span> <span class="hl str">&quot;_sorted&quot;</span><span class="hl opt">));</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
+int main_generate(int argc, char* argv[]) {
+  std::cout &lt;&lt; &#34;Generation\n&#34;;
+  for (auto i = 0; i &lt; ITERATIONS_NUM; ++i) {
+    std::vector&lt;Type&gt; unsorted(DATA_SIZE);
+    generate(unsorted);
+    save_file(unsorted, data_file_name(i, &#34;&#34;));
+    std::cout &lt;&lt; &#34;Sorting...\n&#34;;
+    std::sort(unsorted.begin(), unsorted.end());
+    check_sorted(unsorted, &#34;check sorted array&#34;);
+    save_file(unsorted, data_file_name(i, &#34;_sorted&#34;));
+  }
+  return 0;
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">load_file</span><span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;&amp;</span> array<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Loading &quot;</span> <span class="hl opt">&lt;&lt;</span> name<span class="hl opt">;</span>
-  array<span class="hl opt">.</span><span class="hl kwd">resize</span><span class="hl opt">(</span>DATA_SIZE<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">);</span>
+void load_file(std::vector&lt;Type&gt;&amp; array, const std::string&amp; name) {
+  std::cout &lt;&lt; &#34;Loading &#34; &lt;&lt; name;
+  array.resize(DATA_SIZE, 0);
 
-  std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span>name<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">(),</span> std<span class="hl opt">::</span>ios<span class="hl opt">::</span>binary<span class="hl opt">|</span>std<span class="hl opt">::</span>ios<span class="hl opt">::</span>in<span class="hl opt">);</span>
-  <span class="hl kwc">auto</span> <span class="hl kwb">const</span> to_load <span class="hl opt">=</span> array<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">() *</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>array<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]);</span>
-  is<span class="hl opt">.</span><span class="hl kwd">read</span><span class="hl opt">((</span><span class="hl kwb">char</span> <span class="hl opt">*)&amp;</span>array<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">],</span> to_load<span class="hl opt">);</span>
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>is<span class="hl opt">.</span><span class="hl kwd">gcount</span><span class="hl opt">() !=</span> to_load<span class="hl opt">) {</span>
-    std<span class="hl opt">::</span>cerr <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, Bad file &quot;</span> <span class="hl opt">&lt;&lt;</span> name
-      <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, loaded &quot;</span> <span class="hl opt">&lt;&lt;</span> is<span class="hl opt">.</span><span class="hl kwd">gcount</span><span class="hl opt">() &lt;&lt;</span> <span class="hl str">&quot; words but should be &quot;</span> <span class="hl opt">&lt;&lt;</span> to_load <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
-    std<span class="hl opt">::</span><span class="hl kwd">exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">);</span>
-  <span class="hl opt">}</span>
-  std<span class="hl opt">::</span><span class="hl kwd">for_each</span><span class="hl opt">(</span>array<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> array<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(), [](</span>Type<span class="hl opt">&amp;</span> v<span class="hl opt">){</span> <span class="hl kwd">endian_swap</span><span class="hl opt">(</span>v<span class="hl opt">); });</span>
-<span class="hl opt">}</span>
+  std::ifstream is(name.c_str(), std::ios::binary|std::ios::in);
+  auto const to_load = array.size() * sizeof(array[0]);
+  is.read((char *)&amp;array[0], to_load);
+  if (is.gcount() != to_load) {
+    std::cerr &lt;&lt; &#34;, Bad file &#34; &lt;&lt; name
+      &lt;&lt; &#34;, loaded &#34; &lt;&lt; is.gcount() &lt;&lt; &#34; words but should be &#34; &lt;&lt; to_load &lt;&lt; &#34;\n&#34;;
+    std::exit(1);
+  }
+  std::for_each(array.begin(), array.end(), [](Type&amp; v){ endian_swap(v); });
+}
 
-<span class="hl kwb">int</span> <span class="hl kwd">naive_quick_sort</span><span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;::</span>iterator begin<span class="hl opt">,</span> std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;::</span>iterator end<span class="hl opt">) {</span>
-  <span class="hl kwc">auto</span> <span class="hl kwb">const</span> sz <span class="hl opt">=</span> end <span class="hl opt">-</span> begin<span class="hl opt">;</span>
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>sz <span class="hl opt">&lt;=</span> <span class="hl num">1</span><span class="hl opt">)</span> <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
+int naive_quick_sort(std::vector&lt;Type&gt;::iterator begin, std::vector&lt;Type&gt;::iterator end) {
+  auto const sz = end - begin;
+  if (sz &lt;= 1) return 0;
 
-  <span class="hl kwc">auto</span> pivot <span class="hl opt">=</span> begin <span class="hl opt">+</span> sz<span class="hl opt">/</span><span class="hl num">2</span><span class="hl opt">;</span>
-  <span class="hl kwc">auto</span> <span class="hl kwb">const</span> pivot_v <span class="hl opt">= *</span>pivot<span class="hl opt">;</span>
+  auto pivot = begin + sz/2;
+  auto const pivot_v = *pivot;
 
-  std<span class="hl opt">::</span><span class="hl kwd">swap</span><span class="hl opt">(*</span>pivot<span class="hl opt">, *(</span>end <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">));</span>
-  <span class="hl kwc">auto</span> p <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">partition</span><span class="hl opt">(</span>begin<span class="hl opt">,</span> end<span class="hl opt">, [&amp;](</span><span class="hl kwb">const</span> Type<span class="hl opt">&amp;</span> a<span class="hl opt">) {</span> <span class="hl kwa">return</span> a <span class="hl opt">&lt;</span> pivot_v<span class="hl opt">; } );</span>
-  std<span class="hl opt">::</span><span class="hl kwd">swap</span><span class="hl opt">(*</span>p<span class="hl opt">, *(</span>end <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">));</span>
+  std::swap(*pivot, *(end - 1));
+  auto p = std::partition(begin, end, [&amp;](const Type&amp; a) { return a &lt; pivot_v; } );
+  std::swap(*p, *(end - 1));
 
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>sz <span class="hl opt">&gt;</span> <span class="hl num">4096</span><span class="hl opt">) {</span>
-    <span class="hl kwc">auto</span> left <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">async</span><span class="hl opt">(</span>std<span class="hl opt">::</span>launch<span class="hl opt">::</span>async<span class="hl opt">, [&amp;]() {</span>
-      <span class="hl kwa">return</span> <span class="hl kwd">naive_quick_sort</span><span class="hl opt">(</span>begin<span class="hl opt">,</span> p<span class="hl opt">);</span>
-    <span class="hl opt">});</span>
-    <span class="hl kwd">naive_quick_sort</span><span class="hl opt">(</span>p <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">,</span> end<span class="hl opt">);</span>
-  <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span>
-    <span class="hl kwd">naive_quick_sort</span><span class="hl opt">(</span>begin<span class="hl opt">,</span> p<span class="hl opt">);</span>
-    <span class="hl kwd">naive_quick_sort</span><span class="hl opt">(</span>p <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">,</span> end<span class="hl opt">);</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
+  if (sz &gt; 4096) {
+    auto left = std::async(std::launch::async, [&amp;]() {
+      return naive_quick_sort(begin, p);
+    });
+    naive_quick_sort(p + 1, end);
+  } else {
+    naive_quick_sort(begin, p);
+    naive_quick_sort(p + 1, end);
+  }
+  return 0;
+}
 
-<span class="hl kwb">void</span> <span class="hl kwd">quick_sort</span><span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;&amp;</span> arr<span class="hl opt">) {</span>
-  <span class="hl kwd">naive_quick_sort</span><span class="hl opt">(</span>arr<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> arr<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">());</span>
-<span class="hl opt">}</span>
+void quick_sort(std::vector&lt;Type&gt;&amp; arr) {
+  naive_quick_sort(arr.begin(), arr.end());
+}
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>argc <span class="hl opt">==</span> <span class="hl num">2</span> <span class="hl opt">&amp;&amp; !</span>std<span class="hl opt">::</span><span class="hl kwd">strcmp</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">],</span> <span class="hl str">&quot;generate&quot;</span><span class="hl opt">))</span>
-    <span class="hl kwa">return</span> <span class="hl kwd">main_generate</span><span class="hl opt">(</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
+int main(int argc, char* argv[]) {
+  if (argc == 2 &amp;&amp; !std::strcmp(argv[1], &#34;generate&#34;))
+    return main_generate(argc, argv);
 
-  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">double</span><span class="hl opt">&gt;</span> times<span class="hl opt">;</span>
-  <span class="hl kwc">auto</span> times_sum <span class="hl opt">=</span> <span class="hl num">0.0</span><span class="hl opt">;</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwc">auto</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> ITERATIONS_NUM<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-    std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;</span> unsorted<span class="hl opt">;</span>
-    <span class="hl kwd">load_file</span><span class="hl opt">(</span>unsorted<span class="hl opt">,</span> <span class="hl kwd">data_file_name</span><span class="hl opt">(</span>i<span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">));</span>
+  std::vector&lt;double&gt; times;
+  auto times_sum = 0.0;
+  for (auto i = 0; i &lt; ITERATIONS_NUM; ++i) {
+    std::vector&lt;Type&gt; unsorted;
+    load_file(unsorted, data_file_name(i, &#34;&#34;));
 
-    std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Type<span class="hl opt">&gt;</span> verify<span class="hl opt">;</span>
-    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, &quot;</span><span class="hl opt">;</span>
-    <span class="hl kwd">load_file</span><span class="hl opt">(</span>verify<span class="hl opt">,</span> <span class="hl kwd">data_file_name</span><span class="hl opt">(</span>i<span class="hl opt">,</span> <span class="hl str">&quot;_sorted&quot;</span><span class="hl opt">));</span>
-    <span class="hl kwd">check_sorted</span><span class="hl opt">(</span>verify<span class="hl opt">,</span> <span class="hl str">&quot;verify array&quot;</span><span class="hl opt">);</span>
+    std::vector&lt;Type&gt; verify;
+    std::cout &lt;&lt; &#34;, &#34;;
+    load_file(verify, data_file_name(i, &#34;_sorted&#34;));
+    check_sorted(verify, &#34;verify array&#34;);
 
-    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, Started&quot;</span><span class="hl opt">;</span>
-    <span class="hl kwc">auto</span> start <span class="hl opt">=</span> std<span class="hl opt">::</span>chrono<span class="hl opt">::</span>high_resolution_clock<span class="hl opt">::</span><span class="hl kwd">now</span><span class="hl opt">();</span>
+    std::cout &lt;&lt; &#34;, Started&#34;;
+    auto start = std::chrono::high_resolution_clock::now();
 
-    <span class="hl kwd">quick_sort</span><span class="hl opt">(</span>unsorted<span class="hl opt">);</span>
+    quick_sort(unsorted);
 
-    <span class="hl kwc">auto</span> stop <span class="hl opt">=</span> std<span class="hl opt">::</span>chrono<span class="hl opt">::</span>high_resolution_clock<span class="hl opt">::</span><span class="hl kwd">now</span><span class="hl opt">();</span>
-    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, Stopped, &quot;</span><span class="hl opt">;</span>
-    <span class="hl kwc">auto</span> duration <span class="hl opt">=</span> std<span class="hl opt">::</span>chrono<span class="hl opt">::</span>duration<span class="hl opt">&lt;</span><span class="hl kwb">double</span><span class="hl opt">&gt;(</span>stop <span class="hl opt">-</span> start<span class="hl opt">).</span><span class="hl kwd">count</span><span class="hl opt">();</span>
-    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> duration<span class="hl opt">;</span>
+    auto stop = std::chrono::high_resolution_clock::now();
+    std::cout &lt;&lt; &#34;, Stopped, &#34;;
+    auto duration = std::chrono::duration&lt;double&gt;(stop - start).count();
+    std::cout &lt;&lt; duration;
 
-    <span class="hl kwd">check_sorted</span><span class="hl opt">(</span>unsorted<span class="hl opt">,</span> <span class="hl str">&quot;sorted array&quot;</span><span class="hl opt">);</span>
+    check_sorted(unsorted, &#34;sorted array&#34;);
 
-    <span class="hl kwb">const</span> <span class="hl kwc">auto</span> match <span class="hl opt">=</span> unsorted <span class="hl opt">==</span> verify<span class="hl opt">;</span>
-    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt; (</span>match ? <span class="hl str">&quot;, OK&quot;</span> <span class="hl opt">:</span> <span class="hl str">&quot;, DON'T MATCH&quot;</span><span class="hl opt">);</span>
+    const auto match = unsorted == verify;
+    std::cout &lt;&lt; (match ? &#34;, OK&#34; : &#34;, DON&#39;T MATCH&#34;);
 
-    times<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span>duration<span class="hl opt">);</span>
-    times_sum <span class="hl opt">+=</span> duration<span class="hl opt">;</span>
+    times.push_back(duration);
+    times_sum += duration;
 
-    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">;</span>
-  <span class="hl opt">}</span>
+    std::cout &lt;&lt; &#34;\n&#34;;
+  }
 
-  <span class="hl kwc">auto</span> <span class="hl kwb">const</span> average <span class="hl opt">=</span> times_sum <span class="hl opt">/</span> ITERATIONS_NUM<span class="hl opt">;</span>
-  <span class="hl kwc">auto</span> <span class="hl kwb">const</span> max_element <span class="hl opt">= *</span>std<span class="hl opt">::</span><span class="hl kwd">max_element</span><span class="hl opt">(</span>times<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> times<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">());</span>
-  <span class="hl kwc">auto</span> <span class="hl kwb">const</span> min_element <span class="hl opt">= *</span>std<span class="hl opt">::</span><span class="hl kwd">min_element</span><span class="hl opt">(</span>times<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> times<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">());</span>
-  <span class="hl kwc">auto</span> <span class="hl kwb">const</span> average_fixed <span class="hl opt">= (</span>times_sum <span class="hl opt">-</span> max_element <span class="hl opt">-</span> min_element<span class="hl opt">) /</span>
-                             <span class="hl opt">(</span>ITERATIONS_NUM <span class="hl opt">-</span> <span class="hl num">2</span><span class="hl opt">);</span>
+  auto const average = times_sum / ITERATIONS_NUM;
+  auto const max_element = *std::max_element(times.begin(), times.end());
+  auto const min_element = *std::min_element(times.begin(), times.end());
+  auto const average_fixed = (times_sum - max_element - min_element) /
+                             (ITERATIONS_NUM - 2);
 
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Average: &quot;</span> <span class="hl opt">&lt;&lt;</span> average <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;s, &quot;</span> 
-            <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Average without max/min: &quot;</span>
-            <span class="hl opt">&lt;&lt;</span> average_fixed <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;s.&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+  std::cout &lt;&lt; &#34;Average: &#34; &lt;&lt; average &lt;&lt; &#34;s, &#34; 
+            &lt;&lt; &#34;Average without max/min: &#34;
+            &lt;&lt; average_fixed &lt;&lt; &#34;s.&#34; &lt;&lt; std::endl;
+}
+</code></pre>
 
 <p>Под занавес, картинка загрузки процессоров. Явно видны всплески на каждой итерации, когда система используется подзавязку.</p>
 

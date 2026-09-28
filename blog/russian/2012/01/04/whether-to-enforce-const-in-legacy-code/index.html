@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,11 +49,10 @@
 <div id="post">
   <p>Битый час сегодня спорили с коллегой по следующему вопросу. Имеем код:</p>
 
-<pre class="hl">
-<span class="hl kwb">void</span> <span class="hl kwd">foo</span><span class="hl opt">(</span>T<span class="hl opt">*</span> t<span class="hl opt">) {</span>
-  <span class="hl kwd">bar</span><span class="hl opt">(</span>t<span class="hl opt">);</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">void foo(T* t) {
+  bar(t);
+}
+</code></pre>
 
 <p>Проблема в том, что функция bar является legacy-функцией одной из наших старых библиотек, которую сейчас мы поменять не можем, и ее сигнатура: <code>void bar(T*)</code>, то есть указатель-параметр не <code>const</code>. Но в реальности эта функция не меняет объект, на который указывает ее параметр.</p>
 
@@ -55,11 +60,10 @@
 
 <p>Я считаю, что код должен выглядеть так:</p>
 
-<pre class="hl">
-<span class="hl kwb">void</span> <span class="hl kwd">foo</span><span class="hl opt">(</span><span class="hl kwb">const</span> T<span class="hl opt">*</span> t<span class="hl opt">) {</span>
-  <span class="hl kwd">bar</span><span class="hl opt">(</span><span class="hl kwa">const_cast</span><span class="hl opt">&lt;</span>T<span class="hl opt">*&gt;(</span>t<span class="hl opt">));</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">void foo(const T* t) {
+  bar(const_cast&lt;T*&gt;(t));
+}
+</code></pre>
 
 <p>Мои аргументы: так как контракт функции foo говорит, что эта функция не будет менять объект, на который указывает указатель, то этот факт <strong>должен</strong> быть отражен в API использованием слова <code>const</code>. И не имеет никакого значения, что по какой-то причине реализация этой функции внутри использует старый код, который неграмотно написан. Да, из-за это приходится делать некрасивое приведение типов, снимая <code>const</code>. Но эта некрасивость локализована внутри <code>foo</code> и в целом не оказывает влияния на стройность нового кода. Более того - если в будущем можно будет отказаться от использования старой функции <code>bar</code>, то проблема вообще исчезнет.</p>
 

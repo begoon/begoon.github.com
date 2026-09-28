@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,12 +49,11 @@
 <div id="post">
   <p>Тривиальный пример (<code>bcc32_5.93_cast_bug.cpp</code>):</p>
 
-<pre class="hl">
-<span class="hl kwc">class</span> A <span class="hl opt">{};</span>
-<span class="hl kwc">class</span> C <span class="hl opt">{};</span>
-A<span class="hl opt">*</span> a<span class="hl opt">;</span>
-A<span class="hl opt">*</span> b <span class="hl opt">=</span> <span class="hl kwa">static_cast</span><span class="hl opt">&lt;</span>C<span class="hl opt">*&gt;(</span>a<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">class A {};
+class C {};
+A* a;
+A* b = static_cast&lt;C*&gt;(a);
+</code></pre>
 
 <p>Компилируем в bcc32.exe (версия 5.93) из Codegear RAD Studion 2007:</p>
 

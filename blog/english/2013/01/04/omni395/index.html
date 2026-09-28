@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -55,8 +61,7 @@ and other devices (alas, not all RS232 ports had all standard line causing
 inventing a handmade wheel for the flow control.), and an LCD-screen with
 loadable fonts.</p>
 
-<p><img src="IMG_1621.JPG" alt="" />
-</p>
+<p><img src="IMG_1621.JPG" alt="" /></p>
 
 <p>The architecture was pretty interesting. The user code was executed inside
 a VM running on top of native Z180 code. It allowed dealing with larger
@@ -67,8 +72,7 @@ took a few seconds. Also, the stack size in the C language was quite limited,
 and sometimes it was worth implementing, for example, the &ldquo;sprintf&rdquo; function
 manually to avoid random crashes due to stack overflows.</p>
 
-<p><img src="IMG_1622.JPG" alt="" />
-</p>
+<p><img src="IMG_1622.JPG" alt="" /></p>
 
 <p>But, frankly speaking, comparing to terminal from other vendors back those
 days (Injenico, Nurit, etc.) where you had to deal with using raw memory
@@ -85,21 +89,17 @@ want to see it inside? Indeed!</p>
 
 <p>Turn it on, and, (surprise!) it still runs my firmware.</p>
 
-<p><img src="IMG_1623.JPG" alt="" />
-</p>
+<p><img src="IMG_1623.JPG" alt="" /></p>
 
 <p>Inside.</p>
 
-<p><img src="IMG_1624.JPG" alt="" />
-</p>
+<p><img src="IMG_1624.JPG" alt="" /></p>
 
 <p>The top board, under the keypad, and the bottom one, with connectors.</p>
 
-<p><img src="IMG_1635.JPG" alt="" />
-</p>
+<p><img src="IMG_1635.JPG" alt="" /></p>
 
-<p><img src="IMG_1636.JPG" alt="" />
-</p>
+<p><img src="IMG_1636.JPG" alt="" /></p>
 
 <p>If I find the compiler and loader I&rsquo;ll try to write a little demo.</p>
 

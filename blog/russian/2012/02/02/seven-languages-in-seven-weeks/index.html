@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -77,14 +83,13 @@
 
 <p>Примерчик из книги:</p>
 
-<pre class="hl">
-<span class="hl opt">//</span> Запускаем future
-futureResult <span class="hl opt">:=</span> <span class="hl kwb">URL</span> <span class="hl kwd">with</span><span class="hl opt">(</span><span class="hl str">&quot;http://google.com/&quot;</span><span class="hl opt">) &#64;</span>fetch
-<span class="hl kwd">writeln</span><span class="hl opt">(</span><span class="hl str">&quot;Сразу начинаем делать что еще, пока future работает в фоне.&quot;</span><span class="hl opt">)</span>
-<span class="hl opt">//</span> Эта строка будет выполнена сразу<span class="hl opt">.</span>
-<span class="hl kwd">writeln</span><span class="hl opt">(</span><span class="hl str">&quot;fetched &quot;</span><span class="hl opt">,</span> futureResult size<span class="hl opt">,</span> <span class="hl str">&quot; bytes&quot;</span><span class="hl opt">)</span>
-<span class="hl opt">//</span> А вот эта строка будет заблокирована<span class="hl opt">,</span> пока future не выполнится<span class="hl opt">.</span>
-</pre>
+<pre><code class="language-plaintext">// Запускаем future
+futureResult := URL with(&#34;http://google.com/&#34;) @fetch
+writeln(&#34;Сразу начинаем делать что еще, пока future работает в фоне.&#34;)
+// Эта строка будет выполнена сразу.
+writeln(&#34;fetched &#34;, futureResult size, &#34; bytes&#34;)
+// А вот эта строка будет заблокирована, пока future не выполнится.
+</code></pre>
 
 <p>Идем дальше, <strong>Prolog</strong>.</p>
 

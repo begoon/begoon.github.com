@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,141 +49,130 @@
 <div id="post">
   <p>Во многих современных языках программирования считать весь файл в строку можно буквально одним оператором, например, в <code>php</code> это делается так:</p>
 
-<pre class="hl">
-<span class="hl kwc">$lines</span> <span class="hl opt">=</span> <span class="hl kwd">file_get_contents</span><span class="hl opt">(</span><span class="hl str">&quot;textfile.txt&quot;</span><span class="hl opt">);</span>
-</pre>
+<pre><code class="language-php">$lines = file_get_contents(&#34;textfile.txt&#34;);
+</code></pre>
 
 <p>или так, медленно и неэффективно, по-старинке:</p>
 
-<pre class="hl">
-<span class="hl kwc">$lines</span> <span class="hl opt">=</span> <span class="hl kwd">join</span><span class="hl opt">(</span><span class="hl str">&quot;&quot;</span><span class="hl opt">,</span> <span class="hl kwd">file</span><span class="hl opt">(</span><span class="hl str">&quot;textfile.txt&quot;</span><span class="hl opt">));</span>
-</pre>
+<pre><code class="language-php">$lines = join(&#34;&#34;, file(&#34;textfile.txt&#34;));
+</code></pre>
 
 <p>Задумался я, как бы это так элегантно одним оператором сделать в С++. Естественно, хочется, чтобы это работало приемлемо быстро для больших файлов (например, от одного мегабайта и больше).</p>
 
 <p>Первое, что сходу приходит в голову (универсальная кондовая классика):</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span><span class="hl str">&quot;testfile.txt&quot;</span><span class="hl opt">);</span>
-std<span class="hl opt">::</span>string v<span class="hl opt">;</span>
-<span class="hl kwb">char</span> buf<span class="hl opt">[</span>N<span class="hl opt">];</span>
-<span class="hl kwa">while</span> <span class="hl opt">(</span>is<span class="hl opt">) {</span> 
-  is<span class="hl opt">.</span><span class="hl kwd">read</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>buf<span class="hl opt">));</span>
-  v<span class="hl opt">.</span><span class="hl kwd">append</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> is<span class="hl opt">.</span><span class="hl kwd">gcount</span><span class="hl opt">());</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">std::ifstream is(&#34;testfile.txt&#34;);
+std::string v;
+char buf[N];
+while (is) { 
+  is.read(buf, sizeof(buf));
+  v.append(buf, is.gcount());
+}
+</code></pre>
 
 <p>С размером буфера N можно еще проиграться, выбрав оптимальный.</p>
 
 <p>Первое улучшение, приходящее в голову — это распределить заранее внутренний буфер для строки, минимизировав количество перераспределений буфера в процессе чтения. Для этого мы, естественно, должны заранее знать размер читаемого файла. Пусть это будет 1 мегабайт (1024*1024).</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span><span class="hl str">&quot;testfile.txt&quot;</span><span class="hl opt">);</span>
-std<span class="hl opt">::</span>string v<span class="hl opt">;</span>
-<span class="hl slc">// Резервируем внутренний буфер std::string на указанный</span>
-<span class="hl slc">// размер в один мегабайт.</span>
-v<span class="hl opt">.</span><span class="hl kwd">reserve</span><span class="hl opt">(</span><span class="hl num">1024</span><span class="hl opt">*</span><span class="hl num">1024</span><span class="hl opt">);</span>
-<span class="hl kwb">char</span> buf<span class="hl opt">[</span>N<span class="hl opt">];</span>
-<span class="hl kwa">while</span> <span class="hl opt">(</span>is<span class="hl opt">) {</span> 
-  is<span class="hl opt">.</span><span class="hl kwd">read</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>buf<span class="hl opt">));</span>
-  v<span class="hl opt">.</span><span class="hl kwd">append</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> is<span class="hl opt">.</span><span class="hl kwd">gcount</span><span class="hl opt">());</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">std::ifstream is(&#34;testfile.txt&#34;);
+std::string v;
+// Резервируем внутренний буфер std::string на указанный
+// размер в один мегабайт.
+v.reserve(1024*1024);
+char buf[N];
+while (is) { 
+  is.read(buf, sizeof(buf));
+  v.append(buf, is.gcount());
+}
+</code></pre>
 
 <p>Далее на сцену выходят STL-алгоритмы и потоковые итераторы. Берем типовой пример использования алгоритма <code>std::copy</code>, который есть практически в любой книге по С++:</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span><span class="hl str">&quot;testfile.txt&quot;</span><span class="hl opt">);</span>
-std<span class="hl opt">::</span>string v<span class="hl opt">;</span>
-<span class="hl slc">// Сброс данного флага необходим для отключения пропуска пробельных</span>
-<span class="hl slc">// символов при форматном вводе через поток.</span>
-is<span class="hl opt">.</span><span class="hl kwd">unsetf</span><span class="hl opt">(</span>std<span class="hl opt">::</span>ios<span class="hl opt">::</span>skipws<span class="hl opt">);</span>
-std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>
-  std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>is<span class="hl opt">),</span> 
-  std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(),</span> 
-  std<span class="hl opt">::</span><span class="hl kwd">back_inserter</span><span class="hl opt">(</span>v<span class="hl opt">)</span>
-<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">std::ifstream is(&#34;testfile.txt&#34;);
+std::string v;
+// Сброс данного флага необходим для отключения пропуска пробельных
+// символов при форматном вводе через поток.
+is.unsetf(std::ios::skipws);
+std::copy(
+  std::istream_iterator&lt;char&gt;(is), 
+  std::istream_iterator&lt;char&gt;(), 
+  std::back_inserter(v)
+);
+</code></pre>
 
 <p>Сразу скажу, это крайне медленный метод. Первым, приходящим в голову улучшением, как всегда, является предварительное распределение буфера приемной строки:</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span><span class="hl str">&quot;testfile.txt&quot;</span><span class="hl opt">);</span>
-std<span class="hl opt">::</span>string v<span class="hl opt">;</span>
-<span class="hl slc">// Резервируем внутренний буфер std::string на указанный</span>
-<span class="hl slc">// размер в один мегабайт.</span>
-v<span class="hl opt">.</span><span class="hl kwd">reserve</span><span class="hl opt">(</span><span class="hl num">1024</span><span class="hl opt">*</span><span class="hl num">1024</span><span class="hl opt">);</span>
-is<span class="hl opt">.</span><span class="hl kwd">unsetf</span><span class="hl opt">(</span>std<span class="hl opt">::</span>ios<span class="hl opt">::</span>skipws<span class="hl opt">);</span>
-std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>
-  std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>is<span class="hl opt">),</span> 
-  std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(),</span> 
-  std<span class="hl opt">::</span><span class="hl kwd">back_inserter</span><span class="hl opt">(</span>v<span class="hl opt">)</span>
-<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">std::ifstream is(&#34;testfile.txt&#34;);
+std::string v;
+// Резервируем внутренний буфер std::string на указанный
+// размер в один мегабайт.
+v.reserve(1024*1024);
+is.unsetf(std::ios::skipws);
+std::copy(
+  std::istream_iterator&lt;char&gt;(is), 
+  std::istream_iterator&lt;char&gt;(), 
+  std::back_inserter(v)
+);
+</code></pre>
 
 <p>В рассмотренном методе видно, что сначала данные изымаются из потока потоковым итератором <code>istream_iterator</code>, а потом кладутся через итератор строки <code>back_inserter</code> в саму строку. Двойная работа. Есть метод лучше — класть данные из потока напрямую в строку, используя один из специальных конструкторов класса <code>std::string</code>:</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span><span class="hl str">&quot;testfile.txt&quot;</span><span class="hl opt">);</span>
-is<span class="hl opt">.</span><span class="hl kwd">unsetf</span><span class="hl opt">(</span>std<span class="hl opt">::</span>ios<span class="hl opt">::</span>skipws<span class="hl opt">);</span>
-<span class="hl slc">// Самое интересное происходит тут: создается переменная &quot;v&quot;</span>
-<span class="hl slc">// через конструктор, работающий напрямую с итераторами потока,</span>
-<span class="hl slc">// и данные напрямую поступают во внутренний буфер строки.</span>
-std<span class="hl opt">::</span>string <span class="hl kwd">v</span><span class="hl opt">(</span>
-  <span class="hl opt">(</span>std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>is<span class="hl opt">)),</span> 
-  std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;()</span>
-<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">std::ifstream is(&#34;testfile.txt&#34;);
+is.unsetf(std::ios::skipws);
+// Самое интересное происходит тут: создается переменная &#34;v&#34;
+// через конструктор, работающий напрямую с итераторами потока,
+// и данные напрямую поступают во внутренний буфер строки.
+std::string v(
+  (std::istream_iterator&lt;char&gt;(is)), 
+  std::istream_iterator&lt;char&gt;()
+);
+</code></pre>
 
 <p>Опытный читатель заметит казалось бы ненужные обрамляющие скобки вокруг первого параметра. Сразу скажу — без них работать не будет, а будет ошибка компиляции. Тут мы касаемся одного из &ldquo;темных углов&rdquo; С++. Это не самый очевидный вопрос, поэтому я посвятил ему <a href="/blog/russian/2009/02/09/dark-corners-of-cpp/">отдельную статью</a>.</p>
 
 <p>Уже лучше, но двигаемся дальше. В потоках ввода есть специальные итераторы <code>istreambuf_iterator</code>, которые работают напрямую с внутренними буферами потока в обход всех высокоуровневых функций форматирования и выходного преобразования. Именно по этому для них вызов функции <code>unsetf</code> будет уже не нужен:</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span><span class="hl str">&quot;testfile.txt&quot;</span><span class="hl opt">);</span>
-std<span class="hl opt">::</span>string v<span class="hl opt">;</span>
-<span class="hl slc">// Опциональное резервирование буфера приемной строки.</span>
-v<span class="hl opt">.</span><span class="hl kwd">reserve</span><span class="hl opt">(</span><span class="hl num">1024</span><span class="hl opt">*</span><span class="hl num">1024</span><span class="hl opt">);</span>
-std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>
-  std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>is<span class="hl opt">),</span> 
-  std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(),</span>
-  std<span class="hl opt">::</span><span class="hl kwd">back_inserter</span><span class="hl opt">(</span>v<span class="hl opt">)</span> 
-<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">std::ifstream is(&#34;testfile.txt&#34;);
+std::string v;
+// Опциональное резервирование буфера приемной строки.
+v.reserve(1024*1024);
+std::copy(
+  std::istreambuf_iterator&lt;char&gt;(is), 
+  std::istreambuf_iterator&lt;char&gt;(),
+  std::back_inserter(v) 
+);
+</code></pre>
 
 <p>И теперь вариант через конструктор класса std::string:</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span><span class="hl str">&quot;testfile.txt&quot;</span><span class="hl opt">);</span>
-std<span class="hl opt">::</span>string <span class="hl kwd">v</span><span class="hl opt">(</span>
-  <span class="hl opt">(</span>std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>is<span class="hl opt">)),</span> 
-  std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;()</span>
-<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">std::ifstream is(&#34;testfile.txt&#34;);
+std::string v(
+  (std::istreambuf_iterator&lt;char&gt;(is)), 
+  std::istreambuf_iterator&lt;char&gt;()
+);
+</code></pre>
 
 <p>Мы уже близки к идеалу. Теперь встроим создание объекта <code>std::ifstream</code> прямо в код создания строки:</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>string <span class="hl kwd">v</span><span class="hl opt">(</span>
-  <span class="hl opt">(</span>std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>
-    std<span class="hl opt">::</span><span class="hl kwd">ifstream</span><span class="hl opt">(</span><span class="hl str">&quot;testfile.txt&quot;</span><span class="hl opt">)</span>
-  <span class="hl opt">)),</span> 
-  std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;()</span>
-<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">std::string v(
+  (std::istreambuf_iterator&lt;char&gt;(
+    std::ifstream(&#34;testfile.txt&#34;)
+  )), 
+  std::istreambuf_iterator&lt;char&gt;()
+);
+</code></pre>
 
 <p>Мы уже в миллиметре от идеала, но в приведенном примере есть одно большое &ldquo;но&rdquo;. Вызов <code>std::ifstream(&quot;testfile.txt&quot;)</code> прямо в вызове конструктора создает временный объект, который по стандарту языка всегда является константой, а первый параметр конструктора ожидает принять не константный параметр, поэтому &ldquo;строгий&rdquo; компилятор типа gcc скорее всего выдаст ошибку компиляции, а менее &ldquo;строгий&rdquo;, например <code>cl.exe</code> от Майкрософта на такой вызов не ругается. Но мы не можем принять такое не универсальное решение, поэтому изменим код, чтобы параметр создавался динамически в куче, а для автоматического его удаления будет использоваться <code>std::auto_ptr</code>:</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>string <span class="hl kwd">v</span><span class="hl opt">(</span>
-  <span class="hl opt">(</span>std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>
-    <span class="hl opt">*(</span>std<span class="hl opt">::</span>auto_ptr<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>ifstream<span class="hl opt">&gt;(</span>
-      <span class="hl kwa">new</span> std<span class="hl opt">::</span><span class="hl kwd">ifstream</span><span class="hl opt">(</span><span class="hl str">&quot;testfile.txt&quot;</span><span class="hl opt">)</span>
-    <span class="hl opt">)).</span><span class="hl kwd">get</span><span class="hl opt">()</span>
-  <span class="hl opt">)),</span> 
-  std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;()</span>
-<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">std::string v(
+  (std::istreambuf_iterator&lt;char&gt;(
+    *(std::auto_ptr&lt;std::ifstream&gt;(
+      new std::ifstream(&#34;testfile.txt&#34;)
+    )).get()
+  )), 
+  std::istreambuf_iterator&lt;char&gt;()
+);
+</code></pre>
 
 <p>Этот код должен работать в любом стандартном компиляторе С++.</p>
 
@@ -187,232 +182,231 @@ std<span class="hl opt">::</span>string <span class="hl kwd">v</span><span class
 
 <p><code>filereader_unittest.cpp</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;gtest/gtest.h&gt;</span>
+<pre><code class="language-cpp">#include &lt;gtest/gtest.h&gt;
 
-<span class="hl ppc">#include &lt;iostream&gt;</span>
-<span class="hl ppc">#include &lt;streambuf&gt;</span>
-<span class="hl ppc">#include &lt;istream&gt;</span>
-<span class="hl ppc">#include &lt;fstream&gt;</span>
-<span class="hl ppc">#include &lt;ios&gt;</span>
-<span class="hl ppc">#include &lt;iomanip&gt;</span>
-<span class="hl ppc">#include &lt;string&gt;</span>
-<span class="hl ppc">#include &lt;vector&gt;</span>
-<span class="hl ppc">#include &lt;memory&gt;</span>
-<span class="hl ppc">#include &lt;cstdlib&gt;</span>
+#include &lt;iostream&gt;
+#include &lt;streambuf&gt;
+#include &lt;istream&gt;
+#include &lt;fstream&gt;
+#include &lt;ios&gt;
+#include &lt;iomanip&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;memory&gt;
+#include &lt;cstdlib&gt;
 
-<span class="hl slc">// Управляющий класс для нашей среды тестирования.</span>
-<span class="hl kwc">class</span> Env<span class="hl opt">:</span> <span class="hl kwc">public</span> testing<span class="hl opt">::</span>Environment <span class="hl opt">{</span>
-<span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl slc">// Размер тестового файла: 1 мегабайт.</span>
-  <span class="hl kwb">static int</span> <span class="hl kwd">testfile_sz</span><span class="hl opt">() {</span> <span class="hl kwa">return</span> <span class="hl num">1024</span> <span class="hl opt">*</span> <span class="hl num">1024</span><span class="hl opt">; }</span>
-  <span class="hl slc">// Имя тестового файла.</span>
-  <span class="hl kwb">static const char</span><span class="hl opt">*</span> <span class="hl kwd">testfile</span><span class="hl opt">() {</span> <span class="hl kwa">return</span> <span class="hl str">&quot;testfile&quot;</span><span class="hl opt">; }</span>
+// Управляющий класс для нашей среды тестирования.
+class Env: public testing::Environment {
+public:
+  // Размер тестового файла: 1 мегабайт.
+  static int testfile_sz() { return 1024 * 1024; }
+  // Имя тестового файла.
+  static const char* testfile() { return &#34;testfile&#34;; }
 
-<span class="hl kwc">protected</span><span class="hl opt">:</span>
-  <span class="hl slc">// Эта функция вызывается один раз в начале тестирования.</span>
-  <span class="hl slc">// Она создает тестовый файл.</span>
-  <span class="hl kwb">void</span> <span class="hl kwd">SetUp</span><span class="hl opt">() {</span>
-    std<span class="hl opt">::</span>string <span class="hl kwd">dummy</span><span class="hl opt">(</span><span class="hl kwd">testfile_sz</span><span class="hl opt">(),</span> <span class="hl str">'x'</span><span class="hl opt">);</span>
-    std<span class="hl opt">::</span>ofstream <span class="hl kwd">os</span><span class="hl opt">(</span><span class="hl kwd">testfile</span><span class="hl opt">());</span>
-    os<span class="hl opt">.</span><span class="hl kwd">write</span><span class="hl opt">(</span>dummy<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">(),</span> dummy<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span>
-  <span class="hl opt">}</span>
+protected:
+  // Эта функция вызывается один раз в начале тестирования.
+  // Она создает тестовый файл.
+  void SetUp() {
+    std::string dummy(testfile_sz(), &#39;x&#39;);
+    std::ofstream os(testfile());
+    os.write(dummy.c_str(), dummy.length());
+  }
 
-  <span class="hl slc">// Эта функция вызывается один раз после всех тестов.</span>
-  <span class="hl slc">// Она удаляет тестовый файл.</span>
-  <span class="hl kwb">void</span> <span class="hl kwd">TearDown</span><span class="hl opt">() {</span>
-    std<span class="hl opt">::</span><span class="hl kwd">remove</span><span class="hl opt">(</span><span class="hl kwd">testfile</span><span class="hl opt">());</span>
-  <span class="hl opt">}</span>
-<span class="hl opt">};</span>
+  // Эта функция вызывается один раз после всех тестов.
+  // Она удаляет тестовый файл.
+  void TearDown() {
+    std::remove(testfile());
+  }
+};
 
-<span class="hl slc">// Функция, реализующая классический метод чтения файла кусками</span>
-<span class="hl slc">// заданной длины N. При необходимости производится предварительное</span>
-<span class="hl slc">// распределение буфера приемной строки.</span>
-<span class="hl kwb">void</span> <span class="hl kwd">rawRead</span><span class="hl opt">(</span><span class="hl kwb">int</span> N<span class="hl opt">,</span> <span class="hl kwb">bool</span> reserve<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile</span><span class="hl opt">());</span>
+// Функция, реализующая классический метод чтения файла кусками
+// заданной длины N. При необходимости производится предварительное
+// распределение буфера приемной строки.
+void rawRead(int N, bool reserve) {
+  std::ifstream is(Env::testfile());
 
-  std<span class="hl opt">::</span>string v<span class="hl opt">;</span>
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>reserve<span class="hl opt">)</span>
-    v<span class="hl opt">.</span><span class="hl kwd">reserve</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile_sz</span><span class="hl opt">());</span>
+  std::string v;
+  if (reserve)
+    v.reserve(Env::testfile_sz());
 
-  <span class="hl kwb">char</span><span class="hl opt">*</span> buf <span class="hl opt">=</span> <span class="hl kwa">new</span> <span class="hl kwb">char</span><span class="hl opt">[</span>N<span class="hl opt">];</span>
-  <span class="hl kwa">while</span> <span class="hl opt">(</span>is<span class="hl opt">) {</span>
-    is<span class="hl opt">.</span><span class="hl kwd">read</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>buf<span class="hl opt">));</span>
-    v<span class="hl opt">.</span><span class="hl kwd">append</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> is<span class="hl opt">.</span><span class="hl kwd">gcount</span><span class="hl opt">());</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwa">delete</span><span class="hl opt">[]</span> buf<span class="hl opt">;</span>
+  char* buf = new char[N];
+  while (is) {
+    is.read(buf, sizeof(buf));
+    v.append(buf, is.gcount());
+  }
+  delete[] buf;
 
-  <span class="hl slc">// На всякий случай проверяем размер считанного файла.</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile_sz</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span> 
-<span class="hl opt">}</span>
+  // На всякий случай проверяем размер считанного файла.
+  EXPECT_EQ(Env::testfile_sz(), v.length()); 
+}
 
-<span class="hl slc">// Классическое чтение с буфером в 100 байт.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>ReaderTest<span class="hl opt">,</span> raw_100<span class="hl opt">) {</span>
-  <span class="hl kwd">rawRead</span><span class="hl opt">(</span><span class="hl num">100</span><span class="hl opt">,</span> <span class="hl kwa">false</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+// Классическое чтение с буфером в 100 байт.
+TEST(ReaderTest, raw_100) {
+  rawRead(100, false);
+}
 
-<span class="hl slc">// Классическое чтение с буфером в 1 килобайт.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>ReaderTest<span class="hl opt">,</span> raw_1024<span class="hl opt">) {</span>
-  <span class="hl kwd">rawRead</span><span class="hl opt">(</span><span class="hl num">1024</span><span class="hl opt">,</span> <span class="hl kwa">false</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+// Классическое чтение с буфером в 1 килобайт.
+TEST(ReaderTest, raw_1024) {
+  rawRead(1024, false);
+}
 
-<span class="hl slc">// Классическое чтение с буфером в 10 килобайт.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>ReaderTest<span class="hl opt">,</span> raw_10240<span class="hl opt">) {</span>
-  <span class="hl kwd">rawRead</span><span class="hl opt">(</span><span class="hl num">10240</span><span class="hl opt">,</span> <span class="hl kwa">false</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+// Классическое чтение с буфером в 10 килобайт.
+TEST(ReaderTest, raw_10240) {
+  rawRead(10240, false);
+}
 
-<span class="hl slc">// Классическое чтение с буфером в 10 килобайт с предварительным</span>
-<span class="hl slc">// распределением буфера приемной строки.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>ReaderTest<span class="hl opt">,</span> raw_reserve_10240<span class="hl opt">) {</span>
-  <span class="hl kwd">rawRead</span><span class="hl opt">(</span><span class="hl num">10240</span><span class="hl opt">,</span> <span class="hl kwa">true</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+// Классическое чтение с буфером в 10 килобайт с предварительным
+// распределением буфера приемной строки.
+TEST(ReaderTest, raw_reserve_10240) {
+  rawRead(10240, true);
+}
 
-<span class="hl slc">// Функция, реализующая чтение через итератор istream_iterator.</span>
-<span class="hl slc">// При необходимости производится предварительное распределение </span>
-<span class="hl slc">// буфера приемной строки.</span>
-<span class="hl kwb">void</span> <span class="hl kwd">check_istream_iterator</span><span class="hl opt">(</span><span class="hl kwb">bool</span> reserve<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile</span><span class="hl opt">());</span>
+// Функция, реализующая чтение через итератор istream_iterator.
+// При необходимости производится предварительное распределение 
+// буфера приемной строки.
+void check_istream_iterator(bool reserve) {
+  std::ifstream is(Env::testfile());
 
-  std<span class="hl opt">::</span>string v<span class="hl opt">;</span>
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>reserve<span class="hl opt">)</span>
-    v<span class="hl opt">.</span><span class="hl kwd">reserve</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile_sz</span><span class="hl opt">());</span>
+  std::string v;
+  if (reserve)
+    v.reserve(Env::testfile_sz());
 
-  <span class="hl slc">// Принудительное игнорирование пропуска пробельных символов.</span>
-  <span class="hl slc">// С этим флагом двоичные данные будут читаться неверно.</span>
-  is<span class="hl opt">.</span><span class="hl kwd">unsetf</span><span class="hl opt">(</span>std<span class="hl opt">::</span>ios<span class="hl opt">::</span>skipws<span class="hl opt">);</span>
-  std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>
-    std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>is<span class="hl opt">),</span> 
-    std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(),</span> 
-    std<span class="hl opt">::</span><span class="hl kwd">back_inserter</span><span class="hl opt">(</span>v<span class="hl opt">)</span>
-  <span class="hl opt">);</span>
+  // Принудительное игнорирование пропуска пробельных символов.
+  // С этим флагом двоичные данные будут читаться неверно.
+  is.unsetf(std::ios::skipws);
+  std::copy(
+    std::istream_iterator&lt;char&gt;(is), 
+    std::istream_iterator&lt;char&gt;(), 
+    std::back_inserter(v)
+  );
 
-  <span class="hl slc">// На всякий случай проверяем размер считанного файла.</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile_sz</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span> 
-<span class="hl opt">}</span>
+  // На всякий случай проверяем размер считанного файла.
+  EXPECT_EQ(Env::testfile_sz(), v.length()); 
+}
 
-<span class="hl slc">// Тестируем работу через istream_iterator.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>ReaderTest<span class="hl opt">,</span> istream_iterator<span class="hl opt">) {</span>
-  <span class="hl kwd">check_istream_iterator</span><span class="hl opt">(</span><span class="hl kwa">false</span><span class="hl opt">);</span>  
-<span class="hl opt">}</span>
+// Тестируем работу через istream_iterator.
+TEST(ReaderTest, istream_iterator) {
+  check_istream_iterator(false);  
+}
 
-<span class="hl slc">// Тестируем работу через istream_iterator с предварительным</span>
-<span class="hl slc">// распределением буфера приемной строки.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>ReaderTest<span class="hl opt">,</span> istream_iterator_reserve<span class="hl opt">) {</span>
-  <span class="hl kwd">check_istream_iterator</span><span class="hl opt">(</span><span class="hl kwa">true</span><span class="hl opt">);</span>  
-<span class="hl opt">}</span>
+// Тестируем работу через istream_iterator с предварительным
+// распределением буфера приемной строки.
+TEST(ReaderTest, istream_iterator_reserve) {
+  check_istream_iterator(true);  
+}
 
-<span class="hl slc">// Тестируем работу через istream_iterator при прямом</span>
-<span class="hl slc">// вызове конструктора строки, который берет данные напрямую</span>
-<span class="hl slc">// из итераторов.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>ReaderTest<span class="hl opt">,</span> istream_iterator_tostring<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile</span><span class="hl opt">());</span>
-  is<span class="hl opt">.</span><span class="hl kwd">unsetf</span><span class="hl opt">(</span>std<span class="hl opt">::</span>ios<span class="hl opt">::</span>skipws<span class="hl opt">);</span>
+// Тестируем работу через istream_iterator при прямом
+// вызове конструктора строки, который берет данные напрямую
+// из итераторов.
+TEST(ReaderTest, istream_iterator_tostring) {
+  std::ifstream is(Env::testfile());
+  is.unsetf(std::ios::skipws);
 
-  std<span class="hl opt">::</span>string <span class="hl kwd">v</span><span class="hl opt">(</span>
-    <span class="hl opt">(</span>std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>is<span class="hl opt">)),</span> 
-    std<span class="hl opt">::</span>istream_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;()</span>
-  <span class="hl opt">);</span>
+  std::string v(
+    (std::istream_iterator&lt;char&gt;(is)), 
+    std::istream_iterator&lt;char&gt;()
+  );
 
-  <span class="hl slc">// На всякий случай проверяем размер считанного файла.</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile_sz</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span> 
-<span class="hl opt">}</span>
+  // На всякий случай проверяем размер считанного файла.
+  EXPECT_EQ(Env::testfile_sz(), v.length()); 
+}
 
-<span class="hl slc">// Функция, реализующая чтение через итератор istreambuf_iterator.</span>
-<span class="hl slc">// При необходимости производится предварительное распределение </span>
-<span class="hl slc">// буфера приемной строки. Для данного метода сброс флага</span>
-<span class="hl slc">// std::ios::skipws не нужен, так как этот итератор работает</span>
-<span class="hl slc">// на более низком уровне.</span>
-<span class="hl kwb">void</span> <span class="hl kwd">check_istreambuf_iterator</span><span class="hl opt">(</span><span class="hl kwb">bool</span> reserve<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile</span><span class="hl opt">());</span>
+// Функция, реализующая чтение через итератор istreambuf_iterator.
+// При необходимости производится предварительное распределение 
+// буфера приемной строки. Для данного метода сброс флага
+// std::ios::skipws не нужен, так как этот итератор работает
+// на более низком уровне.
+void check_istreambuf_iterator(bool reserve) {
+  std::ifstream is(Env::testfile());
 
-  std<span class="hl opt">::</span>string v<span class="hl opt">;</span>
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>reserve<span class="hl opt">)</span>
-    v<span class="hl opt">.</span><span class="hl kwd">reserve</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile_sz</span><span class="hl opt">());</span>
+  std::string v;
+  if (reserve)
+    v.reserve(Env::testfile_sz());
 
-  std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>
-    std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>is<span class="hl opt">),</span> 
-    std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(),</span>
-    std<span class="hl opt">::</span><span class="hl kwd">back_inserter</span><span class="hl opt">(</span>v<span class="hl opt">)</span>  
-  <span class="hl opt">);</span>
+  std::copy(
+    std::istreambuf_iterator&lt;char&gt;(is), 
+    std::istreambuf_iterator&lt;char&gt;(),
+    std::back_inserter(v)  
+  );
 
-  <span class="hl slc">// На всякий случай проверяем размер считанного файла.</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile_sz</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span> 
-<span class="hl opt">}</span>
+  // На всякий случай проверяем размер считанного файла.
+  EXPECT_EQ(Env::testfile_sz(), v.length()); 
+}
 
-<span class="hl slc">// Тестируем работу через istreambuf_iterator.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>ReaderTest<span class="hl opt">,</span> istreambuf_iterator<span class="hl opt">) {</span>
-  <span class="hl kwd">check_istreambuf_iterator</span><span class="hl opt">(</span><span class="hl kwa">false</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+// Тестируем работу через istreambuf_iterator.
+TEST(ReaderTest, istreambuf_iterator) {
+  check_istreambuf_iterator(false);
+}
 
-<span class="hl slc">// Тестируем работу через istreambuf_iterator с предварительным</span>
-<span class="hl slc">// распределением буфера приемной строки.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>ReaderTest<span class="hl opt">,</span> istreambuf_iterator_reserve<span class="hl opt">) {</span>
-  <span class="hl kwd">check_istreambuf_iterator</span><span class="hl opt">(</span><span class="hl kwa">true</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+// Тестируем работу через istreambuf_iterator с предварительным
+// распределением буфера приемной строки.
+TEST(ReaderTest, istreambuf_iterator_reserve) {
+  check_istreambuf_iterator(true);
+}
 
-<span class="hl slc">// Тестируем работу через istreambuf_iterator при прямом</span>
-<span class="hl slc">// вызове конструктора строки, который берет данные напрямую</span>
-<span class="hl slc">// из итераторов.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>ReaderTest<span class="hl opt">,</span> istreambuf_iterator_tostring<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile</span><span class="hl opt">());</span>
+// Тестируем работу через istreambuf_iterator при прямом
+// вызове конструктора строки, который берет данные напрямую
+// из итераторов.
+TEST(ReaderTest, istreambuf_iterator_tostring) {
+  std::ifstream is(Env::testfile());
 
-  std<span class="hl opt">::</span>string <span class="hl kwd">v</span><span class="hl opt">(</span>
-    <span class="hl opt">(</span>std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>is<span class="hl opt">)),</span> 
-    std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;()</span>
-  <span class="hl opt">);</span>
+  std::string v(
+    (std::istreambuf_iterator&lt;char&gt;(is)), 
+    std::istreambuf_iterator&lt;char&gt;()
+  );
 
-  <span class="hl slc">// На всякий случай проверяем размер считанного файла.</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile_sz</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span> 
-<span class="hl opt">}</span>
+  // На всякий случай проверяем размер считанного файла.
+  EXPECT_EQ(Env::testfile_sz(), v.length()); 
+}
 
-<span class="hl ppc">#ifdef WIN32</span>
+#ifdef WIN32
 
-<span class="hl slc">// Этот тест аналогичен тесту istreambuf_iterator_tostring</span>
-<span class="hl slc">// за исключение создания объекта потока прямо в вызове</span>
-<span class="hl slc">// конструктора строки. Работает только в cl.exe, так как</span>
-<span class="hl slc">// &quot;стандартный&quot; компилятор запрещает передавать временные</span>
-<span class="hl slc">// объекты по неконстантной ссылке, а cl.exe почему-то это</span>
-<span class="hl slc">// разрешает.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>ReaderTest<span class="hl opt">,</span> istreambuf_iterator_tostring_short<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span>string <span class="hl kwd">v</span><span class="hl opt">(</span>
-    <span class="hl opt">(</span>std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>
-      std<span class="hl opt">::</span><span class="hl kwd">ifstream</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile</span><span class="hl opt">())</span>
-    <span class="hl opt">)),</span> 
-    std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;()</span>
-  <span class="hl opt">);</span>
+// Этот тест аналогичен тесту istreambuf_iterator_tostring
+// за исключение создания объекта потока прямо в вызове
+// конструктора строки. Работает только в cl.exe, так как
+// &#34;стандартный&#34; компилятор запрещает передавать временные
+// объекты по неконстантной ссылке, а cl.exe почему-то это
+// разрешает.
+TEST(ReaderTest, istreambuf_iterator_tostring_short) {
+  std::string v(
+    (std::istreambuf_iterator&lt;char&gt;(
+      std::ifstream(Env::testfile())
+    )), 
+    std::istreambuf_iterator&lt;char&gt;()
+  );
 
-  <span class="hl slc">// На всякий случай проверяем размер считанного файла.</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile_sz</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span> 
-<span class="hl opt">}</span>
+  // На всякий случай проверяем размер считанного файла.
+  EXPECT_EQ(Env::testfile_sz(), v.length()); 
+}
 
-<span class="hl ppc">#endif</span>
+#endif
 
-<span class="hl slc">// Финальный метод. Конструктор строки берет данные напрямую</span>
-<span class="hl slc">// из итератора istreambuf_iterator. Объект потока создается</span>
-<span class="hl slc">// динамически прямо в коде вызова конструктора строки через </span>
-<span class="hl slc">// std::auto_ptr.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>ReaderTest<span class="hl opt">,</span> istreambuf_iterator_tostring_short_auto_ptr<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span>string <span class="hl kwd">v</span><span class="hl opt">(</span>
-    <span class="hl opt">(</span>std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>
-      <span class="hl opt">*(</span>std<span class="hl opt">::</span>auto_ptr<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>ifstream<span class="hl opt">&gt;(</span>
-        <span class="hl kwa">new</span> std<span class="hl opt">::</span><span class="hl kwd">ifstream</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile</span><span class="hl opt">())</span>
-      <span class="hl opt">)).</span><span class="hl kwd">get</span><span class="hl opt">()</span>
-    <span class="hl opt">)),</span> 
-    std<span class="hl opt">::</span>istreambuf_iterator<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;()</span>
-  <span class="hl opt">);</span>
+// Финальный метод. Конструктор строки берет данные напрямую
+// из итератора istreambuf_iterator. Объект потока создается
+// динамически прямо в коде вызова конструктора строки через 
+// std::auto_ptr.
+TEST(ReaderTest, istreambuf_iterator_tostring_short_auto_ptr) {
+  std::string v(
+    (std::istreambuf_iterator&lt;char&gt;(
+      *(std::auto_ptr&lt;std::ifstream&gt;(
+        new std::ifstream(Env::testfile())
+      )).get()
+    )), 
+    std::istreambuf_iterator&lt;char&gt;()
+  );
 
-  <span class="hl slc">// На всякий случай проверяем размер считанного файла.</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span>Env<span class="hl opt">::</span><span class="hl kwd">testfile_sz</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span> 
-<span class="hl opt">}</span>
+  // На всякий случай проверяем размер считанного файла.
+  EXPECT_EQ(Env::testfile_sz(), v.length()); 
+}
 
-<span class="hl slc">// Запуск тестов.</span>
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span> <span class="hl opt">**</span>argv<span class="hl opt">) {</span>
-  <span class="hl slc">// Инициализация нашей тестовой среды.</span>
-  testing<span class="hl opt">::</span><span class="hl kwd">AddGlobalTestEnvironment</span><span class="hl opt">(</span><span class="hl kwa">new</span> Env<span class="hl opt">);</span>
-  testing<span class="hl opt">::</span><span class="hl kwd">InitGoogleTest</span><span class="hl opt">(&amp;</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
-  <span class="hl kwa">return</span> <span class="hl kwd">RUN_ALL_TESTS</span><span class="hl opt">();</span>
-<span class="hl opt">}</span>
-</pre>
+// Запуск тестов.
+int main(int argc, char **argv) {
+  // Инициализация нашей тестовой среды.
+  testing::AddGlobalTestEnvironment(new Env);
+  testing::InitGoogleTest(&amp;argc, argv);
+  return RUN_ALL_TESTS();
+}
+</code></pre>
 
 <p>Для компиляции вам необходимы файлы <code>gtest/gtest.h</code> и <code>gtest-all.cc</code> (см. выше).</p>
 

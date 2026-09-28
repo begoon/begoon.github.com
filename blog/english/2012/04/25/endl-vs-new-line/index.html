@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -45,18 +51,17 @@
 
 <p>A code with <code>std::endl</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;string&gt;</span>
-<span class="hl ppc">#include &lt;iostream&gt;</span>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;iostream&gt;
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> <span class="hl num">1000000</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-    std<span class="hl opt">::</span>string <span class="hl kwd">s</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl str">'x'</span><span class="hl opt">);</span>
-    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> s <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+int main() {
+  for (int i = 0; i &lt; 1000000; ++i) {
+    std::string s(1, &#39;x&#39;);
+    std::cout &lt;&lt; s &lt;&lt; std::endl;
+  }
+  return 0;
+}
+</code></pre>
 
 <p>Compile and run:</p>
 
@@ -69,18 +74,17 @@ sys 0m3.311s
 
 <p>A code with <code>\n</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;string&gt;</span>
-<span class="hl ppc">#include &lt;iostream&gt;</span>
+<pre><code class="language-cpp">#include &lt;string&gt;
+#include &lt;iostream&gt;
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> <span class="hl num">1000000</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-    std<span class="hl opt">::</span>string <span class="hl kwd">s</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl str">'x'</span><span class="hl opt">);</span>
-    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> s <span class="hl opt">&lt;&lt;</span> <span class="hl str">'</span><span class="hl esc">\n</span><span class="hl str">'</span><span class="hl opt">;</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+int main() {
+  for (int i = 0; i &lt; 1000000; ++i) {
+    std::string s(1, &#39;x&#39;);
+    std::cout &lt;&lt; s &lt;&lt; &#39;\n&#39;;
+  }
+  return 0;
+}
+</code></pre>
 
 <p>Compile and run:</p>
 

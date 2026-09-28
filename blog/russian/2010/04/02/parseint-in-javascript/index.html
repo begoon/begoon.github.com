@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,11 +51,10 @@
 
 <p>Я думал, что код ниже должен давать мне числа от 0 до 9:</p>
 
-<pre class="hl">
-<span class="hl kwa">var</span> n <span class="hl opt">= [</span> <span class="hl str">'00'</span><span class="hl opt">,</span> <span class="hl str">'01'</span><span class="hl opt">,</span> <span class="hl str">'02'</span><span class="hl opt">,</span> <span class="hl str">'03'</span><span class="hl opt">,</span> <span class="hl str">'04'</span><span class="hl opt">,</span> <span class="hl str">'05'</span><span class="hl opt">,</span> <span class="hl str">'06'</span><span class="hl opt">,</span> <span class="hl str">'07'</span><span class="hl opt">,</span> <span class="hl str">'08'</span><span class="hl opt">,</span> <span class="hl str">'09'</span> <span class="hl opt">];</span>
-<span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwa">var</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> n<span class="hl opt">.</span>length<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
-  document<span class="hl opt">.</span><span class="hl kwd">writeln</span><span class="hl opt">(</span><span class="hl kwd">parseInt</span><span class="hl opt">(</span>n<span class="hl kwc">[i]</span><span class="hl opt">))</span>
-</pre>
+<pre><code class="language-javascript">var n = [ &#39;00&#39;, &#39;01&#39;, &#39;02&#39;, &#39;03&#39;, &#39;04&#39;, &#39;05&#39;, &#39;06&#39;, &#39;07&#39;, &#39;08&#39;, &#39;09&#39; ];
+for (var i = 0; i &lt; n.length; ++i)
+  document.writeln(parseInt(n[i]))
+</code></pre>
 
 <p>Но выводится:</p>
 
@@ -59,11 +64,10 @@
 
 <p>Правильно надо писать так:</p>
 
-<pre class="hl">
-<span class="hl kwa">var</span> n <span class="hl opt">= [</span> <span class="hl str">'00'</span><span class="hl opt">,</span> <span class="hl str">'01'</span><span class="hl opt">,</span> <span class="hl str">'02'</span><span class="hl opt">,</span> <span class="hl str">'03'</span><span class="hl opt">,</span> <span class="hl str">'04'</span><span class="hl opt">,</span> <span class="hl str">'05'</span><span class="hl opt">,</span> <span class="hl str">'06'</span><span class="hl opt">,</span> <span class="hl str">'07'</span><span class="hl opt">,</span> <span class="hl str">'08'</span><span class="hl opt">,</span> <span class="hl str">'09'</span> <span class="hl opt">];</span>
-<span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwa">var</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> n<span class="hl opt">.</span>length<span class="hl opt">; ++</span>i<span class="hl opt">)</span>
-  document<span class="hl opt">.</span><span class="hl kwd">writeln</span><span class="hl opt">(</span><span class="hl kwd">parseInt</span><span class="hl opt">(</span>n<span class="hl kwc">[i]</span><span class="hl opt">,</span> <span class="hl num">10</span><span class="hl opt">));</span>
-</pre>
+<pre><code class="language-javascript">var n = [ &#39;00&#39;, &#39;01&#39;, &#39;02&#39;, &#39;03&#39;, &#39;04&#39;, &#39;05&#39;, &#39;06&#39;, &#39;07&#39;, &#39;08&#39;, &#39;09&#39; ];
+for (var i = 0; i &lt; n.length; ++i)
+  document.writeln(parseInt(n[i], 10));
+</code></pre>
 
 <p>По хорошему, второй аргумент <code>parseInt()</code>&lsquo;а, задающий систему исчисления, должен быть обязательным, чтобы исключить путаницу.</p>
 

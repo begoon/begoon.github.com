@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -49,20 +55,19 @@
 
 <p>Фрагмент кода, в котором рабочий цикл имеет условие, позволяющее ему работать время, близкое к одной секунде:</p>
 
-<pre class="hl">
-<span class="hl opt">...</span>
-<span class="hl slc">// Получаем номер текущей секунды</span>
-<span class="hl kwb">time_t</span> started <span class="hl opt">=</span> <span class="hl kwd">time</span><span class="hl opt">(</span>NULL<span class="hl opt">);</span>
-<span class="hl slc">// Ждем перехода на следующую секунду</span>
-<span class="hl kwa">while</span> <span class="hl opt">(</span><span class="hl kwd">time</span><span class="hl opt">(</span>NULL<span class="hl opt">) ==</span> started<span class="hl opt">);</span>
-<span class="hl slc">// И сразу запускаем рабочий цикл</span>
-started <span class="hl opt">=</span> <span class="hl kwd">time</span><span class="hl opt">(</span>NULL<span class="hl opt">);</span>
-<span class="hl kwa">do</span> <span class="hl opt">{</span>
-   <span class="hl slc">// Цикл, работающий в течение секунды</span>
-   <span class="hl opt">...</span>
-<span class="hl opt">}</span> <span class="hl kwa">while</span> <span class="hl opt">(</span><span class="hl kwd">time</span><span class="hl opt">(</span>NULL<span class="hl opt">) ==</span> started<span class="hl opt">);</span>
-<span class="hl opt">...</span>
-</pre>
+<pre><code class="language-cpp">...
+// Получаем номер текущей секунды
+time_t started = time(NULL);
+// Ждем перехода на следующую секунду
+while (time(NULL) == started);
+// И сразу запускаем рабочий цикл
+started = time(NULL);
+do {
+   // Цикл, работающий в течение секунды
+   ...
+} while (time(NULL) == started);
+...
+</code></pre>
 
 <p>Тут, конечно, есть недостатки. Подготовительный цикл ожидания перехода на следующую секунду может &ldquo;есть&rdquo; процессорное время, если <code>time()</code> для вашей системы не отдает time slice. Также сложно сделать какой-то надежный универсальный шаблон или макрос, так как надо гарантированно избежать какого-либо лишнего кода, чтобы не терять точность.</p>
 

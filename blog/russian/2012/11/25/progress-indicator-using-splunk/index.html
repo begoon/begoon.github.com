@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -101,21 +107,20 @@ Splunk под вашу операционную систему. Далее мо�
 <p>Вот простой скрипт, который в течение минуты будет записывать в лог
 сообщения, содержащие процентный показатель (от 0 до 100%).</p>
 
-<pre class="hl">
-    <span class="hl kwa">require</span> <span class="hl str">'date'</span>
+<pre><code class="language-ruby">    require &#39;date&#39;
 
-    duration <span class="hl opt">=</span> <span class="hl num">60</span><span class="hl opt">*</span><span class="hl num">1</span>
-    update_period <span class="hl opt">=</span> <span class="hl num">0.5</span>
-    i <span class="hl opt">=</span> <span class="hl num">0</span>
-    <span class="hl kwa">while</span> i <span class="hl opt">&lt;=</span> duration <span class="hl kwa">do</span>
-      progress <span class="hl opt">=</span> i <span class="hl opt">*</span> <span class="hl num">100.0</span> <span class="hl opt">/</span> duration
-      msg <span class="hl opt">=</span> <span class="hl str">&quot;%s progress=%05.2f\n&quot;</span> <span class="hl opt">% [</span>DateTime<span class="hl opt">.</span>now<span class="hl opt">,</span> progress<span class="hl opt">]</span>
+    duration = 60*1
+    update_period = 0.5
+    i = 0
+    while i &lt;= duration do
+      progress = i * 100.0 / duration
+      msg = &#34;%s progress=%05.2f\n&#34; % [DateTime.now, progress]
       puts msg
-      <span class="hl kwd">open</span><span class="hl opt">(</span><span class="hl str">&quot;logs/my.log&quot;</span><span class="hl opt">,</span> <span class="hl str">'a'</span>) <span class="hl esc">{ |f| f &lt;&lt; msg }</span>
-      i <span class="hl opt">=</span> i <span class="hl opt">+</span> update_period
+      open(&#34;logs/my.log&#34;, &#39;a&#39;) { |f| f &lt;&lt; msg }
+      i = i + update_period
       sleep update_period
-    <span class="hl kwa">end</span>
-</pre>
+    end
+</code></pre>
 
 <p>Лог будет выглядеть примерно вот так:</p>
 
@@ -135,7 +140,7 @@ Splunk под вашу операционную систему. Далее мо�
 <p>Для простоты мы будет все делать на одной машине, и Спланк будет брать лог
 просто из указанного файла.</p>
 
-<p>Итак, вы уже установили Спланк, и если зайти на &ldquo;http://localhost:8000&rdquo;, то
+<p>Итак, вы уже установили Спланк, и если зайти на &ldquo;<a href="http://localhost:8000&quot;">http://localhost:8000&quot;</a>, то
 вы увидите рабочую страницу Спланка, где можно залогиниться пользователем
 &ldquo;admin&rdquo;.</p>
 
@@ -143,28 +148,24 @@ Splunk под вашу операционную систему. Далее мо�
 or files&rdquo;. Тут мы указывает имя файла или каталога, где лежат наши логи
 (в данном случае это будет одиночный файл).</p>
 
-<p><img src="01-adding-log.png" alt="" />
-</p>
+<p><img src="01-adding-log.png" alt="" /></p>
 
 <p>Подтверждаем создание так называемого источника логов (source type).
 Как я уже говорил, логи в Спланк могут поступать различными путями. Каждый
 такой источник логов именован и может обрабатываться независимо.</p>
 
-<p><img src="02-data-source-creation.png" alt="" />
-</p>
+<p><img src="02-data-source-creation.png" alt="" /></p>
 
 <p>Итак, лог добавлен. Мы видим, что Спланк &ldquo;подцепил&rdquo; файл и уже разобрал
 строки на поля. Спланк понимает огромное количество форматов даты и времени,
 но и это настаиваемо.</p>
 
-<p><img src="03-data-source-check.png" alt="" />
-</p>
+<p><img src="03-data-source-check.png" alt="" /></p>
 
 <p>Далее мы даем имя нашему источнику логов - &ldquo;test_logging&rdquo;, и сохраняем
 настройки.</p>
 
-<p><img src="04-data-source-name.png" alt="" />
-</p>
+<p><img src="04-data-source-name.png" alt="" /></p>
 
 <p>Возвращаемся на главную страницу и строке Search вводим наш первый запрос
 на языке SPL (в красном):</p>
@@ -178,8 +179,7 @@ or files&rdquo;. Тут мы указывает имя файла или кат�
 запроса (в логе уже есть данные). В SPL работает принцип UNIX pipes (|),
 когда результат одной операции передается на вход следующей.</p>
 
-<p><img src="05-radial-gauge-query.png" alt="" />
-</p>
+<p><img src="05-radial-gauge-query.png" alt="" /></p>
 
 <p>Итак, таблица есть. Теперь сделаем ей графическое представление. Так как
 у нас всего одно поле, показывающее процент выполнения от 0 до 100, то,
@@ -188,8 +188,7 @@ or files&rdquo;. Тут мы указывает имя файла или кат�
 и выбираем тип элемента (Chart type) &ldquo;radial gauge&rdquo; (в красном). Появляется
 вот такой красивый спидометр.</p>
 
-<p><img src="06-radial-gauge-widget.png" alt="" />
-</p>
+<p><img src="06-radial-gauge-widget.png" alt="" /></p>
 
 <p>Первый виджет готов. Теперь ради эксперимента создадим еще один. Он тоже
 будет показывать значения поля progress, но в виде горизонтального
@@ -204,8 +203,7 @@ or files&rdquo;. Тут мы указывает имя файла или кат�
 Сортировка по умолчанию по полю &ldquo;_time&rdquo; по убыванию. Внизу (в зеленом)
 мы видим результат этого запроса.</p>
 
-<p><img src="07-bar-chart-query.png" alt="" />
-</p>
+<p><img src="07-bar-chart-query.png" alt="" /></p>
 
 <p>Далее кликаем на &ldquo;Formatting options&rdquo;, выбираем тип &ldquo;bar&rdquo; (в зеленом),
 для оси Y задаем интервал от 0 до 100. Почему-то тут ось X идет по
@@ -214,16 +212,14 @@ or files&rdquo;. Тут мы указывает имя файла или кат�
 картинки показывал значение 100, то и наш горизонтальный индикатор
 полностью закрашен.</p>
 
-<p><img src="08-chart-type-bar.png" alt="" />
-</p>
+<p><img src="08-chart-type-bar.png" alt="" /></p>
 
 <p>Я пропустил это для первого виджета, спидометра, но отлаженный запрос
 и его визуальное представление можно сохранить в виде &ldquo;Dashboard panel&rdquo;.
 Для это кликаем на &ldquo;Create&rdquo; и &ldquo;Dashboard panel&hellip;&rdquo; (в красном) и сохраняем
 настройки. Назовем первый наш виджет &ldquo;Speedometer&rdquo;, и второй &ldquo;Progress bar&rdquo;.</p>
 
-<p><img src="09-create-dashboard-button.png" alt="" />
-</p>
+<p><img src="09-create-dashboard-button.png" alt="" /></p>
 
 <p>При сохранение первого виджета будет предложено также создать панель
 (dashboard), назовем ее &ldquo;Test logging&rdquo;. При сохранении второго виджета
@@ -232,8 +228,7 @@ or files&rdquo;. Тут мы указывает имя файла или кат�
 <p>После создания панели можно кликнуть на &ldquo;Dashboards &amp; Views&rdquo;, выбрать ее
 по имени &ldquo;Test logging&rdquo;. Внешний вид будет примерно таким:</p>
 
-<p><img src="10-dashboard-layout.png" alt="" />
-</p>
+<p><img src="10-dashboard-layout.png" alt="" /></p>
 
 <p>Пока данных нет, поэтому панели пустые. Мы видим название панели (в
 красном), названия виджетов (в желтом), кнопку активации панели (в зеленом)

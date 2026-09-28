@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -57,21 +63,18 @@
 
 <p>Кстати, как вы справляетесь вот с этим?</p>
 
-<pre class="hl">
-<span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> s<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">(); ++</span>i<span class="hl opt">)</span>
-</pre>
+<pre><code class="language-cpp">for (int i = 0; i &lt; s.length(); ++i)
+</code></pre>
 
 <p>Убрать предупреждение о приведении <code>size_t</code> к <code>int</code> можно, изменив на:</p>
 
-<pre class="hl">
-<span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">size_t</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> s<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">(); ++</span>i<span class="hl opt">)</span>
-</pre>
+<pre><code class="language-cpp">for (size_t i = 0; i &lt; s.length(); ++i)
+</code></pre>
 
 <p>Но как быть с:</p>
 
-<pre class="hl">
-<span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> s<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">();</span> i <span class="hl opt">&gt;=</span> <span class="hl num">0</span><span class="hl opt">; --</span>i<span class="hl opt">)</span>
-</pre>
+<pre><code class="language-cpp">for (int i = s.length(); i &gt;= 0; --i)
+</code></pre>
 
 <p>Тут уже на size_t не изменить и надо внучную писать <code>int i = static_cast&lt;int&gt;(s.length())</code>, что, конечно, плохо.</p>
 

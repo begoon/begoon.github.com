@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,17 +49,16 @@
 <div id="post">
   <p>Признаюсь, мне никогда раньше не приходило в голову индексировать строковую константу прямо на месте. Например:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;stdio.h&gt;</span>
+<pre><code class="language-cpp">#include &lt;stdio.h&gt;
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl kwb">int</span> i<span class="hl opt">;</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span>i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> <span class="hl num">8</span><span class="hl opt">; ++</span>i<span class="hl opt">)</span>
-    <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%c&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;12345678&quot;</span><span class="hl opt">[</span>i<span class="hl opt">]);</span>
-  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+int main() {
+  int i;
+  for (i = 0; i &lt; 8; ++i)
+    printf(&#34;%c&#34;, &#34;12345678&#34;[i]);
+  printf(&#34;\n&#34;);
+  return 0;
+}
+</code></pre>
 
 <p>Лично мне выражение <code>&quot;12345678&quot;[i]</code> как-то режет глаз. Хотя с точки зрения языка тут все в порядке.</p>
 

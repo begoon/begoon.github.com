@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -45,34 +51,33 @@
 
 <p>Amusingly, the majority of people, which I asked to sketch out more or less efficient implementation of the string class, wrote roughly the following:</p>
 
-<pre class="hl">
-<span class="hl kwc">class</span> String <span class="hl opt">{</span>
- <span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwc">explicit</span> <span class="hl kwd">String</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span> 
-    <span class="hl kwd">init</span><span class="hl opt">(</span>value<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">(),</span> value<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span> 
-  <span class="hl opt">}</span>
-  <span class="hl kwd">String</span><span class="hl opt">(</span><span class="hl kwb">const</span> String<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span> <span class="hl kwd">init</span><span class="hl opt">(</span>value<span class="hl opt">.</span>data_<span class="hl opt">,</span> value<span class="hl opt">.</span>sz_<span class="hl opt">); }</span>
-  <span class="hl opt">~</span><span class="hl kwd">String</span><span class="hl opt">() {</span> <span class="hl kwd">free</span><span class="hl opt">(</span>data_<span class="hl opt">); }</span>
+<pre><code class="language-cpp">class String {
+ public:
+  explicit String(const std::string&amp; value) { 
+    init(value.c_str(), value.length()); 
+  }
+  String(const String&amp; value) { init(value.data_, value.sz_); }
+  ~String() { free(data_); }
 
-  String<span class="hl opt">&amp;</span> <span class="hl kwc">operator</span><span class="hl opt">=(</span><span class="hl kwb">const</span> String<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwa">this</span> <span class="hl opt">!= &amp;</span>value<span class="hl opt">) {</span>
-      <span class="hl kwa">if</span> <span class="hl opt">(</span>value<span class="hl opt">.</span>sz_ <span class="hl opt">&gt;</span> sz_<span class="hl opt">)</span> data_ <span class="hl opt">= (</span><span class="hl kwb">char</span><span class="hl opt">*)</span>std<span class="hl opt">::</span><span class="hl kwd">realloc</span><span class="hl opt">(</span>data_<span class="hl opt">,</span> value<span class="hl opt">.</span>sz_<span class="hl opt">);</span>
-      sz_ <span class="hl opt">=</span> value<span class="hl opt">.</span>sz_<span class="hl opt">;</span>
-      std<span class="hl opt">::</span><span class="hl kwd">memcpy</span><span class="hl opt">(</span>data_<span class="hl opt">,</span> value<span class="hl opt">.</span>data_<span class="hl opt">,</span> sz_<span class="hl opt">);</span>
-    <span class="hl opt">}</span>
-    <span class="hl kwa">return</span> <span class="hl opt">*</span><span class="hl kwa">this</span><span class="hl opt">;</span>
-  <span class="hl opt">}</span>
+  String&amp; operator=(const String&amp; value) {
+    if (this != &amp;value) {
+      if (value.sz_ &gt; sz_) data_ = (char*)std::realloc(data_, value.sz_);
+      sz_ = value.sz_;
+      std::memcpy(data_, value.data_, sz_);
+    }
+    return *this;
+  }
 
- <span class="hl kwc">private</span><span class="hl opt">:</span>
-  <span class="hl kwb">void</span> <span class="hl kwd">init</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> data<span class="hl opt">,</span> <span class="hl kwb">size_t</span> sz<span class="hl opt">) {</span>
-    sz_ <span class="hl opt">=</span> sz<span class="hl opt">;</span>
-    data_ <span class="hl opt">= (</span><span class="hl kwb">char</span><span class="hl opt">*)</span><span class="hl kwd">malloc</span><span class="hl opt">(</span>sz_<span class="hl opt">);</span>
-    std<span class="hl opt">::</span><span class="hl kwd">memcpy</span><span class="hl opt">(</span>data_<span class="hl opt">,</span> data<span class="hl opt">,</span> sz_<span class="hl opt">);</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwb">char</span><span class="hl opt">*</span> data_<span class="hl opt">;</span>
-  <span class="hl kwb">size_t</span> sz_<span class="hl opt">;</span>
-<span class="hl opt">};</span>
-</pre>
+ private:
+  void init(const char* data, size_t sz) {
+    sz_ = sz;
+    data_ = (char*)malloc(sz_);
+    std::memcpy(data_, data, sz_);
+  }
+  char* data_;
+  size_t sz_;
+};
+</code></pre>
 
 <p>Obviously with such implementation of the assignment operator the string can only increase memory utilisation, not reduce. It&rsquo;s done deliberately to save some extra time on assigning.</p>
 
@@ -86,133 +91,132 @@
 
 <p>So, <code>std_string.cpp</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;iostream&gt;</span>
-<span class="hl ppc">#include &lt;sstream&gt;</span>
-<span class="hl ppc">#include &lt;string&gt;</span>
-<span class="hl ppc">#include &lt;vector&gt;</span>
-<span class="hl ppc">#include &lt;algorithm&gt;</span>
-<span class="hl ppc">#include &lt;cstdlib&gt;</span>
-<span class="hl ppc">#include &lt;cstring&gt;</span>
-<span class="hl ppc">#include &lt;cassert&gt;</span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;cstdlib&gt;
+#include &lt;cstring&gt;
+#include &lt;cassert&gt;
 
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
+#include &#34;gtest/gtest.h&#34;
 
-<span class="hl kwb">static const int</span> N <span class="hl opt">=</span> <span class="hl num">100</span><span class="hl opt">;</span>
+static const int N = 100;
 
-<span class="hl slc">// This homemade class implements the more or less efficient </span>
-<span class="hl slc">// string in terms of copying.</span>
-<span class="hl kwc">class</span> String <span class="hl opt">{</span>
- <span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl slc">// &quot;explicit&quot; disables any implicit cast making sure </span>
-  <span class="hl slc">// which constructor exactly is being called.</span>
-  <span class="hl kwc">explicit</span> <span class="hl kwd">String</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span> 
-    <span class="hl kwd">init</span><span class="hl opt">(</span>value<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">(),</span> value<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span> 
-  <span class="hl opt">}</span>
-  <span class="hl kwd">String</span><span class="hl opt">(</span><span class="hl kwb">const</span> String<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span> <span class="hl kwd">init</span><span class="hl opt">(</span>value<span class="hl opt">.</span>data_<span class="hl opt">,</span> value<span class="hl opt">.</span>sz_<span class="hl opt">); }</span>
-  <span class="hl opt">~</span><span class="hl kwd">String</span><span class="hl opt">() {</span> <span class="hl kwd">free</span><span class="hl opt">(</span>data_<span class="hl opt">); }</span>
+// This homemade class implements the more or less efficient 
+// string in terms of copying.
+class String {
+ public:
+  // &#34;explicit&#34; disables any implicit cast making sure 
+  // which constructor exactly is being called.
+  explicit String(const std::string&amp; value) { 
+    init(value.c_str(), value.length()); 
+  }
+  String(const String&amp; value) { init(value.data_, value.sz_); }
+  ~String() { free(data_); }
 
-  <span class="hl slc">// Perhaps this method is only one attempt to use memory allocation</span>
-  <span class="hl slc">// efficiently.</span>
-  String<span class="hl opt">&amp;</span> <span class="hl kwc">operator</span><span class="hl opt">=(</span><span class="hl kwb">const</span> String<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwa">this</span> <span class="hl opt">!= &amp;</span>value<span class="hl opt">) {</span>
-      <span class="hl slc">// Memory is re-allocated only if a source is longer the current</span>
-      <span class="hl slc">// string. It's clear that this implementation will only increase </span>
-      <span class="hl slc">// memory allocated by the string.</span>
-      <span class="hl kwa">if</span> <span class="hl opt">(</span>value<span class="hl opt">.</span>sz_ <span class="hl opt">&gt;</span> sz_<span class="hl opt">)</span> data_ <span class="hl opt">= (</span><span class="hl kwb">char</span><span class="hl opt">*)</span>std<span class="hl opt">::</span><span class="hl kwd">realloc</span><span class="hl opt">(</span>data_<span class="hl opt">,</span> value<span class="hl opt">.</span>sz_<span class="hl opt">);</span>
-      sz_ <span class="hl opt">=</span> value<span class="hl opt">.</span>sz_<span class="hl opt">;</span>
-      std<span class="hl opt">::</span><span class="hl kwd">memcpy</span><span class="hl opt">(</span>data_<span class="hl opt">,</span> value<span class="hl opt">.</span>data_<span class="hl opt">,</span> sz_<span class="hl opt">);</span>
-    <span class="hl opt">}</span>
-    <span class="hl kwa">return</span> <span class="hl opt">*</span><span class="hl kwa">this</span><span class="hl opt">;</span>
-  <span class="hl opt">}</span>
+  // Perhaps this method is only one attempt to use memory allocation
+  // efficiently.
+  String&amp; operator=(const String&amp; value) {
+    if (this != &amp;value) {
+      // Memory is re-allocated only if a source is longer the current
+      // string. It&#39;s clear that this implementation will only increase 
+      // memory allocated by the string.
+      if (value.sz_ &gt; sz_) data_ = (char*)std::realloc(data_, value.sz_);
+      sz_ = value.sz_;
+      std::memcpy(data_, value.data_, sz_);
+    }
+    return *this;
+  }
 
-  <span class="hl kwc">friend class</span> StringCmp<span class="hl opt">;</span>
-  <span class="hl kwc">friend class</span> StringPointerCmp<span class="hl opt">;</span>
+  friend class StringCmp;
+  friend class StringPointerCmp;
 
- <span class="hl kwc">private</span><span class="hl opt">:</span>
-  <span class="hl kwb">void</span> <span class="hl kwd">init</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> data<span class="hl opt">,</span> <span class="hl kwb">size_t</span> sz<span class="hl opt">) {</span>
-    sz_ <span class="hl opt">=</span> sz<span class="hl opt">;</span>
-    data_ <span class="hl opt">= (</span><span class="hl kwb">char</span><span class="hl opt">*)</span><span class="hl kwd">malloc</span><span class="hl opt">(</span>sz_<span class="hl opt">);</span>
-    std<span class="hl opt">::</span><span class="hl kwd">memcpy</span><span class="hl opt">(</span>data_<span class="hl opt">,</span> data<span class="hl opt">,</span> sz_<span class="hl opt">);</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwb">char</span><span class="hl opt">*</span> data_<span class="hl opt">;</span>
-  <span class="hl kwb">size_t</span> sz_<span class="hl opt">;</span>
-<span class="hl opt">};</span>
+ private:
+  void init(const char* data, size_t sz) {
+    sz_ = sz;
+    data_ = (char*)malloc(sz_);
+    std::memcpy(data_, data, sz_);
+  }
+  char* data_;
+  size_t sz_;
+};
 
-std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>string<span class="hl opt">&gt;</span> std_strings<span class="hl opt">;</span>
-std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>string<span class="hl opt">*&gt;</span> std_strings_p<span class="hl opt">;</span>
-std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>String<span class="hl opt">&gt;</span> strings<span class="hl opt">;</span>
-std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>String<span class="hl opt">*&gt;</span> strings_p<span class="hl opt">;</span>
+std::vector&lt;std::string&gt; std_strings;
+std::vector&lt;std::string*&gt; std_strings_p;
+std::vector&lt;String&gt; strings;
+std::vector&lt;String*&gt; strings_p;
 
-<span class="hl slc">// Functor to compare two std::string.</span>
-<span class="hl kwc">class</span> StlStringCmp <span class="hl opt">{</span>
- <span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwb">bool</span> <span class="hl kwc">operator</span><span class="hl opt">()(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> a<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> b<span class="hl opt">) {</span>
-    <span class="hl kwa">return</span> a <span class="hl opt">&lt;</span> b<span class="hl opt">;</span>
-  <span class="hl opt">}</span>
-<span class="hl opt">};</span>
+// Functor to compare two std::string.
+class StlStringCmp {
+ public:
+  bool operator()(const std::string&amp; a, const std::string&amp; b) {
+    return a &lt; b;
+  }
+};
 
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>SortingStlString<span class="hl opt">,</span> StlString<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>std_strings<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> std_strings<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> <span class="hl kwd">StlStringCmp</span><span class="hl opt">());</span>
-<span class="hl opt">}</span>
+TEST(SortingStlString, StlString) {
+  std::sort(std_strings.begin(), std_strings.end(), StlStringCmp());
+}
 
-<span class="hl slc">// Functor to compare two std::string*.</span>
-<span class="hl kwc">class</span> StlStringPointerCmp <span class="hl opt">{</span>
- <span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwb">bool</span> <span class="hl kwc">operator</span><span class="hl opt">()(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">*</span> a<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">*</span> b<span class="hl opt">) {</span>
-    <span class="hl kwa">return</span> <span class="hl opt">*</span>a <span class="hl opt">&lt; *</span>b<span class="hl opt">;</span>
-  <span class="hl opt">}</span>
-<span class="hl opt">};</span>
+// Functor to compare two std::string*.
+class StlStringPointerCmp {
+ public:
+  bool operator()(const std::string* a, const std::string* b) {
+    return *a &lt; *b;
+  }
+};
 
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>SortingStlString<span class="hl opt">,</span> StlStringPointer<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>std_strings_p<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> std_strings_p<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> <span class="hl kwd">StlStringPointerCmp</span><span class="hl opt">());</span>
-<span class="hl opt">}</span>
+TEST(SortingStlString, StlStringPointer) {
+  std::sort(std_strings_p.begin(), std_strings_p.end(), StlStringPointerCmp());
+}
 
-<span class="hl slc">// Functor to compare two String.</span>
-<span class="hl kwc">class</span> StringCmp <span class="hl opt">{</span>
- <span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwb">bool</span> <span class="hl kwc">operator</span><span class="hl opt">()(</span><span class="hl kwb">const</span> String<span class="hl opt">&amp;</span> a<span class="hl opt">,</span> <span class="hl kwb">const</span> String<span class="hl opt">&amp;</span> b<span class="hl opt">) {</span>
-    <span class="hl kwa">assert</span><span class="hl opt">(</span>a<span class="hl opt">.</span>sz_ <span class="hl opt">==</span> b<span class="hl opt">.</span>sz_<span class="hl opt">);</span>
-    <span class="hl kwa">return</span> std<span class="hl opt">::</span><span class="hl kwd">memcmp</span><span class="hl opt">(</span>a<span class="hl opt">.</span>data_<span class="hl opt">,</span> b<span class="hl opt">.</span>data_<span class="hl opt">,</span> a<span class="hl opt">.</span>sz_<span class="hl opt">);</span>
-  <span class="hl opt">}</span>
-<span class="hl opt">};</span>
+// Functor to compare two String.
+class StringCmp {
+ public:
+  bool operator()(const String&amp; a, const String&amp; b) {
+    assert(a.sz_ == b.sz_);
+    return std::memcmp(a.data_, b.data_, a.sz_);
+  }
+};
 
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>SortingStlString<span class="hl opt">,</span> String<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>strings<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> strings<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> <span class="hl kwd">StringCmp</span><span class="hl opt">());</span>
-<span class="hl opt">}</span>
+TEST(SortingStlString, String) {
+  std::sort(strings.begin(), strings.end(), StringCmp());
+}
 
-<span class="hl slc">// Functor to compare two String*.</span>
-<span class="hl kwc">class</span> StringPointerCmp <span class="hl opt">{</span>
- <span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwb">bool</span> <span class="hl kwc">operator</span><span class="hl opt">()(</span><span class="hl kwb">const</span> String<span class="hl opt">*</span> a<span class="hl opt">,</span> <span class="hl kwb">const</span> String<span class="hl opt">*</span> b<span class="hl opt">) {</span>
-    <span class="hl kwa">assert</span><span class="hl opt">(</span>a<span class="hl opt">-&gt;</span>sz_ <span class="hl opt">==</span> b<span class="hl opt">-&gt;</span>sz_<span class="hl opt">);</span>
-    <span class="hl kwa">return</span> std<span class="hl opt">::</span><span class="hl kwd">memcmp</span><span class="hl opt">(</span>a<span class="hl opt">-&gt;</span>data_<span class="hl opt">,</span> b<span class="hl opt">-&gt;</span>data_<span class="hl opt">,</span> a<span class="hl opt">-&gt;</span>sz_<span class="hl opt">);</span>
-  <span class="hl opt">}</span>
-<span class="hl opt">};</span>
+// Functor to compare two String*.
+class StringPointerCmp {
+ public:
+  bool operator()(const String* a, const String* b) {
+    assert(a-&gt;sz_ == b-&gt;sz_);
+    return std::memcmp(a-&gt;data_, b-&gt;data_, a-&gt;sz_);
+  }
+};
 
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>SortingStlString<span class="hl opt">,</span> StringPointer<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>strings_p<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> strings_p<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> <span class="hl kwd">StringPointerCmp</span><span class="hl opt">());</span>
-<span class="hl opt">}</span>
+TEST(SortingStlString, StringPointer) {
+  std::sort(strings_p.begin(), strings_p.end(), StringPointerCmp());
+}
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
-  <span class="hl slc">// The filler to make strings long enough making their copying expensive.</span>
-  std<span class="hl opt">::</span>string <span class="hl kwd">big</span><span class="hl opt">(</span><span class="hl num">1024</span> <span class="hl opt">*</span> <span class="hl num">1024</span><span class="hl opt">,</span> <span class="hl str">'?'</span><span class="hl opt">);</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> N<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-    <span class="hl slc">// All strings are the same length. The comparison functions rely on it.</span>
-    std<span class="hl opt">::</span>stringstream fmt<span class="hl opt">;</span>
-    fmt <span class="hl opt">&lt;&lt;</span> N <span class="hl opt">*</span> <span class="hl num">2</span> <span class="hl opt">-</span> i <span class="hl opt">&lt;&lt;</span> big<span class="hl opt">;</span>
-    std_strings<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span>fmt<span class="hl opt">.</span><span class="hl kwd">str</span><span class="hl opt">());</span>
-    std_strings_p<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl kwa">new</span> std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span>fmt<span class="hl opt">.</span><span class="hl kwd">str</span><span class="hl opt">()));</span>
-    strings<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl kwd">String</span><span class="hl opt">(</span>fmt<span class="hl opt">.</span><span class="hl kwd">str</span><span class="hl opt">()));</span>
-    strings_p<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl kwa">new</span> <span class="hl kwd">String</span><span class="hl opt">(</span>fmt<span class="hl opt">.</span><span class="hl kwd">str</span><span class="hl opt">()));</span>
-  <span class="hl opt">}</span>
+int main(int argc, char* argv[]) {
+  // The filler to make strings long enough making their copying expensive.
+  std::string big(1024 * 1024, &#39;?&#39;);
+  for (int i = 0; i &lt; N; ++i) {
+    // All strings are the same length. The comparison functions rely on it.
+    std::stringstream fmt;
+    fmt &lt;&lt; N * 2 - i &lt;&lt; big;
+    std_strings.push_back(fmt.str());
+    std_strings_p.push_back(new std::string(fmt.str()));
+    strings.push_back(String(fmt.str()));
+    strings_p.push_back(new String(fmt.str()));
+  }
 
-  testing<span class="hl opt">::</span><span class="hl kwd">InitGoogleTest</span><span class="hl opt">(&amp;</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
-  <span class="hl slc">// Enforce to print out tests' timing.</span>
-  testing<span class="hl opt">::</span><span class="hl kwd">GTEST_FLAG</span><span class="hl opt">(</span>print_time<span class="hl opt">) =</span> <span class="hl kwa">true</span><span class="hl opt">;</span>
-  <span class="hl kwa">return</span> <span class="hl kwd">RUN_ALL_TESTS</span><span class="hl opt">();</span>
-<span class="hl opt">}</span>
-</pre>
+  testing::InitGoogleTest(&amp;argc, argv);
+  // Enforce to print out tests&#39; timing.
+  testing::GTEST_FLAG(print_time) = true;
+  return RUN_ALL_TESTS();
+}
+</code></pre>
 
 <p>Compile:</p>
 

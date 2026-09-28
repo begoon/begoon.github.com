@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -45,31 +51,27 @@
 
 <p>The both:</p>
 
-<pre class="hl">
-<span class="hl kwb">const</span> T<span class="hl opt">*</span> p<span class="hl opt">;</span>
-</pre>
+<pre><code class="language-cpp">const T* p;
+</code></pre>
 
 <p>and</p>
 
-<pre class="hl">
-T <span class="hl kwb">const</span><span class="hl opt">*</span> p<span class="hl opt">;</span>
-</pre>
+<pre><code class="language-cpp">T const* p;
+</code></pre>
 
 <p>declare the pointer <code>p</code> to a const object but not a const pointer. The pointer itself can be modified:</p>
 
-<pre class="hl">
-T <span class="hl kwb">const</span><span class="hl opt">*</span> p<span class="hl opt">;</span>
-<span class="hl opt">...</span>
-p <span class="hl opt">=</span> NULL<span class="hl opt">;</span>
-</pre>
+<pre><code class="language-cpp">T const* p;
+...
+p = NULL;
+</code></pre>
 
 <p>But it&rsquo;s impossible to modify the object:</p>
 
-<pre class="hl">
-T <span class="hl kwb">const</span><span class="hl opt">*</span> p<span class="hl opt">;</span>
-<span class="hl opt">...</span>
-p<span class="hl opt">-&gt;</span>some_member <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>   <span class="hl slc">// ERROR: error C2166: l-value specifies const object</span>
-</pre>
+<pre><code class="language-cpp">T const* p;
+...
+p-&gt;some_member = 0;   // ERROR: error C2166: l-value specifies const object
+</code></pre>
 
 <p>This was the introductory and let&rsquo;s talk about the topic.</p>
 

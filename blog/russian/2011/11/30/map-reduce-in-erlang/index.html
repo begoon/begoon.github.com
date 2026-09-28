@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -51,98 +57,96 @@
 
 <p>Фактически мой код повторяет пример из &ldquo;<a href="http://pragprog.com/book/jaerlang/programming-erlang">Programming Erlang</a>&rdquo; и использует модуль <code>phofs</code> (parallel higher-order functions) из этой же книги.</p>
 
-<pre class="hl">
-<span class="hl opt">-</span><span class="hl kwd">module</span><span class="hl opt">(</span>find_variables<span class="hl opt">).</span>
-<span class="hl opt">-</span><span class="hl kwd">export</span><span class="hl opt">([</span>main<span class="hl opt">/</span><span class="hl num">0</span><span class="hl opt">,</span> find_variables_in_file<span class="hl opt">/</span><span class="hl num">2</span><span class="hl opt">,</span> process_found_variables<span class="hl opt">/</span><span class="hl num">3</span><span class="hl opt">]).</span>
+<pre><code class="language-erlang">-module(find_variables).
+-export([main/0, find_variables_in_file/2, process_found_variables/3]).
 
-<span class="hl opt">-</span><span class="hl kwd">define</span><span class="hl opt">(</span>PATH<span class="hl opt">,</span> <span class="hl str">&quot;/Projects/interesting_project&quot;</span><span class="hl opt">).</span>
-<span class="hl opt">-</span><span class="hl kwd">define</span><span class="hl opt">(</span>MASK<span class="hl opt">,</span> <span class="hl str">&quot;</span><span class="hl esc">\\</span><span class="hl str">..*(cpp|c)&quot;</span><span class="hl opt">).</span>
+-define(PATH, &#34;/Projects/interesting_project&#34;).
+-define(MASK, &#34;\\..*(cpp|c)&#34;).
 
-<span class="hl kwd">main</span><span class="hl opt">() -&gt;</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;Creating list of files...~n&quot;</span><span class="hl opt">, []),</span>
-    <span class="hl slc">% Стандартная функция обхода файловой системы. Последний параметр -</span>
-    <span class="hl slc">% функтор, накапливающий имена в списке.</span>
-    Files <span class="hl opt">=</span> <span class="hl kwc">filelib</span><span class="hl opt">:</span><span class="hl kwd">fold_files</span><span class="hl opt">(</span>?PATH<span class="hl opt">,</span> ?MASK<span class="hl opt">,</span> true<span class="hl opt">,</span>
-                               <span class="hl kwa">fun</span><span class="hl opt">(</span>N<span class="hl opt">,</span> A<span class="hl opt">) -&gt; [</span>N | A<span class="hl opt">]</span> <span class="hl kwa">end</span><span class="hl opt">, []),</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;Found ~b file(s)~n&quot;</span><span class="hl opt">, [</span><span class="hl kwb">length</span><span class="hl opt">(</span>Files<span class="hl opt">)]),</span>
-    F1 <span class="hl opt">=</span> <span class="hl kwa">fun</span> find_variables_in_file<span class="hl opt">/</span><span class="hl num">2</span><span class="hl opt">,</span>   <span class="hl slc">% Map</span>
-    F2 <span class="hl opt">=</span> <span class="hl kwa">fun</span> process_found_variables<span class="hl opt">/</span><span class="hl num">3</span><span class="hl opt">,</span>  <span class="hl slc">% Reduce</span>
-    <span class="hl slc">% Вызываем MapReduce через функцию benchmark, считающую время</span>
-    <span class="hl slc">% выполнения.</span>
-    <span class="hl kwd">benchmark</span><span class="hl opt">(</span><span class="hl kwa">fun</span><span class="hl opt">() -&gt;</span>
-        L <span class="hl opt">=</span> <span class="hl kwc">phofs</span><span class="hl opt">:</span><span class="hl kwd">mapreduce</span><span class="hl opt">(</span>F1<span class="hl opt">,</span> F2<span class="hl opt">, [],</span> Files<span class="hl opt">),</span>
-        <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;Found ~b variable(s)~n&quot;</span><span class="hl opt">, [</span><span class="hl kwb">length</span><span class="hl opt">(</span>L<span class="hl opt">)])</span>
-    <span class="hl kwa">end</span><span class="hl opt">,</span> <span class="hl str">&quot;MapReduce&quot;</span><span class="hl opt">).</span>
+main() -&gt;
+    io:format(&#34;Creating list of files...~n&#34;, []),
+    % Стандартная функция обхода файловой системы. Последний параметр -
+    % функтор, накапливающий имена в списке.
+    Files = filelib:fold_files(?PATH, ?MASK, true,
+                               fun(N, A) -&gt; [N | A] end, []),
+    io:format(&#34;Found ~b file(s)~n&#34;, [length(Files)]),
+    F1 = fun find_variables_in_file/2,   % Map
+    F2 = fun process_found_variables/3,  % Reduce
+    % Вызываем MapReduce через функцию benchmark, считающую время
+    % выполнения.
+    benchmark(fun() -&gt;
+        L = phofs:mapreduce(F1, F2, [], Files),
+        io:format(&#34;Found ~b variable(s)~n&#34;, [length(L)])
+    end, &#34;MapReduce&#34;).
 
-<span class="hl kwd">benchmark</span><span class="hl opt">(</span>Worker<span class="hl opt">,</span> Title<span class="hl opt">) -&gt;</span>
-    <span class="hl opt">{</span>T<span class="hl opt">,</span> _<span class="hl opt">} =</span> <span class="hl kwc">timer</span><span class="hl opt">:</span><span class="hl kwd">tc</span><span class="hl opt">(</span><span class="hl kwa">fun</span><span class="hl opt">() -&gt;</span> <span class="hl kwd">Worker</span><span class="hl opt">()</span> <span class="hl kwa">end</span><span class="hl opt">),</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~s: ~f sec(s)~n&quot;</span><span class="hl opt">, [</span>Title<span class="hl opt">,</span> T<span class="hl opt">/</span><span class="hl num">1000000</span><span class="hl opt">]).</span>
+benchmark(Worker, Title) -&gt;
+    {T, _} = timer:tc(fun() -&gt; Worker() end),
+    io:format(&#34;~s: ~f sec(s)~n&#34;, [Title, T/1000000]).
 
-<span class="hl opt">-</span><span class="hl kwd">define</span><span class="hl opt">(</span>REGEXP<span class="hl opt">,</span> <span class="hl str">&quot;(getenv|GetVariable)\s*</span><span class="hl esc">\\</span><span class="hl str">(\s*</span><span class="hl esc">\&quot;</span><span class="hl str">([^</span><span class="hl esc">\&quot;</span><span class="hl str">]+)</span><span class="hl esc">\&quot;</span><span class="hl str">\s*</span><span class="hl esc">\\</span><span class="hl str">)&quot;</span><span class="hl opt">).</span>
+-define(REGEXP, &#34;(getenv|GetVariable)\s*\\(\s*\&#34;([^\&#34;]+)\&#34;\s*\\)&#34;).
 
-<span class="hl slc">% Map. Анализ одного файла.</span>
-<span class="hl kwd">find_variables_in_file</span><span class="hl opt">(</span>Pid<span class="hl opt">,</span> FileName<span class="hl opt">) -&gt;</span>
-    <span class="hl kwa">case</span> <span class="hl kwc">file</span><span class="hl opt">:</span><span class="hl kwd">open</span><span class="hl opt">(</span>FileName<span class="hl opt">, [</span>read<span class="hl opt">])</span> <span class="hl kwa">of</span>
-        <span class="hl opt">{</span>ok<span class="hl opt">,</span> File<span class="hl opt">} -&gt;</span>
-            <span class="hl slc">% Заранее компилируем регулярное выражение.</span>
-            <span class="hl opt">{</span>_<span class="hl opt">,</span> RE<span class="hl opt">} =</span> <span class="hl kwc">re</span><span class="hl opt">:</span><span class="hl kwd">compile</span><span class="hl opt">(</span>?REGEXP<span class="hl opt">),</span>
-            <span class="hl slc">% Данный обратный вызов пошлет родительскому контролирующему</span>
-            <span class="hl slc">% потому сообщение с именем найденной переменной.</span>
-            CallBack <span class="hl opt">=</span> <span class="hl kwa">fun</span><span class="hl opt">(</span>Var<span class="hl opt">) -&gt;</span> Pid <span class="hl opt">! {</span>Var<span class="hl opt">,</span> <span class="hl num">1</span><span class="hl opt">}</span> <span class="hl kwa">end</span><span class="hl opt">,</span>
-            <span class="hl kwd">find_variable_in_file</span><span class="hl opt">(</span>File<span class="hl opt">,</span> RE<span class="hl opt">,</span> CallBack<span class="hl opt">),</span>
-            <span class="hl kwc">file</span><span class="hl opt">:</span><span class="hl kwd">close</span><span class="hl opt">(</span>File<span class="hl opt">);</span>
-        <span class="hl opt">{</span>error<span class="hl opt">,</span> Reason<span class="hl opt">} -&gt;</span>
-            <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;Unable to process '~s', ~p~n&quot;</span><span class="hl opt">, [</span>FileName<span class="hl opt">,</span> Reason<span class="hl opt">]),</span>
-            <span class="hl kwb">exit</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)</span>
-    <span class="hl kwa">end</span><span class="hl opt">.</span>
+% Map. Анализ одного файла.
+find_variables_in_file(Pid, FileName) -&gt;
+    case file:open(FileName, [read]) of
+        {ok, File} -&gt;
+            % Заранее компилируем регулярное выражение.
+            {_, RE} = re:compile(?REGEXP),
+            % Данный обратный вызов пошлет родительскому контролирующему
+            % потому сообщение с именем найденной переменной.
+            CallBack = fun(Var) -&gt; Pid ! {Var, 1} end,
+            find_variable_in_file(File, RE, CallBack),
+            file:close(File);
+        {error, Reason} -&gt;
+            io:format(&#34;Unable to process &#39;~s&#39;, ~p~n&#34;, [FileName, Reason]),
+            exit(1)
+    end.
 
-<span class="hl slc">% Reduce. Анализ данных. Данная функция вызывается контролирующим</span>
-<span class="hl slc">% процессом MapReduce для каждого найденного ключа вместе со списком</span>
-<span class="hl slc">% значений, ассоциированных с ним. В нашем случае это будут пары</span>
-<span class="hl slc">% {VarName, 1}. Мы просто подсчитаем для каждого VarName количество</span>
-<span class="hl slc">% пришедших пар, то есть количество найденных вхождений этой переменной.</span>
-<span class="hl slc">% Это и есть наш незамысловатый анализ.</span>
+% Reduce. Анализ данных. Данная функция вызывается контролирующим
+% процессом MapReduce для каждого найденного ключа вместе со списком
+% значений, ассоциированных с ним. В нашем случае это будут пары
+% {VarName, 1}. Мы просто подсчитаем для каждого VarName количество
+% пришедших пар, то есть количество найденных вхождений этой переменной.
+% Это и есть наш незамысловатый анализ.
 
-<span class="hl kwd">process_found_variables</span><span class="hl opt">(</span>Key<span class="hl opt">,</span> Vals<span class="hl opt">,</span> A<span class="hl opt">) -&gt;</span>
-    <span class="hl opt">[{</span>Key<span class="hl opt">,</span> <span class="hl kwb">length</span><span class="hl opt">(</span>Vals<span class="hl opt">)}</span> | A<span class="hl opt">].</span>
+process_found_variables(Key, Vals, A) -&gt;
+    [{Key, length(Vals)} | A].
 
-<span class="hl slc">% Построчный обход файла.</span>
-<span class="hl kwd">find_variable_in_file</span><span class="hl opt">(</span>File<span class="hl opt">,</span> RE<span class="hl opt">,</span> CallBack<span class="hl opt">) -&gt;</span>
-    <span class="hl kwa">case</span> <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">get_line</span><span class="hl opt">(</span>File<span class="hl opt">,</span> <span class="hl str">&quot;&quot;</span><span class="hl opt">)</span> <span class="hl kwa">of</span>
-       eof <span class="hl opt">-&gt;</span> void<span class="hl opt">;</span>
-       Line <span class="hl opt">-&gt;</span>
-         <span class="hl kwd">scan_line_in_file</span><span class="hl opt">(</span>Line<span class="hl opt">,</span> RE<span class="hl opt">,</span> CallBack<span class="hl opt">),</span>
-         <span class="hl kwd">find_variable_in_file</span><span class="hl opt">(</span>File<span class="hl opt">,</span> RE<span class="hl opt">,</span> CallBack<span class="hl opt">)</span>
-    <span class="hl kwa">end</span><span class="hl opt">.</span>
+% Построчный обход файла.
+find_variable_in_file(File, RE, CallBack) -&gt;
+    case io:get_line(File, &#34;&#34;) of
+       eof -&gt; void;
+       Line -&gt;
+         scan_line_in_file(Line, RE, CallBack),
+         find_variable_in_file(File, RE, CallBack)
+    end.
 
-<span class="hl slc">% Поиск строки в строке по регулярному выражению (скомпилированному ранее),</span>
-<span class="hl slc">% и в случае нахождение вызов CallBack с передачей ему имени найденной</span>
-<span class="hl slc">% переменной.</span>
-<span class="hl kwd">scan_line_in_file</span><span class="hl opt">(</span>Line<span class="hl opt">,</span> RE<span class="hl opt">,</span> CallBack<span class="hl opt">) -&gt;</span>
-    <span class="hl kwa">case</span> <span class="hl kwc">re</span><span class="hl opt">:</span><span class="hl kwd">run</span><span class="hl opt">(</span>Line<span class="hl opt">,</span> RE<span class="hl opt">)</span> <span class="hl kwa">of</span>
-        <span class="hl opt">{</span>match<span class="hl opt">,</span> Captured<span class="hl opt">} -&gt;</span>
-            <span class="hl opt">[</span>_<span class="hl opt">,</span> _<span class="hl opt">, {</span>NameP<span class="hl opt">,</span> NameL<span class="hl opt">}] =</span> Captured<span class="hl opt">,</span>
-            Name <span class="hl opt">=</span> <span class="hl kwc">string</span><span class="hl opt">:</span><span class="hl kwd">substr</span><span class="hl opt">(</span>Line<span class="hl opt">,</span> NameP <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">,</span> NameL<span class="hl opt">),</span>
-            <span class="hl kwd">CallBack</span><span class="hl opt">(</span>Name<span class="hl opt">);</span>
-        nomatch <span class="hl opt">-&gt;</span> void
-    <span class="hl kwa">end</span><span class="hl opt">.</span>
-</pre>
+% Поиск строки в строке по регулярному выражению (скомпилированному ранее),
+% и в случае нахождение вызов CallBack с передачей ему имени найденной
+% переменной.
+scan_line_in_file(Line, RE, CallBack) -&gt;
+    case re:run(Line, RE) of
+        {match, Captured} -&gt;
+            [_, _, {NameP, NameL}] = Captured,
+            Name = string:substr(Line, NameP + 1, NameL),
+            CallBack(Name);
+        nomatch -&gt; void
+    end.
+</code></pre>
 
 <p>Для сборки программы нужен <a href="http://media.pragprog.com/titles/jaerlang/code/phofs.erl">модуль phofs</a>. Он является универсальным, независимым от конкретных функций Map и Reduce.</p>
 
 <p>И Makefile на всякий случай:</p>
 
-<pre class="hl">
-target <span class="hl opt">=</span> find_variables
+<pre><code class="language-makefile">target = find_variables
 
-<span class="hl kwa">all</span><span class="hl opt">:</span>
-    erlc <span class="hl opt">$(</span>target<span class="hl opt">)</span>.erl
+all:
+    erlc $(target).erl
     erlc phofs.erl
-    erl <span class="hl opt">-</span>noshell <span class="hl opt">-</span>s <span class="hl opt">$(</span>target<span class="hl opt">)</span> main <span class="hl opt">-</span>s init stop
+    erl -noshell -s $(target) main -s init stop
 
-<span class="hl kwa">clean</span><span class="hl opt">:</span>
-    <span class="hl opt">-</span><span class="hl kwa">rm</span> <span class="hl opt">*</span>.beam <span class="hl opt">*</span>.dump
-</pre>
+clean:
+    -rm *.beam *.dump
+</code></pre>
 
 <p>Пузомерка. Как я уже сказал, программа на C++ вместе со временем вызова <code>find</code> на моей машине работает 1-2 секунды. Версия на Erlang&rsquo;e работает ~20 секунд. Плохо? Смотря как посмотреть. Если анализ каждого файла будет более длительным (то есть программа будет основное время тратить на анализ файла, а не обход каталогов), то тут уже не совсем очевидно, какое из решений будет более практично при увеличении числа файлов и сложности анализа.</p>
 

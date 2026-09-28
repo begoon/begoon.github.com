@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -43,24 +49,23 @@
 <div id="post">
   <p>If you look closely, the search field on the main page appears with a little delay. It becomes visible only when the search index script is fully loaded. But the script is being loaded asynchronously, in background. I googled the following example:</p>
 
-<pre class="hl">
-<span class="hl opt">&lt;</span>script language<span class="hl opt">=</span><span class="hl str">&quot;javascript&quot;</span><span class="hl opt">&gt;</span>
-<span class="hl opt">(</span><span class="hl kwa">function</span><span class="hl opt">() {</span>
-    <span class="hl kwa">function</span> <span class="hl kwd">async_load</span><span class="hl opt">(){</span>
-        <span class="hl kwa">var</span> s <span class="hl opt">=</span> document<span class="hl opt">.</span><span class="hl kwd">createElement</span><span class="hl opt">(</span><span class="hl str">'script'</span><span class="hl opt">);</span>
-        s<span class="hl opt">.</span>type <span class="hl opt">=</span> <span class="hl str">'text/javascript'</span><span class="hl opt">;</span>
-        s<span class="hl opt">.</span>async <span class="hl opt">=</span> <span class="hl kwa">true</span><span class="hl opt">;</span>
-        s<span class="hl opt">.</span>src <span class="hl opt">=</span> <span class="hl str">'URL of a script to load'</span><span class="hl opt">;</span>
-        <span class="hl kwa">var</span> x <span class="hl opt">=</span> document<span class="hl opt">.</span><span class="hl kwd">getElementsByTagName</span><span class="hl opt">(</span><span class="hl str">'script'</span><span class="hl opt">)</span><span class="hl kwc">[0]</span><span class="hl opt">;</span>
-        x<span class="hl opt">.</span>parentNode<span class="hl opt">.</span><span class="hl kwd">insertBefore</span><span class="hl opt">(</span>s<span class="hl opt">,</span> x<span class="hl opt">);</span>
-    <span class="hl opt">}</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(</span>window<span class="hl opt">.</span>attachEvent<span class="hl opt">)</span>
-        window<span class="hl opt">.</span><span class="hl kwd">attachEvent</span><span class="hl opt">(</span><span class="hl str">'onload'</span><span class="hl opt">,</span> async_load<span class="hl opt">);</span>
-    <span class="hl kwa">else</span>
-        window<span class="hl opt">.</span><span class="hl kwd">addEventListener</span><span class="hl opt">(</span><span class="hl str">'load'</span><span class="hl opt">,</span> async_load<span class="hl opt">,</span> <span class="hl kwa">false</span><span class="hl opt">);</span>
-<span class="hl opt">})();</span>
-<span class="hl opt">&lt;/</span>script<span class="hl opt">&gt;</span>
-</pre>
+<pre><code class="language-javascript">&lt;script language=&#34;javascript&#34;&gt;
+(function() {
+    function async_load(){
+        var s = document.createElement(&#39;script&#39;);
+        s.type = &#39;text/javascript&#39;;
+        s.async = true;
+        s.src = &#39;URL of a script to load&#39;;
+        var x = document.getElementsByTagName(&#39;script&#39;)[0];
+        x.parentNode.insertBefore(s, x);
+    }
+    if (window.attachEvent)
+        window.attachEvent(&#39;onload&#39;, async_load);
+    else
+        window.addEventListener(&#39;load&#39;, async_load, false);
+})();
+&lt;/script&gt;
+</code></pre>
 
 <p>They say, this is a modern HTML5 compatible method, the idiom.</p>
 

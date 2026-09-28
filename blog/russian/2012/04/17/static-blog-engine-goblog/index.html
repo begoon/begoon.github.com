@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -71,25 +77,24 @@
 
 <p>На Heroku идея немного иная. Heroku хостит Ruby, поэтому статический сайт на Heroku &ndash; это сами страницы и программа-вебсервер, которая их отдает. Звучит страшновато, но на Ruby такой сервер выглядит весьма компактно, например так:</p>
 
-<pre class="hl">
-<span class="hl kwa">require</span> <span class="hl str">'bundler/setup'</span>
-<span class="hl kwa">require</span> <span class="hl str">'sinatra/base'</span>
+<pre><code class="language-ruby">require &#39;bundler/setup&#39;
+require &#39;sinatra/base&#39;
 
-<span class="hl kwa">class</span> SinatraStaticServer <span class="hl opt">&lt;</span> Sinatra<span class="hl opt">:</span><span class="hl kwc">:Base</span>  
+class SinatraStaticServer &lt; Sinatra::Base  
 
-  <span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl kwc">/.+/</span>) <span class="hl kwa">do</span>
-    <span class="hl kwd">send_sinatra_file</span><span class="hl opt">(</span>request<span class="hl opt">.</span>path) <span class="hl esc">{404}</span>
-  <span class="hl kwa">end</span>
+  get(/.+/) do
+    send_sinatra_file(request.path) {404}
+  end
 
-  <span class="hl kwa">def</span> <span class="hl kwd">send_sinatra_file</span><span class="hl opt">(</span>path<span class="hl opt">, &amp;</span>missing_file_block)
-    file_path <span class="hl opt">=</span> File<span class="hl opt">.</span><span class="hl kwd">join</span><span class="hl opt">(</span>File<span class="hl opt">.</span><span class="hl kwd">dirname</span><span class="hl opt">(</span>__FILE__)<span class="hl opt">,</span> <span class="hl str">'public'</span><span class="hl opt">,</span>  path)
-    file_path <span class="hl opt">=</span> File<span class="hl opt">.</span><span class="hl kwd">join</span><span class="hl opt">(</span>file_path<span class="hl opt">,</span> <span class="hl str">'index.html'</span>) <span class="hl kwa">unless</span> file_path <span class="hl opt">=</span>~ <span class="hl kwc">/\.[a-z]+$/</span>i  
-    File<span class="hl opt">.</span>exist<span class="hl opt">?(</span>file_path) <span class="hl opt">?</span> <span class="hl kwd">send_file</span><span class="hl opt">(</span>file_path) <span class="hl opt">:</span> missing_file_block<span class="hl opt">.</span>call
-  <span class="hl kwa">end</span>
-<span class="hl kwa">end</span>
+  def send_sinatra_file(path, &amp;missing_file_block)
+    file_path = File.join(File.dirname(__FILE__), &#39;public&#39;,  path)
+    file_path = File.join(file_path, &#39;index.html&#39;) unless file_path =~ /\.[a-z]+$/i  
+    File.exist?(file_path) ? send_file(file_path) : missing_file_block.call
+  end
+end
 
 run SinatraStaticServer
-</pre>
+</code></pre>
 
 <p>Как ни странно, хостинг на Heroku в целом проще, чем на GitHub. Также, на Heroku, git-репозиторий блога остается private, тогда как на GitHub&rsquo;е он становиться открытым, как и все остальные проекты. Хотя для меня звучит странно держать проект блога (фактически, сайта) закрытым. Он же и так весь доступен через веб.</p>
 
@@ -186,13 +191,12 @@ git commit -m &quot;New post about ...&quot;
 
 <p>Чтобы запустить сайт локально, я временно добавляю <code>127.0.0.1 demin.ws</code> в <code>/etc/hosts</code> и запускаю мини web-сервер. Помните, как он выглядел на Ruby? Маленький, правда? А теперь версия на Go (<a href="https://github.com/begoon/begoon.github.com/blob/master/_engine/server.go">server.go</a>):</p>
 
-<pre class="hl">
-<span class="hl kwa">package</span> main
-<span class="hl kwa">import</span> <span class="hl str">&quot;net/http&quot;</span>
-<span class="hl kwa">func</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl kwb">panic</span><span class="hl opt">(</span>http<span class="hl opt">.</span><span class="hl kwd">ListenAndServe</span><span class="hl opt">(</span><span class="hl str">&quot;:80&quot;</span><span class="hl opt">,</span> http<span class="hl opt">.</span><span class="hl kwd">FileServer</span><span class="hl opt">(</span>http<span class="hl opt">.</span><span class="hl kwd">Dir</span><span class="hl opt">(</span><span class="hl str">&quot;..&quot;</span><span class="hl opt">))))</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-go">package main
+import &#34;net/http&#34;
+func main() {
+  panic(http.ListenAndServe(&#34;:80&#34;, http.FileServer(http.Dir(&#34;..&#34;))))
+}
+</code></pre>
 
 <p>Итак:</p>
 

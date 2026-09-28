@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -43,11 +49,10 @@
 <div id="post">
   <p>Today we argued an hour with a colleague regarding the following code:</p>
 
-<pre class="hl">
-<span class="hl kwb">void</span> <span class="hl kwd">foo</span><span class="hl opt">(</span>T<span class="hl opt">*</span> t<span class="hl opt">) {</span>
-  <span class="hl kwd">bar</span><span class="hl opt">(</span>t<span class="hl opt">);</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">void foo(T* t) {
+  bar(t);
+}
+</code></pre>
 
 <p>The problem is that the function <code>bar</code> is a part of a legacy library which we cannot refactor right now. The signature of <code>bar</code> is <code>void bar(T*)</code>. <code>T</code> is not <code>const</code>. But in reality <code>bar</code> never changes an object referenced by <code>t</code>. This is how it was implemented.</p>
 
@@ -55,11 +60,10 @@
 
 <p>I think the code should be like this:</p>
 
-<pre class="hl">
-<span class="hl kwb">void</span> <span class="hl kwd">foo</span><span class="hl opt">(</span><span class="hl kwb">const</span> T<span class="hl opt">*</span> t<span class="hl opt">) {</span>
-  <span class="hl kwd">bar</span><span class="hl opt">(</span><span class="hl kwa">const_cast</span><span class="hl opt">&lt;</span>T<span class="hl opt">*&gt;(</span>t<span class="hl opt">));</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">void foo(const T* t) {
+  bar(const_cast&lt;T*&gt;(t));
+}
+</code></pre>
 
 <p>Why? The contact of foo doesn’t require the pointer t to be non-const. We must reflect this in the API by making <code>t</code> <code>const</code>. It doesn’t matter that for some reason a particular implementation of <code>foo</code> is based on the legacy <code>bar</code> function not having <code>const</code> in the argument but never changing it. Yes, we have to use the ugly <code>const_cast</code> but this bad code is nicely isolated inside <code>foo</code> only and doesn’t affect our nice and clean brand new API. Moreover, if we refactor <code>foo</code> at some point and get rid of legacy <code>bar</code> at all, the problem will disappear completely.</p>
 

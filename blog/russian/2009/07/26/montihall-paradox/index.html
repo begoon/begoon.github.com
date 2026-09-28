@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -59,95 +65,94 @@
 
 <p><code>montihall.cpp</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;iostream&gt;</span>
-<span class="hl ppc">#include &lt;set&gt;</span>
-<span class="hl ppc">#include &lt;cstdlib&gt;</span>
-<span class="hl ppc">#include &lt;cassert&gt;</span>
-<span class="hl ppc">#include &lt;ctime&gt;</span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;set&gt;
+#include &lt;cstdlib&gt;
+#include &lt;cassert&gt;
+#include &lt;ctime&gt;
 
-<span class="hl kwb">int</span> all_doors<span class="hl opt">[] = {</span> <span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">,</span> <span class="hl num">3</span> <span class="hl opt">};</span>
+int all_doors[] = { 1, 2, 3 };
 
-<span class="hl kwb">bool</span> <span class="hl kwd">no_change_strategy</span><span class="hl opt">() {</span>
-  <span class="hl slc">// doors - это множество доступных дверей (1, 2, 3) для выбора игроком.</span>
-  std<span class="hl opt">::</span>set<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> <span class="hl kwd">doors</span><span class="hl opt">(</span>all_doors<span class="hl opt">,</span> all_doors <span class="hl opt">+</span> <span class="hl num">3</span><span class="hl opt">);</span>
+bool no_change_strategy() {
+  // doors - это множество доступных дверей (1, 2, 3) для выбора игроком.
+  std::set&lt;int&gt; doors(all_doors, all_doors + 3);
 
-  <span class="hl slc">// Выбираем истинную дверь (от 1 до 3).</span>
-  <span class="hl kwb">int</span> real_door <span class="hl opt">= (</span>std<span class="hl opt">::</span><span class="hl kwd">rand</span><span class="hl opt">() %</span> <span class="hl num">3</span><span class="hl opt">) +</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  // Выбираем истинную дверь (от 1 до 3).
+  int real_door = (std::rand() % 3) + 1;
 
-  <span class="hl slc">// Выбираем первый и окончательный выбор игрока (от 1 до 3).</span>
-  <span class="hl kwb">int</span> primary_choice_door <span class="hl opt">= (</span>std<span class="hl opt">::</span><span class="hl kwd">rand</span><span class="hl opt">() %</span> <span class="hl num">3</span><span class="hl opt">) +</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  // Выбираем первый и окончательный выбор игрока (от 1 до 3).
+  int primary_choice_door = (std::rand() % 3) + 1;
 
-  <span class="hl kwa">return</span> real_door <span class="hl opt">==</span> primary_choice_door<span class="hl opt">;</span>
-<span class="hl opt">}</span>
+  return real_door == primary_choice_door;
+}
 
-<span class="hl kwb">bool</span> <span class="hl kwd">change_strategy</span><span class="hl opt">() {</span>
-  <span class="hl slc">// doors - это множество доступных дверей (1, 2, 3) для выбора двери,</span>
-  <span class="hl slc">// открываемой ведущим после первого выбора игрока.</span>
-  std<span class="hl opt">::</span>set<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> <span class="hl kwd">doors</span><span class="hl opt">(</span>all_doors<span class="hl opt">,</span> all_doors <span class="hl opt">+</span> <span class="hl num">3</span><span class="hl opt">);</span>
+bool change_strategy() {
+  // doors - это множество доступных дверей (1, 2, 3) для выбора двери,
+  // открываемой ведущим после первого выбора игрока.
+  std::set&lt;int&gt; doors(all_doors, all_doors + 3);
 
-  <span class="hl slc">// Выбираем истинную дверь (от 1 до 3).</span>
-  <span class="hl kwb">int</span> real_door <span class="hl opt">= (</span>std<span class="hl opt">::</span><span class="hl kwd">rand</span><span class="hl opt">() %</span> <span class="hl num">3</span><span class="hl opt">) +</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  // Выбираем истинную дверь (от 1 до 3).
+  int real_door = (std::rand() % 3) + 1;
 
-  <span class="hl slc">// Выбираем первый выбор игрока (от 1 до 3)</span>
-  <span class="hl kwb">int</span> primary_choice_door <span class="hl opt">= (</span>std<span class="hl opt">::</span><span class="hl kwd">rand</span><span class="hl opt">() %</span> <span class="hl num">3</span><span class="hl opt">) +</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  // Выбираем первый выбор игрока (от 1 до 3)
+  int primary_choice_door = (std::rand() % 3) + 1;
 
-  <span class="hl slc">// Исключаем из множества дверей истинную дверь и выбор игрока.</span>
-  doors<span class="hl opt">.</span><span class="hl kwd">erase</span><span class="hl opt">(</span>real_door<span class="hl opt">);</span>
-  doors<span class="hl opt">.</span><span class="hl kwd">erase</span><span class="hl opt">(</span>primary_choice_door<span class="hl opt">);</span>
-  <span class="hl slc">// На всякий пожарный проверим целостность данных.</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>doors<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">() ==</span> <span class="hl num">1</span> <span class="hl opt">||</span> doors<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">() ==</span> <span class="hl num">2</span><span class="hl opt">);</span>
+  // Исключаем из множества дверей истинную дверь и выбор игрока.
+  doors.erase(real_door);
+  doors.erase(primary_choice_door);
+  // На всякий пожарный проверим целостность данных.
+  assert(doors.size() == 1 || doors.size() == 2);
 
-  <span class="hl slc">// Из оставшихся элементов (их может быть 1 или 2 штуки) выбираем дверь,</span>
-  <span class="hl slc">// которую откроет ведущий. reveal_door равно либо 1, либо 2.</span>
-  <span class="hl kwb">int</span> reveal_door <span class="hl opt">= (</span>std<span class="hl opt">::</span><span class="hl kwd">rand</span><span class="hl opt">() %</span> doors<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">()) +</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  // Из оставшихся элементов (их может быть 1 или 2 штуки) выбираем дверь,
+  // которую откроет ведущий. reveal_door равно либо 1, либо 2.
+  int reveal_door = (std::rand() % doors.size()) + 1;
 
-  <span class="hl slc">// i указывает на первый элемент в множестве (всего в нем 1 или 2 элемента).</span>
-  std<span class="hl opt">::</span>set<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;::</span>const_iterator i <span class="hl opt">=</span> doors<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">();</span>
-  <span class="hl slc">// Сдвигаем итератор на элемент, номер которого равен reveal_door.</span>
-  <span class="hl slc">// Можно было бы написать &quot;if (reveal_door == 2) ++i;&quot;, но цикл как-то</span>
-  <span class="hl slc">// универсальнее.</span>
-  <span class="hl kwa">while</span> <span class="hl opt">(--</span>reveal_door<span class="hl opt">) ++</span>i<span class="hl opt">;</span>
-  reveal_door <span class="hl opt">= *</span>i<span class="hl opt">;</span>
+  // i указывает на первый элемент в множестве (всего в нем 1 или 2 элемента).
+  std::set&lt;int&gt;::const_iterator i = doors.begin();
+  // Сдвигаем итератор на элемент, номер которого равен reveal_door.
+  // Можно было бы написать &#34;if (reveal_door == 2) ++i;&#34;, но цикл как-то
+  // универсальнее.
+  while (--reveal_door) ++i;
+  reveal_door = *i;
 
-  <span class="hl slc">// 'doors2' - это множество доступных дверей (1, 2, 3) для игрока,</span>
-  <span class="hl slc">// меняющего свой первоначальный выбор.</span>
-  std<span class="hl opt">::</span>set<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> <span class="hl kwd">doors2</span><span class="hl opt">(</span>all_doors<span class="hl opt">,</span> all_doors <span class="hl opt">+</span> <span class="hl num">3</span><span class="hl opt">);</span>
+  // &#39;doors2&#39; - это множество доступных дверей (1, 2, 3) для игрока,
+  // меняющего свой первоначальный выбор.
+  std::set&lt;int&gt; doors2(all_doors, all_doors + 3);
 
-  <span class="hl slc">// Исключаем из множества дверей первый выбор игрока и</span>
-  <span class="hl slc">// и дверь, открытую ведущим.</span>
-  doors2<span class="hl opt">.</span><span class="hl kwd">erase</span><span class="hl opt">(</span>primary_choice_door<span class="hl opt">);</span>
-  doors2<span class="hl opt">.</span><span class="hl kwd">erase</span><span class="hl opt">(</span>reveal_door<span class="hl opt">);</span>
-  <span class="hl slc">// На всякий пожарный проверим целостность данных.</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>doors2<span class="hl opt">.</span><span class="hl kwd">size</span><span class="hl opt">() ==</span> <span class="hl num">1</span><span class="hl opt">);</span>
+  // Исключаем из множества дверей первый выбор игрока и
+  // и дверь, открытую ведущим.
+  doors2.erase(primary_choice_door);
+  doors2.erase(reveal_door);
+  // На всякий пожарный проверим целостность данных.
+  assert(doors2.size() == 1);
 
-  <span class="hl slc">// В множестве оставшихся дверей будет только одна дверь, так как истинная </span>
-  <span class="hl slc">// дверь точно не равна двери, открытой ведущим, во второй выбор игрока</span>
-  <span class="hl slc">// точно отличается от первоначального. Поэтому просто берем из этого </span>
-  <span class="hl slc">// множества первый элемент.</span>
-  <span class="hl kwb">int</span> second_choice <span class="hl opt">= *</span>doors2<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">();</span>
+  // В множестве оставшихся дверей будет только одна дверь, так как истинная 
+  // дверь точно не равна двери, открытой ведущим, во второй выбор игрока
+  // точно отличается от первоначального. Поэтому просто берем из этого 
+  // множества первый элемент.
+  int second_choice = *doors2.begin();
 
-  <span class="hl kwa">return</span> real_door <span class="hl opt">==</span> second_choice<span class="hl opt">;</span>
-<span class="hl opt">}</span>
+  return real_door == second_choice;
+}
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">srand</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">));</span>
-  <span class="hl kwb">int</span> guess_on_change <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-  <span class="hl kwb">int</span> guess_on_not_change <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-  <span class="hl kwb">int</span> N <span class="hl opt">=</span> <span class="hl num">100000</span><span class="hl opt">;</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> N<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwd">change_strategy</span><span class="hl opt">())</span>
-      guess_on_change <span class="hl opt">=</span> guess_on_change <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">;</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwd">no_change_strategy</span><span class="hl opt">())</span>
-      guess_on_not_change <span class="hl opt">=</span> guess_on_not_change <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">;</span>
-  <span class="hl opt">}</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Вероятность выиграть при смене изначального выбора: &quot;</span>
-    <span class="hl opt">&lt;&lt;</span> guess_on_change <span class="hl opt">*</span> <span class="hl num">1.0</span> <span class="hl opt">/</span> N <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Вероятность выиграть не меняя изначального выбора: &quot;</span>
-    <span class="hl opt">&lt;&lt;</span> guess_on_not_change <span class="hl opt">*</span> <span class="hl num">1.0</span> <span class="hl opt">/</span> N <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+int main() {
+  std::srand(std::time(0));
+  int guess_on_change = 0;
+  int guess_on_not_change = 0;
+  int N = 100000;
+  for (int i = 0; i &lt; N; ++i) {
+    if (change_strategy())
+      guess_on_change = guess_on_change + 1;
+    if (no_change_strategy())
+      guess_on_not_change = guess_on_not_change + 1;
+  }
+  std::cout &lt;&lt; &#34;Вероятность выиграть при смене изначального выбора: &#34;
+    &lt;&lt; guess_on_change * 1.0 / N &lt;&lt; std::endl;
+  std::cout &lt;&lt; &#34;Вероятность выиграть не меняя изначального выбора: &#34;
+    &lt;&lt; guess_on_not_change * 1.0 / N &lt;&lt; std::endl;
+  return 0;
+}
+</code></pre>
 
 <p>Компилируем и запускаем:</p>
 

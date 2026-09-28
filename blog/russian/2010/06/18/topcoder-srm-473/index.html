@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -66,39 +72,37 @@
 
 <p>Приведу фрагмент программы, которую родил мой воспаленный мозг ночью:</p>
 
-<pre class="hl">
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>cmd <span class="hl opt">==</span> <span class="hl str">'S'</span><span class="hl opt">) {</span> 
-    x <span class="hl opt">+=</span> dx<span class="hl opt">;</span> 
-    y <span class="hl opt">+=</span> dy<span class="hl opt">;</span> 
-  <span class="hl opt">}</span> <span class="hl kwa">else</span> <span class="hl opt">{</span> 
-    <span class="hl kwa">if</span> <span class="hl opt">(</span>cmd <span class="hl opt">==</span> <span class="hl str">'L'</span> <span class="hl opt">&amp;&amp;</span> dx <span class="hl opt">==</span>  <span class="hl num">0</span> <span class="hl opt">&amp;&amp;</span> dy <span class="hl opt">==</span>  <span class="hl num">1</span><span class="hl opt">)</span> dx <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">,</span> dy <span class="hl opt">=</span>  <span class="hl num">0</span><span class="hl opt">;</span> 
-    <span class="hl kwa">else if</span> <span class="hl opt">(</span>cmd <span class="hl opt">==</span> <span class="hl str">'R'</span> <span class="hl opt">&amp;&amp;</span> dx <span class="hl opt">==</span>  <span class="hl num">0</span> <span class="hl opt">&amp;&amp;</span> dy <span class="hl opt">==</span>  <span class="hl num">1</span><span class="hl opt">)</span> dx <span class="hl opt">= +</span><span class="hl num">1</span><span class="hl opt">,</span> dy <span class="hl opt">=</span>  <span class="hl num">0</span><span class="hl opt">;</span> 
-    <span class="hl kwa">else if</span> <span class="hl opt">(</span>cmd <span class="hl opt">==</span> <span class="hl str">'L'</span> <span class="hl opt">&amp;&amp;</span> dx <span class="hl opt">==</span>  <span class="hl num">1</span> <span class="hl opt">&amp;&amp;</span> dy <span class="hl opt">==</span>  <span class="hl num">0</span><span class="hl opt">)</span> dx <span class="hl opt">=</span>  <span class="hl num">0</span><span class="hl opt">,</span> dy <span class="hl opt">=</span>  <span class="hl num">1</span><span class="hl opt">;</span> 
-    <span class="hl kwa">else if</span> <span class="hl opt">(</span>cmd <span class="hl opt">==</span> <span class="hl str">'R'</span> <span class="hl opt">&amp;&amp;</span> dx <span class="hl opt">==</span>  <span class="hl num">1</span> <span class="hl opt">&amp;&amp;</span> dy <span class="hl opt">==</span>  <span class="hl num">0</span><span class="hl opt">)</span> dx <span class="hl opt">=</span>  <span class="hl num">0</span><span class="hl opt">,</span> dy <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">;</span> 
-    <span class="hl kwa">else if</span> <span class="hl opt">(</span>cmd <span class="hl opt">==</span> <span class="hl str">'L'</span> <span class="hl opt">&amp;&amp;</span> dx <span class="hl opt">==</span>  <span class="hl num">0</span> <span class="hl opt">&amp;&amp;</span> dy <span class="hl opt">== -</span><span class="hl num">1</span><span class="hl opt">)</span> dx <span class="hl opt">=</span>  <span class="hl num">1</span><span class="hl opt">,</span> dy <span class="hl opt">=</span>  <span class="hl num">0</span><span class="hl opt">;</span> 
-    <span class="hl kwa">else if</span> <span class="hl opt">(</span>cmd <span class="hl opt">==</span> <span class="hl str">'R'</span> <span class="hl opt">&amp;&amp;</span> dx <span class="hl opt">==</span>  <span class="hl num">0</span> <span class="hl opt">&amp;&amp;</span> dy <span class="hl opt">== -</span><span class="hl num">1</span><span class="hl opt">)</span> dx <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">,</span> dy <span class="hl opt">=</span>  <span class="hl num">0</span><span class="hl opt">;</span> 
-    <span class="hl kwa">else if</span> <span class="hl opt">(</span>cmd <span class="hl opt">==</span> <span class="hl str">'L'</span> <span class="hl opt">&amp;&amp;</span> dx <span class="hl opt">== -</span><span class="hl num">1</span> <span class="hl opt">&amp;&amp;</span> dy <span class="hl opt">==</span>  <span class="hl num">0</span><span class="hl opt">)</span> dx <span class="hl opt">=</span>  <span class="hl num">0</span><span class="hl opt">,</span> dy <span class="hl opt">= -</span><span class="hl num">1</span><span class="hl opt">;</span> 
-    <span class="hl kwa">else if</span> <span class="hl opt">(</span>cmd <span class="hl opt">==</span> <span class="hl str">'R'</span> <span class="hl opt">&amp;&amp;</span> dx <span class="hl opt">== -</span><span class="hl num">1</span> <span class="hl opt">&amp;&amp;</span> dy <span class="hl opt">==</span>  <span class="hl num">0</span><span class="hl opt">)</span> dx <span class="hl opt">=</span>  <span class="hl num">0</span><span class="hl opt">,</span> dy <span class="hl opt">=</span>  <span class="hl num">1</span><span class="hl opt">;</span> 
-<span class="hl opt">...</span>
-</pre>
+<pre><code class="language-cpp">  if (cmd == &#39;S&#39;) { 
+    x += dx; 
+    y += dy; 
+  } else { 
+    if (cmd == &#39;L&#39; &amp;&amp; dx ==  0 &amp;&amp; dy ==  1) dx = -1, dy =  0; 
+    else if (cmd == &#39;R&#39; &amp;&amp; dx ==  0 &amp;&amp; dy ==  1) dx = +1, dy =  0; 
+    else if (cmd == &#39;L&#39; &amp;&amp; dx ==  1 &amp;&amp; dy ==  0) dx =  0, dy =  1; 
+    else if (cmd == &#39;R&#39; &amp;&amp; dx ==  1 &amp;&amp; dy ==  0) dx =  0, dy = -1; 
+    else if (cmd == &#39;L&#39; &amp;&amp; dx ==  0 &amp;&amp; dy == -1) dx =  1, dy =  0; 
+    else if (cmd == &#39;R&#39; &amp;&amp; dx ==  0 &amp;&amp; dy == -1) dx = -1, dy =  0; 
+    else if (cmd == &#39;L&#39; &amp;&amp; dx == -1 &amp;&amp; dy ==  0) dx =  0, dy = -1; 
+    else if (cmd == &#39;R&#39; &amp;&amp; dx == -1 &amp;&amp; dy ==  0) dx =  0, dy =  1; 
+...
+</code></pre>
 
 <p>Даже сейчас я не могу смотреть на это без содрогания. Надо то было всего:</p>
 
-<pre class="hl">
-<span class="hl opt">...</span>
-<span class="hl kwb">int</span> dx<span class="hl opt">[</span><span class="hl num">4</span><span class="hl opt">] = {</span> <span class="hl num">0</span><span class="hl opt">,</span> <span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">, -</span><span class="hl num">1</span> <span class="hl opt">};</span>
-<span class="hl kwb">int</span> dy<span class="hl opt">[</span><span class="hl num">4</span><span class="hl opt">] = {</span> <span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">, -</span><span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">0</span> <span class="hl opt">};</span>
-<span class="hl kwb">int</span> d <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">...</span>
-<span class="hl kwa">if</span> <span class="hl opt">(</span>cmd <span class="hl opt">==</span> ‘S’<span class="hl opt">) {</span>
-  x <span class="hl opt">+=</span> dx<span class="hl opt">[</span>d<span class="hl opt">];</span>
-  y <span class="hl opt">+=</span> dy<span class="hl opt">[</span>d<span class="hl opt">];</span>
-<span class="hl opt">}</span> <span class="hl kwa">if</span> <span class="hl opt">(</span>cmd <span class="hl opt">==</span> ‘L’<span class="hl opt">)</span>
-  d <span class="hl opt">= (</span>d <span class="hl opt">+</span> <span class="hl num">4</span> <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">) %</span> <span class="hl num">4</span><span class="hl opt">;</span>
-<span class="hl kwa">else if</span> <span class="hl opt">(</span>cmd <span class="hl opt">==</span> ‘R’<span class="hl opt">)</span>
-  d <span class="hl opt">= (</span>d <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">) %</span> <span class="hl num">4</span><span class="hl opt">;</span>
-<span class="hl opt">...</span>
-</pre>
+<pre><code class="language-cpp">...
+int dx[4] = { 0, 1, 0, -1 };
+int dy[4] = { 1, 0, -1, 0 };
+int d = 0;
+...
+if (cmd == ‘S’) {
+  x += dx[d];
+  y += dy[d];
+} if (cmd == ‘L’)
+  d = (d + 4 - 1) % 4;
+else if (cmd == ‘R’)
+  d = (d + 1) % 4;
+...
+</code></pre>
 
 <p>И все!</p>
 

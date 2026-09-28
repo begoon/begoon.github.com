@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,29 +51,26 @@
 
 <p>Прототип функции такой:</p>
 
-<pre class="hl">
-<span class="hl kwb">int</span> <span class="hl kwd">putenv</span><span class="hl opt">(</span><span class="hl kwb">char</span><span class="hl opt">*</span> string<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">int putenv(char* string);
+</code></pre>
 
 <p>Казалось бы, все предельно просто и понятно — вызываешь функцию, она делает свое дело, если надо проверятся код ошибки, и все пучком.</p>
 
 <p>Например:</p>
 
-<pre class="hl">
-<span class="hl kwd">putenv</span><span class="hl opt">(</span><span class="hl str">&quot;TESTVAR=testvalue&quot;</span><span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">putenv(&#34;TESTVAR=testvalue&#34;);
+</code></pre>
 
 <p>Или так:</p>
 
-<pre class="hl">
-<span class="hl opt">...</span>
-<span class="hl kwb">char</span> var<span class="hl opt">[</span><span class="hl num">1024</span><span class="hl opt">];</span>
-<span class="hl opt">...</span>
-<span class="hl kwd">strcpy</span><span class="hl opt">(</span>var<span class="hl opt">,</span> <span class="hl str">&quot;TESTVAR=&quot;</span><span class="hl opt">);</span>
-<span class="hl kwd">strcat</span><span class="hl opt">(</span>var<span class="hl opt">,</span> value<span class="hl opt">);</span>
-<span class="hl kwd">putenv</span><span class="hl opt">(</span>var<span class="hl opt">);</span>
-<span class="hl opt">...</span>
-</pre>
+<pre><code class="language-cpp">...
+char var[1024];
+...
+strcpy(var, &#34;TESTVAR=&#34;);
+strcat(var, value);
+putenv(var);
+...
+</code></pre>
 
 <p>Вроде похожие примеры, хотя между ними есть огромное &ldquo;но&rdquo;. Первый пример будет работать нормально, а вот второй пример может приводить к неверному значению установленной переменной или даже к падению программы с нарушением защиты памяти на некоторых платформах. Почему?</p>
 
@@ -81,59 +84,57 @@
 
 <p>Файл тестов (<code>putenv_unittest.cpp</code>):</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;gtest/gtest.h&gt;</span>
-<span class="hl ppc">#include &lt;cstdlib&gt;</span>
+<pre><code class="language-cpp">#include &lt;gtest/gtest.h&gt;
+#include &lt;cstdlib&gt;
 
-<span class="hl slc">// Главная проверочная функция. Вызывает putenv() с указанным буфером</span>
-<span class="hl slc">// (автоматическим или статическим), если надо перезатирает буфер, чтобы</span>
-<span class="hl slc">// проверить тот ли это буфер, и после сверяет установленное значение</span>
-<span class="hl slc">// с ожидаемым эталоном.</span>
-<span class="hl kwb">void</span> <span class="hl kwd">checkPutEnv</span><span class="hl opt">(</span><span class="hl kwb">char</span><span class="hl opt">*</span> buf<span class="hl opt">,</span> <span class="hl kwb">bool</span> rewrite<span class="hl opt">) {</span>
-  <span class="hl slc">// Эталон</span>
-  <span class="hl kwb">const char</span><span class="hl opt">*</span> etalon <span class="hl opt">=</span> <span class="hl str">&quot;TESTVAR=testvalue&quot;</span><span class="hl opt">;</span>
-  <span class="hl slc">// Копируем эталон в буфер</span>
-  std<span class="hl opt">::</span><span class="hl kwd">strcpy</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> etalon<span class="hl opt">);</span>
-  <span class="hl slc">// Устанавливаем переменную</span>
-  <span class="hl kwd">putenv</span><span class="hl opt">(</span>buf<span class="hl opt">);</span>
-  <span class="hl slc">// Если того требуют условия теста, то перезатираем буфер</span>
-  <span class="hl slc">// фальшивым значением.</span>
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>rewrite<span class="hl opt">)</span>
-    std<span class="hl opt">::</span><span class="hl kwd">strcpy</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> <span class="hl str">&quot;TESTVAR=novalue&quot;</span><span class="hl opt">);</span>
-  <span class="hl slc">// Копируем значение системной переменной.</span>
-  std<span class="hl opt">::</span>string actual <span class="hl opt">=</span> <span class="hl kwd">getenv</span><span class="hl opt">(</span><span class="hl str">&quot;TESTVAR&quot;</span><span class="hl opt">);</span>
-  <span class="hl slc">// Сверяем результаты</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">string</span><span class="hl opt">(</span><span class="hl str">&quot;testvalue&quot;</span><span class="hl opt">),</span> actual<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+// Главная проверочная функция. Вызывает putenv() с указанным буфером
+// (автоматическим или статическим), если надо перезатирает буфер, чтобы
+// проверить тот ли это буфер, и после сверяет установленное значение
+// с ожидаемым эталоном.
+void checkPutEnv(char* buf, bool rewrite) {
+  // Эталон
+  const char* etalon = &#34;TESTVAR=testvalue&#34;;
+  // Копируем эталон в буфер
+  std::strcpy(buf, etalon);
+  // Устанавливаем переменную
+  putenv(buf);
+  // Если того требуют условия теста, то перезатираем буфер
+  // фальшивым значением.
+  if (rewrite)
+    std::strcpy(buf, &#34;TESTVAR=novalue&#34;);
+  // Копируем значение системной переменной.
+  std::string actual = getenv(&#34;TESTVAR&#34;);
+  // Сверяем результаты
+  EXPECT_EQ(std::string(&#34;testvalue&#34;), actual);
+}
 
-<span class="hl slc">// Тест с использованием статического буфера без перезатирания.</span>
-<span class="hl slc">// Это должно работать стопудово на все платформах, так как</span>
-<span class="hl slc">// используется статический буфер, и мы его не перезатираем.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>PutEnv<span class="hl opt">,</span> UsingStaticVariable<span class="hl opt">) {</span>
- <span class="hl kwb">static char</span> buf<span class="hl opt">[</span><span class="hl num">1024</span><span class="hl opt">];</span>
- <span class="hl kwd">checkPutEnv</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> <span class="hl kwa">false</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
+// Тест с использованием статического буфера без перезатирания.
+// Это должно работать стопудово на все платформах, так как
+// используется статический буфер, и мы его не перезатираем.
+TEST(PutEnv, UsingStaticVariable) {
+ static char buf[1024];
+ checkPutEnv(buf, false);
+}
 
-<span class="hl slc">// Тест с использованием статического буфера с перезатиранием.</span>
-<span class="hl slc">// Данный тест будет рабоать только на системах, которые копируют</span>
-<span class="hl slc">// аргумент putenv()'а во внутренний буфер. То есть перезатирание</span>
-<span class="hl slc">// нами буфера не приведет к изменению значения установленной</span>
-<span class="hl slc">// переменной.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>PutEnv<span class="hl opt">,</span> UsingStaticVariableRewriteBuffer<span class="hl opt">) {</span>
- <span class="hl kwb">static char</span> buf<span class="hl opt">[</span><span class="hl num">1024</span><span class="hl opt">];</span>
- <span class="hl kwd">checkPutEnv</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> <span class="hl kwa">true</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
-</pre>
+// Тест с использованием статического буфера с перезатиранием.
+// Данный тест будет рабоать только на системах, которые копируют
+// аргумент putenv()&#39;а во внутренний буфер. То есть перезатирание
+// нами буфера не приведет к изменению значения установленной
+// переменной.
+TEST(PutEnv, UsingStaticVariableRewriteBuffer) {
+ static char buf[1024];
+ checkPutEnv(buf, true);
+}
+</code></pre>
 
 <p>Файл головной программы запуска тестов (<code>runner.cc</code>):</p>
 
-<pre class="hl">
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
- testing<span class="hl opt">::</span><span class="hl kwd">InitGoogleTest</span><span class="hl opt">(&amp;</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
- <span class="hl kwa">return</span> <span class="hl kwd">RUN_ALL_TESTS</span><span class="hl opt">();</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">#include &#34;gtest/gtest.h&#34;
+int main(int argc, char* argv[]) {
+ testing::InitGoogleTest(&amp;argc, argv);
+ return RUN_ALL_TESTS();
+}
+</code></pre>
 
 <p>Сначала пробуем в Visual Studio.</p>
 
@@ -142,7 +143,7 @@
 <pre><code>cl /EHsc /I. /Feputenv_unittest_vs2008.exe runner.cpp putenv_unittest.cpp gtest\gtest-all.cc
 </code></pre>
 
-<p>Запускаем putenv_unittest_vs2008.exe&rsquo;:</p>
+<p>Запускаем `putenv_unittest_vs2008.exe&rsquo;:</p>
 
 <pre><code>[==========] Running 2 tests from 1 test case.
 [----------] Global test environment set-up.

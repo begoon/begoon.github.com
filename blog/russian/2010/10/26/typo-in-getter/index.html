@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,38 +49,34 @@
 <div id="post">
   <p>Есть (точнее был) у меня вот такой код:</p>
 
-<pre class="hl">
-<span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> <span class="hl kwd">id</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> id_<span class="hl opt">; }</span>
-std<span class="hl opt">::</span>string <span class="hl kwd">id</span><span class="hl opt">() {</span> <span class="hl kwa">return</span> id_<span class="hl opt">; }</span>
-</pre>
+<pre><code class="language-cpp">const std::string&amp; id() const { return id_; }
+std::string id() { return id_; }
+</code></pre>
 
 <p>В нем есть одна досадная опечатка, из которой код:</p>
 
-<pre class="hl">
-order<span class="hl opt">.</span><span class="hl kwd">id</span><span class="hl opt">() =</span> <span class="hl num">123</span><span class="hl opt">;</span>
-</pre>
+<pre><code class="language-cpp">order.id() = 123;
+</code></pre>
 
 <p>делал то, что от него не ожидалось, а точнее, ничего не делал. И проблема, как вы наверное уже догадались, в пропущеном значке <code>&amp;</code> во второй строке. Должно было быть так:</p>
 
-<pre class="hl">
-<span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> <span class="hl kwd">id</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> id_<span class="hl opt">; }</span>
-std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> <span class="hl kwd">id</span><span class="hl opt">() {</span> <span class="hl kwa">return</span> id_<span class="hl opt">; }</span>
-</pre>
+<pre><code class="language-cpp">const std::string&amp; id() const { return id_; }
+std::string&amp; id() { return id_; }
+</code></pre>
 
 <p>Эта опечатка стоила мне часа поиска проблемы через вторичные признаки в виде иногда не обновляемой базы данных.</p>
 
 <p>Причина? А все потому, что я поленился написать тесты изначально, решив, что это уж очень простые методы. Но теперь таки добавил для этого тест:</p>
 
-<pre class="hl">
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>Order<span class="hl opt">,</span> GetterSetters<span class="hl opt">) {</span>
-  Order order<span class="hl opt">;</span>
-  <span class="hl opt">...</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">,</span> order<span class="hl opt">.</span><span class="hl kwd">id</span><span class="hl opt">());</span>   <span class="hl slc">// Must be initialized.</span>
-  order<span class="hl opt">.</span><span class="hl kwd">id</span><span class="hl opt">() =</span> <span class="hl num">123</span><span class="hl opt">;</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">123</span><span class="hl opt">,</span> order<span class="hl opt">.</span><span class="hl kwd">id</span><span class="hl opt">());</span>
-  <span class="hl opt">...</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">TEST(Order, GetterSetters) {
+  Order order;
+  ...
+  EXPECT_EQ(0, order.id());   // Must be initialized.
+  order.id() = 123;
+  EXPECT_EQ(123, order.id());
+  ...
+}
+</code></pre>
 
 <p>Решил сэкономить время, а вышло наоборот.</p>
 

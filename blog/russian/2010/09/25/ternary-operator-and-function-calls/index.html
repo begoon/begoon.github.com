@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,49 +49,46 @@
 <div id="post">
   <p>Был удивлен, когда компилятор С съел вот такой забавный способ условного вызова функций:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;stdio.h&gt;</span>
-<span class="hl ppc">#include &lt;math.h&gt;</span>
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl kwb">int</span> i<span class="hl opt">;</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span>i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;=</span> <span class="hl num">1</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-    <span class="hl kwb">float</span> a <span class="hl opt">= (</span>i ? floor <span class="hl opt">:</span> ceil<span class="hl opt">) (</span><span class="hl num">10.5</span><span class="hl opt">);</span>
-    <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%d: %f</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> i<span class="hl opt">,</span> a<span class="hl opt">);</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">#include &lt;stdio.h&gt;
+#include &lt;math.h&gt;
+int main() {
+  int i;
+  for (i = 0; i &lt;= 1; ++i) {
+    float a = (i ? floor : ceil) (10.5);
+    printf(&#34;%d: %f\n&#34;, i, a);
+  }
+  return 0;
+}
+</code></pre>
 
 <p>Для С++ надо написать:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;stdio.h&gt;</span>
-<span class="hl ppc">#include &lt;cmath&gt;</span>
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl kwb">int</span> i<span class="hl opt">;</span>
-  <span class="hl kwc">typedef</span> <span class="hl kwb">float</span> <span class="hl opt">(*</span>f<span class="hl opt">)(</span><span class="hl kwb">float</span><span class="hl opt">);</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span>i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;=</span> <span class="hl num">1</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-    <span class="hl kwb">float</span> a <span class="hl opt">= (</span>i ? <span class="hl opt">(</span>f<span class="hl opt">)</span>std<span class="hl opt">::</span>floor <span class="hl opt">: (</span>f<span class="hl opt">)</span>std<span class="hl opt">::</span>ceil<span class="hl opt">) (</span><span class="hl num">10.5</span><span class="hl opt">);</span>
-    <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%d: %f</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> i<span class="hl opt">,</span> a<span class="hl opt">);</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">#include &lt;stdio.h&gt;
+#include &lt;cmath&gt;
+int main() {
+  int i;
+  typedef float (*f)(float);
+  for (i = 0; i &lt;= 1; ++i) {
+    float a = (i ? (f)std::floor : (f)std::ceil) (10.5);
+    printf(&#34;%d: %f\n&#34;, i, a);
+  }
+  return 0;
+}
+</code></pre>
 
 <p>или</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;stdio.h&gt;</span>
-<span class="hl ppc">#include &lt;cmath&gt;</span>
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl kwb">int</span> i<span class="hl opt">;</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span>i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;=</span> <span class="hl num">1</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-    <span class="hl kwb">float</span> a <span class="hl opt">= (</span>i ? std<span class="hl opt">::</span>floorl <span class="hl opt">:</span> std<span class="hl opt">::</span>ceill<span class="hl opt">) (</span><span class="hl num">10.5</span><span class="hl opt">);</span>
-    <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%d: %f</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> i<span class="hl opt">,</span> a<span class="hl opt">);</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">#include &lt;stdio.h&gt;
+#include &lt;cmath&gt;
+int main() {
+  int i;
+  for (i = 0; i &lt;= 1; ++i) {
+    float a = (i ? std::floorl : std::ceill) (10.5);
+    printf(&#34;%d: %f\n&#34;, i, a);
+  }
+  return 0;
+}
+</code></pre>
 
 <p>Все программы выводят:</p>
 

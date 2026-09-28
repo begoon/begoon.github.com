@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -51,15 +57,13 @@
 
 <p>Файл <code>iepon.cmd</code>:</p>
 
-<pre class="hl">
-reg add <span class="hl str">&quot;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&quot;</span> <span class="hl opt">/</span>v ProxyEnable <span class="hl opt">/</span>t REG_DWORD <span class="hl opt">/</span>d <span class="hl num">1</span> <span class="hl opt">/</span>f
-</pre>
+<pre><code class="language-dos">reg add &#34;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&#34; /v ProxyEnable /t REG_DWORD /d 1 /f
+</code></pre>
 
 <p>Файл <code>iepoff.cmd</code>:</p>
 
-<pre class="hl">
-reg add <span class="hl str">&quot;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&quot;</span> <span class="hl opt">/</span>v ProxyEnable <span class="hl opt">/</span>t REG_DWORD <span class="hl opt">/</span>d <span class="hl num">0</span> <span class="hl opt">/</span>f
-</pre>
+<pre><code class="language-dos">reg add &#34;HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings&#34; /v ProxyEnable /t REG_DWORD /d 0 /f
+</code></pre>
 
 <p>Я проверял это только в Windows XP.</p>
 

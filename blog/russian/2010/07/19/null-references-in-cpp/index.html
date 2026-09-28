@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,24 +49,23 @@
 <div id="post">
   <p>Началось с того, что мне предложили взглянуть некий на &ldquo;интересный&rdquo; код. Там было что-то вроде:</p>
 
-<pre class="hl">
-<span class="hl opt">...</span>
-<span class="hl kwc">class</span> A <span class="hl opt">{</span> <span class="hl kwc">virtual</span> <span class="hl kwb">void</span> <span class="hl kwd">f</span><span class="hl opt">() {} };</span>
-<span class="hl kwc">class</span> B <span class="hl opt">{};</span>
+<pre><code class="language-cpp">...
+class A { virtual void f() {} };
+class B {};
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  A a<span class="hl opt">;</span>
-  <span class="hl kwa">try</span> <span class="hl opt">{</span>
-    B<span class="hl opt">&amp;</span> b <span class="hl opt">=</span> <span class="hl kwa">dynamic_cast</span><span class="hl opt">&lt;</span>B<span class="hl opt">&amp;&gt;(</span>a<span class="hl opt">);</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(&amp;</span>b <span class="hl opt">==</span> <span class="hl num">0</span><span class="hl opt">) {</span>
-      <span class="hl slc">// ...</span>
-    <span class="hl opt">}</span>
-  <span class="hl opt">}</span> <span class="hl kwa">catch</span> <span class="hl opt">(...) {</span>
-    std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Got it!&quot;</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+int main() {
+  A a;
+  try {
+    B&amp; b = dynamic_cast&lt;B&amp;&gt;(a);
+    if (&amp;b == 0) {
+      // ...
+    }
+  } catch (...) {
+    std::cout &lt;&lt; &#34;Got it!&#34; &lt;&lt; std::endl;
+  }
+  return 0;
+}
+</code></pre>
 
 <p>Я слегка выпал в осадок от уведенного, а в частности, от строки <code>if (&amp;b == 0) {</code>. До сего времени я пребывал в осознании факта, что ссылка в С++ либо существует и указывает на реальный объект, либо ее нет вообще. И если тут приведение типа к <code>B&amp;</code> не срабатывает, то будет исключение, и управление все равно улетит в другое место, и проверять как-либо <code>b</code> бессмысленно.</p>
 
@@ -70,10 +75,9 @@
 
 <p>Меня заинтересовал другой вопрос: как вообще ссылка может существовать отдельно от объекта. Оказывается, может:</p>
 
-<pre class="hl">
-<span class="hl kwb">int</span><span class="hl opt">&amp;</span> a <span class="hl opt">= *(</span><span class="hl kwb">int</span><span class="hl opt">*)</span><span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span> a <span class="hl opt">=</span> <span class="hl num">123</span><span class="hl opt">; }</span>
-</pre>
+<pre><code class="language-cpp">int&amp; a = *(int*)0;
+int main() { a = 123; }
+</code></pre>
 
 <p>Данный код прекрасно компилируется Студией (2010) и компилятором SUN (этот хоть предупреждение выдает), и также прекрасно падается при запуске по понятой причине.</p>
 

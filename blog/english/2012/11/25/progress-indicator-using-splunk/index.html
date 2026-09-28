@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -70,21 +76,20 @@
 
 <p>Let&rsquo;s begin with a simple script in Ruby. It generates log records containing a number representing its completion (from 0 to 100%).</p>
 
-<pre class="hl">
-    <span class="hl kwa">require</span> <span class="hl str">'date'</span>
+<pre><code class="language-ruby">    require &#39;date&#39;
 
-    duration <span class="hl opt">=</span> <span class="hl num">60</span><span class="hl opt">*</span><span class="hl num">1</span>
-    update_period <span class="hl opt">=</span> <span class="hl num">0.5</span>
-    i <span class="hl opt">=</span> <span class="hl num">0</span>
-    <span class="hl kwa">while</span> i <span class="hl opt">&lt;=</span> duration <span class="hl kwa">do</span>
-      progress <span class="hl opt">=</span> i <span class="hl opt">*</span> <span class="hl num">100.0</span> <span class="hl opt">/</span> duration
-      msg <span class="hl opt">=</span> <span class="hl str">&quot;%s progress=%05.2f\n&quot;</span> <span class="hl opt">% [</span>DateTime<span class="hl opt">.</span>now<span class="hl opt">,</span> progress<span class="hl opt">]</span>
+    duration = 60*1
+    update_period = 0.5
+    i = 0
+    while i &lt;= duration do
+      progress = i * 100.0 / duration
+      msg = &#34;%s progress=%05.2f\n&#34; % [DateTime.now, progress]
       puts msg
-      <span class="hl kwd">open</span><span class="hl opt">(</span><span class="hl str">&quot;logs/my.log&quot;</span><span class="hl opt">,</span> <span class="hl str">'a'</span>) <span class="hl esc">{ |f| f &lt;&lt; msg }</span>
-      i <span class="hl opt">=</span> i <span class="hl opt">+</span> update_period
+      open(&#34;logs/my.log&#34;, &#39;a&#39;) { |f| f &lt;&lt; msg }
+      i = i + update_period
       sleep update_period
-    <span class="hl kwa">end</span>
-</pre>
+    end
+</code></pre>
 
 <p>The log records may look like:</p>
 
@@ -101,27 +106,23 @@
 
 <p>For simplicity we run everything on a single machine, and Splunk will be taking log updates directly from a file.</p>
 
-<p>So, you have already installed Splunk, and if you open &ldquo;http://localhost:8080&rdquo; in your browser you should be able to login as the &ldquo;admin&rdquo; user.</p>
+<p>So, you have already installed Splunk, and if you open &ldquo;<a href="http://localhost:8080&quot;">http://localhost:8080&quot;</a> in your browser you should be able to login as the &ldquo;admin&rdquo; user.</p>
 
 <p>Then in menu follow to: &ldquo;Manager -&gt; Data Inputs -&gt; Add data -&gt; A file or directory or files&rdquo;. Here we specify the file and directory name with the logs (in our case just a single file).</p>
 
-<p><img src="01-adding-log.png" alt="" />
-</p>
+<p><img src="01-adding-log.png" alt="" /></p>
 
 <p>Confirm creating a source of logs (source type). As I said, logs can be delivered to Splunk in various ways. Each way can be named and addressed as a source type.</p>
 
-<p><img src="02-data-source-creation.png" alt="" />
-</p>
+<p><img src="02-data-source-creation.png" alt="" /></p>
 
 <p>The log has been added. We see that Splunk has picked up the file and already parsed its lines into fields. Out of the box Splunk understands many date and time formats, but it is configurable.</p>
 
-<p><img src="03-data-source-check.png" alt="" />
-</p>
+<p><img src="03-data-source-check.png" alt="" /></p>
 
 <p>Now we give a name to our source type - &ldquo;test_logging&rdquo; and save the settings.</p>
 
-<p><img src="04-data-source-name.png" alt="" />
-</p>
+<p><img src="04-data-source-name.png" alt="" /></p>
 
 <p>Now we get back to the main page and type in our first SPL query in the search bar (in red):</p>
 
@@ -130,13 +131,11 @@
 
 <p>It says: take logs from the &ldquo;test_logging&rdquo; data source, create a table with one column called &ldquo;progress&rdquo; taking values from the corresponding field, set the type of &ldquo;progress&rdquo; to float. At the bottom (in blue) we see the result of the query (own log already has some data). SPL uses the concept of UNIX pipes (|) feeding output from one command to the next one.</p>
 
-<p><img src="05-radial-gauge-query.png" alt="" />
-</p>
+<p><img src="05-radial-gauge-query.png" alt="" /></p>
 
 <p>So, we have the table. Now let&rsquo;s create a widget. Due to simplicity of our data (one single field) we can represent it as a speedometer gauge. Click on &ldquo;Formatting options&rdquo; (in blue) and set the chart type to &ldquo;radial gauge&rdquo; (in red). And here is our cool widget:</p>
 
-<p><img src="06-radial-gauge-widget.png" alt="" />
-</p>
+<p><img src="06-radial-gauge-widget.png" alt="" /></p>
 
 <p>The first widget is ready. Now let&rsquo;s create an alternative one looking differently. It will also represent the value of the progress but in the form of a horizontal bar moving from left to right. This is the query:</p>
 
@@ -145,25 +144,21 @@
 
 <p>It says: using data from the &ldquo;test_logging&rdquo; source type create a table with two fields, &ldquo;_time&rdquo; and &ldquo;progress&rdquo;, and then take only the first line from it. Default sorting is descending by &ldquo;_time&rdquo;. At the bottom (in green) we see the result of the query.</p>
 
-<p><img src="07-bar-chart-query.png" alt="" />
-</p>
+<p><img src="07-bar-chart-query.png" alt="" /></p>
 
 <p>Now click on &ldquo;Formatting options&rdquo;, choose &ldquo;bar&rdquo; (in green), set the interval for the Y-axis from 0 to 100. For some reason, the X-axis is vertical here (this axis will represent &ldquo;_time&rdquo;), and the Y-axis is horizontal (this one will show &ldquo;progress&rdquo;). Because our query on the previous picture already shown &ldquo;100&rdquo;, the widget is fully filled.</p>
 
-<p><img src="08-chart-type-bar.png" alt="" />
-</p>
+<p><img src="08-chart-type-bar.png" alt="" /></p>
 
 <p>Describing the first widget I deliberately skipped how to save the query. We will do it now. We click on &ldquo;Create&rdquo; and then &ldquo;Dashboard panel&hellip;&rdquo; (in red) and save the settings. We name the first widget as &ldquo;Speedometer&rdquo; and the second - &ldquo;Progress bar&rdquo;.</p>
 
-<p><img src="09-create-dashboard-button.png" alt="" />
-</p>
+<p><img src="09-create-dashboard-button.png" alt="" /></p>
 
 <p>Along with saving the first widget we will be asked to create a new panel, a dashboard. Let&rsquo;s call it &ldquo;Test logging&rdquo;. When saving the second widget we will add it to the already created one.</p>
 
 <p>Finally, we click on &ldquo;Dashboards &amp; View&rdquo;, select your dashboard and it will be shown like:</p>
 
-<p><img src="10-dashboard-layout.png" alt="" />
-</p>
+<p><img src="10-dashboard-layout.png" alt="" /></p>
 
 <p>There is no data here, so the panels are empty. We see the name of the dashboard (in red), the names of the widgets (in yellow) and two &ldquo;Edit&rdquo; buttons (in blue) allowing updating queries and visual representation on the fly. Before starting our Ruby script, we need to click on the both &ldquo;Edit&rdquo; buttons and set the time interval from &ldquo;rt-1s&rdquo; to &ldquo;rt&rdquo;. Such interval means getting updates each second.</p>
 

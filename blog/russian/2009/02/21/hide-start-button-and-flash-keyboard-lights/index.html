@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -49,68 +55,66 @@
 
 <p>Данная программа убирает кнопку Пуск (Start) на 5 секунд, а потом возвращает ее назад. Проверял на Windows 2000 и XP. Если программу прервать в отведенные 5 секунд, кнопку Пуск придется восстанавливать повторным запуском программы</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;windows.h&gt;</span>
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">void</span><span class="hl opt">) {</span>
-   <span class="hl slc">// Ищем кнопку.</span>
-   HWND hWnd<span class="hl opt">;</span>
-   hWnd <span class="hl opt">=</span> <span class="hl kwd">FindWindow</span><span class="hl opt">(</span><span class="hl str">&quot;Shell_TrayWnd&quot;</span><span class="hl opt">,</span> NULL<span class="hl opt">);</span>
-   hWnd <span class="hl opt">=</span> <span class="hl kwd">FindWindowEx</span><span class="hl opt">(</span>hWnd<span class="hl opt">,</span> NULL<span class="hl opt">,</span> <span class="hl str">&quot;BUTTON&quot;</span><span class="hl opt">,</span> NULL<span class="hl opt">);</span>
+<pre><code class="language-cpp">#include &lt;windows.h&gt;
+int main(void) {
+   // Ищем кнопку.
+   HWND hWnd;
+   hWnd = FindWindow(&#34;Shell_TrayWnd&#34;, NULL);
+   hWnd = FindWindowEx(hWnd, NULL, &#34;BUTTON&#34;, NULL);
 
-   <span class="hl slc">// Прячем её.</span>
-   <span class="hl kwd">ShowWindow</span><span class="hl opt">(</span>hWnd<span class="hl opt">,</span> SW_HIDE<span class="hl opt">);</span>
+   // Прячем её.
+   ShowWindow(hWnd, SW_HIDE);
 
-   <span class="hl slc">// Ждём.</span>
-   <span class="hl kwd">Sleep</span><span class="hl opt">(</span><span class="hl num">5000</span><span class="hl opt">);</span>
+   // Ждём.
+   Sleep(5000);
 
-   <span class="hl slc">// Показываем обратно.</span>
-   <span class="hl kwd">ShowWindow</span><span class="hl opt">(</span>hWnd<span class="hl opt">,</span> SW_SHOW<span class="hl opt">);</span>
+   // Показываем обратно.
+   ShowWindow(hWnd, SW_SHOW);
 
-   <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+   return 0;
+}
+</code></pre>
 
 <p><strong>Мигание индикаторами на клавиатуре</strong></p>
 
 <p>Данная программа устраивает бегущий огонек по индикаторам <code>NUM LOCK</code>, <code>CAPS LOCK</code> и <code>SCROLL LOCK</code> на более менее обычных клавиатурах.</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;windows.h&gt;</span>
+<pre><code class="language-cpp">#include &lt;windows.h&gt;
 
-<span class="hl kwb">void</span> <span class="hl kwd">kbdLight</span><span class="hl opt">(</span>WORD code<span class="hl opt">) {</span>
-   INPUT input<span class="hl opt">;</span>
+void kbdLight(WORD code) {
+   INPUT input;
 
-   input<span class="hl opt">.</span>type <span class="hl opt">=</span> INPUT_KEYBOARD<span class="hl opt">;</span>
-   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>wVk <span class="hl opt">=</span> code<span class="hl opt">;</span>
-   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>wScan <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>dwFlags <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>time <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>dwExtraInfo <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+   input.type = INPUT_KEYBOARD;
+   input.ki.wVk = code;
+   input.ki.wScan = 0;
+   input.ki.dwFlags = 0;
+   input.ki.time = 0;
+   input.ki.dwExtraInfo = 0;
 
-   <span class="hl kwd">SendInput</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">, &amp;</span>input<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>input<span class="hl opt">));</span>
+   SendInput(1, &amp;input, sizeof(input));
 
-   input<span class="hl opt">.</span>type <span class="hl opt">=</span> INPUT_KEYBOARD<span class="hl opt">;</span>
-   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>wVk <span class="hl opt">=</span> code<span class="hl opt">;</span>
-   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>wScan <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>dwFlags <span class="hl opt">=</span> KEYEVENTF_KEYUP<span class="hl opt">;</span>
-   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>time <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-   input<span class="hl opt">.</span>ki<span class="hl opt">.</span>dwExtraInfo <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
+   input.type = INPUT_KEYBOARD;
+   input.ki.wVk = code;
+   input.ki.wScan = 0;
+   input.ki.dwFlags = KEYEVENTF_KEYUP;
+   input.ki.time = 0;
+   input.ki.dwExtraInfo = 0;
 
-   <span class="hl kwd">SendInput</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">, &amp;</span>input<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>input<span class="hl opt">));</span>
-<span class="hl opt">}</span>
+   SendInput(1, &amp;input, sizeof(input));
+}
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">void</span><span class="hl opt">) {</span>
-   <span class="hl kwa">while</span> <span class="hl opt">(</span><span class="hl kwa">true</span><span class="hl opt">) {</span>
-      <span class="hl kwd">kbdLight</span><span class="hl opt">(</span>VK_NUMLOCK<span class="hl opt">);</span>
-      <span class="hl kwd">Sleep</span><span class="hl opt">(</span><span class="hl num">100</span><span class="hl opt">);</span>
-      <span class="hl kwd">kbdLight</span><span class="hl opt">(</span>VK_CAPITAL<span class="hl opt">);</span>
-      <span class="hl kwd">Sleep</span><span class="hl opt">(</span><span class="hl num">100</span><span class="hl opt">);</span>
-      <span class="hl kwd">kbdLight</span><span class="hl opt">(</span>VK_SCROLL<span class="hl opt">);</span>
-      <span class="hl kwd">Sleep</span><span class="hl opt">(</span><span class="hl num">100</span><span class="hl opt">);</span>
-   <span class="hl opt">}</span>
-   <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+int main(void) {
+   while (true) {
+      kbdLight(VK_NUMLOCK);
+      Sleep(100);
+      kbdLight(VK_CAPITAL);
+      Sleep(100);
+      kbdLight(VK_SCROLL);
+      Sleep(100);
+   }
+   return 0;
+}
+</code></pre>
 
 <p>Если у вас есть интересные исходнички подобного рода — прикладывайте в комментарии.</p>
 

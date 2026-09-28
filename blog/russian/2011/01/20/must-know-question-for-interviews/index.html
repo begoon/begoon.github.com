@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -67,19 +73,18 @@
 
 <p><strong>3. (Хит!) Что распечатает данная программа? (не забываем, что собеседование на позицию разработчика на C/C++). В принципе, его тоже можно задать по телефону.</strong></p>
 
-<pre class="hl">
-<span class="hl kwb">char</span><span class="hl opt">*</span> <span class="hl kwd">f</span><span class="hl opt">() {</span>
-  <span class="hl kwb">char</span> buf<span class="hl opt">[</span><span class="hl num">100</span><span class="hl opt">];</span>
-  <span class="hl kwd">strcpy</span><span class="hl opt">(</span>buf<span class="hl opt">,</span> <span class="hl str">&quot;TEST”);</span>
-<span class="hl str">  return buf;</span>
-<span class="hl str">}</span>
-<span class="hl str"></span>
-<span class="hl str">int main() {</span>
-<span class="hl str">  char* s = f();</span>
-<span class="hl str">  /* (1) */</span>
-<span class="hl str">  printf(&quot;</span><span class="hl opt">%</span>s<span class="hl esc">\n</span><span class="hl str">&quot;, s);</span>
-<span class="hl str">}</span>
-</pre>
+<pre><code class="language-cpp">char* f() {
+  char buf[100];
+  strcpy(buf, &#34;TEST”);
+  return buf;
+}
+
+int main() {
+  char* s = f();
+  /* (1) */
+  printf(&#34;%s\n&#34;, s);
+}
+</code></pre>
 
 <p>Ответ: &ldquo;Нельзя сказать с уверенностью, скорее всего мусор, но в целом это неопределенное поведение, так как локальный буфер формально прекращает существование после выхода из функции f()&rdquo; является почти исчерпывающим.</p>
 

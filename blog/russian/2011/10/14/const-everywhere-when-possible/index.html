@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -49,14 +55,13 @@
 
 <p>Пара примеров, где люди часто не ставят <code>const</code>:</p>
 
-<pre class="hl">
-<span class="hl kwb">const int</span> sz <span class="hl opt">=</span> <span class="hl kwd">very_long_name_to_calculate_size</span><span class="hl opt">(...);</span>
-<span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> sz<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-<span class="hl opt">...</span>
-<span class="hl kwb">const</span> VeryLongClassName <span class="hl kwd">var</span><span class="hl opt">(</span>a<span class="hl opt">,</span> lot<span class="hl opt">,</span> of<span class="hl opt">,</span> different<span class="hl opt">,</span> parameters<span class="hl opt">);</span>
-<span class="hl kwb">int</span> a <span class="hl opt">=</span> var<span class="hl opt">.</span><span class="hl kwd">getX</span><span class="hl opt">();</span>
-<span class="hl slc">// Only &quot;const&quot; functions of &quot;VeryLongClassName&quot; are called further down.</span>
-</pre>
+<pre><code class="language-cpp">const int sz = very_long_name_to_calculate_size(...);
+for (int i = 0; i &lt; sz; ++i) {
+...
+const VeryLongClassName var(a, lot, of, different, parameters);
+int a = var.getX();
+// Only &#34;const&#34; functions of &#34;VeryLongClassName&#34; are called further down.
+</code></pre>
 
 <p>Кстати, явное указание на неизменность переменной помогает компилятору в оптимизации.</p>
 

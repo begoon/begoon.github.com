@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -47,32 +53,31 @@
 
 <p>Как я ее решал. Прочитав определение совершенных чисел (до этого я не знал про такие числа, и далее будет понятно, что это было моей главной проблемой) и поняв, что мне надо разложить число на множители, я написал что-то вроде:</p>
 
-<pre class="hl">
-<span class="hl kwb">bool</span> <span class="hl kwd">is_perfect</span><span class="hl opt">(</span><span class="hl kwb">long long</span> n<span class="hl opt">) {</span>
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>n <span class="hl opt">==</span> <span class="hl num">1</span><span class="hl opt">)</span> <span class="hl kwa">return false</span><span class="hl opt">;</span>
-  <span class="hl kwb">long long</span> s <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span>
-  <span class="hl kwb">long long</span> q <span class="hl opt">=</span> <span class="hl kwd">sqrt</span><span class="hl opt">((</span><span class="hl kwb">double</span><span class="hl opt">)</span>n<span class="hl opt">);</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">long long</span> i <span class="hl opt">=</span> <span class="hl num">2</span><span class="hl opt">;</span> i <span class="hl opt">&lt;=</span> q<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-    <span class="hl kwa">if</span> <span class="hl opt">((</span>n <span class="hl opt">%</span> i<span class="hl opt">) ==</span> <span class="hl num">0</span><span class="hl opt">) {</span>
-      s <span class="hl opt">+=</span> i<span class="hl opt">;</span>
-      <span class="hl kwa">if</span> <span class="hl opt">(</span>n<span class="hl opt">/</span>i <span class="hl opt">!=</span> i<span class="hl opt">)</span> s <span class="hl opt">+=</span> n<span class="hl opt">/</span>i<span class="hl opt">;</span>
-    <span class="hl opt">}</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwa">return</span> s <span class="hl opt">==</span> n<span class="hl opt">;</span>
-<span class="hl opt">}</span>
+<pre><code class="language-cpp">bool is_perfect(long long n) {
+  if (n == 1) return false;
+  long long s = 1;
+  long long q = sqrt((double)n);
+  for (long long i = 2; i &lt;= q; ++i) {
+    if ((n % i) == 0) {
+      s += i;
+      if (n/i != i) s += n/i;
+    }
+  }
+  return s == n;
+}
 
-<span class="hl opt">...</span>
-  <span class="hl kwb">bool</span> found <span class="hl opt">=</span> <span class="hl kwa">false</span><span class="hl opt">;</span>
-  <span class="hl kwa">while</span> <span class="hl opt">(</span>m <span class="hl opt">&lt;=</span> n<span class="hl opt">) {</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(</span><span class="hl kwd">is_perfect</span><span class="hl opt">(</span>m<span class="hl opt">)) {</span>
-      os <span class="hl opt">&lt;&lt;</span> m <span class="hl opt">&lt;&lt;</span> endl<span class="hl opt">;</span>
-      found <span class="hl opt">=</span> <span class="hl kwa">true</span><span class="hl opt">;</span>
-    <span class="hl opt">}</span>
-    m <span class="hl opt">+=</span> <span class="hl num">1</span><span class="hl opt">;</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwa">if</span> <span class="hl opt">(!</span>found<span class="hl opt">)</span> os <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Absent&quot;</span> <span class="hl opt">&lt;&lt;</span> endl<span class="hl opt">;</span>
-<span class="hl opt">...</span>
-</pre>
+...
+  bool found = false;
+  while (m &lt;= n) {
+    if (is_perfect(m)) {
+      os &lt;&lt; m &lt;&lt; endl;
+      found = true;
+    }
+    m += 1;
+  }
+  if (!found) os &lt;&lt; &#34;Absent&#34; &lt;&lt; endl;
+...
+</code></pre>
 
 <p>Ничего оригинального. Работает на данных тестовых контрольных примерах. Прогоняю в системе. На одном из тестов мне сообщают, что программа работает более двух секунд, и это превышение данного временного лимита.</p>
 

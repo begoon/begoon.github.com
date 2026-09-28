@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -44,25 +50,23 @@
   <p>Порой понимаешь, что не знаешь каких-то банальных вещей. Сегодня на повестке дня Pimpl и умные указатели. Я почему-то был уверен, что forward class declaration можно делать только если класс используется в форме указателя или ссылки (#1), то есть тексте записывается в форме <code>T*</code> или <code>T&amp;</code> (#2). Поэтому, когда мне надо было реализовать Pimpl, я не использовал умные указатели, так как с виду для них требуется полное определение класса.</p>
 
 <p><code>A.h</code>:
-<pre class="hl">
-<span class="hl ppc">#include &lt;memory&gt;</span>
-<span class="hl kwc">class</span> A_pimpl<span class="hl opt">;</span>
-<span class="hl kwc">class</span> A <span class="hl opt">{</span>
-  <span class="hl opt">&hellip;</span>
-  std<span class="hl opt">::</span>unique_ptr<span class="hl opt">&lt;</span>A_pimpl<span class="hl opt">&gt;</span> p<span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre></p>
+<pre><code class="language-cpp">#include &lt;memory&gt;
+class A_pimpl;
+class A {
+  &hellip;
+  std::unique_ptr&lt;A_pimpl&gt; p;
+}
+</code></pre></p>
 
 <p>Я почему-то думал, что это не будет работать из-за неопределенности класса <code>A_pimpl</code>. И был сильно удивлен, попробовал и узнав, что на самом деле это прекрасно работает. То есть факт #1 не эквивалентен факту #2.</p>
 
 <p>В <code>A.cpp</code> можно теперь спокойно писать:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;A.h&quot;</span><span class="hl ppc"></span>
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;pimpl.h&quot;</span><span class="hl ppc"></span>
+<pre><code class="language-cpp">#include &#34;A.h&#34;
+#include &#34;pimpl.h&#34;
 
-A<span class="hl opt">::</span><span class="hl kwd">A</span><span class="hl opt">() :</span> <span class="hl kwd">p</span><span class="hl opt">(</span><span class="hl kwa">new</span> <span class="hl kwd">A_pimpl</span><span class="hl opt">()) {}</span>
-</pre>
+A::A() : p(new A_pimpl()) {}
+</code></pre>
 
 <p>Все выше сказанное также работает для <code>std::shared_ptr</code> (C++ 2011), <code>boost::scoped_ptr</code> и <code>boost::shared_ptr</code>.</p>
 
@@ -71,25 +75,23 @@ A<span class="hl opt">::</span><span class="hl kwd">A</span><span class="hl opt"
 <p>Как меня поправили в комментариях, у класса <code>A</code> обязательно должен быть явно задан деструктор, причем его тело должно быть именно в <code>A.cpp</code>, а не в заголовочном файле. Иначе будет ошибка типа &ldquo;error C2338: can&rsquo;t delete an incomplete type&rdquo;.</p>
 
 <p><code>A.h</code>:
-<pre class="hl">
-<span class="hl ppc">#include &lt;memory&gt;</span>
-<span class="hl kwc">class</span> A_pimpl<span class="hl opt">;</span>
-<span class="hl kwc">class</span> A <span class="hl opt">{</span>
-  <span class="hl kwd">A</span><span class="hl opt">();</span>
-  <span class="hl opt">~</span><span class="hl kwd">A</span><span class="hl opt">();</span>
-  std<span class="hl opt">::</span>unique_ptr<span class="hl opt">&lt;</span>A_pimpl<span class="hl opt">&gt;</span> p<span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre></p>
+<pre><code class="language-cpp">#include &lt;memory&gt;
+class A_pimpl;
+class A {
+  A();
+  ~A();
+  std::unique_ptr&lt;A_pimpl&gt; p;
+}
+</code></pre></p>
 
 <p>и <code>A.cpp</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;A.h&quot;</span><span class="hl ppc"></span>
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;pimpl.h&quot;</span><span class="hl ppc"></span>
+<pre><code class="language-cpp">#include &#34;A.h&#34;
+#include &#34;pimpl.h&#34;
 
-A<span class="hl opt">::</span><span class="hl kwd">A</span><span class="hl opt">() :</span> <span class="hl kwd">p</span><span class="hl opt">(</span><span class="hl kwa">new</span> <span class="hl kwd">A_pimpl</span><span class="hl opt">()) {}</span>
-A<span class="hl opt">::~</span><span class="hl kwd">A</span><span class="hl opt">() {}</span>
-</pre>
+A::A() : p(new A_pimpl()) {}
+A::~A() {}
+</code></pre>
 
 </div>
 

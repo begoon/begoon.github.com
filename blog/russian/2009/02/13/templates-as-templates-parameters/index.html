@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,84 +51,81 @@
 
 <p>Бывают случаи, когда параметр шаблона сам является шаблонным классом и для его инстанцирования тоже нужно указать параметр. Например, универсальная шаблонная функция для печати стандартного контейнера любого типа в поток:</p>
 
-<pre class="hl">
-<span class="hl kwc">template</span><span class="hl opt">&lt;</span> typename C<span class="hl opt">,</span> typename E <span class="hl opt">&gt;</span>
-<span class="hl kwb">void</span> <span class="hl kwd">print</span><span class="hl opt">(</span><span class="hl kwb">const</span> C<span class="hl opt">&lt;</span>E<span class="hl opt">&gt;&amp;</span> v<span class="hl opt">) {</span>
-  <span class="hl kwd">copy</span><span class="hl opt">(</span>v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> ostream_iterator<span class="hl opt">&lt;</span>E<span class="hl opt">&gt;(</span>cout<span class="hl opt">,</span> <span class="hl str">&quot;  &quot;</span><span class="hl opt">));</span>
-  cout <span class="hl opt">&lt;&lt;</span> endl<span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">template&lt; typename C, typename E &gt;
+void print(const C&lt;E&gt;&amp; v) {
+  copy(v.begin(), v.end(), ostream_iterator&lt;E&gt;(cout, &#34;  &#34;));
+  cout &lt;&lt; endl;
+}
+</code></pre>
 
 <p>И все бы ничего, но с только зрения синтаксиса С++ это неверно. Нельзя просто написать <code>C&lt;E&gt;</code>, если <code>E</code> сам является не определенным типом, а параметром шаблона. Правильный способ использования параметра шаблона, который в свою очередь зависит от другого параметра, должен выглядеть так:</p>
 
-<pre class="hl">
-<span class="hl kwc">template</span><span class="hl opt">&lt;</span> <span class="hl kwc">template</span><span class="hl opt">&lt;</span>typename<span class="hl opt">&gt;</span> <span class="hl kwc">class</span> C<span class="hl opt">,</span> typename E <span class="hl opt">&gt;</span>
-<span class="hl kwb">void</span> <span class="hl kwd">print</span><span class="hl opt">(</span><span class="hl kwb">const</span> C<span class="hl opt">&lt;</span>E<span class="hl opt">&gt;&amp;</span> v<span class="hl opt">) {</span>
-  <span class="hl kwd">copy</span><span class="hl opt">(</span>v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> ostream_iterator<span class="hl opt">&lt;</span>E<span class="hl opt">&gt;(</span>cout<span class="hl opt">,</span> <span class="hl str">&quot;  &quot;</span><span class="hl opt">));</span>
-  cout <span class="hl opt">&lt;&lt;</span> endl<span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">template&lt; template&lt;typename&gt; class C, typename E &gt;
+void print(const C&lt;E&gt;&amp; v) {
+  copy(v.begin(), v.end(), ostream_iterator&lt;E&gt;(cout, &#34;  &#34;));
+  cout &lt;&lt; endl;
+}
+</code></pre>
 
 <p>Теперь полный пример (<code>template_parameter.cpp</code>):</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;iostream&gt;</span>
-<span class="hl ppc">#include &lt;iomanip&gt;</span>
-<span class="hl ppc">#include &lt;algorithm&gt;</span>
-<span class="hl ppc">#include &lt;iterator&gt;</span>
-<span class="hl ppc">#include &lt;string&gt;</span>
-<span class="hl ppc">#include &lt;vector&gt;</span>
-<span class="hl ppc">#include &lt;list&gt;</span>
-<span class="hl ppc">#include &lt;deque&gt;</span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;algorithm&gt;
+#include &lt;iterator&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;list&gt;
+#include &lt;deque&gt;
 
-<span class="hl slc">// Я обычно не использую пространства имен &quot;по умолчанию&quot;, но тут</span>
-<span class="hl slc">// это сделано для компактности примера.</span>
-<span class="hl kwa">using namespace</span> std<span class="hl opt">;</span>
+// Я обычно не использую пространства имен &#34;по умолчанию&#34;, но тут
+// это сделано для компактности примера.
+using namespace std;
 
-<span class="hl slc">// Вся изюминка тут: template&lt;typename&gt; или template&lt;class&gt;.</span>
-<span class="hl slc">// Без этого параметр шаблона &quot;С&quot; нельзя будет параметризировать.</span>
-<span class="hl slc">// в конструкции C&lt;E&gt;&amp;.</span>
-<span class="hl kwc">template</span><span class="hl opt">&lt;</span> <span class="hl kwc">template</span><span class="hl opt">&lt;</span>typename<span class="hl opt">&gt;</span> <span class="hl kwc">class</span> C<span class="hl opt">,</span> typename E <span class="hl opt">&gt;</span>
-<span class="hl slc">// Тут происходит параметризация параметра &quot;С&quot; параметром &quot;E&quot;.</span>
-<span class="hl slc">// Без этого класс &quot;С&quot; не может быть использован, так как &quot;E&quot;</span>
-<span class="hl slc">// является не просто типом, а тоже параметром шаблона.</span>
-<span class="hl kwb">void</span> <span class="hl kwd">print</span><span class="hl opt">(</span><span class="hl kwb">const</span> C<span class="hl opt">&lt;</span>E<span class="hl opt">&gt;&amp;</span> v<span class="hl opt">) {</span>
-  <span class="hl slc">// Так как класс элемента контейнера &quot;Е&quot; нам тут нужен как отдельный</span>
-  <span class="hl slc">// тип, то для этого и затеяна вся тема с параметризированными</span>
-  <span class="hl slc">// параметрами шаблона.</span>
-  <span class="hl kwd">copy</span><span class="hl opt">(</span>v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> ostream_iterator<span class="hl opt">&lt;</span>E<span class="hl opt">&gt;(</span>cout<span class="hl opt">,</span> <span class="hl str">&quot;  &quot;</span><span class="hl opt">));</span>
-  cout <span class="hl opt">&lt;&lt;</span> endl<span class="hl opt">;</span>
-<span class="hl opt">}</span>
+// Вся изюминка тут: template&lt;typename&gt; или template&lt;class&gt;.
+// Без этого параметр шаблона &#34;С&#34; нельзя будет параметризировать.
+// в конструкции C&lt;E&gt;&amp;.
+template&lt; template&lt;typename&gt; class C, typename E &gt;
+// Тут происходит параметризация параметра &#34;С&#34; параметром &#34;E&#34;.
+// Без этого класс &#34;С&#34; не может быть использован, так как &#34;E&#34;
+// является не просто типом, а тоже параметром шаблона.
+void print(const C&lt;E&gt;&amp; v) {
+  // Так как класс элемента контейнера &#34;Е&#34; нам тут нужен как отдельный
+  // тип, то для этого и затеяна вся тема с параметризированными
+  // параметрами шаблона.
+  copy(v.begin(), v.end(), ostream_iterator&lt;E&gt;(cout, &#34;  &#34;));
+  cout &lt;&lt; endl;
+}
 
-<span class="hl slc">// Тестовая программа демонстрирует, как одна функция print()</span>
-<span class="hl slc">// может использоваться для печати любого контейнера</span>
-<span class="hl slc">// (если, конечно, он удовлетворяет требованиям алгоритма</span>
-<span class="hl slc">// copy() по наличию должных итераторов), содержащего элементы </span>
-<span class="hl slc">// любого типа.</span>
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
-  <span class="hl slc">// Массив целых.</span>
-  <span class="hl kwb">int</span> i<span class="hl opt">[</span><span class="hl num">5</span><span class="hl opt">] = {</span> <span class="hl num">1</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">,</span> <span class="hl num">3</span><span class="hl opt">,</span> <span class="hl num">4</span><span class="hl opt">,</span> <span class="hl num">5</span> <span class="hl opt">};</span>
-  <span class="hl slc">// Создаем вектор, состоящий из целых, и печатаем его.</span>
-  print<span class="hl opt">&lt;</span> vector<span class="hl opt">,</span> <span class="hl kwb">int</span> <span class="hl opt">&gt;(</span> vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;(</span>i<span class="hl opt">,</span> i <span class="hl opt">+</span> <span class="hl num">5</span><span class="hl opt">) );</span>
+// Тестовая программа демонстрирует, как одна функция print()
+// может использоваться для печати любого контейнера
+// (если, конечно, он удовлетворяет требованиям алгоритма
+// copy() по наличию должных итераторов), содержащего элементы 
+// любого типа.
+int main(int argc, char* argv[]) {
+  // Массив целых.
+  int i[5] = { 1, 2, 3, 4, 5 };
+  // Создаем вектор, состоящий из целых, и печатаем его.
+  print&lt; vector, int &gt;( vector&lt;int&gt;(i, i + 5) );
 
-  <span class="hl slc">// Массив вещественных.</span>
-  <span class="hl kwb">float</span> f<span class="hl opt">[</span><span class="hl num">5</span><span class="hl opt">] = {</span> <span class="hl num">.1</span><span class="hl opt">,</span> <span class="hl num">.2</span><span class="hl opt">,</span> <span class="hl num">.3</span><span class="hl opt">,</span> <span class="hl num">.4</span><span class="hl opt">,</span> <span class="hl num">.5</span> <span class="hl opt">};</span>
-  <span class="hl slc">// Создаем вектор, состоящий из вещественных, и печатаем его.</span>
-  print<span class="hl opt">&lt;</span> vector<span class="hl opt">,</span> <span class="hl kwb">float</span> <span class="hl opt">&gt;(</span> vector<span class="hl opt">&lt;</span><span class="hl kwb">float</span><span class="hl opt">&gt;(</span>f<span class="hl opt">,</span> f <span class="hl opt">+</span> <span class="hl num">5</span><span class="hl opt">) );</span>
+  // Массив вещественных.
+  float f[5] = { .1, .2, .3, .4, .5 };
+  // Создаем вектор, состоящий из вещественных, и печатаем его.
+  print&lt; vector, float &gt;( vector&lt;float&gt;(f, f + 5) );
 
-  <span class="hl slc">// Массив символов.</span>
-  <span class="hl kwb">char</span> c<span class="hl opt">[</span><span class="hl num">5</span><span class="hl opt">] = {</span> <span class="hl str">'a'</span><span class="hl opt">,</span> <span class="hl str">'b'</span><span class="hl opt">,</span> <span class="hl str">'c'</span><span class="hl opt">,</span> <span class="hl str">'d'</span><span class="hl opt">,</span> <span class="hl str">'e'</span> <span class="hl opt">};</span>
-  <span class="hl slc">// Создаем деку, состоящую их символов, и печатаем ее.</span>
-  print<span class="hl opt">&lt;</span> deque<span class="hl opt">,</span> <span class="hl kwb">char</span> <span class="hl opt">&gt;(</span> deque<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;(</span>c<span class="hl opt">,</span> c <span class="hl opt">+</span> <span class="hl num">5</span><span class="hl opt">) );</span>
+  // Массив символов.
+  char c[5] = { &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39; };
+  // Создаем деку, состоящую их символов, и печатаем ее.
+  print&lt; deque, char &gt;( deque&lt;char&gt;(c, c + 5) );
 
-  <span class="hl slc">// Массив строк в стиле С.</span>
-  <span class="hl kwb">char</span><span class="hl opt">*</span> s<span class="hl opt">[</span><span class="hl num">5</span><span class="hl opt">] = {</span> <span class="hl str">&quot;a1&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;b2&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;c3&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;d4&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;e5&quot;</span> <span class="hl opt">};</span>
-  <span class="hl slc">// Создаем список, состоящий из строк, и печатаем его.</span>
-  print<span class="hl opt">&lt;</span> list<span class="hl opt">,</span> string <span class="hl opt">&gt;(</span> list<span class="hl opt">&lt;</span>string<span class="hl opt">&gt;(</span>s<span class="hl opt">,</span> s <span class="hl opt">+</span> <span class="hl num">5</span><span class="hl opt">) );</span>
+  // Массив строк в стиле С.
+  char* s[5] = { &#34;a1&#34;, &#34;b2&#34;, &#34;c3&#34;, &#34;d4&#34;, &#34;e5&#34; };
+  // Создаем список, состоящий из строк, и печатаем его.
+  print&lt; list, string &gt;( list&lt;string&gt;(s, s + 5) );
 
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+  return 0;
+}
+</code></pre>
 
 <p>Компилируем.</p>
 
@@ -160,13 +163,12 @@ a1  b2  c3  d4  e5
 
 <p>Комментарий Александра прояснил ситуацию с проблемой при компиляции в Visual Studio. Окончательный вариант кода, чтобы работало в <code>cl.exe</code>, таков:</p>
 
-<pre class="hl">
-<span class="hl kwc">template</span><span class="hl opt">&lt;</span> <span class="hl kwc">template</span><span class="hl opt">&lt;</span>typename<span class="hl opt">,</span> typename<span class="hl opt">&gt;</span> <span class="hl kwc">class</span> C<span class="hl opt">,</span> typename E <span class="hl opt">&gt;</span>
-<span class="hl kwb">void</span> <span class="hl kwd">print</span><span class="hl opt">(</span><span class="hl kwb">const</span> C<span class="hl opt">&lt;</span>E<span class="hl opt">,</span> allocator<span class="hl opt">&lt;</span>E<span class="hl opt">&gt; &gt;&amp;</span> v<span class="hl opt">) {</span>
-  <span class="hl kwd">copy</span><span class="hl opt">(</span>v<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> v<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> ostream_iterator<span class="hl opt">&lt;</span>E<span class="hl opt">&gt;(</span>cout<span class="hl opt">,</span> <span class="hl str">&quot;  &quot;</span><span class="hl opt">));</span>
-  cout <span class="hl opt">&lt;&lt;</span> endl<span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">template&lt; template&lt;typename, typename&gt; class C, typename E &gt;
+void print(const C&lt;E, allocator&lt;E&gt; &gt;&amp; v) {
+  copy(v.begin(), v.end(), ostream_iterator&lt;E&gt;(cout, &#34;  &#34;));
+  cout &lt;&lt; endl;
+}
+</code></pre>
 
 <p>У шаблонов стандартных контейнеров есть второй параметр, так называемый <code>allocator</code>. Этот параметр часто используется со значением по умолчанию, поэтому редко приходится вспоминать о нем. И как уточнил Александр, моя проблема была в том, что <code>cl.exe</code> требует явного указания наличия этого параметра при параметризации параметра <code>C</code>.</p>
 

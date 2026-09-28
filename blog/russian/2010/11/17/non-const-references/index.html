@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -51,13 +57,12 @@
 
 <p>Лично нарвался недавно на собственную мину (конечно, упрощенный вариант):</p>
 
-<pre class="hl">
-T a <span class="hl opt">=</span> <span class="hl num">10</span><span class="hl opt">;</span>
-<span class="hl opt">...</span>
-<span class="hl kwd">f</span><span class="hl opt">(</span>a<span class="hl opt">);</span>
-<span class="hl opt">...</span>
-<span class="hl kwa">assert</span><span class="hl opt">(</span>a <span class="hl opt">==</span> <span class="hl num">10</span><span class="hl opt">);</span> <span class="hl slc">// BOOM!!! WTF?! Who changed this?</span>
-</pre>
+<pre><code class="language-cpp">T a = 10;
+...
+f(a);
+...
+assert(a == 10); // BOOM!!! WTF?! Who changed this?
+</code></pre>
 
 <p>А причина в <code>void f(T&amp; a);</code>, а должно быть <code>void f(const T&amp; a);</code> или <code>void f(T* a);</code>. Функция <code>f()</code> почему-то изменила значение «а», а писал я ее давно и успел забыть такую ее «особенность». Но из кода <code>f(a)</code> сходу не видно – может эта функция изменить <code>а</code> или нет.</p>
 
@@ -65,14 +70,13 @@ T a <span class="hl opt">=</span> <span class="hl num">10</span><span class="hl 
 
 <p>Кстати, один из аргументов, приводимый людьми, выступающими за неконстантные ссылки –это «писать <code>a.</code> приятнее и понятнее, чем <code>a-&gt;</code> или <code>*a</code>». Также ссылка более надежна с точки зрения <code>NULL</code> (сделать ссылку, указывающую на <code>NULL</code> конечно можно, но тут уже надо постараться). Тут можно выйти положения так:</p>
 
-<pre class="hl">
-<span class="hl kwb">void</span> <span class="hl kwd">f</span><span class="hl opt">(</span>T<span class="hl opt">*</span> ptr_a<span class="hl opt">) {</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>ptr_a <span class="hl opt">!=</span> NULL<span class="hl opt">);</span>
-  T<span class="hl opt">&amp;</span> a <span class="hl opt">= *</span>ptr_a<span class="hl opt">;</span>
-  <span class="hl opt">...</span>
-  <span class="hl kwa">if</span> <span class="hl opt">(</span>a<span class="hl opt">.</span><span class="hl kwd">foo</span><span class="hl opt">()) ...</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">void f(T* ptr_a) {
+  assert(ptr_a != NULL);
+  T&amp; a = *ptr_a;
+  ...
+  if (a.foo()) ...
+}
+</code></pre>
 
 <p>Небольшой лишний код, но решены обе проблемы: проверка на <code>NULL</code> и необходимость разыменовывать указатель каждый раз. А главное, в вызывающем коде придется писать так: <code>f(&amp;a)</code>, что явно укажет на факт возможной модификации аргумента внутри функции.</p>
 
@@ -84,21 +88,19 @@ T a <span class="hl opt">=</span> <span class="hl num">10</span><span class="hl 
 
 <p>Например:</p>
 
-<pre class="hl">
-<span class="hl kwb">void</span> <span class="hl kwd">print</span><span class="hl opt">(</span>std<span class="hl opt">::</span>ostream<span class="hl opt">&amp;</span> os<span class="hl opt">,</span> <span class="hl kwb">const</span> T<span class="hl opt">&amp;</span> a<span class="hl opt">) {</span>
-   os <span class="hl opt">&lt;&lt;</span> a<span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">void print(std::ostream&amp; os, const T&amp; a) {
+   os &lt;&lt; a;
+}
+</code></pre>
 
 <p>или</p>
 
-<pre class="hl">
-<span class="hl kwb">void</span> <span class="hl kwd">save_to_db</span><span class="hl opt">(</span>Database<span class="hl opt">&amp;</span> db<span class="hl opt">, ...) {</span>
-   db<span class="hl opt">.</span><span class="hl kwd">connect</span><span class="hl opt">();</span>
-   db<span class="hl opt">.</span><span class="hl kwd">save</span><span class="hl opt">(...)</span>
-   <span class="hl opt">...</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">void save_to_db(Database&amp; db, ...) {
+   db.connect();
+   db.save(...)
+   ...
+}
+</code></pre>
 
 <p>Ну и чтобы два раза не вставать, пара личных маленьких радостей:</p>
 

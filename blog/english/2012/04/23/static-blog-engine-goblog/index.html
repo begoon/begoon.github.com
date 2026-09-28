@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -71,25 +77,24 @@
 
 <p>Heroku works slightly different. Heroku hosts Ruby, therefore a Heroku project is a bunch of pages, plus a mini web server application serving them. Looks a bit scary, but such server in Ruby is very simple:</p>
 
-<pre class="hl">
-<span class="hl kwa">require</span> <span class="hl str">'bundler/setup'</span>
-<span class="hl kwa">require</span> <span class="hl str">'sinatra/base'</span>
+<pre><code class="language-ruby">require &#39;bundler/setup&#39;
+require &#39;sinatra/base&#39;
 
-<span class="hl kwa">class</span> SinatraStaticServer <span class="hl opt">&lt;</span> Sinatra<span class="hl opt">:</span><span class="hl kwc">:Base</span>  
+class SinatraStaticServer &lt; Sinatra::Base  
 
-  <span class="hl kwd">get</span><span class="hl opt">(</span><span class="hl kwc">/.+/</span>) <span class="hl kwa">do</span>
-    <span class="hl kwd">send_sinatra_file</span><span class="hl opt">(</span>request<span class="hl opt">.</span>path) <span class="hl esc">{404}</span>
-  <span class="hl kwa">end</span>
+  get(/.+/) do
+    send_sinatra_file(request.path) {404}
+  end
 
-  <span class="hl kwa">def</span> <span class="hl kwd">send_sinatra_file</span><span class="hl opt">(</span>path<span class="hl opt">, &amp;</span>missing_file_block)
-    file_path <span class="hl opt">=</span> File<span class="hl opt">.</span><span class="hl kwd">join</span><span class="hl opt">(</span>File<span class="hl opt">.</span><span class="hl kwd">dirname</span><span class="hl opt">(</span>__FILE__)<span class="hl opt">,</span> <span class="hl str">'public'</span><span class="hl opt">,</span>  path)
-    file_path <span class="hl opt">=</span> File<span class="hl opt">.</span><span class="hl kwd">join</span><span class="hl opt">(</span>file_path<span class="hl opt">,</span> <span class="hl str">'index.html'</span>) <span class="hl kwa">unless</span> file_path <span class="hl opt">=</span>~ <span class="hl kwc">/\.[a-z]+$/</span>i  
-    File<span class="hl opt">.</span>exist<span class="hl opt">?(</span>file_path) <span class="hl opt">?</span> <span class="hl kwd">send_file</span><span class="hl opt">(</span>file_path) <span class="hl opt">:</span> missing_file_block<span class="hl opt">.</span>call
-  <span class="hl kwa">end</span>
-<span class="hl kwa">end</span>
+  def send_sinatra_file(path, &amp;missing_file_block)
+    file_path = File.join(File.dirname(__FILE__), &#39;public&#39;,  path)
+    file_path = File.join(file_path, &#39;index.html&#39;) unless file_path =~ /\.[a-z]+$/i  
+    File.exist?(file_path) ? send_file(file_path) : missing_file_block.call
+  end
+end
 
 run SinatraStaticServer
-</pre>
+</code></pre>
 
 <p>As strangely enough it sounds, Heroku as blog hosting is simpler than GitHub. Additionally, your git repository on Heroku remains private, whereas on GitHub by default it is public. I don&rsquo;t see any problems with it though, because it is all available anyway to everybody via the web site, but some people prefer keeping blog guts or bits of unfinished work in private.</p>
 
@@ -184,13 +189,12 @@ git commit -m &quot;New post about ...&quot;
 
 <p>To check/preview the site locally I temporarily add <code>127.0.0.1 demin.ws</code> to <code>/etc/hosts</code> and launch a mini web server. Remember, how it looked in Ruby? Tiny, right? Check out this:</p>
 
-<pre class="hl">
-<span class="hl kwa">package</span> main
-<span class="hl kwa">import</span> <span class="hl str">&quot;net/http&quot;</span>
-<span class="hl kwa">func</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl kwb">panic</span><span class="hl opt">(</span>http<span class="hl opt">.</span><span class="hl kwd">ListenAndServe</span><span class="hl opt">(</span><span class="hl str">&quot;:80&quot;</span><span class="hl opt">,</span> http<span class="hl opt">.</span><span class="hl kwd">FileServer</span><span class="hl opt">(</span>http<span class="hl opt">.</span><span class="hl kwd">Dir</span><span class="hl opt">(</span><span class="hl str">&quot;..&quot;</span><span class="hl opt">))))</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-go">package main
+import &#34;net/http&#34;
+func main() {
+  panic(http.ListenAndServe(&#34;:80&#34;, http.FileServer(http.Dir(&#34;..&#34;))))
+}
+</code></pre>
 
 <p>Nice? Now run it:</p>
 

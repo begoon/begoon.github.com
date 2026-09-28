@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -49,18 +55,17 @@
 
 <p>Файл <code>splitpath.cmd</code>:</p>
 
-<pre class="hl">
-&#64;<span class="hl kwb">echo</span> off 
-<span class="hl kwb">set</span> line<span class="hl opt">=</span><span class="hl kwc">%path%</span>
-<span class="hl kwb">setlocal</span> 
-<span class="hl opt">:</span>parse_line
-<span class="hl kwa">for</span> <span class="hl opt">/</span>F <span class="hl str">&quot;delims=; tokens=1,*&quot;</span> <span class="hl kwc">%%a</span> in <span class="hl opt">(</span><span class="hl str">&quot;%line%&quot;) do (</span>
-<span class="hl str">   echo %%a</span>
-<span class="hl str">   set line=%%b</span>
-<span class="hl str">)</span>
-<span class="hl str">if &quot;</span><span class="hl kwc">%line%&quot;</span> NEQ <span class="hl str">&quot;&quot;</span> <span class="hl kwa">goto</span> parse_line
-<span class="hl kwb">endlocal</span>
-</pre>
+<pre><code class="language-dos">@echo off 
+set line=%path%
+setlocal 
+:parse_line
+for /F &#34;delims=; tokens=1,*&#34; %%a in (&#34;%line%&#34;) do (
+   echo %%a
+   set line=%%b
+)
+if &#34;%line%&#34; NEQ &#34;&#34; goto parse_line
+endlocal
+</code></pre>
 
 <p>Примерный результат его работы выглядит так:</p>
 

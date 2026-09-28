@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,16 +49,15 @@
 <div id="post">
   <p>Когда я вижу в production коде, в котором мне надо по какой-то причине разобраться, что-то типа:</p>
 
-<pre class="hl">
-<span class="hl opt">...</span>
-<span class="hl kwb">int</span> x <span class="hl opt">= (</span>i <span class="hl opt">&lt;&lt;</span> <span class="hl num">8</span><span class="hl opt">) | (</span>i <span class="hl opt">&gt;&gt;</span> <span class="hl num">2</span><span class="hl opt">) | ((</span>i <span class="hl opt">&amp;</span> <span class="hl num">0x06</span><span class="hl opt">) ^</span> <span class="hl num">0xAA</span><span class="hl opt">);</span>
+<pre><code class="language-cpp">...
+int x = (i &lt;&lt; 8) | (i &gt;&gt; 2) | ((i &amp; 0x06) ^ 0xAA);
 
-<span class="hl slc">// if (x &gt;= 0x12345)</span>
-<span class="hl slc">//  x = x &gt;&gt; 3;</span>
+// if (x &gt;= 0x12345)
+//  x = x &gt;&gt; 3;
 
-<span class="hl kwd">calc_something_complicated</span><span class="hl opt">(</span>x<span class="hl opt">);</span>
-<span class="hl opt">...</span>
-</pre>
+calc_something_complicated(x);
+...
+</code></pre>
 
 <p>мне хочется рвать и метать. Расчехлить <a href="http://ftp.kernel.org/pub/software/scm/git/docs/git-blame.html">blame</a>, найти автора и заглянуть ему в глаза.</p>
 
@@ -60,15 +65,14 @@
 
 <p>На втором месте у меня стоит отладочная печать, навеки оставленная в коде:</p>
 
-<pre class="hl">
-<span class="hl opt">...</span>
-<span class="hl kwb">int</span> x <span class="hl opt">= (</span>i <span class="hl opt">&lt;&lt;</span> <span class="hl num">8</span><span class="hl opt">) | (</span>i <span class="hl opt">&gt;&gt;</span> <span class="hl num">2</span><span class="hl opt">) | ((</span>i <span class="hl opt">&amp;</span> <span class="hl num">0x06</span><span class="hl opt">) ^</span> <span class="hl num">0xAA</span><span class="hl opt">);</span>
+<pre><code class="language-cpp">...
+int x = (i &lt;&lt; 8) | (i &gt;&gt; 2) | ((i &amp; 0x06) ^ 0xAA);
 
-<span class="hl slc">// std::cerr &lt;&lt; &quot;На этот раз x = &quot; &lt;&lt; x &lt;&lt; std::endl;</span>
+// std::cerr &lt;&lt; &#34;На этот раз x = &#34; &lt;&lt; x &lt;&lt; std::endl;
 
-<span class="hl kwd">calc_something_complicated</span><span class="hl opt">(</span>x<span class="hl opt">);</span>
-<span class="hl opt">...</span>
-</pre>
+calc_something_complicated(x);
+...
+</code></pre>
 
 <p>Снова получается, что автор сомневался и так и не отладил все до конца.</p>
 
@@ -76,16 +80,15 @@
 
 <p>Ну на третьем месте нашего хит-парада - блоки TODO.</p>
 
-<pre class="hl">
-<span class="hl opt">...</span>
-<span class="hl kwb">int</span> x <span class="hl opt">= (</span>i <span class="hl opt">&lt;&lt;</span> <span class="hl num">8</span><span class="hl opt">) | (</span>i <span class="hl opt">&gt;&gt;</span> <span class="hl num">2</span><span class="hl opt">) | ((</span>i <span class="hl opt">&amp;</span> <span class="hl num">0x06</span><span class="hl opt">) ^</span> <span class="hl num">0xAA</span><span class="hl opt">);</span>
+<pre><code class="language-cpp">...
+int x = (i &lt;&lt; 8) | (i &gt;&gt; 2) | ((i &amp; 0x06) ^ 0xAA);
 
-<span class="hl slc">// TODO: Заменить тип int на int64, так как на носу эра 64-разрядных машин.</span>
-<span class="hl slc">// Программист Вася, 06.10.2009. Если что, вы знаете где меня искать.</span>
+// TODO: Заменить тип int на int64, так как на носу эра 64-разрядных машин.
+// Программист Вася, 06.10.2009. Если что, вы знаете где меня искать.
 
-<span class="hl kwd">calc_something_complicated</span><span class="hl opt">(</span>x<span class="hl opt">);</span>
-<span class="hl opt">...</span>
-</pre>
+calc_something_complicated(x);
+...
+</code></pre>
 
 <p>Тут еще куда ни шло. Куски TODO можно найти автоматическим поиском при подготовке релиза и перед ответственным слиянием. Но каждый TODO должен быть подписан и датирован, а лучше еще и детально объяснен. Ни что так не помогает оценить &ldquo;нужность&rdquo; куска кода, как дата его последней модификации.</p>
 

@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,25 +51,23 @@
 
 <p>Например, вместо:</p>
 
-<pre class="hl">
-<span class="hl kwb">void</span> <span class="hl kwd">f</span><span class="hl opt">(</span>T<span class="hl opt">&amp;</span> t<span class="hl opt">) {</span>
-  <span class="hl slc">// change ‘t’</span>
-<span class="hl opt">}</span>
-<span class="hl opt">...</span>
-T a<span class="hl opt">;</span>
-<span class="hl kwd">f</span><span class="hl opt">(</span>a<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">void f(T&amp; t) {
+  // change ‘t’
+}
+...
+T a;
+f(a);
+</code></pre>
 
 <p>я предпочту передачу по указателю:</p>
 
-<pre class="hl">
-<span class="hl kwb">void</span> <span class="hl kwd">f</span><span class="hl opt">(</span>T<span class="hl opt">*</span> t<span class="hl opt">) {</span>
-  <span class="hl slc">// change ‘*t’</span>
-<span class="hl opt">}</span>
-<span class="hl opt">...</span>
-T a<span class="hl opt">;</span>
-<span class="hl kwd">f</span><span class="hl opt">(&amp;</span>a<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">void f(T* t) {
+  // change ‘*t’
+}
+...
+T a;
+f(&amp;a);
+</code></pre>
 
 <p>Мой основной мотив – наглядность в вызывающем коде. Когда я вижу <code>&amp;</code> перед аргументом, я точно знаю, что это возвращаемый параметр, и он может измениться после вызова. И мне не надо постоянно помнить, какие именно агрументы у этой функции ссылки, а какие нет.</p>
 

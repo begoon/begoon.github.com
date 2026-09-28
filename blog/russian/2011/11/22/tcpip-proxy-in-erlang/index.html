@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -59,119 +65,118 @@
 
 <p>Для меня это было немного необычно.</p>
 
-<pre class="hl">
-<span class="hl opt">-</span><span class="hl kwd">module</span><span class="hl opt">(</span>tcp_proxy<span class="hl opt">).</span>
+<pre><code class="language-erlang">-module(tcp_proxy).
 
-<span class="hl opt">-</span><span class="hl kwd">define</span><span class="hl opt">(</span>WIDTH<span class="hl opt">,</span> <span class="hl num">16</span><span class="hl opt">).</span>
+-define(WIDTH, 16).
 
-<span class="hl kwd">main</span><span class="hl opt">([</span>ListenPort<span class="hl opt">,</span> RemoteHost<span class="hl opt">,</span> RemotePort<span class="hl opt">]) -&gt;</span>
-    ListenPortN <span class="hl opt">=</span> <span class="hl kwb">list_to_integer</span><span class="hl opt">(</span>ListenPort<span class="hl opt">),</span>
-    <span class="hl kwd">start</span><span class="hl opt">(</span>ListenPortN<span class="hl opt">,</span> RemoteHost<span class="hl opt">,</span> <span class="hl kwb">list_to_integer</span><span class="hl opt">(</span>RemotePort<span class="hl opt">));</span>
+main([ListenPort, RemoteHost, RemotePort]) -&gt;
+    ListenPortN = list_to_integer(ListenPort),
+    start(ListenPortN, RemoteHost, list_to_integer(RemotePort));
 
-<span class="hl kwd">main</span><span class="hl opt">(</span>_<span class="hl opt">) -&gt;</span> <span class="hl kwd">usage</span><span class="hl opt">().</span>
+main(_) -&gt; usage().
 
-<span class="hl kwd">usage</span><span class="hl opt">() -&gt;</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~ntcp_proxy.erl local_port remote_port remote_host~n~n&quot;</span><span class="hl opt">, []),</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;Example:~n~n&quot;</span><span class="hl opt">, []),</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;tcp_proxy.erl 50000 google.com 80~n~n&quot;</span><span class="hl opt">, []).</span>
+usage() -&gt;
+    io:format(&#34;~ntcp_proxy.erl local_port remote_port remote_host~n~n&#34;, []),
+    io:format(&#34;Example:~n~n&#34;, []),
+    io:format(&#34;tcp_proxy.erl 50000 google.com 80~n~n&#34;, []).
 
-<span class="hl kwd">start</span><span class="hl opt">(</span>ListenPort<span class="hl opt">,</span> CalleeHost<span class="hl opt">,</span> CalleePort<span class="hl opt">) -&gt;</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;Start listening on port ~p and forwarding data to ~s:~p~n&quot;</span><span class="hl opt">,</span>
-              <span class="hl opt">[</span>ListenPort<span class="hl opt">,</span> CalleeHost<span class="hl opt">,</span> CalleePort<span class="hl opt">]),</span>
-    <span class="hl opt">{</span>ok<span class="hl opt">,</span> ListenSocket<span class="hl opt">} =</span> <span class="hl kwc">gen_tcp</span><span class="hl opt">:</span><span class="hl kwd">listen</span><span class="hl opt">(</span>ListenPort<span class="hl opt">, [</span><span class="hl kwb">binary</span><span class="hl opt">, {</span>packet<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">},</span>
-                                                    <span class="hl opt">{</span>reuseaddr<span class="hl opt">,</span> true<span class="hl opt">},</span>
-                                                    <span class="hl opt">{</span>active<span class="hl opt">,</span> true<span class="hl opt">}]),</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;Listener socket is started ~s~n&quot;</span><span class="hl opt">, [</span><span class="hl kwd">socket_info</span><span class="hl opt">(</span>ListenSocket<span class="hl opt">)]),</span>
-    <span class="hl kwb">spawn</span><span class="hl opt">(</span><span class="hl kwa">fun</span><span class="hl opt">() -&gt;</span> <span class="hl kwd">acceptor</span><span class="hl opt">(</span>ListenSocket<span class="hl opt">,</span> CalleeHost<span class="hl opt">,</span> CalleePort<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">)</span> <span class="hl kwa">end</span><span class="hl opt">),</span>
-    <span class="hl kwb">register</span><span class="hl opt">(</span>logger<span class="hl opt">,</span> <span class="hl kwb">spawn</span><span class="hl opt">(</span><span class="hl kwa">fun</span><span class="hl opt">() -&gt;</span> <span class="hl kwd">logger</span><span class="hl opt">()</span> <span class="hl kwa">end</span><span class="hl opt">)),</span>
-    <span class="hl kwd">wait</span><span class="hl opt">().</span>
+start(ListenPort, CalleeHost, CalleePort) -&gt;
+    io:format(&#34;Start listening on port ~p and forwarding data to ~s:~p~n&#34;,
+              [ListenPort, CalleeHost, CalleePort]),
+    {ok, ListenSocket} = gen_tcp:listen(ListenPort, [binary, {packet, 0},
+                                                    {reuseaddr, true},
+                                                    {active, true}]),
+    io:format(&#34;Listener socket is started ~s~n&#34;, [socket_info(ListenSocket)]),
+    spawn(fun() -&gt; acceptor(ListenSocket, CalleeHost, CalleePort, 0) end),
+    register(logger, spawn(fun() -&gt; logger() end)),
+    wait().
 
-<span class="hl slc">% Infinine loop to make sure that the main thread doesn't exit.</span>
-<span class="hl kwd">wait</span><span class="hl opt">() -&gt;</span> <span class="hl kwa">receive</span> _ <span class="hl opt">-&gt;</span> true <span class="hl kwa">end</span><span class="hl opt">,</span> <span class="hl kwd">wait</span><span class="hl opt">().</span>
+% Infinine loop to make sure that the main thread doesn&#39;t exit.
+wait() -&gt; receive _ -&gt; true end, wait().
 
-<span class="hl kwd">format_socket_info</span><span class="hl opt">(</span>Info<span class="hl opt">) -&gt;</span>
-    <span class="hl opt">{</span>ok<span class="hl opt">, {</span>\<span class="hl opt">{</span>A<span class="hl opt">,</span> B<span class="hl opt">,</span> C<span class="hl opt">,</span> D<span class="hl opt">},</span> Port<span class="hl opt">}} =</span> Info<span class="hl opt">,</span>
-    <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">flatten</span><span class="hl opt">(</span><span class="hl kwc">io_lib</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~p.~p.~p.~p:~p&quot;</span><span class="hl opt">, [</span>A<span class="hl opt">,</span> B<span class="hl opt">,</span> C<span class="hl opt">,</span> D<span class="hl opt">,</span> Port<span class="hl opt">])).</span>
+format_socket_info(Info) -&gt;
+    {ok, {\{A, B, C, D}, Port}} = Info,
+    lists:flatten(io_lib:format(&#34;~p.~p.~p.~p:~p&#34;, [A, B, C, D, Port])).
 
-<span class="hl kwd">peer_info</span><span class="hl opt">(</span>Socket<span class="hl opt">) -&gt;</span> <span class="hl kwd">format_socket_info</span><span class="hl opt">(</span><span class="hl kwc">inet</span><span class="hl opt">:</span><span class="hl kwd">peername</span><span class="hl opt">(</span>Socket<span class="hl opt">)).</span>
+peer_info(Socket) -&gt; format_socket_info(inet:peername(Socket)).
 
-<span class="hl kwd">socket_info</span><span class="hl opt">(</span>Socket<span class="hl opt">) -&gt;</span> <span class="hl kwd">format_socket_info</span><span class="hl opt">(</span><span class="hl kwc">inet</span><span class="hl opt">:</span><span class="hl kwd">sockname</span><span class="hl opt">(</span>Socket<span class="hl opt">)).</span>
+socket_info(Socket) -&gt; format_socket_info(inet:sockname(Socket)).
 
-<span class="hl kwd">acceptor</span><span class="hl opt">(</span>ListenSocket<span class="hl opt">,</span> RemoteHost<span class="hl opt">,</span> RemotePort<span class="hl opt">,</span> ConnN<span class="hl opt">) -&gt;</span>
-    <span class="hl kwa">case</span> <span class="hl kwc">gen_tcp</span><span class="hl opt">:</span><span class="hl kwd">accept</span><span class="hl opt">(</span>ListenSocket<span class="hl opt">)</span> <span class="hl kwa">of</span>
-      <span class="hl opt">{</span>ok<span class="hl opt">,</span> LocalSocket<span class="hl opt">} -&gt;</span>
-          <span class="hl kwb">spawn</span><span class="hl opt">(</span><span class="hl kwa">fun</span><span class="hl opt">() -&gt;</span> <span class="hl kwd">acceptor</span><span class="hl opt">(</span>ListenSocket<span class="hl opt">,</span> RemoteHost<span class="hl opt">,</span> RemotePort<span class="hl opt">,</span> ConnN <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">)</span> <span class="hl kwa">end</span><span class="hl opt">),</span>
-          LocalInfo <span class="hl opt">=</span> <span class="hl kwd">peer_info</span><span class="hl opt">(</span>LocalSocket<span class="hl opt">),</span>
-          logger <span class="hl opt">! {</span>message<span class="hl opt">,</span> <span class="hl str">&quot;~4.16.0B: Incoming connection from ~s~n&quot;</span><span class="hl opt">, [</span>ConnN<span class="hl opt">,</span> LocalInfo<span class="hl opt">]},</span>
-          <span class="hl kwa">case</span> <span class="hl kwc">gen_tcp</span><span class="hl opt">:</span><span class="hl kwd">connect</span><span class="hl opt">(</span>RemoteHost<span class="hl opt">,</span> RemotePort<span class="hl opt">, [</span><span class="hl kwb">binary</span><span class="hl opt">, {</span>packet<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">}])</span> <span class="hl kwa">of</span>
-            <span class="hl opt">{</span>ok<span class="hl opt">,</span> RemoteSocket<span class="hl opt">} -&gt;</span>
-              RemoteInfo <span class="hl opt">=</span> <span class="hl kwd">peer_info</span><span class="hl opt">(</span>RemoteSocket<span class="hl opt">),</span>
-              logger <span class="hl opt">! {</span>message<span class="hl opt">,</span> <span class="hl str">&quot;~4.16.0B: Connected to ~s~n&quot;</span><span class="hl opt">, [</span>ConnN<span class="hl opt">,</span> RemoteInfo<span class="hl opt">]},</span>
-              <span class="hl kwd">exchange_data</span><span class="hl opt">(</span>LocalSocket<span class="hl opt">,</span> RemoteSocket<span class="hl opt">,</span> LocalInfo<span class="hl opt">,</span> RemoteInfo<span class="hl opt">,</span> ConnN<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">),</span>
-              logger <span class="hl opt">! {</span>message<span class="hl opt">,</span> <span class="hl str">&quot;~4.16.0B: Finished~n&quot;</span><span class="hl opt">, [</span>ConnN<span class="hl opt">]};</span>
-            <span class="hl opt">{</span>error<span class="hl opt">,</span> Reason<span class="hl opt">} -&gt;</span>
-              logger <span class="hl opt">! {</span>message<span class="hl opt">,</span> <span class="hl str">&quot;~4.16.0B: Unable to connect to ~s:~s (error: ~p)~n&quot;</span><span class="hl opt">,</span>
-                       <span class="hl opt">[</span>ConnN<span class="hl opt">,</span> RemoteHost<span class="hl opt">,</span> RemotePort<span class="hl opt">,</span> Reason<span class="hl opt">]}</span>
-          <span class="hl kwa">end</span><span class="hl opt">;</span>
-      <span class="hl opt">{</span>error<span class="hl opt">,</span> Reason<span class="hl opt">} -&gt;</span>
-          logger <span class="hl opt">! {</span>message<span class="hl opt">,</span> <span class="hl str">&quot;Socket accept error '~w'~n&quot;</span><span class="hl opt">, [</span>Reason<span class="hl opt">]}</span>
-    <span class="hl kwa">end</span><span class="hl opt">.</span>
+acceptor(ListenSocket, RemoteHost, RemotePort, ConnN) -&gt;
+    case gen_tcp:accept(ListenSocket) of
+      {ok, LocalSocket} -&gt;
+          spawn(fun() -&gt; acceptor(ListenSocket, RemoteHost, RemotePort, ConnN + 1) end),
+          LocalInfo = peer_info(LocalSocket),
+          logger ! {message, &#34;~4.16.0B: Incoming connection from ~s~n&#34;, [ConnN, LocalInfo]},
+          case gen_tcp:connect(RemoteHost, RemotePort, [binary, {packet, 0}]) of
+            {ok, RemoteSocket} -&gt;
+              RemoteInfo = peer_info(RemoteSocket),
+              logger ! {message, &#34;~4.16.0B: Connected to ~s~n&#34;, [ConnN, RemoteInfo]},
+              exchange_data(LocalSocket, RemoteSocket, LocalInfo, RemoteInfo, ConnN, 0),
+              logger ! {message, &#34;~4.16.0B: Finished~n&#34;, [ConnN]};
+            {error, Reason} -&gt;
+              logger ! {message, &#34;~4.16.0B: Unable to connect to ~s:~s (error: ~p)~n&#34;,
+                       [ConnN, RemoteHost, RemotePort, Reason]}
+          end;
+      {error, Reason} -&gt;
+          logger ! {message, &#34;Socket accept error &#39;~w&#39;~n&#34;, [Reason]}
+    end.
 
-<span class="hl kwd">exchange_data</span><span class="hl opt">(</span>LocalSocket<span class="hl opt">,</span> RemoteSocket<span class="hl opt">,</span> LocalInfo<span class="hl opt">,</span> RemoteInfo<span class="hl opt">,</span> ConnN<span class="hl opt">,</span> PacketN<span class="hl opt">) -&gt;</span>
-    <span class="hl kwa">receive</span>
-        <span class="hl opt">{</span>tcp<span class="hl opt">,</span> RemoteSocket<span class="hl opt">,</span> Bin<span class="hl opt">} -&gt;</span>
-            logger <span class="hl opt">! {</span>received<span class="hl opt">,</span> ConnN<span class="hl opt">,</span> Bin<span class="hl opt">,</span> RemoteInfo<span class="hl opt">,</span> PacketN<span class="hl opt">},</span>
-            <span class="hl kwc">gen_tcp</span><span class="hl opt">:</span><span class="hl kwd">send</span><span class="hl opt">(</span>LocalSocket<span class="hl opt">,</span> Bin<span class="hl opt">),</span>
-            logger <span class="hl opt">! {</span>sent<span class="hl opt">,</span> ConnN<span class="hl opt">,</span> LocalInfo<span class="hl opt">,</span> PacketN<span class="hl opt">},</span>
-            <span class="hl kwd">exchange_data</span><span class="hl opt">(</span>LocalSocket<span class="hl opt">,</span> RemoteSocket<span class="hl opt">,</span> LocalInfo<span class="hl opt">,</span> RemoteInfo<span class="hl opt">,</span> ConnN<span class="hl opt">,</span> PacketN <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">);</span>
-        <span class="hl opt">{</span>tcp<span class="hl opt">,</span> LocalSocket<span class="hl opt">,</span> Bin<span class="hl opt">} -&gt;</span>
-            logger <span class="hl opt">! {</span>received<span class="hl opt">,</span> ConnN<span class="hl opt">,</span> Bin<span class="hl opt">,</span> LocalInfo<span class="hl opt">,</span> PacketN<span class="hl opt">},</span>
-            <span class="hl kwc">gen_tcp</span><span class="hl opt">:</span><span class="hl kwd">send</span><span class="hl opt">(</span>RemoteSocket<span class="hl opt">,</span> Bin<span class="hl opt">),</span>
-            logger <span class="hl opt">! {</span>sent<span class="hl opt">,</span> ConnN<span class="hl opt">,</span> RemoteInfo<span class="hl opt">,</span> PacketN<span class="hl opt">},</span>
-            <span class="hl kwd">exchange_data</span><span class="hl opt">(</span>LocalSocket<span class="hl opt">,</span> RemoteSocket<span class="hl opt">,</span> LocalInfo<span class="hl opt">,</span> RemoteInfo<span class="hl opt">,</span> ConnN<span class="hl opt">,</span> PacketN <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">);</span>
-        <span class="hl opt">{</span>tcp_closed<span class="hl opt">,</span> RemoteSocket<span class="hl opt">} -&gt;</span>
-            logger <span class="hl opt">! {</span>message<span class="hl opt">,</span> <span class="hl str">&quot;~4.16.0B: Disconnected from ~s~n&quot;</span><span class="hl opt">, [</span>ConnN<span class="hl opt">,</span> RemoteInfo<span class="hl opt">]};</span>
-        <span class="hl opt">{</span>tcp_closed<span class="hl opt">,</span> LocalSocket<span class="hl opt">} -&gt;</span>
-            logger <span class="hl opt">! {</span>message<span class="hl opt">,</span> <span class="hl str">&quot;~4.16.0B: Disconnected from ~s~n&quot;</span><span class="hl opt">, [</span>ConnN<span class="hl opt">,</span> LocalInfo<span class="hl opt">]}</span>
-    <span class="hl kwa">end</span><span class="hl opt">.</span>
+exchange_data(LocalSocket, RemoteSocket, LocalInfo, RemoteInfo, ConnN, PacketN) -&gt;
+    receive
+        {tcp, RemoteSocket, Bin} -&gt;
+            logger ! {received, ConnN, Bin, RemoteInfo, PacketN},
+            gen_tcp:send(LocalSocket, Bin),
+            logger ! {sent, ConnN, LocalInfo, PacketN},
+            exchange_data(LocalSocket, RemoteSocket, LocalInfo, RemoteInfo, ConnN, PacketN + 1);
+        {tcp, LocalSocket, Bin} -&gt;
+            logger ! {received, ConnN, Bin, LocalInfo, PacketN},
+            gen_tcp:send(RemoteSocket, Bin),
+            logger ! {sent, ConnN, RemoteInfo, PacketN},
+            exchange_data(LocalSocket, RemoteSocket, LocalInfo, RemoteInfo, ConnN, PacketN + 1);
+        {tcp_closed, RemoteSocket} -&gt;
+            logger ! {message, &#34;~4.16.0B: Disconnected from ~s~n&#34;, [ConnN, RemoteInfo]};
+        {tcp_closed, LocalSocket} -&gt;
+            logger ! {message, &#34;~4.16.0B: Disconnected from ~s~n&#34;, [ConnN, LocalInfo]}
+    end.
 
-<span class="hl kwd">logger</span><span class="hl opt">() -&gt;</span>
-    <span class="hl kwa">receive</span>
-        <span class="hl opt">{</span>received<span class="hl opt">,</span> Pid<span class="hl opt">,</span> Msg<span class="hl opt">,</span> From<span class="hl opt">,</span> PacketN<span class="hl opt">} -&gt;</span>
-            <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~4.16.0B: Received (#~p) ~p byte(s) from ~s~n&quot;</span><span class="hl opt">,</span>
-                      <span class="hl opt">[</span>Pid<span class="hl opt">,</span> PacketN<span class="hl opt">,</span> <span class="hl kwd">byte_size</span><span class="hl opt">(</span>Msg<span class="hl opt">),</span> From<span class="hl opt">]),</span>
-            <span class="hl kwd">dump_bin</span><span class="hl opt">(</span>Pid<span class="hl opt">,</span> Msg<span class="hl opt">),</span>
-            <span class="hl kwd">logger</span><span class="hl opt">();</span>
-        <span class="hl opt">{</span>sent<span class="hl opt">,</span> Pid<span class="hl opt">,</span> ToSocket<span class="hl opt">,</span> PacketN<span class="hl opt">} -&gt;</span>
-            <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~4.16.0B: Sent (#~p) to ~s~n&quot;</span><span class="hl opt">, [</span>Pid<span class="hl opt">,</span> PacketN<span class="hl opt">,</span> ToSocket<span class="hl opt">]),</span>
-            <span class="hl kwd">logger</span><span class="hl opt">();</span>
-        <span class="hl opt">{</span>message<span class="hl opt">,</span> Format<span class="hl opt">,</span> Args<span class="hl opt">} -&gt;</span>
-            <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span>Format<span class="hl opt">,</span> Args<span class="hl opt">),</span>
-            <span class="hl kwd">logger</span><span class="hl opt">()</span>
-    <span class="hl kwa">end</span><span class="hl opt">.</span>
+logger() -&gt;
+    receive
+        {received, Pid, Msg, From, PacketN} -&gt;
+            io:format(&#34;~4.16.0B: Received (#~p) ~p byte(s) from ~s~n&#34;,
+                      [Pid, PacketN, byte_size(Msg), From]),
+            dump_bin(Pid, Msg),
+            logger();
+        {sent, Pid, ToSocket, PacketN} -&gt;
+            io:format(&#34;~4.16.0B: Sent (#~p) to ~s~n&#34;, [Pid, PacketN, ToSocket]),
+            logger();
+        {message, Format, Args} -&gt;
+            io:format(Format, Args),
+            logger()
+    end.
 
-<span class="hl kwd">dump_list</span><span class="hl opt">(</span>Prefix<span class="hl opt">,</span> L<span class="hl opt">,</span> Offset<span class="hl opt">) -&gt;</span>
-    <span class="hl opt">{</span>H<span class="hl opt">,</span> T<span class="hl opt">} =</span> <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">split</span><span class="hl opt">(</span><span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">min</span><span class="hl opt">([</span>?WIDTH<span class="hl opt">,</span> <span class="hl kwb">length</span><span class="hl opt">(</span>L<span class="hl opt">)]),</span> L<span class="hl opt">),</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~4.16.0B: &quot;</span><span class="hl opt">, [</span>Prefix<span class="hl opt">]),</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~4.16.0B: &quot;</span><span class="hl opt">, [</span>Offset<span class="hl opt">]),</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~-*s| &quot;</span><span class="hl opt">, [</span>?WIDTH <span class="hl opt">*</span> <span class="hl num">3</span><span class="hl opt">,</span> <span class="hl kwd">dump_numbers</span><span class="hl opt">(</span>H<span class="hl opt">)]),</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~-*s&quot;</span><span class="hl opt">, [</span>?WIDTH<span class="hl opt">,</span> <span class="hl kwd">dump_chars</span><span class="hl opt">(</span>H<span class="hl opt">)]),</span>
-    <span class="hl kwc">io</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~n&quot;</span><span class="hl opt">, []),</span>
-    <span class="hl kwa">if</span> <span class="hl kwb">length</span><span class="hl opt">(</span>T<span class="hl opt">) &gt;</span> <span class="hl num">0</span> <span class="hl opt">-&gt;</span> <span class="hl kwd">dump_list</span><span class="hl opt">(</span>Prefix<span class="hl opt">,</span> T<span class="hl opt">,</span> Offset <span class="hl opt">+</span> <span class="hl num">16</span><span class="hl opt">);</span> true <span class="hl opt">-&gt; []</span> <span class="hl kwa">end</span><span class="hl opt">.</span>
+dump_list(Prefix, L, Offset) -&gt;
+    {H, T} = lists:split(lists:min([?WIDTH, length(L)]), L),
+    io:format(&#34;~4.16.0B: &#34;, [Prefix]),
+    io:format(&#34;~4.16.0B: &#34;, [Offset]),
+    io:format(&#34;~-*s| &#34;, [?WIDTH * 3, dump_numbers(H)]),
+    io:format(&#34;~-*s&#34;, [?WIDTH, dump_chars(H)]),
+    io:format(&#34;~n&#34;, []),
+    if length(T) &gt; 0 -&gt; dump_list(Prefix, T, Offset + 16); true -&gt; [] end.
 
-<span class="hl kwd">dump_numbers</span><span class="hl opt">(</span>L<span class="hl opt">)</span> <span class="hl kwa">when</span> <span class="hl opt">(</span><span class="hl kwd">is_list</span><span class="hl opt">(</span>L<span class="hl opt">)) -&gt;</span>
-    <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">flatten</span><span class="hl opt">([</span><span class="hl kwc">io_lib</span><span class="hl opt">:</span><span class="hl kwd">format</span><span class="hl opt">(</span><span class="hl str">&quot;~2.16.0B &quot;</span><span class="hl opt">, [</span>X<span class="hl opt">])</span> || X <span class="hl opt">&lt;-</span> L<span class="hl opt">]).</span>
+dump_numbers(L) when (is_list(L)) -&gt;
+    lists:flatten([io_lib:format(&#34;~2.16.0B &#34;, [X]) || X &lt;- L]).
 
-<span class="hl kwd">dump_chars</span><span class="hl opt">(</span>L<span class="hl opt">) -&gt;</span>
-    <span class="hl kwc">lists</span><span class="hl opt">:</span><span class="hl kwd">map</span><span class="hl opt">(</span><span class="hl kwa">fun</span><span class="hl opt">(</span>X<span class="hl opt">) -&gt;</span>
-                <span class="hl kwa">if</span> X <span class="hl opt">&gt;=</span> <span class="hl num">32</span> andalso X <span class="hl opt">&lt;</span> <span class="hl num">128</span> <span class="hl opt">-&gt;</span> X<span class="hl opt">;</span>
-                   true <span class="hl opt">-&gt;</span> $<span class="hl opt">.</span>
-                <span class="hl kwa">end</span>
-              <span class="hl kwa">end</span><span class="hl opt">,</span> L<span class="hl opt">).</span>
+dump_chars(L) -&gt;
+    lists:map(fun(X) -&gt;
+                if X &gt;= 32 andalso X &lt; 128 -&gt; X;
+                   true -&gt; $.
+                end
+              end, L).
 
-<span class="hl kwd">dump_bin</span><span class="hl opt">(</span>Prefix<span class="hl opt">,</span> Bin<span class="hl opt">) -&gt;</span>
-    <span class="hl kwd">dump_list</span><span class="hl opt">(</span>Prefix<span class="hl opt">,</span> <span class="hl kwb">binary_to_list</span><span class="hl opt">(</span>Bin<span class="hl opt">),</span> <span class="hl num">0</span><span class="hl opt">).</span>
-</pre>
+dump_bin(Prefix, Bin) -&gt;
+    dump_list(Prefix, binary_to_list(Bin), 0).
+</code></pre>
 
 <p>В работе может выводить примерно следующее:</p>
 

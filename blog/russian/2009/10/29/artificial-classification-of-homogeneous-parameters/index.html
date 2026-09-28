@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,20 +49,18 @@
 <div id="post">
   <p>Допустим есть вот такой класс:</p>
 
-<pre class="hl">
-<span class="hl kwc">class</span> Date <span class="hl opt">{</span>
- <span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwd">Date</span><span class="hl opt">(</span><span class="hl kwb">int</span> year<span class="hl opt">,</span> <span class="hl kwb">int</span> month<span class="hl opt">,</span> <span class="hl kwb">int</span> day<span class="hl opt">) {</span>
-    <span class="hl opt">...</span>
-  <span class="hl opt">}</span>
-<span class="hl opt">};</span>
-</pre>
+<pre><code class="language-cpp">class Date {
+ public:
+  Date(int year, int month, int day) {
+    ...
+  }
+};
+</code></pre>
 
 <p>К сожалению, не весь мир пользуется логичной нотацией Год/Месяц/День или День/Месяц/Год. Иногда люди пишут Месяц/День/Год. Хотя и первые два легко перепутать. Вот к чему я веду: где-то в далеком от описания класса коде кто-то пишет:</p>
 
-<pre class="hl">
-Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl num">2009</span><span class="hl opt">,</span> <span class="hl num">4</span><span class="hl opt">,</span> <span class="hl num">5</span><span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">Date d(2009, 4, 5);
+</code></pre>
 
 <p>Что он этим хотел сказать? 4-е Мая или 5-е Апреля? Сложно быть уверенным, что пользователь такого класса когда-нибудь не перепутает порядок аргументов.</p>
 
@@ -64,45 +68,40 @@ Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl n
 
 <p>Например, так:</p>
 
-<pre class="hl">
-<span class="hl kwc">class</span> Year <span class="hl opt">{</span>
- <span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwc">explicit</span> <span class="hl kwd">Year</span><span class="hl opt">(</span><span class="hl kwb">int</span> year<span class="hl opt">) :</span> <span class="hl kwd">year_</span><span class="hl opt">(</span>year<span class="hl opt">) {}</span>
-  <span class="hl kwc">operator</span> <span class="hl kwb">int</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> year_<span class="hl opt">; }</span>
- <span class="hl kwc">private</span><span class="hl opt">:</span>
-  <span class="hl kwb">int</span> year_<span class="hl opt">;</span>
-<span class="hl opt">};</span>
-</pre>
+<pre><code class="language-cpp">class Year {
+ public:
+  explicit Year(int year) : year_(year) {}
+  operator int() const { return year_; }
+ private:
+  int year_;
+};
+</code></pre>
 
 <p>И аналогично:</p>
 
-<pre class="hl">
-<span class="hl kwc">class</span> Month <span class="hl opt">{ ... };</span>
-<span class="hl kwc">class</span> Day <span class="hl opt">{ ... };</span>
-</pre>
+<pre><code class="language-cpp">class Month { ... };
+class Day { ... };
+</code></pre>
 
 <p>Интерфейс самого класса Date может быть таким:</p>
 
-<pre class="hl">
-<span class="hl kwc">class</span> Date <span class="hl opt">{</span>
- <span class="hl kwc">public</span><span class="hl opt">:</span>
-   <span class="hl kwd">Date</span><span class="hl opt">(</span>Year year<span class="hl opt">,</span> Month month<span class="hl opt">,</span> Day day<span class="hl opt">);</span>
-   <span class="hl kwd">Date</span><span class="hl opt">(</span>Month month<span class="hl opt">,</span> Day day<span class="hl opt">,</span> Year year<span class="hl opt">);</span>
-   <span class="hl kwd">Date</span><span class="hl opt">(</span>Day day<span class="hl opt">,</span> Month month<span class="hl opt">,</span> Year year<span class="hl opt">);</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">class Date {
+ public:
+   Date(Year year, Month month, Day day);
+   Date(Month month, Day day, Year year);
+   Date(Day day, Month month, Year year);
+}
+</code></pre>
 
 <p>И использовать класс надо так:</p>
 
-<pre class="hl">
-Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl kwd">Year</span><span class="hl opt">(</span><span class="hl num">2010</span><span class="hl opt">),</span> <span class="hl kwd">Month</span><span class="hl opt">(</span><span class="hl num">4</span><span class="hl opt">),</span> <span class="hl kwd">Day</span><span class="hl opt">(</span><span class="hl num">5</span><span class="hl opt">));</span>
-</pre>
+<pre><code class="language-cpp">Date d(Year(2010), Month(4), Day(5));
+</code></pre>
 
 <p>или</p>
 
-<pre class="hl">
-Date <span class="hl kwd">d</span><span class="hl opt">(</span><span class="hl kwd">Month</span><span class="hl opt">(</span><span class="hl num">4</span><span class="hl opt">),</span> <span class="hl kwd">Day</span><span class="hl opt">(</span><span class="hl num">5</span><span class="hl opt">),</span> <span class="hl kwd">Year</span><span class="hl opt">(</span><span class="hl num">2010</span><span class="hl opt">));</span>
-</pre>
+<pre><code class="language-cpp">Date d(Month(4), Day(5), Year(2010));
+</code></pre>
 
 <p>Результат будет всегда предсказуем и виден в вызывающем коде. Тут все inline&rsquo;овое, так что эти три &ldquo;лишние&rdquo; класса никакого замедления не дадут.</p>
 

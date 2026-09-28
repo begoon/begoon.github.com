@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,39 +49,36 @@
 <div id="post">
   <p>В С++ крайне распространен прием использования класса <code>std::vector</code> для хранения указателей на размещенные в <a href="http://ru.wikipedia.org/wiki/%D0%9A%D1%83%D1%87%D0%B0_(%D0%BD%D0%B5%D1%80%D0%B0%D1%81%D0%BF%D1%80%D0%B5%D0%B4%D0%B5%D0%BB%D1%91%D0%BD%D0%BD%D0%B0%D1%8F_%D0%BF%D0%B0%D0%BC%D1%8F%D1%82%D1%8C)">куче</a> объекты.</p>
 
-<pre class="hl">
-<span class="hl kwc">class</span> Book <span class="hl opt">{</span>
-<span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwd">Book</span><span class="hl opt">(</span><span class="hl kwb">int</span> index<span class="hl opt">);</span>
-<span class="hl opt">...</span>
-<span class="hl opt">};</span>
-<span class="hl opt">...</span>
-std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Book <span class="hl opt">*&gt;</span> books<span class="hl opt">;</span>
-<span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> <span class="hl num">10</span><span class="hl opt">; ++</span>i<span class="hl opt">)</span>
-  books<span class="hl opt">.</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl kwa">new</span> <span class="hl kwd">Book</span><span class="hl opt">(</span>i<span class="hl opt">));</span>
-</pre>
+<pre><code class="language-cpp">class Book {
+public:
+  Book(int index);
+...
+};
+...
+std::vector&lt;Book *&gt; books;
+for (int i = 0; i &lt; 10; ++i)
+  books.push_back(new Book(i));
+</code></pre>
 
 <p>Естественно, после использования память надо освободить. Обычно стандартный прием для этого таков:</p>
 
-<pre class="hl">
-<span class="hl kwa">for</span> <span class="hl opt">(</span>std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span>Book <span class="hl opt">*&gt;::</span>iterator i <span class="hl opt">=</span> books<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">();</span> i <span class="hl opt">!=</span> books<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(); ++</span>i<span class="hl opt">)</span>
-  <span class="hl kwa">delete</span> <span class="hl opt">*</span>i<span class="hl opt">;</span>
-</pre>
+<pre><code class="language-cpp">for (std::vector&lt;Book *&gt;::iterator i = books.begin(); i != books.end(); ++i)
+  delete *i;
+</code></pre>
 
 <p>В целом, с таким подходом все в порядке, разве что слегка веет от него излишней алгоритмической загруженностью. Он вынужден, навязан особенностями языка C++. Индексная переменная <code>i</code> здесь абсолютно неважна для цикла, она является чисто служебной. Все это, конечно, не так страшно, как использование оператора goto или статических переменных, но все равно хочется гармонии. И способ есть. Данный код можно переписать так:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;algorithm&gt;</span>
-<span class="hl kwc">class</span> deleter <span class="hl opt">{</span>
-<span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwc">template</span> <span class="hl opt">&lt;</span>typename T<span class="hl opt">&gt;</span>
-  <span class="hl kwb">void</span> <span class="hl kwc">operator</span><span class="hl opt">()(</span><span class="hl kwb">const</span> T<span class="hl opt">*</span> p<span class="hl opt">)</span> <span class="hl kwb">const</span> <span class="hl opt">{</span>
-    <span class="hl kwa">delete</span> p<span class="hl opt">;</span>
-  <span class="hl opt">}</span>
-<span class="hl opt">};</span>
-<span class="hl opt">...</span>
-  std<span class="hl opt">::</span><span class="hl kwd">for_each</span><span class="hl opt">(</span>a<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> a<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> <span class="hl kwd">deleter</span><span class="hl opt">());</span>
-</pre>
+<pre><code class="language-cpp">#include &lt;algorithm&gt;
+class deleter {
+public:
+  template &lt;typename T&gt;
+  void operator()(const T* p) const {
+    delete p;
+  }
+};
+...
+  std::for_each(a.begin(), a.end(), deleter());
+</code></pre>
 
 <p>Данный код определяет класс-функтор, у которого перегруженный оператор <code>operator()</code> является шаблонным. Затем стандартный алгоритм <code>std::for_each()</code> вызывает этот оператор для каждого члена вектора.</p>
 

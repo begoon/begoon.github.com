@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -60,15 +66,14 @@ Delta (100) &gt; than 10
 
 <p>Я заподозрил функцию <code>QueryPerformanceCounter()</code>. Написал еще один кондовый тест:</p>
 
-<pre class="hl">
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>PreciseTimer<span class="hl opt">,</span> MillisecCounter<span class="hl opt">) {</span>
-  monitor<span class="hl opt">::</span>PreciseTimer timer<span class="hl opt">;</span>
-  monitor<span class="hl opt">::</span>PreciseTimer<span class="hl opt">::</span>Counter a <span class="hl opt">=</span> timer<span class="hl opt">.</span><span class="hl kwd">millisec</span><span class="hl opt">();</span>
-  timer<span class="hl opt">.</span><span class="hl kwd">sleepMs</span><span class="hl opt">(</span><span class="hl num">10000</span><span class="hl opt">);</span>
-  monitor<span class="hl opt">::</span>PreciseTimer<span class="hl opt">::</span>Counter b <span class="hl opt">=</span> timer<span class="hl opt">.</span><span class="hl kwd">millisec</span><span class="hl opt">();</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span><span class="hl num">10000</span><span class="hl opt">,</span> b <span class="hl opt">-</span> a<span class="hl opt">);</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">TEST(PreciseTimer, MillisecCounter) {
+  monitor::PreciseTimer timer;
+  monitor::PreciseTimer::Counter a = timer.millisec();
+  timer.sleepMs(10000);
+  monitor::PreciseTimer::Counter b = timer.millisec();
+  EXPECT_EQ(10000, b - a);
+}
+</code></pre>
 
 <p>Этот тест делает видную глазом задержку в 10 секунд (чтобы исключить проблему в самой задержке) и затем проверят показания таймера.</p>
 

@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,15 +49,13 @@
 <div id="post">
   <p>Универсальный класс <a href="/blog/russian/2009/01/29/milliseconds-timer-for-windows-and-unix/">Миллисекундный таймер для Windows и UNIX</a>, дающий возможность работать с миллисекундными интервалами времени в Windows и UNIX получил новую функцию:</p>
 
-<pre class="hl">
-<span class="hl kwb">static void</span> <span class="hl kwd">sleepMs</span><span class="hl opt">(</span><span class="hl kwb">int</span> ms<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">static void sleepMs(int ms);
+</code></pre>
 
 <p>Эта функция реализует задержку в указанное число миллисекунд. Функция является статической, то есть ей можно пользоваться без создания экземпляра касса:</p>
 
-<pre class="hl">
-ext<span class="hl opt">::</span>PreciseTimer<span class="hl opt">::</span><span class="hl kwd">sleepMs</span><span class="hl opt">(</span><span class="hl num">100</span><span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">ext::PreciseTimer::sleepMs(100);
+</code></pre>
 
 <p>Необходимо учитывать, что в UNIX системах данная функция может быть прервана пришедшим системным сигналом, например, сигналом о полученных новых данных в буфер сокета. В этом случае задержка может быть меньне, чем ожидается.</p>
 

@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,8 +49,7 @@
 <div id="post">
   <p><a href="http://ramlamyammambam.livejournal.com/190698.html">По наводке Сергея Вакуленко</a>, я купил <a href="http://en.wikipedia.org/wiki/GMC-4">GMC-4</a>. Все-таки в подобных устройствах есть какой-то неповторимый шарм. Заказал в забавном японском магазине гаджетов <a href="http://www.japantrendshop.com/gmc4-microcomputer-p-789.html">Japan Trend Shop</a>.</p>
 
-<p><img src="/images/blog/gmc4/gmc4.jpg" alt="" />
-</p>
+<p><img src="/images/blog/gmc4/gmc4.jpg" alt="" /></p>
 
 <p>GMC-4 &ndash; это четырехбитный микрокомпьютер. Характеристики компьютера:</p>
 
@@ -67,54 +72,43 @@
 
 <p>Сегодня приехала моя посылка. GMC-4 является приложением к одному из выпусков журнала &ldquo;Otona no Kagaku&rdquo; издательства Gakken, 24-й номер за 2009 год. Коробка с конструктором приклеена к журналу. Все на японском.</p>
 
-<p><img src="/images/blog/gmc4/IMG_0458.JPG" alt="" />
-</p>
+<p><img src="/images/blog/gmc4/IMG_0458.JPG" alt="" /></p>
 
 <p>Забавно, на обратной стороне коробки изображены машинные инструкции GMC-4. Все умещается в одну таблицу.</p>
 
-<p><img src="/images/blog/gmc4/IMG_0459.JPG" alt="" />
-</p>
+<p><img src="/images/blog/gmc4/IMG_0459.JPG" alt="" /></p>
 
 <p>Плата, пищалка, подставка, фрагменты клавиатуры и винты.</p>
 
-<p><img src="/images/blog/gmc4/IMG_0460.JPG" alt="" />
-</p>
+<p><img src="/images/blog/gmc4/IMG_0460.JPG" alt="" /></p>
 
 <p>Инструкция на японском &ndash; это жестко.</p>
 
-<p><img src="/images/blog/gmc4/IMG_0469.JPG" alt="" />
-</p>
+<p><img src="/images/blog/gmc4/IMG_0469.JPG" alt="" /></p>
 
 <p>Ставим батарейки и закрепляем пищалку.</p>
 
-<p><img src="/images/blog/gmc4/IMG_0463.JPG" alt="" />
-</p>
+<p><img src="/images/blog/gmc4/IMG_0463.JPG" alt="" /></p>
 
 <p>Плата.</p>
 
-<p><img src="/images/blog/gmc4/IMG_0461.JPG" alt="" />
-</p>
+<p><img src="/images/blog/gmc4/IMG_0461.JPG" alt="" /></p>
 
-<p><img src="/images/blog/gmc4/IMG_0462.JPG" alt="" />
-</p>
+<p><img src="/images/blog/gmc4/IMG_0462.JPG" alt="" /></p>
 
 <p>Наклеиваем клавиатуру.</p>
 
-<p><img src="/images/blog/gmc4/IMG_0464.JPG" alt="" />
-</p>
+<p><img src="/images/blog/gmc4/IMG_0464.JPG" alt="" /></p>
 
-<p><img src="/images/blog/gmc4/IMG_0466.JPG" alt="" />
-</p>
+<p><img src="/images/blog/gmc4/IMG_0466.JPG" alt="" /></p>
 
 <p>Включаем&hellip; It&rsquo;s alive! Alive!!!</p>
 
-<p><img src="/images/blog/gmc4/IMG_0468.JPG" alt="" />
-</p>
+<p><img src="/images/blog/gmc4/IMG_0468.JPG" alt="" /></p>
 
 <p>Итак: клавиатура, семисегментник, под ним процессор, затем пипка &ldquo;hard reset&rdquo;. Сверху семь  светодиодов, управляемых индивидуально. Они, например, используются для отображения текущего адреса. Мне это все напомнило <a href="http://ru.wikipedia.org/wiki/%D0%AE%D0%A2-88">ЮТ-88</a>. В его <a href="http://junetech.chat.ru/kollection/ut88/1step.htm">первой модификации</a> был только семисегментный индикатор и похожая клавиатура.</p>
 
-<p><img src="/images/blog/gmc4/ut88-minimal.jpg" alt="" />
-</p>
+<p><img src="/images/blog/gmc4/ut88-minimal.jpg" alt="" /></p>
 
 <p>Попробуем чего-нибудь написать. Например, простая программа, которая ждет нажатия на клавиатуре и затем отображает код нажатой кнопки на семисегментном индикаторе.</p>
 
@@ -158,8 +152,7 @@
 
 <h2><a href="http://dansan.air-nifty.com/blog/gmc4-simulator.html">Симулятор</a></h2>
 
-<p><img src="/images/blog/gmc4/gmc4simulator.png" alt="" />
-</p>
+<p><img src="/images/blog/gmc4/gmc4simulator.png" alt="" /></p>
 
 <h3>Автоматический загрузчик</h3>
 

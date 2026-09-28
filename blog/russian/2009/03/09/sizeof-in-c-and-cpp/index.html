@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,16 +51,15 @@
 
 <p>Программа <code>x.c</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;stdio.h&gt;</span>
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl kwb">char</span> s<span class="hl opt">[</span><span class="hl num">4</span><span class="hl opt">];</span>
-  s<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">] =</span> <span class="hl str">'C'</span><span class="hl opt">;</span> s<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">] =</span> s<span class="hl opt">[</span><span class="hl num">2</span><span class="hl opt">] =</span> <span class="hl str">'+'</span><span class="hl opt">;</span> s<span class="hl opt">[</span><span class="hl num">3</span><span class="hl opt">] =</span> <span class="hl num">0</span><span class="hl opt">;</span>
-  s<span class="hl opt">[</span><span class="hl kwa">sizeof</span><span class="hl opt">(</span><span class="hl str">' '</span><span class="hl opt">) ^</span> <span class="hl num">5</span><span class="hl opt">] =</span> <span class="hl num">0</span><span class="hl opt">;</span>
-  <span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%s</span><span class="hl esc">\n</span><span class="hl str">&quot;</span><span class="hl opt">,</span> s<span class="hl opt">);</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">#include &lt;stdio.h&gt;
+int main() {
+  char s[4];
+  s[0] = &#39;C&#39;; s[1] = s[2] = &#39;+&#39;; s[3] = 0;
+  s[sizeof(&#39; &#39;) ^ 5] = 0;
+  printf(&#34;%s\n&#34;, s);
+  return 0;
+}
+</code></pre>
 
 <p>Компилируем и запускаем.</p>
 

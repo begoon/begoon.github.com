@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -59,40 +65,38 @@
 
 <p>The original NOR interpreter was written on x86 assembly:</p>
 
-<pre class="hl">
-<span class="hl kwa">cld</span>
-<span class="hl kwc">emCPU:</span>
-<span class="hl kwa">mov</span>  <span class="hl kwb">si</span><span class="hl opt">,</span>emIP
-<span class="hl kwa">lodsw</span>
-<span class="hl kwa">xchg</span> <span class="hl kwb">ax</span><span class="hl opt">,</span><span class="hl kwb">di</span>
-<span class="hl kwa">mov</span>  <span class="hl kwb">di</span><span class="hl opt">,[</span><span class="hl kwb">di</span><span class="hl opt">]</span>
-<span class="hl kwa">lodsw</span>
-<span class="hl kwa">xchg</span> <span class="hl kwb">ax</span><span class="hl opt">,</span><span class="hl kwb">bx</span>
-<span class="hl kwa">or</span>   <span class="hl kwb">di</span><span class="hl opt">,[</span><span class="hl kwb">bx</span><span class="hl opt">]</span>
-<span class="hl kwa">lodsw</span>
-<span class="hl kwa">xchg</span> <span class="hl kwb">ax</span><span class="hl opt">,</span><span class="hl kwb">di</span>
-<span class="hl kwa">not</span>  <span class="hl kwb">ax</span>
-<span class="hl kwa">mov</span>  emIP<span class="hl opt">,</span><span class="hl kwb">si</span>
-<span class="hl kwa">stosw</span>
-<span class="hl kwa">jmp  short</span> emCPU
-</pre>
+<pre><code class="language-x86asm">cld
+emCPU:
+mov  si,emIP
+lodsw
+xchg ax,di
+mov  di,[di]
+lodsw
+xchg ax,bx
+or   di,[bx]
+lodsw
+xchg ax,di
+not  ax
+mov  emIP,si
+stosw
+jmp  short emCPU
+</code></pre>
 
 <p>Nothing prevents to write it on any language, for example, Python.</p>
 
-<pre class="hl">
-<span class="hl kwa">def</span> <span class="hl kwd">nor</span><span class="hl opt">(</span>a<span class="hl opt">,</span> b<span class="hl opt">):</span>
-  <span class="hl kwa">return</span> ~<span class="hl opt">(</span>a | b<span class="hl opt">) &amp;</span> <span class="hl num">0xFFFF</span>
+<pre><code class="language-python">def nor(a, b):
+  return ~(a | b) &amp; 0xFFFF
 
-<span class="hl kwa">def</span> <span class="hl kwd">norcpu</span><span class="hl opt">():</span>
-  <span class="hl kwa">while</span> <span class="hl num">1</span><span class="hl opt">:</span>
-    i <span class="hl opt">=</span> mem<span class="hl opt">[</span>IP<span class="hl opt">];</span>
-    a <span class="hl opt">=</span> mem<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">0</span><span class="hl opt">]</span>
-    b <span class="hl opt">=</span> mem<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">]</span>
-    r <span class="hl opt">=</span> mem<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">2</span><span class="hl opt">]</span>
-    mem<span class="hl opt">[</span>IP<span class="hl opt">] =</span> i <span class="hl opt">+</span> <span class="hl num">3</span>
-    f <span class="hl opt">=</span> <span class="hl kwd">nor</span><span class="hl opt">(</span>mem<span class="hl opt">[</span>a<span class="hl opt">],</span> mem<span class="hl opt">[</span>b<span class="hl opt">])</span>
-    mem<span class="hl opt">[</span>r<span class="hl opt">] =</span> f
-</pre>
+def norcpu():
+  while 1:
+    i = mem[IP];
+    a = mem[i + 0]
+    b = mem[i + 1]
+    r = mem[i + 2]
+    mem[IP] = i + 3
+    f = nor(mem[a], mem[b])
+    mem[r] = f
+</code></pre>
 
 <p>Why NOR? The Boolean algebra theory says that any of 14 of 16 Boolean functions could be calculated using just the rest two - NOR and NAND. For instance:</p>
 
@@ -131,18 +135,17 @@ OR @t1, @t2, IP
 
 <p>Recently I&rsquo;ve come back to this NOR interpreter approach but in Python world. I&rsquo;ve modified the original idea a bit to simplify (or just make it possible) an implementation of addition using NOR only, without native code at all. I&rsquo;ve introduced one extra operation in the interpreter ñ the result of NOR is cyclically shifted left by 1 bit and stored the special location in memory.</p>
 
-<pre class="hl">
-<span class="hl kwa">def</span> <span class="hl kwd">norcpu</span><span class="hl opt">():</span>
-  <span class="hl kwa">while</span> <span class="hl num">1</span><span class="hl opt">:</span>
-    i <span class="hl opt">=</span> mem<span class="hl opt">[</span>IP<span class="hl opt">];</span>
-    a <span class="hl opt">=</span> mem<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">0</span><span class="hl opt">]</span>
-    b <span class="hl opt">=</span> mem<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">]</span>
-    r <span class="hl opt">=</span> mem<span class="hl opt">[</span>i <span class="hl opt">+</span> <span class="hl num">2</span><span class="hl opt">]</span>
-    mem<span class="hl opt">[</span>IP<span class="hl opt">] =</span> i <span class="hl opt">+</span> <span class="hl num">3</span>
-    f <span class="hl opt">=</span> <span class="hl kwd">nor</span><span class="hl opt">(</span>mem<span class="hl opt">[</span>a<span class="hl opt">],</span> mem<span class="hl opt">[</span>b<span class="hl opt">])</span>
-    mem<span class="hl opt">[</span>r<span class="hl opt">] =</span> f
-    mem<span class="hl opt">[</span>S<span class="hl opt">] = ((</span>f <span class="hl opt">&gt;&gt;</span> <span class="hl num">31</span><span class="hl opt">) &amp;</span> <span class="hl num">1</span><span class="hl opt">)</span> | <span class="hl opt">((</span>f <span class="hl opt">&amp;</span> <span class="hl num">0x7FFF</span><span class="hl opt">) &lt;&lt;</span> <span class="hl num">1</span><span class="hl opt">)</span>
-</pre>
+<pre><code class="language-python">def norcpu():
+  while 1:
+    i = mem[IP];
+    a = mem[i + 0]
+    b = mem[i + 1]
+    r = mem[i + 2]
+    mem[IP] = i + 3
+    f = nor(mem[a], mem[b])
+    mem[r] = f
+    mem[S] = ((f &gt;&gt; 31) &amp; 1) | ((f &amp; 0x7FFF) &lt;&lt; 1)
+</code></pre>
 
 <p>There are two special locations now: <code>IP</code> (instruction pointer) and <code>S</code> (shift register).</p>
 

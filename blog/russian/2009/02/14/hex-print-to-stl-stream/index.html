@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,60 +49,56 @@
 <div id="post">
   <p>Когда-то очень давно я написал элементарный манипулятор для шестнадцатеричной печати в стандарный поток. Все просто и тривиально. Но тем не менее я заметил, что таскаю этот микрокласс почти в кажный проект, где нужна отладочная печать. Обычно для шестнадцатеричной печати надо указывать сразу несколько итераторов, типа:</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>hex <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>uppercase <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span><span class="hl kwd">setfill</span><span class="hl opt">(</span><span class="hl str">'0'</span><span class="hl opt">) &lt;&lt;</span> std<span class="hl opt">::</span><span class="hl kwd">setw</span><span class="hl opt">(</span><span class="hl num">2</span><span class="hl opt">) &lt;&lt;</span> <span class="hl num">0xAA</span><span class="hl opt">;</span>
-</pre>
+<pre><code class="language-cpp">std::cout &lt;&lt; std::hex &lt;&lt; std::uppercase &lt;&lt; std::setfill(&#39;0&#39;) &lt;&lt; std::setw(2) &lt;&lt; 0xAA;
+</code></pre>
 
 <p>Причем <code>std::setw()</code> надо повторять для каждого нового выводимого элемента. Я свел все это в один итератор, чтобы можно было просто написать (указав итератору ширину выводимого поля):</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> ext<span class="hl opt">::</span><span class="hl kwd">Hex</span><span class="hl opt">(</span><span class="hl num">2</span><span class="hl opt">) &lt;&lt;</span> <span class="hl num">0xAA</span><span class="hl opt">;</span>
-</pre>
+<pre><code class="language-cpp">std::cout &lt;&lt; ext::Hex(2) &lt;&lt; 0xAA;
+</code></pre>
 
 <p>Итак, класс <code>Hex</code> (название пространства имен можно подкрутить по вкусу), файл <code>hex.h</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#ifndef _EXT_HEX_H</span>
-<span class="hl ppc">#define _EXT_HEX_H</span>
+<pre><code class="language-cpp">#ifndef _EXT_HEX_H
+#define _EXT_HEX_H
 
-<span class="hl ppc">#include &lt;iostream&gt;</span>
-<span class="hl ppc">#include &lt;iomanip&gt;</span>
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
 
-<span class="hl kwa">namespace</span> ext <span class="hl opt">{</span>
+namespace ext {
 
-<span class="hl kwc">class</span> Hex <span class="hl opt">{</span>
-<span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwd">Hex</span><span class="hl opt">(</span><span class="hl kwb">int</span> width<span class="hl opt">) :</span> <span class="hl kwd">__width</span><span class="hl opt">(</span>width<span class="hl opt">) {}</span>
-  <span class="hl kwc">friend</span> std<span class="hl opt">::</span>ostream<span class="hl opt">&amp;</span> <span class="hl kwc">operator</span><span class="hl opt">&lt;&lt; (</span>std<span class="hl opt">::</span>ostream<span class="hl opt">&amp;</span> os<span class="hl opt">,</span> <span class="hl kwb">const</span> Hex<span class="hl opt">&amp;</span> hex<span class="hl opt">);</span>
-<span class="hl kwc">private</span><span class="hl opt">:</span>
-  <span class="hl kwb">int</span> __width<span class="hl opt">;</span>
-<span class="hl opt">};</span>
+class Hex {
+public:
+  Hex(int width) : __width(width) {}
+  friend std::ostream&amp; operator&lt;&lt; (std::ostream&amp; os, const Hex&amp; hex);
+private:
+  int __width;
+};
 
-<span class="hl kwc">inline</span> std<span class="hl opt">::</span>ostream<span class="hl opt">&amp;</span> <span class="hl kwc">operator</span><span class="hl opt">&lt;&lt; (</span>std<span class="hl opt">::</span>ostream<span class="hl opt">&amp;</span> os<span class="hl opt">,</span> <span class="hl kwb">const</span> Hex<span class="hl opt">&amp;</span> hex<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">hex</span><span class="hl opt">(</span>os<span class="hl opt">);</span>
-  std<span class="hl opt">::</span><span class="hl kwd">uppercase</span><span class="hl opt">(</span>os<span class="hl opt">);</span>
-  os<span class="hl opt">.</span><span class="hl kwd">width</span><span class="hl opt">(</span>hex<span class="hl opt">.</span>__width<span class="hl opt">);</span>
-  os<span class="hl opt">.</span><span class="hl kwd">fill</span><span class="hl opt">(</span><span class="hl str">'0'</span><span class="hl opt">);</span>
-  <span class="hl kwa">return</span> os<span class="hl opt">;</span>
-<span class="hl opt">}</span>
+inline std::ostream&amp; operator&lt;&lt; (std::ostream&amp; os, const Hex&amp; hex) {
+  std::hex(os);
+  std::uppercase(os);
+  os.width(hex.__width);
+  os.fill(&#39;0&#39;);
+  return os;
+}
 
-<span class="hl opt">}</span> <span class="hl slc">// ext</span>
+} // ext
 
-<span class="hl ppc">#endif</span> <span class="hl slc">// _EXT_HEX_H</span><span class="hl ppc"></span>
-</pre>
+#endif // _EXT_HEX_H
+</code></pre>
 
 <p>Теперь можно писать так:</p>
 
-<pre class="hl">
-std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> ext<span class="hl opt">::</span><span class="hl kwd">Hex</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">)  &lt;&lt;</span> <span class="hl num">0x0a</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> ext<span class="hl opt">::</span><span class="hl kwd">Hex</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)  &lt;&lt;</span> <span class="hl num">0x0a</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> ext<span class="hl opt">::</span><span class="hl kwd">Hex</span><span class="hl opt">(</span><span class="hl num">1</span><span class="hl opt">)  &lt;&lt;</span> <span class="hl num">0xaa</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> ext<span class="hl opt">::</span><span class="hl kwd">Hex</span><span class="hl opt">(</span><span class="hl num">2</span><span class="hl opt">)  &lt;&lt;</span> <span class="hl num">0xaa</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> ext<span class="hl opt">::</span><span class="hl kwd">Hex</span><span class="hl opt">(</span><span class="hl num">4</span><span class="hl opt">)  &lt;&lt;</span> <span class="hl num">0xaa</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> ext<span class="hl opt">::</span><span class="hl kwd">Hex</span><span class="hl opt">(</span><span class="hl num">8</span><span class="hl opt">)  &lt;&lt;</span> <span class="hl num">0x0a</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> ext<span class="hl opt">::</span><span class="hl kwd">Hex</span><span class="hl opt">(</span><span class="hl num">16</span><span class="hl opt">) &lt;&lt;</span> <span class="hl num">0x0a</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> ext<span class="hl opt">::</span><span class="hl kwd">Hex</span><span class="hl opt">(</span><span class="hl num">32</span><span class="hl opt">) &lt;&lt;</span> <span class="hl num">0x0a</span> <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-</pre>
+<pre><code class="language-cpp">std::cout &lt;&lt; ext::Hex(0)  &lt;&lt; 0x0a &lt;&lt; std::endl;
+std::cout &lt;&lt; ext::Hex(1)  &lt;&lt; 0x0a &lt;&lt; std::endl;
+std::cout &lt;&lt; ext::Hex(1)  &lt;&lt; 0xaa &lt;&lt; std::endl;
+std::cout &lt;&lt; ext::Hex(2)  &lt;&lt; 0xaa &lt;&lt; std::endl;
+std::cout &lt;&lt; ext::Hex(4)  &lt;&lt; 0xaa &lt;&lt; std::endl;
+std::cout &lt;&lt; ext::Hex(8)  &lt;&lt; 0x0a &lt;&lt; std::endl;
+std::cout &lt;&lt; ext::Hex(16) &lt;&lt; 0x0a &lt;&lt; std::endl;
+std::cout &lt;&lt; ext::Hex(32) &lt;&lt; 0x0a &lt;&lt; std::endl;
+</code></pre>
 
 <p>И результатом будет:</p>
 
@@ -116,34 +118,33 @@ AA
 
 <p>Файл <code>hex_unittest.cpp</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;hex.h&quot;</span><span class="hl ppc"></span>
-<span class="hl ppc">#include &lt;sstream&gt;</span>
+<pre><code class="language-cpp">#include &#34;gtest/gtest.h&#34;
+#include &#34;hex.h&#34;
+#include &lt;sstream&gt;
 
-<span class="hl kwb">void</span> <span class="hl kwd">testHex</span><span class="hl opt">(</span><span class="hl kwb">int</span> n<span class="hl opt">,</span> <span class="hl kwb">int</span> w<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> etalon<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span>stringstream fmt<span class="hl opt">;</span>
-  fmt <span class="hl opt">&lt;&lt;</span> ext<span class="hl opt">::</span><span class="hl kwd">Hex</span><span class="hl opt">(</span>w<span class="hl opt">) &lt;&lt;</span> n<span class="hl opt">;</span>
-  <span class="hl kwd">EXPECT_EQ</span><span class="hl opt">(</span>etalon<span class="hl opt">,</span> fmt<span class="hl opt">.</span><span class="hl kwd">str</span><span class="hl opt">());</span>
-<span class="hl opt">}</span>
+void testHex(int n, int w, const std::string&amp; etalon) {
+  std::stringstream fmt;
+  fmt &lt;&lt; ext::Hex(w) &lt;&lt; n;
+  EXPECT_EQ(etalon, fmt.str());
+}
 
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>HexManip<span class="hl opt">,</span> Generic<span class="hl opt">) {</span>
-  <span class="hl kwd">testHex</span><span class="hl opt">(</span><span class="hl num">0x0A</span><span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">,</span> <span class="hl str">&quot;A&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwd">testHex</span><span class="hl opt">(</span><span class="hl num">0x0A</span><span class="hl opt">,</span> <span class="hl num">1</span><span class="hl opt">,</span> <span class="hl str">&quot;A&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwd">testHex</span><span class="hl opt">(</span><span class="hl num">0xAA</span><span class="hl opt">,</span> <span class="hl num">1</span><span class="hl opt">,</span> <span class="hl str">&quot;AA&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwd">testHex</span><span class="hl opt">(</span><span class="hl num">0xAA</span><span class="hl opt">,</span> <span class="hl num">2</span><span class="hl opt">,</span> <span class="hl str">&quot;AA&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwd">testHex</span><span class="hl opt">(</span><span class="hl num">0xAA</span><span class="hl opt">,</span> <span class="hl num">4</span><span class="hl opt">,</span> <span class="hl str">&quot;00AA&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwd">testHex</span><span class="hl opt">(</span><span class="hl num">0xAA</span><span class="hl opt">,</span> <span class="hl num">8</span><span class="hl opt">,</span> <span class="hl str">&quot;000000AA&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwd">testHex</span><span class="hl opt">(</span><span class="hl num">0xAA</span><span class="hl opt">,</span> <span class="hl num">16</span><span class="hl opt">,</span> <span class="hl str">&quot;00000000000000AA&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwd">testHex</span><span class="hl opt">(</span><span class="hl num">0xAA</span><span class="hl opt">,</span> <span class="hl num">32</span><span class="hl opt">,</span> <span class="hl str">&quot;000000000000000000000000000000AA&quot;</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
-Ну и головная программа<span class="hl opt">:</span>
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
-  testing<span class="hl opt">::</span><span class="hl kwd">InitGoogleTest</span><span class="hl opt">(&amp;</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
-  <span class="hl kwa">return</span> <span class="hl kwd">RUN_ALL_TESTS</span><span class="hl opt">();</span>
-<span class="hl opt">}</span>
-</pre>
+TEST(HexManip, Generic) {
+  testHex(0x0A, 0, &#34;A&#34;);
+  testHex(0x0A, 1, &#34;A&#34;);
+  testHex(0xAA, 1, &#34;AA&#34;);
+  testHex(0xAA, 2, &#34;AA&#34;);
+  testHex(0xAA, 4, &#34;00AA&#34;);
+  testHex(0xAA, 8, &#34;000000AA&#34;);
+  testHex(0xAA, 16, &#34;00000000000000AA&#34;);
+  testHex(0xAA, 32, &#34;000000000000000000000000000000AA&#34;);
+}
+Ну и головная программа:
+#include &#34;gtest/gtest.h&#34;
+int main(int argc, char* argv[]) {
+  testing::InitGoogleTest(&amp;argc, argv);
+  return RUN_ALL_TESTS();
+}
+</code></pre>
 
 <p>Компилируем.</p>
 

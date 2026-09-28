@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -47,14 +53,13 @@
 
 <p>Для сборки финального html-файла из кучи мелких у меня написана примитивная программа. Вот ее фрагмент:</p>
 
-<pre class="hl">
-<span class="hl kwa">while</span> <span class="hl opt">(!</span><span class="hl kwd">feof</span><span class="hl opt">(</span>f<span class="hl opt">)) {</span>
-  <span class="hl kwb">char</span> line<span class="hl opt">[</span><span class="hl num">1024</span><span class="hl opt">];</span>
-  <span class="hl opt">*</span>line <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-  <span class="hl kwd">fgets</span><span class="hl opt">(</span>line<span class="hl opt">,</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span>line<span class="hl opt">),</span> f<span class="hl opt">);</span>
-  <span class="hl kwd">printf</span><span class="hl opt">(</span>line<span class="hl opt">);</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">while (!feof(f)) {
+  char line[1024];
+  *line = 0;
+  fgets(line, sizeof(line), f);
+  printf(line);
+}
+</code></pre>
 
 <p>Подразумевается, что данный код прострочно копирует данные из файла <code>f</code> на стандарный вывод.</p>
 
@@ -62,29 +67,25 @@
 
 <p>Получалось, что вместо, например:</p>
 
-<pre class="hl">
-<span class="hl kwa">&lt;table</span> <span class="hl kwb">width</span>=<span class="hl str">&quot;100%&quot;</span><span class="hl kwa">&gt;</span>
-</pre>
+<pre><code class="language-html">&lt;table width=&#34;100%&#34;&gt;
+</code></pre>
 
 <p>на выходе было:</p>
 
-<pre class="hl">
-<span class="hl kwa">&lt;table</span> <span class="hl kwb">width</span>=<span class="hl str">&quot;100&quot;</span><span class="hl kwa">&gt;</span>
-</pre>
+<pre><code class="language-html">&lt;table width=&#34;100&#34;&gt;
+</code></pre>
 
 <p>Вы, наверное, уже догадались, в чем тут дело. Но, признаюсь, я искал проблему минут тридцать.</p>
 
 <p>Вместо:</p>
 
-<pre class="hl">
-<span class="hl kwd">printf</span><span class="hl opt">(</span>line<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">printf(line);
+</code></pre>
 
 <p>надо писать:</p>
 
-<pre class="hl">
-<span class="hl kwd">printf</span><span class="hl opt">(</span><span class="hl str">&quot;%s&quot;</span><span class="hl opt">,</span> line<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">printf(&#34;%s&#34;, line);
+</code></pre>
 
 <p>А иначе все процентные символы будут расцены как указатели форматов, ибо первый параметр <code>printf()</code> - это не просто строка, а формат, и в случае их неэкранирования будут уделены, что и происходило в моем случае.</p>
 

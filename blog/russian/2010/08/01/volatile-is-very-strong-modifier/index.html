@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -43,14 +49,13 @@
 <div id="post">
   <p>Как-то по многим блогам эта тема недавно пробегала, но надо отдать должное, вопрос почему эта программа, будучи откомпилированной в Студии, печатает &ldquo;1&rdquo; вместо &ldquo;0&rdquo;, озадачивает даже опытных программистов на С++ (или по крайней мере они дают неправильное объяснение причины происходящего).</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;iostream&gt;</span>
-<span class="hl kwc">volatile</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> p <span class="hl opt">=</span> <span class="hl str">&quot;0&quot;</span><span class="hl opt">;</span>
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> p <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+volatile const char* p = &#34;0&#34;;
+int main() {
+  std::cout &lt;&lt; p &lt;&lt; std::endl;
+  return 0;
+}
+</code></pre>
 
 <p>Для получение схожего эффекта в GCC надо заменить &ldquo;0&rdquo; на &ldquo;false&rdquo;.</p>
 

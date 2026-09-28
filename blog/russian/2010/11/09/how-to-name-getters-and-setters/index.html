@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,22 +51,20 @@
 
 <p><strong>1. Чисто плюсовый вариант, основанный на семантике ссылок.</strong></p>
 
-<pre class="hl">
-<span class="hl kwc">class</span> Foo <span class="hl opt">{</span>
-  Value field_<span class="hl opt">;</span>
-<span class="hl kwc">public</span><span class="hl opt">:</span>
-  Value<span class="hl opt">&amp;</span> <span class="hl kwd">field</span><span class="hl opt">() {</span> <span class="hl kwa">return</span> field_<span class="hl opt">; }</span>
-  <span class="hl kwb">const</span> Value<span class="hl opt">&amp;</span> <span class="hl kwd">field</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> field_<span class="hl opt">; }</span>
-<span class="hl opt">};</span>
-</pre>
+<pre><code class="language-cpp">class Foo {
+  Value field_;
+public:
+  Value&amp; field() { return field_; }
+  const Value&amp; field() const { return field_; }
+};
+</code></pre>
 
 <p>Использование:</p>
 
-<pre class="hl">
-Foo foo<span class="hl opt">;</span>
-foo<span class="hl opt">.</span><span class="hl kwd">field</span><span class="hl opt">() =</span> field_instance<span class="hl opt">;</span>
-field_instance <span class="hl opt">=</span> foo<span class="hl opt">.</span><span class="hl kwd">field</span><span class="hl opt">();</span>
-</pre>
+<pre><code class="language-cpp">Foo foo;
+foo.field() = field_instance;
+field_instance = foo.field();
+</code></pre>
 
 <p>Плюсы: краткость текста, близость к нотации <a href="http://www.cplusplus.com/forum/general/8147/">свойств</a>, и возможность использования присвоения в каскаде (<code>foo1.field() = foo2.field() = 2;</code>).</p>
 
@@ -68,22 +72,20 @@ field_instance <span class="hl opt">=</span> foo<span class="hl opt">.</span><sp
 
 <p><strong>2. Способ в стиле Java.</strong></p>
 
-<pre class="hl">
-<span class="hl kwc">class</span> Foo <span class="hl opt">{</span>
-  Value field_<span class="hl opt">;</span>
-<span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwb">void</span> <span class="hl kwd">setField</span><span class="hl opt">(</span><span class="hl kwb">const</span> Value<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span> field_ <span class="hl opt">=</span> value<span class="hl opt">; }</span>
-  <span class="hl kwb">const</span> Value<span class="hl opt">&amp;</span> <span class="hl kwd">getField</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> field_<span class="hl opt">; }</span>
-<span class="hl opt">};</span>
-</pre>
+<pre><code class="language-cpp">class Foo {
+  Value field_;
+public:
+  void setField(const Value&amp; value) { field_ = value; }
+  const Value&amp; getField() const { return field_; }
+};
+</code></pre>
 
 <p>Использование:</p>
 
-<pre class="hl">
-Foo foo<span class="hl opt">;</span>
-foo<span class="hl opt">.</span><span class="hl kwd">setField</span><span class="hl opt">(</span>field_instance<span class="hl opt">);</span>
-field_instance <span class="hl opt">=</span> foo<span class="hl opt">.</span><span class="hl kwd">getField</span><span class="hl opt">();</span>
-</pre>
+<pre><code class="language-cpp">Foo foo;
+foo.setField(field_instance);
+field_instance = foo.getField();
+</code></pre>
 
 <p>Плюсы: ясность и очевидность синтаксиса.</p>
 
@@ -91,22 +93,20 @@ field_instance <span class="hl opt">=</span> foo<span class="hl opt">.</span><sp
 
 <p><strong>3. Cтиль Objective-C</strong></p>
 
-<pre class="hl">
-<span class="hl kwc">class</span> Foo <span class="hl opt">{</span>
-  Value field_<span class="hl opt">;</span>
-<span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwb">void</span> <span class="hl kwd">setField</span><span class="hl opt">(</span><span class="hl kwb">const</span> Value<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span> field_ <span class="hl opt">=</span> value<span class="hl opt">; }</span>
-  <span class="hl kwb">const</span> Value<span class="hl opt">&amp;</span> <span class="hl kwd">field</span><span class="hl opt">()</span> <span class="hl kwb">const</span> <span class="hl opt">{</span> <span class="hl kwa">return</span> field_<span class="hl opt">; }</span>
-<span class="hl opt">};</span>
-</pre>
+<pre><code class="language-cpp">class Foo {
+  Value field_;
+public:
+  void setField(const Value&amp; value) { field_ = value; }
+  const Value&amp; field() const { return field_; }
+};
+</code></pre>
 
 <p>Использование:</p>
 
-<pre class="hl">
-Foo foo<span class="hl opt">;</span>
-foo<span class="hl opt">.</span><span class="hl kwd">setField</span><span class="hl opt">(</span>field_instance<span class="hl opt">);</span>
-field_instance <span class="hl opt">=</span> foo<span class="hl opt">.</span><span class="hl kwd">field</span><span class="hl opt">();</span>
-</pre>
+<pre><code class="language-cpp">Foo foo;
+foo.setField(field_instance);
+field_instance = foo.field();
+</code></pre>
 
 <p>Плюсы: краткость текста при чтении (нет почти бессмысленной приставки &ldquo;get&rdquo;) и очевидность при записи.</p>
 

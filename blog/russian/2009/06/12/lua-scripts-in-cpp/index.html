@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -53,80 +59,77 @@
 
 <p>После этого можно писать вот такие куски кода:</p>
 
-<pre class="hl">
-lua script<span class="hl opt">;</span>
-script<span class="hl opt">.</span>set_variable<span class="hl opt">&lt;</span>lua<span class="hl opt">::</span>string_arg_t<span class="hl opt">&gt;(</span><span class="hl str">&quot;a&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;test&quot;</span><span class="hl opt">);</span>
-script<span class="hl opt">.</span><span class="hl kwd">exec</span><span class="hl opt">(</span><span class="hl str">&quot;b = a .. '123';&quot;</span><span class="hl opt">);</span>
-std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> script<span class="hl opt">.</span>get_variable<span class="hl opt">&lt;</span>lua<span class="hl opt">::</span>string_arg_t<span class="hl opt">&gt;(</span><span class="hl str">&quot;b&quot;</span><span class="hl opt">).</span><span class="hl kwd">value</span><span class="hl opt">());</span>
-</pre>
+<pre><code class="language-cpp">lua script;
+script.set_variable&lt;lua::string_arg_t&gt;(&#34;a&#34;, &#34;test&#34;);
+script.exec(&#34;b = a .. &#39;123&#39;;&#34;);
+std::cout &lt;&lt; script.get_variable&lt;lua::string_arg_t&gt;(&#34;b&#34;).value());
+</code></pre>
 
 <p>Данный простой скрипт принимает строку через переменню <code>a</code>, добавляет к ней <code>123</code> и записывает результат в переменную <code>b</code>, которая потом подхватывается из С++.</p>
 
 <p>Если надо добавить свою функцию, например, для проверки существования файла, можно написать так:</p>
 
-<pre class="hl">
-<span class="hl kwc">class</span> file_exists_func_t <span class="hl opt">{</span>
- <span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl slc">// Регистрируем аргументы функции. В данном случае один аргумент типа &quot;строка&quot;.</span>
-  <span class="hl kwb">static const</span> lua<span class="hl opt">::</span>args_t<span class="hl opt">*</span> <span class="hl kwd">in_args</span><span class="hl opt">() {</span>
-    lua<span class="hl opt">::</span>args_t<span class="hl opt">*</span> args <span class="hl opt">=</span> <span class="hl kwa">new</span> lua<span class="hl opt">::</span><span class="hl kwd">args_t</span><span class="hl opt">();</span>
-    args<span class="hl opt">-&gt;</span><span class="hl kwd">add</span><span class="hl opt">(</span><span class="hl kwa">new</span> lua<span class="hl opt">::</span><span class="hl kwd">string_arg_t</span><span class="hl opt">());</span>
-    <span class="hl kwa">return</span> args<span class="hl opt">;</span>
-  <span class="hl opt">}</span>
+<pre><code class="language-cpp">class file_exists_func_t {
+ public:
+  // Регистрируем аргументы функции. В данном случае один аргумент типа &#34;строка&#34;.
+  static const lua::args_t* in_args() {
+    lua::args_t* args = new lua::args_t();
+    args-&gt;add(new lua::string_arg_t());
+    return args;
+  }
 
-  <span class="hl slc">// Регистрируем выходные параметры. В данном случае это просто bool.</span>
-  <span class="hl slc">// Фукнция в Lua может возвращать не только одно значение, а несколько,</span>
-  <span class="hl slc">// поэтому можно задать список типов выходных параметров.</span>
-  <span class="hl kwb">static const</span> lua<span class="hl opt">::</span>args_t<span class="hl opt">*</span> <span class="hl kwd">out_args</span><span class="hl opt">() {</span>
-    lua<span class="hl opt">::</span>args_t<span class="hl opt">*</span> args <span class="hl opt">=</span> <span class="hl kwa">new</span> lua<span class="hl opt">::</span><span class="hl kwd">args_t</span><span class="hl opt">();</span>
-    args<span class="hl opt">-&gt;</span><span class="hl kwd">add</span><span class="hl opt">(</span><span class="hl kwa">new</span> lua<span class="hl opt">::</span><span class="hl kwd">bool_arg_t</span><span class="hl opt">());</span>
-    <span class="hl kwa">return</span> args<span class="hl opt">;</span>
-  <span class="hl opt">}</span>
+  // Регистрируем выходные параметры. В данном случае это просто bool.
+  // Фукнция в Lua может возвращать не только одно значение, а несколько,
+  // поэтому можно задать список типов выходных параметров.
+  static const lua::args_t* out_args() {
+    lua::args_t* args = new lua::args_t();
+    args-&gt;add(new lua::bool_arg_t());
+    return args;
+  }
 
-  <span class="hl slc">// Задаем namespace и, собственно, имя фукнции. </span>
-  <span class="hl slc">// Получается &quot;fs.file_exits()&quot;.</span>
-  <span class="hl kwb">static const</span> std<span class="hl opt">::</span>string <span class="hl kwd">ns</span><span class="hl opt">() {</span> <span class="hl kwa">return</span> <span class="hl str">&quot;fs&quot;</span><span class="hl opt">; }</span>
-  <span class="hl kwb">static const</span> std<span class="hl opt">::</span>string <span class="hl kwd">name</span><span class="hl opt">() {</span> <span class="hl kwa">return</span> <span class="hl str">&quot;file_exists&quot;</span><span class="hl opt">; }</span>
+  // Задаем namespace и, собственно, имя фукнции. 
+  // Получается &#34;fs.file_exits()&#34;.
+  static const std::string ns() { return &#34;fs&#34;; }
+  static const std::string name() { return &#34;file_exists&#34;; }
 
-  <span class="hl slc">// Данный метод вычисляет значение функции.</span>
-  <span class="hl slc">// Сначала надо разобрать входные параметры, вычислить функцию и</span>
-  <span class="hl slc">// положить результы с массив выходных значений. Правильность</span>
-  <span class="hl slc">// работы с типами аргументов, выходных данных и индексов в массивах,</span>
-  <span class="hl slc">// их описывающих, лежит на плечах автора функции.</span>
-  <span class="hl kwb">static void</span> <span class="hl kwd">calc</span><span class="hl opt">(</span><span class="hl kwb">const</span> lua<span class="hl opt">::</span>args_t<span class="hl opt">&amp;</span> in<span class="hl opt">,</span> lua<span class="hl opt">::</span>args_t<span class="hl opt">&amp;</span> out<span class="hl opt">) {</span>
-    std<span class="hl opt">::</span>string filename <span class="hl opt">=</span> <span class="hl kwa">dynamic_cast</span><span class="hl opt">&lt;</span>lua<span class="hl opt">::</span>string_arg_t<span class="hl opt">&amp;&gt;(*</span>in<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]).</span><span class="hl kwd">value</span><span class="hl opt">();</span>
-    std<span class="hl opt">::</span>ifstream <span class="hl kwd">is</span><span class="hl opt">(</span>filename<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">());</span>
-    <span class="hl kwa">dynamic_cast</span><span class="hl opt">&lt;</span>lua<span class="hl opt">::</span>bool_arg_t<span class="hl opt">&amp;&gt;(*</span>out<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]).</span><span class="hl kwd">value</span><span class="hl opt">() =</span> is<span class="hl opt">.</span><span class="hl kwd">good</span><span class="hl opt">();</span>
-  <span class="hl opt">}</span>
-<span class="hl opt">};</span>
-<span class="hl opt">...</span>
-<span class="hl kwa">try</span> <span class="hl opt">{</span>
-  <span class="hl slc">// Создаем исполнителя скрипта.</span>
-  lua script<span class="hl opt">;</span>
-  <span class="hl slc">// Регистрируем нашу функцию &quot;fs.file_exists()&quot;.</span>
-  script<span class="hl opt">.</span>register_function<span class="hl opt">&lt;</span> file_exists_func_t <span class="hl opt">&gt;();</span>
-  <span class="hl slc">// Устанавливаем переменную &quot;fname&quot; в &quot;readme.txt&quot;.</span>
-  script<span class="hl opt">.</span>set_variable<span class="hl opt">&lt;</span>lua<span class="hl opt">::</span>string_arg_t<span class="hl opt">&gt;(</span><span class="hl str">&quot;fname&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;readme.txt&quot;</span><span class="hl opt">);</span>
-  <span class="hl slc">// Вызываем скрипт.</span>
-  script<span class="hl opt">.</span><span class="hl kwd">exec</span><span class="hl opt">(</span><span class="hl str">&quot;exists = fs.file_exists(fname);&quot;</span><span class="hl opt">);</span>
-  <span class="hl slc">// Получаем результат через переменную &quot;exists&quot;.</span>
-  <span class="hl kwb">bool</span> exists <span class="hl opt">=</span> script<span class="hl opt">.</span>get_variable<span class="hl opt">&lt;</span>lua<span class="hl opt">::</span>bool_arg_t<span class="hl opt">&gt;(</span><span class="hl str">&quot;exists&quot;</span><span class="hl opt">).</span><span class="hl kwd">value</span><span class="hl opt">();</span>
-<span class="hl opt">}</span> <span class="hl kwa">catch</span> <span class="hl opt">(</span>lua<span class="hl opt">::</span>exception<span class="hl opt">&amp;</span> e<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span>cerr <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;error: &quot;</span> <span class="hl opt">&lt;&lt;</span> e<span class="hl opt">.</span><span class="hl kwd">error</span><span class="hl opt">() &lt;&lt;</span> <span class="hl str">&quot;, line &quot;</span> <span class="hl opt">&lt;&lt;</span> e<span class="hl opt">.</span><span class="hl kwd">line</span><span class="hl opt">();</span>
-<span class="hl opt">}</span>
-</pre>
+  // Данный метод вычисляет значение функции.
+  // Сначала надо разобрать входные параметры, вычислить функцию и
+  // положить результы с массив выходных значений. Правильность
+  // работы с типами аргументов, выходных данных и индексов в массивах,
+  // их описывающих, лежит на плечах автора функции.
+  static void calc(const lua::args_t&amp; in, lua::args_t&amp; out) {
+    std::string filename = dynamic_cast&lt;lua::string_arg_t&amp;&gt;(*in[0]).value();
+    std::ifstream is(filename.c_str());
+    dynamic_cast&lt;lua::bool_arg_t&amp;&gt;(*out[0]).value() = is.good();
+  }
+};
+...
+try {
+  // Создаем исполнителя скрипта.
+  lua script;
+  // Регистрируем нашу функцию &#34;fs.file_exists()&#34;.
+  script.register_function&lt; file_exists_func_t &gt;();
+  // Устанавливаем переменную &#34;fname&#34; в &#34;readme.txt&#34;.
+  script.set_variable&lt;lua::string_arg_t&gt;(&#34;fname&#34;, &#34;readme.txt&#34;);
+  // Вызываем скрипт.
+  script.exec(&#34;exists = fs.file_exists(fname);&#34;);
+  // Получаем результат через переменную &#34;exists&#34;.
+  bool exists = script.get_variable&lt;lua::bool_arg_t&gt;(&#34;exists&#34;).value();
+} catch (lua::exception&amp; e) {
+  std::cerr &lt;&lt; &#34;error: &#34; &lt;&lt; e.error() &lt;&lt; &#34;, line &#34; &lt;&lt; e.line();
+}
+</code></pre>
 
 <p>Что пока не поддерживается, так это параметры типа <a href="http://www.lua.org/manual/5.1/manual.html#2.5.7">таблица (хеш)</a> для передачи их в функцию и получения их в качестве результата.</p>
 
 <p>В каталоге <code>lib</code> лежат несколько мини примеров на Lua. Например, вот так можно вызвать внешнюю функцию для <code>base64</code> кодирования или декодирования:</p>
 
-<pre class="hl">
-lua script<span class="hl opt">;</span>
-script<span class="hl opt">.</span><span class="hl kwd">exec</span><span class="hl opt">(</span><span class="hl str">&quot;package.path = package.path .. ';./lib/?.lua'&quot;</span><span class="hl opt">);</span>
-script<span class="hl opt">.</span><span class="hl kwd">exec</span><span class="hl opt">(</span><span class="hl str">&quot;require('base64'); a = base64.encode('test');&quot;</span><span class="hl opt">);</span>
-<span class="hl slc">// Данный пример напечатает &quot;dGVzdA==&quot;.</span>
-std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> script<span class="hl opt">.</span>get_variable<span class="hl opt">&lt;</span>lua<span class="hl opt">::</span>string_arg_t<span class="hl opt">&gt;(</span><span class="hl str">&quot;a&quot;</span><span class="hl opt">).</span><span class="hl kwd">value</span><span class="hl opt">();</span>
-</pre>
+<pre><code class="language-cpp">lua script;
+script.exec(&#34;package.path = package.path .. &#39;;./lib/?.lua&#39;&#34;);
+script.exec(&#34;require(&#39;base64&#39;); a = base64.encode(&#39;test&#39;);&#34;);
+// Данный пример напечатает &#34;dGVzdA==&#34;.
+std::cout &lt;&lt; script.get_variable&lt;lua::string_arg_t&gt;(&#34;a&#34;).value();
+</code></pre>
 
 <p><a href="http://code.google.com/p/luascript/source/browse/">Исходники</a> доступны для просмотра в онлайне, или через <a href="http://code.google.com/p/luascript/source/checkout">Mercurial</a>.</p>
 

@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -56,138 +62,136 @@
 
 <p>Данные для поиска сделаны в виде &ldquo;наихудщего случая&rdquo;, когда сравнивать надо все до победного, и совпадение будет только с самом конце. Это должно вызвать явное квадратичное время у <code>naive_strstr()</code>.</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;iostream&gt;</span>
-<span class="hl ppc">#include &lt;vector&gt;</span>
-<span class="hl ppc">#include &lt;cstdlib&gt;</span>
-<span class="hl ppc">#include &lt;cstring&gt;</span>
-<span class="hl ppc">#include &lt;cassert&gt;</span>
-<span class="hl ppc">#include &lt;ctime&gt;</span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;cstdlib&gt;
+#include &lt;cstring&gt;
+#include &lt;cassert&gt;
+#include &lt;ctime&gt;
 
-<span class="hl kwb">int</span> <span class="hl kwd">naive_strstr</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> str<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> needle<span class="hl opt">) {</span>
-  <span class="hl kwb">int</span> str_sz <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>str<span class="hl opt">);</span>
-  <span class="hl kwb">int</span> needle_sz <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>needle<span class="hl opt">);</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> str_sz <span class="hl opt">-</span> needle_sz <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-    <span class="hl kwb">int</span> j<span class="hl opt">;</span>
-    <span class="hl kwa">for</span> <span class="hl opt">(</span>j <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> j <span class="hl opt">&lt;</span> needle_sz<span class="hl opt">; ++</span>j<span class="hl opt">)</span>
-      <span class="hl kwa">if</span> <span class="hl opt">(</span>str<span class="hl opt">[</span>i <span class="hl opt">+</span> j<span class="hl opt">] !=</span> needle<span class="hl opt">[</span>j<span class="hl opt">])</span>
-        <span class="hl kwa">break</span><span class="hl opt">;</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(</span>j <span class="hl opt">==</span> needle_sz<span class="hl opt">)</span>
-      <span class="hl kwa">return</span> i<span class="hl opt">;</span>
-  <span class="hl opt">}</span>
-  <span class="hl kwa">return</span> <span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
+int naive_strstr(const char* str, const char* needle) {
+  int str_sz = std::strlen(str);
+  int needle_sz = std::strlen(needle);
+  for (int i = 0; i &lt; str_sz - needle_sz + 1; ++i) {
+    int j;
+    for (j = 0; j &lt; needle_sz; ++j)
+      if (str[i + j] != needle[j])
+        break;
+    if (j == needle_sz)
+      return i;
+  }
+  return -1;
+}
 
-<span class="hl kwb">int</span> <span class="hl kwd">kmp_strstr</span><span class="hl opt">(</span><span class="hl kwb">const char</span><span class="hl opt">*</span> str<span class="hl opt">,</span> <span class="hl kwb">const char</span><span class="hl opt">*</span> needle<span class="hl opt">) {</span>
-  <span class="hl kwb">int</span> str_sz <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>str<span class="hl opt">);</span>
-  <span class="hl kwb">int</span> needle_sz <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>needle<span class="hl opt">);</span>
+int kmp_strstr(const char* str, const char* needle) {
+  int str_sz = std::strlen(str);
+  int needle_sz = std::strlen(needle);
 
-  std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">int</span><span class="hl opt">&gt;</span> <span class="hl kwd">prefix</span><span class="hl opt">(</span>needle_sz<span class="hl opt">,</span> <span class="hl num">0</span><span class="hl opt">);</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">1</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> needle_sz<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-    <span class="hl kwb">int</span> j <span class="hl opt">=</span> prefix<span class="hl opt">[</span>i <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">];</span>
-    <span class="hl kwa">while</span> <span class="hl opt">(</span>j <span class="hl opt">&gt;</span> <span class="hl num">0</span> <span class="hl opt">&amp;&amp;</span> needle<span class="hl opt">[</span>j<span class="hl opt">] !=</span> needle<span class="hl opt">[</span>i<span class="hl opt">])</span>
-      j <span class="hl opt">=</span> prefix<span class="hl opt">[</span>j <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">];</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(</span>needle<span class="hl opt">[</span>j<span class="hl opt">] ==</span> needle<span class="hl opt">[</span>i<span class="hl opt">])</span>
-      j <span class="hl opt">+=</span> <span class="hl num">1</span><span class="hl opt">;</span>
-    prefix<span class="hl opt">[</span>i<span class="hl opt">] =</span> j<span class="hl opt">;</span>
-  <span class="hl opt">}</span>
+  std::vector&lt;int&gt; prefix(needle_sz, 0);
+  for (int i = 1; i &lt; needle_sz; ++i) {
+    int j = prefix[i - 1];
+    while (j &gt; 0 &amp;&amp; needle[j] != needle[i])
+      j = prefix[j - 1];
+    if (needle[j] == needle[i])
+      j += 1;
+    prefix[i] = j;
+  }
 
-  <span class="hl kwb">int</span> j <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> str_sz<span class="hl opt">; ++</span>i<span class="hl opt">) {</span>
-    <span class="hl kwa">while</span> <span class="hl opt">(</span>j <span class="hl opt">&gt;</span> <span class="hl num">0</span> <span class="hl opt">&amp;&amp;</span> needle<span class="hl opt">[</span>j<span class="hl opt">] !=</span> str<span class="hl opt">[</span>i<span class="hl opt">])</span>
-      j <span class="hl opt">=</span> prefix<span class="hl opt">[</span>j <span class="hl opt">-</span> <span class="hl num">1</span><span class="hl opt">];</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(</span>needle<span class="hl opt">[</span>j<span class="hl opt">] ==</span> str<span class="hl opt">[</span>i<span class="hl opt">])</span>
-      j <span class="hl opt">+=</span> <span class="hl num">1</span><span class="hl opt">;</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(</span>j <span class="hl opt">==</span> needle_sz<span class="hl opt">)</span>
-      <span class="hl kwa">return</span> i <span class="hl opt">-</span> j <span class="hl opt">+</span> <span class="hl num">1</span><span class="hl opt">;</span>
-  <span class="hl opt">}</span>
+  int j = 0;
+  for (int i = 0; i &lt; str_sz; ++i) {
+    while (j &gt; 0 &amp;&amp; needle[j] != str[i])
+      j = prefix[j - 1];
+    if (needle[j] == str[i])
+      j += 1;
+    if (j == needle_sz)
+      return i - j + 1;
+  }
 
-  <span class="hl kwa">return</span> <span class="hl opt">-</span><span class="hl num">1</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
+  return -1;
+}
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
-  <span class="hl kwb">int</span> N <span class="hl opt">=</span> argc <span class="hl opt">&gt;</span> <span class="hl num">1</span> ? std<span class="hl opt">::</span><span class="hl kwd">atoi</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">1</span><span class="hl opt">]) :</span> <span class="hl num">10</span><span class="hl opt">*</span><span class="hl num">1000</span><span class="hl opt">*</span><span class="hl num">1000</span><span class="hl opt">;</span>
-  <span class="hl kwb">int</span> M <span class="hl opt">=</span> argc <span class="hl opt">&gt;</span> <span class="hl num">2</span> ? std<span class="hl opt">::</span><span class="hl kwd">atoi</span><span class="hl opt">(</span>argv<span class="hl opt">[</span><span class="hl num">2</span><span class="hl opt">]) :</span> <span class="hl num">1000</span><span class="hl opt">;</span>
+int main(int argc, char* argv[]) {
+  int N = argc &gt; 1 ? std::atoi(argv[1]) : 10*1000*1000;
+  int M = argc &gt; 2 ? std::atoi(argv[2]) : 1000;
 
-  std<span class="hl opt">::</span>string <span class="hl kwd">str</span><span class="hl opt">(</span>N<span class="hl opt">,</span> <span class="hl str">'a'</span><span class="hl opt">);</span>
-  std<span class="hl opt">::</span>string <span class="hl kwd">needle</span><span class="hl opt">(</span>M<span class="hl opt">,</span> <span class="hl str">'a'</span><span class="hl opt">);</span>
+  std::string str(N, &#39;a&#39;);
+  std::string needle(M, &#39;a&#39;);
 
-  <span class="hl slc">// Our needle is the last M characters of the string.</span>
-  str<span class="hl opt">[</span>str<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">() -</span> <span class="hl num">1</span><span class="hl opt">] +=</span> <span class="hl num">1</span><span class="hl opt">;</span>
-  needle<span class="hl opt">[</span>needle<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">() -</span> <span class="hl num">1</span><span class="hl opt">] +=</span> <span class="hl num">1</span><span class="hl opt">;</span>
+  // Our needle is the last M characters of the string.
+  str[str.length() - 1] += 1;
+  needle[needle.length() - 1] += 1;
 
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;N = &quot;</span> <span class="hl opt">&lt;&lt;</span> N <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, M = &quot;</span> <span class="hl opt">&lt;&lt;</span> M <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  std::cout &lt;&lt; &#34;N = &#34; &lt;&lt; N &lt;&lt; &#34;, M = &#34; &lt;&lt; M &lt;&lt; std::endl;
 
-  <span class="hl kwb">size_t</span> correct_position <span class="hl opt">=</span> str<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">() -</span> needle<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">();</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;Correct position: &quot;</span> <span class="hl opt">&lt;&lt;</span> correct_position <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
+  size_t correct_position = str.length() - needle.length();
+  std::cout &lt;&lt; &#34;Correct position: &#34; &lt;&lt; correct_position &lt;&lt; std::endl;
 
-  <span class="hl kwb">const char</span><span class="hl opt">*</span> str_p <span class="hl opt">=</span> str<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">();</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>str_p<span class="hl opt">) ==</span> str<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span>
+  const char* str_p = str.c_str();
+  assert(std::strlen(str_p) == str.length());
 
-  <span class="hl kwb">const char</span><span class="hl opt">*</span> needle_p <span class="hl opt">=</span> needle<span class="hl opt">.</span><span class="hl kwd">c_str</span><span class="hl opt">();</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">strlen</span><span class="hl opt">(</span>needle_p<span class="hl opt">) ==</span> needle<span class="hl opt">.</span><span class="hl kwd">length</span><span class="hl opt">());</span>
+  const char* needle_p = needle.c_str();
+  assert(std::strlen(needle_p) == needle.length());
 
-  <span class="hl kwb">time_t</span> started<span class="hl opt">,</span> duration<span class="hl opt">;</span>
-  <span class="hl kwb">size_t</span> i<span class="hl opt">;</span>
+  time_t started, duration;
+  size_t i;
 
-  started <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">);</span>
-  i <span class="hl opt">=</span> str<span class="hl opt">.</span><span class="hl kwd">find</span><span class="hl opt">(</span>needle<span class="hl opt">);</span>
-  duration <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">)-</span> started<span class="hl opt">;</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;string::find(): &quot;</span> <span class="hl opt">&lt;&lt;</span> i <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, time &quot;</span> <span class="hl opt">&lt;&lt;</span> duration <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>i <span class="hl opt">==</span> correct_position<span class="hl opt">);</span>
+  started = std::time(0);
+  i = str.find(needle);
+  duration = std::time(0)- started;
+  std::cout &lt;&lt; &#34;string::find(): &#34; &lt;&lt; i &lt;&lt; &#34;, time &#34; &lt;&lt; duration &lt;&lt; std::endl;
+  assert(i == correct_position);
 
-  started <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">);</span>
-  <span class="hl kwb">const char</span><span class="hl opt">*</span> p <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">strstr</span><span class="hl opt">(</span>str_p<span class="hl opt">,</span> needle_p<span class="hl opt">);</span>
-  duration <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">)-</span> started<span class="hl opt">;</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>p <span class="hl opt">!=</span> NULL<span class="hl opt">);</span>
-  i <span class="hl opt">=</span> p <span class="hl opt">-</span> str_p<span class="hl opt">;</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;strstr()      : &quot;</span> <span class="hl opt">&lt;&lt;</span> i <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, time &quot;</span> <span class="hl opt">&lt;&lt;</span> duration <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>i <span class="hl opt">==</span> correct_position<span class="hl opt">);</span>
+  started = std::time(0);
+  const char* p = std::strstr(str_p, needle_p);
+  duration = std::time(0)- started;
+  assert(p != NULL);
+  i = p - str_p;
+  std::cout &lt;&lt; &#34;strstr()      : &#34; &lt;&lt; i &lt;&lt; &#34;, time &#34; &lt;&lt; duration &lt;&lt; std::endl;
+  assert(i == correct_position);
 
-  started <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">);</span>
-  i <span class="hl opt">=</span> <span class="hl kwd">naive_strstr</span><span class="hl opt">(</span>str_p<span class="hl opt">,</span> needle_p<span class="hl opt">);</span>
-  duration <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">)-</span> started<span class="hl opt">;</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;naive_strstr(): &quot;</span> <span class="hl opt">&lt;&lt;</span> i <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, time &quot;</span> <span class="hl opt">&lt;&lt;</span> duration <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>i <span class="hl opt">==</span> correct_position<span class="hl opt">);</span>
+  started = std::time(0);
+  i = naive_strstr(str_p, needle_p);
+  duration = std::time(0)- started;
+  std::cout &lt;&lt; &#34;naive_strstr(): &#34; &lt;&lt; i &lt;&lt; &#34;, time &#34; &lt;&lt; duration &lt;&lt; std::endl;
+  assert(i == correct_position);
 
-  started <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">);</span>
-  i <span class="hl opt">=</span> <span class="hl kwd">kmp_strstr</span><span class="hl opt">(</span>str_p<span class="hl opt">,</span> needle_p<span class="hl opt">);</span>
-  duration <span class="hl opt">=</span> std<span class="hl opt">::</span><span class="hl kwd">time</span><span class="hl opt">(</span><span class="hl num">0</span><span class="hl opt">)-</span> started<span class="hl opt">;</span>
-  std<span class="hl opt">::</span>cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;kmp_strstr()  : &quot;</span> <span class="hl opt">&lt;&lt;</span> i <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;, time &quot;</span> <span class="hl opt">&lt;&lt;</span> duration <span class="hl opt">&lt;&lt;</span> std<span class="hl opt">::</span>endl<span class="hl opt">;</span>
-  <span class="hl kwa">assert</span><span class="hl opt">(</span>i <span class="hl opt">==</span> correct_position<span class="hl opt">);</span>
+  started = std::time(0);
+  i = kmp_strstr(str_p, needle_p);
+  duration = std::time(0)- started;
+  std::cout &lt;&lt; &#34;kmp_strstr()  : &#34; &lt;&lt; i &lt;&lt; &#34;, time &#34; &lt;&lt; duration &lt;&lt; std::endl;
+  assert(i == correct_position);
 
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+  return 0;
+}
+</code></pre>
 
 <p>Makefile:</p>
 
-<pre class="hl">
-<span class="hl kwa">all</span><span class="hl opt">:</span>  do-32 do-64
+<pre><code class="language-makefile">all:  do-32 do-64
 
-target <span class="hl opt">=</span> strstr_find
+target = strstr_find
 
-do-32<span class="hl opt">:</span> build-32
-    <span class="hl opt">$(</span>target<span class="hl opt">)</span>
+do-32: build-32
+    $(target)
 
-do-64<span class="hl opt">:</span> build-64
-    <span class="hl opt">$(</span>target<span class="hl opt">)</span>
+do-64: build-64
+    $(target)
 
-do-build<span class="hl opt">:</span>
-    <span class="hl str">&quot;%VS100COMNTOOLS%..\..\VC</span><span class="hl esc">\v</span><span class="hl str">cvarsall.bat&quot;</span> <span class="hl opt">$(</span>arch<span class="hl opt">) &amp;&amp;</span> cl <span class="hl opt">/</span>O2 <span class="hl opt">/</span>EHsc <span class="hl opt">$(</span>target<span class="hl opt">)</span>.<span class="hl kwa">cpp</span>
+do-build:
+    &#34;%VS100COMNTOOLS%..\..\VC\vcvarsall.bat&#34; $(arch) &amp;&amp; cl /O2 /EHsc $(target).cpp
 
-build-32<span class="hl opt">:</span>
-    <span class="hl opt">$(</span>MAKE<span class="hl opt">)</span> do-build arch<span class="hl opt">=</span>x86
+build-32:
+    $(MAKE) do-build arch=x86
 
-build-64<span class="hl opt">:</span>
-    <span class="hl opt">$(</span>MAKE<span class="hl opt">)</span> do-build arch<span class="hl opt">=</span>amd64
+build-64:
+    $(MAKE) do-build arch=amd64
 
-run<span class="hl opt">:</span>
-    <span class="hl opt">$(</span>target<span class="hl opt">)</span>
+run:
+    $(target)
 
-<span class="hl kwa">clean</span><span class="hl opt">:</span>
-    <span class="hl opt">-</span>del <span class="hl opt">*</span>.exe <span class="hl opt">*</span>.ilk <span class="hl opt">*</span>.obj <span class="hl opt">*</span>.pdb <span class="hl opt">*</span>.suo
-</pre>
+clean:
+    -del *.exe *.ilk *.obj *.pdb *.suo
+</code></pre>
 
 <p>Запускаем на Visual Studio 2010 32-bit:</p>
 

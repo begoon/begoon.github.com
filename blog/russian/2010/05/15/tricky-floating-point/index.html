@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,20 +51,19 @@
 
 <p>Но все было гораздо проще. Как вы думаете, что должна выводить следующая программа?</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;iostream&gt;</span>
-<span class="hl ppc">#include &lt;cmath&gt;</span>
-<span class="hl kwa">using namespace</span> std<span class="hl opt">;</span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
-  <span class="hl kwb">double</span> f <span class="hl opt">=</span> <span class="hl num">1.15</span><span class="hl opt">;</span>
-  <span class="hl kwb">int</span> a <span class="hl opt">=</span> f <span class="hl opt">*</span> <span class="hl num">100.0</span> <span class="hl opt">+</span> <span class="hl num">0.1E-9</span><span class="hl opt">;</span>
-  <span class="hl kwb">int</span> b <span class="hl opt">=</span> f <span class="hl opt">*</span> <span class="hl num">100.0</span><span class="hl opt">;</span>
-  cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;a = &quot;</span> <span class="hl opt">&lt;&lt;</span> a <span class="hl opt">&lt;&lt;</span> endl<span class="hl opt">;</span>
-  cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;b = &quot;</span> <span class="hl opt">&lt;&lt;</span> b <span class="hl opt">&lt;&lt;</span> endl<span class="hl opt">;</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+int main(int argc, char* argv[]) {
+  double f = 1.15;
+  int a = f * 100.0 + 0.1E-9;
+  int b = f * 100.0;
+  cout &lt;&lt; &#34;a = &#34; &lt;&lt; a &lt;&lt; endl;
+  cout &lt;&lt; &#34;b = &#34; &lt;&lt; b &lt;&lt; endl;
+  return 0;
+}
+</code></pre>
 
 <p>Я ожидал два числа 115.</p>
 
@@ -74,25 +79,24 @@ b = 114
 
 <p>Кстати, если попробовать так:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;iostream&gt;</span>
-<span class="hl ppc">#include &lt;cmath&gt;</span>
-<span class="hl kwa">using namespace</span> std<span class="hl opt">;</span>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+using namespace std;
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
-  <span class="hl kwb">double</span> f <span class="hl opt">=</span> <span class="hl num">1.15</span><span class="hl opt">;</span>
-  <span class="hl kwb">int</span> a <span class="hl opt">=</span> f <span class="hl opt">*</span> <span class="hl num">100.0</span> <span class="hl opt">+</span> <span class="hl num">0.1E-9</span><span class="hl opt">;</span>
-  <span class="hl kwb">int</span> b <span class="hl opt">=</span> f <span class="hl opt">*</span> <span class="hl num">100.0</span><span class="hl opt">;</span>
-  cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;a = &quot;</span> <span class="hl opt">&lt;&lt;</span> a <span class="hl opt">&lt;&lt;</span> endl<span class="hl opt">;</span>
-  cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;b = &quot;</span> <span class="hl opt">&lt;&lt;</span> b <span class="hl opt">&lt;&lt;</span> endl<span class="hl opt">;</span>
-  <span class="hl kwb">double</span> f1 <span class="hl opt">=</span> <span class="hl num">0.15</span><span class="hl opt">;</span>
-  <span class="hl kwb">int</span> a1 <span class="hl opt">=</span> f1 <span class="hl opt">*</span> <span class="hl num">100.0</span> <span class="hl opt">+</span> <span class="hl num">0.1E-9</span><span class="hl opt">;</span>
-  <span class="hl kwb">int</span> b1 <span class="hl opt">=</span> f1 <span class="hl opt">*</span> <span class="hl num">100.0</span><span class="hl opt">;</span>
-  cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;a1 = &quot;</span> <span class="hl opt">&lt;&lt;</span> a1 <span class="hl opt">&lt;&lt;</span> endl<span class="hl opt">;</span>
-  cout <span class="hl opt">&lt;&lt;</span> <span class="hl str">&quot;b1 = &quot;</span> <span class="hl opt">&lt;&lt;</span> b1 <span class="hl opt">&lt;&lt;</span> endl<span class="hl opt">;</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+int main(int argc, char* argv[]) {
+  double f = 1.15;
+  int a = f * 100.0 + 0.1E-9;
+  int b = f * 100.0;
+  cout &lt;&lt; &#34;a = &#34; &lt;&lt; a &lt;&lt; endl;
+  cout &lt;&lt; &#34;b = &#34; &lt;&lt; b &lt;&lt; endl;
+  double f1 = 0.15;
+  int a1 = f1 * 100.0 + 0.1E-9;
+  int b1 = f1 * 100.0;
+  cout &lt;&lt; &#34;a1 = &#34; &lt;&lt; a1 &lt;&lt; endl;
+  cout &lt;&lt; &#34;b1 = &#34; &lt;&lt; b1 &lt;&lt; endl;
+  return 0;
+}
+</code></pre>
 
 <p>то результат будет:</p>
 

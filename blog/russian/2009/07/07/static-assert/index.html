@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,20 +51,18 @@
 
 <p>У меня вот такой:</p>
 
-<pre class="hl">
-<span class="hl kwc">template</span> <span class="hl opt">&lt;</span><span class="hl kwb">bool</span><span class="hl opt">&gt;</span> <span class="hl kwb">struct</span> STATIC_ASSERTION_FAILURE<span class="hl opt">;</span>
-<span class="hl kwc">template</span> <span class="hl opt">&lt;&gt;</span> <span class="hl kwb">struct</span> STATIC_ASSERTION_FAILURE<span class="hl opt">&lt;</span><span class="hl kwa">true</span><span class="hl opt">&gt; {};</span>
-<span class="hl ppc">#define STATIC_CHECK(x) sizeof(STATIC_ASSERTION_FAILURE&lt; (bool)(x) &gt;)</span>
-</pre>
+<pre><code class="language-cpp">template &lt;bool&gt; struct STATIC_ASSERTION_FAILURE;
+template &lt;&gt; struct STATIC_ASSERTION_FAILURE&lt;true&gt; {};
+#define STATIC_CHECK(x) sizeof(STATIC_ASSERTION_FAILURE&lt; (bool)(x) &gt;)
+</code></pre>
 
 <p>Работает приемлемо сносно:</p>
 
-<pre class="hl">
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl kwd">STATIC_CHECK</span><span class="hl opt">(</span><span class="hl kwa">sizeof</span><span class="hl opt">(</span><span class="hl kwb">int</span><span class="hl opt">) &lt;</span> <span class="hl kwa">sizeof</span><span class="hl opt">(</span><span class="hl kwb">char</span><span class="hl opt">));</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+<pre><code class="language-cpp">int main() {
+  STATIC_CHECK(sizeof(int) &lt; sizeof(char));
+  return 0;
+}
+</code></pre>
 
 </div>
 

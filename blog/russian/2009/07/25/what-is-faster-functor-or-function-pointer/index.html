@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Программирование - это просто!" href="/atom.xml" type="application/atom+xml">
@@ -45,54 +51,53 @@
 
 <p><code>functor.cpp</code>:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include</span> <span class="hl pps">&quot;gtest/gtest.h&quot;</span><span class="hl ppc"></span>
+<pre><code class="language-cpp">#include &#34;gtest/gtest.h&#34;
 
-<span class="hl ppc">#include &lt;algorithm&gt;</span>
+#include &lt;algorithm&gt;
 
-<span class="hl kwc">typedef</span> <span class="hl kwb">double</span> Type<span class="hl opt">;</span>
+typedef double Type;
 
-Type<span class="hl opt">*</span> array<span class="hl opt">;</span>
-<span class="hl kwb">const int</span> N <span class="hl opt">=</span> <span class="hl num">100000000</span><span class="hl opt">;</span>
+Type* array;
+const int N = 100000000;
 
-<span class="hl kwc">inline</span> <span class="hl kwb">bool</span> <span class="hl kwd">less</span><span class="hl opt">(</span>Type a1<span class="hl opt">,</span> Type a2<span class="hl opt">) {</span>
-  <span class="hl kwa">return</span> a1 <span class="hl opt">&lt;</span> a2<span class="hl opt">;</span>
-<span class="hl opt">}</span>
+inline bool less(Type a1, Type a2) {
+  return a1 &lt; a2;
+}
 
-<span class="hl kwc">class</span> Less <span class="hl opt">{</span>
- <span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwc">inline</span> <span class="hl kwb">bool</span> <span class="hl kwc">operator</span><span class="hl opt">()(</span>Type a1<span class="hl opt">,</span> Type a2<span class="hl opt">) {</span>
-    <span class="hl kwa">return</span> a1 <span class="hl opt">&lt;</span> a2<span class="hl opt">;</span>
-  <span class="hl opt">}</span>
-<span class="hl opt">};</span>
+class Less {
+ public:
+  inline bool operator()(Type a1, Type a2) {
+    return a1 &lt; a2;
+  }
+};
 
-<span class="hl slc">// Использование встроенной функции сравнения.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>Callback<span class="hl opt">,</span> BuiltIn<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>array<span class="hl opt">,</span> array <span class="hl opt">+</span> N<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+// Использование встроенной функции сравнения.
+TEST(Callback, BuiltIn) {
+  std::sort(array, array + N);
+}
 
-<span class="hl slc">// Использование свободной функции сравнения по указателю.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>Callback<span class="hl opt">,</span> Function<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>array<span class="hl opt">,</span> array <span class="hl opt">+</span> N<span class="hl opt">,</span> less<span class="hl opt">);</span>
-<span class="hl opt">}</span>
+// Использование свободной функции сравнения по указателю.
+TEST(Callback, Function) {
+  std::sort(array, array + N, less);
+}
 
-<span class="hl slc">// Использование функтора.</span>
-<span class="hl kwd">TEST</span><span class="hl opt">(</span>Callback<span class="hl opt">,</span> Functor<span class="hl opt">) {</span>
-  std<span class="hl opt">::</span><span class="hl kwd">sort</span><span class="hl opt">(</span>array<span class="hl opt">,</span> array <span class="hl opt">+</span> N<span class="hl opt">,</span> <span class="hl kwd">Less</span><span class="hl opt">());</span>
-<span class="hl opt">}</span>
+// Использование функтора.
+TEST(Callback, Functor) {
+  std::sort(array, array + N, Less());
+}
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">(</span><span class="hl kwb">int</span> argc<span class="hl opt">,</span> <span class="hl kwb">char</span><span class="hl opt">*</span> argv<span class="hl opt">[]) {</span>
-  <span class="hl slc">// Создаем отсортированный массив.</span>
-  array <span class="hl opt">=</span> <span class="hl kwa">new</span> Type<span class="hl opt">[</span>N<span class="hl opt">];</span>
-  Type<span class="hl opt">*</span> p <span class="hl opt">=</span> array<span class="hl opt">;</span>
-  <span class="hl kwa">for</span> <span class="hl opt">(</span><span class="hl kwb">int</span> i <span class="hl opt">=</span> <span class="hl num">0</span><span class="hl opt">;</span> i <span class="hl opt">&lt;</span> N<span class="hl opt">; ++</span>i<span class="hl opt">) *</span>p<span class="hl opt">++ =</span> i<span class="hl opt">;</span>
+int main(int argc, char* argv[]) {
+  // Создаем отсортированный массив.
+  array = new Type[N];
+  Type* p = array;
+  for (int i = 0; i &lt; N; ++i) *p++ = i;
 
-  testing<span class="hl opt">::</span><span class="hl kwd">InitGoogleTest</span><span class="hl opt">(&amp;</span>argc<span class="hl opt">,</span> argv<span class="hl opt">);</span>
-  <span class="hl slc">// Принудительно печатаем время работы тестов.</span>
-  testing<span class="hl opt">::</span><span class="hl kwd">GTEST_FLAG</span><span class="hl opt">(</span>print_time<span class="hl opt">) =</span> <span class="hl kwa">true</span><span class="hl opt">;</span>
-  <span class="hl kwa">return</span> <span class="hl kwd">RUN_ALL_TESTS</span><span class="hl opt">();</span>
-<span class="hl opt">}</span>
-</pre>
+  testing::InitGoogleTest(&amp;argc, argv);
+  // Принудительно печатаем время работы тестов.
+  testing::GTEST_FLAG(print_time) = true;
+  return RUN_ALL_TESTS();
+}
+</code></pre>
 
 <p>Компилируем и запускаем (Visual Studio 2008):</p>
 

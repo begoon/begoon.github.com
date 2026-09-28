@@ -21,6 +21,12 @@
 
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
+      <script defer src="/common/highlight/highlight.min.js"></script>
+   <script defer src="/common/highlight/erlang.min.js"></script>
+   <script defer src="/common/highlight/dos.min.js"></script>
+   <script defer src="/common/highlight/x86asm.min.js"></script>
+   <script defer src="/js/highlight.js"></script>
+
    <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
    <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="Programming DIY" href="/english/atom.xml" type="application/atom+xml">
@@ -62,45 +68,44 @@ finding the issue by yourself first, and then read further down.</p>
 
 <p>The simple <code>main()</code> function below easily reproduces the issue.</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;vector&gt;</span>
-<span class="hl ppc">#include &lt;map&gt;</span>
-<span class="hl ppc">#include &lt;string&gt;</span>
+<pre><code class="language-cpp">#include &lt;vector&gt;
+#include &lt;map&gt;
+#include &lt;string&gt;
 
-<span class="hl ppc">#include &lt;unistd.h&gt;</span>
+#include &lt;unistd.h&gt;
 
-<span class="hl kwc">class</span> EnvironmentVariablesManager <span class="hl opt">{</span>
- <span class="hl kwc">public</span><span class="hl opt">:</span>
-  <span class="hl kwc">typedef</span> std<span class="hl opt">::</span>vector<span class="hl opt">&lt;</span><span class="hl kwb">char</span><span class="hl opt">&gt;</span> VariableContainer<span class="hl opt">;</span>
-  <span class="hl kwc">typedef</span> std<span class="hl opt">::</span>map<span class="hl opt">&lt;</span>std<span class="hl opt">::</span>string<span class="hl opt">,</span> VariableContainer<span class="hl opt">&gt;</span> Variables<span class="hl opt">;</span>
-  <span class="hl kwb">void</span> <span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">) {</span>
-    VariableContainer pair<span class="hl opt">;</span>
-    <span class="hl kwd">PairToContainer</span><span class="hl opt">(</span>name<span class="hl opt">,</span> value<span class="hl opt">, &amp;</span>pair<span class="hl opt">);</span>
-    <span class="hl kwb">const</span> std<span class="hl opt">::</span>pair<span class="hl opt">&lt;</span>Variables<span class="hl opt">::</span>iterator<span class="hl opt">,</span> <span class="hl kwb">bool</span><span class="hl opt">&gt;</span> inserted <span class="hl opt">=</span>
-      vars_<span class="hl opt">.</span><span class="hl kwd">insert</span><span class="hl opt">(</span>std<span class="hl opt">::</span><span class="hl kwd">make_pair</span><span class="hl opt">(</span>name<span class="hl opt">,</span> pair<span class="hl opt">));</span>
-    <span class="hl kwa">if</span> <span class="hl opt">(!</span>inserted<span class="hl opt">.</span>second<span class="hl opt">)</span>
-      inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second <span class="hl opt">=</span> pair<span class="hl opt">;</span>
-    <span class="hl kwd">putenv</span><span class="hl opt">(&amp;</span>inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]);</span>
-  <span class="hl opt">}</span>
+class EnvironmentVariablesManager {
+ public:
+  typedef std::vector&lt;char&gt; VariableContainer;
+  typedef std::map&lt;std::string, VariableContainer&gt; Variables;
+  void put(const std::string&amp; name, const std::string&amp; value) {
+    VariableContainer pair;
+    PairToContainer(name, value, &amp;pair);
+    const std::pair&lt;Variables::iterator, bool&gt; inserted =
+      vars_.insert(std::make_pair(name, pair));
+    if (!inserted.second)
+      inserted.first-&gt;second = pair;
+    putenv(&amp;inserted.first-&gt;second[0]);
+  }
 
- <span class="hl kwc">private</span><span class="hl opt">:</span>
-  <span class="hl kwb">void</span> <span class="hl kwd">PairToContainer</span><span class="hl opt">(</span><span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> name<span class="hl opt">,</span> <span class="hl kwb">const</span> std<span class="hl opt">::</span>string<span class="hl opt">&amp;</span> value<span class="hl opt">,</span>
-                       VariableContainer<span class="hl opt">*</span> pair<span class="hl opt">)</span> <span class="hl kwb">const</span> <span class="hl opt">{</span>
-    pair<span class="hl opt">-&gt;</span><span class="hl kwd">clear</span><span class="hl opt">();</span>
-    std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>name<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> name<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> std<span class="hl opt">::</span><span class="hl kwd">back_inserter</span><span class="hl opt">(*</span>pair<span class="hl opt">));</span>
-    pair<span class="hl opt">-&gt;</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl str">'='</span><span class="hl opt">);</span>
-    std<span class="hl opt">::</span><span class="hl kwd">copy</span><span class="hl opt">(</span>value<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> value<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">(),</span> std<span class="hl opt">::</span><span class="hl kwd">back_inserter</span><span class="hl opt">(*</span>pair<span class="hl opt">));</span>
-    pair<span class="hl opt">-&gt;</span><span class="hl kwd">push_back</span><span class="hl opt">(</span><span class="hl str">'\0'</span><span class="hl opt">);</span>
-  <span class="hl opt">}</span>
-  Variables vars_<span class="hl opt">;</span>
-<span class="hl opt">};</span>
+ private:
+  void PairToContainer(const std::string&amp; name, const std::string&amp; value,
+                       VariableContainer* pair) const {
+    pair-&gt;clear();
+    std::copy(name.begin(), name.end(), std::back_inserter(*pair));
+    pair-&gt;push_back(&#39;=&#39;);
+    std::copy(value.begin(), value.end(), std::back_inserter(*pair));
+    pair-&gt;push_back(&#39;\0&#39;);
+  }
+  Variables vars_;
+};
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  EnvironmentVariablesManager env<span class="hl opt">;</span>
-  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;DB2_HOME&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;a&quot;</span><span class="hl opt">);</span>
-  env<span class="hl opt">.</span><span class="hl kwd">put</span><span class="hl opt">(</span><span class="hl str">&quot;DB2_HOME&quot;</span><span class="hl opt">,</span> <span class="hl str">&quot;12345678&quot;</span><span class="hl opt">);</span>
-<span class="hl opt">}</span>
-</pre>
+int main() {
+  EnvironmentVariablesManager env;
+  env.put(&#34;DB2_HOME&#34;, &#34;a&#34;);
+  env.put(&#34;DB2_HOME&#34;, &#34;12345678&#34;);
+}
+</code></pre>
 
 <p>Valgrind complains on this code saying that <code>putenv</code> tries reading some memory
 after freeing (this trace is from OSX).</p>
@@ -149,19 +154,17 @@ second call <code>env.put(&quot;DB2_HOME&quot;, &quot;12345678&quot;)</code>, th
 (valgrind didn&rsquo;t complain any more). So, we started to suspect the following
 lines of code:</p>
 
-<pre class="hl">
-    <span class="hl kwa">if</span> <span class="hl opt">(!</span>inserted<span class="hl opt">.</span>second<span class="hl opt">)</span>
-      inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second <span class="hl opt">=</span> pair<span class="hl opt">;</span>
-    <span class="hl kwd">putenv</span><span class="hl opt">(&amp;</span>inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second<span class="hl opt">[</span><span class="hl num">0</span><span class="hl opt">]);</span>
-</pre>
+<pre><code class="language-cpp">    if (!inserted.second)
+      inserted.first-&gt;second = pair;
+    putenv(&amp;inserted.first-&gt;second[0]);
+</code></pre>
 
 <p>If to change the code little bit (if fact, doing exactly the same operation
 but in a slightly different way):</p>
 
-<pre class="hl">
-    <span class="hl kwa">if</span> <span class="hl opt">(!</span>inserted<span class="hl opt">.</span>second<span class="hl opt">)</span>
-      inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second<span class="hl opt">.</span><span class="hl kwd">assign</span><span class="hl opt">(</span>pair<span class="hl opt">.</span><span class="hl kwd">begin</span><span class="hl opt">(),</span> pair<span class="hl opt">.</span><span class="hl kwd">end</span><span class="hl opt">());</span>
-</pre>
+<pre><code class="language-cpp">    if (!inserted.second)
+      inserted.first-&gt;second.assign(pair.begin(), pair.end());
+</code></pre>
 
 <p>the error report changes:</p>
 
@@ -187,24 +190,23 @@ but in a slightly different way):</p>
 <p>Now it is more or less clear what is going on. But let&rsquo;s consider a much more
 simple example first, purely in C:</p>
 
-<pre class="hl">
-<span class="hl ppc">#include &lt;unistd.h&gt;</span>
-<span class="hl ppc">#include &lt;stdlib.h&gt;</span>
+<pre><code class="language-c">#include &lt;unistd.h&gt;
+#include &lt;stdlib.h&gt;
 
-<span class="hl kwb">int</span> <span class="hl kwd">main</span><span class="hl opt">() {</span>
-  <span class="hl kwb">char</span> <span class="hl opt">*</span>v1<span class="hl opt">, *</span>v2<span class="hl opt">;</span>
-  v1 <span class="hl opt">=</span> <span class="hl kwd">malloc</span><span class="hl opt">(</span><span class="hl num">10</span><span class="hl opt">);</span>
-  <span class="hl kwd">strcpy</span><span class="hl opt">(</span>v1<span class="hl opt">,</span> <span class="hl str">&quot;x=123&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwd">putenv</span><span class="hl opt">(</span>v1<span class="hl opt">);</span>
-  <span class="hl kwd">free</span><span class="hl opt">(</span>v1<span class="hl opt">);</span>
+int main() {
+  char *v1, *v2;
+  v1 = malloc(10);
+  strcpy(v1, &#34;x=123&#34;);
+  putenv(v1);
+  free(v1);
 
-  v2 <span class="hl opt">=</span> <span class="hl kwd">malloc</span><span class="hl opt">(</span><span class="hl num">10</span><span class="hl opt">);</span>
-  <span class="hl kwd">strcpy</span><span class="hl opt">(</span>v2<span class="hl opt">,</span> <span class="hl str">&quot;x=123&quot;</span><span class="hl opt">);</span>
-  <span class="hl kwd">putenv</span><span class="hl opt">(</span>v2<span class="hl opt">);</span>
-  <span class="hl kwd">free</span><span class="hl opt">(</span>v2<span class="hl opt">);</span>
-  <span class="hl kwa">return</span> <span class="hl num">0</span><span class="hl opt">;</span>
-<span class="hl opt">}</span>
-</pre>
+  v2 = malloc(10);
+  strcpy(v2, &#34;x=123&#34;);
+  putenv(v2);
+  free(v2);
+  return 0;
+}
+</code></pre>
 
 <p>valgrind also reports about this code (this trace is from Linux):</p>
 
@@ -267,17 +269,15 @@ one.</p>
 
 <p>Now go back to C++. If the original code:</p>
 
-<pre class="hl">
-    <span class="hl kwa">if</span> <span class="hl opt">(!</span>inserted<span class="hl opt">.</span>second<span class="hl opt">)</span>
-      inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second <span class="hl opt">=</span> pair<span class="hl opt">;</span>
-</pre>
+<pre><code class="language-cpp">    if (!inserted.second)
+      inserted.first-&gt;second = pair;
+</code></pre>
 
 <p>is replaced to:</p>
 
-<pre class="hl">
-    <span class="hl kwa">if</span> <span class="hl opt">(!</span>inserted<span class="hl opt">.</span>second<span class="hl opt">)</span>
-      inserted<span class="hl opt">.</span>first<span class="hl opt">-&gt;</span>second<span class="hl opt">.</span><span class="hl kwd">swap</span><span class="hl opt">(</span>pair<span class="hl opt">);</span>
-</pre>
+<pre><code class="language-cpp">    if (!inserted.second)
+      inserted.first-&gt;second.swap(pair);
+</code></pre>
 
 <p>the issue disappears (valgrind doesn&rsquo;t find anything suspecious anymore).</p>
 
