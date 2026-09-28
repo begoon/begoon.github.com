@@ -38,7 +38,6 @@ title: "Проекты"
 
 * [Эмулятор на JavaScript][Эмулятор Радио-86РК на JavaScript 2012] / 2012, версия 2, использующая i8080-js
 * [Эмулятор на микрокомпьютере Maximite][Эмулятор Радио-86РК на микрокомпьютере Maximite] / 2012
-* [Эмулятор на JavaScript][Эмулятор Радио-86РК на JavaScript] / 2009, версия 1
 * [Эмулятор под Windows][Эмулятор Радио-86РК под Windows]
 * [Эмулятор под DOS][Эмулятор Радио-86РК под DOS]
 
@@ -56,7 +55,6 @@ title: "Проекты"
 [Моя коллекция микропроцессоров Intel 8080]: /blog/russian/2012/12/24/my-i8080-collection/
 [Эмулятор Радио-86РК на JavaScript 2012]: http://github.com/begoon/rk86-js/
 [Эмулятор Радио-86РК на микрокомпьютере Maximite]: https://github.com/begoon/rk86-maximite/
-[Эмулятор Радио-86РК на JavaScript]: http://radio86.googlecode.com
 [Эмулятор Радио-86РК под Windows]: /projects/radio86/emulator/windows/
 [Эмулятор Радио-86РК под DOS]: /projects/radio86/emulator/dos/
 
