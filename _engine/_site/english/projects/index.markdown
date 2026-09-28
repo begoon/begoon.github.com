@@ -48,7 +48,7 @@ Most of my projects are available at [GitHub][]. The projects listed below are h
 
 * [Programming DIY][], a blog about programming (frozen after migration to this site).
 
-[nxtbtrc]: http://code.google.com/p/nxtbtrc/
+[nxtbtrc]: https://demin.ws/nxt/bluetooth/
 [Lego NXT remote control via bluetooth]: /blog/english/2009/10/05/lego-nxt-remote-control-via-bluetooth/
 [NXT Brick remote control over Bluetooth]: /projects/lego/nxt/bluetooth/
 [lemonbind]: http://code.google.com/p/lemonbind/

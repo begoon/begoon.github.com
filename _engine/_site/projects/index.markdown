@@ -61,7 +61,7 @@ title: "Проекты"
 [Эмулятор процессора Intel 8080 (КР580) на JavaScript]: http://github.com/begoon/i8080-js/
 [Эмулятор процессора Intel 8080 (КР580)]: https://github.com/begoon/i8080-core/
 
-[nxtbtrc]: http://code.google.com/p/nxtbtrc
+[nxtbtrc]: https://demin.ws/nxt/bluetooth/
 [Управление Lego NXT через bluetooth]: /blog/russian/2009/06/24/lego-nxt-remote-control-via-bluetooth/
 [NXT Brick remote control over Bluetooth]: /projects/lego/nxt/bluetooth/
 [lemonbind]: http://code.google.com/p/lemonbind/

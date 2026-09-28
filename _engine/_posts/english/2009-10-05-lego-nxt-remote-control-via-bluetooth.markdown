@@ -18,7 +18,7 @@ This bit is roughly one year old project — the remote control over Bluetooth f
 
 I've called it unpretentiously — [nxtbtrc][].
 
-[nxtbtrc]: http://code.google.com/p/nxtbtrc
+[nxtbtrc]: https://demin.ws/nxt/bluetooth/
 
 Everything is simple. The Java applet running on a J2ME compatible phone pairs with Lego NXT brick and then sends commands to it. Nothing special but it was interesting to figure out how to use Bluetooth API in J2ME.
 
