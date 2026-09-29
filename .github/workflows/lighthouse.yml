@@ -3,9 +3,14 @@ name: Lighthouse
 # Audits the live site at https://demin.ws after each GitHub Pages deployment,
 # on demand, and once a week. Reports are attached to the run as artifacts and
 # the category scores are summarized on the run page.
+#
+# GitHub Pages publishes the `refactor` branch, so a push there is a deployment.
+# The manual and scheduled triggers only work once this file is on the default
+# branch, which is how GitHub registers workflows.
 
 on:
-  deployment_status:
+  push:
+    branches: [refactor]
   workflow_dispatch:
     inputs:
       urls:
@@ -25,11 +30,6 @@ concurrency:
 jobs:
   audit:
     name: Audit demin.ws
-    # For deployment events, run only after a successful GitHub Pages deploy.
-    if: >-
-      github.event_name != 'deployment_status' ||
-      (github.event.deployment_status.state == 'success' &&
-       github.event.deployment.environment == 'github-pages')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -40,19 +40,17 @@ jobs:
         https://demin.ws/blog/russian/2026/09/29/thirteen-years-later/
         https://demin.ws/blog/english/2026/09/29/thirteen-years-later/
     steps:
-      - name: Check out the deployed revision
+      - name: Check out the pushed revision
         uses: actions/checkout@v4
-        with:
-          # For deployment events, check out exactly what Pages deployed so the
-          # propagation check below compares against the right index.html.
-          ref: ${{ github.event.deployment.sha || github.sha }}
 
       - name: Wait for the deployment to propagate
-        if: github.event_name == 'deployment_status'
+        # Pages builds and deploys the pushed commit in parallel with this job;
+        # poll until the live index.html matches the checked-out one.
+        if: github.event_name == 'push'
         run: |
           expected="$(sha256sum index.html | cut -d' ' -f1)"
           echo "Expected index.html sha256: $expected"
-          for attempt in $(seq 1 36); do
+          for attempt in $(seq 1 60); do
             live="$(curl -fsSL -H 'Cache-Control: no-cache' "$SITE/?nocache=$RANDOM" | sha256sum | cut -d' ' -f1)"
             if [ "$live" = "$expected" ]; then
               echo "Live site matches the deployed revision after $attempt attempt(s)."
@@ -61,7 +59,7 @@ jobs:
             echo "Attempt $attempt: live index.html sha256 is $live; waiting 5s..."
             sleep 5
           done
-          echo "::warning::Live index.html still differs from the deployed revision after 3 minutes; auditing anyway."
+          echo "::warning::Live index.html still differs from the deployed revision after 5 minutes; auditing anyway."
 
       - name: Resolve URLs to audit
         id: urls
