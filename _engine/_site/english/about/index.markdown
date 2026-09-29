@@ -7,8 +7,6 @@ Alexander Demin, a programmer.
 
 {% img /images/me.jpg %}
 
-I live, I love and I do programming.
-
 * [GitHub][]
 * Twitter [begoon][]
 * [Linkedin][]

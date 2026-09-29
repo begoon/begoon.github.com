@@ -7,8 +7,6 @@ title: "Я"
 
 {% img /images/me.jpg %}
 
-Живу, люблю, программирую.
-
 ### Disclaimer
 
 {% include russian/disclaimer.html %}
