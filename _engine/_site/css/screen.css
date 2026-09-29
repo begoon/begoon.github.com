@@ -188,7 +188,7 @@ ul.posts span {
 
 .social-links {
   display: flex;
-  gap: .5em;
+  gap: 0;
   margin: 1em 0;
 }
 
@@ -212,6 +212,11 @@ ul.posts span {
 
 .social-links img {
   display: block;
+}
+
+#home .motto ~ ul {
+  margin-left: 0;
+  list-style-position: inside;
 }
 
 /*****************************************************************************/
@@ -357,6 +362,16 @@ ul.posts span {
 
   .site pre.motto {
     font-size: 11px;
+  }
+
+  #home .motto ~ ul {
+    list-style: none;
+  }
+
+  #home .motto ~ ul > li::before {
+    content: "\2022";
+    display: inline-block;
+    width: .75em;
   }
 
   #post pre code {

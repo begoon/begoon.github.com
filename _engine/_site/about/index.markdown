@@ -3,15 +3,15 @@ layout: default
 language: russian
 title: "Я"
 ---
-Это я, Александр Дëмин, программист.
+Александр Дëмин, программист.
 
 {% img /images/me.jpg %}
+
+{% include social-links.html %}
 
 ### Disclaimer
 
 {% include russian/disclaimer.html %}
-
-{% include social-links.html %}
 
 ### Motto
 
@@ -22,7 +22,7 @@ title: "Я"
 
 Если вы догадаетесь, что это значит -- сообщите, пожалуйста.
 
-*Кто уже догадался:*
+Кто уже догадался:
 
 * *Сергей Кользун // 05.09.2012*
 * *Кирилл Маргорин // 06.09.2012*
