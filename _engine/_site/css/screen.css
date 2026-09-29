@@ -246,10 +246,6 @@ ul.posts span {
 /* Mobile */
 
 @media (max-width: 640px) {
-  #home > .title {
-    display: none;
-  }
-
   body {
     font-size: 17px;
     line-height: 1.6;
