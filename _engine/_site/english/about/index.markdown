@@ -7,17 +7,11 @@ Alexander Demin, a programmer.
 
 {% img /images/me.jpg %}
 
-* [GitHub][]
-* Twitter [begoon][]
-* [Linkedin][]
+{% include social-links.html %}
 
 ### Disclaimer
 
 {% include english/disclaimer.html %}
-
-[GitHub]: http://github.com/begoon/
-[begoon]: http://twitter.com/begoon
-[Linkedin]: http://www.linkedin.com/in/alexanderdemin
 
 ### Motto
 

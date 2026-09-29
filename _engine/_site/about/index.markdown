@@ -11,13 +11,7 @@ title: "Я"
 
 {% include russian/disclaimer.html %}
 
-* [GitHub][]
-* Twitter [begoon][]
-* [Linkedin][]
-
-[GitHub]: http://github.com/begoon/
-[begoon]: http://twitter.com/begoon
-[Linkedin]: http://www.linkedin.com/in/alexanderdemin
+{% include social-links.html %}
 
 ### Motto
 

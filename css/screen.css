@@ -165,6 +165,34 @@ ul.posts span {
   border: 0;
 }
 
+.social-links {
+  display: flex;
+  gap: .5em;
+  margin: 1em 0;
+}
+
+.social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+}
+
+.social-links a:hover {
+  background: #eee;
+}
+
+.social-links a:focus-visible {
+  outline: 2px solid #00a;
+  outline-offset: 2px;
+}
+
+.social-links img {
+  display: block;
+}
+
 /*****************************************************************************/
 /*
 /* Posts
