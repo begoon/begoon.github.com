@@ -420,6 +420,10 @@ func render_page(p Page) string {
 	}
 
 	funcs := template.FuncMap{
+		"asset_version": func(filename string) string {
+			content := load_file(filepath.Join(SiteDir, filename))
+			return fmt.Sprintf("%x", sha256.Sum256([]byte(*content)))
+		},
 		"include":        include,
 		"last_update":    last_update,
 		"feed_posts":     feed_posts,
@@ -738,13 +742,16 @@ func check_links_re(s *string, filename string, re *regexp.Regexp) {
 		for _, link := range m {
 			l := link[1]
 			trace("|| [%s]", l)
+			// Query strings and fragments are not part of the local filename.
+			if i := strings.IndexAny(l, "?#"); i >= 0 {
+				l = l[:i]
+			}
 			if strings.HasPrefix(l, "/") {
 				file_exist(PublicDir + l)
 			} else if strings.HasPrefix(l, SiteHostID) {
 				file_exist(PublicDir + l[len(SiteHostID):])
 			} else {
 				if !ExtLinkRE.MatchString(l) {
-					l = regexp.MustCompile("#.+$").ReplaceAllString(l, "")
 					file_exist(filepath.Join(filepath.Dir(filename), l))
 				}
 			}
