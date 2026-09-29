@@ -1,0 +1,134 @@
+name: Lighthouse
+
+# Audits the live site at https://demin.ws after each GitHub Pages deployment,
+# on demand, and once a week. Reports are attached to the run as artifacts and
+# the category scores are summarized on the run page.
+
+on:
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: "Space-separated URLs to audit (defaults to the configured set)"
+        required: false
+        default: ""
+  schedule:
+    - cron: "17 6 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lighthouse
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    name: Audit demin.ws
+    # For deployment events, run only after a successful GitHub Pages deploy.
+    if: >-
+      github.event_name != 'deployment_status' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'github-pages')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SITE: https://demin.ws
+      DEFAULT_URLS: >-
+        https://demin.ws/
+        https://demin.ws/english/
+        https://demin.ws/blog/russian/2026/09/29/thirteen-years-later/
+        https://demin.ws/blog/english/2026/09/29/thirteen-years-later/
+    steps:
+      - name: Check out the deployed revision
+        uses: actions/checkout@v4
+        with:
+          # For deployment events, check out exactly what Pages deployed so the
+          # propagation check below compares against the right index.html.
+          ref: ${{ github.event.deployment.sha || github.sha }}
+
+      - name: Wait for the deployment to propagate
+        if: github.event_name == 'deployment_status'
+        run: |
+          expected="$(sha256sum index.html | cut -d' ' -f1)"
+          echo "Expected index.html sha256: $expected"
+          for attempt in $(seq 1 36); do
+            live="$(curl -fsSL -H 'Cache-Control: no-cache' "$SITE/?nocache=$RANDOM" | sha256sum | cut -d' ' -f1)"
+            if [ "$live" = "$expected" ]; then
+              echo "Live site matches the deployed revision after $attempt attempt(s)."
+              exit 0
+            fi
+            echo "Attempt $attempt: live index.html sha256 is $live; waiting 5s..."
+            sleep 5
+          done
+          echo "::warning::Live index.html still differs from the deployed revision after 3 minutes; auditing anyway."
+
+      - name: Resolve URLs to audit
+        id: urls
+        env:
+          REQUESTED_URLS: ${{ github.event.inputs.urls }}
+        run: |
+          urls="$REQUESTED_URLS"
+          if [ -z "$urls" ]; then
+            urls="$DEFAULT_URLS"
+          fi
+          {
+            echo "list<<EOF"
+            for url in $urls; do echo "$url"; done
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Run Lighthouse
+        id: lighthouse
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: ${{ steps.urls.outputs.list }}
+          configPath: .github/lighthouse/lighthouserc.json
+          uploadArtifacts: true
+          artifactName: lighthouse-reports
+          temporaryPublicStorage: false
+
+      - name: Summarize scores
+        if: always() && steps.lighthouse.outputs.resultsPath != ''
+        env:
+          RESULTS_PATH: ${{ steps.lighthouse.outputs.resultsPath }}
+        run: |
+          node - <<'JS' >> "$GITHUB_STEP_SUMMARY"
+          const fs = require("fs");
+          const path = require("path");
+          const manifestPath = path.join(process.env.RESULTS_PATH, "manifest.json");
+          if (!fs.existsSync(manifestPath)) {
+            console.log("Lighthouse produced no manifest; see the job log.");
+            process.exit(0);
+          }
+          const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+          const pct = (v) => (v == null ? "–" : Math.round(v * 100));
+          console.log("## Lighthouse scores for demin.ws\n");
+          console.log("| URL | Performance | Accessibility | Best practices | SEO |");
+          console.log("| --- | ---: | ---: | ---: | ---: |");
+          for (const entry of manifest.filter((e) => e.isRepresentativeRun)) {
+            const s = entry.summary || {};
+            console.log(
+              `| ${entry.url} | ${pct(s.performance)} | ${pct(s.accessibility)} | ${pct(s["best-practices"])} | ${pct(s.seo)} |`
+            );
+          }
+          console.log("\nMedian of 3 runs per URL. Full HTML and JSON reports are in the `lighthouse-reports` artifact.");
+          JS
+
+      - name: Enforce score budgets
+        # The action annotates failed assertions but does not fail the job;
+        # fail here on error-level budget violations from lighthouserc.json.
+        if: steps.lighthouse.outputs.assertionResults != ''
+        env:
+          RESULTS: ${{ steps.lighthouse.outputs.assertionResults }}
+        run: |
+          node - <<'JS'
+          const failed = JSON.parse(process.env.RESULTS).filter((r) => !r.passed);
+          const errors = failed.filter((r) => r.level === "error");
+          const warnings = failed.length - errors.length;
+          console.log(`${errors.length} error(s), ${warnings} warning(s) from Lighthouse budgets.`);
+          for (const r of failed) {
+            console.log(`  [${r.level}] ${r.url} ${r.auditId}: ${r.actual} (expected ${r.operator} ${r.expected})`);
+          }
+          if (errors.length > 0) process.exit(1);
+          JS
