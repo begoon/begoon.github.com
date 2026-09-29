@@ -1,5 +1,6 @@
 ---
 layout: default
+description: "Александр Дёмин, программист. Профили, проекты и небольшая загадка."
 language: russian
 title: "Я"
 ---

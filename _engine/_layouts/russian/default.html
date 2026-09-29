@@ -5,11 +5,11 @@
    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1" />
    <title>{{.Page.title}}</title>
+{{if .Page.description}}<meta name="description" content="{{html .Page.description}}" />{{end}}
    <link href="/favicon.png" rel="icon" />
    {{include "google_analytics.html"}}
    <link rel="stylesheet" href="/css/screen.css?v={{asset_version "css/screen.css"}}" type="text/css" media="screen, projection" />
-   <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
-   {{include "highlight.html"}}
+{{include "highlight.html"}}
    <link rel="alternate" title="{{include "russian/title.html"}}" href="/atom.xml" type="application/atom+xml">
 </head>
 <body>
@@ -25,9 +25,9 @@
     <span class="extra">&raquo;&nbsp;<a href="/english" aria-label="English"><span class="language-full">english</span><span class="language-short">eng</span></a></span>
   </div>
 
-  <div id="home">
+  <main id="home">
     {{.Page.child}}
-  </div>
+  </main>
 
   <div class="footer">
     <div class="contact">

@@ -50,6 +50,9 @@ highlights them using locally hosted Highlight.js 11.12.0; no `highlight` execut
 or JavaScript build tool is needed. Without JavaScript, code remains readable.
 Feed readers receive plain code blocks.
 
+Pages without labelled code skip the highlighting scripts and stylesheet.
+The extra Erlang, DOS, and x86 assembly grammars load only on pages using them.
+
 Vendored files in `_engine/_site/common/highlight/` come from
 [Highlight.js CDN release 11.12.0](https://github.com/highlightjs/cdn-release/tree/11.12.0):
 `build/highlight.min.js`, the `erlang`, `dos`, and `x86asm` grammars from
@@ -60,6 +63,25 @@ and rebuild the site when upgrading.
 Legacy language names are normalized by the generator. Io has no bundled grammar
 and uses plain text. Unlabelled blocks and unsupported languages are left unchanged
 rather than auto-detected.
+
+# Comments
+
+Disqus loads when the comments section comes within 300 pixels of the viewport.
+Browsers without IntersectionObserver load it immediately. Thread identifiers,
+forum names, and canonical comment URLs remain unchanged.
+
+# Page descriptions
+
+Posts and pages may provide an optional, single-line `description` in their
+metadata. The default layouts escape it and emit a meta description. For example:
+
+```text
+description: "A short summary of this page."
+```
+
+For posts using `@` metadata, use `@description: A short summary of this post.`
+Descriptions are optional; no automatic summary is generated. Both homepages and
+About pages provide explicit descriptions.
 
 # Subscription feeds
 

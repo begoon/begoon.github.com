@@ -1,5 +1,6 @@
 ---
 layout: default
+description: "About Alexander Demin, a programmer. Social profiles, projects, and a small puzzle."
 language: english
 title: "Me"
 ---

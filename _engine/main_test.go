@@ -226,3 +226,50 @@ func TestCodeLanguageAliases(t *testing.T) {
 		}
 	}
 }
+
+func TestConditionalHighlightAssets(t *testing.T) {
+	for _, test := range []struct {
+		name, content string
+		want          []string
+	}{
+		{"text", "<p>Hello</p>", nil},
+		{"inline", "<p><code>printf()</code></p>", nil},
+		{"unlabelled", "<pre><code>plain</code></pre>", nil},
+		{"plaintext", render_code("plain", "io"), nil},
+		{"cpp", render_code("int main() {}", "c++"), []string{"highlight.min.js", "/js/highlight.js", "highlight.css"}},
+		{"extras", render_code("ok.", "erlang") + render_code("echo hi", "bat") + render_code("mov ax, bx", "nasm"), []string{"highlight.min.js", "/js/highlight.js", "highlight.css", "erlang.min.js", "dos.min.js", "x86asm.min.js"}},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			p := Page{"highlight": "stale", "highlight_erlang": "stale"}
+			set_highlight_assets(p, test.content)
+			output := render_page(load_layout("_includes/highlight.html", p))
+			for _, asset := range []string{"highlight.min.js", "/js/highlight.js", "highlight.css", "erlang.min.js", "dos.min.js", "x86asm.min.js"} {
+				want := false
+				for _, expected := range test.want {
+					if expected == asset {
+						want = true
+					}
+				}
+				if strings.Contains(output, asset) != want {
+					t.Errorf("asset %s: %s", asset, output)
+				}
+			}
+		})
+	}
+}
+
+func TestPageDescriptionAndMain(t *testing.T) {
+	for _, language := range []string{"english", "russian"} {
+		p := Page{"filename": "test", "layout": "default", "language": language, "title": "Example", "description": `A "quote" & <tag>`, "content": "<p>Text</p>"}
+		output := render_page(p)
+		if !strings.Contains(output, `<meta name="description" content="A &#34;quote&#34; &amp; &lt;tag&gt;" />`) {
+			t.Fatalf("description not escaped: %s", output)
+		}
+		if !strings.Contains(output, `<main id="home">`) || !strings.Contains(output, "</main>") {
+			t.Fatal("main landmark missing")
+		}
+		if strings.Contains(output, "highlight.min.js") {
+			t.Fatal("highlighting loaded without code")
+		}
+	}
+}

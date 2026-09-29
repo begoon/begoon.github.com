@@ -394,6 +394,25 @@ func feed_content(content, postURL string) string {
 	})
 }
 
+var codeLanguageRE = regexp.MustCompile(`<pre><code class="language-([a-zA-Z0-9_+-]+)">`)
+
+func set_highlight_assets(p Page, content string) {
+	for _, key := range []string{"highlight", "highlight_erlang", "highlight_dos", "highlight_x86asm"} {
+		delete(p, key)
+	}
+	for _, match := range codeLanguageRE.FindAllStringSubmatch(content, -1) {
+		language := match[1]
+		if language == "plaintext" {
+			continue
+		}
+		p["highlight"] = "yes"
+		switch language {
+		case "erlang", "dos", "x86asm":
+			p["highlight_"+language] = "yes"
+		}
+	}
+}
+
 func render_page(p Page) string {
 	trace("> Render page [%s]\n", p["filename"])
 
@@ -451,6 +470,9 @@ func render_page(p Page) string {
 	p["content"] = b.String()
 
 	if layout_name := p["layout"]; layout_name != "none" {
+		if layout_name == "default" {
+			set_highlight_assets(p, p["content"])
+		}
 		trace("& Layout [%s]\n", layout_name)
 		layout := load_layout(filepath.Join(LayoutsDir, p["language"], layout_name)+".html", p)
 		layout["child"] = p["content"]

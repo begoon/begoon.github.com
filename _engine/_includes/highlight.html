@@ -1,5 +1,8 @@
+{{if .Page.highlight}}
+   <link rel="stylesheet" href="/css/highlight.css" />
    <script defer src="/common/highlight/highlight.min.js"></script>
-   <script defer src="/common/highlight/erlang.min.js"></script>
-   <script defer src="/common/highlight/dos.min.js"></script>
-   <script defer src="/common/highlight/x86asm.min.js"></script>
+{{if .Page.highlight_erlang}}<script defer src="/common/highlight/erlang.min.js"></script>{{end}}
+{{if .Page.highlight_dos}}<script defer src="/common/highlight/dos.min.js"></script>{{end}}
+{{if .Page.highlight_x86asm}}<script defer src="/common/highlight/x86asm.min.js"></script>{{end}}
    <script defer src="/js/highlight.js"></script>
+{{end}}
