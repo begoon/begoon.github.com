@@ -3,7 +3,7 @@ layout: default
 title: "Программирование - это просто!"
 language: russian
 ---
-<div class="title">{{.Page.title}} / Блог о программировании для начинающих и не только</div>
+<div class="title">{{.Page.title}}</div>
 
 <script type="text/javascript" src="/js/{{.Page.language}}/search_loader.js"></script>
 
@@ -12,8 +12,7 @@ language: russian
 <ul class="posts">
 {{range .Posts}}{{if .russian}}
   <li id="post_{{.index}}">
-    <span>{{.year}}-{{.month}}-{{.day}}</span> 
-    &raquo; 
+    <span>{{.year}}-{{.month}}-{{.day}} &raquo;</span>
     <a href="{{.url}}">{{html .title}}</a>
   </li>
 {{end}}{{end}}

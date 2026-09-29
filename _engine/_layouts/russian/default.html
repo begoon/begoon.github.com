@@ -1,16 +1,15 @@
 <!DOCTYPE html>
  
-<html>
+<html lang="ru">
 <head>
    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
    <title>{{.Page.title}}</title>
    <link href="/favicon.png" rel="icon" />
    {{include "google_analytics.html"}}
    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection" />
    <link rel="stylesheet" type="text/css" href="/css/highlight.css" />
    {{include "highlight.html"}}
-   <link href="https://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" />
-   <link href="https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" /> 
    <link rel="alternate" title="{{include "russian/title.html"}}" href="/atom.xml" type="application/atom+xml">
 </head>
 <body>
@@ -18,11 +17,11 @@
 <div class="site">
 
   <div class="menu">
-    <a class="extra" href="/english">&laquo; english &raquo;</a>  
-    <a href="/">блог</a> |
-    <a href="/projects/">проекты</a> |
-    <a href="/interview/">интервью</a> |
-    <a href="/articles/">статьи</a> |
+    <a class="extra" href="/english">&laquo; english<span class="language-chevron"> &raquo;</span></a>
+    <a href="/">блог</a> <span class="menu-separator" aria-hidden="true">|</span>
+    <a href="/projects/">проекты</a> <span class="menu-separator" aria-hidden="true">|</span>
+    <a href="/interview/">интервью</a> <span class="menu-separator" aria-hidden="true">|</span>
+    <a href="/articles/">статьи</a> <span class="menu-separator" aria-hidden="true">|</span>
     <a href="/about/">автор</a>
   </div>
 

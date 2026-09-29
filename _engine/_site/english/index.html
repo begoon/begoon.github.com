@@ -3,7 +3,7 @@ layout: default
 title: Programming DIY
 language: english
 ---
-<div class="title">{{.Page.title}} / Blog about programming for beginners and beyond</div>
+<div class="title">{{.Page.title}}</div>
 
 <script type="text/javascript" src="/js/{{.Page.language}}/search_loader.js"></script>
 
@@ -12,10 +12,8 @@ language: english
 <ul class="posts">
 {{range .Posts}}{{if .english}}
   <li id="post_{{.index}}">
-    <span>{{.year}}-{{.month}}-{{.day}}</span> 
-    &raquo; 
+    <span>{{.year}}-{{.month}}-{{.day}} &raquo;</span>
     <a href="{{.url}}">{{html .title}}</a>
   </li>
 {{end}}{{end}}
 </ul>
-

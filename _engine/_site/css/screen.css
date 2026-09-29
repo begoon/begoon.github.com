@@ -17,12 +17,12 @@ html, body {
 
 body {
   background-color: white;
-  font-family: "PT Serif", "Georgia", "Helvetica Neue", Arial, sans-serif;
+  font-family: Georgia, "Times New Roman", serif;
   text-align: center;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "PT Serif", "Georgia", "Helvetica Neue", Arial, sans-serif;
+  font-family: Georgia, "Times New Roman", serif;
   margin-top: 1em;
 }
 
@@ -84,6 +84,10 @@ ul.posts span {
   color: #aaa;
   font-family: Monaco, "Courier New", monospace;
   font-size: 80%;
+}
+
+.search-box {
+  float: right;
 }
 
 /*****************************************************************************/
@@ -236,4 +240,143 @@ ul.posts span {
 
 #post img {
   border: 0;
+}
+
+/*****************************************************************************/
+/* Mobile */
+
+@media (max-width: 640px) {
+  #home > .title {
+    display: none;
+  }
+
+  body {
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .site {
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0 auto 2em;
+    padding: 0 16px;
+    font-size: inherit;
+    overflow-wrap: anywhere;
+  }
+
+  #post {
+    font-size: inherit;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.25;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
+  }
+
+  .site .menu {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 10px;
+    padding: 8px 0 0;
+    margin-bottom: 0;
+    border-bottom: none;
+    font-size: .875rem;
+    line-height: 1.4;
+  }
+
+  .site .menu a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    white-space: nowrap;
+  }
+
+  .site .menu .extra {
+    flex-basis: 100%;
+    font-size: 1rem;
+  }
+
+  .menu-separator {
+    display: none;
+  }
+
+  .language-chevron {
+    display: none;
+  }
+
+  .site img, .site video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .site iframe {
+    max-width: 100%;
+  }
+
+  .site pre {
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-wrap: normal;
+    font-size: .875rem;
+    line-height: 1.5;
+  }
+
+  #post pre {
+    padding: .75em;
+  }
+
+  #post pre code {
+    font-size: inherit;
+    white-space: pre;
+  }
+
+  .site table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .search-box {
+    float: none;
+    margin: 0 0 1em;
+  }
+
+  #search {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 12px;
+    font: inherit;
+  }
+
+  ul.posts li {
+    padding: .5em 0;
+    line-height: 1.5;
+  }
+
+  .site ul:not(.posts), .site ol {
+    margin-left: 1.35em;
+  }
+
+  ul.posts span {
+    display: none;
+  }
+
+  .site .footer .contact {
+    float: none;
+    margin-right: 0;
+    padding-top: .75em;
+  }
 }
