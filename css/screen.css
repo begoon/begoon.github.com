@@ -116,6 +116,10 @@ ul.posts span {
 }
 
 @media (min-width: 641px) {
+  body {
+    line-height: 1.6;
+  }
+
   .menu-separator {
     padding: 0 .25em;
   }
