@@ -15,9 +15,10 @@ Alexander Demin, a programmer.
 
 ### Motto
 
-    ** 54 3F 3F 71 20 2F 25 74 3F 65 76 67 75 5F 66 
-    20 2F 65 72 20 6F 72 67 67 72 65 20 67 75 2F 3E 
-    20 66 68 63 72 65 70 3F 5F 63 68 67 72 65 66 **
+<pre class="motto"><code>** 54 3F 3F 71 20 2F 25 74 3F 65 76 67 75 5F 66
+20 2F 65 72 20 6F 72 67 67 72 65 20 67 75 2F 3E
+20 66 68 63 72 65 70 3F 5F 63 68 67 72 65 66 **
+</code></pre>
 
 If you figure out what it means, please, let me know.
 

@@ -115,6 +115,23 @@ ul.posts span {
   color: #000;
 }
 
+.site .menu .extra {
+  float: right;
+  color: #767676;
+}
+
+.site .menu .extra a {
+  color: #767676;
+}
+
+.site .menu .extra a:hover {
+  color: #000;
+}
+
+.language-short {
+  display: none;
+}
+
 .title {
   color: #a00;
   font-weight: bold;
@@ -283,7 +300,7 @@ ul.posts span {
   .site .menu {
     display: flex;
     flex-wrap: wrap;
-    column-gap: 10px;
+    column-gap: 6px;
     padding: 8px 0 0;
     margin-bottom: 0;
     border-bottom: none;
@@ -299,16 +316,21 @@ ul.posts span {
   }
 
   .site .menu .extra {
-    flex-basis: 100%;
-    font-size: 1rem;
+    float: none;
+    display: inline-flex;
+    align-items: center;
   }
 
   .menu-separator {
     display: none;
   }
 
-  .language-chevron {
+  .language-full {
     display: none;
+  }
+
+  .language-short {
+    display: inline;
   }
 
   .site img, .site video {
@@ -331,6 +353,10 @@ ul.posts span {
 
   #post pre {
     padding: .75em;
+  }
+
+  .site pre.motto {
+    font-size: 11px;
   }
 
   #post pre code {
