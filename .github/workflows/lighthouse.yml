@@ -91,7 +91,7 @@ jobs:
         env:
           RESULTS_PATH: ${{ steps.lighthouse.outputs.resultsPath }}
         run: |
-          node - <<'JS' >> "$GITHUB_STEP_SUMMARY"
+          node - <<'JS' | tee -a "$GITHUB_STEP_SUMMARY"
           const fs = require("fs");
           const path = require("path");
           const manifestPath = path.join(process.env.RESULTS_PATH, "manifest.json");
@@ -126,7 +126,8 @@ jobs:
           const warnings = failed.length - errors.length;
           console.log(`${errors.length} error(s), ${warnings} warning(s) from Lighthouse budgets.`);
           for (const r of failed) {
-            console.log(`  [${r.level}] ${r.url} ${r.auditId}: ${r.actual} (expected ${r.operator} ${r.expected})`);
+            const audit = r.auditProperty ? `${r.auditId}:${r.auditProperty}` : r.auditId;
+            console.log(`  [${r.level}] ${r.url} ${audit}: ${r.actual} (expected ${r.operator} ${r.expected})`);
           }
           if (errors.length > 0) process.exit(1);
           JS
