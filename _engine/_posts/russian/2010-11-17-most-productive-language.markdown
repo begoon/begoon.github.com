@@ -10,7 +10,7 @@ categories:
 ---
 В [интервью][Мое интервью] проекту "[OpenQuality][]" в сказал, что не имею особого пристрастия к конкретному языку. Важен проект, а не язык, на котором он реализуется.
 
-[Мое интервью]: http://experience.openquality.ru/alexander-demin-interview/
+[Мое интервью]: /articles/openquality-interview/
 [OpenQuality]: http://openquality.ru/
 
 А как насчет вопроса «а на каком языке вы наиболее продуктивны»?

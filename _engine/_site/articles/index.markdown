@@ -56,7 +56,7 @@ title: "Статьи"
 
 * [Интервью проекту OpenQuality.ru][] / 2010
 
-[Интервью проекту OpenQuality.ru]: http://experience.openquality.ru/alexander-demin-interview/
+[Интервью проекту OpenQuality.ru]: /articles/openquality-interview/
 
 [Платежный терминал OMNI-395 изнутри]: http://habrahabr.ru/post/164693/
 [Цветной микрокомпьютер Maximite на базе PIC32]: http://habrahabr.ru/post/161405/
