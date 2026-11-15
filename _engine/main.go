@@ -671,8 +671,12 @@ func process_post(filename string) {
 	}
 	trace("= Written file [%s]", t)
 
-	p["index"] = strconv.Itoa(len(posts))
-	posts = append(posts, &p)
+	// An unlisted post keeps its page and URL but stays out of the index,
+	// the search and the feed, which are all built from "posts".
+	if p["unlisted"] != "yes" {
+		p["index"] = strconv.Itoa(len(posts))
+		posts = append(posts, &p)
+	}
 
 	post_id := p["language"] + "-" + p["date"]
 	if existing, ok := post_dates[post_id]; ok {
