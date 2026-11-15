@@ -3,6 +3,7 @@ layout: post
 title: "Обзор Chromebook Samsung 5 3G"
 language: russian
 date: 2011-10-02 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/10/chromebook-samsung-5-3g.html
 categories: 

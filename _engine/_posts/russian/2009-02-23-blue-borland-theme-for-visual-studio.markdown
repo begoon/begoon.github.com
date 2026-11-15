@@ -3,6 +3,7 @@ layout: post
 title: "Голубая (Борланд) палитра для Visual Studio"
 language: russian
 date: 2009-02-23 01:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/02/visual-studio.html
 categories:

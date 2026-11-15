@@ -3,6 +3,7 @@ layout: post
 title: "Включение/выключение proxy в Internet Explorer"
 language: russian
 date: 2009-03-19 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/03/proxy-internet-explorer.html
 categories:

@@ -3,6 +3,7 @@ layout: post
 title: "Сравнение программ из коробки в Windows и Mac OS X"
 language: russian
 date: 2011-09-04 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/09/windows-mac-os-x.html
 categories: 

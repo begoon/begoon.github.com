@@ -3,6 +3,7 @@ layout: post
 title: "Электронные книги - iPad, Kindle, Amazon и все все все"
 language: russian
 date: 2010-09-19 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/09/ipad-kindle-amazon.html
 categories:

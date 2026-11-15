@@ -3,6 +3,7 @@ layout: post
 title: "Google Nexus One"
 language: russian
 date: 2010-01-12 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/01/google-nexus-one.html
 categories:

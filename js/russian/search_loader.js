@@ -13,4 +13,4 @@
         window.addEventListener('load', async_load, false);
 })
 
-("russian", "668684e42880944cddced91a9776afb2bda00d3070aafd6796b3d487d2d5b040");
+("russian", "36a04736df4e4b34bf6c78830d28dbac3b8c7c59956cf4ad8148c33c22f6cc8e");

@@ -3,6 +3,7 @@ layout: post
 title: "А какая у вас зарплата?"
 language: russian
 date: 2010-12-18 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/12/blog-post_18.html
 categories:

@@ -7,7 +7,7 @@ bring a post back, remove the flag and rebuild.
 
 Posts are hidden in rounds, each reviewed and agreed separately.
 
-Hidden so far: 45 Russian and 15 English posts, in 3 rounds.
+Hidden so far: 56 Russian and 17 English posts, in 4 rounds.
 
 ## Round 1: link-only and one-picture posts
 
@@ -110,3 +110,30 @@ News of the moment, old job ads, first impressions of products and thin link pos
 | 2012-04-24 | [Live programming in circa](https://demin.ws/blog/english/2012/04/24/live-programming-in-circa/) |
 | 2012-09-22 | [iPhone 5](https://demin.ws/blog/english/2012/09/22/iphone5/) |
 | 2012-12-22 | [The fascinating apps I am happy to pay for](https://demin.ws/blog/english/2012/12/22/the-fascinating-apps-i-am-happy-to-pay-for/) |
+
+## Round 4: consumer and opinion pieces
+
+Gadget and software reviews of their day, personal opinion pieces on salaries and bonuses, and small Windows tricks. Hidden by the author's choice from titles; they were not re-read first.
+
+### Russian (11)
+
+| Date | Post |
+|---|---|
+| 2009-02-21 | [Спрятать кнопку "Пуск" и помигать клавиатурой](https://demin.ws/blog/russian/2009/02/21/hide-start-button-and-flash-keyboard-lights/) |
+| 2009-02-23 | [Голубая (Борланд) палитра для Visual Studio](https://demin.ws/blog/russian/2009/02/23/blue-borland-theme-for-visual-studio/) |
+| 2009-03-19 | [Включение/выключение proxy в Internet Explorer](https://demin.ws/blog/russian/2009/03/19/on-off-proxy-in-internet-explorer/) |
+| 2010-01-12 | [Google Nexus One](https://demin.ws/blog/russian/2010/01/12/google-nexus-one/) |
+| 2010-09-19 | [Электронные книги - iPad, Kindle, Amazon и все все все](https://demin.ws/blog/russian/2010/09/19/ebooks-ipad-kindle-amazon/) |
+| 2010-12-18 | [А какая у вас зарплата?](https://demin.ws/blog/russian/2010/12/18/what-is-your-salary/) |
+| 2011-02-23 | [MicroXP - легковесная верcия Windows XP](https://demin.ws/blog/russian/2011/02/23/microxp/) |
+| 2011-03-06 | [Бонусы](https://demin.ws/blog/russian/2011/03/06/bonuses/) |
+| 2011-09-04 | [Сравнение программ из коробки в Windows и Mac OS X](https://demin.ws/blog/russian/2011/09/04/comparing-builtin-application-in-windows-and-macosx/) |
+| 2011-10-02 | [Обзор Chromebook Samsung 5 3G](https://demin.ws/blog/russian/2011/10/02/chromebook-samsumg-5-3g-review/) |
+| 2013-01-18 | [Спасибо, тебе Эппл](https://demin.ws/blog/russian/2013/01/18/thank-you-apple/) |
+
+### English (2)
+
+| Date | Post |
+|---|---|
+| 2011-02-23 | [MicroXP - a lightweight Windows XP](https://demin.ws/blog/english/2011/02/23/microxp/) |
+| 2011-10-02 | [Chromebook Samsung 5 5G review](https://demin.ws/blog/english/2011/10/02/chromebook-samsumg-5-3g-review/) |

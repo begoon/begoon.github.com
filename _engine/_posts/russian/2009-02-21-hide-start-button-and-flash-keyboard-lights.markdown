@@ -3,6 +3,7 @@ layout: post
 title: 'Спрятать кнопку "Пуск" и помигать клавиатурой'
 language: russian
 date: 2009-02-21 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/02/blog-post_21.html
 categories:
