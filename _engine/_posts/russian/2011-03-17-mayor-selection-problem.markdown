@@ -3,6 +3,7 @@ layout: post
 title: "Задача: выборы мэра"
 language: russian
 date: 2011-03-17 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/03/blog-post_17.html
 categories:

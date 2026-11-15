@@ -2,6 +2,7 @@
 layout: post
 language: russian
 date: 2012-04-06 01:56
+unlisted: yes
 title: "Различие герундиальных и инфинитивных оборотов"
 categories:
 - russian

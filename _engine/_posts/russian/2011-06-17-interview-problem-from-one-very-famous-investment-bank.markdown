@@ -3,6 +3,7 @@ layout: post
 title: "Задача с интервью одного очень крупного инвестиционного банка"
 language: russian
 date: 2011-06-17 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/06/blog-post_17.html
 categories: 

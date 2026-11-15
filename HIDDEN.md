@@ -8,7 +8,7 @@ bring a post back, remove the flag and rebuild.
 Posts are hidden in rounds, each reviewed and agreed separately. A post is
 always hidden in both languages when it has a translation.
 
-Hidden so far: 69 Russian and 24 English posts, in 6 rounds.
+Hidden so far: 73 Russian and 24 English posts, in 7 rounds.
 
 ## Round 1: link-only and one-picture posts
 
@@ -181,3 +181,16 @@ Short posts that point at something external (a contest, a video, an event, some
 | 2012-09-05 | [A first hack of my motto](https://demin.ws/blog/english/2012/09/05/first-hack-of-motto/) |
 | 2012-09-06 | [Aliases in Gmail](https://demin.ws/blog/english/2012/09/06/gmail-aliases/) |
 | 2012-10-01 | [Getting code statistics](https://demin.ws/blog/english/2012/10/01/git-diff/) |
+
+## Round 7: bare puzzles and English-language notes
+
+Two puzzle statements with no solution in the post, and two posts about English grammar and phrases, off-topic for a programming blog. None has a translation.
+
+### Russian (4)
+
+| Date | Post |
+|---|---|
+| 2011-03-17 | [Задача: выборы мэра](https://demin.ws/blog/russian/2011/03/17/mayor-selection-problem/) |
+| 2011-06-17 | [Задача с интервью одного очень крупного инвестиционного банка](https://demin.ws/blog/russian/2011/06/17/interview-problem-from-one-very-famous-investment-bank/) |
+| 2012-04-06 | [Различие герундиальных и инфинитивных оборотов](https://demin.ws/blog/russian/2012/04/06/differences-between-gerund-and-infinitive-expressions/) |
+| 2012-07-26 | [Полезные обороты для английского](https://demin.ws/blog/russian/2012/07/26/useful-english-phrases/) |
