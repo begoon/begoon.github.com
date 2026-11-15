@@ -3,6 +3,7 @@ layout: post
 title: "Как правильно уничтожить банковскую карту"
 language: russian
 date: 2012-09-29 22:30
+unlisted: yes
 comments: true
 categories: 
 - photo

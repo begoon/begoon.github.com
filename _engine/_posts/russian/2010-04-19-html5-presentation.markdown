@@ -3,6 +3,7 @@ layout: post
 title: "Презентация про HTML5"
 language: russian
 date: 2010-04-19 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/04/html5.html
 categories:

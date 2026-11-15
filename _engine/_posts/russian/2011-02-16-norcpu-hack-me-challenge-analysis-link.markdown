@@ -3,6 +3,7 @@ layout: post
 title: "Ссылка на анализ результатов взлома программы однокомандного процессора NORCPU"
 language: russian
 date: 2011-02-16 01:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/02/norcpu_16.html
 categories:

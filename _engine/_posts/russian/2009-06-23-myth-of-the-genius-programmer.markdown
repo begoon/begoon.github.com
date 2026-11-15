@@ -3,6 +3,7 @@ layout: post
 title: "The Myth of the Genius Programmer"
 language: russian
 date: 2009-06-23 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/06/myth-of-genius-programmer.html
 categories:

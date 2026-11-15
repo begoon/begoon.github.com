@@ -3,6 +3,7 @@ layout: post
 title: "Язык Go в действии - мультисерверная сокращалка URL'ов менее чем за час"
 language: russian
 date: 2011-02-24 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/02/go-url.html
 categories:

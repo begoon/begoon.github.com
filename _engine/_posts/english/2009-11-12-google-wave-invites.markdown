@@ -3,6 +3,7 @@ layout: post
 title: "Google Wave invites"
 language: english
 date: 2009-11-12 00:00
+unlisted: yes
 comments: true
 blogspot: http://meta-coding.blogspot.com/2009/11/google-wave-invites.html
 categories: 

@@ -1,5 +1,6 @@
 @language: russian
 @date: 2012-12-25 22:00
+@unlisted: yes
 @tags: bloomberg
 
 Рабочее место в Блумберге

@@ -3,6 +3,7 @@ layout: post
 title: "Introduction to Google Mock (video)"
 language: english
 date: 2009-10-16 00:00
+unlisted: yes
 comments: true
 blogspot: http://meta-coding.blogspot.com/2009/10/introduction-to-google-mock-video.html
 categories: 

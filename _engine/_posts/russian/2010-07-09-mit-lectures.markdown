@@ -3,6 +3,7 @@ layout: post
 title: "Лекции из MIT"
 language: russian
 date: 2010-07-09 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/07/mit.html
 categories:

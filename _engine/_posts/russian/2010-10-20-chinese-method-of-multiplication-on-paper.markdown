@@ -3,6 +3,7 @@ layout: post
 title: "Умножение вручную на бумажке по-китайски"
 language: russian
 date: 2010-10-20 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/10/blog-post_20.html
 categories:

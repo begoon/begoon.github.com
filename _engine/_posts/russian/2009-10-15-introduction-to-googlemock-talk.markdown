@@ -3,6 +3,7 @@ layout: post
 title: "Введение в Google Mock (видео)"
 language: russian
 date: 2009-10-15 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/10/google-mock.html
 categories:

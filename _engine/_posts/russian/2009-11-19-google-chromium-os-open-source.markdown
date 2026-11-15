@@ -3,6 +3,7 @@ layout: post
 title: "Google Chromium OS теперь open source"
 language: russian
 date: 2009-11-19 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/11/google-chromium-os-open-source.html
 categories:

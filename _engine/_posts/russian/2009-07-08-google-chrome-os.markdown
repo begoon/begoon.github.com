@@ -3,6 +3,7 @@ layout: post
 title: "Google Chrome OS"
 language: russian
 date: 2009-07-08 01:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/07/google-chrome-os.html
 categories:

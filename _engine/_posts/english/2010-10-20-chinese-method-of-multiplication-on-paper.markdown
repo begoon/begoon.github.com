@@ -3,6 +3,7 @@ layout: post
 title: "Chinese method of multiplication on paper"
 language: english
 date: 2010-10-20 00:00
+unlisted: yes
 comments: true
 blogspot: http://meta-coding.blogspot.com/2010/10/chinese-method-of-multiplication-on.html
 categories: 

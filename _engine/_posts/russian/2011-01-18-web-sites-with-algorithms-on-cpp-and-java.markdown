@@ -3,6 +3,7 @@ layout: post
 title: "Сайты с алгоритмами на C++ и Java"
 language: russian
 date: 2011-01-18 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/01/c-java.html
 categories:
