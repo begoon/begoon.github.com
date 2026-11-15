@@ -15,7 +15,7 @@ categories:
 
 [Мифический человеко-месяц или как создаются программные системы][]
 
-[Мифический человеко-месяц или как создаются программные системы]: http://www.ozon.ru/context/detail/id/83760/?partner=easy-coding
+[Мифический человеко-месяц или как создаются программные системы]: http://www.ozon.ru/context/detail/id/83760/
 
 {% img /images/covers/russian/mythical-man-month-cover.jpg %}
 

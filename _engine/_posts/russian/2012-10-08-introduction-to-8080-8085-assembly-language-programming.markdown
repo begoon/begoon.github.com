@@ -11,7 +11,7 @@ categories:
 Купил очень дешево на Амазоне старую книгу про программирование на ассемблере
 для 8080-8085.
 
-<a href="http://www.amazon.co.uk/gp/product/0471080098/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=0471080098&amp;linkCode=as2&amp;tag=prodiy-21">Introduction to 8080-8085 Assembly Language Programming (Self-teaching Guides)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=0471080098" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/0471080098">Introduction to 8080-8085 Assembly Language Programming (Self-teaching Guides)</a>
 
 ![](/images/covers/english/introduction-to-8080-8085-assembly-language-programming.jpg)
 

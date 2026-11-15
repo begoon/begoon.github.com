@@ -10,10 +10,6 @@ title: "Я"
 
 {% include social-links.html %}
 
-### Disclaimer
-
-{% include russian/disclaimer.html %}
-
 ### Motto
 
 <pre class="motto"><code>** 54 3F 3F 71 20 2F 25 74 3F 65 76 67 75 5F 66

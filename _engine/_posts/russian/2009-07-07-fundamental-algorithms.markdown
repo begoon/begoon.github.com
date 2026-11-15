@@ -22,7 +22,7 @@ categories:
 
 [Фундаментальные алгоритмы на C++. Части 1-4. Анализ. Структуры данных. Сортировка.][]
 
-[Фундаментальные алгоритмы на C++. Части 1-4. Анализ. Структуры данных. Сортировка.]: http://www.ozon.ru/context/detail/id/128304/?partner=easy-coding
+[Фундаментальные алгоритмы на C++. Части 1-4. Анализ. Структуры данных. Сортировка.]: http://www.ozon.ru/context/detail/id/128304/
 
 {% img /images/covers/russian/fundamental-algorithms-1-4-cover.jpg %}
 
@@ -36,7 +36,7 @@ categories:
 
 [Фундаментальные алгоритмы на C++. Часть 5. Алгоритмы на графах.][]
 
-[Фундаментальные алгоритмы на C++. Часть 5. Алгоритмы на графах.]: http://www.ozon.ru/context/detail/id/1317133/?partner=easy-coding
+[Фундаментальные алгоритмы на C++. Часть 5. Алгоритмы на графах.]: http://www.ozon.ru/context/detail/id/1317133/
 
 {% img /images/covers/russian/fundamental-algorithms-5-cover.jpg %}
 

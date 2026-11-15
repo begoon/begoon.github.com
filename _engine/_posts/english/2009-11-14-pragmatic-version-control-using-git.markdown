@@ -47,7 +47,7 @@ I would recommend a very good book to start with git.
 
 Travis Swicegood, "Pragmatic Version Control using Git"
 
-<a href="http://www.amazon.co.uk/gp/product/1934356158/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=1934356158"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=1934356158&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=1934356158" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/1934356158"><img border="0" src="/images/covers/amazon/1934356158.jpg" alt=""></a>
 
 This is the very good introduction into Git from the community of Linux kernel developers and from Linux Torvalds in particular.
 

@@ -31,7 +31,7 @@ categories:
 
 [С. М. Окулов, Алгоритмы обработки строк][]
 
-[С. М. Окулов, Алгоритмы обработки строк]: http://www.ozon.ru/context/detail/id/4843928/?partner=easy-coding
+[С. М. Окулов, Алгоритмы обработки строк]: http://www.ozon.ru/context/detail/id/4843928/
 
 {% img /images/covers/russian/string-processing-algorithms-cover.jpg %}
 
@@ -47,7 +47,7 @@ categories:
 
 [С. К. Ландо, Лекции о производящих функциях][]
 
-[С. К. Ландо, Лекции о производящих функциях]: http://www.ozon.ru/context/detail/id/1280166/?partner=easy-coding
+[С. К. Ландо, Лекции о производящих функциях]: http://www.ozon.ru/context/detail/id/1280166/
 
 {% img /images/covers/russian/lectures-about-generating-functions-cover.jpg %}
 

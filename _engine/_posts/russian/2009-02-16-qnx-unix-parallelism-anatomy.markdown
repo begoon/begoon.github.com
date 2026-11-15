@@ -13,7 +13,7 @@ categories:
 
 [QNX/UNIX. Анатомия параллелизма][]
 
-[QNX/UNIX. Анатомия параллелизма]: http://www.ozon.ru/context/detail/id/2512096/?partner=easy-coding
+[QNX/UNIX. Анатомия параллелизма]: http://www.ozon.ru/context/detail/id/2512096/
 
 {% img /images/covers/russian/qnx-unix-parallelism-anatomy-cover.jpg %}
 

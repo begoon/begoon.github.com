@@ -181,9 +181,9 @@ Here is a list of books I read (regarding the architecture) and skimmed
 A short, concise and easy book for beginners. It describes many projects
 on Propeller. One of the authors is the PMC inventor.
 
-<a href="http://www.amazon.co.uk/gp/product/B004X6U6II/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B004X6U6II&amp;linkCode=as2&amp;tag=prodiy-21">Getting Started With the Propeller</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B004X6U6II" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B004X6U6II">Getting Started With the Propeller</a>
 
-<a href="http://www.amazon.co.uk/gp/product/B004X6U6II/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B004X6U6II&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B004X6U6II&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B004X6U6II" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B004X6U6II"><img border="0" src="/images/covers/amazon/B004X6U6II.jpg" alt=""></a>
 
 - - - 
 
@@ -194,14 +194,14 @@ benefit from the original multi-core architecture of Propeller. The first
 section covers the internals of Propeller. Following sections contain
 various projects (can be skipped on the first reading).
 
-<a href="http://www.amazon.co.uk/gp/product/B003TQM9Y2/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B003TQM9Y2&amp;linkCode=as2&amp;tag=prodiy-21">Programming the Propeller with Spin : A Beginner's Guide to Parallel Processing (Tab Electronics)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B003TQM9Y2" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B003TQM9Y2">Programming the Propeller with Spin : A Beginner's Guide to Parallel Processing (Tab Electronics)</a>
 
-<a href="http://www.amazon.co.uk/gp/product/B003TQM9Y2/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B003TQM9Y2&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B003TQM9Y2&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B003TQM9Y2" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B003TQM9Y2"><img border="0" src="/images/covers/amazon/B003TQM9Y2.jpg" alt=""></a>
 
 - - -
 
 A collections of real applications with Propeller from its creators.
 
-<a href="http://www.amazon.co.uk/gp/product/B003BZVIZC/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B003BZVIZC&amp;linkCode=as2&amp;tag=prodiy-21">Programming and Customizing the Multicore Propeller Microcontroller : The Official Guide</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B003BZVIZC" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B003BZVIZC">Programming and Customizing the Multicore Propeller Microcontroller : The Official Guide</a>
 
-<a href="http://www.amazon.co.uk/gp/product/B003BZVIZC/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B003BZVIZC&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B003BZVIZC&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B003BZVIZC" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B003BZVIZC"><img border="0" src="/images/covers/amazon/B003BZVIZC.jpg" alt=""></a>

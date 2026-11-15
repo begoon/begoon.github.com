@@ -13,7 +13,7 @@ categories:
 
 [Наставление для программистов, руководящих другими программистами][]
 
-[Наставление для программистов, руководящих другими программистами]: http://www.ozon.ru/context/detail/id/2409500/?partner=easy-coding
+[Наставление для программистов, руководящих другими программистами]: http://www.ozon.ru/context/detail/id/2409500/
 
 {% img /images/covers/russian/herding-cats-cover.jpg %}
 

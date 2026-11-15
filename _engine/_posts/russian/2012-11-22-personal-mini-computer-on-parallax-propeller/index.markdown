@@ -193,9 +193,9 @@ QuickStart", поэтому спаять надо только плату рас
 Небольшая и очень понятная книга для начинающих. Описаны (с картинками)
 интересные проекты. Один из соавторов является конструктором PMC.
 
-<a href="http://www.amazon.co.uk/gp/product/B004X6U6II/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B004X6U6II&amp;linkCode=as2&amp;tag=prodiy-21">Getting Started With the Propeller</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B004X6U6II" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B004X6U6II">Getting Started With the Propeller</a>
 
-<a href="http://www.amazon.co.uk/gp/product/B004X6U6II/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B004X6U6II&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B004X6U6II&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B004X6U6II" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B004X6U6II"><img border="0" src="/images/covers/amazon/B004X6U6II.jpg" alt=""></a>
 
 - - - 
 
@@ -205,17 +205,17 @@ QuickStart", поэтому спаять надо только плату рас
 вы получите почти полное понимание архитектуры. Далее описаны несколько
 проектов (это можно пропустить).
 
-<a href="http://www.amazon.co.uk/gp/product/B003TQM9Y2/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B003TQM9Y2&amp;linkCode=as2&amp;tag=prodiy-21">Programming the Propeller with Spin : A Beginner's Guide to Parallel Processing (Tab Electronics)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B003TQM9Y2" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B003TQM9Y2">Programming the Propeller with Spin : A Beginner's Guide to Parallel Processing (Tab Electronics)</a>
 
-<a href="http://www.amazon.co.uk/gp/product/B003TQM9Y2/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B003TQM9Y2&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B003TQM9Y2&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B003TQM9Y2" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B003TQM9Y2"><img border="0" src="/images/covers/amazon/B003TQM9Y2.jpg" alt=""></a>
 
 - - -
 
 Сборник реальных проектов с использованием Пропеллера от его создателей.
 
-<a href="http://www.amazon.co.uk/gp/product/B003BZVIZC/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B003BZVIZC&amp;linkCode=as2&amp;tag=prodiy-21">Programming and Customizing the Multicore Propeller Microcontroller : The Official Guide</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B003BZVIZC" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B003BZVIZC">Programming and Customizing the Multicore Propeller Microcontroller : The Official Guide</a>
 
-<a href="http://www.amazon.co.uk/gp/product/B003BZVIZC/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B003BZVIZC&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B003BZVIZC&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B003BZVIZC" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B003BZVIZC"><img border="0" src="/images/covers/amazon/B003BZVIZC.jpg" alt=""></a>
 
 На момент написания этой статьи, первая книга доступна только в формате Киндл
 на Амазоне по цене в два доллара, а вот вторую и третью можно найти, если

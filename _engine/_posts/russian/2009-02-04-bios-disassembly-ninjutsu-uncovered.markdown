@@ -15,7 +15,7 @@ categories:
 
 [BIOS. Дизассемблирование, модификация, программирование][] (BIOS Disassembly Ninjutsu Uncovered)
 
-[BIOS. Дизассемблирование, модификация, программирование]: http://www.ozon.ru/context/detail/id/3506567/?partner=easy-coding
+[BIOS. Дизассемблирование, модификация, программирование]: http://www.ozon.ru/context/detail/id/3506567/
 
 {% img /images/covers/russian/bios-disassembly-ninjutsu-uncovered-cover.jpg %}
 

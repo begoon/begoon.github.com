@@ -13,7 +13,7 @@ categories:
 
 [Интерфейс USB. Практика использования и программирования][]
 
-[Интерфейс USB. Практика использования и программирования]: http://www.ozon.ru/context/detail/id/1955129/?partner=easy-coding
+[Интерфейс USB. Практика использования и программирования]: http://www.ozon.ru/context/detail/id/1955129/
 
 {% img /images/covers/russian/usb-interface-usage-and-programming-cover.jpg %}
 

@@ -13,7 +13,7 @@ categories:
 
 [Человеский фактор: успешные проекты и команды][]
 
-[Человеский фактор: успешные проекты и команды]: http://www.ozon.ru/context/detail/id/2338486/?partner=easy-coding
+[Человеский фактор: успешные проекты и команды]: http://www.ozon.ru/context/detail/id/2338486/
 
 {% img /images/covers/russian/peopleware-cover.jpg %}
 

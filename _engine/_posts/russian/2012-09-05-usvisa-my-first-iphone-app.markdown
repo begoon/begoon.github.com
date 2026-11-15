@@ -63,17 +63,17 @@ Disclaimer 2
 
 **Предупреждение**: *Ссылки снизу содержат мой личный номер партнерской программы с Амазоном. От возможных покупок, совершенных после перехода по этим ссылкам, я могу получить небольшой процент. Если вас это не устраивает, пожалуйста, не нажимайте на ссылки, или вручную «почистите» URL через cut-paste. Спасибо за понимание.*
 
-1\. <a href="http://www.amazon.co.uk/gp/product/B007OWBAB0/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;tag=prodiy-21&amp;linkCode=as2&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B007OWBAB0">iOS Programming: The Big Nerd Ranch Guide, 3/e (Big Nerd Ranch Guides)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B007OWBAB0" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+1\. <a href="https://www.amazon.co.uk/dp/B007OWBAB0">iOS Programming: The Big Nerd Ranch Guide, 3/e (Big Nerd Ranch Guides)</a>
 
-<a href="http://www.amazon.co.uk/gp/product/B007OWBAB0/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;tag=prodiy-21&amp;linkCode=as2&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B007OWBAB0"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;Format=_SL160_&amp;ASIN=B007OWBAB0&amp;MarketPlace=GB&amp;ID=AsinImage&amp;WS=1&amp;tag=prodiy-21&amp;ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B007OWBAB0" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B007OWBAB0"><img border="0" src="/images/covers/amazon/B007OWBAB0.jpg" alt=""></a>
 
-2\. <a href="http://www.amazon.co.uk/gp/product/0321706285/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;tag=prodiy-21&amp;linkCode=as2&amp;camp=1634&amp;creative=6738&amp;creativeASIN=0321706285">Objective-C Programming: The Big Nerd Ranch Guide (Big Nerd Ranch Guides)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=0321706285" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+2\. <a href="https://www.amazon.co.uk/dp/0321706285">Objective-C Programming: The Big Nerd Ranch Guide (Big Nerd Ranch Guides)</a>
 
-<a href="http://www.amazon.co.uk/gp/product/0321706285/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;tag=prodiy-21&amp;linkCode=as2&amp;camp=1634&amp;creative=6738&amp;creativeASIN=0321706285"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;Format=_SL160_&amp;ASIN=0321706285&amp;MarketPlace=GB&amp;ID=AsinImage&amp;WS=1&amp;tag=prodiy-21&amp;ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=0321706285" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/0321706285"><img border="0" src="/images/covers/amazon/0321706285.jpg" alt=""></a>
 
-3\. <a href="http://www.amazon.co.uk/gp/product/B006GFZ288/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;tag=prodiy-21&amp;linkCode=as2&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B006GFZ288">Programming in Objective-C (4th Edition) (Developer's Library)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B006GFZ288" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+3\. <a href="https://www.amazon.co.uk/dp/B006GFZ288">Programming in Objective-C (4th Edition) (Developer's Library)</a>
 
-<a href="http://www.amazon.co.uk/gp/product/B006GFZ288/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;tag=prodiy-21&amp;linkCode=as2&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B006GFZ288"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;Format=_SL160_&amp;ASIN=B006GFZ288&amp;MarketPlace=GB&amp;ID=AsinImage&amp;WS=1&amp;tag=prodiy-21&amp;ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B006GFZ288" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B006GFZ288"><img border="0" src="/images/covers/amazon/B006GFZ288.jpg" alt=""></a>
 
 А еще есть один волшебный бесплатный документ --  «[From C++ to Objective-C][]».
 

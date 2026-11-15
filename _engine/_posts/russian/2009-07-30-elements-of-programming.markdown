@@ -16,7 +16,7 @@ categories:
 
 Недавно я купил его последнюю книгу "Elements of Programming".
 
-<a href="http://www.amazon.co.uk/gp/product/032163537X/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=032163537X"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=032163537X&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=032163537X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/032163537X"><img border="0" src="/images/covers/amazon/032163537X.jpg" alt=""></a>
 
 Довольно своеобразная книга. Много математики, приводимой как обоснование тех или иных приемов в программировании (язык, конечно, С++), из-за чего читается немного тяжело. Забавно, я читал многие его публикации до этого, и как-то заметил, что чем дальше, тем больше он использует формальную математику для описания программирования.
 

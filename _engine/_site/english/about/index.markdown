@@ -10,10 +10,6 @@ Alexander Demin, a programmer.
 
 {% include social-links.html %}
 
-### Disclaimer
-
-{% include english/disclaimer.html %}
-
 ### Motto
 
 <pre class="motto"><code>** 54 3F 3F 71 20 2F 25 74 3F 65 76 67 75 5F 66

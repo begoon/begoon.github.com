@@ -19,4 +19,4 @@ categories:
 
 Возразите мне...
 
-[Психология влияния]: http://www.ozon.ru/context/detail/id/147187/?partner=easy-coding
+[Психология влияния]: http://www.ozon.ru/context/detail/id/147187/

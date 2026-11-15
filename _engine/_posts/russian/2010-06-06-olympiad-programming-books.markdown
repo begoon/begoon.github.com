@@ -29,7 +29,7 @@ categories:
 
 С. Окулов, [Программирование в алгоритмах][]
 
-[Программирование в алгоритмах]: http://www.ozon.ru/context/detail/id/3506097/?partner=easy-coding
+[Программирование в алгоритмах]: http://www.ozon.ru/context/detail/id/3506097/
 
 {% img /images/covers/russian/programming-in-algorithms-cover.jpg %}
 
@@ -37,7 +37,7 @@ categories:
 
 {% img /images/covers/russian/solving-difficult-olympiad-problems-cover.jpg %}
 
-[Решение сложных и олимпиадных задач по программированию]: http://www.ozon.ru/context/detail/id/4884026/?partner=easy-coding
+[Решение сложных и олимпиадных задач по программированию]: http://www.ozon.ru/context/detail/id/4884026/
 
 Мне эти две понравились тем, что тут даются не просто сухие академические описания алгоритмов, как, например, у [Седжвика][Роберт Седжвик, "Фундаментальные алгоритмы"], а примеры их применения и адаптации для реальных задач.
 

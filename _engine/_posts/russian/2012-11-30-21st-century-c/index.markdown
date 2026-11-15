@@ -5,9 +5,9 @@
 "21st Century C: C Tips from the New School", автор Ben Klemens
 ================================================================
 
-<a href="http://www.amazon.co.uk/gp/product/1449327141/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=1449327141&amp;linkCode=as2&amp;tag=prodiy-21">21st Century C: C Tips from the New School</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=1449327141" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/1449327141">21st Century C: C Tips from the New School</a>
 
-<a href="http://www.amazon.co.uk/gp/product/1449327141/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=1449327141&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=1449327141&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=1449327141" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/1449327141"><img border="0" src="/images/covers/amazon/1449327141.jpg" alt=""></a>
 
 Как следует из названия - это книга о "новом" C. Конкретно: С89, C99 и даже
 C11. Плюс, краткий обзор основных "игроков" типа gcc или clang.

@@ -11,7 +11,7 @@ categories:
 ---
 Лет пятнадцать назад мне в руки попала книга Чарльза Уэзерелла "[Этюды для программистов][]".
 
-[Этюды для программистов]: http://www.ozon.ru/context/detail/id/1940685/?partner=easy-coding
+[Этюды для программистов]: http://www.ozon.ru/context/detail/id/1940685/
 
 {% img /images/covers/russian/etudes-for-programmers-cover.jpg %}
 
@@ -49,7 +49,7 @@ categories:
 
 Пару дней назад королевская почта доставила мне то, что я так давно мечтал полистать лично — это английский оригинал этой книги.
 
-<a href="http://www.amazon.co.uk/gp/product/0132918072/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=0132918072"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=0132918072&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=0132918072" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+
 
 Книга была издана аж в 1978 (я тогда даже не ходил пешком под стол, а просто лежал) и более не переиздавалась. Я купил списанный библиотечный экземпляр. Немного потертый, переклеенный скотчем по корешку, с библиотечным кармашком для карточки на обратной стороне обложки. Экстаз, один словом.
 

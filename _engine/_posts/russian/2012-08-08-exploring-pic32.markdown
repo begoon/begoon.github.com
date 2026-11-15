@@ -12,9 +12,9 @@ categories:
 ---
 Работая с Джефом Грэхемом [над интервью][Интервью с Джефом Грэхемом], я узнал от него про книгу, идеи и готовые части кода из которой стали основой некоторых подсистем программой части Maximite.
 
-<a href="http://www.amazon.co.uk/gp/product/B005VO36UG/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B005VO36UG&amp;linkCode=as2&amp;tag=prodiy-21">Programming 32-bit Microcontrollers in C: Exploring the PIC32 (Embedded Technology)</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B005VO36UG" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B005VO36UG">Programming 32-bit Microcontrollers in C: Exploring the PIC32 (Embedded Technology)</a>
 
-<a href="http://www.amazon.co.uk/gp/product/B005VO36UG/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B005VO36UG&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B005VO36UG&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B005VO36UG" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B005VO36UG"><img border="0" src="/images/covers/amazon/B005VO36UG.jpg" alt=""></a>
 
 [Интервью с Джефом Грэхемом]: /blog/russian/2012/08/07/interview-with-geoff-graham/
 

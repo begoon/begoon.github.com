@@ -11,9 +11,9 @@ categories:
 ---
 Quite often in hotel rooms you can only find Ethernet. But what am I supposed to do with iPhone and iPad then? So, I bought this tiny little device some time ago:
 
-<a href="http://www.amazon.co.uk/gp/product/B004YNK9O6/ref=as_li_qf_sp_asin_tl?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B004YNK9O6&amp;linkCode=as2&amp;tag=prodiy-21">Palm-Size Portable Mini Travel 2 in 1 Wireless N 802.11n/g WLAN Network Router / Client Adapter</a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B004YNK9O6" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/B004YNK9O6">Palm-Size Portable Mini Travel 2 in 1 Wireless N 802.11n/g WLAN Network Router / Client Adapter</a>
 
-<a href="http://www.amazon.co.uk/gp/product/B004YNK9O6/ref=as_li_qf_sp_asin_il?ie=UTF8&amp;camp=1634&amp;creative=6738&amp;creativeASIN=B004YNK9O6&amp;linkCode=as2&amp;tag=prodiy-21"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&amp;ASIN=B004YNK9O6&amp;Format=_SL160_&amp;ID=AsinImage&amp;MarketPlace=GB&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=prodiy-21" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&amp;l=as2&amp;o=2&amp;a=B004YNK9O6" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+
 
 This is called [WA-6220](http://www.ccandc.com.tw/products_2.php?prod=100).
 

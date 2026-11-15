@@ -11,7 +11,7 @@ categories:
 ---
 [Биография Стива Джобса от Уолтера Айзексона][]
 
-[Биография Стива Джобса от Уолтера Айзексона]: http://www.ozon.ru/context/detail/id/7363365/?partner=easy-coding
+[Биография Стива Джобса от Уолтера Айзексона]: http://www.ozon.ru/context/detail/id/7363365/
 
 {% img /images/covers/russian/steve-jobs-exclusive-biography-cover.jpg %}
 

@@ -59,6 +59,6 @@ P.P.S. Настоятельно рекомендую по теме вот эту
 
 [Компиляторы. Принципы, технологии и инструментарий][]
 
-[Компиляторы. Принципы, технологии и инструментарий]: http://www.ozon.ru/context/detail/id/3829076/?partner=easy-coding
+[Компиляторы. Принципы, технологии и инструментарий]: http://www.ozon.ru/context/detail/id/3829076/
 
 {% img /images/covers/russian/compilers-cover.jpg %}

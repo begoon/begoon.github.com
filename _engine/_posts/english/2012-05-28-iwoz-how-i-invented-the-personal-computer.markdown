@@ -10,7 +10,7 @@ categories:
 - english
 ---
 
-<a href="http://www.amazon.co.uk/gp/product/140015328X/ref=as_li_tf_il?ie=UTF8&tag=prodiy-21&linkCode=as2&camp=1634&creative=6738&creativeASIN=140015328X"><img border="0" src="http://ws.assoc-amazon.co.uk/widgets/q?_encoding=UTF8&Format=_SL160_&ASIN=140015328X&MarketPlace=GB&ID=AsinImage&WS=1&tag=prodiy-21&ServiceVersion=20070822" ></a><img src="http://www.assoc-amazon.co.uk/e/ir?t=prodiy-21&l=as2&o=2&a=140015328X" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" />
+<a href="https://www.amazon.co.uk/dp/140015328X"><img border="0" src="/images/covers/amazon/140015328X.jpg" alt=""></a>
 
 A quote from the book:
 
