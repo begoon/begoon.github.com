@@ -3,6 +3,7 @@ layout: post
 language: english
 title: "How to search in this blog?"
 date: 2012-04-10 16:59
+unlisted: yes
 categories:
 - english
 ---

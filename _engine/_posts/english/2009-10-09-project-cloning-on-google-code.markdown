@@ -3,6 +3,7 @@ layout: post
 title: "Project cloning on Google Code"
 language: english
 date: 2009-10-09 00:00
+unlisted: yes
 comments: true
 blogspot: http://meta-coding.blogspot.com/2009/10/project-cloning-on-google-code.html
 categories: 

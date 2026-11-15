@@ -3,6 +3,7 @@ layout: post
 title: "cmockery staging project"
 language: english
 date: 2010-02-13 00:00
+unlisted: yes
 comments: true
 blogspot: http://meta-coding.blogspot.com/2010/02/cmockery-staging-project.html
 categories: 

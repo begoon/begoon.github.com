@@ -3,6 +3,7 @@ layout: post
 title: "Блог о Великобритании глазами программиста"
 language: russian
 date: 2010-07-29 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/07/blog-post_29.html
 categories:

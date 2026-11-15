@@ -3,6 +3,7 @@ layout: post
 title: "Партнерские ссылки в данном блоге"
 language: russian
 date: 2012-05-23 06:00
+unlisted: yes
 comments: true
 categories: 
 - russian

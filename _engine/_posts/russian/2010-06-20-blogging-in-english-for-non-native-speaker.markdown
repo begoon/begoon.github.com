@@ -3,6 +3,7 @@ layout: post
 title: "Блог на английском для носителя русского языка?"
 language: russian
 date: 2010-06-20 01:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/06/blog-post_20.html
 categories:

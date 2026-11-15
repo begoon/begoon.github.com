@@ -3,6 +3,7 @@ layout: post
 title: "Как вы пишете в Blogspot?"
 language: russian
 date: 2009-05-17 02:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/05/blogspot.html
 categories:

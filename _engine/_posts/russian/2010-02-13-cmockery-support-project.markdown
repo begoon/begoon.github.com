@@ -3,6 +3,7 @@ layout: post
 title: "Проект поддержки библиотеки cmockery"
 language: russian
 date: 2010-02-13 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/02/cmockery.html
 categories:

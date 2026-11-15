@@ -3,6 +3,7 @@ layout: post
 title: "Wiki2blog: онлайновый wiki-редактор для Blogspot"
 language: russian
 date: 2009-12-22 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/12/wiki2blog-wiki-blogspot.html
 categories:

@@ -3,6 +3,7 @@ layout: post
 language: russian
 title: "В блоге работает поиск"
 date: 2012-04-10 16:27
+unlisted: yes
 categories:
 - russian
 ---

@@ -3,6 +3,7 @@ layout: post
 title: "В блоге новая система комментирования DISQUS"
 language: russian
 date: 2010-12-19 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/12/disqus.html
 categories:
