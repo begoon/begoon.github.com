@@ -3,6 +3,7 @@ layout: post
 title: "Screencast’ы"
 language: russian
 date: 2010-11-13 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/11/screencast.html
 categories:

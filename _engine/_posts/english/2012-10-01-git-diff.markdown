@@ -3,6 +3,7 @@ layout: post
 title: "Getting code statistics"
 language: english
 date: 2012-10-01 08:28
+unlisted: yes
 comments: true
 categories: 
 - diff

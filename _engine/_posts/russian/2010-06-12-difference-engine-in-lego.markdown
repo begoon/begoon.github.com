@@ -3,6 +3,7 @@ layout: post
 title: "Разностная машина из Лего, или динамическое программирование в жизни"
 language: russian
 date: 2010-06-12 01:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/06/blog-post_12.html
 categories:

@@ -3,6 +3,7 @@ layout: post
 title: "Процесс создания программного обеспечения в одной картинке"
 language: russian
 date: 2011-07-17 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/07/blog-post.html
 categories: 

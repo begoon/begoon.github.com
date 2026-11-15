@@ -3,6 +3,7 @@ layout: post
 title: "Chaos Construction 2010"
 language: russian
 date: 2010-08-31 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/08/chaos-construction.html
 categories:

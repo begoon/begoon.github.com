@@ -3,6 +3,7 @@ layout: post
 title: A first hack of my motto
 language: english
 date: 2012-09-05 19:33
+unlisted: yes
 comments: true
 categories: 
 - challenge

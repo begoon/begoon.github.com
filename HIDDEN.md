@@ -5,9 +5,10 @@ The engine still publishes each of them at its original URL, but leaves them
 out of the index pages, the search and the Atom feeds. Nothing is deleted: to
 bring a post back, remove the flag and rebuild.
 
-Posts are hidden in rounds, each reviewed and agreed separately.
+Posts are hidden in rounds, each reviewed and agreed separately. A post is
+always hidden in both languages when it has a translation.
 
-Hidden so far: 58 Russian and 17 English posts, in 5 rounds.
+Hidden so far: 69 Russian and 24 English posts, in 6 rounds.
 
 ## Round 1: link-only and one-picture posts
 
@@ -148,3 +149,35 @@ The Stepanov lectures post shows only a dead Flash embed, and the KeePass/TrueCr
 |---|---|
 | 2010-01-17 | [KeePass, TrueCrypt или как обезопасить свои конфиденциальные данные](https://demin.ws/blog/russian/2010/01/17/truecrypt-keepass-and-confidential-data/) |
 | 2010-04-30 | [Две лекции создателя STL Александра Степанова в Яндексе](https://demin.ws/blog/russian/2010/04/30/stepanov-talks-at-yandex/) |
+
+## Round 6: thin posts that survived the first passes
+
+Short posts that point at something external (a contest, a video, an event, someone else's picture) or are small asides about the blog itself.
+
+### Russian (11)
+
+| Date | Post |
+|---|---|
+| 2009-09-03 | [Google Code Jam Qualification Round 2009](https://demin.ws/blog/russian/2009/09/03/google-code-jam-qualification-round-2009/) |
+| 2010-06-12 | [Разностная машина из Лего, или динамическое программирование в жизни](https://demin.ws/blog/russian/2010/06/12/difference-engine-in-lego/) |
+| 2010-08-19 | [Роб Пайк критикует С++ и Java](https://demin.ws/blog/russian/2010/08/19/rob-pike-criticise-cpp-and-java/) |
+| 2010-08-31 | [Chaos Construction 2010](https://demin.ws/blog/russian/2010/08/31/chaos-construction-2010/) |
+| 2010-11-13 | [Screencast’ы](https://demin.ws/blog/russian/2010/11/13/screencasts/) |
+| 2011-07-17 | [Процесс создания программного обеспечения в одной картинке](https://demin.ws/blog/russian/2011/07/17/software-development-in-one-picture/) |
+| 2012-04-10 | [Асинхронная загрузка скриптов JavaScript](https://demin.ws/blog/russian/2012/04/10/asynchronous-javascript-loading/) |
+| 2012-09-05 | [Первый "взлом" моего девиза](https://demin.ws/blog/russian/2012/09/05/first-hack-of-motto/) |
+| 2012-09-06 | [Почтовые синонимы в Gmail](https://demin.ws/blog/russian/2012/09/06/gmail-aliases/) |
+| 2012-09-22 | [Загадка: что такое РОЛД?](https://demin.ws/blog/russian/2012/09/22/rold-quiz/) |
+| 2012-10-01 | [Статистика изменений кода](https://demin.ws/blog/russian/2012/10/01/git-diff/) |
+
+### English (7)
+
+| Date | Post |
+|---|---|
+| 2009-09-04 | [Google Code Jam Qualification Round 2009](https://demin.ws/blog/english/2009/09/04/google-code-jam-qualification-round-2009/) |
+| 2010-11-13 | [Screencasts](https://demin.ws/blog/english/2010/11/13/screencasts/) |
+| 2011-07-17 | [Software development in one picture](https://demin.ws/blog/english/2011/07/17/software-development-in-one-picture/) |
+| 2012-04-10 | [Asynchronous JavaScript loading](https://demin.ws/blog/english/2012/04/10/asynchronous-javascript-loading/) |
+| 2012-09-05 | [A first hack of my motto](https://demin.ws/blog/english/2012/09/05/first-hack-of-motto/) |
+| 2012-09-06 | [Aliases in Gmail](https://demin.ws/blog/english/2012/09/06/gmail-aliases/) |
+| 2012-10-01 | [Getting code statistics](https://demin.ws/blog/english/2012/10/01/git-diff/) |

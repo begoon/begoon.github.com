@@ -3,6 +3,7 @@ layout: post
 title: "Google Code Jam Qualification Round 2009"
 language: russian
 date: 2009-09-03 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/09/google-code-jam-qualification-round.html
 categories:

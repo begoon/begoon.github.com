@@ -3,6 +3,7 @@ layout: post
 title: "Google Code Jam Qualification Round 2009"
 language: english
 date: 2009-09-04 00:00
+unlisted: yes
 comments: true
 blogspot: http://meta-coding.blogspot.com/2009/09/google-code-jam-qualification-round.html
 categories: 

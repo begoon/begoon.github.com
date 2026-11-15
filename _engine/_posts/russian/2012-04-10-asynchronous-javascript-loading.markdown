@@ -2,6 +2,7 @@
 layout: post
 language: russian
 date: 2012-04-10 23:13
+unlisted: yes
 title: "Асинхронная загрузка скриптов JavaScript"
 categories:
 - russian

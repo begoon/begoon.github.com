@@ -3,6 +3,7 @@ layout: post
 title: "Роб Пайк критикует С++ и Java"
 language: russian
 date: 2010-08-19 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/08/java.html
 categories:
