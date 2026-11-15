@@ -148,8 +148,3 @@ The Stepanov lectures post shows only a dead Flash embed, and the KeePass/TrueCr
 |---|---|
 | 2010-01-17 | [KeePass, TrueCrypt или как обезопасить свои конфиденциальные данные](https://demin.ws/blog/russian/2010/01/17/truecrypt-keepass-and-confidential-data/) |
 | 2010-04-30 | [Две лекции создателя STL Александра Степанова в Яндексе](https://demin.ws/blog/russian/2010/04/30/stepanov-talks-at-yandex/) |
-
-### English (0)
-
-| Date | Post |
-|---|---|
