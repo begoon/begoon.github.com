@@ -3,6 +3,7 @@ layout: post
 title: 'Live programming in circa'
 language: english
 date: 2012-04-24 20:53
+unlisted: yes
 comments: true
 categories: 
 - english

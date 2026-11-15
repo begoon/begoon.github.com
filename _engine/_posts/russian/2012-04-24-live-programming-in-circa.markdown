@@ -3,6 +3,7 @@ layout: post
 title: '"Живое" программирование на circa'
 language: russian
 date: 2012-04-24 20:53
+unlisted: yes
 comments: true
 categories: 
 - russian

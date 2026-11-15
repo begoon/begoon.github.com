@@ -3,6 +3,7 @@ layout: post
 title: "Снова головоломки или сайт hackquest.com"
 language: russian
 date: 2010-08-26 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/08/hackquestcom.html
 categories:

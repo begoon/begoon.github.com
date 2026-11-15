@@ -3,6 +3,7 @@ layout: post
 title: "Видео докладов с ACCU 2011"
 language: russian
 date: 2011-05-06 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/05/accu-2011.html
 categories: 

@@ -3,6 +3,7 @@ layout: post
 title: "Bloomberg: Вакансии"
 language: russian
 date: 2010-06-26 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/06/bloomberg.html
 categories:

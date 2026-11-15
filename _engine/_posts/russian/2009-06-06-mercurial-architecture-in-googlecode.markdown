@@ -3,6 +3,7 @@ layout: post
 title: "Архитектура Mercurial на Google Code"
 language: russian
 date: 2009-06-06 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/06/mercurial-google-code.html
 categories:

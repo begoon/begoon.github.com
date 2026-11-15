@@ -3,6 +3,7 @@ layout: post
 title: "Решение кубика Рубика максимум на 20 шагов"
 language: russian
 date: 2010-08-10 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/08/20.html
 categories:

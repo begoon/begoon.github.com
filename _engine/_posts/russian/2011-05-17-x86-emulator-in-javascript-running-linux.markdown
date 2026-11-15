@@ -3,6 +3,7 @@ layout: post
 title: "Эмулятор x86 на JavaScript, на котором работает Linux"
 language: russian
 date: 2011-05-17 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/05/x86-javascript-linux.html
 categories: 

@@ -3,6 +3,7 @@ layout: post
 title: "Живая карта Лондонского метро"
 language: russian
 date: 2010-06-21 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/06/live-map.html
 categories:

@@ -3,6 +3,7 @@ layout: post
 title: "Visual Studio 11 Developer Preview"
 language: russian
 date: 2011-12-07 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/12/visual-studio-11-developer-preview.html
 categories: 

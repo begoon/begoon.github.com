@@ -3,6 +3,7 @@ layout: post
 title: "Презентация от авторов Google C++ Testing Framework"
 language: russian
 date: 2009-10-07 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2009/10/google-c-testing-framework.html
 categories:

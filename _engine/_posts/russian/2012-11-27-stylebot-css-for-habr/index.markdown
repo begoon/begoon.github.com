@@ -1,5 +1,6 @@
 @language: russian
 @date: 2012-11-27 22:00
+@unlisted: yes
 @tags: habr, habrahabr, css, stylebot
 
 CSS для удобного просмотра Хабра

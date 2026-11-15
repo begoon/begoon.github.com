@@ -3,6 +3,7 @@ layout: post
 title: "Работа в компании Hex-Rays"
 language: russian
 date: 2011-04-26 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2011/04/hex-rays.html
 categories: 

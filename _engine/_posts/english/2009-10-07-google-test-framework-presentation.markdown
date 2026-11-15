@@ -3,6 +3,7 @@ layout: post
 title: "Google C++ Testing Framework presentation"
 language: english
 date: 2009-10-07 00:00
+unlisted: yes
 comments: true
 blogspot: http://meta-coding.blogspot.com/2009/10/google-c-testing-framework-presentation.html
 categories: 
