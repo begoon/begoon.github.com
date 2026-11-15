@@ -3,6 +3,7 @@ layout: post
 title: "Две лекции создателя STL Александра Степанова в Яндексе"
 language: russian
 date: 2010-04-30 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/04/stl.html
 categories:

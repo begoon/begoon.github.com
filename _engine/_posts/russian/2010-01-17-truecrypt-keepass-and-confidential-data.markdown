@@ -3,6 +3,7 @@ layout: post
 title: "KeePass, TrueCrypt или как обезопасить свои конфиденциальные данные"
 language: russian
 date: 2010-01-17 00:00
+unlisted: yes
 comments: true
 blogspot: http://easy-coding.blogspot.com/2010/01/keepass-truecrypt.html
 categories:

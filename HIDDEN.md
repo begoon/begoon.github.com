@@ -7,7 +7,7 @@ bring a post back, remove the flag and rebuild.
 
 Posts are hidden in rounds, each reviewed and agreed separately.
 
-Hidden so far: 56 Russian and 17 English posts, in 4 rounds.
+Hidden so far: 58 Russian and 17 English posts, in 5 rounds.
 
 ## Round 1: link-only and one-picture posts
 
@@ -137,3 +137,19 @@ Gadget and software reviews of their day, personal opinion pieces on salaries an
 |---|---|
 | 2011-02-23 | [MicroXP - a lightweight Windows XP](https://demin.ws/blog/english/2011/02/23/microxp/) |
 | 2011-10-02 | [Chromebook Samsung 5 5G review](https://demin.ws/blog/english/2011/10/02/chromebook-samsumg-5-3g-review/) |
+
+## Round 5: broken and outdated advice
+
+The Stepanov lectures post shows only a dead Flash embed, and the KeePass/TrueCrypt post recommends TrueCrypt, which was discontinued in 2014.
+
+### Russian (2)
+
+| Date | Post |
+|---|---|
+| 2010-01-17 | [KeePass, TrueCrypt или как обезопасить свои конфиденциальные данные](https://demin.ws/blog/russian/2010/01/17/truecrypt-keepass-and-confidential-data/) |
+| 2010-04-30 | [Две лекции создателя STL Александра Степанова в Яндексе](https://demin.ws/blog/russian/2010/04/30/stepanov-talks-at-yandex/) |
+
+### English (0)
+
+| Date | Post |
+|---|---|
