@@ -14,7 +14,7 @@ Publications
 ### 2012
 
 * [US Visa: My First iPhone App][], The Pragmatic BookShelf magazine
-* *RESTful Web Service in Go Powered by the Google App Engine*, Dr.Dobb's
+* [RESTful Web Service in Go Powered by the Google App Engine][], Dr.Dobb's
 * [The Beauty of Concurrency in Go][], The Pragmatic BookShelf magazine
 * [A review of "The Art of Readable Code" by Dustin Boswell and Trevor Foucher][], C Vu Volume 24 Issue 2, page 27
 * [The NOR Machine][], a model of CPU performing one command, The Pragmatic BookShelf magazine
@@ -37,3 +37,4 @@ Publications
 [Concurrent programming in Go]: /media/CVu_23.2.pdf#page=13
 [The first little step into test-driven development]: /media/CVu_23.1.pdf#page=4
 [A review of "21st Century C" by Ben Klemens]: /english/articles/21st-century-c-review/
+[RESTful Web Service in Go Powered by the Google App Engine]: /english/articles/restful-web-service-in-go-gae/

@@ -1,0 +1,693 @@
+---
+layout: default
+language: english
+title: "RESTful Web Service in Go Powered by the Google App Engine"
+---
+
+<div id="post">
+
+<h1>RESTful Web Service in Go Powered by the Google App Engine</h1>
+
+<p>Alexander Demin / August 28, 2012</p>
+
+<p>An article published in Dr.Dobb's. This is a local copy of the full text;
+the original pages are gone.</p>
+
+<p>Cloud computing has been gaining increasing popularity over the last few 
+years. Moreover, it is getting cheaper and cheaper, and even individual 
+developers can  afford using this technology for free with some limitation on 
+volumes. </p>
+<p>Google App Engine (GAE) is one cloud option. If you need a robust and 
+scalable Web service, but you don't want to build the infrastructure 
+yourself, GAE might be exactly what you need. With GAE, you  focus only on the 
+business side of your application, and GAE does the rest (load balancing, 
+caching, backup, scheduling, etc.)</p>
+<p>However, your application has to be designed according to GAE's rules. The 
+application has  some special APIs for database, caching, networking, and 
+logging. You still can use the standard libraries of your programming language 
+(with minor exceptions related to peculiarities of the cloud deployment). For 
+example, the state of the application should not be stored in the memory of your 
+app instance, and services such as the datastore should be used to persist 
+state.</p>
+<p>At the moment, GAE provides runtime and APIs for Java, Python, and Go. In 
+this article, I  build a sample Web service in Go and deploy it to 
+GAE.</p>
+<h3>"Houston, We Have A Problem"</h3>
+<p>I recently faced a problem that I will use for an example Web service. The 
+problem is real, useful, and not too sophisticated from the business-side 
+perspective.</p>
+<p>In the past year, I applied for a U.S. visa a couple of times at the  embassy 
+in London. Unfortunately, each time, my application required what they call 
+"administrative processing," which can take a few weeks or even months. The 
+updates regarding a visa are published in a PDF file on the embassy's website. 
+The contents of that file are a table indexed by batch numbers (they assign you 
+a batch number when you submit your application). So, to get an update of  visa 
+processing status, you download the PDF file, press CTRL-F, and search for a 
+particular row containing your batch number.</p>
+<p>I came up with the idea of putting a simple RESTful API on top of this manual 
+process. Instead of fiddling with the PDF file, I'd simply go to a specific URL 
+&#8212; for example, http://some-visa-service/batch/123456789 (where "123456789" would 
+be the batch number) &#8212; hit enter, and it would print out the status of the 
+application. Moreover, such an API can be easily adopted by any third-party 
+software. The service could load the PDF in advance, parse it, and keep the 
+contents in an internal representation. It would allow doing batch status 
+retrievals without processing the entire PDF on each request.</p>
+<p>This problem with U.S. visas  occurred before I started playing with GAE. 
+Initially, I implemented a simple standalone Web server in Go parsing the PDF 
+and exposing the information via a RESTful  API. Luckily, in Go, an advanced 
+concurrent Web server can be implemented in a very few lines of code quite 
+elegantly. Then I started thinking about hosting (VPS, for instance) where I 
+could have my server permanently running. But such an approach gave me nothing  
+new or exciting, and an idea about GAE emerged. </p>
+<h3>Dissecting the Problem</h3>
+<p>There are two sub problems here. The first is to programmatically parse our 
+PDF file and extract the information. The second is the GAE deployment.</p>
+<p><strong>1. Parsing the PDF</strong></p>
+<p>Based on the PDF specifications available on the <a href="http://www.adobe.com/devnet/pdf/pdf_reference_archive.html">Adobe 
+website</a>, the contents of my <a href="http://photos.state.gov/libraries/unitedkingdom/164203/cons-visa/admin_processing_dates.pdf">particular 
+PDF</a> can be parsed this way:</p>
+<ul>
+<li>Load up the PDF into memory.</li>
+<li>Each fragment of the user information in a PDF is identified with 
+  "stream\r\n" and "endstream\r\n" markers. The blocks of data embraced by these 
+  markers are packed using the zlib inflate algorithm. So we need to find any 
+  such blocks using the markers and deflate their contents.</li>
+<li>Each unzipped (deflated) block of data is now a plain text containing PDF 
+  markup tags. We need to locate blocks of the text embraced by "BT\r\n" (Begin 
+  Text) and "ET\r\n" (End Text) tags. All these blocks will be collected in a 
+  list of strings.</li>
+<li>Inside each block of text identified in step 2 (elements of the collected 
+  list of strings), we need to find all substrings embraced by parentheses &#8212; "(" 
+  and ")'"characters. We join all these substrings, and the resulting text will 
+  be a plain text representation of the user information we are looking for. So 
+  in this step, we will be processing each string found in  step 2 by removing 
+  all substrings that are not surrounded by parentheses.</li>
+<li> Finally, we have to identify the structure of the plain text. The batch 
+  status information in our PDF is formatted as a three column table. The 
+  columns are: batch number, status, and date. Unfortunately, the PDF contains 
+  some extra text (headers, footers, etc.) that will also appear in our parsed 
+  plain text along with the useful information (the list of strings from the 
+  step 3 will contain not only useful payload, but also some junk). We will 
+  identify the table column fields by iterating sequentially along the list of 
+  strings. If the current string looks like a batch number (11 decimal digits), 
+  we take it as the batch number, and the following two strings will be 
+  interpreted as the status update and the data accordingly. We take these three 
+  strings and jump over them further to find next potential batch number.</li></ul>
+<p>It all looks a little complicated, but with regular expressions, it only 
+  takes just a few lines of code to implement.</p>
+<p>Of course, we pretty much hard-coded the format, so if clerks in the U.S. 
+  embassy change their format, it may not work anymore. But at the moment, these 
+  four steps work fine for parsing the existing  PDF.</p>
+<p><strong>2. GAE deployment</strong></p>
+<p>Now, let's define our Web interface. Our application will be a Web service 
+  employing the RESTful approach in a very simple form.Let's say our service 
+  domain is "some-service.com." We will have three functions:</p>
+<ol>
+<li>http://some-service.com/batch/&lt;number&gt; to retrieve the status of a 
+    particular batch ("&lt;number&gt;" could be something like 
+    "20121234567")</li>
+<li>http://some-service.com/action/print/ to print out the entire 
+    table.</li>
+<li>http://some-service.com/action/refresh/ to reload the PDF and update the 
+    information in our Web service. This URL also will be a scheduled task 
+    executed automatically on a regular basis, keeping our information 
+    up-to-date.</li></ol>
+<p>The last two functions should be available only to the administrator.</p>
+<p>Our internal representation of the data will be a map (a dictionary), in 
+  which the key is a string representing the batch number, and the value is a 
+  list of pairs holding the status and date. I found that the PDF may contain 
+  more than one record per batch number, so we need to extract all of them.</p>
+<p>The pair is a structure defined in Go as:</p><pre>type BatchUpdate struct {
+  Status, Date string
+}</pre>
+<p>And the map is defined as:</p><pre>type BatchTable map[string][]BatchUpdate</pre>
+<p>When the service is started, the storage (map) is empty. When a first 
+  request comes in from the <code>/batch</code> function, it downloads the PDF, 
+  parses it, populates the data to the map, and replies back to the request. 
+  Subsequent requests will already have all the data in  storage. I can 
+  maintain a timestamp indicating when the PDF was last parsed, and within each 
+  request, I can check whether the data is older than a certain period of time 
+  (and if yes, reload the PDF). I can also reload the data at regular 
+  intervals; for instance, every hour. It is important to remember that because 
+  the reloads may by initiated concurrently, I must synchronize access to 
+  the storage to avoid race conditions. It is simple to manage when the storage 
+  is in memory of the same process, but if an external persistent storage is 
+  used, things can be tricky. I will come back to this question of synchronization 
+  shortly..</p>
+<p>After the PDF is parsed, I place its contents in a variable of the 
+  <code>BatchTable</code> type. </p>
+<p>There is another problem here. According to  GAE requirements, the 
+  application must be stateless across HTTP requests because they can be 
+  processed on physically different machines. The only way to persist is to use 
+  the Datastore API, Blobstore API, or Memcache API. Datastore is a 
+  semi-structured store allowing queries using a SQL-like approach. We could 
+  have a table in this store where the primary key is the batch number, and the 
+  status and the date are columns. Unfortunately, once a piece of data is 
+  written, it becomes visible to other instances of your application, which in 
+  turn also may update the storage at the same time. If we treat the batch 
+  records individually, we may easily end up with an inconsistency because the 
+  records from multiple concurrent refreshing processes can be mixed in the same 
+  database. Another issue is that when we load an updated PDF, we have to delete 
+  all existing records first, which, again, is not an atomic operation. Of 
+  course, transactional updates are still possible, but let's take a look at 
+  "lighter" alternatives that may be more suitable in our particular case.</p>
+<p>Alternatively, we can serialize our map object to a byte blob and stick it 
+  in Blobstore. Blobstore can hold a lot of binary data (for instance, images). 
+  With Blobstore, we don't face the concurrency issue anymore because we will 
+  read and write the table as a whole atomically. But here, because Blobstore 
+  also keeps data on disk, we still have the redundant overhead of reading and 
+  writing the table on the disk back and forth. </p>
+<p>Eventually, I implemented a hybrid approach using Memcache. Memcache is 
+  quite similar to Blobstore in the sense of dealing with blobs addressed by 
+  keys. Also Memcache data is visible to all instances of the application over 
+  the network. The principal difference  is that Memcache keeps data in memory only. 
+  Note that the GAE documentation says that the cloud may decide to restart your 
+  application (for example, moving it to another cluster) or purge some content 
+  from Memcache to free space. So our application should expect that  content 
+  may disappear from the Memcache store at any time. It could be a major problem 
+  to store individual records in Memcache. This is where the "hybrid" comes 
+  in. I will store all our data as a single record in Memcache. If it 
+  disappears, I will simply reload and parse the PDF again. Reads and writes to 
+  Memcache are atomic, so there is no concurrency issue.The GAE Memcache API has 
+  one more limitation: The length of a record value cannot be more than 1MB. The 
+  length of our PDF is about 1.6MB, but the length of the information 
+  represented as a map container is only about 200KB, so for the moment I amfar below that 
+  limit.</p>
+<p>Here is a structure I will store in Memcache:</p><pre>type Table struct {
+    UpdateTime string
+    Batches    BatchTable
+}</pre>
+<p>It incorporates <code>BatchTable</code> and has a field called 
+  <code>UpdateTime</code> allowing to maintain the age of the data. The record 
+  key will be a hard-coded value of <code>table</code>. If the 
+  <code>table</code> record exists in Memcache, we retrieve it, deserialize, and 
+  use. If not, we load up the PDF, parse it, serialize, and store to Memcache. 
+  </p>
+<h3>Talk Is Cheap, Show Me Your Code</h3>
+<p>Now let's write some code. I'll be describing a fully functional and complete 
+  implementation of the service.</p>
+<p>In the first lines, I declare the packages required for our application. 
+  Note, the first three packages are not standard Go packages: They are 
+  available only in the GAE.</p><pre>package usvisa
+
+import (
+  "appengine"
+  "appengine/memcache"
+  "appengine/urlfetch"
+  "bytes"
+  "compress/zlib"
+  "fmt"
+  "io/ioutil"
+  "net/http"
+  "regexp"
+  "strconv"
+  "strings"
+  "text/template"
+  "time"
+  "errors" )</pre>
+<p>In the next lines, 
+  an<code> init() </code>function is run at program initialization. Here, I 
+  need to set the handlers corresponding to application URLs (functions).</p><pre>func init() {
+  http.HandleFunc("/batch/", Batch)
+  http.HandleFunc("/action/refresh/", Refresh)
+  http.HandleFunc("/action/print/", Print)
+}</pre>
+<p>In the next lines, I declare a constant holding a URL of the PDF file.</p><pre>const (
+  PdfUrl = "http://photos.state.gov/libraries/unitedkingdom/164203/cons-visa/admin_processing_dates.pdf"
+)</pre>
+<p>Next, I declare a data structure for the contents of our PDF. 
+  <code>BatchTable</code> is a map, where the key is a batch number (a string) 
+  and the value is an array of pairs. Each pair (<code>BatchUpdate</code> type) 
+  holds a status and date.</p><pre>type BatchUpdate struct {
+  Status, Date string
+}
+
+type BatchTable map[string][]BatchUpdate</pre>
+<p>The next lines condtain regular expressions to dissect the PDF. 
+  <code>TextBlockRE</code> matches blocks of text surrounding by "BT\r\n" and 
+  "ET\r\n" tags. <code>TextRE</code> does the same for substrings in 
+  parentheses.</p><pre>var (
+  TextBlockRE = regexp.MustCompile(`(?ms)BT\\r\\n(.+?)ET\\r\\n`)
+  TextRE = regexp.MustCompile(`\\((.+?)\\)`)
+)</pre>
+<p>Next come two string constants marking data streams in a PDF document.</p>
+<pre>const (
+  StreamStartMarker = "stream\x0D\x0A"
+  StreamEndMarker   = "endstream\x0D\x0A"
+)</pre>
+<p>Now the GAE fun begins. I emphasize again that GAE applications must keep 
+  their state via the context. The context is passed by GAE along with the 
+  request object. We will see where the context is coming from a bit further 
+  down. Moreover, instead of the standard HTTP client in Go, I must use 
+  the <code>urlfetch</code> API provided by GAE because App Engine applications don't access  
+  network sockets. They must use the App Engine APIs to communicate with the 
+  outside world.</p>
+<p>In  the next lines of code, there is a function loading up a file from a 
+  given URL. After the file is read, it calls the <code>parse()</code> function. 
+  Note the lines where I do logging. Again, instead of using the standard log 
+  package, I use logging facilities provided by the cloud and addressable 
+  through the application context (the <code>c</code> variable).</p><pre>func LoadBatchTable(c appengine.Context, url string) (BatchTable, error) {
+  c.Infof("Started downloading")
+  duration, _ := time.ParseDuration("1m")
+  client := &http.Client{
+    Transport: &urlfetch.Transport{
+      Context:                       c,
+      Deadline:                      duration,
+      AllowInvalidServerCertificate: true,
+    },
+  }
+  response, err := client.Get(url)
+  if err != nil {
+    c.Errorf("GET failed, [%v]", err)
+    return nil, errors.New("GET failed")
+  }
+  defer response.Body.Close()
+  contents, err := ioutil.ReadAll(response.Body)
+  if err != nil {
+    c.Errorf("GET read failed, [%v]", err)
+    return nil, errors.New("ReadAll failed")
+  }
+  c.Infof("Loaded %d bytes\n", len(contents))
+  return parse(c, contents)
+}</pre>
+<p>In the next lines, there is a function implementing our 4th step to parse 
+  the PDF. It identifies a closest data stream in the file. If there are no 
+  markers found, we exit. Then we copy out the block and cut it from the 
+  data.</p><pre>func parse(c appengine.Context, pdf []byte) (BatchTable, error) {
+  table := make(BatchTable)
+  for {
+    begin := bytes.Index(pdf, []byte(StreamStartMarker))
+    if begin == -1 {
+      break
+    }
+    pdf = pdf[begin+len(StreamStartMarker):]
+    end := bytes.Index(pdf, []byte(StreamStartMarker))
+    if end == -1 {
+      break
+    }
+    section := pdf[0:end]
+    pdf = pdf[end+len(StreamEndMarker):]</pre>
+<p>Next, I unzip the data, and if it fails, I ignore the block and go for 
+  the next one.</p>
+<pre>buf := bytes.NewBuffer(section)
+zr, err := zlib.NewReader(buf)
+if err != nil {
+  c.Errorf("Unzip initialization failed, [%v]", err)
+  return table, errors.New("Unzip initialization failed")
+}
+unzipped, err := ioutil.ReadAll(zr)
+if err != nil {
+  c.Errorf("Unzip failed, [%v]", err)
+  return table, errors.New("Unzip failed")
+}</pre>
+<p>Then, I apply the two regular expressions and accumulate found strings in 
+  the <code>records</code> variable, which is a list of strings.</p><pre>var records []string
+for _, group := range TextBlockRE.FindAllSubmatch(unzipped, -1) {
+  var lines [][]byte
+  for _, group := range TextRE.FindAllSubmatch(group[1], -1) {
+    lines = append(lines, group[1])
+  }
+  records = append(records, string(bytes.Join(lines, []byte{})))
+}</pre>
+<p>In the next lines of code, I iterate over the all found strings and check 
+  whether the current one looks as a batch number. If yes, I take it along with 
+  the next two and put them aside as a record to the final table. If a record 
+  with the same ID already exists, we append the current pair to the end of the 
+  list (remember, one batch number can occur more once in the file, and we have 
+  to collect them all). </p><pre>    for i := 0; i &lt; len(records)-2; i++ {
+      v, err := strconv.ParseInt(records[i], 10, 64)
+      if err == nil &amp;&amp; v &gt;= 20000000000 &amp;&amp; v &lt; 29000000000 {
+        id := records[i]
+        // A map access to a non-existent entry returns the zero value.
+        // The zero value of a slice behaves as an empty slice.
+        table[id] = make([]BatchUpdate, 0)
+        table[id] = append(table[id], BatchUpdate{records[i+1], records[i+2]})
+        i += 2
+      }
+    }
+  }
+  return table, nil
+}</pre>
+<p>Now, I have the <code>LoadBatchTable()</code> function returning the 
+  contents of the PDF as a Go map. It is time to think about storing this map to 
+  Memcache and creating the ability to read it back. In the next lines, I 
+  introduce another structure called <code>Table</code>. It contains a timestamp 
+  of when the record was created (an <code>UpdateTime</code> field) and a map 
+  with the information from the PDF file (a <code>Batches</code> field).</p><pre>type Table struct {
+  UpdateTime string
+  Batches    BatchTable
+}</pre>
+<p>If you are not familiar with  memory management in Go, it is important to 
+  emphasize some key principles. First, Go is a garbage-collected language, so 
+  we don't need to worry about freeing memory. Second, Go has pointers. But 
+  pointers in Go are much safer than in C or C++ because they don't provide 
+  pointer arithmetic, so the pointer in Go is more like references in C++. 
+  Moreover, Go can implicitly dereference pointers when you need to access 
+  fields of the pointer's underlying structure. For example, if you have a 
+  pointer of the type <code>BatchTable</code> declared as <code>p 
+  *BatchTable</code>, you can either access <code>UpdateTime</code> via 
+  <code>p-&gt;UpdateTime</code> or <code>p.UpdateTime</code>. It offers some 
+  syntactic comfort. Third, Go can pass objects of any type either by pointer (that is, reference) or 
+  by value, but some built-in types (for instance, maps and slices) are always 
+  passed by pointer. For example, a variable of the type <code>BatchTable</code> 
+  is always passed by pointer, but of the type <code>Table</code>, by default by 
+  value. That is why in the next lines of code, we declare a type of the 
+  function return value as a pointer to void deep copying.</p>
+<p>The next lines also contain a function reading the table from Memcache. 
+  Memcache API allows putting values of either the string type or arbitrary 
+  compound types into it. We will use the compound type <code>Table</code>. Go 
+  has a built-in mechanism called "Gob" for serializing any variable into an 
+  array of bytes. In the next lines, we ask Memcache to read a record named 
+  <code>table</code> and de-serialize it as avariable of the <code>Table</code> 
+  type. If there is no such record, we assume that Memcache has purged it or 
+  nobody read the table since the service started, and we load up the table from 
+  the network. </p><pre>func ReadTable(c appengine.Context, reload bool) (*Table, error) {
+  var table Table
+  if _, err := memcache.Gob.Get(c, "table", &amp;table); err == memcache.ErrCacheMiss {
+    c.Infof("No [table] record found in cache, [%v]", err)
+    if reload {
+      table = *RefreshTable(c)
+    }
+  } else if err != nil {
+    c.Errorf("Unable to read [table] record, [%v]", err)
+    return nil, errors.New("Unable to read a record")
+  }
+  c.Infof("Read %d records, updated at [%s]", len(table.Batches), table.UpdateTime)
+  return &amp;table, nil
+}</pre>
+<p>In the next lines, there is a counterpart function storing the table to 
+  Memcache. Again, before storing, Memcache serializes the table into bytes via 
+  Gob. </p><pre>func StoreTable(c appengine.Context, table *Table) {
+  c.Infof("Storing %d records, updated at [%s]", len(table.Batches), table.UpdateTime)
+  record := &amp;memcache.Item{
+    Key:    "table",
+    Object: table,
+  }
+  if err := memcache.Gob.Set(c, record); err != nil {
+    c.Errorf("Unable to store [table] record, [%v]", err)
+  }
+  c.Infof("Stored")
+}</pre>
+<p>At this point, I am pretty much done with the core functionality.I am able to 
+  load and parse the PDF, then to store our data structure back to the GAE 
+  cloud via Memcache.</p>
+<p>For the sake convenient debugging, let me implement one more thing. I should
+  have the ability to print out the entire table of batches. With a text template 
+  library available in Go, the implementation of such functionality takes a 
+  couple lines of code. I define a template of an HTML page representing a 
+  table. To understand template syntax, you basically need to know only two 
+  things: placeholders and clauses. The placeholders are represented as<code> 
+  {{"{{"}}.PlaceHolderName}}</code>. Placeholders will be replaced by a variable (or a 
+  field) from the template data source named <code>PlaceHolderName</code>. There 
+  is also is a range clause allowing traversal of a map or an array.</p><pre>const (
+  PrintTemplate = '
+    &lt;style&gt;
+      table { border-collapse:collapse; }
+      table, th, td { border: 1px solid black; padding: .2em; }
+      td { vertical-align:top; }
+    &lt;/style&gt;
+    &lt;p&gt;
+      # records: {{"{{"}}len .Records}},
+      updated: {{"{{"}}.LastUpdateTime}},
+      now: {{"{{"}}.Now}},
+      age: {{"{{"}}.Age}},
+      &lt;a href="{{"{{"}}.PdfUrl}}"&gt;Original PDF&lt;/a&gt;
+    &lt;/p&gt;
+    &lt;table&gt;
+     {{"{{"}}range $id, $updates := .Records}}
+       &lt;tr&gt;
+         &lt;td&gt;{{"{{"}}$id}}&lt;/td&gt;
+         &lt;td&gt;
+           {{"{{"}}range $updates}}
+             {{"{{"}}.Status}}, {{"{{"}}.Date}}
+             &lt;p/&gt;
+           {{"{{"}}end}}
+         &lt;/td&gt;
+       &lt;/tr&gt;
+     {{"{{"}}end}}
+    &lt;/table&gt;
+  '
+)</pre>
+<p>Now let's implement a function printing the table via this template. In the 
+  following lines, Iprepare a data source. Note that, despite its native 
+  compiling nature, the Go language has a very powerful introspection mechanism. 
+  This allows the text template engine to be flexible in terms the data source 
+  type. For example, if the data source is a map, the map keys will be become 
+  the placeholder names, but if the data source is a structure (as in our case), 
+  the template engine will automatically discover the field names and use them 
+  as the placeholders. I also parse and execute the template.  The output will 
+  be sent to the outgoing stream represented by the <code>w</code> variable.</p>
+<pre>func Print(w http.ResponseWriter, r *http.Request) {
+  c := appengine.NewContext(r)
+  c.Infof("&gt; Print")
+  defer c.Infof("Print finished")
+  w.Header().Set("Content-Type", "text/html; charset=utf-8")
+
+  table, err := ReadTable(c, false)
+  if err != nil {
+    fmt.Fprintf(w, "No data")
+    return
+  }
+
+  last, _ := time.Parse(time.RFC3339, table.UpdateTime)
+  now := time.Now().UTC()
+
+  data := struct {
+    PdfUrl                   string
+    LastUpdateTime, Now, Age string
+    Records                  BatchTable
+  }{
+    PdfUrl,
+    last.Format(time.RFC3339),
+    now.Format(time.RFC3339),
+    now.Sub(last).String(),
+    table.Batches,
+  }
+
+  template.Must(template.New("Data").Parse(PrintTemplate)).Execute(w, data)
+}</pre>
+<p> By the way, <code>Print</code> is our first function handling HTTP 
+  requests in GAE. Such functions always have two parameters: a request and a 
+  response writer. The GAE context must be retrieved from the request.<br><br>In 
+  the next lines, we have a function handling requests to reload the table from 
+  the PDF file.</p><pre>func Refresh(w http.ResponseWriter, r *http.Request) {
+  c := appengine.NewContext(r)
+  c.Infof("&gt; Refresh")
+  defer c.Infof("Refresh finished")
+  RefreshTable(c)
+}</pre>
+<p>Next, we need the function that actually executes the reload. It loads and 
+  parses the PDF file, puts the result to the table, and updates the current 
+  timestamp.</p><pre>func RefreshTable(c appengine.Context) *Table {
+  c.Infof("- Refreshing a table")
+  table := new(Table)
+  table.Batches, _ = LoadBatchTable(c, PdfUrl)
+  table.UpdateTime = time.Now().UTC().Format(time.RFC3339)
+  c.Infof("Storing a table to memcache")
+  StoreTable(c, table)
+  return table
+}</pre>
+<p>We are approaching the finale. The function<code> GetBatch()</code> 
+  implements a data retrieval for a given batch number. First, it reads the 
+  table from Memcache, checks whether it is time to refresh the data (our 
+  obsolescence time is one hour), and finally gets the record from the 
+  table.</p><pre>func GetBatch(c appengine.Context, id string) []BatchUpdate {
+  table, err := ReadTable(c, true)
+  if table != nil {
+    return nil
+  }
+
+  gap, _ := time.ParseDuration("1h")
+  last, _ := time.Parse(time.RFC3339, table.UpdateTime)
+  now := time.Now().UTC()
+
+  c.Infof("Last updated: %s, now %s, gap %s", last.String(), now.String(), gap.String())
+  check := last.Add(gap)
+  c.Infof("Check time %s", check.String())
+
+  if check.Before(now) {
+    c.Infof("Time to update")
+    table = RefreshTable(c)
+  }
+
+  if record, exists := table.Batches[id]; exists {
+    return record
+  }
+  return nil
+}</pre>
+<p>Now, I'll implement our last HTTP handle for the<code> /batch/</code> 
+  function, and I extract the requested batch number from the URL. Then, after 
+  retrieving the batch information, I either report that such a batch doesn't 
+  exist or iterate over all the records belonging to the given batch and print 
+  them all.</p><pre>func Batch(w http.ResponseWriter, r *http.Request) {
+  c := appengine.NewContext(r)
+  w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+
+  parts := strings.Split(r.URL.Path, "/")
+  id := parts[2]
+  c.Infof("&gt; Batch: [%s]", id)
+  defer c.Infof("Batch done")
+
+  updates := GetBatch(c, id)
+  if updates == nil {
+    fmt.Fprintf(w, "Batch not found")
+  } else {
+    for _, update := range updates {
+      fmt.Fprintf(w, "%s\n%s\n\n", update.Status, update.Date)
+    }
+  }
+  c.Infof("%v", updates)
+}</pre>
+<p>That's it! Now we have <a href="http://github.com/begoon/usvisa-api/">the 
+  full implementation of our GAE-driven Web service</a>. Let's save it as a file 
+  called usvisa.go and give it a whirl!</p>
+<h3>It's Alive! Alive!</h3>
+<p>You'll need to download and install the <a href="https://developers.google.com/appengine/">Google 
+  App Engine SDK for Go</a>. Next, you need to add its installation directory to 
+  your paths. GAE SDK for Go is available for Windows, Linux, and Mac. I used 
+  Mac, but also tested on a VM running Ubuntu on Windows. </p>
+<p>Once you have done this, create a directory somewhere, for example, 
+  /Users/alexander/Projects/usvisa. Inside this directory, create another 
+  subdirectory also called usvisa/ and place the usvisa.go file there (the full 
+  name  should be /Users/alexander/Projects/usvisa/usvisa/usvisa.go). </p>
+<p>Now we need a configuration file. Each GAE project has a file describing 
+  its properties. Create a /Users/alexander/Projects/usavisa/app.yaml file and 
+  put the following into it:</p><pre>application: usvisa-service
+version: 1
+runtime: go
+api_version: go1
+
+handlers:
+
+- url: /batch/.*
+  script: _go_app
+
+- url: /.*
+  script: _go_app
+  login: admin</pre>
+<p>The name of the application is usvisa-service. Of course, if you are going 
+  to give it a real try deploying to GAE, I would recommend changing the name 
+  because it could be already occupied. You need to go to <a href="https://appengine.google.com/">the 
+  App Engine,</a> create an application with your unique name, and update the 
+  app.yam file accordingly.</p>
+<p>Also important in the <code>handlers</code> descriptions are the <code>- 
+  url:</code> sections, which define a mask of URLs and their properties. We 
+  only have three URLs: /batch/, /action/print/, and /action/refresh/. We 
+  indicate that the first one is visible to everybody, but the last two require 
+  administrator permissions (literally, they will be visible to you only) by 
+  adding the <code>login: admin </code>option.</p>
+<p>Recall that we talked about scheduled tasks. In our application, it would 
+  be convenient if the /action/refresh/ URL could be invoked automatically on a 
+  regular basis, in a way similar to the UNIX <code>cron</code> service. Let's 
+  create another file, called cron.yaml, place it in the same directory as 
+  app.yaml, and put the following into it:</p><pre>cron:
+- description: data refresh
+  url: /action/refresh/
+  schedule: every 60 minutes</pre>
+<p>This specifies that the /action/refresh/ URL will be invoked by GAE every 
+  hour (don't skip the trailing "/" at the third line). </p>
+<p>Let's review the directory structure:</p>
+<ul>
+<li>/Users/alexander/Projects/usvisa/app.yaml</li>
+<li>/Users/alexander/Projects/usvisa/cron.yaml</li>
+<li>/Users/alexander/Projects/usvisa/usvisa/usvisa.go</li></ul>
+<p>Now everything is ready. Prior to uploading to the GAE cloud, you can test 
+  your application locally. Execute the following:</p><pre>cd /Users/alexander/Projects/usvisa
+dev_appserver.py .</pre>
+<p>If everything is correct, the last few lines in your terminal console will 
+  contain something like this:</p><pre>INFO     2012-06-10 15:44:14,864 dev_appserver_multiprocess.py:647] Running application dev~usvisa-service on port 8080: http://localhost:8080
+INFO     2012-06-10 15:44:14,864 dev_appserver_multiprocess.py:649] Admin console is available at: http://localhost:8080/_ah/admin</pre>
+<p>Go to the http://localhost:8080/_ah/admin URL to make sure that the local 
+  development server is up the running. Then try the 
+  http://localhost:8080/action/print/ URL. You should see something like the 
+  following in the browser window:</p><pre># records: 0, updated: 0001-01-01T00:00:00Z, now: 2012-06-10T15:44:58Z, age: 2259641h1m17.462093152s, Original PDF</pre>
+<p>This simply means that we have no information in Memcache so far. In the 
+  terminal console, you also should see the lines like this:</p><pre>2012/06/10 15:44:58 INFO: &gt; Print
+2012/06/10 15:44:58 INFO: No [table] record found in cache, [memcache: cache miss]
+2012/06/10 15:44:58 INFO: Read 0 records, updated at []
+2012/06/10 15:44:58 INFO: Print finished</pre>
+<p>Now let's load up the data by invoking the 
+  http://localhost:8080/action/refresh/ URL in the browser. In the console, it 
+  should print the following (in your case, the particular numbers could be 
+  different):</p><pre>2012/06/10 15:45:36 INFO: &gt; Refresh
+2012/06/10 15:45:36 INFO: - Refreshing a table
+2012/06/10 15:45:36 INFO: Started downloading
+2012/06/10 15:45:42 INFO: Loaded 2212885 bytes
+2012/06/10 15:45:43 INFO: Storing a table to memcache
+2012/06/10 15:45:43 INFO: Storing 6037 records, updated at [2012-06-10T15:45:43Z]
+2012/06/10 15:45:43 INFO: Stored
+2012/06/10 15:45:43 INFO: Refresh finished</pre>
+<p>Now invoke http://localhost:8080/action/print/ again. The console output 
+  should be something like:</p><pre>2012/06/10 15:46:18 INFO: &gt; Print
+2012/06/10 15:46:18 INFO: Read 6037 records, updated at [2012-06-10T15:45:43Z]
+2012/06/10 15:46:18 INFO: Print finished</pre>
+<p>And in the browser window, you may get something like this (indicating that 
+  the age of our data is ~35 seconds):</p><pre># records: 6037, updated: 2012-06-10T15:45:43Z, now: 2012-06-10T15:46:18Z, age: 35.481546s, Original PDF
+
+20010070231&#9; Pending, 7-Jan-10
+20010072631&#9; Pending, 7-Jan-10
+20010072641&#9; Pending, 7-Jan-10
+20080791731&#9; processed, 30-Sep-11
+...</pre>
+<p>Finally, let's check the batch information retrieval by invoking 
+  http://localhost:8080/batch/20080791731. In my particular example, it 
+  printed:</p><pre>processed
+30-Sep-11</pre>
+<p>In the console, it printed:</p><pre>2012/06/10 15:50:20 INFO: &gt; Batch: [20080791731]
+2012/06/10 15:50:20 INFO: Read 6037 records, updated at [2012-06-10T15:45:43Z]
+2012/06/10 15:50:20 INFO: Last updated: 2012-06-10 15:45:43 +0000 UTC, now 2012-06-10 15:50:20.386815 +0000 UTC, gap 1h0m0s
+2012/06/10 15:50:20 INFO: Check time 2012-06-10 16:45:43 +0000 UTC
+2012/06/10 15:50:20 INFO: [{processed 30-Sep-11}]
+2012/06/10 15:50:20 INFO: Batch done</pre>
+<p>Now we need to check the situation when the contents of the Memcache record 
+  <code>table</code> disappear. Go to http://localhost:8080/_ah/admin, Memcache 
+  Viewer, and  delete the record called <code>table</code>, then invoke 
+  http://localhost:8080/batch/20080791731 again. It should come up with the same 
+  output in the browser window. In the console output (below), we see that the 
+  record had not been found,  the table was reloaded, and the batch information 
+  was retrieved.</p><pre>2012/06/10 15:55:52 INFO: &gt; Batch: [20080791731]
+2012/06/10 15:55:52 INFO: No [table] record found in cache, [memcache: cache miss]
+2012/06/10 15:55:52 INFO: - Refreshing a table
+2012/06/10 15:55:52 INFO: Started downloading
+2012/06/10 15:55:58 INFO: Loaded 2212885 bytes
+2012/06/10 15:55:59 INFO: Storing a table to memcache
+2012/06/10 15:55:59 INFO: Storing 6037 records, updated at [2012-06-10T15:55:59Z]
+2012/06/10 15:55:59 INFO: Stored
+2012/06/10 15:55:59 INFO: Read 6037 records, updated at [2012-06-10T15:55:59Z]
+2012/06/10 15:55:59 INFO: Last updated: 2012-06-10 15:55:59 +0000 UTC, now 2012-06-10 15:55:59.702255 +0000 UTC, gap 1h0m0s
+2012/06/10 15:55:59 INFO: Check time 2012-06-10 16:55:59 +0000 UTC
+2012/06/10 15:55:59 INFO: [{processed 30-Sep-11}]
+2012/06/10 15:55:59 INFO: Batch done</pre>
+<p>That's it. Everything has been tested. Interestingly, you don't need to stop 
+  the development server when you change the source of your project. The GAE 
+  development server automatically detects changed files and rebuilds them 
+  on-the-fly upon the next request.</p>
+<p>It is time now to deploy our nifty Web service to the GAE cloud. Stop your 
+  development server by CTRL-C and type in the following command:</p><pre>appcfg.py update .</pre>
+<p>If your application is properly created via the <a href="https://appengine.google.com/">GAE 
+  administrative console</a> and  app.yaml contains the correct information, you 
+  will be prompted for your Google credentials,  then the application will 
+  uploaded and install automatically. Afterwards, you can try exactly the same 
+  scenarios that we used on the local server. Simply replace localhost:8080 in 
+  your application URL (for example, usvisa-service.appspot.com).</p>
+<h3>Conclusion</h3>
+<p>Summing up, I have developed a Web service in Go that does useful data 
+  retrieval and exposes the results via a RESTful API, and, now, I've rolled it out on the 
+  Google App Engine cloud. If your volumes (traffic and data) are less than a 
+  certain limit, you can use GAE for free. Beyond that, Google will 
+  start charging you under <a href="http://www.google.com/enterprise/cloud/appengine/pricing.html">their 
+   flexible pricing model</a>. Because different GAE APIs are charged differently, 
+  it is better to always choose APIs that suit your requirements best. </p>
+<p>My full <a href="http://usvisa-api.appspot.com/batch/">implementation is 
+  running here</a>. The full project is available <a href="http://github.com/begoon/usvisa-api/">on 
+  GitHub</a>.</p>
+
+<hr>
+
+<p><em>This article was first published by Dr.Dobb's (UBM TechWeb) on
+August 28, 2012. The text and the code are mine, and I keep this copy here
+because the original site no longer exists. Dr.Dobb's is a trademark of its
+owner. The original publication is preserved in the
+<a href="https://web.archive.org/web/20121001204730/http://www.drdobbs.com/cloud/restful-web-service-in-go-powered-by-the/240006401">Internet Archive</a>.</em></p>
+
+</div>

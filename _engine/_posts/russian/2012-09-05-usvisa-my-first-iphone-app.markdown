@@ -146,7 +146,7 @@ Objective-C и Cocoa используют активно несколько ша
 
 **ДОПОЛНЕНИЕ**. В процессе работы над статьей, появилась идея сделать специальный веб-сервис, обращаясь к которому по простым URL'ам можно получать данные о заявке, а вся «кухня» по разбору PDF'ки происходит «на облаке». В журнале Dr.Dobb's недавно вышла моя статья - [RESTful Web Service in Go Powered by the Google App Engine][], описывающая данный подход. Желающие могут «допилить» приложение для работы через этот веб-сервис. Можно вообще сделать хитро: сначала обратиться к веб-сервису, и если от него есть ответ, то на этом закончить, а если нет -- запустить процедуру самостоятельного скачивания и разбора PDF'ки.
 
-[RESTful Web Service in Go Powered by the Google App Engine]: http://www.drdobbs.com/cloud/restful-web-service-in-go-powered-by-the/240006401
+[RESTful Web Service in Go Powered by the Google App Engine]: /english/articles/restful-web-service-in-go-gae/
 
 Приложение для командной строки
 -------------------------------
