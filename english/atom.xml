@@ -4,13 +4,22 @@
   <title type="text">Programming DIY</title>
   <link href="https://demin.ws/english/atom.xml" rel="self" type="application/atom+xml"/>
   <link href="https://demin.ws/english/" rel="alternate" type="text/html"/>
-  <updated>2026-09-29T14:16:00Z</updated>
+  <updated>2026-11-21T10:00:00Z</updated>
   <id>http://demin.ws/english/</id>
   <author>
     <name>Alexander Demin</name>
     <email>alexander@demin.ws</email>
   </author>
 
+
+  <entry>
+    <title type="text">Old publications are back</title>
+    <link href="https://demin.ws/blog/english/2026/11/21/old-publications-restored/" rel="alternate" type="text/html"/>
+    <published>2026-11-21T10:00:00Z</published>
+    <updated>2026-11-21T10:00:00Z</updated>
+    <id>http://demin.ws/blog/english/2026/11/21/old-publications-restored/</id>
+    <content type="html">&lt;p&gt;While cleaning up the blog I had to remove the links to my old magazine&#xA;articles, because the original pages at ACCU and The Pragmatic Bookshelf&#xA;are long gone. Recently I found the PDFs of those issues in my archives:&#xA;five issues of C Vu, Overload 107 and three issues of PragPub from 2011&#xA;and 2012.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;The issues are now hosted here, and the links on the &lt;a href=&#34;https://demin.ws/english/articles/&#34;&gt;Articles&lt;/a&gt; page&#xA;work again, each opening the magazine right at my article.&lt;/p&gt;&#xA;&lt;hr/&gt;&lt;a href=&#34;https://demin.ws/english/about/&#34;&gt;Disclaimer&lt;/a&gt;</content>
+  </entry>
 
   <entry>
     <title type="text">Thirteen years later</title>
@@ -451,15 +460,6 @@
     <updated>2012-05-17T20:10:00Z</updated>
     <id>http://demin.ws/blog/english/2012/05/17/veracity/</id>
     <content type="html">&lt;p&gt;I read about &amp;ldquo;yet another&amp;rdquo; distributed version control system some time ago, called &lt;a href=&#34;http://veracity-scm.com&#34;&gt;Veracity&lt;/a&gt;. They said that this is a decent candidate able to compete with all flagship DVCS.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;So, let&amp;rsquo;s go right to the comparison table from the official web site.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&lt;img src=&#34;https://demin.ws/images/blog/veracity-comparison.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&#xA;&#xA;&lt;p&gt;I wanted to figure out unique features for the sake of what they had started this project. I checked out a presentation from OSCON 2011.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;#1&lt;/p&gt;&#xA;&#xA;&lt;iframe width=&#34;560&#34; height=&#34;420&#34; src=&#34;https://www.youtube.com/embed/1qCIff0N3Yw?color=white&amp;amp;theme=light&#34;&gt;&lt;/iframe&gt;&#xA;&#xA;&lt;p&gt;#2&lt;/p&gt;&#xA;&#xA;&lt;iframe width=&#34;560&#34; height=&#34;420&#34; src=&#34;https://www.youtube.com/embed/iqDu7s7hSsg?color=white&amp;amp;theme=light&#34;&gt;&lt;/iframe&gt;&#xA;&#xA;&lt;p&gt;#3&lt;/p&gt;&#xA;&#xA;&lt;iframe width=&#34;560&#34; height=&#34;420&#34; src=&#34;https://www.youtube.com/embed/HH8nFadt9SA?color=white&amp;amp;theme=light&#34;&gt;&lt;/iframe&gt;&#xA;&#xA;&lt;p&gt;Here is my subjective fifty cents:&lt;/p&gt;&#xA;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Clear &amp;ldquo;no&amp;rdquo; to GPL (a stone into git, hg, bzr). They say that &amp;ldquo;Not-GPL&amp;rdquo; is more attractive for enterprise use.&lt;/li&gt;&#xA;&lt;li&gt;Ability to use external data storage for the repository (for example, MSSQL or Oracle). Again, large companies may like it.&lt;/li&gt;&#xA;&lt;li&gt;File locks (a controversial feature, in my view)&lt;/li&gt;&#xA;&lt;li&gt;Bug tracking (fossil also can do this).&lt;/li&gt;&#xA;&lt;li&gt;Build tracking (seems to be a really unique feature).&lt;/li&gt;&#xA;&lt;li&gt;Written in pure C, and it natively supports Windows, Linux and Mac from the day one.&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&#xA;&lt;p&gt;There are a few principle decisions:&lt;/p&gt;&#xA;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;No &amp;lsquo;index&amp;rsquo; (as in git) and it will never be there.&lt;/li&gt;&#xA;&lt;li&gt;There is no way to change the history, at all (for example, even a typo in a last commit cannot be fixed).&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&#xA;&lt;p&gt;Personally for me, these two &amp;ldquo;features&amp;rdquo; definitely don&amp;rsquo;t fit into my way of using DVCS. For this reason I have stopped using fossil on my personal projects, though I loved the ability to have Wiki and a bug tracker built into the repository.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;As a result it turns out that the key features of Veracity are &amp;ldquo;Not-GPL&amp;rdquo; and the external storages. It is obviously an attack on the corporate market. By the way, the company founder, Eric Sink, already had a DVCS product and company now acquired by Microsoft.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;So, my subjective conclusion is that this is an attempt to bring DVCS into corporations.&lt;/p&gt;&#xA;&#xA;&lt;h3&gt;Extra fifty cents&lt;/h3&gt;&#xA;&#xA;&lt;p&gt;Eric Sink wrote a book, &amp;ldquo;&lt;a href=&#34;http://www.ericsink.com/vcbe/&#34;&gt;Version Control by Example&lt;/a&gt;&amp;rdquo;, in which he gives more or less fair comparison of Veracity against a few flagship DCVS. I flipped through it in half an hour, and I found a super quote, which I furiously share and actively promote (the selection in bold is mine).&lt;/p&gt;&#xA;&#xA;&lt;blockquote&gt;&#xA;&lt;p&gt;11. Don&amp;rsquo;t comment out code&lt;/p&gt;&#xA;&#xA;&lt;p&gt;When using a VCS, you shouldn&amp;rsquo;t comment out a big section of code simply because you think you might need it someday. &lt;strong&gt;Just delete it&lt;/strong&gt;. The previous version of the file is still in your version control history, so you can always get it back if and when you need it. This practice is particularly important for web developers, where the commented-out stuff may adversely affect your page load times.&lt;/p&gt;&#xA;&lt;/blockquote&gt;&#xA;&lt;hr/&gt;&lt;a href=&#34;https://demin.ws/english/about/&#34;&gt;Disclaimer&lt;/a&gt;</content>
-  </entry>
-
-  <entry>
-    <title type="text">Why a getter doesn&#39;t need a &#34;get&#34; prefix</title>
-    <link href="https://demin.ws/blog/english/2012/05/17/why-getter-does-not-need-get-prefix/" rel="alternate" type="text/html"/>
-    <published>2012-05-17T07:48:00Z</published>
-    <updated>2012-05-17T07:48:00Z</updated>
-    <id>http://demin.ws/blog/english/2012/05/17/why-getter-does-not-need-get-prefix/</id>
-    <content type="html">&lt;h3&gt;Idea&lt;/h3&gt;&#xA;&#xA;&lt;p&gt;Never use a &lt;code&gt;get&lt;/code&gt; prefix for getters.&lt;/p&gt;&#xA;&#xA;&lt;h3&gt;Why?&lt;/h3&gt;&#xA;&#xA;&lt;p&gt;Usually we consider member functions to be getters if they simply return a reference or pointer to a private member, just for the sake of data incapsulation. Such functions don&amp;rsquo;t do anything really, they have no payload.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;So, there is nothing requiring a &amp;ldquo;get&amp;rdquo; verb to describe its meaning. The getter is just an alias of a member. The &amp;ldquo;get&amp;rdquo; prefix is only required when a function does a &lt;strong&gt;real&lt;/strong&gt; data transformation or computation, for instance, &lt;code&gt;getLastTick()&lt;/code&gt; or &lt;code&gt;getFullUserName()&lt;/code&gt;. But it is even better here to replace &amp;ldquo;get&amp;rdquo; by something more meaningful, &lt;code&gt;extractLastTick()&lt;/code&gt; and &lt;code&gt;buildFullUserName()&lt;/code&gt;.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;&amp;#9632;&lt;/p&gt;&#xA;&#xA;&lt;p&gt;Related posts:&lt;/p&gt;&#xA;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://demin.ws/blog/english/2010/11/09/naming-convension-for-getters-and-setters-in-cpp/&#34;&gt;Naming convension for getters and setters in C++&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr/&gt;&lt;a href=&#34;https://demin.ws/english/about/&#34;&gt;Disclaimer&lt;/a&gt;</content>
   </entry>
 
 </feed>
