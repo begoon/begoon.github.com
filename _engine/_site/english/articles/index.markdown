@@ -9,7 +9,7 @@ Publications
 
 ### 2013
 
-* *A review of "21st Century C" by Ben Klement*, C Vu Volume 24 Issue 6, page 27
+* [A review of "21st Century C" by Ben Klemens][], C Vu Volume 24 Issue 6, page 27
 
 ### 2012
 
@@ -36,3 +36,4 @@ Publications
 [Perforce cross-platform patcher]: /media/CVu_23.3.pdf#page=21
 [Concurrent programming in Go]: /media/CVu_23.2.pdf#page=13
 [The first little step into test-driven development]: /media/CVu_23.1.pdf#page=4
+[A review of "21st Century C" by Ben Klemens]: /english/articles/21st-century-c-review/

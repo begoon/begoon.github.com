@@ -52,6 +52,11 @@ ul {
   margin-top: 1em;
 }
 
+.site ul:not(.posts),
+.site ol {
+  margin-left: 1.35em;
+}
+
 pre {
   margin-top: 1em;
 }
@@ -249,11 +254,6 @@ ul.posts span {
   overflow-x: auto;
 }
 
-#post ul,
-#post ol {
-  margin-left: 1.35em;
-}
-
 #post code {
   font-family: Menlo, Monaco, "Andale Mono", "Lucida console", "Courier New", monospace;
   font-size: 80%;
@@ -411,10 +411,6 @@ ul.posts span {
   ul.posts li {
     padding: .5em 0;
     line-height: 1.5;
-  }
-
-  .site ul:not(.posts), .site ol {
-    margin-left: 1.35em;
   }
 
   ul.posts span {
