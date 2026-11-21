@@ -15,7 +15,7 @@ I've decided to change the approach and implemented Google's way: Don't sort. Se
 
 Now, on the [main page][] there is a search. The search allows to filter out the posts containing particular word(s) in the title or body.
 
-[main page]: /english/
+[main page]: /
 
 The search is based on the reverted index, without sorting by relevance. The posts, containing required words, are displayed sorted by default by date.
 

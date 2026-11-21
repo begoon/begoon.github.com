@@ -36,7 +36,7 @@ jobs:
       SITE: https://demin.ws
       DEFAULT_URLS: >-
         https://demin.ws/
-        https://demin.ws/english/
+        https://demin.ws/russian/
         https://demin.ws/blog/russian/2026/09/29/thirteen-years-later/
         https://demin.ws/blog/english/2026/09/29/thirteen-years-later/
     steps:

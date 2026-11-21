@@ -1,7 +1,7 @@
 This repository contains materials of the personal blog "[Программирование - это просто][] / [Programming DIY][]". 
 
-[Программирование - это просто]: https://demin.ws/
-[Programming DIY]: https://demin.ws/english/
+[Программирование - это просто]: https://demin.ws/russian/
+[Programming DIY]: https://demin.ws/
 
 # How to use the blog engine
 

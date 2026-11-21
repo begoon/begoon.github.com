@@ -1,0 +1,18 @@
+---
+layout: default
+description: "Блог Александра Дёмина о программировании, проектах и экспериментах."
+title: "Программирование - это просто!"
+language: russian
+---
+<script type="text/javascript" src="/js/{{.Page.language}}/search_loader.js"></script>
+
+{{include "search_button.html"}}
+
+<ul class="posts">
+{{range .Posts}}{{if .russian}}
+  <li id="post_{{.index}}">
+    <span>{{.year}}-{{.month}}-{{.day}} &raquo;</span>
+    <a href="{{.url}}">{{html .title}}</a>
+  </li>
+{{end}}{{end}}
+</ul>

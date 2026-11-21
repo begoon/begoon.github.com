@@ -1,15 +1,15 @@
 ---
 layout: default
-description: "Блог Александра Дёмина о программировании, проектах и экспериментах."
-title: "Программирование - это просто!"
-language: russian
+description: "Alexander Demin’s blog about programming, projects, and experiments."
+title: Programming DIY
+language: english
 ---
 <script type="text/javascript" src="/js/{{.Page.language}}/search_loader.js"></script>
 
 {{include "search_button.html"}}
 
 <ul class="posts">
-{{range .Posts}}{{if .russian}}
+{{range .Posts}}{{if .english}}
   <li id="post_{{.index}}">
     <span>{{.year}}-{{.month}}-{{.day}} &raquo;</span>
     <a href="{{.url}}">{{html .title}}</a>

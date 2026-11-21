@@ -3,7 +3,7 @@
 {{$host := .FeedHost}}{{$idhost := .SiteHostID}}
   <title type="text">{{include "english/title.html" | xml}}</title>
   <link href="{{$host}}/english/atom.xml" rel="self" type="application/atom+xml"/>
-  <link href="{{$host}}/english/" rel="alternate" type="text/html"/>
+  <link href="{{$host}}/" rel="alternate" type="text/html"/>
   <updated>{{last_update "english"}}</updated>
   <id>{{$idhost}}/english/</id>
   <author>
