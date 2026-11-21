@@ -18,4 +18,4 @@ I've recorded an additional video for your convenience:
 
 <iframe width="640" height="360" src="https://www.youtube.com/embed/m6pfXBHTyY4" frameborder="0" allowfullscreen></iframe>
 
-[US Visa: My First iPhone App]: http://pragprog.com/magazines/2012-09/us-visa-my-first-iphone-app/
+[US Visa: My First iPhone App]: /media/PragPub_2012-09.pdf#page=31

@@ -11,7 +11,7 @@ categories:
 ---
 Моя статья "[Build a CPU with Only One Instruction][]" в "The Pragmatic Bookshelf magazine".
 
-[Build a CPU with Only One Instruction]: http://pragprog.com/magazines/2012-03/the-nor-machine
+[Build a CPU with Only One Instruction]: /media/PragPub_2012-03.pdf#page=9
 
 В статье реалиазация на Ruby. Так как в Ruby можно опускать скобки вокруг параметров при вызове функций, то сейчас целевой код выглядит ну почти на настоящий ассемблер. И не скажешь, что это Ruby.
 

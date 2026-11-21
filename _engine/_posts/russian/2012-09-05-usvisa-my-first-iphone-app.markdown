@@ -27,7 +27,7 @@ Disclaimer 2
 
 Данный пост был изначально опубликован в виде статьи в журнале «The Pragmatic Bookshelf Magazine» на английском языке -- [US Visa: My First iPhone App][]. Русская версия, публикуемая здесь, не является точным переводом журнальной версии, так как была написана как отдельный текст несколько позже.
 
-[US Visa: My First iPhone App]: http://pragprog.com/magazines/2012-09/us-visa-my-first-iphone-app/
+[US Visa: My First iPhone App]: /media/PragPub_2012-09.pdf#page=31
 
 «Хьюстон! У нас проблема!»
 --------------------------

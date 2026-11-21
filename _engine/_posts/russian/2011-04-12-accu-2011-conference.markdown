@@ -43,6 +43,6 @@ categories:
 [ComputErl - Erlang-based Framework for Many Task Computing]: http://accu.org/index.php/conferences/accu_conference_2011/accu2011_sessions#ComputErl%20-%20Erlang-based%20Framework%20for%20Many%20Task%20Computing
 [CPU Caches and Why You Care]: http://accu.org/index.php/conferences/accu_conference_2011/accu2011_sessions#CPU%20Caches%20and%20Why%20You%20Care
 
-Кстати, чтобы уж два раза не вставать, в последнем выпуске ACCU'шного журнала CVu была моя статейка "[The First Little Step into Test-Driven Development][]" (так как электронная версия журнала находится в платной части сайта, то я выложил только страницы с моей статьей).
+Кстати, чтобы уж два раза не вставать, в последнем выпуске ACCU'шного журнала CVu была моя статейка "[The First Little Step into Test-Driven Development][]".
 
-[The First Little Step into Test-Driven Development]: http://accu.org/var/uploads/journals/cvu241.pdf
+[The First Little Step into Test-Driven Development]: /media/CVu_23.1.pdf#page=4

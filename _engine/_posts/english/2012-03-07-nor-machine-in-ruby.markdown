@@ -11,7 +11,7 @@ categories:
 ---
 My [article about a virtual CPU, a machine, computing only one instruction - NOR][], in The Pragmatic Bookshelf magazine.
 
-[article about a virtual CPU, a machine, computing only one instruction - NOR]: http://pragprog.com/magazines/2012-03/the-nor-machine
+[article about a virtual CPU, a machine, computing only one instruction - NOR]: /media/PragPub_2012-03.pdf#page=9
 
 The idea was previously described in a series of posts:
 
